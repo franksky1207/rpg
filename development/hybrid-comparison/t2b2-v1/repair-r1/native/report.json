@@ -1,0 +1,873 @@
+{
+  "results": [
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": false,
+      "file": "normal-idle-0-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": false,
+      "file": "normal-idle-9-before.png",
+      "bytes": 11767
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": false,
+      "file": "normal-idle-21-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": false,
+      "file": "normal-attack-0-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": false,
+      "file": "normal-attack-9-before.png",
+      "bytes": 12381
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": false,
+      "file": "normal-attack-21-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": false,
+      "file": "normal-hit-0-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": false,
+      "file": "normal-hit-9-before.png",
+      "bytes": 11936
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": false,
+      "file": "normal-hit-21-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": false,
+      "file": "normal-dodge-0-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": false,
+      "file": "normal-dodge-9-before.png",
+      "bytes": 12517
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": false,
+      "file": "normal-dodge-21-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 0,
+      "calibrated": false,
+      "file": "normal-return-0-before.png",
+      "bytes": 11618
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 9,
+      "calibrated": false,
+      "file": "normal-return-9-before.png",
+      "bytes": 11562
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 21,
+      "calibrated": false,
+      "file": "normal-return-21-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": false,
+      "file": "normal-defeat-0-before.png",
+      "bytes": 11738
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": false,
+      "file": "normal-defeat-9-before.png",
+      "bytes": 11764
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": false,
+      "file": "normal-defeat-21-before.png",
+      "bytes": 9929
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": true,
+      "file": "normal-idle-0-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": true,
+      "file": "normal-idle-9-agx.png",
+      "bytes": 17382
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": true,
+      "file": "normal-idle-21-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": true,
+      "file": "normal-attack-0-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": true,
+      "file": "normal-attack-9-agx.png",
+      "bytes": 17967
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": true,
+      "file": "normal-attack-21-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": true,
+      "file": "normal-hit-0-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": true,
+      "file": "normal-hit-9-agx.png",
+      "bytes": 17338
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": true,
+      "file": "normal-hit-21-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": true,
+      "file": "normal-dodge-0-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": true,
+      "file": "normal-dodge-9-agx.png",
+      "bytes": 16997
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": true,
+      "file": "normal-dodge-21-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 0,
+      "calibrated": true,
+      "file": "normal-return-0-agx.png",
+      "bytes": 16924
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 9,
+      "calibrated": true,
+      "file": "normal-return-9-agx.png",
+      "bytes": 16646
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 21,
+      "calibrated": true,
+      "file": "normal-return-21-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": true,
+      "file": "normal-defeat-0-agx.png",
+      "bytes": 17584
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": true,
+      "file": "normal-defeat-9-agx.png",
+      "bytes": 17042
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": true,
+      "file": "normal-defeat-21-agx.png",
+      "bytes": 13362
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": false,
+      "file": "elite-idle-0-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": false,
+      "file": "elite-idle-9-before.png",
+      "bytes": 15486
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": false,
+      "file": "elite-idle-21-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": false,
+      "file": "elite-attack-0-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": false,
+      "file": "elite-attack-9-before.png",
+      "bytes": 15165
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": false,
+      "file": "elite-attack-21-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": false,
+      "file": "elite-hit-0-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": false,
+      "file": "elite-hit-9-before.png",
+      "bytes": 15324
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": false,
+      "file": "elite-hit-21-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": false,
+      "file": "elite-dodge-0-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": false,
+      "file": "elite-dodge-9-before.png",
+      "bytes": 17066
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": false,
+      "file": "elite-dodge-21-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 0,
+      "calibrated": false,
+      "file": "elite-return-0-before.png",
+      "bytes": 14955
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 9,
+      "calibrated": false,
+      "file": "elite-return-9-before.png",
+      "bytes": 15569
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 21,
+      "calibrated": false,
+      "file": "elite-return-21-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": false,
+      "file": "elite-defeat-0-before.png",
+      "bytes": 15341
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": false,
+      "file": "elite-defeat-9-before.png",
+      "bytes": 15494
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": false,
+      "file": "elite-defeat-21-before.png",
+      "bytes": 11328
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": true,
+      "file": "elite-idle-0-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": true,
+      "file": "elite-idle-9-agx.png",
+      "bytes": 23629
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": true,
+      "file": "elite-idle-21-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": true,
+      "file": "elite-attack-0-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": true,
+      "file": "elite-attack-9-agx.png",
+      "bytes": 22313
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": true,
+      "file": "elite-attack-21-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": true,
+      "file": "elite-hit-0-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": true,
+      "file": "elite-hit-9-agx.png",
+      "bytes": 23202
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": true,
+      "file": "elite-hit-21-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": true,
+      "file": "elite-dodge-0-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": true,
+      "file": "elite-dodge-9-agx.png",
+      "bytes": 23104
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": true,
+      "file": "elite-dodge-21-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 0,
+      "calibrated": true,
+      "file": "elite-return-0-agx.png",
+      "bytes": 21928
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 9,
+      "calibrated": true,
+      "file": "elite-return-9-agx.png",
+      "bytes": 23202
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 21,
+      "calibrated": true,
+      "file": "elite-return-21-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": true,
+      "file": "elite-defeat-0-agx.png",
+      "bytes": 23635
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": true,
+      "file": "elite-defeat-9-agx.png",
+      "bytes": 23005
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": true,
+      "file": "elite-defeat-21-agx.png",
+      "bytes": 15976
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": false,
+      "file": "boss-idle-0-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": false,
+      "file": "boss-idle-9-before.png",
+      "bytes": 15412
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": false,
+      "file": "boss-idle-21-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": false,
+      "file": "boss-attack-0-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": false,
+      "file": "boss-attack-9-before.png",
+      "bytes": 15355
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": false,
+      "file": "boss-attack-21-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": false,
+      "file": "boss-hit-0-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": false,
+      "file": "boss-hit-9-before.png",
+      "bytes": 15714
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": false,
+      "file": "boss-hit-21-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": false,
+      "file": "boss-dodge-0-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": false,
+      "file": "boss-dodge-9-before.png",
+      "bytes": 16600
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": false,
+      "file": "boss-dodge-21-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 0,
+      "calibrated": false,
+      "file": "boss-return-0-before.png",
+      "bytes": 15513
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 9,
+      "calibrated": false,
+      "file": "boss-return-9-before.png",
+      "bytes": 15310
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 21,
+      "calibrated": false,
+      "file": "boss-return-21-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": false,
+      "file": "boss-defeat-0-before.png",
+      "bytes": 15555
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": false,
+      "file": "boss-defeat-9-before.png",
+      "bytes": 16664
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": false,
+      "file": "boss-defeat-21-before.png",
+      "bytes": 14880
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": true,
+      "file": "boss-idle-0-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": true,
+      "file": "boss-idle-9-agx.png",
+      "bytes": 22644
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": true,
+      "file": "boss-idle-21-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": true,
+      "file": "boss-attack-0-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": true,
+      "file": "boss-attack-9-agx.png",
+      "bytes": 22098
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": true,
+      "file": "boss-attack-21-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": true,
+      "file": "boss-hit-0-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": true,
+      "file": "boss-hit-9-agx.png",
+      "bytes": 23482
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": true,
+      "file": "boss-hit-21-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": true,
+      "file": "boss-dodge-0-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": true,
+      "file": "boss-dodge-9-agx.png",
+      "bytes": 24137
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": true,
+      "file": "boss-dodge-21-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 0,
+      "calibrated": true,
+      "file": "boss-return-0-agx.png",
+      "bytes": 22056
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 9,
+      "calibrated": true,
+      "file": "boss-return-9-agx.png",
+      "bytes": 22611
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 21,
+      "calibrated": true,
+      "file": "boss-return-21-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": true,
+      "file": "boss-defeat-0-agx.png",
+      "bytes": 22796
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": true,
+      "file": "boss-defeat-9-agx.png",
+      "bytes": 24247
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": true,
+      "file": "boss-defeat-21-agx.png",
+      "bytes": 21719
+    }
+  ],
+  "hardware": "SwiftShader headless only, not physical GPU or performance evidence",
+  "sameCamera": true,
+  "sameFrames": true,
+  "lightApproximation": "3x3 point quadrature of each saved area lamp; native raster/IBL and Cycles remain different",
+  "displayTransform": "same local Blender OCIO AgX LUT; LUT redistribution unavailable"
+}

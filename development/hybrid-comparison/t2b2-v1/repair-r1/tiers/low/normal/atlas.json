@@ -1,0 +1,3701 @@
+{
+  "schema": "cw.t2b2.repair-tier-atlas",
+  "version": 1,
+  "masterMetadata": "enemies/normal/atlases/atlas.json",
+  "masterSHA": "40d47f01288ffde28c0956d4083811da15eb5a7c7faea8b2728107e3de9f770c",
+  "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
+  "scale": 0.5,
+  "sourcePixelBudget": 128,
+  "rows": [
+    {
+      "action": "idle",
+      "layer": "enemy",
+      "rgba": "idle-enemy.png",
+      "depth": "idle-enemy-depth.png",
+      "dimensions": [
+        280,
+        324
+      ],
+      "frameDimensions": [
+        36,
+        77
+      ],
+      "padding": 2,
+      "mipmap": false,
+      "frames": [
+        {
+          "frame": 0,
+          "timeMs": 0.0,
+          "rect": [
+            2,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.007142857142857143,
+            0.006172839506172839,
+            0.1357142857142857,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 1,
+          "timeMs": 33.333333333333336,
+          "rect": [
+            42,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.15,
+            0.006172839506172839,
+            0.2785714285714286,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 2,
+          "timeMs": 66.66666666666667,
+          "rect": [
+            82,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.29285714285714287,
+            0.006172839506172839,
+            0.42142857142857143,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 3,
+          "timeMs": 100.0,
+          "rect": [
+            122,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.4357142857142857,
+            0.006172839506172839,
+            0.5642857142857143,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 4,
+          "timeMs": 133.33333333333334,
+          "rect": [
+            162,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.5785714285714286,
+            0.006172839506172839,
+            0.7071428571428572,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 5,
+          "timeMs": 166.66666666666666,
+          "rect": [
+            202,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.7214285714285714,
+            0.006172839506172839,
+            0.85,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 6,
+          "timeMs": 200.0,
+          "rect": [
+            242,
+            2,
+            36,
+            77
+          ],
+          "uv": [
+            0.8642857142857143,
+            0.006172839506172839,
+            0.9928571428571429,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 7,
+          "timeMs": 233.33333333333334,
+          "rect": [
+            2,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.007142857142857143,
+            0.25617283950617287,
+            0.1357142857142857,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 8,
+          "timeMs": 266.6666666666667,
+          "rect": [
+            42,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.15,
+            0.25617283950617287,
+            0.2785714285714286,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 9,
+          "timeMs": 300.0,
+          "rect": [
+            82,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.29285714285714287,
+            0.25617283950617287,
+            0.42142857142857143,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 10,
+          "timeMs": 333.3333333333333,
+          "rect": [
+            122,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.4357142857142857,
+            0.25617283950617287,
+            0.5642857142857143,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 11,
+          "timeMs": 366.6666666666667,
+          "rect": [
+            162,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.5785714285714286,
+            0.25617283950617287,
+            0.7071428571428572,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 12,
+          "timeMs": 400.0,
+          "rect": [
+            202,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.7214285714285714,
+            0.25617283950617287,
+            0.85,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 13,
+          "timeMs": 433.3333333333333,
+          "rect": [
+            242,
+            83,
+            36,
+            77
+          ],
+          "uv": [
+            0.8642857142857143,
+            0.25617283950617287,
+            0.9928571428571429,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 14,
+          "timeMs": 466.6666666666667,
+          "rect": [
+            2,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.007142857142857143,
+            0.5061728395061729,
+            0.1357142857142857,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 15,
+          "timeMs": 500.0,
+          "rect": [
+            42,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.15,
+            0.5061728395061729,
+            0.2785714285714286,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 16,
+          "timeMs": 533.3333333333334,
+          "rect": [
+            82,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.29285714285714287,
+            0.5061728395061729,
+            0.42142857142857143,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 17,
+          "timeMs": 566.6666666666666,
+          "rect": [
+            122,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.4357142857142857,
+            0.5061728395061729,
+            0.5642857142857143,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 18,
+          "timeMs": 600.0,
+          "rect": [
+            162,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.5785714285714286,
+            0.5061728395061729,
+            0.7071428571428572,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 19,
+          "timeMs": 633.3333333333334,
+          "rect": [
+            202,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.7214285714285714,
+            0.5061728395061729,
+            0.85,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 20,
+          "timeMs": 666.6666666666666,
+          "rect": [
+            242,
+            164,
+            36,
+            77
+          ],
+          "uv": [
+            0.8642857142857143,
+            0.5061728395061729,
+            0.9928571428571429,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 21,
+          "timeMs": 700.0,
+          "rect": [
+            2,
+            245,
+            36,
+            77
+          ],
+          "uv": [
+            0.007142857142857143,
+            0.7561728395061729,
+            0.1357142857142857,
+            0.9938271604938271
+          ],
+          "masterTrim": [
+            90,
+            54,
+            72,
+            153
+          ],
+          "masterPivot": [
+            38.00010681152344,
+            142.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        }
+      ],
+      "durationMs": 700,
+      "frameCount": 22,
+      "fps": 30
+    },
+    {
+      "action": "attack",
+      "layer": "enemy",
+      "rgba": "attack-enemy.png",
+      "depth": "attack-enemy-depth.png",
+      "dimensions": [
+        385,
+        328
+      ],
+      "frameDimensions": [
+        51,
+        78
+      ],
+      "padding": 2,
+      "mipmap": false,
+      "frames": [
+        {
+          "frame": 0,
+          "timeMs": 0.0,
+          "rect": [
+            2,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.005194805194805195,
+            0.006097560975609756,
+            0.13766233766233765,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 1,
+          "timeMs": 33.333333333333336,
+          "rect": [
+            57,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.14805194805194805,
+            0.006097560975609756,
+            0.2805194805194805,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 2,
+          "timeMs": 66.66666666666667,
+          "rect": [
+            112,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.2909090909090909,
+            0.006097560975609756,
+            0.42337662337662335,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 3,
+          "timeMs": 100.0,
+          "rect": [
+            167,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.43376623376623374,
+            0.006097560975609756,
+            0.5662337662337662,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 4,
+          "timeMs": 133.33333333333334,
+          "rect": [
+            222,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.5766233766233766,
+            0.006097560975609756,
+            0.7090909090909091,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 5,
+          "timeMs": 166.66666666666666,
+          "rect": [
+            277,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.7194805194805195,
+            0.006097560975609756,
+            0.8519480519480519,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 6,
+          "timeMs": 200.0,
+          "rect": [
+            332,
+            2,
+            51,
+            78
+          ],
+          "uv": [
+            0.8623376623376623,
+            0.006097560975609756,
+            0.9948051948051948,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 7,
+          "timeMs": 233.33333333333334,
+          "rect": [
+            2,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.005194805194805195,
+            0.25609756097560976,
+            0.13766233766233765,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 8,
+          "timeMs": 266.6666666666667,
+          "rect": [
+            57,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.14805194805194805,
+            0.25609756097560976,
+            0.2805194805194805,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 9,
+          "timeMs": 300.0,
+          "rect": [
+            112,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.2909090909090909,
+            0.25609756097560976,
+            0.42337662337662335,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 10,
+          "timeMs": 333.3333333333333,
+          "rect": [
+            167,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.43376623376623374,
+            0.25609756097560976,
+            0.5662337662337662,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 11,
+          "timeMs": 366.6666666666667,
+          "rect": [
+            222,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.5766233766233766,
+            0.25609756097560976,
+            0.7090909090909091,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 12,
+          "timeMs": 400.0,
+          "rect": [
+            277,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.7194805194805195,
+            0.25609756097560976,
+            0.8519480519480519,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 13,
+          "timeMs": 433.3333333333333,
+          "rect": [
+            332,
+            84,
+            51,
+            78
+          ],
+          "uv": [
+            0.8623376623376623,
+            0.25609756097560976,
+            0.9948051948051948,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 14,
+          "timeMs": 466.6666666666667,
+          "rect": [
+            2,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.005194805194805195,
+            0.5060975609756098,
+            0.13766233766233765,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 15,
+          "timeMs": 500.0,
+          "rect": [
+            57,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.14805194805194805,
+            0.5060975609756098,
+            0.2805194805194805,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 16,
+          "timeMs": 533.3333333333334,
+          "rect": [
+            112,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.2909090909090909,
+            0.5060975609756098,
+            0.42337662337662335,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 17,
+          "timeMs": 566.6666666666666,
+          "rect": [
+            167,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.43376623376623374,
+            0.5060975609756098,
+            0.5662337662337662,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 18,
+          "timeMs": 600.0,
+          "rect": [
+            222,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.5766233766233766,
+            0.5060975609756098,
+            0.7090909090909091,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 19,
+          "timeMs": 633.3333333333334,
+          "rect": [
+            277,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.7194805194805195,
+            0.5060975609756098,
+            0.8519480519480519,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 20,
+          "timeMs": 666.6666666666666,
+          "rect": [
+            332,
+            166,
+            51,
+            78
+          ],
+          "uv": [
+            0.8623376623376623,
+            0.5060975609756098,
+            0.9948051948051948,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 21,
+          "timeMs": 700.0,
+          "rect": [
+            2,
+            248,
+            51,
+            78
+          ],
+          "uv": [
+            0.005194805194805195,
+            0.7560975609756098,
+            0.13766233766233765,
+            0.9939024390243902
+          ],
+          "masterTrim": [
+            83,
+            52,
+            102,
+            155
+          ],
+          "masterPivot": [
+            45.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        }
+      ],
+      "durationMs": 700,
+      "frameCount": 22,
+      "fps": 30
+    },
+    {
+      "action": "hit",
+      "layer": "enemy",
+      "rgba": "hit-enemy.png",
+      "depth": "hit-enemy-depth.png",
+      "dimensions": [
+        287,
+        332
+      ],
+      "frameDimensions": [
+        37,
+        79
+      ],
+      "padding": 2,
+      "mipmap": false,
+      "frames": [
+        {
+          "frame": 0,
+          "timeMs": 0.0,
+          "rect": [
+            2,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.006968641114982578,
+            0.006024096385542169,
+            0.13588850174216027,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 1,
+          "timeMs": 33.333333333333336,
+          "rect": [
+            43,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.14982578397212543,
+            0.006024096385542169,
+            0.2787456445993031,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 2,
+          "timeMs": 66.66666666666667,
+          "rect": [
+            84,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.2926829268292683,
+            0.006024096385542169,
+            0.42160278745644597,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 3,
+          "timeMs": 100.0,
+          "rect": [
+            125,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.4355400696864111,
+            0.006024096385542169,
+            0.5644599303135889,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 4,
+          "timeMs": 133.33333333333334,
+          "rect": [
+            166,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.578397212543554,
+            0.006024096385542169,
+            0.7073170731707317,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 5,
+          "timeMs": 166.66666666666666,
+          "rect": [
+            207,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.7212543554006968,
+            0.006024096385542169,
+            0.8501742160278746,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 6,
+          "timeMs": 200.0,
+          "rect": [
+            248,
+            2,
+            37,
+            79
+          ],
+          "uv": [
+            0.8641114982578397,
+            0.006024096385542169,
+            0.9930313588850174,
+            0.24397590361445784
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 7,
+          "timeMs": 233.33333333333334,
+          "rect": [
+            2,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.006968641114982578,
+            0.2560240963855422,
+            0.13588850174216027,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 8,
+          "timeMs": 266.6666666666667,
+          "rect": [
+            43,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.14982578397212543,
+            0.2560240963855422,
+            0.2787456445993031,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 9,
+          "timeMs": 300.0,
+          "rect": [
+            84,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.2926829268292683,
+            0.2560240963855422,
+            0.42160278745644597,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 10,
+          "timeMs": 333.3333333333333,
+          "rect": [
+            125,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.4355400696864111,
+            0.2560240963855422,
+            0.5644599303135889,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 11,
+          "timeMs": 366.6666666666667,
+          "rect": [
+            166,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.578397212543554,
+            0.2560240963855422,
+            0.7073170731707317,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 12,
+          "timeMs": 400.0,
+          "rect": [
+            207,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.7212543554006968,
+            0.2560240963855422,
+            0.8501742160278746,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 13,
+          "timeMs": 433.3333333333333,
+          "rect": [
+            248,
+            85,
+            37,
+            79
+          ],
+          "uv": [
+            0.8641114982578397,
+            0.2560240963855422,
+            0.9930313588850174,
+            0.4939759036144578
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 14,
+          "timeMs": 466.6666666666667,
+          "rect": [
+            2,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.006968641114982578,
+            0.5060240963855421,
+            0.13588850174216027,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 15,
+          "timeMs": 500.0,
+          "rect": [
+            43,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.14982578397212543,
+            0.5060240963855421,
+            0.2787456445993031,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 16,
+          "timeMs": 533.3333333333334,
+          "rect": [
+            84,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.2926829268292683,
+            0.5060240963855421,
+            0.42160278745644597,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 17,
+          "timeMs": 566.6666666666666,
+          "rect": [
+            125,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.4355400696864111,
+            0.5060240963855421,
+            0.5644599303135889,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 18,
+          "timeMs": 600.0,
+          "rect": [
+            166,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.578397212543554,
+            0.5060240963855421,
+            0.7073170731707317,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 19,
+          "timeMs": 633.3333333333334,
+          "rect": [
+            207,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.7212543554006968,
+            0.5060240963855421,
+            0.8501742160278746,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 20,
+          "timeMs": 666.6666666666666,
+          "rect": [
+            248,
+            168,
+            37,
+            79
+          ],
+          "uv": [
+            0.8641114982578397,
+            0.5060240963855421,
+            0.9930313588850174,
+            0.7439759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 21,
+          "timeMs": 700.0,
+          "rect": [
+            2,
+            251,
+            37,
+            79
+          ],
+          "uv": [
+            0.006968641114982578,
+            0.7560240963855421,
+            0.13588850174216027,
+            0.9939759036144579
+          ],
+          "masterTrim": [
+            88,
+            50,
+            74,
+            157
+          ],
+          "masterPivot": [
+            40.00010681152344,
+            146.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        }
+      ],
+      "durationMs": 700,
+      "frameCount": 22,
+      "fps": 30
+    },
+    {
+      "action": "dodge",
+      "layer": "enemy",
+      "rgba": "dodge-enemy.png",
+      "depth": "dodge-enemy-depth.png",
+      "dimensions": [
+        364,
+        324
+      ],
+      "frameDimensions": [
+        48,
+        77
+      ],
+      "padding": 2,
+      "mipmap": false,
+      "frames": [
+        {
+          "frame": 0,
+          "timeMs": 0.0,
+          "rect": [
+            2,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.005494505494505495,
+            0.006172839506172839,
+            0.13736263736263737,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 1,
+          "timeMs": 33.333333333333336,
+          "rect": [
+            54,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.14835164835164835,
+            0.006172839506172839,
+            0.2802197802197802,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 2,
+          "timeMs": 66.66666666666667,
+          "rect": [
+            106,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.29120879120879123,
+            0.006172839506172839,
+            0.4230769230769231,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 3,
+          "timeMs": 100.0,
+          "rect": [
+            158,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.4340659340659341,
+            0.006172839506172839,
+            0.5659340659340659,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 4,
+          "timeMs": 133.33333333333334,
+          "rect": [
+            210,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.5769230769230769,
+            0.006172839506172839,
+            0.7087912087912088,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 5,
+          "timeMs": 166.66666666666666,
+          "rect": [
+            262,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.7197802197802198,
+            0.006172839506172839,
+            0.8516483516483516,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 6,
+          "timeMs": 200.0,
+          "rect": [
+            314,
+            2,
+            48,
+            77
+          ],
+          "uv": [
+            0.8626373626373627,
+            0.006172839506172839,
+            0.9945054945054945,
+            0.24382716049382716
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 7,
+          "timeMs": 233.33333333333334,
+          "rect": [
+            2,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.005494505494505495,
+            0.25617283950617287,
+            0.13736263736263737,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 8,
+          "timeMs": 266.6666666666667,
+          "rect": [
+            54,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.14835164835164835,
+            0.25617283950617287,
+            0.2802197802197802,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 9,
+          "timeMs": 300.0,
+          "rect": [
+            106,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.29120879120879123,
+            0.25617283950617287,
+            0.4230769230769231,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 10,
+          "timeMs": 333.3333333333333,
+          "rect": [
+            158,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.4340659340659341,
+            0.25617283950617287,
+            0.5659340659340659,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 11,
+          "timeMs": 366.6666666666667,
+          "rect": [
+            210,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.5769230769230769,
+            0.25617283950617287,
+            0.7087912087912088,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 12,
+          "timeMs": 400.0,
+          "rect": [
+            262,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.7197802197802198,
+            0.25617283950617287,
+            0.8516483516483516,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 13,
+          "timeMs": 433.3333333333333,
+          "rect": [
+            314,
+            83,
+            48,
+            77
+          ],
+          "uv": [
+            0.8626373626373627,
+            0.25617283950617287,
+            0.9945054945054945,
+            0.49382716049382713
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 14,
+          "timeMs": 466.6666666666667,
+          "rect": [
+            2,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.005494505494505495,
+            0.5061728395061729,
+            0.13736263736263737,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 15,
+          "timeMs": 500.0,
+          "rect": [
+            54,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.14835164835164835,
+            0.5061728395061729,
+            0.2802197802197802,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 16,
+          "timeMs": 533.3333333333334,
+          "rect": [
+            106,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.29120879120879123,
+            0.5061728395061729,
+            0.4230769230769231,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 17,
+          "timeMs": 566.6666666666666,
+          "rect": [
+            158,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.4340659340659341,
+            0.5061728395061729,
+            0.5659340659340659,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 18,
+          "timeMs": 600.0,
+          "rect": [
+            210,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.5769230769230769,
+            0.5061728395061729,
+            0.7087912087912088,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 19,
+          "timeMs": 633.3333333333334,
+          "rect": [
+            262,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.7197802197802198,
+            0.5061728395061729,
+            0.8516483516483516,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 20,
+          "timeMs": 666.6666666666666,
+          "rect": [
+            314,
+            164,
+            48,
+            77
+          ],
+          "uv": [
+            0.8626373626373627,
+            0.5061728395061729,
+            0.9945054945054945,
+            0.7438271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 21,
+          "timeMs": 700.0,
+          "rect": [
+            2,
+            245,
+            48,
+            77
+          ],
+          "uv": [
+            0.005494505494505495,
+            0.7561728395061729,
+            0.13736263736263737,
+            0.9938271604938271
+          ],
+          "masterTrim": [
+            73,
+            53,
+            96,
+            154
+          ],
+          "masterPivot": [
+            55.00010681152344,
+            143.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        }
+      ],
+      "durationMs": 700,
+      "frameCount": 22,
+      "fps": 30
+    },
+    {
+      "action": "return",
+      "layer": "enemy",
+      "rgba": "return-enemy.png",
+      "depth": "return-enemy-depth.png",
+      "dimensions": [
+        301,
+        328
+      ],
+      "frameDimensions": [
+        39,
+        78
+      ],
+      "padding": 2,
+      "mipmap": false,
+      "frames": [
+        {
+          "frame": 0,
+          "timeMs": 0.0,
+          "rect": [
+            2,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.006644518272425249,
+            0.006097560975609756,
+            0.1362126245847176,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 1,
+          "timeMs": 33.333333333333336,
+          "rect": [
+            45,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.14950166112956811,
+            0.006097560975609756,
+            0.27906976744186046,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 2,
+          "timeMs": 66.66666666666667,
+          "rect": [
+            88,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.292358803986711,
+            0.006097560975609756,
+            0.4219269102990033,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 3,
+          "timeMs": 100.0,
+          "rect": [
+            131,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.43521594684385384,
+            0.006097560975609756,
+            0.5647840531561462,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 4,
+          "timeMs": 133.33333333333334,
+          "rect": [
+            174,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.5780730897009967,
+            0.006097560975609756,
+            0.707641196013289,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 5,
+          "timeMs": 166.66666666666666,
+          "rect": [
+            217,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.7209302325581395,
+            0.006097560975609756,
+            0.8504983388704319,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 6,
+          "timeMs": 200.0,
+          "rect": [
+            260,
+            2,
+            39,
+            78
+          ],
+          "uv": [
+            0.8637873754152824,
+            0.006097560975609756,
+            0.9933554817275747,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 7,
+          "timeMs": 233.33333333333334,
+          "rect": [
+            2,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.006644518272425249,
+            0.25609756097560976,
+            0.1362126245847176,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 8,
+          "timeMs": 266.6666666666667,
+          "rect": [
+            45,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.14950166112956811,
+            0.25609756097560976,
+            0.27906976744186046,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 9,
+          "timeMs": 300.0,
+          "rect": [
+            88,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.292358803986711,
+            0.25609756097560976,
+            0.4219269102990033,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 10,
+          "timeMs": 333.3333333333333,
+          "rect": [
+            131,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.43521594684385384,
+            0.25609756097560976,
+            0.5647840531561462,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 11,
+          "timeMs": 366.6666666666667,
+          "rect": [
+            174,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.5780730897009967,
+            0.25609756097560976,
+            0.707641196013289,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 12,
+          "timeMs": 400.0,
+          "rect": [
+            217,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.7209302325581395,
+            0.25609756097560976,
+            0.8504983388704319,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 13,
+          "timeMs": 433.3333333333333,
+          "rect": [
+            260,
+            84,
+            39,
+            78
+          ],
+          "uv": [
+            0.8637873754152824,
+            0.25609756097560976,
+            0.9933554817275747,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 14,
+          "timeMs": 466.6666666666667,
+          "rect": [
+            2,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.006644518272425249,
+            0.5060975609756098,
+            0.1362126245847176,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 15,
+          "timeMs": 500.0,
+          "rect": [
+            45,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.14950166112956811,
+            0.5060975609756098,
+            0.27906976744186046,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 16,
+          "timeMs": 533.3333333333334,
+          "rect": [
+            88,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.292358803986711,
+            0.5060975609756098,
+            0.4219269102990033,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 17,
+          "timeMs": 566.6666666666666,
+          "rect": [
+            131,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.43521594684385384,
+            0.5060975609756098,
+            0.5647840531561462,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 18,
+          "timeMs": 600.0,
+          "rect": [
+            174,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.5780730897009967,
+            0.5060975609756098,
+            0.707641196013289,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 19,
+          "timeMs": 633.3333333333334,
+          "rect": [
+            217,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.7209302325581395,
+            0.5060975609756098,
+            0.8504983388704319,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 20,
+          "timeMs": 666.6666666666666,
+          "rect": [
+            260,
+            166,
+            39,
+            78
+          ],
+          "uv": [
+            0.8637873754152824,
+            0.5060975609756098,
+            0.9933554817275747,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 21,
+          "timeMs": 700.0,
+          "rect": [
+            2,
+            248,
+            39,
+            78
+          ],
+          "uv": [
+            0.006644518272425249,
+            0.7560975609756098,
+            0.1362126245847176,
+            0.9939024390243902
+          ],
+          "masterTrim": [
+            87,
+            51,
+            78,
+            156
+          ],
+          "masterPivot": [
+            41.00010681152344,
+            145.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        }
+      ],
+      "durationMs": 700,
+      "frameCount": 22,
+      "fps": 30
+    },
+    {
+      "action": "defeat",
+      "layer": "enemy",
+      "rgba": "defeat-enemy.png",
+      "depth": "defeat-enemy-depth.png",
+      "dimensions": [
+        350,
+        328
+      ],
+      "frameDimensions": [
+        46,
+        78
+      ],
+      "padding": 2,
+      "mipmap": false,
+      "frames": [
+        {
+          "frame": 0,
+          "timeMs": 0.0,
+          "rect": [
+            2,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.005714285714285714,
+            0.006097560975609756,
+            0.13714285714285715,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 1,
+          "timeMs": 33.333333333333336,
+          "rect": [
+            52,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.14857142857142858,
+            0.006097560975609756,
+            0.28,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 2,
+          "timeMs": 66.66666666666667,
+          "rect": [
+            102,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.2914285714285714,
+            0.006097560975609756,
+            0.4228571428571429,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 3,
+          "timeMs": 100.0,
+          "rect": [
+            152,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.4342857142857143,
+            0.006097560975609756,
+            0.5657142857142857,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 4,
+          "timeMs": 133.33333333333334,
+          "rect": [
+            202,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.5771428571428572,
+            0.006097560975609756,
+            0.7085714285714285,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 5,
+          "timeMs": 166.66666666666666,
+          "rect": [
+            252,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.72,
+            0.006097560975609756,
+            0.8514285714285714,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 6,
+          "timeMs": 200.0,
+          "rect": [
+            302,
+            2,
+            46,
+            78
+          ],
+          "uv": [
+            0.8628571428571429,
+            0.006097560975609756,
+            0.9942857142857143,
+            0.24390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 7,
+          "timeMs": 233.33333333333334,
+          "rect": [
+            2,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.005714285714285714,
+            0.25609756097560976,
+            0.13714285714285715,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 8,
+          "timeMs": 266.6666666666667,
+          "rect": [
+            52,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.14857142857142858,
+            0.25609756097560976,
+            0.28,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 9,
+          "timeMs": 300.0,
+          "rect": [
+            102,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.2914285714285714,
+            0.25609756097560976,
+            0.4228571428571429,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 10,
+          "timeMs": 333.3333333333333,
+          "rect": [
+            152,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.4342857142857143,
+            0.25609756097560976,
+            0.5657142857142857,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 11,
+          "timeMs": 366.6666666666667,
+          "rect": [
+            202,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.5771428571428572,
+            0.25609756097560976,
+            0.7085714285714285,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 12,
+          "timeMs": 400.0,
+          "rect": [
+            252,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.72,
+            0.25609756097560976,
+            0.8514285714285714,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 13,
+          "timeMs": 433.3333333333333,
+          "rect": [
+            302,
+            84,
+            46,
+            78
+          ],
+          "uv": [
+            0.8628571428571429,
+            0.25609756097560976,
+            0.9942857142857143,
+            0.49390243902439024
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 14,
+          "timeMs": 466.6666666666667,
+          "rect": [
+            2,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.005714285714285714,
+            0.5060975609756098,
+            0.13714285714285715,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 15,
+          "timeMs": 500.0,
+          "rect": [
+            52,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.14857142857142858,
+            0.5060975609756098,
+            0.28,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 16,
+          "timeMs": 533.3333333333334,
+          "rect": [
+            102,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.2914285714285714,
+            0.5060975609756098,
+            0.4228571428571429,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 17,
+          "timeMs": 566.6666666666666,
+          "rect": [
+            152,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.4342857142857143,
+            0.5060975609756098,
+            0.5657142857142857,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 18,
+          "timeMs": 600.0,
+          "rect": [
+            202,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.5771428571428572,
+            0.5060975609756098,
+            0.7085714285714285,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 19,
+          "timeMs": 633.3333333333334,
+          "rect": [
+            252,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.72,
+            0.5060975609756098,
+            0.8514285714285714,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 20,
+          "timeMs": 666.6666666666666,
+          "rect": [
+            302,
+            166,
+            46,
+            78
+          ],
+          "uv": [
+            0.8628571428571429,
+            0.5060975609756098,
+            0.9942857142857143,
+            0.7439024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        },
+        {
+          "frame": 21,
+          "timeMs": 700.0,
+          "rect": [
+            2,
+            248,
+            46,
+            78
+          ],
+          "uv": [
+            0.005714285714285714,
+            0.7560975609756098,
+            0.13714285714285715,
+            0.9939024390243902
+          ],
+          "masterTrim": [
+            76,
+            52,
+            92,
+            155
+          ],
+          "masterPivot": [
+            52.00010681152344,
+            144.6882438659668
+          ],
+          "displayRule": "map reduced rect to original masterTrim extent, preserve original pivot and stage size"
+        }
+      ],
+      "durationMs": 700,
+      "frameCount": 22,
+      "fps": 30
+    }
+  ]
+}

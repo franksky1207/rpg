@@ -7,7 +7,7 @@ import bpy,bmesh,sys,pathlib,argparse,math
 sys.path.insert(0,str(pathlib.Path(__file__).parent))
 from art import *
 from bpy_extras.object_utils import world_to_camera_view
-p=argparse.ArgumentParser();p.add_argument('--actor',required=True);p.add_argument('--output',default='/tmp/t2b2-frames');p.add_argument('--sample-only',action='store_true');p.add_argument('--terminal-only',action='store_true');args=p.parse_args(sys.argv[sys.argv.index('--')+1:])
+p=argparse.ArgumentParser();p.add_argument('--actor',required=True);p.add_argument('--output',default='/tmp/t2b2-frames');p.add_argument('--sample-only',action='store_true');p.add_argument('--terminal-only',action='store_true');p.add_argument('--action',choices=ACTIONS);args=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 source=HERE/'player/animation-source.blend' if args.actor=='player' else HERE/'enemies'/args.actor/'source.blend'
 bpy.ops.wm.open_mainfile(filepath=str(source));s=bpy.context.scene
 s.cycles.samples=32
@@ -52,8 +52,9 @@ n=s.node_tree.nodes;n.clear();r=n.new('CompositorNodeRLayers');comp=n.new('Compo
 mapper=n.new('CompositorNodeMapRange');mapper.inputs['From Min'].default_value=6;mapper.inputs['From Max'].default_value=14;mapper.inputs['To Min'].default_value=0;mapper.inputs['To Max'].default_value=1;mapper.use_clamp=True;s.node_tree.links.new(r.outputs['Depth'],mapper.inputs[0])
 z=n.new('CompositorNodeOutputFile');z.format.file_format='PNG';z.format.color_mode='BW';z.format.color_depth='16';s.node_tree.links.new(mapper.outputs[0],z.inputs[0])
 foot=world_to_camera_view(s,s.camera,Vector((0,0,0)));pivot=[foot.x*256,(1-foot.y)*256]
-samples=json.loads((out/'bake.json').read_text())['samples'] if args.terminal_only else []
-for name in ACTIONS:
+samples=json.loads((out/'bake.json').read_text())['samples'] if (args.terminal_only or args.action) and (out/'bake.json').exists() else []
+if args.action:samples=[r for r in samples if r['action']!=args.action]
+for name in ([args.action] if args.action else ACTIONS):
  rig.animation_data.action=bpy.data.actions['B2_'+name]
  for f in ([22] if args.terminal_only else [1,10,22] if args.sample_only else range(1,23)):
   s.frame_set(f);bpy.context.view_layer.update()

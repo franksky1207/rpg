@@ -2,11 +2,12 @@
 Idempotent: clear root translations before sampling, then key all 22 samples.
 Never edits rest bones, sockets, mesh, equipment or accepted sources.
 """
-import bpy,pathlib,sys
+import bpy,pathlib,sys,argparse
 sys.path.insert(0,str(pathlib.Path(__file__).parent))
 from art import *
+p=argparse.ArgumentParser();p.add_argument('--actors',nargs='+',choices=['normal','elite','boss','player'],default=['normal','elite','boss','player']);args=p.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
 report=[]
-for actor in ['normal','elite','boss','player']:
+for actor in args.actors:
  path=HERE/'player/animation-source.blend' if actor=='player' else HERE/'enemies'/actor/'source.blend';bpy.ops.wm.open_mainfile(filepath=str(path));bpy.context.preferences.filepaths.save_version=0
  rig=next(o for o in bpy.data.objects if o.type=='ARMATURE');rig.data.pose_position='POSE';root=rig.pose.bones['root'];meshes=[o for o in bpy.data.objects if o.type=='MESH'];rows=[]
  axis=(rig.matrix_world.to_3x3()@root.bone.matrix_local.to_3x3()).inverted()@Vector((0,0,1))

@@ -6,37 +6,37 @@
       "actor": "normal",
       "file": "candidate.glb",
       "exactBytes": true,
-      "sha256": "d63b126cb0eef3e64c5d09c49e01db2883bf876e65680c200fabb5d18722c1c4"
+      "sha256": "e45a6a9d2135100fe172a9e7ec5a821761f18c337a39f2f34c60b29518830bcb"
     },
     {
       "actor": "elite",
       "file": "candidate.glb",
       "exactBytes": true,
-      "sha256": "9b3a1c4eef040d6730abb2b215553544caada1596e5cc1b6754be5fe88e1fd8f"
+      "sha256": "4ef0ba15a1c7624df5383356ea3dd3b3dc030b0302461195f5f18c81a40f3539"
     },
     {
       "actor": "boss",
       "file": "candidate.glb",
       "exactBytes": true,
-      "sha256": "fa740613ed56d81d6848cc9076b18bb7503f68100b50d068b4dbefbd8cddce50"
+      "sha256": "4bdc98e901aa576cc4d0231b91f1a8d28a386c6ebc26ab37cafccb3dfdc0e495"
     },
     {
       "actor": "player",
       "file": "candidate-low.glb",
       "exactBytes": true,
-      "sha256": "717cd639519c2baa91a89bc29bdf7d4060936ba9231fc7993504a3ef5378b2a7"
+      "sha256": "8a9c9d7a538a0000d1a178f968cd3471dd45ad6ec8af60a47c69ab48de7125c6"
     },
     {
       "actor": "player",
       "file": "candidate-medium.glb",
       "exactBytes": true,
-      "sha256": "cbb08d02b5cd8ea0502b92ae8ab51179de6ae037d02416845c32eafd7da76521"
+      "sha256": "032019eab46d99a5a23ff7615dfa1fe878c2fff60cb9f4cb627dc8d6bfce26a2"
     },
     {
       "actor": "player",
       "file": "candidate-high.glb",
       "exactBytes": true,
-      "sha256": "67b985396fe552ca1befcb15e2262d378256d0dee7d36dbb1a263350c8ec66a4"
+      "sha256": "b0439995939ef91b94c7046ab81828d1adde51fedde0ed5dc21420eef7e1f748"
     }
   ],
   "independentFrameSamples": 234,

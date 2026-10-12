@@ -1,0 +1,2843 @@
+{
+  "schema": "cw.t2b2.repair-quality",
+  "version": 1,
+  "basis": "one repaired high master, no inferior A-only source",
+  "method": "exact area, linear sRGB/premultiplied RGBA; depth nearest covered sample; independent cells before packing",
+  "tiers": {
+    "low": {
+      "sourcePixelBudget": 128,
+      "files": [
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-base.png",
+          "bytes": 64171,
+          "sha256": "557bb5867e0439b27d8869416656784f926532f5ab1a5b9a3a89b98161d8e400",
+          "decodedPlaneBytesEstimate": 413952
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-base-depth.png",
+          "bytes": 31678,
+          "sha256": "bbba75097cb603185826732f16dbabf152e8bc929b70dd1a324004474189e878",
+          "decodedPlaneBytesEstimate": 206976
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-helmet.png",
+          "bytes": 2989,
+          "sha256": "48b3e4ddc4094be6f7e3bee3b8a27cfc3a090998f03b1a5e662af706577fbdf9",
+          "decodedPlaneBytesEstimate": 18928
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-helmet-depth.png",
+          "bytes": 972,
+          "sha256": "51934360a9458ef152614b69b6409492fb4f91c620d8497aece00ef3d87d74e9",
+          "decodedPlaneBytesEstimate": 9464
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-armor.png",
+          "bytes": 2944,
+          "sha256": "269902ad35f760f1729d8caa4e5e15074acf9f0529e24b774cde2461d38d275d",
+          "decodedPlaneBytesEstimate": 23296
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-armor-depth.png",
+          "bytes": 1037,
+          "sha256": "b5192a11c53138320db78daff120569543425a6e5f8aff04fbd921668147043d",
+          "decodedPlaneBytesEstimate": 11648
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-shoes.png",
+          "bytes": 565,
+          "sha256": "a2362174f7b50e3c1d8766963ff6e559e5292a06d6e9e7b3344ea0756944dbf2",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-shoes-depth.png",
+          "bytes": 269,
+          "sha256": "026f87e7fc848d59407723d8ab9c4df9e00059ad1f50ffe04407108e5264594e",
+          "decodedPlaneBytesEstimate": 14112
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-accessory.png",
+          "bytes": 773,
+          "sha256": "c64ac0c3d20a59e81b3326b84c7fe0aa9858415a494fecdf3ab2695a02fc55a4",
+          "decodedPlaneBytesEstimate": 11200
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-body-accessory-depth.png",
+          "bytes": 305,
+          "sha256": "e7f3239b5f37900513a403ffd6b064c40127c4d1baaa70734e6de8e3eefedad7",
+          "decodedPlaneBytesEstimate": 5600
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-weapon.png",
+          "bytes": 12435,
+          "sha256": "cd0dbaf5f0d8d35aa702dd28cc6da3188b3f4f64d0dcd1bef0ea1b86e65fc927",
+          "decodedPlaneBytesEstimate": 89376
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-weapon-depth.png",
+          "bytes": 4997,
+          "sha256": "6a0c885a62e710d57956cad1f534bc69bac45f1ebcee2087c535e062e33a751a",
+          "decodedPlaneBytesEstimate": 44688
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-helmet.png",
+          "bytes": 8646,
+          "sha256": "204e6244e08b275b859c66dfd50f0f25686514f0079c636dd8947ed2175562a7",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-helmet-depth.png",
+          "bytes": 4011,
+          "sha256": "7dfc3fb9544956ad30117fdcbd62c4676585024c81e9320017b0b5635a5df882",
+          "decodedPlaneBytesEstimate": 21280
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-armor.png",
+          "bytes": 42922,
+          "sha256": "fa933af42cbcb361595a05c86bf299fe6a03e262c2a5d932bed1b55605522add",
+          "decodedPlaneBytesEstimate": 177408
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-armor-depth.png",
+          "bytes": 15630,
+          "sha256": "e89ee03003c03f0a64abb0a10cd23bcebe8d8bf0cfe6a14d5b3d94e1f77c3344",
+          "decodedPlaneBytesEstimate": 88704
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-shoes.png",
+          "bytes": 5233,
+          "sha256": "e045b6bdcd949029684508e52317802aacabfe8ca1ec3afd130386133cf222dc",
+          "decodedPlaneBytesEstimate": 66528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-shoes-depth.png",
+          "bytes": 2144,
+          "sha256": "84cfa7083581f25d447e7990347c345362f0edabcad4f45b1ec8cae909bfcde6",
+          "decodedPlaneBytesEstimate": 33264
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-accessory.png",
+          "bytes": 5293,
+          "sha256": "d2d56853661893091b8c5e277319d6a5d8c202b0cd681ecf9fac5311b57874a4",
+          "decodedPlaneBytesEstimate": 33600
+        },
+        {
+          "path": "repair-r1/tiers/low/player/idle-accessory-depth.png",
+          "bytes": 2354,
+          "sha256": "ac30c0f2e66d68c0d4f2fe8659d61d266c9e84231c871787b8c6797f245718db",
+          "decodedPlaneBytesEstimate": 16800
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-base.png",
+          "bytes": 83005,
+          "sha256": "0663d622cb50eef46562e9c00e385ec0e206227f3e19218a64e3027e4336da6b",
+          "decodedPlaneBytesEstimate": 463008
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-base-depth.png",
+          "bytes": 37810,
+          "sha256": "50c1e5420f8c7696eb79952f98210b59671014514d3387b43bef22e4aa721637",
+          "decodedPlaneBytesEstimate": 231504
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-helmet.png",
+          "bytes": 3541,
+          "sha256": "70e94be00fff2c6de0317eea329c6cc9ba36e6be368d3f787a4f3e41af459d58",
+          "decodedPlaneBytesEstimate": 30464
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-helmet-depth.png",
+          "bytes": 1332,
+          "sha256": "f282096b0b33672e6e41633f67eb77c51447172f652ae7eadbaf7b27b8d101fa",
+          "decodedPlaneBytesEstimate": 15232
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-armor.png",
+          "bytes": 3601,
+          "sha256": "32d6be9ca5d425c870d4229c964ae3c069a37fc99d4b9478ed141a036596e682",
+          "decodedPlaneBytesEstimate": 28560
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-armor-depth.png",
+          "bytes": 1445,
+          "sha256": "a502bd0e35ff8a9344c4782bdaf7bc5a00e2bd4a8571397aa6d7ae8e86d2633c",
+          "decodedPlaneBytesEstimate": 14280
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-shoes.png",
+          "bytes": 1038,
+          "sha256": "56214f503bb178c018e88ca7e4909bdb1cfa8b5a04a15f3736e8b462f39d5cfe",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-shoes-depth.png",
+          "bytes": 384,
+          "sha256": "abe01aef17ebeeca59dc135032dc7648157cc2fcfdca4f2bb147c6e569241af0",
+          "decodedPlaneBytesEstimate": 14112
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-accessory.png",
+          "bytes": 1154,
+          "sha256": "5f1b597eb431ba8a5f9c9217356813ec79a66d156fb7492a1e17724b1b29a6c7",
+          "decodedPlaneBytesEstimate": 13552
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-body-accessory-depth.png",
+          "bytes": 394,
+          "sha256": "902eec335ca58293fc0a6ebeca210bd18c9016690876203ce8eb5cfb4b9145cf",
+          "decodedPlaneBytesEstimate": 6776
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-weapon.png",
+          "bytes": 15954,
+          "sha256": "34052110752f7e4f06ec49eca7fe49f1bbff04fbd7a498f130503650a9889a93",
+          "decodedPlaneBytesEstimate": 354144
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-weapon-depth.png",
+          "bytes": 6609,
+          "sha256": "0cfe8e85a4c6e6d3919eb5e7c05e1953fc0de03a791d9c46a18ae3bb773ad750",
+          "decodedPlaneBytesEstimate": 177072
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-helmet.png",
+          "bytes": 12403,
+          "sha256": "9260af0ec186bf749f9af2b9bab9cee3ae386d2f86a31c467d0d97c64692fbfe",
+          "decodedPlaneBytesEstimate": 61824
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-helmet-depth.png",
+          "bytes": 5096,
+          "sha256": "8314de7c2d02e40ffea04416494c03824f32cf89db8128ab787f715c532f4e6c",
+          "decodedPlaneBytesEstimate": 30912
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-armor.png",
+          "bytes": 53739,
+          "sha256": "194d40660d25da8124bd7b381ed2c873f30b8f87a21e53a9f5463d16a1b83c48",
+          "decodedPlaneBytesEstimate": 203056
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-armor-depth.png",
+          "bytes": 20164,
+          "sha256": "50e6cb1baf2e72cb0069900e9b37db7963ed8de6f7ace44fe06f33fde84196ed",
+          "decodedPlaneBytesEstimate": 101528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-shoes.png",
+          "bytes": 9530,
+          "sha256": "33c9c5c2bca2bb6a41e720be57f634b55fdb647a49961746b6a3f47549a1fe8c",
+          "decodedPlaneBytesEstimate": 66528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-shoes-depth.png",
+          "bytes": 2599,
+          "sha256": "02ef470b10b79204c4c09af9591cd65d661f8f6fe04cd4d52ce34a0456098b47",
+          "decodedPlaneBytesEstimate": 33264
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-accessory.png",
+          "bytes": 7686,
+          "sha256": "4690268738d85c96822bfec5994c6c918b7a0c4299d2af2dcc17c7c527d41404",
+          "decodedPlaneBytesEstimate": 39984
+        },
+        {
+          "path": "repair-r1/tiers/low/player/attack-accessory-depth.png",
+          "bytes": 2982,
+          "sha256": "0f9b35b755f107215bee494e293a55bc953accdae0aa1947b8b2c87f1a6fcdcf",
+          "decodedPlaneBytesEstimate": 19992
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-base.png",
+          "bytes": 78659,
+          "sha256": "3a4db4ead8d51fecaf15d01d5ffd06895fb7d1352173e96c2c968e66e74c26f6",
+          "decodedPlaneBytesEstimate": 422576
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-base-depth.png",
+          "bytes": 37225,
+          "sha256": "682e3af523a55a6f8d43156fc308f53a3488d19296b18c4cb5bd327b946891ef",
+          "decodedPlaneBytesEstimate": 211288
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-helmet.png",
+          "bytes": 3653,
+          "sha256": "1c1eb1c498c5ac5bbd58c687dc8ae8cb6177ea226289037d1ee2b4b71ff9cf77",
+          "decodedPlaneBytesEstimate": 33600
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-helmet-depth.png",
+          "bytes": 1384,
+          "sha256": "3cbb8c248b50938429ada33fc1cb1141af1a8ebdd4b5f036d1b4ea2b7d143001",
+          "decodedPlaneBytesEstimate": 16800
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-armor.png",
+          "bytes": 4274,
+          "sha256": "ad6a0ac1a18e0ff98536aa63cbf7b2aedaedd3c6dcf0cdf27da46a0d3cf901c9",
+          "decodedPlaneBytesEstimate": 31920
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-armor-depth.png",
+          "bytes": 1524,
+          "sha256": "a4a66dcaf6c8b460f75beb19bdcd5aa60b5e1b1102e77fa6ab4e1c3577b0d1cf",
+          "decodedPlaneBytesEstimate": 15960
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-shoes.png",
+          "bytes": 1038,
+          "sha256": "56214f503bb178c018e88ca7e4909bdb1cfa8b5a04a15f3736e8b462f39d5cfe",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-shoes-depth.png",
+          "bytes": 384,
+          "sha256": "abe01aef17ebeeca59dc135032dc7648157cc2fcfdca4f2bb147c6e569241af0",
+          "decodedPlaneBytesEstimate": 14112
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-accessory.png",
+          "bytes": 1061,
+          "sha256": "943a6c2f666d49715c87180fa6180413e8352d129d2454b32b2eed3560a181a2",
+          "decodedPlaneBytesEstimate": 14784
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-body-accessory-depth.png",
+          "bytes": 378,
+          "sha256": "d82f9675c472b2d95c31e941353afcd1902d81e7de1d3e033215059953251fc6",
+          "decodedPlaneBytesEstimate": 7392
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-weapon.png",
+          "bytes": 17113,
+          "sha256": "3571db50a7e6b0bc290543c89a18c34df22363462cf743c34e08dd96686debad",
+          "decodedPlaneBytesEstimate": 221536
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-weapon-depth.png",
+          "bytes": 6804,
+          "sha256": "b48b8d3a91278bb99878a04087f5bf90b854d125545e53d263731fc1f99cc6db",
+          "decodedPlaneBytesEstimate": 110768
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-helmet.png",
+          "bytes": 11988,
+          "sha256": "0810bd5d140769918c4f0308100b73a31fbe2e0cd58e0c6dbb7c20ce4075d13b",
+          "decodedPlaneBytesEstimate": 61152
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-helmet-depth.png",
+          "bytes": 5006,
+          "sha256": "343bab9c8a8619f71020f8a827e9b581dae7678c0f38e0a3e6553e4bd996e3f4",
+          "decodedPlaneBytesEstimate": 30576
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-armor.png",
+          "bytes": 53379,
+          "sha256": "3f1336cf22a7fd19b8309172349278cffd784f729481cd33ebe7f541b397e852",
+          "decodedPlaneBytesEstimate": 186480
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-armor-depth.png",
+          "bytes": 19577,
+          "sha256": "2d6b91b2103b585272afc0b24f4fc04952fd83d8af277287822db3bfcc461439",
+          "decodedPlaneBytesEstimate": 93240
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-shoes.png",
+          "bytes": 9530,
+          "sha256": "33c9c5c2bca2bb6a41e720be57f634b55fdb647a49961746b6a3f47549a1fe8c",
+          "decodedPlaneBytesEstimate": 66528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-shoes-depth.png",
+          "bytes": 2599,
+          "sha256": "02ef470b10b79204c4c09af9591cd65d661f8f6fe04cd4d52ce34a0456098b47",
+          "decodedPlaneBytesEstimate": 33264
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-accessory.png",
+          "bytes": 8000,
+          "sha256": "5414078ba2e888cbf76d0c141fe8fb3447b6b5427415b5696e10985389c19041",
+          "decodedPlaneBytesEstimate": 44352
+        },
+        {
+          "path": "repair-r1/tiers/low/player/hit-accessory-depth.png",
+          "bytes": 3019,
+          "sha256": "02fd2c1cbf494ae5841a44b6aef19f96b6d5eb5be8f571b34055343467de7284",
+          "decodedPlaneBytesEstimate": 22176
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-base.png",
+          "bytes": 83865,
+          "sha256": "118627822087448e48ded9adb7aaa38a0d6b703e0b0e49c02dac4dab77f6047d",
+          "decodedPlaneBytesEstimate": 413952
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-base-depth.png",
+          "bytes": 38905,
+          "sha256": "cfa8390c7a7349d1d7959c00a4f1d5db963ba336158c6045619f271d3fdab038",
+          "decodedPlaneBytesEstimate": 206976
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-helmet.png",
+          "bytes": 4076,
+          "sha256": "ba02a2c53223b2dc8d8d25016ae2ccd688b27183952b6fcde1eae22d473d75c9",
+          "decodedPlaneBytesEstimate": 45696
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-helmet-depth.png",
+          "bytes": 1446,
+          "sha256": "2250aad5bdbf8b894ca2172e1115a2591a293b8cc40f0efabec70f1b55ae4004",
+          "decodedPlaneBytesEstimate": 22848
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-armor.png",
+          "bytes": 4127,
+          "sha256": "b442f3d54a1a88451068cefeac45ac7b212cb7f1919c3801862cbdbbd6e03c90",
+          "decodedPlaneBytesEstimate": 33600
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-armor-depth.png",
+          "bytes": 1431,
+          "sha256": "fa8bd689f31bf2ef74bece84db17823dd6d8254745fbee57cb709e1871f5887a",
+          "decodedPlaneBytesEstimate": 16800
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-shoes.png",
+          "bytes": 1456,
+          "sha256": "0863a8695067715a134ce2f5d980ea9eeab7aa1ebf1f9c459a2166bc16629149",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-shoes-depth.png",
+          "bytes": 464,
+          "sha256": "da7ee3925891ca18f783dd1a461d9112a19148182b3c6dfda35b72b722a7af59",
+          "decodedPlaneBytesEstimate": 14112
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-accessory.png",
+          "bytes": 1204,
+          "sha256": "408ec5d1e36a6c7a2c13b9386b498c6cba63f308787a84146572b5f907306ddd",
+          "decodedPlaneBytesEstimate": 19712
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-body-accessory-depth.png",
+          "bytes": 402,
+          "sha256": "178264e657b25ccf889454003aadad61056c7648a06a6caeb975d191545714ec",
+          "decodedPlaneBytesEstimate": 9856
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-weapon.png",
+          "bytes": 15681,
+          "sha256": "8efecd854bc465dd95e6029fa355ec6bcb1df660166785044da2e0119d85f0c6",
+          "decodedPlaneBytesEstimate": 164864
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-weapon-depth.png",
+          "bytes": 6117,
+          "sha256": "3ad9db60de64e3a5c2a395338c3535cbec8affa14d38a1e009e7c0ac22476ae0",
+          "decodedPlaneBytesEstimate": 82432
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-helmet.png",
+          "bytes": 11806,
+          "sha256": "a0e4ee0541f5486da3029d23a3a40a5ed2ecaa83bf5440f4c1dfde9994f3b22e",
+          "decodedPlaneBytesEstimate": 77280
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-helmet-depth.png",
+          "bytes": 4925,
+          "sha256": "916546c2e178d9f2acf2b9bc3625853febafcc85073effe2134e056cf693c9c7",
+          "decodedPlaneBytesEstimate": 38640
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-armor.png",
+          "bytes": 48493,
+          "sha256": "5bc93c760013303204c8d55fce86dda234339e43a6a21382a589ff3f2b54cb3b",
+          "decodedPlaneBytesEstimate": 177408
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-armor-depth.png",
+          "bytes": 19594,
+          "sha256": "3ece03425821f973b2430636658da60bf181ede96c6e78bf5ff7d574539bf94b",
+          "decodedPlaneBytesEstimate": 88704
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-shoes.png",
+          "bytes": 11015,
+          "sha256": "de666604843c897102f1364b83cafab1d72c0e8bb77be0e4259ba602f4a23252",
+          "decodedPlaneBytesEstimate": 66528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-shoes-depth.png",
+          "bytes": 3761,
+          "sha256": "55fd0aa2befffd2fb05e29a69f34eed6f9c8c9e0da9051a76a981d586e8c9268",
+          "decodedPlaneBytesEstimate": 33264
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-accessory.png",
+          "bytes": 7948,
+          "sha256": "48234687e2c1e1925bafcaf89a8e64183e79d54872529fda405fb7fa02c84119",
+          "decodedPlaneBytesEstimate": 51744
+        },
+        {
+          "path": "repair-r1/tiers/low/player/dodge-accessory-depth.png",
+          "bytes": 3151,
+          "sha256": "c7dd331b58b80e716d238c674b852cfa8c9c1b30335b66fc8de7a37b27955f6a",
+          "decodedPlaneBytesEstimate": 25872
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-base.png",
+          "bytes": 77438,
+          "sha256": "eb90e84e3ac6e34497c12d2bbbf2117f1d4144e5c35dedbb0c07023ef2790270",
+          "decodedPlaneBytesEstimate": 448448
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-base-depth.png",
+          "bytes": 36978,
+          "sha256": "fd3def3c07d487fdbf247f7d1855fca6b66022199fb56e3e52a8ac857dce3f11",
+          "decodedPlaneBytesEstimate": 224224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-helmet.png",
+          "bytes": 3282,
+          "sha256": "71a7d25d4036fe9b86f2cd9366cdb84410d2b512e3b587e27fd9e3233f579d82",
+          "decodedPlaneBytesEstimate": 26656
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-helmet-depth.png",
+          "bytes": 1250,
+          "sha256": "4d71d22472818580ca250fb7d78dfc901242f67bb3c82cc01da8d1e20ac8c00a",
+          "decodedPlaneBytesEstimate": 13328
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-armor.png",
+          "bytes": 3574,
+          "sha256": "4387e00e461cabc1798b0af4136f5669acc39d085ce3298f95c8f5459be016cf",
+          "decodedPlaneBytesEstimate": 28560
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-armor-depth.png",
+          "bytes": 1360,
+          "sha256": "22b498f1167d0b49845546de0026151b7b46276dbab3994caa10b5dafec9c046",
+          "decodedPlaneBytesEstimate": 14280
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-shoes.png",
+          "bytes": 967,
+          "sha256": "00a0d0cce518b9d2773ffee45819b4ce9173e01728930f7e1f75ebe031baeb79",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-shoes-depth.png",
+          "bytes": 365,
+          "sha256": "86b34d9ac3e80eed1d828bdd344f049af6c7458ed66d3554211a3329b6323aa6",
+          "decodedPlaneBytesEstimate": 14112
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-accessory.png",
+          "bytes": 1032,
+          "sha256": "b46144bd9ec3caf084828bf5e41d78ff9a256d58f8ffda552356e90d21a29367",
+          "decodedPlaneBytesEstimate": 12320
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-body-accessory-depth.png",
+          "bytes": 389,
+          "sha256": "8b62b3966cd43ac4795a28a97073f77c2d830f2c2226b06a7e5f027dacceb587",
+          "decodedPlaneBytesEstimate": 6160
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-weapon.png",
+          "bytes": 14984,
+          "sha256": "9d0facd87c199e463170c08f7f51e2e6af5fc3eebf55c875d49037ce1e231442",
+          "decodedPlaneBytesEstimate": 123648
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-weapon-depth.png",
+          "bytes": 5648,
+          "sha256": "4761a095d69d57eb28e159ed35ce8816fe18226cd5328e85532e03421c361276",
+          "decodedPlaneBytesEstimate": 61824
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-helmet.png",
+          "bytes": 10921,
+          "sha256": "02326be2feee4d36043289f580d125f95b5c00d7701bf04ac911596bf09cb44c",
+          "decodedPlaneBytesEstimate": 54096
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-helmet-depth.png",
+          "bytes": 4795,
+          "sha256": "b4bf96c32e0256560059bf79f2958aebe45dcc5fd6c98b71384608c2cb00b315",
+          "decodedPlaneBytesEstimate": 27048
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-armor.png",
+          "bytes": 48963,
+          "sha256": "c793514431c969ce41914629b55fba7b211d0289fe621985e8b68198c4d75b3f",
+          "decodedPlaneBytesEstimate": 193536
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-armor-depth.png",
+          "bytes": 19233,
+          "sha256": "8c6715e86a7d7972e7226b73b29cf29ec0d2d23a48d2794cc4ef82876adfef06",
+          "decodedPlaneBytesEstimate": 96768
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-shoes.png",
+          "bytes": 9280,
+          "sha256": "6f52e2f8e65fb7a07d7266917c4dbccab88809ca778e99558456614cc6ee0048",
+          "decodedPlaneBytesEstimate": 66528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-shoes-depth.png",
+          "bytes": 3616,
+          "sha256": "5262998dd9f5e308a648fedcb6336fcdfad339a977d6026618a79db2241a44a1",
+          "decodedPlaneBytesEstimate": 33264
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-accessory.png",
+          "bytes": 7810,
+          "sha256": "5085bf7807ff731c27e6e3cc985a7d8a08b561dd64e6294926b6d0360f508793",
+          "decodedPlaneBytesEstimate": 39984
+        },
+        {
+          "path": "repair-r1/tiers/low/player/return-accessory-depth.png",
+          "bytes": 2756,
+          "sha256": "6a65577ac374a023f9aa01a00695ad9429b41746ed674c02fb75c22abdb66151",
+          "decodedPlaneBytesEstimate": 19992
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-base.png",
+          "bytes": 79516,
+          "sha256": "787f2d350f9420fa3e5db5627a5a7f73b8507007c8db19e83ebf9770e6ace153",
+          "decodedPlaneBytesEstimate": 448448
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-base-depth.png",
+          "bytes": 37044,
+          "sha256": "b5dd26414e05cc9ef6aec9feb777825639290b0d968da34bb232ac7a0b84ce5f",
+          "decodedPlaneBytesEstimate": 224224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-helmet.png",
+          "bytes": 3867,
+          "sha256": "0e9812daf25e99b24fcac0b5b9ae9342695a18451c56172d8e6def603f92b0b0",
+          "decodedPlaneBytesEstimate": 78400
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-helmet-depth.png",
+          "bytes": 1532,
+          "sha256": "1a14383184a8a74a4fd7eea6020d0201a666a87e854ae9c8db04e8e785c7df04",
+          "decodedPlaneBytesEstimate": 39200
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-armor.png",
+          "bytes": 3768,
+          "sha256": "235263312dbb439f90b8100c395b6c8efb1b278b8ea37033895790941723c482",
+          "decodedPlaneBytesEstimate": 42336
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-armor-depth.png",
+          "bytes": 1515,
+          "sha256": "3d3feaae84214fe1cc1be5014f33bda55cb8bc525be7fe2d6fc65a49a21de481",
+          "decodedPlaneBytesEstimate": 21168
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-shoes.png",
+          "bytes": 1203,
+          "sha256": "3e9d3ade402068881858f2c7d45cbe6069085a8f7b4c4ad7a03a36b946a0f610",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-shoes-depth.png",
+          "bytes": 431,
+          "sha256": "b53d19d376c0b5ac686f2fb441bff5cb3427c206e0cdd356693920da15a6817e",
+          "decodedPlaneBytesEstimate": 14112
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-accessory.png",
+          "bytes": 1025,
+          "sha256": "457654a09fc4d67cffecfe52c3325a799ec61dd4c8ad03523747fc1682c9a888",
+          "decodedPlaneBytesEstimate": 20944
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-body-accessory-depth.png",
+          "bytes": 354,
+          "sha256": "9d43fc8048b081756950c0536239ff7695b959337fa881498a10e47f498c9a7e",
+          "decodedPlaneBytesEstimate": 10472
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-weapon.png",
+          "bytes": 16979,
+          "sha256": "01d93d5d89ca355793419227c9fef6ac20632c484bb289f193f9e125d1e3aa70",
+          "decodedPlaneBytesEstimate": 263424
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-weapon-depth.png",
+          "bytes": 6792,
+          "sha256": "f22e4758525c9077cfc491eb54cac81fcb23484c8028b83978bc38d2019ee010",
+          "decodedPlaneBytesEstimate": 131712
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-helmet.png",
+          "bytes": 12351,
+          "sha256": "b0c15136bd09310f7f475e2c0989dff55d0fd4d43ee7ee168e61bbaededc24b5",
+          "decodedPlaneBytesEstimate": 114240
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-helmet-depth.png",
+          "bytes": 5303,
+          "sha256": "545dffb2f1bc97652ddf1768fb96ba0de0e4d77beae06aced61aaa19b1e3c641",
+          "decodedPlaneBytesEstimate": 57120
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-armor.png",
+          "bytes": 48859,
+          "sha256": "31289db9b78b3b5738b71379580eccdb45479e682844e4c0374d05e8b273ea03",
+          "decodedPlaneBytesEstimate": 186480
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-armor-depth.png",
+          "bytes": 20134,
+          "sha256": "e3e796604e9645f884124f870810ae245f523433a544d446c9e17ce86ea92bfc",
+          "decodedPlaneBytesEstimate": 93240
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-shoes.png",
+          "bytes": 10376,
+          "sha256": "6a019b4d686b51b64a5e38a86803f10308330faa791354ccfb8a4f41fca5252a",
+          "decodedPlaneBytesEstimate": 66528
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-shoes-depth.png",
+          "bytes": 3870,
+          "sha256": "289953ee05c06d95f48b7441d2075832a8a43ff73116539c3c559ac0e7cf66fb",
+          "decodedPlaneBytesEstimate": 33264
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-accessory.png",
+          "bytes": 8008,
+          "sha256": "f60e93f6093b93c281c252cb714b047dfb435c169ead5ce16448b718a787cf4f",
+          "decodedPlaneBytesEstimate": 59136
+        },
+        {
+          "path": "repair-r1/tiers/low/player/defeat-accessory-depth.png",
+          "bytes": 3022,
+          "sha256": "7dc5b5b43a76106da71d28e1569b4ce2fbd3649e21e5c7ef22f0b34b18aeeda4",
+          "decodedPlaneBytesEstimate": 29568
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/idle-enemy.png",
+          "bytes": 75903,
+          "sha256": "20614d89929506cbc3a208a0621e59c29c56563768917e1c7b7eb28e85ad3a50",
+          "decodedPlaneBytesEstimate": 362880
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/idle-enemy-depth.png",
+          "bytes": 36586,
+          "sha256": "4504b227ff8bb7d7c3155239aa3889eb696564257069ec9fb02c00494b8bf9d0",
+          "decodedPlaneBytesEstimate": 181440
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/attack-enemy.png",
+          "bytes": 108059,
+          "sha256": "0e29a3fd90594b80c5af10257b1277df2a351d43be4ed7d360511bde33c454ac",
+          "decodedPlaneBytesEstimate": 505120
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/attack-enemy-depth.png",
+          "bytes": 46335,
+          "sha256": "308ca6b67bbc97b1803a79d6265e44810d7a75c8f63851ea0929c4c337a316c8",
+          "decodedPlaneBytesEstimate": 252560
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/hit-enemy.png",
+          "bytes": 104609,
+          "sha256": "903522035c2cc3a37d295ed4c0539863324ddd5d14da4610ae79a80120a6b33e",
+          "decodedPlaneBytesEstimate": 381136
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/hit-enemy-depth.png",
+          "bytes": 47538,
+          "sha256": "74bd80a8f7f1ac555470a51cb356d54e092abe73bfca62e3b86eb672f0d14f44",
+          "decodedPlaneBytesEstimate": 190568
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/dodge-enemy.png",
+          "bytes": 120401,
+          "sha256": "69ee764754949b41c980f818755b822630d555a1c46864242d387bc12ea4c039",
+          "decodedPlaneBytesEstimate": 471744
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/dodge-enemy-depth.png",
+          "bytes": 57901,
+          "sha256": "4849d4bdac1e7f9387a8d7902b27edce3bb2f9348a994f352294aa623a859b97",
+          "decodedPlaneBytesEstimate": 235872
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/return-enemy.png",
+          "bytes": 110771,
+          "sha256": "3f59bac6b2bc2a0d4f51afe55e5136f1ad5bc38a95563faf460997f428d1b32e",
+          "decodedPlaneBytesEstimate": 394912
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/return-enemy-depth.png",
+          "bytes": 53930,
+          "sha256": "54090da25ec2dcfbe021a1740e663aea39bc3131c5bba3d589c89bacb9986ca6",
+          "decodedPlaneBytesEstimate": 197456
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/defeat-enemy.png",
+          "bytes": 94001,
+          "sha256": "b7ac9d72d8b4b69aaff53dc5aaa1df611b06afb3c0aca4589f489b50ad8414db",
+          "decodedPlaneBytesEstimate": 459200
+        },
+        {
+          "path": "repair-r1/tiers/low/normal/defeat-enemy-depth.png",
+          "bytes": 42779,
+          "sha256": "03a92d201b6389a11ffb4174b589ea382a546a06167791c1111ae288cc820826",
+          "decodedPlaneBytesEstimate": 229600
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/idle-enemy.png",
+          "bytes": 103792,
+          "sha256": "1ab74e50f56c4004dcf2001c136fbfd8af4767b256f121c6c5cc4757913b746d",
+          "decodedPlaneBytesEstimate": 498960
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/idle-enemy-depth.png",
+          "bytes": 51985,
+          "sha256": "fd41c0e8a8e1a822c2f0637180ca67f60fa8ff985d03f7e967f5133abf8551c5",
+          "decodedPlaneBytesEstimate": 249480
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/attack-enemy.png",
+          "bytes": 139073,
+          "sha256": "4c5dbfc1854cd891fe55f5c25e6377d56869ef0a52a981aada199144ad9c4fb2",
+          "decodedPlaneBytesEstimate": 624512
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/attack-enemy-depth.png",
+          "bytes": 63346,
+          "sha256": "3251f1d0e9422c9fc10e6cbc92d170e1ea331c2bd7a1d1f93f2d06f5ea261a19",
+          "decodedPlaneBytesEstimate": 312256
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/hit-enemy.png",
+          "bytes": 139269,
+          "sha256": "751a154d4cca61cdcd4b00fe0d6a3f21d9f604c9a9b5c7aa2ae01664044a4719",
+          "decodedPlaneBytesEstimate": 529872
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/hit-enemy-depth.png",
+          "bytes": 64258,
+          "sha256": "fc505deeecc2c4ce3d37825ffcaf897404e56a82e4fa05bfb33283b111e48bcc",
+          "decodedPlaneBytesEstimate": 264936
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/dodge-enemy.png",
+          "bytes": 157084,
+          "sha256": "d0e6f0d332d4669974c129cacf6f141e9b9a495207faeaee750fb0a304ad0fac",
+          "decodedPlaneBytesEstimate": 606144
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/dodge-enemy-depth.png",
+          "bytes": 75304,
+          "sha256": "cc965243383b58e13dae47da5e2096f015c3570b72af67a38024a3bae9add19f",
+          "decodedPlaneBytesEstimate": 303072
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/return-enemy.png",
+          "bytes": 144869,
+          "sha256": "723d00197a42683b6384bb79f90b8b37fbb82596385650a5b3ebf1ed0bcc8269",
+          "decodedPlaneBytesEstimate": 578592
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/return-enemy-depth.png",
+          "bytes": 73216,
+          "sha256": "85fe1d522141cab6c7dec43ecec2118db90c1a9780b821c558f2a29abf5c2199",
+          "decodedPlaneBytesEstimate": 289296
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/defeat-enemy.png",
+          "bytes": 122752,
+          "sha256": "a2d8c685b9744fb42f095aeb8a0610397400847f37a9a84af41221dd4227882a",
+          "decodedPlaneBytesEstimate": 606144
+        },
+        {
+          "path": "repair-r1/tiers/low/elite/defeat-enemy-depth.png",
+          "bytes": 58238,
+          "sha256": "721c8139e770a46026eb11c48d6659e3944425bf36a73602ec2cd3ead0317a88",
+          "decodedPlaneBytesEstimate": 303072
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/idle-enemy.png",
+          "bytes": 126826,
+          "sha256": "ddf8c5f04d213ea95d6c56add012154ab9be5e1d3af88b0623164d111f65f55f",
+          "decodedPlaneBytesEstimate": 682080
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/idle-enemy-depth.png",
+          "bytes": 72583,
+          "sha256": "cb298d7b6a46484f6af3f75a3cc48c67c3756ae5456150e5123a3a17cbbbcb16",
+          "decodedPlaneBytesEstimate": 341040
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/attack-enemy.png",
+          "bytes": 140241,
+          "sha256": "1aec69a4dc49514248d96aaa88607eb1a16c29ed0d1c32eb0e13314855c9db1e",
+          "decodedPlaneBytesEstimate": 717696
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/attack-enemy-depth.png",
+          "bytes": 73234,
+          "sha256": "02011aa7b55df026dd8a02ad1b7f01773450cfa797ce0f5e358994ec532ae5ea",
+          "decodedPlaneBytesEstimate": 358848
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/hit-enemy.png",
+          "bytes": 155842,
+          "sha256": "401d7546fdce4075ca29c188df08f37e24e93aab7d5a2ca482708d693e38eeaa",
+          "decodedPlaneBytesEstimate": 719488
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/hit-enemy-depth.png",
+          "bytes": 80965,
+          "sha256": "fa4c1e9516846934cdb45944f0506ab67106dcee970b76d5e165433f97c2144f",
+          "decodedPlaneBytesEstimate": 359744
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/dodge-enemy.png",
+          "bytes": 161708,
+          "sha256": "435e0681d5022c2bca86f78c9f0678e8199785edd89041474c776858a7e9dfe4",
+          "decodedPlaneBytesEstimate": 729344
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/dodge-enemy-depth.png",
+          "bytes": 82360,
+          "sha256": "1c8a3f72a84cd07b610ee5ee2e4fb31bfbf7a3226f3897b2c1f5849d72891929",
+          "decodedPlaneBytesEstimate": 364672
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/return-enemy.png",
+          "bytes": 153800,
+          "sha256": "7770aab0fdbebaa9c6edc1f6093cbb02a57270a83e9ff4eda1101e66bc35e0ff",
+          "decodedPlaneBytesEstimate": 701568
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/return-enemy-depth.png",
+          "bytes": 79099,
+          "sha256": "967e702667df83129ef950d372677e3dd3b66111217367d781eb48ef43b3617f",
+          "decodedPlaneBytesEstimate": 350784
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/defeat-enemy.png",
+          "bytes": 158949,
+          "sha256": "14c926f26d69d578a63b7c72cf843a50b2f7a9feef8e39d111922c6203e5b264",
+          "decodedPlaneBytesEstimate": 767536
+        },
+        {
+          "path": "repair-r1/tiers/low/boss/defeat-enemy-depth.png",
+          "bytes": 81596,
+          "sha256": "b38d4ac617b06793e8b7cebd76f82613a2da7ee70e489498dace34ff000d640b",
+          "decodedPlaneBytesEstimate": 383768
+        }
+      ],
+      "encodedBytes": 4996088,
+      "decodedPlaneBytesEstimate": 25577496,
+      "gpuBytes": "unavailable; estimates exclude driver/mip/upload overhead"
+    },
+    "medium": {
+      "sourcePixelBudget": 192,
+      "files": [
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-base.png",
+          "bytes": 122355,
+          "sha256": "3a1d46c1fd0c2ec11ee21a7deb709ef8c1fe6975adae15004570773c03a1a638",
+          "decodedPlaneBytesEstimate": 893760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-base-depth.png",
+          "bytes": 57620,
+          "sha256": "792a3177c01c8b6a4920b85692cbac69b093a0272a356e3dd690e2dd03767f72",
+          "decodedPlaneBytesEstimate": 446880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-helmet.png",
+          "bytes": 5195,
+          "sha256": "b3ef6529ecbf155957d4590c71ea97c27203be1aac375c76c50521dedd7b94b4",
+          "decodedPlaneBytesEstimate": 34272
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-helmet-depth.png",
+          "bytes": 1537,
+          "sha256": "7430511de0b49c7ab1e583c73923ec02b8613021c8a886bc8134c8350be73b0b",
+          "decodedPlaneBytesEstimate": 17136
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-armor.png",
+          "bytes": 4966,
+          "sha256": "9dfa69ed4887541c8166ea5d9a0850421dcc35956895d78094665c4ac8353fc5",
+          "decodedPlaneBytesEstimate": 41888
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-armor-depth.png",
+          "bytes": 1544,
+          "sha256": "b0cbc9a9061070d67a63eed3db03a3d4e29237d0e2d29871ee673e213c6fdfff",
+          "decodedPlaneBytesEstimate": 20944
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-shoes.png",
+          "bytes": 846,
+          "sha256": "c57f1afa879122825ae0d03b004c2681d394f226b8884e265cabde3ff8cf5aa6",
+          "decodedPlaneBytesEstimate": 53760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-shoes-depth.png",
+          "bytes": 397,
+          "sha256": "0d079ffd09c082060a5a28ff49bb0735c73f6c8ea54ee9b34dc1b666afd3563a",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-accessory.png",
+          "bytes": 1422,
+          "sha256": "b62393b31f20b970e4fb50c8db35b911fa30e9ac603b5100fe8b06af2c76194f",
+          "decodedPlaneBytesEstimate": 18928
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-body-accessory-depth.png",
+          "bytes": 431,
+          "sha256": "f08c8a84c9afab28f2370ba644daec33f9023a4b14859788202ac81a8124e515",
+          "decodedPlaneBytesEstimate": 9464
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-weapon.png",
+          "bytes": 22855,
+          "sha256": "dba8292eaf2adcfd020c553946186bbcd6aab968073dd3f1391af9459a5f5e87",
+          "decodedPlaneBytesEstimate": 177632
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-weapon-depth.png",
+          "bytes": 7769,
+          "sha256": "d3fd4874403c48591c6b46a723ade2b3bf5fc8d2cd5d9dbfca56d0e53c5db047",
+          "decodedPlaneBytesEstimate": 88816
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-helmet.png",
+          "bytes": 18386,
+          "sha256": "f8bb5cbac5f398a8fb77d74824b1f50743b15daf5a9d75c419e6a48712ff7220",
+          "decodedPlaneBytesEstimate": 84672
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-helmet-depth.png",
+          "bytes": 7198,
+          "sha256": "e1f32ab793e74ae366392103503e88841b979266f0251b3945cb8e2db2143218",
+          "decodedPlaneBytesEstimate": 42336
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-armor.png",
+          "bytes": 79159,
+          "sha256": "d8136b4d141c6b8a584490d7c6deb583b9f37653258aa87a1a931a7400b6f9e3",
+          "decodedPlaneBytesEstimate": 372736
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-armor-depth.png",
+          "bytes": 29131,
+          "sha256": "e65948404fddf327f2f68fdfccf33ae4221510132874e1234f7ab9ecc721ff67",
+          "decodedPlaneBytesEstimate": 186368
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-shoes.png",
+          "bytes": 13688,
+          "sha256": "5b2362c9905282e25d439b5dc0e70ab4d84f96447e53e3989cbb19d13a4500b1",
+          "decodedPlaneBytesEstimate": 135408
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-shoes-depth.png",
+          "bytes": 4574,
+          "sha256": "2fb22acfce3e6eb1658ad88920d455db71d24602b8e4be3512cafee2764f31e9",
+          "decodedPlaneBytesEstimate": 67704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-accessory.png",
+          "bytes": 11817,
+          "sha256": "cb4a9778e3fbc4b1e26ec1a421b3e2dd7a2736b29470a29e7e62b5dab802eefc",
+          "decodedPlaneBytesEstimate": 65856
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/idle-accessory-depth.png",
+          "bytes": 3739,
+          "sha256": "3753a237f6ec225c9e3b6c44e049cece251595f4cb0dce12e3bcb2ee8980a837",
+          "decodedPlaneBytesEstimate": 32928
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-base.png",
+          "bytes": 157776,
+          "sha256": "3bf7e9ee1a0dd5e7c3dcb929306f93b64f6412c67a586fcb6eaf7290c7d1371c",
+          "decodedPlaneBytesEstimate": 991760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-base-depth.png",
+          "bytes": 71572,
+          "sha256": "a3a6d47f03d356ed4e7adf400796b1e0eb8533f5bb6047b2b35662d21332c0dc",
+          "decodedPlaneBytesEstimate": 495880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-helmet.png",
+          "bytes": 7047,
+          "sha256": "e6fff85c5c2436267d8555d30813cb06c21c359c940daa7857c69c2903374134",
+          "decodedPlaneBytesEstimate": 59136
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-helmet-depth.png",
+          "bytes": 2376,
+          "sha256": "d4a735df316d0763063bfac1c661b8e90bc43167379fee5999dea2bc40778613",
+          "decodedPlaneBytesEstimate": 29568
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-armor.png",
+          "bytes": 7534,
+          "sha256": "86d2cbb330e16730ed71bf31c5e0e370d535deef81ed872f8fc07c771e098f22",
+          "decodedPlaneBytesEstimate": 56448
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-armor-depth.png",
+          "bytes": 2698,
+          "sha256": "cffaaf265bd250f902137777b0a3085d183d5e15cd8877ba2573721adf8767cf",
+          "decodedPlaneBytesEstimate": 28224
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-shoes.png",
+          "bytes": 1474,
+          "sha256": "5d8e5ea2ceb00778aa89bdc0064e8027b3f50e86994764fdba20cf4ebc7a91a6",
+          "decodedPlaneBytesEstimate": 53760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-shoes-depth.png",
+          "bytes": 560,
+          "sha256": "8b99539a7a2eb69bb6b0237d25281f603512192921e2e655b9c66f9947378b29",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-accessory.png",
+          "bytes": 1932,
+          "sha256": "f71cd8172c02a611a9cfae6dd7b8dd4c4b1853ec5d41fb03e7fd8895e05570ad",
+          "decodedPlaneBytesEstimate": 23520
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-body-accessory-depth.png",
+          "bytes": 675,
+          "sha256": "634ba03db745fe087ce1bad94032a2e18769c4c1c61d438d3bf68aa15a7ef3bd",
+          "decodedPlaneBytesEstimate": 11760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-weapon.png",
+          "bytes": 32078,
+          "sha256": "eef8b1e0928d11db7210886f5bb045bd89ed97af93f9b039053092c2110cd9f3",
+          "decodedPlaneBytesEstimate": 764400
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-weapon-depth.png",
+          "bytes": 11538,
+          "sha256": "5df364f650777ae4e251bcabf7e2a98ea642307d6467d19fd2ced61da7167d43",
+          "decodedPlaneBytesEstimate": 382200
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-helmet.png",
+          "bytes": 23714,
+          "sha256": "bcd3ff17a6d4ba33af6362d236ce0d84392311f9333919339a7d4d1f0cc26755",
+          "decodedPlaneBytesEstimate": 121856
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-helmet-depth.png",
+          "bytes": 9838,
+          "sha256": "b2e4afa369a40fa8784ea84bfef3e538f4739c3dc6e306f1ffe975f8d5f73d06",
+          "decodedPlaneBytesEstimate": 60928
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-armor.png",
+          "bytes": 102350,
+          "sha256": "3874059f2782fee086fa38b86c91f413166856eef6ca02931ed6e9d0d21a1f11",
+          "decodedPlaneBytesEstimate": 421456
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-armor-depth.png",
+          "bytes": 37001,
+          "sha256": "b648547d4203726b8c28f6cade22c44f6a58bcd0e8153d84e607e6a9229032ae",
+          "decodedPlaneBytesEstimate": 210728
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-shoes.png",
+          "bytes": 21457,
+          "sha256": "0f00daac81563b92324cf22b486894d646a4cce4b85d7748f04e48cd7398c3a9",
+          "decodedPlaneBytesEstimate": 135408
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-shoes-depth.png",
+          "bytes": 5870,
+          "sha256": "8f86d76968be7d60d99ae069299df27d6415600e9c86d86aad333fde21405073",
+          "decodedPlaneBytesEstimate": 67704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-accessory.png",
+          "bytes": 15796,
+          "sha256": "fa7528e39d41d3d262f1340ba18c52ac820eb8c81f6ee74570e2c55b9cca830e",
+          "decodedPlaneBytesEstimate": 77952
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/attack-accessory-depth.png",
+          "bytes": 5538,
+          "sha256": "8352eb75fb87416b57d601b3b349d2adeea680d9db1ee93de0d48fb6fe01de1c",
+          "decodedPlaneBytesEstimate": 38976
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-base.png",
+          "bytes": 159105,
+          "sha256": "880a118f706852114e5f26a5f3efc967baf65a7307d7873cc11ac3e1cd58098b",
+          "decodedPlaneBytesEstimate": 919296
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-base-depth.png",
+          "bytes": 72291,
+          "sha256": "969074e1f2950e01ee706b6cd7e92dba04f9a210cf2672ce4c5af3c7785a1e37",
+          "decodedPlaneBytesEstimate": 459648
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-helmet.png",
+          "bytes": 7284,
+          "sha256": "316d3194948c5fbb6a992d90527e6d9b810482534e7c248393a38da816472076",
+          "decodedPlaneBytesEstimate": 65856
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-helmet-depth.png",
+          "bytes": 2467,
+          "sha256": "e58cb16db07ccb9b47c874d477cda5a67641d0ca4d621d2f7f489f4c47796c42",
+          "decodedPlaneBytesEstimate": 32928
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-armor.png",
+          "bytes": 7592,
+          "sha256": "b0663196c1d35d3c0d5f9ed0971658007e25ad23ecd92a61aff971e0f6b7c74b",
+          "decodedPlaneBytesEstimate": 58240
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-armor-depth.png",
+          "bytes": 2589,
+          "sha256": "d85c3a966a4b4246c048265758d0bc54ed0b4e23b09b209fe87bba13767ba7c4",
+          "decodedPlaneBytesEstimate": 29120
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-shoes.png",
+          "bytes": 1474,
+          "sha256": "5d8e5ea2ceb00778aa89bdc0064e8027b3f50e86994764fdba20cf4ebc7a91a6",
+          "decodedPlaneBytesEstimate": 53760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-shoes-depth.png",
+          "bytes": 560,
+          "sha256": "8b99539a7a2eb69bb6b0237d25281f603512192921e2e655b9c66f9947378b29",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-accessory.png",
+          "bytes": 1948,
+          "sha256": "d60cad6eda444caafc0b8f4919aa577108917aa1f3c9635f38c37521799da130",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-body-accessory-depth.png",
+          "bytes": 631,
+          "sha256": "7b5dd525ab163de36dd5de059b803896d1b4566a6f3d669ad680dabeb7a34a89",
+          "decodedPlaneBytesEstimate": 13440
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-weapon.png",
+          "bytes": 31665,
+          "sha256": "a5dba90b97ece1590a03be1d9f8ddd9830df7c0025efb0e22933e5c207452869",
+          "decodedPlaneBytesEstimate": 465248
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-weapon-depth.png",
+          "bytes": 11537,
+          "sha256": "0f20a0b0f21754d875cfdbd34a43f9352106847d1ebfd06a779c26fde9a4678f",
+          "decodedPlaneBytesEstimate": 232624
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-helmet.png",
+          "bytes": 23617,
+          "sha256": "f1cbe0fdd267ffc7a168fd3d40bd4da6e15e108f2e00ccbf2ac404e6fb233b9e",
+          "decodedPlaneBytesEstimate": 124320
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-helmet-depth.png",
+          "bytes": 9809,
+          "sha256": "8e07fdc91e0f2ca902e17b943843d73d5d99a8fe0de6b39c4af4531721ac8dd2",
+          "decodedPlaneBytesEstimate": 62160
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-armor.png",
+          "bytes": 101771,
+          "sha256": "2bbfff124406867a62ee0777127b237e1a499d32e9b4ef3ba0dc0bc48f4775b0",
+          "decodedPlaneBytesEstimate": 385840
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-armor-depth.png",
+          "bytes": 36212,
+          "sha256": "f0f7f74176af67a8a6db81177f0c855247a15f2dfa6da8cb51e87e0fb21cf6ec",
+          "decodedPlaneBytesEstimate": 192920
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-shoes.png",
+          "bytes": 21457,
+          "sha256": "0f00daac81563b92324cf22b486894d646a4cce4b85d7748f04e48cd7398c3a9",
+          "decodedPlaneBytesEstimate": 135408
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-shoes-depth.png",
+          "bytes": 5870,
+          "sha256": "8f86d76968be7d60d99ae069299df27d6415600e9c86d86aad333fde21405073",
+          "decodedPlaneBytesEstimate": 67704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-accessory.png",
+          "bytes": 15444,
+          "sha256": "53fd6bf2ae696ef278a8c0178902fbe6bceef09a4df7e70a4735bb98517852bb",
+          "decodedPlaneBytesEstimate": 86800
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/hit-accessory-depth.png",
+          "bytes": 5415,
+          "sha256": "da0000ddc8dc7618bc182638baad9abca036ad71cbc4a6399c053cfcb7a0d85c",
+          "decodedPlaneBytesEstimate": 43400
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-base.png",
+          "bytes": 161619,
+          "sha256": "4d9a3251060304a1d335a869281bf34402e4180c8e827dc8bd3e85f6e2e1e3f2",
+          "decodedPlaneBytesEstimate": 893760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-base-depth.png",
+          "bytes": 74089,
+          "sha256": "14d518d6f06d05b5dcc5fb6cedb138855e670e13fdeb3159960754cd00403d67",
+          "decodedPlaneBytesEstimate": 446880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-helmet.png",
+          "bytes": 7243,
+          "sha256": "546881abff2f566146e5d0f981991455870cb494e4916dfef7852bfe076b33eb",
+          "decodedPlaneBytesEstimate": 87584
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-helmet-depth.png",
+          "bytes": 2441,
+          "sha256": "c5021ec767e0c71d627c15ae29ef05aed9181d05f01067d810945791a7345566",
+          "decodedPlaneBytesEstimate": 43792
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-armor.png",
+          "bytes": 7443,
+          "sha256": "c35d57b55f957eae38a248fc1ccdbfc3ceb7e6d1129335fbf9eafd68c67f71d5",
+          "decodedPlaneBytesEstimate": 62720
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-armor-depth.png",
+          "bytes": 2409,
+          "sha256": "fb90e62b41f02ded5509da93b4174ac1fe47dea950be7c79b67d7e9719eb30f1",
+          "decodedPlaneBytesEstimate": 31360
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-shoes.png",
+          "bytes": 2013,
+          "sha256": "81739530ff25ee0f8385ed9d305f218e7b6f3c3c697777e4d644fe3d5a7dc383",
+          "decodedPlaneBytesEstimate": 53760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-shoes-depth.png",
+          "bytes": 654,
+          "sha256": "b27dec74242793f611551c48f740e52fde33c406f3e417aa9219f81b2abecb1f",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-accessory.png",
+          "bytes": 1926,
+          "sha256": "71c0a8ecd7d87838bffe91512539c9a5f3c7782a9dba14f9e18d5cff456ecd23",
+          "decodedPlaneBytesEstimate": 34496
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-body-accessory-depth.png",
+          "bytes": 660,
+          "sha256": "fb94740a6164c0d974a6a66634c2ed528a359e0aecdfdfaedb09524d952a77e4",
+          "decodedPlaneBytesEstimate": 17248
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-weapon.png",
+          "bytes": 29455,
+          "sha256": "0f98d94a925e485442b202fb258fb78f75d0540628c735c6c27e7fb08973b4a7",
+          "decodedPlaneBytesEstimate": 345184
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-weapon-depth.png",
+          "bytes": 10443,
+          "sha256": "5784cfefd004959b64a856ba73852bddbc2ced0f2e306789e84f42ae15013f72",
+          "decodedPlaneBytesEstimate": 172592
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-helmet.png",
+          "bytes": 23675,
+          "sha256": "31c73c201e3bdadc4b7311d2134368ebc3cdc6306e1a949754a45f7f38b72b3c",
+          "decodedPlaneBytesEstimate": 158928
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-helmet-depth.png",
+          "bytes": 9811,
+          "sha256": "23188784cb873b121ec2ac72efc9215fad70c5a8a8652ac8671df10cb6d6a69e",
+          "decodedPlaneBytesEstimate": 79464
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-armor.png",
+          "bytes": 96722,
+          "sha256": "18df31b5210d8500f65e9ee25a93074844e9a4349c6be1488bb1758c6e35029d",
+          "decodedPlaneBytesEstimate": 372736
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-armor-depth.png",
+          "bytes": 36213,
+          "sha256": "988e52b1bae945460fff89a60e1facec9e63320fcf2d94ceb7f41e2926cd4f61",
+          "decodedPlaneBytesEstimate": 186368
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-shoes.png",
+          "bytes": 23878,
+          "sha256": "5587b9789fb5256414ec1e7082ad58302b022e8a38a45b7968fbfcb372dd0576",
+          "decodedPlaneBytesEstimate": 135408
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-shoes-depth.png",
+          "bytes": 6805,
+          "sha256": "f3de06084aa50f710b001c7fee0665b6654d4596bad2d33d75c9c5ccd228a559",
+          "decodedPlaneBytesEstimate": 67704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-accessory.png",
+          "bytes": 15869,
+          "sha256": "2c456162381a4e0ef057086ba68240c2b1c88294832e2b6b3f2f46b9791c6b1e",
+          "decodedPlaneBytesEstimate": 104160
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/dodge-accessory-depth.png",
+          "bytes": 5748,
+          "sha256": "f6c4501f1bfc6e28f46e18d7c36722670d76d75848c271503d504f69f03986c7",
+          "decodedPlaneBytesEstimate": 52080
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-base.png",
+          "bytes": 153611,
+          "sha256": "86884aff6a6cbde528105062fa6437a4d199ebe8494cbf0588982c1bc02f0f82",
+          "decodedPlaneBytesEstimate": 970368
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-base-depth.png",
+          "bytes": 70691,
+          "sha256": "aa2fc22899998ad4abed656a354c6cfa768e0efa93106683677429868fbe8f4e",
+          "decodedPlaneBytesEstimate": 485184
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-helmet.png",
+          "bytes": 6250,
+          "sha256": "bf082ce959257504b08c85fc2f5241d4a9ccc5380f7a15cd1bcd43774e33426b",
+          "decodedPlaneBytesEstimate": 48944
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-helmet-depth.png",
+          "bytes": 2055,
+          "sha256": "c423ed9468bea1686a011016559835ecbce04e307d2e9214f12123074a9eda7b",
+          "decodedPlaneBytesEstimate": 24472
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-armor.png",
+          "bytes": 6775,
+          "sha256": "434dd02ce5f24080afb71318f581c14ca0b6d8f340cd9e680d67d43fa43ab733",
+          "decodedPlaneBytesEstimate": 54096
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-armor-depth.png",
+          "bytes": 2257,
+          "sha256": "208b88efcd9ed624e2fb04ab29fa169586e19a4577147011251d99eaf61e34dd",
+          "decodedPlaneBytesEstimate": 27048
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-shoes.png",
+          "bytes": 1427,
+          "sha256": "7538c9281594cb62beb29cb0c1bf56b250cb27a30652ff2f5cd9ad8399fd0b99",
+          "decodedPlaneBytesEstimate": 53760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-shoes-depth.png",
+          "bytes": 538,
+          "sha256": "96834f0a7b93ef947a47721381da22cc22bc04eccffc9d6ecab15129696deca5",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-accessory.png",
+          "bytes": 1579,
+          "sha256": "fa21b6405b58ca22bb8989d81ebf12c43b1e8b229ac287259b6e87d1e1857672",
+          "decodedPlaneBytesEstimate": 20384
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-body-accessory-depth.png",
+          "bytes": 572,
+          "sha256": "327accfd2a45e816f77793df1fe2932e6bb1799c801967604cad21af8b3c53b3",
+          "decodedPlaneBytesEstimate": 10192
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-weapon.png",
+          "bytes": 29431,
+          "sha256": "3d4a2db92b269efc15874ca975648c10f8399e9336a53ed50b0ae25c33cf9489",
+          "decodedPlaneBytesEstimate": 255136
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-weapon-depth.png",
+          "bytes": 9959,
+          "sha256": "0b288cd649479b42cd9ef35d461a6186710b41053fb06e5c554027a1fe161f4b",
+          "decodedPlaneBytesEstimate": 127568
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-helmet.png",
+          "bytes": 21055,
+          "sha256": "c453fef26a9056f6cb428beb94680e248733d19c97defe06abbe25d87790b31f",
+          "decodedPlaneBytesEstimate": 107184
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-helmet-depth.png",
+          "bytes": 8816,
+          "sha256": "c8fed967e40c68a58acc5beb8b7a6a337cbc2bfbf69fa5ffacd981ff7e726da9",
+          "decodedPlaneBytesEstimate": 53592
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-armor.png",
+          "bytes": 96488,
+          "sha256": "923e68229bdef2caeda2cacb12fc97e9e18e2ed8e09f3fbce8494bf283614f58",
+          "decodedPlaneBytesEstimate": 407680
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-armor-depth.png",
+          "bytes": 35536,
+          "sha256": "ac84c23590a949c06398a91c218f4361d7546ab49ef2d8cf2a7689346e7f4cea",
+          "decodedPlaneBytesEstimate": 203840
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-shoes.png",
+          "bytes": 20969,
+          "sha256": "9dc13eccbb6cef365bf6abda70cf67bd2e6ab17f4e84d67e64f4ec4c013ea2a3",
+          "decodedPlaneBytesEstimate": 135408
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-shoes-depth.png",
+          "bytes": 6495,
+          "sha256": "63732bd5b17c40a37799e72cff99cb9c3a81d8ae1fa7313e1e05435e6ed55272",
+          "decodedPlaneBytesEstimate": 67704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-accessory.png",
+          "bytes": 13979,
+          "sha256": "c6e6d327b743601feec94d3f63d12ab2014d6126ba657c84ef964dcd57d5f52c",
+          "decodedPlaneBytesEstimate": 74704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/return-accessory-depth.png",
+          "bytes": 4711,
+          "sha256": "079eba82fd5ac142415c6e65113ea9fccd15e1e1f4f6ebcc8e020fcc6621716f",
+          "decodedPlaneBytesEstimate": 37352
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-base.png",
+          "bytes": 152718,
+          "sha256": "b9699376851cc2389ec3638f3deded3e75dd12f95a2c21ffc90d1b8eb1356a07",
+          "decodedPlaneBytesEstimate": 970368
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-base-depth.png",
+          "bytes": 70671,
+          "sha256": "59e624f1a451a2c0068d4048448a79930991642d2a6e593f304e93bf2d2432db",
+          "decodedPlaneBytesEstimate": 485184
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-helmet.png",
+          "bytes": 6907,
+          "sha256": "2b9fa8c3383452a5eb97acb9ee3540ba22054e9019119d9681f5d1f65be71d06",
+          "decodedPlaneBytesEstimate": 156800
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-helmet-depth.png",
+          "bytes": 2520,
+          "sha256": "aff11ac661361b203f29d3d70b4f6e14a9c809fb22b4d71345aaff2c5866a54a",
+          "decodedPlaneBytesEstimate": 78400
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-armor.png",
+          "bytes": 6960,
+          "sha256": "026d5ec618ffabfa1b3319e160a583c1e74360cf620879f6dcbb78c614ec9a54",
+          "decodedPlaneBytesEstimate": 81200
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-armor-depth.png",
+          "bytes": 2528,
+          "sha256": "0c22dfcde45e71bf6f53355b9387a523ce0a52f0d779c1cdc283457149b33a93",
+          "decodedPlaneBytesEstimate": 40600
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-shoes.png",
+          "bytes": 1788,
+          "sha256": "c2b33d8e79d1ea77d8359775c917f4202bd4726a3aee41317da8773bbec12b6d",
+          "decodedPlaneBytesEstimate": 53760
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-shoes-depth.png",
+          "bytes": 619,
+          "sha256": "f484c09f4ad84019d25d42df27fa79fa1fef917a1b216a6ef1cd3c161f3f4ed1",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-accessory.png",
+          "bytes": 1905,
+          "sha256": "b8a0737859562f49af8637580af4b35b014c217f4243fcf7a7b5a4e921b084da",
+          "decodedPlaneBytesEstimate": 40320
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-body-accessory-depth.png",
+          "bytes": 637,
+          "sha256": "fddfebed836ddfcc250dc3d10faac367d3d86e2f95be30bc677ae77dbeb1a97e",
+          "decodedPlaneBytesEstimate": 20160
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-weapon.png",
+          "bytes": 31750,
+          "sha256": "6f8f9be925d688dba8b977d6e85f74ae1b2cde6a39dce4acba6c28a2b9875f19",
+          "decodedPlaneBytesEstimate": 564480
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-weapon-depth.png",
+          "bytes": 11858,
+          "sha256": "0555acf71f106d900d0860a0464da72e852714caa10447447504ca33bd3190f9",
+          "decodedPlaneBytesEstimate": 282240
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-helmet.png",
+          "bytes": 24001,
+          "sha256": "8df91841c8e8a4b99a040c848180559f7dcc5f1070cd066aed3e8d393624894c",
+          "decodedPlaneBytesEstimate": 235984
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-helmet-depth.png",
+          "bytes": 10026,
+          "sha256": "99dffb47f2c51abd20ea25916fe53f5d2b6383a4d263b7bcd22af8126c5c4848",
+          "decodedPlaneBytesEstimate": 117992
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-armor.png",
+          "bytes": 100982,
+          "sha256": "8697f4e03a882235ec8769e7f946987331c06fc641eec914420ac90284b32741",
+          "decodedPlaneBytesEstimate": 399168
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-armor-depth.png",
+          "bytes": 38183,
+          "sha256": "0821a816faf40abd9caef58cb802db7b10b717c18b09e56e0b7227617ec3da3b",
+          "decodedPlaneBytesEstimate": 199584
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-shoes.png",
+          "bytes": 23045,
+          "sha256": "3f89de8f34f3ce3623f3394671c9ba249bff64638ea9e47aeeeaec5a2d44cedb",
+          "decodedPlaneBytesEstimate": 135408
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-shoes-depth.png",
+          "bytes": 6677,
+          "sha256": "056435743632e98ce6e64067d85b8b0bd95533dcb65aa3f29719dcc3041e0344",
+          "decodedPlaneBytesEstimate": 67704
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-accessory.png",
+          "bytes": 15408,
+          "sha256": "a17eed5a7db22ffe87cfaaa9238e8c61c9172050f4b00ed4253f43167b0754e6",
+          "decodedPlaneBytesEstimate": 118048
+        },
+        {
+          "path": "repair-r1/tiers/medium/player/defeat-accessory-depth.png",
+          "bytes": 5455,
+          "sha256": "b18a898c4cca1a10e019c5fe3052d7d298d79bbf6a1e26b2a2322e5551591481",
+          "decodedPlaneBytesEstimate": 59024
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/idle-enemy.png",
+          "bytes": 148366,
+          "sha256": "2b8becafa01194995632428c6ed53fc3e024660440f38ef9a1457bdd74e63c19",
+          "decodedPlaneBytesEstimate": 773024
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/idle-enemy-depth.png",
+          "bytes": 68156,
+          "sha256": "c948e2397b77d51478303a570dbc0d309b1775ab4cb7582212b64dc434c95352",
+          "decodedPlaneBytesEstimate": 386512
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/attack-enemy.png",
+          "bytes": 217135,
+          "sha256": "f2d2aaf96e5861fc02154166f03f839b7134c89b7dab637df072857019e96af6",
+          "decodedPlaneBytesEstimate": 1097712
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/attack-enemy-depth.png",
+          "bytes": 90691,
+          "sha256": "c37e3b5d4ad0f69a72f845deb3bf31f237898e8d3b705783f11085af15088612",
+          "decodedPlaneBytesEstimate": 548856
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/hit-enemy.png",
+          "bytes": 209663,
+          "sha256": "f6efb4643ca737e11933785db4a00d803143cd1987c564e8d8891be7ef8b995b",
+          "decodedPlaneBytesEstimate": 819840
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/hit-enemy-depth.png",
+          "bytes": 92535,
+          "sha256": "7a5af7fc826a934fa1f930ed3a9b40cecad7feb5cb7cb2c9d7780f362e32875b",
+          "decodedPlaneBytesEstimate": 409920
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/dodge-enemy.png",
+          "bytes": 240953,
+          "sha256": "f305fcc7d8a35805c8e332a30ab0061467821a55c538e77876f46ed32190f7b8",
+          "decodedPlaneBytesEstimate": 1021440
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/dodge-enemy-depth.png",
+          "bytes": 112695,
+          "sha256": "f41457654944793020c59db20794fc4d45635dd08087779bc81e5603ae544dea",
+          "decodedPlaneBytesEstimate": 510720
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/return-enemy.png",
+          "bytes": 222867,
+          "sha256": "cb3abbed5f896fca9f8f3d6c461fa19f9f7d2ce449e5e0b768c6f3de4a27a633",
+          "decodedPlaneBytesEstimate": 853776
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/return-enemy-depth.png",
+          "bytes": 103398,
+          "sha256": "3b6030e75eca09695f5ad7b90f7dc7ba2c0dfd974e7c6e46cc4b7bdfd111a9e0",
+          "decodedPlaneBytesEstimate": 426888
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/defeat-enemy.png",
+          "bytes": 185666,
+          "sha256": "1d7c6bb31138e8b5fc510c9626c9f13193094899a0707396b69426e633661686",
+          "decodedPlaneBytesEstimate": 989296
+        },
+        {
+          "path": "repair-r1/tiers/medium/normal/defeat-enemy-depth.png",
+          "bytes": 84236,
+          "sha256": "2219df89974004f1d986f52d1149324f8bf60daf6a942a96bc1256317def14e1",
+          "decodedPlaneBytesEstimate": 494648
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/idle-enemy.png",
+          "bytes": 201971,
+          "sha256": "cb7fe8506535e6e8ef45bd82bf9109aa8c5f0327a3de597d86dc07978503fbba",
+          "decodedPlaneBytesEstimate": 1066240
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/idle-enemy-depth.png",
+          "bytes": 100157,
+          "sha256": "3102574e04852f5e579e431f8197650307587f487585779ebb2aac77f8cff48a",
+          "decodedPlaneBytesEstimate": 533120
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/attack-enemy.png",
+          "bytes": 277538,
+          "sha256": "b669e09482fe5ad2ef998ede548d460d212bc94a69d3864974900a82cd3c0861",
+          "decodedPlaneBytesEstimate": 1355200
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/attack-enemy-depth.png",
+          "bytes": 125573,
+          "sha256": "6f26fe4700202d4c35f7cd9d1a0f39593dc69832bedbd7faabcacf479c755164",
+          "decodedPlaneBytesEstimate": 677600
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/hit-enemy.png",
+          "bytes": 273403,
+          "sha256": "69dc5f538002c1a960ec8abb466f269aa490633d1e91eb35f91e294f73398762",
+          "decodedPlaneBytesEstimate": 1134112
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/hit-enemy-depth.png",
+          "bytes": 126899,
+          "sha256": "b49568dc9abd34f6b6514fd968e943328edda6812d5e634eb6f813047a6dc7ec",
+          "decodedPlaneBytesEstimate": 567056
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/dodge-enemy.png",
+          "bytes": 310622,
+          "sha256": "f344a52a5028ef470020167d3ec1712a3debd6d603a3d539b1318fee2f9e6dbb",
+          "decodedPlaneBytesEstimate": 1314544
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/dodge-enemy-depth.png",
+          "bytes": 151034,
+          "sha256": "d2e7405335fac7acf6d7bf254cc07ef69452f44534f26dc6095e9a604bb2ee4b",
+          "decodedPlaneBytesEstimate": 657272
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/return-enemy.png",
+          "bytes": 289302,
+          "sha256": "b5ea52b4990472136ec079c2156ec6358f988aac2abfbb89f459fb7a770a0a03",
+          "decodedPlaneBytesEstimate": 1260336
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/return-enemy-depth.png",
+          "bytes": 142933,
+          "sha256": "bac0ca35f2cc0f42b74abb087de72a2ccdb4e2ea970b5e8be1bf988f6c5eb1e1",
+          "decodedPlaneBytesEstimate": 630168
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/defeat-enemy.png",
+          "bytes": 242488,
+          "sha256": "339a86b38dc2f6e7a14070dd834bb56d5b1d80096b515cd924f3346242ab39c5",
+          "decodedPlaneBytesEstimate": 1314544
+        },
+        {
+          "path": "repair-r1/tiers/medium/elite/defeat-enemy-depth.png",
+          "bytes": 114200,
+          "sha256": "1ac97634740a77cb6bafab35de00832cf60742a9c646e370d4f043551de398da",
+          "decodedPlaneBytesEstimate": 657272
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/idle-enemy.png",
+          "bytes": 252884,
+          "sha256": "be1d2d9588720b3d2168bd3dc2d122292dc6df6dbdc81c1a751a88731b00a013",
+          "decodedPlaneBytesEstimate": 1488144
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/idle-enemy-depth.png",
+          "bytes": 135365,
+          "sha256": "76879e55251e168f279670401b6bb3141694eec9d9cdce584e1f5a61a70301df",
+          "decodedPlaneBytesEstimate": 744072
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/attack-enemy.png",
+          "bytes": 282321,
+          "sha256": "eb909a40fede8eb86dad2113f590a830931ced79eb391d1e676b5edda3455d52",
+          "decodedPlaneBytesEstimate": 1567104
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/attack-enemy-depth.png",
+          "bytes": 141594,
+          "sha256": "27745081edaa309ab4169f5afeb5cc82ca25df6144f1d66c6d7c2f6bb2aac5e6",
+          "decodedPlaneBytesEstimate": 783552
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/hit-enemy.png",
+          "bytes": 316005,
+          "sha256": "e0176081d55a6573f57b315d65283a470e3ead2d60a792b15e1f30534088e8a3",
+          "decodedPlaneBytesEstimate": 1572480
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/hit-enemy-depth.png",
+          "bytes": 157754,
+          "sha256": "bbf423c13f5594380e4a7b7a9f105b588acbe885e06b8ddfcfad07eff8e5bae2",
+          "decodedPlaneBytesEstimate": 786240
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/dodge-enemy.png",
+          "bytes": 323268,
+          "sha256": "73d0b0a56840268481bf3f4d29f5ba510487a9aad479f4d84e4b03b2369174d4",
+          "decodedPlaneBytesEstimate": 1587040
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/dodge-enemy-depth.png",
+          "bytes": 160489,
+          "sha256": "7bba8b2d95b3ab60a7ea2bc3b20f58bbde7061507ccd12c5a6f55621c841dc00",
+          "decodedPlaneBytesEstimate": 793520
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/return-enemy.png",
+          "bytes": 305332,
+          "sha256": "b4eaf7d2f4dceae4c72c0c2329091e2b8e746daa581adb20e2db7915a9a7e78c",
+          "decodedPlaneBytesEstimate": 1531488
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/return-enemy-depth.png",
+          "bytes": 153314,
+          "sha256": "c51e630014ea66d7a608fa2ffa05dd70b13e5b3a0307211d44b33223fca7f2ec",
+          "decodedPlaneBytesEstimate": 765744
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/defeat-enemy.png",
+          "bytes": 324283,
+          "sha256": "60e87aa4fe85e6c8bf51c1d300efb99050b78bb60cc80dcb89e7ec5c526a753f",
+          "decodedPlaneBytesEstimate": 1685376
+        },
+        {
+          "path": "repair-r1/tiers/medium/boss/defeat-enemy-depth.png",
+          "bytes": 159157,
+          "sha256": "b2f543de38cfe62c39321f9350c9d821b036209a6e82f888dfa8219c68ffa881",
+          "decodedPlaneBytesEstimate": 842688
+        }
+      ],
+      "encodedBytes": 9803386,
+      "decodedPlaneBytesEstimate": 54704832,
+      "gpuBytes": "unavailable; estimates exclude driver/mip/upload overhead"
+    },
+    "high": {
+      "sourcePixelBudget": 256,
+      "files": [
+        {
+          "path": "player/atlases/idle-body-base.png",
+          "bytes": 177504,
+          "sha256": "9c34a3cd7d32f0db68292bef8ae73d08d7ab3eaca9cbf7d13c922206cc383800",
+          "decodedPlaneBytesEstimate": 1528800
+        },
+        {
+          "path": "player/atlases/idle-body-base-depth.png",
+          "bytes": 89843,
+          "sha256": "cd48a296fc15539fbb3ea4b6384ecaff892e1f6b7731b2d62680ba736618e41c",
+          "decodedPlaneBytesEstimate": 764400
+        },
+        {
+          "path": "player/atlases/idle-body-helmet.png",
+          "bytes": 7557,
+          "sha256": "9aededc52e788a3853c950db31bd882589b1725349e525520608500cd797e17e",
+          "decodedPlaneBytesEstimate": 51744
+        },
+        {
+          "path": "player/atlases/idle-body-helmet-depth.png",
+          "bytes": 2361,
+          "sha256": "bd813cc08853935afdd17048b3ce30ea9578fbec8d89ffa4f12e176b0007ac89",
+          "decodedPlaneBytesEstimate": 25872
+        },
+        {
+          "path": "player/atlases/idle-body-armor.png",
+          "bytes": 6880,
+          "sha256": "a69c363c99ca4ac8e3d5647c5cc4c94e6839c0de89f141a41638bb5a3ba20f21",
+          "decodedPlaneBytesEstimate": 65856
+        },
+        {
+          "path": "player/atlases/idle-body-armor-depth.png",
+          "bytes": 2416,
+          "sha256": "80197abebf338b80df857f9a9305185e772e88b1c3031f4ce6c6d28ce7ab668b",
+          "decodedPlaneBytesEstimate": 32928
+        },
+        {
+          "path": "player/atlases/idle-body-shoes.png",
+          "bytes": 1193,
+          "sha256": "6b374efb0db512bf2f11fea48d6bfca7eccb56b31a5d9f35ce8b1705459fd620",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/idle-body-shoes-depth.png",
+          "bytes": 483,
+          "sha256": "964536516dff6e3debd90d62ea3654d582f182574c2ff7d6d2ead8d7914ad7bc",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "player/atlases/idle-body-accessory.png",
+          "bytes": 1486,
+          "sha256": "755d7bd2c2e995d0aeb4bb0e5b7398cebca4ad7f1b965ae30064300fd5ac3b64",
+          "decodedPlaneBytesEstimate": 26880
+        },
+        {
+          "path": "player/atlases/idle-body-accessory-depth.png",
+          "bytes": 560,
+          "sha256": "7ea3ae2ab2aeb183ab59125825c2bdfa15cbb95f01b8efc883309679e1da26f4",
+          "decodedPlaneBytesEstimate": 13440
+        },
+        {
+          "path": "player/atlases/idle-weapon.png",
+          "bytes": 29606,
+          "sha256": "2f485d7fdc1e92b44799e4d28bdb4c6acc4b6c78a2ff67a89a568ae60d3f1a24",
+          "decodedPlaneBytesEstimate": 291984
+        },
+        {
+          "path": "player/atlases/idle-weapon-depth.png",
+          "bytes": 10360,
+          "sha256": "2905276caba45e5fffc550ea43785dc4255a1942ec3fd3fd8920eb66533bc2ad",
+          "decodedPlaneBytesEstimate": 145992
+        },
+        {
+          "path": "player/atlases/idle-helmet.png",
+          "bytes": 26840,
+          "sha256": "607018d62bf6fa055c9c2b036fd9cf4f4b3471203b50b22961fa0e14b444a035",
+          "decodedPlaneBytesEstimate": 137088
+        },
+        {
+          "path": "player/atlases/idle-helmet-depth.png",
+          "bytes": 11989,
+          "sha256": "853d6871a624a9a1493c1b3f20bc15577e523b5a439e6fbc2b97053f75320ec3",
+          "decodedPlaneBytesEstimate": 68544
+        },
+        {
+          "path": "player/atlases/idle-armor.png",
+          "bytes": 108993,
+          "sha256": "9628d01d41ea0a797a43b9d3b40586c5b076f50c946340fc756efc9423a03009",
+          "decodedPlaneBytesEstimate": 622832
+        },
+        {
+          "path": "player/atlases/idle-armor-depth.png",
+          "bytes": 43058,
+          "sha256": "dbd359f40a6dea27467ac5b65994f66f778755aea7f2a9dd13dbcdd40117f620",
+          "decodedPlaneBytesEstimate": 311416
+        },
+        {
+          "path": "player/atlases/idle-shoes.png",
+          "bytes": 18853,
+          "sha256": "2dfde4226c62baa00e0196f9af476960c0eec8a8ee1e9f39b0d0cf2728022a6d",
+          "decodedPlaneBytesEstimate": 224000
+        },
+        {
+          "path": "player/atlases/idle-shoes-depth.png",
+          "bytes": 6545,
+          "sha256": "513401ed3425fdd318dcda8a92784c742af439052d89a8db0966b5d1100082a0",
+          "decodedPlaneBytesEstimate": 112000
+        },
+        {
+          "path": "player/atlases/idle-accessory.png",
+          "bytes": 15644,
+          "sha256": "826e63b4b68b18d1dc2ae84f5bff219e462579d50f24d5f17520bee1dc9b30d6",
+          "decodedPlaneBytesEstimate": 104832
+        },
+        {
+          "path": "player/atlases/idle-accessory-depth.png",
+          "bytes": 5607,
+          "sha256": "241552fb7a72dc48cf982acde95a3776b1a45c6dcd9561e8156ebddfa9747d99",
+          "decodedPlaneBytesEstimate": 52416
+        },
+        {
+          "path": "player/atlases/attack-body-base.png",
+          "bytes": 236108,
+          "sha256": "d7c1dd29783ce5ce88d1e2c3880a522cf069cfa55c65282ee13329716b7f3ca3",
+          "decodedPlaneBytesEstimate": 1708112
+        },
+        {
+          "path": "player/atlases/attack-body-base-depth.png",
+          "bytes": 110380,
+          "sha256": "868077e0e353b47f540d9e31297bda68bf7d9570c03d859917e7f72cb86533d2",
+          "decodedPlaneBytesEstimate": 854056
+        },
+        {
+          "path": "player/atlases/attack-body-helmet.png",
+          "bytes": 9635,
+          "sha256": "2c39b8aae40f981536bc50c64bda13c8bf6e7b85a5002bb7188e0455ecc62f5e",
+          "decodedPlaneBytesEstimate": 94080
+        },
+        {
+          "path": "player/atlases/attack-body-helmet-depth.png",
+          "bytes": 3350,
+          "sha256": "1a3c0b5925cf31c3ba9036194a67b832574249c6b0f22fc5537a9fa32fa047a2",
+          "decodedPlaneBytesEstimate": 47040
+        },
+        {
+          "path": "player/atlases/attack-body-armor.png",
+          "bytes": 9874,
+          "sha256": "736a9b96869223c8a62b47ea3e193e18bede057283a13fdad6533e543d1f289f",
+          "decodedPlaneBytesEstimate": 87360
+        },
+        {
+          "path": "player/atlases/attack-body-armor-depth.png",
+          "bytes": 3444,
+          "sha256": "c4b6e74c3deab5bb515ed679c8c71a9d2e80408529e2a83ab3462296c01c8639",
+          "decodedPlaneBytesEstimate": 43680
+        },
+        {
+          "path": "player/atlases/attack-body-shoes.png",
+          "bytes": 2142,
+          "sha256": "c5723ec45a872c2cc346e6df78043b37c247822960bd9e076a181dfeca417cb4",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/attack-body-shoes-depth.png",
+          "bytes": 696,
+          "sha256": "f04ae7cbf8927e5dae6f9ea732e49d1ff6db9379915573df953886c65db0f8fd",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "player/atlases/attack-body-accessory.png",
+          "bytes": 2067,
+          "sha256": "dc0cd9083e28131dfa9b1bd5dbc66b72fb28d846b44c6d17d4fbc2ce595e2a59",
+          "decodedPlaneBytesEstimate": 34272
+        },
+        {
+          "path": "player/atlases/attack-body-accessory-depth.png",
+          "bytes": 615,
+          "sha256": "7b1c382487d6e26eec8e466e39341d891c6ade3da61a7895f2a652a785322b6d",
+          "decodedPlaneBytesEstimate": 17136
+        },
+        {
+          "path": "player/atlases/attack-weapon.png",
+          "bytes": 45223,
+          "sha256": "3476d4e6b5a48c398c9c5cb74baf973ccd452404b0c87e3fb862e960f34a6b31",
+          "decodedPlaneBytesEstimate": 1317120
+        },
+        {
+          "path": "player/atlases/attack-weapon-depth.png",
+          "bytes": 15322,
+          "sha256": "f81abba975f07b11ad9efe4844846b683e1f3b2f49749e5ba011be18a0afb556",
+          "decodedPlaneBytesEstimate": 658560
+        },
+        {
+          "path": "player/atlases/attack-helmet.png",
+          "bytes": 34889,
+          "sha256": "f48b802094f4d022d0e4623e96a436b1e3341adc0646dda930dd8533774b0535",
+          "decodedPlaneBytesEstimate": 197456
+        },
+        {
+          "path": "player/atlases/attack-helmet-depth.png",
+          "bytes": 15034,
+          "sha256": "3ca1884969af865c67880a7fb6cc74091d3fbb6ed477ca1913219fcb0f3c2d9a",
+          "decodedPlaneBytesEstimate": 98728
+        },
+        {
+          "path": "player/atlases/attack-armor.png",
+          "bytes": 154550,
+          "sha256": "e95c2e33204fc4d75058375625f707ffd1de3e88bf85049674f83360110a44e7",
+          "decodedPlaneBytesEstimate": 718704
+        },
+        {
+          "path": "player/atlases/attack-armor-depth.png",
+          "bytes": 54629,
+          "sha256": "6de9df36105dd4aa33b9a8d6c2e7ca277e20ab386b5bc1a1404d3eb80951a298",
+          "decodedPlaneBytesEstimate": 359352
+        },
+        {
+          "path": "player/atlases/attack-shoes.png",
+          "bytes": 30412,
+          "sha256": "dcb39f77835f0bbd04b4c0539b7167c8793f51c38603292622af80a60ec8bb43",
+          "decodedPlaneBytesEstimate": 224000
+        },
+        {
+          "path": "player/atlases/attack-shoes-depth.png",
+          "bytes": 8635,
+          "sha256": "8f66c1e2a3892197d0bfe35421158ab5a47dca8f2694f3fdc685adee3d50b1e7",
+          "decodedPlaneBytesEstimate": 112000
+        },
+        {
+          "path": "player/atlases/attack-accessory.png",
+          "bytes": 22268,
+          "sha256": "2a650e3ffcca4af3ee21e33dc911521b01657f5fc7c8e076874b01e6403c4d82",
+          "decodedPlaneBytesEstimate": 124320
+        },
+        {
+          "path": "player/atlases/attack-accessory-depth.png",
+          "bytes": 7402,
+          "sha256": "588e278b7966aeb2517b6120de3201e40e63e8c97bd7e01757ef3e27be04a3e3",
+          "decodedPlaneBytesEstimate": 62160
+        },
+        {
+          "path": "player/atlases/hit-body-base.png",
+          "bytes": 236689,
+          "sha256": "c8afbb9218029f81b1fae3ffc9f7281b92480f58c27bef7c130304eb13048476",
+          "decodedPlaneBytesEstimate": 1579200
+        },
+        {
+          "path": "player/atlases/hit-body-base-depth.png",
+          "bytes": 111021,
+          "sha256": "076a45eaa12be7ed1949d4084457dbde8e9590f618ba3056c62207dbf9add9c2",
+          "decodedPlaneBytesEstimate": 789600
+        },
+        {
+          "path": "player/atlases/hit-body-helmet.png",
+          "bytes": 9491,
+          "sha256": "c2c04a7463b968cdf5e1dd54266858d1dd8cb0b922062542a456e2f5832d07f7",
+          "decodedPlaneBytesEstimate": 101920
+        },
+        {
+          "path": "player/atlases/hit-body-helmet-depth.png",
+          "bytes": 3328,
+          "sha256": "5fac2c4b011c1eaabf7b92be5995daa2a237f40b72990d62aa7b6fdee6559a4e",
+          "decodedPlaneBytesEstimate": 50960
+        },
+        {
+          "path": "player/atlases/hit-body-armor.png",
+          "bytes": 10128,
+          "sha256": "5a5d2db0cced5137a4eca9d82fd2dd77fa466a16d218093ff6ca16633cb7d096",
+          "decodedPlaneBytesEstimate": 92400
+        },
+        {
+          "path": "player/atlases/hit-body-armor-depth.png",
+          "bytes": 3537,
+          "sha256": "ff96bf219538960d5b408c8ec6b7a82cc0a49f21cc8f7ae62116c2b6fb5c741e",
+          "decodedPlaneBytesEstimate": 46200
+        },
+        {
+          "path": "player/atlases/hit-body-shoes.png",
+          "bytes": 2142,
+          "sha256": "c5723ec45a872c2cc346e6df78043b37c247822960bd9e076a181dfeca417cb4",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/hit-body-shoes-depth.png",
+          "bytes": 696,
+          "sha256": "f04ae7cbf8927e5dae6f9ea732e49d1ff6db9379915573df953886c65db0f8fd",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "player/atlases/hit-body-accessory.png",
+          "bytes": 2225,
+          "sha256": "7f3df68350b14b255ac049964e52f30d2da3d10aaecbf237e90f64413d13797b",
+          "decodedPlaneBytesEstimate": 40320
+        },
+        {
+          "path": "player/atlases/hit-body-accessory-depth.png",
+          "bytes": 634,
+          "sha256": "ec62a1c1845b30d72e7bbb8070d96baba46b1a3b41c91879b20ab7846088ebdd",
+          "decodedPlaneBytesEstimate": 20160
+        },
+        {
+          "path": "player/atlases/hit-weapon.png",
+          "bytes": 44287,
+          "sha256": "a3abfae3abc05df808088fa8f19b104d08a987d46980b0abb2d1085f7f8b4665",
+          "decodedPlaneBytesEstimate": 789264
+        },
+        {
+          "path": "player/atlases/hit-weapon-depth.png",
+          "bytes": 14549,
+          "sha256": "2dd2be11609d4b4271aa677e34471983d5df357a66647ca7e249d2c7c5d7cdea",
+          "decodedPlaneBytesEstimate": 394632
+        },
+        {
+          "path": "player/atlases/hit-helmet.png",
+          "bytes": 34751,
+          "sha256": "8f4e022d1e5073dce38c68383644141f968d1e2531f9476ca228d95c8cc978f6",
+          "decodedPlaneBytesEstimate": 200032
+        },
+        {
+          "path": "player/atlases/hit-helmet-depth.png",
+          "bytes": 14500,
+          "sha256": "739ff98d9b5daeb2405886c605937f704f18e5e49872554842b6f06f0b76b881",
+          "decodedPlaneBytesEstimate": 100016
+        },
+        {
+          "path": "player/atlases/hit-armor.png",
+          "bytes": 152845,
+          "sha256": "ff2ac45c4fa8a53de9c9899d7a53f06676c32cc11332dbc29107059d62178966",
+          "decodedPlaneBytesEstimate": 656880
+        },
+        {
+          "path": "player/atlases/hit-armor-depth.png",
+          "bytes": 54075,
+          "sha256": "bc03ec6523706be5ae4c843abcd2122b4346e2da7fbd42d72bb4cd8a5654decc",
+          "decodedPlaneBytesEstimate": 328440
+        },
+        {
+          "path": "player/atlases/hit-shoes.png",
+          "bytes": 30412,
+          "sha256": "dcb39f77835f0bbd04b4c0539b7167c8793f51c38603292622af80a60ec8bb43",
+          "decodedPlaneBytesEstimate": 224000
+        },
+        {
+          "path": "player/atlases/hit-shoes-depth.png",
+          "bytes": 8635,
+          "sha256": "8f66c1e2a3892197d0bfe35421158ab5a47dca8f2694f3fdc685adee3d50b1e7",
+          "decodedPlaneBytesEstimate": 112000
+        },
+        {
+          "path": "player/atlases/hit-accessory.png",
+          "bytes": 23328,
+          "sha256": "d2c393950f6fe70d65ee373e33a58c001e8362c364c5693e3cc35a19a0cf6902",
+          "decodedPlaneBytesEstimate": 143360
+        },
+        {
+          "path": "player/atlases/hit-accessory-depth.png",
+          "bytes": 7432,
+          "sha256": "ab661183f823304639bdc3bcaa5f748affda17b0dc06b0a6a9a10fb8c35b1cb6",
+          "decodedPlaneBytesEstimate": 71680
+        },
+        {
+          "path": "player/atlases/dodge-body-base.png",
+          "bytes": 240716,
+          "sha256": "e6b9db4869c53ec5a2c25db967f565b36f2c620fa9153460a9d49f6763d2cf06",
+          "decodedPlaneBytesEstimate": 1528800
+        },
+        {
+          "path": "player/atlases/dodge-body-base-depth.png",
+          "bytes": 114156,
+          "sha256": "1f0b415fd4a709debbb82b67a05f848f8c150812a39c0b4cce17c7bd433fb06d",
+          "decodedPlaneBytesEstimate": 764400
+        },
+        {
+          "path": "player/atlases/dodge-body-helmet.png",
+          "bytes": 9656,
+          "sha256": "d923055bd379618243d4fef0cc9e1d05eb4c2bc974983b6f5720090e8190cdf8",
+          "decodedPlaneBytesEstimate": 139664
+        },
+        {
+          "path": "player/atlases/dodge-body-helmet-depth.png",
+          "bytes": 3397,
+          "sha256": "55a06975ee20dd0b63fc8e263539630e74de52da4997f9c391d9f5e278cf8cf0",
+          "decodedPlaneBytesEstimate": 69832
+        },
+        {
+          "path": "player/atlases/dodge-body-armor.png",
+          "bytes": 9933,
+          "sha256": "48ac7db99227b88d60e8cefdb4c697d653cbeedac9e2767dbc1541971bcd6f5e",
+          "decodedPlaneBytesEstimate": 100800
+        },
+        {
+          "path": "player/atlases/dodge-body-armor-depth.png",
+          "bytes": 3463,
+          "sha256": "58662cb8b52344770a0ff4a6b18296d9e9a41a551526e2f58a4bc899a04a3530",
+          "decodedPlaneBytesEstimate": 50400
+        },
+        {
+          "path": "player/atlases/dodge-body-shoes.png",
+          "bytes": 2659,
+          "sha256": "8f79b7c06a19726bef3d7bb20f8cbf5cf6618b0c0fe4ec3c29e522be2f3e2f78",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/dodge-body-shoes-depth.png",
+          "bytes": 799,
+          "sha256": "a00bea0614be55fb1fbc89f5bd80bec230592a4297e0a3a31facf68729af5867",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "player/atlases/dodge-body-accessory.png",
+          "bytes": 2272,
+          "sha256": "9831d6dd29216085d093cc5972600171768e8d869c4bc48ee1b51a984f28f678",
+          "decodedPlaneBytesEstimate": 53312
+        },
+        {
+          "path": "player/atlases/dodge-body-accessory-depth.png",
+          "bytes": 675,
+          "sha256": "0131dfa4f20437d6b3fd438256c43c4c53c2458ddf9bde0ea0e8747bfd3936ed",
+          "decodedPlaneBytesEstimate": 26656
+        },
+        {
+          "path": "player/atlases/dodge-weapon.png",
+          "bytes": 41074,
+          "sha256": "95b322ff20034714fde91216c6bbf9c1800012ddf391b625a428b0b5016ad948",
+          "decodedPlaneBytesEstimate": 574896
+        },
+        {
+          "path": "player/atlases/dodge-weapon-depth.png",
+          "bytes": 12881,
+          "sha256": "c48f064dc9a1caed94bde8a35aa50fc8194c68664eae9d33cf3890816c147250",
+          "decodedPlaneBytesEstimate": 287448
+        },
+        {
+          "path": "player/atlases/dodge-helmet.png",
+          "bytes": 35595,
+          "sha256": "7e42736a45fa67258d6aa79a17163923b8b230b69afd686cbf4b2483ea996aba",
+          "decodedPlaneBytesEstimate": 263424
+        },
+        {
+          "path": "player/atlases/dodge-helmet-depth.png",
+          "bytes": 15140,
+          "sha256": "8be46de241c1319ef75a3bba1359b47e6e12d904945100b2e64b47829c9682fb",
+          "decodedPlaneBytesEstimate": 131712
+        },
+        {
+          "path": "player/atlases/dodge-armor.png",
+          "bytes": 149171,
+          "sha256": "19a87b948e73ad9773ad6d154b3e95808964cce9ea136e5f42cf97c722dd57d9",
+          "decodedPlaneBytesEstimate": 639744
+        },
+        {
+          "path": "player/atlases/dodge-armor-depth.png",
+          "bytes": 54146,
+          "sha256": "fba2cf728f0fd9d896da7e49953fe201d3ffc1ec2a32eb9849d82fef6baef78c",
+          "decodedPlaneBytesEstimate": 319872
+        },
+        {
+          "path": "player/atlases/dodge-shoes.png",
+          "bytes": 33878,
+          "sha256": "36d4ca63f90a66d45bfade208d159e72c0e6889ae5a2a0b9e31cb1d8d1e85f56",
+          "decodedPlaneBytesEstimate": 224000
+        },
+        {
+          "path": "player/atlases/dodge-shoes-depth.png",
+          "bytes": 9885,
+          "sha256": "20dc0a1f84d4ea7ae58f18aabac65ea33db8453b10700b74f4f187373315973f",
+          "decodedPlaneBytesEstimate": 112000
+        },
+        {
+          "path": "player/atlases/dodge-accessory.png",
+          "bytes": 22991,
+          "sha256": "ed2531260e78cf14e20c0b685a39e46581459d879657eddc35bd3c455e1a07e5",
+          "decodedPlaneBytesEstimate": 170240
+        },
+        {
+          "path": "player/atlases/dodge-accessory-depth.png",
+          "bytes": 7869,
+          "sha256": "c44d46be9636e3fa64415ac2e15278d6cb533d29d27e82e5d36afe97c139b6a2",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/return-body-base.png",
+          "bytes": 230680,
+          "sha256": "383449966317cb3e6b37e2e0c2be88b09c4b816e8d8f39fee62c94564e756760",
+          "decodedPlaneBytesEstimate": 1680000
+        },
+        {
+          "path": "player/atlases/return-body-base-depth.png",
+          "bytes": 109506,
+          "sha256": "e4bf67d2969331d26c2c7258af8be987dd9c728a48a5eae1793fea091562c276",
+          "decodedPlaneBytesEstimate": 840000
+        },
+        {
+          "path": "player/atlases/return-body-helmet.png",
+          "bytes": 8773,
+          "sha256": "c6017ce0cc6d1c46863c6d5b7a1f85bc0b4eaed5715d3750d12c969de2dfa370",
+          "decodedPlaneBytesEstimate": 77952
+        },
+        {
+          "path": "player/atlases/return-body-helmet-depth.png",
+          "bytes": 2968,
+          "sha256": "23d5205427500b164a0bc832dbc97be2f23807f25482c51697e48b44b86af8f5",
+          "decodedPlaneBytesEstimate": 38976
+        },
+        {
+          "path": "player/atlases/return-body-armor.png",
+          "bytes": 8473,
+          "sha256": "ee1a353e6499d911a4d1c4d2b41fb22e01c1a3599f93b943738911424daa34c6",
+          "decodedPlaneBytesEstimate": 84448
+        },
+        {
+          "path": "player/atlases/return-body-armor-depth.png",
+          "bytes": 2936,
+          "sha256": "a66d52f6decd1539fd30d31d0d33e0235856311936a1bede3df1cc751dddcbd4",
+          "decodedPlaneBytesEstimate": 42224
+        },
+        {
+          "path": "player/atlases/return-body-shoes.png",
+          "bytes": 1685,
+          "sha256": "06a81b41f6af93a09be990612a846cc5c4bfcce42792278e1712715223fba2c9",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/return-body-shoes-depth.png",
+          "bytes": 642,
+          "sha256": "cd88585d5c185881e726d864115464e50fdcfb64a41d4b734c41ec3576113097",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "player/atlases/return-body-accessory.png",
+          "bytes": 1844,
+          "sha256": "2b84f066b4f19741e371414fcc999ffa20e038fef0a44490f9e1a8d251ed1e94",
+          "decodedPlaneBytesEstimate": 30464
+        },
+        {
+          "path": "player/atlases/return-body-accessory-depth.png",
+          "bytes": 575,
+          "sha256": "e3940ce38f8171896e1c31b401c1218b540da0777b051336546ce8667f5d234c",
+          "decodedPlaneBytesEstimate": 15232
+        },
+        {
+          "path": "player/atlases/return-weapon.png",
+          "bytes": 41243,
+          "sha256": "425738150b18ef82d24a36ce7555924c0b75b77d14b71fbce75883268362a366",
+          "decodedPlaneBytesEstimate": 428736
+        },
+        {
+          "path": "player/atlases/return-weapon-depth.png",
+          "bytes": 12871,
+          "sha256": "08478e29b67200465654df4562ffadb8b5e03c642926350f8220308d166a4c00",
+          "decodedPlaneBytesEstimate": 214368
+        },
+        {
+          "path": "player/atlases/return-helmet.png",
+          "bytes": 31157,
+          "sha256": "1e836ffcc4b1364e3a27139e27b295a93b463a04e09c89dd2b95d27f3fdf960a",
+          "decodedPlaneBytesEstimate": 174048
+        },
+        {
+          "path": "player/atlases/return-helmet-depth.png",
+          "bytes": 13654,
+          "sha256": "cdb07d83e49018844240dc825901ff3398bb3fba951a4e0ecb0bddd21cf1e26b",
+          "decodedPlaneBytesEstimate": 87024
+        },
+        {
+          "path": "player/atlases/return-armor.png",
+          "bytes": 143991,
+          "sha256": "32e95f30ca289844a4dadca6eef0ec448e2057683aea75a8c2f7118b196847ff",
+          "decodedPlaneBytesEstimate": 700672
+        },
+        {
+          "path": "player/atlases/return-armor-depth.png",
+          "bytes": 53079,
+          "sha256": "a622250b079ea2d258ad08765e2023185aec166ba299ac2d73ba698a3eea5e17",
+          "decodedPlaneBytesEstimate": 350336
+        },
+        {
+          "path": "player/atlases/return-shoes.png",
+          "bytes": 29056,
+          "sha256": "b33d5f968680b86c74027f0516619988ce272be9953ce90d853df45e512cad50",
+          "decodedPlaneBytesEstimate": 224000
+        },
+        {
+          "path": "player/atlases/return-shoes-depth.png",
+          "bytes": 9323,
+          "sha256": "beb3209af4a9117cccf75bf7df1f709b24a813803d473238c12b3b823cf71a50",
+          "decodedPlaneBytesEstimate": 112000
+        },
+        {
+          "path": "player/atlases/return-accessory.png",
+          "bytes": 19123,
+          "sha256": "3a4c5826b44d448568458c40608802fde766a6349721aee235ebafdf358c9c8c",
+          "decodedPlaneBytesEstimate": 120176
+        },
+        {
+          "path": "player/atlases/return-accessory-depth.png",
+          "bytes": 6346,
+          "sha256": "68827a938aed1a6e862ab9ee7d90a5f2209b31ac8cdf027da658822626b46380",
+          "decodedPlaneBytesEstimate": 60088
+        },
+        {
+          "path": "player/atlases/defeat-body-base.png",
+          "bytes": 229086,
+          "sha256": "9209c9fc5b4580f733bfc43dc596dc115fadb4c0776bbc1eb889146bc5d8f7b4",
+          "decodedPlaneBytesEstimate": 1663200
+        },
+        {
+          "path": "player/atlases/defeat-body-base-depth.png",
+          "bytes": 110459,
+          "sha256": "036ef7ff5109bf12d4961139d169a28b281578d84fb9979f6976cc34219652c6",
+          "decodedPlaneBytesEstimate": 831600
+        },
+        {
+          "path": "player/atlases/defeat-body-helmet.png",
+          "bytes": 8982,
+          "sha256": "f6f060910b8b3746b9ab6beb9139dd6cf5d6f4a1514180555cde6898ab4b13ce",
+          "decodedPlaneBytesEstimate": 257040
+        },
+        {
+          "path": "player/atlases/defeat-body-helmet-depth.png",
+          "bytes": 3317,
+          "sha256": "4bc7860c1010af6b242929b045f1aa984418ca3e826eb2d8116db28015638568",
+          "decodedPlaneBytesEstimate": 128520
+        },
+        {
+          "path": "player/atlases/defeat-body-armor.png",
+          "bytes": 9454,
+          "sha256": "98714faf3186edb61bf1ef08c7470694f7ffd654f4dedb9f35f57eff3286784f",
+          "decodedPlaneBytesEstimate": 132608
+        },
+        {
+          "path": "player/atlases/defeat-body-armor-depth.png",
+          "bytes": 3464,
+          "sha256": "4530f216d226acd8b443c0fc107c8b93061e094909ddb86e14babaf104729101",
+          "decodedPlaneBytesEstimate": 66304
+        },
+        {
+          "path": "player/atlases/defeat-body-shoes.png",
+          "bytes": 2085,
+          "sha256": "84ca06589ac1c676a0ce36ffe161ef174eded01278e030942a956067b46bd64c",
+          "decodedPlaneBytesEstimate": 85120
+        },
+        {
+          "path": "player/atlases/defeat-body-shoes-depth.png",
+          "bytes": 740,
+          "sha256": "c8b902f4dc0d5db894aec25dec51b7f63ff9d3bdcc15e7a4cd416b4af608759d",
+          "decodedPlaneBytesEstimate": 42560
+        },
+        {
+          "path": "player/atlases/defeat-body-accessory.png",
+          "bytes": 1994,
+          "sha256": "6c726366ad9226aba9d77e64432e181d4e4154f7a864d1fe9363a143c13835a0",
+          "decodedPlaneBytesEstimate": 60480
+        },
+        {
+          "path": "player/atlases/defeat-body-accessory-depth.png",
+          "bytes": 573,
+          "sha256": "318e858b1b7e1becffc9750d275644c5708d5c3bce0e8b06b6e7d3d67ec9feb1",
+          "decodedPlaneBytesEstimate": 30240
+        },
+        {
+          "path": "player/atlases/defeat-weapon.png",
+          "bytes": 43903,
+          "sha256": "33f5df948b9b0a898c56f96e8dc03f833c89473c4bb03e8415d581491ab5f31e",
+          "decodedPlaneBytesEstimate": 958048
+        },
+        {
+          "path": "player/atlases/defeat-weapon-depth.png",
+          "bytes": 15386,
+          "sha256": "6a7349ad1d5dd803169d13929d5c75990e1e7df92912a5bb363f3ae1b41db17a",
+          "decodedPlaneBytesEstimate": 479024
+        },
+        {
+          "path": "player/atlases/defeat-helmet.png",
+          "bytes": 36107,
+          "sha256": "2bc7a2c6780d85097d35a5038cd1a670879abac37b18f6dcc1163ddd273070bc",
+          "decodedPlaneBytesEstimate": 395136
+        },
+        {
+          "path": "player/atlases/defeat-helmet-depth.png",
+          "bytes": 15550,
+          "sha256": "6d1299bdaa5c73b87dcbb28907a51af7dbb23553835022fc94b985541ce75538",
+          "decodedPlaneBytesEstimate": 197568
+        },
+        {
+          "path": "player/atlases/defeat-armor.png",
+          "bytes": 150767,
+          "sha256": "560cab333455a79834339851feb71d2d5ed2f6d6747e50e1a2ebd5bc42b96808",
+          "decodedPlaneBytesEstimate": 674240
+        },
+        {
+          "path": "player/atlases/defeat-armor-depth.png",
+          "bytes": 56111,
+          "sha256": "fce71c550de33121f8c553644267b9c3a24e0b9d06a9d4476154e5216ad60364",
+          "decodedPlaneBytesEstimate": 337120
+        },
+        {
+          "path": "player/atlases/defeat-shoes.png",
+          "bytes": 32304,
+          "sha256": "0b5318a0b01e068959fd1f35e8813001bdd7088857f62a83a143d5bafe0bb9a6",
+          "decodedPlaneBytesEstimate": 224000
+        },
+        {
+          "path": "player/atlases/defeat-shoes-depth.png",
+          "bytes": 9835,
+          "sha256": "db7f693a95e6d57a8a880f90255f9ea6729c376ac9064d74c51e54d0206b422b",
+          "decodedPlaneBytesEstimate": 112000
+        },
+        {
+          "path": "player/atlases/defeat-accessory.png",
+          "bytes": 22072,
+          "sha256": "3da8f5cb0192313341ac6bcde85edbe10941688f9d41bdc97b2e1e7fab2840ec",
+          "decodedPlaneBytesEstimate": 192192
+        },
+        {
+          "path": "player/atlases/defeat-accessory-depth.png",
+          "bytes": 7713,
+          "sha256": "228b3381872e9fb5744d88b68e2882bf52ee3b7297d284a98df57edae6203d66",
+          "decodedPlaneBytesEstimate": 96096
+        },
+        {
+          "path": "enemies/normal/atlases/idle-enemy.png",
+          "bytes": 239517,
+          "sha256": "203dc60a376be10405a8c6f7ad779d280d782eac75575d869a4b5d5d158d7fc0",
+          "decodedPlaneBytesEstimate": 1336384
+        },
+        {
+          "path": "enemies/normal/atlases/idle-enemy-depth.png",
+          "bytes": 107725,
+          "sha256": "c3bb15e60bd16ef6b42e4b77f9b69e47b1a6a16de093fc688e2d1a5801ab309a",
+          "decodedPlaneBytesEstimate": 668192
+        },
+        {
+          "path": "enemies/normal/atlases/attack-enemy.png",
+          "bytes": 349203,
+          "sha256": "a4cf83871bb268246ad54bcb88803e2528f3673ab3a9988afef0a1f5191b3fb2",
+          "decodedPlaneBytesEstimate": 1887648
+        },
+        {
+          "path": "enemies/normal/atlases/attack-enemy-depth.png",
+          "bytes": 142281,
+          "sha256": "3975035e3667860450b480ecfc91b50ae84a16d3d45f24c77ad886858f9eff2e",
+          "decodedPlaneBytesEstimate": 943824
+        },
+        {
+          "path": "enemies/normal/atlases/hit-enemy.png",
+          "bytes": 343801,
+          "sha256": "5a95c501988c2897dd70fd18ff1261df4b487064796f000c1c904b64466af8e3",
+          "decodedPlaneBytesEstimate": 1406496
+        },
+        {
+          "path": "enemies/normal/atlases/hit-enemy-depth.png",
+          "bytes": 146813,
+          "sha256": "31e07d181f710d00042c0e298e31eb7320aa0d729c37d69ef7df60a83f8498c5",
+          "decodedPlaneBytesEstimate": 703248
+        },
+        {
+          "path": "enemies/normal/atlases/dodge-enemy.png",
+          "bytes": 391884,
+          "sha256": "17225c84ab00f0b7d869f85a41e161a227f76d72d52098f298bd1a35552b9285",
+          "decodedPlaneBytesEstimate": 1769600
+        },
+        {
+          "path": "enemies/normal/atlases/dodge-enemy-depth.png",
+          "bytes": 179939,
+          "sha256": "4e1655170757814f59c787a02ad30dae997a39cb754fa99fcbae32d1dadd6f91",
+          "decodedPlaneBytesEstimate": 884800
+        },
+        {
+          "path": "enemies/normal/atlases/return-enemy.png",
+          "bytes": 363285,
+          "sha256": "43208981b0e3321539a618dd553cc2a7e1e47c4e2955832e1ae54be202be484b",
+          "decodedPlaneBytesEstimate": 1469440
+        },
+        {
+          "path": "enemies/normal/atlases/return-enemy-depth.png",
+          "bytes": 164244,
+          "sha256": "31cda95c332ca9940784b854776a6c32915b0d5e784282ee625ad5c72139a29a",
+          "decodedPlaneBytesEstimate": 734720
+        },
+        {
+          "path": "enemies/normal/atlases/defeat-enemy.png",
+          "bytes": 303573,
+          "sha256": "c5f5c643a2cda08d5f1ba5cbf0255d0bcb098fc192578cfae0a9b0188ac56977",
+          "decodedPlaneBytesEstimate": 1709568
+        },
+        {
+          "path": "enemies/normal/atlases/defeat-enemy-depth.png",
+          "bytes": 133521,
+          "sha256": "a9aa961ce9437f8ba5923aaf3f59d488c8c421ee454e67dde032c3999562f585",
+          "decodedPlaneBytesEstimate": 854784
+        },
+        {
+          "path": "enemies/elite/atlases/idle-enemy.png",
+          "bytes": 322432,
+          "sha256": "f476360edd8f651cd21fa62c2dc6c9bd87031d5fdbba613c6681feed9627ba05",
+          "decodedPlaneBytesEstimate": 1846320
+        },
+        {
+          "path": "enemies/elite/atlases/idle-enemy-depth.png",
+          "bytes": 155986,
+          "sha256": "976b7c2ec7abe1e506aec882772edc70fd249a957683f5b250c4680d432ed2ac",
+          "decodedPlaneBytesEstimate": 923160
+        },
+        {
+          "path": "enemies/elite/atlases/attack-enemy.png",
+          "bytes": 457326,
+          "sha256": "aee2d54264bfe47aa53dd754a88cf8a0db01bba7c28cb36c6376bea14287562a",
+          "decodedPlaneBytesEstimate": 2350656
+        },
+        {
+          "path": "enemies/elite/atlases/attack-enemy-depth.png",
+          "bytes": 196619,
+          "sha256": "805c458fa7f4a1861b1c9cc8cf8f6d027cc8110fbe347b1beb643e7d32a0745b",
+          "decodedPlaneBytesEstimate": 1175328
+        },
+        {
+          "path": "enemies/elite/atlases/hit-enemy.png",
+          "bytes": 456654,
+          "sha256": "8daeac5f7a156f4b5f836ca195ab7443535809c9945195267dc19b341062800a",
+          "decodedPlaneBytesEstimate": 1965488
+        },
+        {
+          "path": "enemies/elite/atlases/hit-enemy-depth.png",
+          "bytes": 201534,
+          "sha256": "ea01e4dee86d3a57164b68df92f3213181efca5ecc0e90c443a2fd7c058e03c2",
+          "decodedPlaneBytesEstimate": 982744
+        },
+        {
+          "path": "enemies/elite/atlases/dodge-enemy.png",
+          "bytes": 503904,
+          "sha256": "852d565b145b53392d3f7c298dd2881ef75f0c0b5cb634398b7d07d7103892dc",
+          "decodedPlaneBytesEstimate": 2261616
+        },
+        {
+          "path": "enemies/elite/atlases/dodge-enemy-depth.png",
+          "bytes": 238572,
+          "sha256": "56cd92b07231e18792bbf99f87470f4ecb276fdaea4be1aacdbfb5269056c199",
+          "decodedPlaneBytesEstimate": 1130808
+        },
+        {
+          "path": "enemies/elite/atlases/return-enemy.png",
+          "bytes": 480006,
+          "sha256": "9dd53e151b9ab7a199ca1a850bbaf99908ad0aef0b322528cf0f2139b770b026",
+          "decodedPlaneBytesEstimate": 2186240
+        },
+        {
+          "path": "enemies/elite/atlases/return-enemy-depth.png",
+          "bytes": 223756,
+          "sha256": "0f66a3286f2e52dbdd5760811f735316280078c7cb25dd57bb0818114ae37f14",
+          "decodedPlaneBytesEstimate": 1093120
+        },
+        {
+          "path": "enemies/elite/atlases/defeat-enemy.png",
+          "bytes": 402043,
+          "sha256": "f1f5281bbc4d8e2e30d6ce2cc1e21de6eb63f0544acaf7797090e349499eb6f2",
+          "decodedPlaneBytesEstimate": 2279424
+        },
+        {
+          "path": "enemies/elite/atlases/defeat-enemy-depth.png",
+          "bytes": 178302,
+          "sha256": "58fd8f39b8f5b61296bec4712b157c2f7e7c638cb088e6e06b5fce290b90c031",
+          "decodedPlaneBytesEstimate": 1139712
+        },
+        {
+          "path": "enemies/boss/atlases/idle-enemy.png",
+          "bytes": 400969,
+          "sha256": "ddd0b7ec60e76781122c74237d6d157e2a16ebc27d3c2ca945c275884b30f6eb",
+          "decodedPlaneBytesEstimate": 2589440
+        },
+        {
+          "path": "enemies/boss/atlases/idle-enemy-depth.png",
+          "bytes": 201258,
+          "sha256": "0db2fe94727766f2e3a34d3de2a3ed65827e3d10811b7c143077d79b178fd1f7",
+          "decodedPlaneBytesEstimate": 1294720
+        },
+        {
+          "path": "enemies/boss/atlases/attack-enemy.png",
+          "bytes": 463549,
+          "sha256": "2d11442135fea2b40e6ca7e0480024c2e4951dbd8435a729f314ac457bed6913",
+          "decodedPlaneBytesEstimate": 2728320
+        },
+        {
+          "path": "enemies/boss/atlases/attack-enemy-depth.png",
+          "bytes": 212728,
+          "sha256": "ae070112452f49473ed13fc385fc9f9b8893465e7a641fee4dddb127ac9234eb",
+          "decodedPlaneBytesEstimate": 1364160
+        },
+        {
+          "path": "enemies/boss/atlases/hit-enemy.png",
+          "bytes": 512684,
+          "sha256": "25d5297586bf970891ba24ca031acd4ce2d5d47aa59dbdbab166b6f9973a6bd6",
+          "decodedPlaneBytesEstimate": 2719584
+        },
+        {
+          "path": "enemies/boss/atlases/hit-enemy-depth.png",
+          "bytes": 234173,
+          "sha256": "e81b56ef27ff2d22ecb2d96167e9dabb1bbcf5b23feef1447f775ebe1fc30380",
+          "decodedPlaneBytesEstimate": 1359792
+        },
+        {
+          "path": "enemies/boss/atlases/dodge-enemy.png",
+          "bytes": 529122,
+          "sha256": "aa0b0c0ff928cb8957cd7f069dab6bf33b2a06cc88abb5ea707661e72a842c9c",
+          "decodedPlaneBytesEstimate": 2757888
+        },
+        {
+          "path": "enemies/boss/atlases/dodge-enemy-depth.png",
+          "bytes": 238801,
+          "sha256": "1e03794089fccacdbb3084cf84fe8a1a0b252c517dd587956a15df720693a3a5",
+          "decodedPlaneBytesEstimate": 1378944
+        },
+        {
+          "path": "enemies/boss/atlases/return-enemy.png",
+          "bytes": 492130,
+          "sha256": "e6b16e58576764fccfa0bf1318e7efe4e26e6ee2dc8ea19714ccaf7e2d2d9656",
+          "decodedPlaneBytesEstimate": 2646560
+        },
+        {
+          "path": "enemies/boss/atlases/return-enemy-depth.png",
+          "bytes": 228541,
+          "sha256": "265faeb391f04509af25c3474ffe9266ed389d242adee0b8344bce02d8ee471d",
+          "decodedPlaneBytesEstimate": 1323280
+        },
+        {
+          "path": "enemies/boss/atlases/defeat-enemy.png",
+          "bytes": 523127,
+          "sha256": "3d6951dbcd393d12ab8e105740a7e41a313f55d97fc309ed39c869565f7feaef",
+          "decodedPlaneBytesEstimate": 2923200
+        },
+        {
+          "path": "enemies/boss/atlases/defeat-enemy-depth.png",
+          "bytes": 236595,
+          "sha256": "4016186a11b807a182cb1f3a9280fe7a84fd5a46f94c2b8dbedb6898db3a4b3e",
+          "decodedPlaneBytesEstimate": 1461600
+        }
+      ],
+      "encodedBytes": 15313938,
+      "decodedPlaneBytesEstimate": 93755592,
+      "gpuBytes": "unavailable; estimates exclude driver/mip/upload overhead"
+    }
+  },
+  "gpuMeasured": false,
+  "comparisonGate": "B3 must render B/C to matching 128/192/256 actor-source pixel grids, same visible size/camera/VFX; current 3D LOD geometry difference still requires visual comparison",
+  "highStrategy": "original shared high master; no duplicate files"
+}

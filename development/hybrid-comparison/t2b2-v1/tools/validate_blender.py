@@ -30,7 +30,7 @@ for actor in ['normal','elite','boss','player']:
  for name in ACTIONS:
   act=bpy.data.actions['B2_'+name];assert act.fcurves and act.frame_range[0]==1 and act.frame_range[1]==22;rig.animation_data.action=act
   reference=None;maxmove=0;risks=[]
-  for frame in [1,5,10,15,21,22]:
+  for frame in range(1,23):
    bpy.context.scene.frame_set(frame);bpy.context.view_layer.update();dg=bpy.context.evaluated_depsgraph_get()
    joints=[b.matrix.copy() for b in rig.pose.bones]
    if reference is None:reference=joints
@@ -41,6 +41,7 @@ for actor in ['normal','elite','boss','player']:
     evaluated[o.name]=(points,[list(p.vertices) for p in m.polygons]);e.to_mesh_clear()
    bounds=[[min(v[i] for v in allpoints),max(v[i] for v in allpoints)] for i in range(3)]
    assert max(b-a for a,b in bounds)<8,'Explosive deformation'
+   assert bounds[2][0]>=0,('Candidate intersects ground',actor,name,frame,bounds[2][0])
    probe={'frame':frame,'boundsMetres':bounds,'belowGroundMetres':max(0,-bounds[2][0])}
    if actor=='player':
     bodyPoints,bodyFaces=evaluated['CW_Player_Foundation'];tree=BVHTree.FromPolygons(bodyPoints,bodyFaces)

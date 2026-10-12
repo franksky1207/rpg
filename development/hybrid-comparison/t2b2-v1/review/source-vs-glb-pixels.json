@@ -1,387 +1,442 @@
 {
   "schema": "cw.t2b2.source-vs-glb-pixels",
   "version": 1,
-  "method": "actual saved-source Cycles32 vs real reimported candidate GLB Cycles32; same camera/30fps sample tick; alpha>.5 silhouette and shared opaque RGB RMSE; no FPS/quality score",
+  "method": "actual saved-source Cycles32 vs real reimported candidate GLB Cycles32; same camera and frame; alpha>.5 silhouette/shared opaque RGB, not native GPU",
   "rows": [
     {
       "actor": "normal",
       "action": "idle",
       "tick": 0,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "idle",
       "tick": 9,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04950238309206843
+      "sharedOpaqueRGB_RMSE": 0.04982816036940467
     },
     {
       "actor": "normal",
       "action": "idle",
       "tick": 21,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "attack",
       "tick": 0,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "attack",
       "tick": 9,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04564645727410168
+      "sharedOpaqueRGB_RMSE": 0.04640704347518505
     },
     {
       "actor": "normal",
       "action": "attack",
       "tick": 21,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "hit",
       "tick": 0,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "hit",
       "tick": 9,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.050438083618210776
+      "sharedOpaqueRGB_RMSE": 0.051139539139296614
     },
     {
       "actor": "normal",
       "action": "hit",
       "tick": 21,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "dodge",
       "tick": 0,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "dodge",
       "tick": 9,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0399458852744454
+      "sharedOpaqueRGB_RMSE": 0.04175378302149117
     },
     {
       "actor": "normal",
       "action": "dodge",
       "tick": 21,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "return",
       "tick": 0,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04454741030740704
+      "sharedOpaqueRGB_RMSE": 0.04561655954885977
     },
     {
       "actor": "normal",
       "action": "return",
       "tick": 9,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04249542324403333
+      "sharedOpaqueRGB_RMSE": 0.04254668348383953
     },
     {
       "actor": "normal",
       "action": "return",
       "tick": 21,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "defeat",
       "tick": 0,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.0485902558961541
+      "sharedOpaqueRGB_RMSE": 0.04889495532705926
     },
     {
       "actor": "normal",
       "action": "defeat",
       "tick": 9,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.045078152666267086
+      "sharedOpaqueRGB_RMSE": 0.04477428778641029
     },
     {
       "actor": "normal",
       "action": "defeat",
       "tick": 21,
+      "sourceSHA": "e4982b7f5f983fccf870d1639af4630020d5f31c0690160f946f474aa0a70cbb",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.06275610569704149
+      "sharedOpaqueRGB_RMSE": 0.06103719554186725
     },
     {
       "actor": "elite",
       "action": "idle",
       "tick": 0,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "idle",
       "tick": 9,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.055123118303648994
+      "sharedOpaqueRGB_RMSE": 0.05547626292584369
     },
     {
       "actor": "elite",
       "action": "idle",
       "tick": 21,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "attack",
       "tick": 0,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "attack",
       "tick": 9,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04534682384633695
+      "sharedOpaqueRGB_RMSE": 0.04490091930260764
     },
     {
       "actor": "elite",
       "action": "attack",
       "tick": 21,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "hit",
       "tick": 0,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "hit",
       "tick": 9,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05607698171383753
+      "sharedOpaqueRGB_RMSE": 0.055938204689309316
     },
     {
       "actor": "elite",
       "action": "hit",
       "tick": 21,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "dodge",
       "tick": 0,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "dodge",
       "tick": 9,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04897420892949909
+      "sharedOpaqueRGB_RMSE": 0.04715755834473766
     },
     {
       "actor": "elite",
       "action": "dodge",
       "tick": 21,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "return",
       "tick": 0,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.048118232838623314
+      "sharedOpaqueRGB_RMSE": 0.0484644734597476
     },
     {
       "actor": "elite",
       "action": "return",
       "tick": 9,
-      "silhouetteIoU": 0.9998695538742499,
-      "sharedOpaqueRGB_RMSE": 0.054732621343481204
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
+      "silhouetteIoU": 1.0,
+      "sharedOpaqueRGB_RMSE": 0.055744267071456875
     },
     {
       "actor": "elite",
       "action": "return",
       "tick": 21,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "defeat",
       "tick": 0,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05538786806253671
+      "sharedOpaqueRGB_RMSE": 0.055656599197844596
     },
     {
       "actor": "elite",
       "action": "defeat",
       "tick": 9,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.049169076427404104
+      "sharedOpaqueRGB_RMSE": 0.05307213067018754
     },
     {
       "actor": "elite",
       "action": "defeat",
       "tick": 21,
+      "sourceSHA": "bc16c8b995494881451f37917d3dcc52876d6bdc6af4533ddc1c9ee7273c4845",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.06356417261637282
+      "sharedOpaqueRGB_RMSE": 0.05451768477916084
     },
     {
       "actor": "boss",
       "action": "idle",
       "tick": 0,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "idle",
       "tick": 9,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05302277653168153
+      "sharedOpaqueRGB_RMSE": 0.050821096485168554
     },
     {
       "actor": "boss",
       "action": "idle",
       "tick": 21,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "attack",
       "tick": 0,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "attack",
       "tick": 9,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.054098784781350884
+      "sharedOpaqueRGB_RMSE": 0.05296717924000627
     },
     {
       "actor": "boss",
       "action": "attack",
       "tick": 21,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "hit",
       "tick": 0,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "hit",
       "tick": 9,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05373281623252917
+      "sharedOpaqueRGB_RMSE": 0.05083687765021774
     },
     {
       "actor": "boss",
       "action": "hit",
       "tick": 21,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "dodge",
       "tick": 0,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "dodge",
       "tick": 9,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05671034221378232
+      "sharedOpaqueRGB_RMSE": 0.051261189209338136
     },
     {
       "actor": "boss",
       "action": "dodge",
       "tick": 21,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "return",
       "tick": 0,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05409837169242929
+      "sharedOpaqueRGB_RMSE": 0.05296775693433921
     },
     {
       "actor": "boss",
       "action": "return",
       "tick": 9,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05162806559547682
+      "sharedOpaqueRGB_RMSE": 0.05017709141447486
     },
     {
       "actor": "boss",
       "action": "return",
       "tick": 21,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "defeat",
       "tick": 0,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05278306936163072
+      "sharedOpaqueRGB_RMSE": 0.05021860933855898
     },
     {
       "actor": "boss",
       "action": "defeat",
       "tick": 9,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.05751058834290033
+      "sharedOpaqueRGB_RMSE": 0.0495096749417351
     },
     {
       "actor": "boss",
       "action": "defeat",
       "tick": 21,
+      "sourceSHA": "13a1417f67d559a4772f3b51037562b62e309ad08759c01349af6881f2b7ab29",
       "silhouetteIoU": 1.0,
-      "sharedOpaqueRGB_RMSE": 0.04826550795394889
+      "sharedOpaqueRGB_RMSE": 0.062168377355720277
     }
   ],
-  "minSilhouetteIoU": 0.9998695538742499,
-  "maxRGB_RMSE": 0.06356417261637282
+  "minimumIoU": 1.0,
+  "maximumRGBRMSE": 0.062168377355720277,
+  "nativeParity": "not implied; see repair-r1/native-color-difference.json"
 }

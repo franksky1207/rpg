@@ -1,7 +1,7 @@
 {
   "schema": "cw.t2b2.glb-roundtrip",
   "version": 1,
-  "glbSHA": "fa740613ed56d81d6848cc9076b18bb7503f68100b50d068b4dbefbd8cddce50",
+  "glbSHA": "4bdc98e901aa576cc4d0231b91f1a8d28a386c6ebc26ab37cafccb3dfdc0e495",
   "actor": "boss",
   "quality": "high",
   "rows": [

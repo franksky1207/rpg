@@ -1,7 +1,7 @@
 {
   "schema": "cw.t2b2.glb-roundtrip",
   "version": 1,
-  "glbSHA": "67b985396fe552ca1befcb15e2262d378256d0dee7d36dbb1a263350c8ec66a4",
+  "glbSHA": "b0439995939ef91b94c7046ab81828d1adde51fedde0ed5dc21420eef7e1f748",
   "actor": "player",
   "quality": "high",
   "rows": [

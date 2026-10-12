@@ -14,7 +14,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "eb5d1435ad1f3ff3358b11f7e442f7b2f3e73ec796becff442ff43d33ff9bd55"
+      "pixelSHA256": "0060a0ee1c48419e797d8dc3e85ba60f5b6735fb3a80aa5abaf136b626292815"
     },
     {
       "variantId": "g007-subset-1",
@@ -29,7 +29,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "ab3ea31f1d2628f350fce552ce520430fad2d7127020d6b3ef0fd0cb16080053"
+      "pixelSHA256": "a41737f43303b708244659bb80c4801e605d55195c11d352eb12977400efd70a"
     },
     {
       "variantId": "g007-subset-2",
@@ -44,7 +44,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "e5b92fb6ebcfaf601083180a34912d5872728d72a99ec1a9c025a2410f3f2707"
+      "pixelSHA256": "c1423d2e83dd24e56f7b3eeca118c7a27b8e5d3383cda83765af97ffc3b97c53"
     },
     {
       "variantId": "g007-subset-3",
@@ -59,7 +59,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "1d777b67b500ed32052f1c98ad93655405df68020283c5316b125de1e8695269"
+      "pixelSHA256": "6c574b8beed887ea4c35c4b75e70762369c08643253f5bfbf9ea159b6cc68fee"
     },
     {
       "variantId": "g007-subset-4",
@@ -74,7 +74,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "208b19c1eb2ac76b69d9a976d47324b1c9492dafc3be9d3dc4fc0fbe794ef1d1"
+      "pixelSHA256": "a8839d05fbf78f7121212f10b1320ad7d91d0ff2b354958b2facee75e599f419"
     },
     {
       "variantId": "g007-subset-5",
@@ -89,7 +89,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "3b18ef2b06b7c1e7895644accd6166e39ff6475847c741164f5016e9615c8d50"
+      "pixelSHA256": "3f0101daa803e2b9f8b63c960c5d0034acf8847cb330eebb62782c7930103324"
     },
     {
       "variantId": "g007-subset-6",
@@ -104,7 +104,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "7ea936cf4cffeab6303bf11133d8f61194c9b92be1ae58499ccd4adb37f76961"
+      "pixelSHA256": "92ad3de9bd14d3a85ce367a3b64ae870add2c5327b2276c249cc848dd87db02b"
     },
     {
       "variantId": "g007-subset-7",
@@ -119,7 +119,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "8ea0c3553cc517ad6029c970d883ff6cadad56cf423a93278c219c09e88b58d8"
+      "pixelSHA256": "470533cbc6804da7299102edcce7db2665f041b6c5716fabcf9ca2bc4786d857"
     },
     {
       "variantId": "g007-subset-8",
@@ -134,7 +134,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "ff6ef11f817642415c3016976deeba069f2957d09e851e31141c2c658b6c9023"
+      "pixelSHA256": "71fb2e7b7097396dc9524754ffd268986f9b9bd07b1cfc3bfc40bdf9f761d9ff"
     },
     {
       "variantId": "g007-subset-9",
@@ -149,7 +149,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "65b9d1c53ebd75332861971f5fab475dc9339aaff1b8c6fb747b6c2875783c9a"
+      "pixelSHA256": "93ff96c89831d29a433c33d1da44103339d8a331cb99dd29331e66a3cccf14e5"
     },
     {
       "variantId": "g007-subset-10",
@@ -164,7 +164,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "025ee8bc8fba7f22c9c9252ed9b154e89740d1cae519d56ef3c2cff237cd9552"
+      "pixelSHA256": "ac13da5b89cf45dadef58f00f76546ef1e883139bee7fce014784b451776b6f7"
     },
     {
       "variantId": "g007-subset-11",
@@ -179,7 +179,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "318d88f9e0b1d465bc6bd8f2909035d5faa5f64d6f7ffe03b2f847305625587b"
+      "pixelSHA256": "9790de4cf10d9d2640753c3b66b45205d0dacdde463d0b6302b39d83b18bdcd6"
     },
     {
       "variantId": "g007-subset-12",
@@ -194,7 +194,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "6b006ac45a49e0d40a0b4b32efa7585904eba47339b79b6944c9729cd178a888"
+      "pixelSHA256": "f553e22729af561dcd8624b8a0009af43cdc96577b4f2ed8611241542caf9bd3"
     },
     {
       "variantId": "g007-subset-13",
@@ -209,7 +209,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "d0927ff3beb30d25241b33f7a76cbe5d584a1c51394f27ababbc0b26ec8ae278"
+      "pixelSHA256": "dbb3b1edd297564dd9a04782679a8d934859d5b2a2a19779f8bd38295c2194a1"
     },
     {
       "variantId": "g007-subset-14",
@@ -224,7 +224,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "7c64102fcd1d35d17aaa5cbe576d47d07b2344824e7fb6aed27089a70268e413"
+      "pixelSHA256": "cfaaa2cd8dbfb2d3120c3af9fa6503fbeac9ac402e252d7a4e9b01c893e3f919"
     },
     {
       "variantId": "g007-subset-15",
@@ -239,7 +239,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "ab08ca8a5b5d3016f29987866140ae941d1998cad85696848999a364660fab97"
+      "pixelSHA256": "b44f5b543e07044007d4daab524bf5bc15f73b72f3d024c61f7d3a21354cb335"
     },
     {
       "variantId": "g007-subset-16",
@@ -254,7 +254,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "25abb28a5fa2926b7c233b9c8ec702bd7e0a398cac8e95c311c16dc80a89dc5f"
+      "pixelSHA256": "25782ba0f68d3607b2a41036ffbc02c59dfbff0b9d76787c36b19fb4a5df0dfe"
     },
     {
       "variantId": "g007-subset-17",
@@ -269,7 +269,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "b2c2ea2cc7685defc1eafa7fc830e3c1d325b90ed53e6aa6daa8e87338e5fc2b"
+      "pixelSHA256": "5df8695088745bfa4c61b97c841bf60598d2b0206e98acccd34475ea9f910ee3"
     },
     {
       "variantId": "g007-subset-18",
@@ -284,7 +284,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "b666b0ddd57ab183eed9990480055bf6a7f34af1fd298feb605dee68dc3d3ed5"
+      "pixelSHA256": "f2979952069cdc71937e794a3d45246f4e5e6d7e366d05c897f98146e575f87a"
     },
     {
       "variantId": "g007-subset-19",
@@ -299,7 +299,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "b386167d8e5efa24365a46a7a442cff93b39d7aba7025673f21260da43f60388"
+      "pixelSHA256": "dd9ec8f6cd77136c4b98bd52b8e0c48db30a21d3ae5a56557e46b78c8c520760"
     },
     {
       "variantId": "g007-subset-20",
@@ -314,7 +314,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "62c7c1ebe3ec745abc5848d6d7883d1c3aa96c2d5a8209e89f6160e80fa6b060"
+      "pixelSHA256": "4c82dc21c7d945842780e3a6f0e67830966f86c8b6cdd4deba8dbca69249bd6b"
     },
     {
       "variantId": "g007-subset-21",
@@ -329,7 +329,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "0cc64c6572cddc6ffb58615857974c00eca59bbf32f41e6040fd3f47a74ec214"
+      "pixelSHA256": "948c63e1af6ece39ead5a55e2d7c271c07f1d6ff0c295489e2b6ef84a9ec90ae"
     },
     {
       "variantId": "g007-subset-22",
@@ -344,7 +344,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "c0f3619edd0d4a5aaed243db7105b2723059d27d4475c001f3178f791f1ffb7e"
+      "pixelSHA256": "2a0def3a617841e5dddc42ce497d884f60ea62b4f315c31d36d92c6ce0280279"
     },
     {
       "variantId": "g007-subset-23",
@@ -359,7 +359,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "7e301275681c0e4c94552f098723c0a7d06aec957c617c9a1ea786ada2cd042a"
+      "pixelSHA256": "6224e65cdefd16a9b120828750262548b62861be1c8fa454c23aa60ab449311b"
     },
     {
       "variantId": "g007-subset-24",
@@ -374,7 +374,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "44a1eaac92d310fa9ef3944ee0707c55d199245f691608ec53ed3a80c63c6a4d"
+      "pixelSHA256": "c458e1f10aa127c013fbf75afa84bee9d1eafabbf47b1b42f76731a248e809ab"
     },
     {
       "variantId": "g007-subset-25",
@@ -389,7 +389,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "45bb94d705684a8b53161f18bbcd08965c7a5895bfc1f7039c5c8a8252ffb918"
+      "pixelSHA256": "d028ef8f3ad8d7c9bff0ad54f3d3d28ae44275fb0da0c0e301fbbed4fac45007"
     },
     {
       "variantId": "g007-subset-26",
@@ -404,7 +404,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "c1423f14d601f43bc8b0ab0ccc1ed4dd9546b36b77a1df93e7b00e1fba7e18f3"
+      "pixelSHA256": "713ba0ff4bacbdd31cdf2644e4ffbd314e54c1e1919430300897e7c45cc5fb1b"
     },
     {
       "variantId": "g007-subset-27",
@@ -419,7 +419,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "2891ef9c5903a606d0c3a180a6f5bf99cb36dc396c080020e4d3b4348a5951a8"
+      "pixelSHA256": "57d66b828db5928c17bf3838528beda1fa46c947ff017514bc0f0d8c337e4cc3"
     },
     {
       "variantId": "g007-subset-28",
@@ -434,7 +434,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "dd7a9ebc978398ec4bd97cc6025d1bfca6e4aa039dfed2df5958564a712ec623"
+      "pixelSHA256": "31f5eb5f75d246d1ae76396f35636635e57a7172909d5037d3315437371611e6"
     },
     {
       "variantId": "g007-subset-29",
@@ -449,7 +449,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "d8f7001f113bc4450a5edb5d330cdfe403a8ec1e15dae49a6112b65950f8a9ea"
+      "pixelSHA256": "c4cf8c1acdcae86be093c45067216129b58d564841f5ea53293567c561046a06"
     },
     {
       "variantId": "g007-subset-30",
@@ -464,7 +464,7 @@
       ],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "1c71b3417d87e0a2c5eabf90a2a038c179b567bc3d17bb9276f6b3a94015184f"
+      "pixelSHA256": "75e00cd258a011f9d0a4eea61c40a9a9cb8db7f7f1674258376f4eb0345372ae"
     },
     {
       "variantId": "g007-subset-31",
@@ -478,7 +478,7 @@
       "emptySlots": [],
       "unavailableSlots": [],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "e1051ddfbccffba18c9c7fa504b58117e5cf8d456988802df42d2d3918cd70f2"
+      "pixelSHA256": "a95a02b34c1722b1f0a69770f0e21fcd1d3dd1c5c306286da44d8c56b5932af4"
     },
     {
       "variantId": "mixed-g006-g007-empty-accessory",
@@ -494,7 +494,7 @@
         "helmet"
       ],
       "fallback": "missing G006 helmet uses uncovered base head + explicit unavailable cue; not a G006 model",
-      "pixelSHA256": "d0927ff3beb30d25241b33f7a76cbe5d584a1c51394f27ababbc0b26ec8ae278"
+      "pixelSHA256": "dbb3b1edd297564dd9a04782679a8d934859d5b2a2a19779f8bd38295c2194a1"
     }
   ],
   "composedBy": "offline depth compositing only; no B3 Renderer",

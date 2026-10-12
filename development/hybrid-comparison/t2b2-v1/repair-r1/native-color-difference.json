@@ -1,0 +1,2066 @@
+{
+  "schema": "cw.t2b2.native-color-difference",
+  "version": 1,
+  "rows": [
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9963756177924218,
+      "rgbRMSEOnCommonOpaque": 0.17518254918031526,
+      "meanRGBSource": [
+        0.28301642340120814,
+        0.31728906481737507,
+        0.33702646769019634
+      ],
+      "meanRGBNative": [
+        0.19352951404871258,
+        0.21371014759581786,
+        0.22517891176641638
+      ],
+      "opaquePixels": 5751
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.927317880794702,
+      "rgbRMSEOnCommonOpaque": 0.16809131502113697,
+      "meanRGBSource": [
+        0.2714489603232057,
+        0.31893814636717255,
+        0.3525971792225668
+      ],
+      "meanRGBNative": [
+        0.1938753851671332,
+        0.2181396336063424,
+        0.2340476765547621
+      ],
+      "opaquePixels": 5358
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.954327320867119,
+      "rgbRMSEOnCommonOpaque": 0.19021383084969445,
+      "meanRGBSource": [
+        0.2986012372863525,
+        0.32845968333858033,
+        0.3441165985110687
+      ],
+      "meanRGBNative": [
+        0.1970472895040419,
+        0.2164216560064324,
+        0.22687358009157865
+      ],
+      "opaquePixels": 5610
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9211312137712981,
+      "rgbRMSEOnCommonOpaque": 0.18350229019451816,
+      "meanRGBSource": [
+        0.2538023028223018,
+        0.2866465101619134,
+        0.3042612718832315
+      ],
+      "meanRGBNative": [
+        0.195768690488695,
+        0.21393678328645035,
+        0.220246002747208
+      ],
+      "opaquePixels": 5039
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9974838245866283,
+      "rgbRMSEOnCommonOpaque": 0.1614686786250836,
+      "meanRGBSource": [
+        0.27140089949680835,
+        0.3124571403126008,
+        0.339842810704905
+      ],
+      "meanRGBNative": [
+        0.19200694660907544,
+        0.21545249439670391,
+        0.2299639310682697
+      ],
+      "opaquePixels": 5284
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9618360886387619,
+      "rgbRMSEOnCommonOpaque": 0.1882233019679167,
+      "meanRGBSource": [
+        0.2923842107199309,
+        0.3276488982084388,
+        0.3493587904204904
+      ],
+      "meanRGBNative": [
+        0.18987087517934406,
+        0.21037265938270383,
+        0.22179744693375086
+      ],
+      "opaquePixels": 5330
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.17617408876396104,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.1948279971940211,
+        0.2153743470295408,
+        0.2264525400295634
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9192988258640649,
+      "rgbRMSEOnCommonOpaque": 0.17764936666596856,
+      "meanRGBSource": [
+        0.262957686800501,
+        0.2974240963151263,
+        0.31849668332310455
+      ],
+      "meanRGBNative": [
+        0.19198591508138407,
+        0.21205765465650195,
+        0.22275430291342302
+      ],
+      "opaquePixels": 5368
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9989944695827049,
+      "rgbRMSEOnCommonOpaque": 0.216761749353647,
+      "meanRGBSource": [
+        0.3000119023592513,
+        0.3645992786135263,
+        0.4095808817060668
+      ],
+      "meanRGBNative": [
+        0.21469889618555563,
+        0.23936575949989677,
+        0.2613747742432938
+      ],
+      "opaquePixels": 3789
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9963756177924218,
+      "rgbRMSEOnCommonOpaque": 0.2216401739681355,
+      "meanRGBSource": [
+        0.28301642340120814,
+        0.31728906481737507,
+        0.33702646769019634
+      ],
+      "meanRGBNative": [
+        0.36658108905186265,
+        0.36787873208751337,
+        0.3842489456224097
+      ],
+      "opaquePixels": 5751
+    },
+    {
+      "actor": "normal",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.927317880794702,
+      "rgbRMSEOnCommonOpaque": 0.22315717433013174,
+      "meanRGBSource": [
+        0.2714489603232057,
+        0.31893814636717255,
+        0.3525971792225668
+      ],
+      "meanRGBNative": [
+        0.36772720286323174,
+        0.3700802904214981,
+        0.3928536401496001
+      ],
+      "opaquePixels": 5358
+    },
+    {
+      "actor": "normal",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.954327320867119,
+      "rgbRMSEOnCommonOpaque": 0.22187649174493268,
+      "meanRGBSource": [
+        0.2986012372863525,
+        0.32845968333858033,
+        0.3441165985110687
+      ],
+      "meanRGBNative": [
+        0.38316451714375405,
+        0.38231239732969846,
+        0.3929628464576525
+      ],
+      "opaquePixels": 5610
+    },
+    {
+      "actor": "normal",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9211312137712981,
+      "rgbRMSEOnCommonOpaque": 0.2341241507327289,
+      "meanRGBSource": [
+        0.2538023028223018,
+        0.2866465101619134,
+        0.3042612718832315
+      ],
+      "meanRGBNative": [
+        0.36006054733860676,
+        0.35000330753457154,
+        0.3611944480113824
+      ],
+      "opaquePixels": 5039
+    },
+    {
+      "actor": "normal",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9974838245866283,
+      "rgbRMSEOnCommonOpaque": 0.2116531762721389,
+      "meanRGBSource": [
+        0.27140089949680835,
+        0.3124571403126008,
+        0.339842810704905
+      ],
+      "meanRGBNative": [
+        0.35551349987383835,
+        0.36028484065843747,
+        0.38182823470038535
+      ],
+      "opaquePixels": 5284
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9618360886387619,
+      "rgbRMSEOnCommonOpaque": 0.21115056896869244,
+      "meanRGBSource": [
+        0.2923842107199309,
+        0.3276488982084388,
+        0.3493587904204904
+      ],
+      "meanRGBNative": [
+        0.3765588787109641,
+        0.3733451053967547,
+        0.38823897288746007
+      ],
+      "opaquePixels": 5330
+    },
+    {
+      "actor": "normal",
+      "action": "return",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9952318316343308,
+      "rgbRMSEOnCommonOpaque": 0.22993821232088207,
+      "meanRGBSource": [
+        0.28554917625263954,
+        0.3194484740752867,
+        0.3388833268632301
+      ],
+      "meanRGBNative": [
+        0.3781071859101386,
+        0.3775105735243016,
+        0.3931266984042602
+      ],
+      "opaquePixels": 5758
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9192988258640649,
+      "rgbRMSEOnCommonOpaque": 0.23317588549904916,
+      "meanRGBSource": [
+        0.262957686800501,
+        0.2974240963151263,
+        0.31849668332310455
+      ],
+      "meanRGBNative": [
+        0.36016554162649017,
+        0.3582756202331899,
+        0.3733599251921234
+      ],
+      "opaquePixels": 5368
+    },
+    {
+      "actor": "normal",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9989944695827049,
+      "rgbRMSEOnCommonOpaque": 0.21519901328340318,
+      "meanRGBSource": [
+        0.3000119023592513,
+        0.3645992786135263,
+        0.4095808817060668
+      ],
+      "meanRGBNative": [
+        0.39991306102804175,
+        0.4165639441313521,
+        0.4456274354555717
+      ],
+      "opaquePixels": 3789
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9968671679197995,
+      "rgbRMSEOnCommonOpaque": 0.1868584670202195,
+      "meanRGBSource": [
+        0.28739789995030957,
+        0.3315483683298784,
+        0.36262951550582945
+      ],
+      "meanRGBNative": [
+        0.1953025610927137,
+        0.22056133468223332,
+        0.23874254441176015
+      ],
+      "opaquePixels": 7617
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9369369369369369,
+      "rgbRMSEOnCommonOpaque": 0.19081844676979554,
+      "meanRGBSource": [
+        0.28878358645688773,
+        0.33789808012454803,
+        0.374057533764016
+      ],
+      "meanRGBNative": [
+        0.1947608252225905,
+        0.2202299986931968,
+        0.23828671428003864
+      ],
+      "opaquePixels": 6902
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9543090638930164,
+      "rgbRMSEOnCommonOpaque": 0.20413884815689248,
+      "meanRGBSource": [
+        0.2968302360451301,
+        0.34024058799896717,
+        0.3714881425986854
+      ],
+      "meanRGBNative": [
+        0.1941551979034633,
+        0.21956950451267382,
+        0.23818579527700232
+      ],
+      "opaquePixels": 7467
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.941371095817893,
+      "rgbRMSEOnCommonOpaque": 0.1989608771110086,
+      "meanRGBSource": [
+        0.2948099558432989,
+        0.33761781033920674,
+        0.36706620664197487
+      ],
+      "meanRGBNative": [
+        0.21477474407577188,
+        0.2373239056665486,
+        0.2512694694097831
+      ],
+      "opaquePixels": 6905
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9974011763096704,
+      "rgbRMSEOnCommonOpaque": 0.19368921518965118,
+      "meanRGBSource": [
+        0.29134904898288017,
+        0.3370984233509068,
+        0.36991486885737185
+      ],
+      "meanRGBNative": [
+        0.19355952118675832,
+        0.21902994559968006,
+        0.23742437337943842
+      ],
+      "opaquePixels": 6942
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9708216022523676,
+      "rgbRMSEOnCommonOpaque": 0.19354170107181343,
+      "meanRGBSource": [
+        0.2937642375082431,
+        0.33801760660834035,
+        0.36938217197846507
+      ],
+      "meanRGBNative": [
+        0.19267739669158498,
+        0.21762151114518274,
+        0.23527655361819652
+      ],
+      "opaquePixels": 7368
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.18616867080250743,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.19533465012448617,
+        0.2210542559101366,
+        0.23928204020328894
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9305162005667118,
+      "rgbRMSEOnCommonOpaque": 0.19138288377841176,
+      "meanRGBSource": [
+        0.2748670904750393,
+        0.31905313698667936,
+        0.350608621013398
+      ],
+      "meanRGBNative": [
+        0.19235428234222063,
+        0.21773879456023848,
+        0.2358160993535664
+      ],
+      "opaquePixels": 7310
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9982824427480916,
+      "rgbRMSEOnCommonOpaque": 0.21301606123569716,
+      "meanRGBSource": [
+        0.32071024831402856,
+        0.3802588391221218,
+        0.42122714692238383
+      ],
+      "meanRGBNative": [
+        0.21697579230499373,
+        0.24332826569992677,
+        0.2660343819436459
+      ],
+      "opaquePixels": 5030
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9968671679197995,
+      "rgbRMSEOnCommonOpaque": 0.22417258970395998,
+      "meanRGBSource": [
+        0.28739789995030957,
+        0.3315483683298784,
+        0.36262951550582945
+      ],
+      "meanRGBNative": [
+        0.37142974821540403,
+        0.384211786329345,
+        0.4107020673570799
+      ],
+      "opaquePixels": 7617
+    },
+    {
+      "actor": "elite",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9369369369369369,
+      "rgbRMSEOnCommonOpaque": 0.22750401563958714,
+      "meanRGBSource": [
+        0.28878358645688773,
+        0.33789808012454803,
+        0.374057533764016
+      ],
+      "meanRGBNative": [
+        0.378414327191308,
+        0.3920835677070058,
+        0.4200623860091768
+      ],
+      "opaquePixels": 6902
+    },
+    {
+      "actor": "elite",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9543090638930164,
+      "rgbRMSEOnCommonOpaque": 0.2251902668844336,
+      "meanRGBSource": [
+        0.2968302360451301,
+        0.34024058799896717,
+        0.3714881425986854
+      ],
+      "meanRGBNative": [
+        0.3725710774466306,
+        0.38567763518960224,
+        0.4115063140563689
+      ],
+      "opaquePixels": 7467
+    },
+    {
+      "actor": "elite",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.941371095817893,
+      "rgbRMSEOnCommonOpaque": 0.24056962892812409,
+      "meanRGBSource": [
+        0.2948099558432989,
+        0.33761781033920674,
+        0.36706620664197487
+      ],
+      "meanRGBNative": [
+        0.38909400690035284,
+        0.39779131348410496,
+        0.42125768482627873
+      ],
+      "opaquePixels": 6905
+    },
+    {
+      "actor": "elite",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9974011763096704,
+      "rgbRMSEOnCommonOpaque": 0.22316472263867784,
+      "meanRGBSource": [
+        0.29134904898288017,
+        0.3370984233509068,
+        0.36991486885737185
+      ],
+      "meanRGBNative": [
+        0.3721338146321475,
+        0.3833415244519049,
+        0.4106337666152681
+      ],
+      "opaquePixels": 6942
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9708216022523676,
+      "rgbRMSEOnCommonOpaque": 0.22471024775831056,
+      "meanRGBSource": [
+        0.2937642375082431,
+        0.33801760660834035,
+        0.36938217197846507
+      ],
+      "meanRGBNative": [
+        0.3810457516339692,
+        0.39121798556555515,
+        0.416436205318178
+      ],
+      "opaquePixels": 7368
+    },
+    {
+      "actor": "elite",
+      "action": "return",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9971188776149317,
+      "rgbRMSEOnCommonOpaque": 0.22716117946604425,
+      "meanRGBSource": [
+        0.2878335699442363,
+        0.33196922000700274,
+        0.36312881920869955
+      ],
+      "meanRGBNative": [
+        0.3775929469374132,
+        0.3891318437133552,
+        0.41520842334835856
+      ],
+      "opaquePixels": 7624
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9305162005667118,
+      "rgbRMSEOnCommonOpaque": 0.23831120617012164,
+      "meanRGBSource": [
+        0.2748670904750393,
+        0.31905313698667936,
+        0.350608621013398
+      ],
+      "meanRGBNative": [
+        0.37222713982992256,
+        0.3836200745688123,
+        0.4096317158874468
+      ],
+      "opaquePixels": 7310
+    },
+    {
+      "actor": "elite",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9982824427480916,
+      "rgbRMSEOnCommonOpaque": 0.21524713342129848,
+      "meanRGBSource": [
+        0.32071024831402856,
+        0.3802588391221218,
+        0.42122714692238383
+      ],
+      "meanRGBNative": [
+        0.3767013604646657,
+        0.4053108798191268,
+        0.4362211047440743
+      ],
+      "opaquePixels": 5030
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9949411913494373,
+      "rgbRMSEOnCommonOpaque": 0.17479653965344533,
+      "meanRGBSource": [
+        0.2995667299177677,
+        0.37276512755640395,
+        0.4223329116592822
+      ],
+      "meanRGBNative": [
+        0.20010331014126473,
+        0.27062776723592313,
+        0.2911601307189582
+      ],
+      "opaquePixels": 7440
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.904330312185297,
+      "rgbRMSEOnCommonOpaque": 0.17665369868857808,
+      "meanRGBSource": [
+        0.27689265824792586,
+        0.35358872818124765,
+        0.40333690251599724
+      ],
+      "meanRGBNative": [
+        0.1942604143651181,
+        0.2654270838644587,
+        0.2854428335911118
+      ],
+      "opaquePixels": 6922
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9054323594978294,
+      "rgbRMSEOnCommonOpaque": 0.1888175580552561,
+      "meanRGBSource": [
+        0.3102549915424341,
+        0.3837683313045737,
+        0.43379599622702164
+      ],
+      "meanRGBNative": [
+        0.20220423563136775,
+        0.2739717870485968,
+        0.2948759294096636
+      ],
+      "opaquePixels": 7442
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9809000835621344,
+      "rgbRMSEOnCommonOpaque": 0.2001070326647791,
+      "meanRGBSource": [
+        0.3302376746225702,
+        0.40679621625007406,
+        0.45837298753365474
+      ],
+      "meanRGBNative": [
+        0.2101499718098067,
+        0.2776846457432804,
+        0.2992815886738183
+      ],
+      "opaquePixels": 7825
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9978765759787658,
+      "rgbRMSEOnCommonOpaque": 0.16778814783835064,
+      "meanRGBSource": [
+        0.27679499889843423,
+        0.35331020048468914,
+        0.4031658955717188
+      ],
+      "meanRGBNative": [
+        0.1949790702798046,
+        0.26347818902841946,
+        0.2836032165675312
+      ],
+      "opaquePixels": 7120
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9788071065989847,
+      "rgbRMSEOnCommonOpaque": 0.18402095292888396,
+      "meanRGBSource": [
+        0.3128227673730144,
+        0.38554524405223617,
+        0.434728716870621
+      ],
+      "meanRGBNative": [
+        0.20268258954621507,
+        0.27447996184476997,
+        0.295275093323104
+      ],
+      "opaquePixels": 7359
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": false,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.17634747051365188,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.20072721968702906,
+        0.2706892959096461,
+        0.2912150194828243
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": false,
+      "silhouetteIoU": 0.9026144537047608,
+      "rgbRMSEOnCommonOpaque": 0.20657918267330083,
+      "meanRGBSource": [
+        0.3266436290005998,
+        0.4037583421145012,
+        0.4563436228021011
+      ],
+      "meanRGBNative": [
+        0.20804872001487257,
+        0.2790465712101448,
+        0.3005909213000377
+      ],
+      "opaquePixels": 7592
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": false,
+      "silhouetteIoU": 0.9958999589995899,
+      "rgbRMSEOnCommonOpaque": 0.1746284961789849,
+      "meanRGBSource": [
+        0.28957643663525495,
+        0.37105452281922785,
+        0.42433522904109755
+      ],
+      "meanRGBNative": [
+        0.2104892057833141,
+        0.2720668873609996,
+        0.2943836120306684
+      ],
+      "opaquePixels": 6930
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9949411913494373,
+      "rgbRMSEOnCommonOpaque": 0.19649603256830633,
+      "meanRGBSource": [
+        0.2995667299177677,
+        0.37276512755640395,
+        0.4223329116592822
+      ],
+      "meanRGBNative": [
+        0.37687592241195184,
+        0.3989062829432903,
+        0.43002477335021017
+      ],
+      "opaquePixels": 7440
+    },
+    {
+      "actor": "boss",
+      "action": "idle",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.904330312185297,
+      "rgbRMSEOnCommonOpaque": 0.20621611886767488,
+      "meanRGBSource": [
+        0.27689265824792586,
+        0.35358872818124765,
+        0.40333690251599724
+      ],
+      "meanRGBNative": [
+        0.36989706023985924,
+        0.3899456691084347,
+        0.42048031000901415
+      ],
+      "opaquePixels": 6922
+    },
+    {
+      "actor": "boss",
+      "action": "attack",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9054323594978294,
+      "rgbRMSEOnCommonOpaque": 0.19329785488094672,
+      "meanRGBSource": [
+        0.3102549915424341,
+        0.3837683313045737,
+        0.43379599622702164
+      ],
+      "meanRGBNative": [
+        0.3817053185154547,
+        0.4091715804838521,
+        0.44106370309478665
+      ],
+      "opaquePixels": 7442
+    },
+    {
+      "actor": "boss",
+      "action": "hit",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9809000835621344,
+      "rgbRMSEOnCommonOpaque": 0.1870178056878542,
+      "meanRGBSource": [
+        0.3302376746225702,
+        0.40679621625007406,
+        0.45837298753365474
+      ],
+      "meanRGBNative": [
+        0.3876579590302419,
+        0.4179760696610936,
+        0.45159230721042504
+      ],
+      "opaquePixels": 7825
+    },
+    {
+      "actor": "boss",
+      "action": "dodge",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9978765759787658,
+      "rgbRMSEOnCommonOpaque": 0.2063600088606274,
+      "meanRGBSource": [
+        0.27679499889843423,
+        0.35331020048468914,
+        0.4031658955717188
+      ],
+      "meanRGBNative": [
+        0.3691969596827363,
+        0.39260354703678463,
+        0.42380315047367606
+      ],
+      "opaquePixels": 7120
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9788071065989847,
+      "rgbRMSEOnCommonOpaque": 0.19133644443225115,
+      "meanRGBSource": [
+        0.3128227673730144,
+        0.38554524405223617,
+        0.434728716870621
+      ],
+      "meanRGBNative": [
+        0.38491749465105973,
+        0.4110314434239532,
+        0.4421348808581781
+      ],
+      "opaquePixels": 7359
+    },
+    {
+      "actor": "boss",
+      "action": "return",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 0,
+      "calibrated": true,
+      "silhouetteIoU": 0.9967504061992251,
+      "rgbRMSEOnCommonOpaque": 0.19401334689195496,
+      "meanRGBSource": [
+        0.30183888645787105,
+        0.37512085599383715,
+        0.42487185097205094
+      ],
+      "meanRGBNative": [
+        0.3709528869996227,
+        0.39496780646371304,
+        0.4267795003229847
+      ],
+      "opaquePixels": 7528
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 9,
+      "calibrated": true,
+      "silhouetteIoU": 0.9026144537047608,
+      "rgbRMSEOnCommonOpaque": 0.19257285582123398,
+      "meanRGBSource": [
+        0.3266436290005998,
+        0.4037583421145012,
+        0.4563436228021011
+      ],
+      "meanRGBNative": [
+        0.3749245852186877,
+        0.40815616025124785,
+        0.4424972623401306
+      ],
+      "opaquePixels": 7592
+    },
+    {
+      "actor": "boss",
+      "action": "defeat",
+      "tick": 21,
+      "calibrated": true,
+      "silhouetteIoU": 0.9958999589995899,
+      "rgbRMSEOnCommonOpaque": 0.19884044546623061,
+      "meanRGBSource": [
+        0.28957643663525495,
+        0.37105452281922785,
+        0.42433522904109755
+      ],
+      "meanRGBNative": [
+        0.38464929406104725,
+        0.41332258155787394,
+        0.44732195908665934
+      ],
+      "opaquePixels": 6930
+    }
+  ],
+  "meanRMSE": {
+    "before": 0.1832183979939732,
+    "agx": 0.21618724813551224
+  },
+  "actualNative": true,
+  "physicalGPU": false,
+  "calibratedMeaning": "attempted source light/AgX settings, not passed parity",
+  "gate": "failed-native-color-parity: RMSE increased; no quality approval"
+}

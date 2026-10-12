@@ -1,3 +1,39 @@
+## 2026-10-12 補修 r1（非全面驗收完成）
+
+前版固定為 `eff0a6becf4f9dbf3d90c33df157aef13a98f355`，
+`repair-r1/revision.json` 保存前版逐檔 SHA/bytes，Git 保留原始源工程及輸出。
+玩家動畫、三敵視覺、GLB、母圖集和 low/medium 候選已同步更新。
+`repair-r1/*-before-after.png`、`pose-views/` 與圖冊提供實際比較。
+
+玩家足點採原踝點固定上移3mm，清除權重變形造成的裸腳局部下穿；來源骨架
+rest矩陣不動。四角色全部528姿勢已加嚴地面斷言，無負地面值。
+
+新增技術檢查：`tools/verify_repair.py`、`tools/verify_combinations.py`。
+後者解碼每個動作/22格並組裝32種穿卸與一混穿，共4356次，不新增播放器。
+`tools/repair_geometry_qc.py` 在 Blender 檢查每格/全部裝備頂點與三方向射線，
+仍保留原 nearest 探針；不能把零探針当成美術批准。
+`tools/repair_candidates.py` 只供以鎖定前版首次建立 r1，存在 revision 時拒覆寫。
+`--player-only` 亦須先恢復鎖定前版玩家源，不是對修改源重複套用。
+`render_frames.py --action return` 只更新該動作並保留其它已烘焙取樣；源 SHA
+改變後必須核對實際再製，不能只改 metadata。所有新的 GLB 再匯出皆經真源
+與獨立再匯出 byte 比對。`reexport.py` 與圖集同樣在 rest 烘焙 LOD 後匯出，
+避免逐動畫格再計算 Decimate；原玩家源拓樸/權重、53骨/9掛點完全不改。
+
+同源 `repair-r1/studio/*.hdr` 是原創面光源的線性環境烘焙，非外借 HDR。
+`tools/color_lut.py` 需本機 PyOpenColorIO 和 Blender4.3.2 安装；只輸出 /tmp。
+上游 AgX 的散布授權沒有取得明示證據，所以 LUT 未入庫、未宣稱 CC0。
+`hybrid-comparison-art-color-browser.js` 只是離線檢驗；原生 shader 校準嘗試
+實測 RMSE 未改善，**不得拿它當已完成材質公平性或 B3 Renderer**。
+
+A low/medium 由同母圖集做線性 sRGB/預乘透明度的精確面積降採樣，深度採
+最近有效樣本，逐格再打包，保留原 trim/pivot/time。`quality-tiers.json`
+記實際 encoded bytes 与 decoded-plane 估算，沒有 GPU 實測。B/C 必須於
+B3 使用相同可見像素/構圖/VFX，三 LOD 的最終畫質公平性仍待同場驗證。
+G006採文字 unavailable，沒有冒用G007；cue mapping 不捏造技能/HP/音訊。
+
+殘餘肩甲/握柄接觸與 native 色差仍是阻塞 Gate；人工美術、真手機/GPU、
+B3整合亦未驗。本批停止，不適合把 B2 當全過而直接進入 B3。
+
 # T2-B2 共用候選資產・隔離與重製
 
 本目錄是共用美術、必要動作與離線驗收，**沒有 A/B/C Renderer**。

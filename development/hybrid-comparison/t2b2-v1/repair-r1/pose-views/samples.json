@@ -1,0 +1,656 @@
+{
+  "schema": "cw.t2b2.pose-view-review",
+  "version": 1,
+  "samples": [
+    {
+      "revision": "before",
+      "action": "idle",
+      "frame": 10,
+      "view": "front",
+      "file": "before-idle-10-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "idle",
+      "frame": 10,
+      "view": "side",
+      "file": "before-idle-10-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "idle",
+      "frame": 10,
+      "view": "back",
+      "file": "before-idle-10-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "idle",
+      "frame": 22,
+      "view": "front",
+      "file": "before-idle-22-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "idle",
+      "frame": 22,
+      "view": "side",
+      "file": "before-idle-22-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "idle",
+      "frame": 22,
+      "view": "back",
+      "file": "before-idle-22-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "attack",
+      "frame": 10,
+      "view": "front",
+      "file": "before-attack-10-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "attack",
+      "frame": 10,
+      "view": "side",
+      "file": "before-attack-10-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "attack",
+      "frame": 10,
+      "view": "back",
+      "file": "before-attack-10-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "attack",
+      "frame": 22,
+      "view": "front",
+      "file": "before-attack-22-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "attack",
+      "frame": 22,
+      "view": "side",
+      "file": "before-attack-22-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "attack",
+      "frame": 22,
+      "view": "back",
+      "file": "before-attack-22-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "hit",
+      "frame": 5,
+      "view": "front",
+      "file": "before-hit-5-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "hit",
+      "frame": 5,
+      "view": "side",
+      "file": "before-hit-5-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "hit",
+      "frame": 5,
+      "view": "back",
+      "file": "before-hit-5-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "hit",
+      "frame": 6,
+      "view": "front",
+      "file": "before-hit-6-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "hit",
+      "frame": 6,
+      "view": "side",
+      "file": "before-hit-6-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "hit",
+      "frame": 6,
+      "view": "back",
+      "file": "before-hit-6-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "dodge",
+      "frame": 10,
+      "view": "front",
+      "file": "before-dodge-10-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "dodge",
+      "frame": 10,
+      "view": "side",
+      "file": "before-dodge-10-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "dodge",
+      "frame": 10,
+      "view": "back",
+      "file": "before-dodge-10-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "dodge",
+      "frame": 22,
+      "view": "front",
+      "file": "before-dodge-22-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "dodge",
+      "frame": 22,
+      "view": "side",
+      "file": "before-dodge-22-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "dodge",
+      "frame": 22,
+      "view": "back",
+      "file": "before-dodge-22-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "return",
+      "frame": 10,
+      "view": "front",
+      "file": "before-return-10-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "return",
+      "frame": 10,
+      "view": "side",
+      "file": "before-return-10-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "return",
+      "frame": 10,
+      "view": "back",
+      "file": "before-return-10-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "return",
+      "frame": 22,
+      "view": "front",
+      "file": "before-return-22-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "return",
+      "frame": 22,
+      "view": "side",
+      "file": "before-return-22-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "return",
+      "frame": 22,
+      "view": "back",
+      "file": "before-return-22-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "defeat",
+      "frame": 10,
+      "view": "front",
+      "file": "before-defeat-10-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "defeat",
+      "frame": 10,
+      "view": "side",
+      "file": "before-defeat-10-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "defeat",
+      "frame": 10,
+      "view": "back",
+      "file": "before-defeat-10-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "defeat",
+      "frame": 22,
+      "view": "front",
+      "file": "before-defeat-22-front.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "defeat",
+      "frame": 22,
+      "view": "side",
+      "file": "before-defeat-22-side.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "before",
+      "action": "defeat",
+      "frame": 22,
+      "view": "back",
+      "file": "before-defeat-22-back.png",
+      "sourceSHA": "ae9cff5f621ecced7b103c592e30701885ca21c32937df320f63364c238fc9c5",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "idle",
+      "frame": 10,
+      "view": "front",
+      "file": "after-idle-10-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "idle",
+      "frame": 10,
+      "view": "side",
+      "file": "after-idle-10-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "idle",
+      "frame": 10,
+      "view": "back",
+      "file": "after-idle-10-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "idle",
+      "frame": 22,
+      "view": "front",
+      "file": "after-idle-22-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "idle",
+      "frame": 22,
+      "view": "side",
+      "file": "after-idle-22-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "idle",
+      "frame": 22,
+      "view": "back",
+      "file": "after-idle-22-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "attack",
+      "frame": 10,
+      "view": "front",
+      "file": "after-attack-10-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "attack",
+      "frame": 10,
+      "view": "side",
+      "file": "after-attack-10-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "attack",
+      "frame": 10,
+      "view": "back",
+      "file": "after-attack-10-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "attack",
+      "frame": 22,
+      "view": "front",
+      "file": "after-attack-22-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "attack",
+      "frame": 22,
+      "view": "side",
+      "file": "after-attack-22-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "attack",
+      "frame": 22,
+      "view": "back",
+      "file": "after-attack-22-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "hit",
+      "frame": 5,
+      "view": "front",
+      "file": "after-hit-5-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "hit",
+      "frame": 5,
+      "view": "side",
+      "file": "after-hit-5-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "hit",
+      "frame": 5,
+      "view": "back",
+      "file": "after-hit-5-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "hit",
+      "frame": 6,
+      "view": "front",
+      "file": "after-hit-6-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "hit",
+      "frame": 6,
+      "view": "side",
+      "file": "after-hit-6-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "hit",
+      "frame": 6,
+      "view": "back",
+      "file": "after-hit-6-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "dodge",
+      "frame": 10,
+      "view": "front",
+      "file": "after-dodge-10-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "dodge",
+      "frame": 10,
+      "view": "side",
+      "file": "after-dodge-10-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "dodge",
+      "frame": 10,
+      "view": "back",
+      "file": "after-dodge-10-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "dodge",
+      "frame": 22,
+      "view": "front",
+      "file": "after-dodge-22-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "dodge",
+      "frame": 22,
+      "view": "side",
+      "file": "after-dodge-22-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "dodge",
+      "frame": 22,
+      "view": "back",
+      "file": "after-dodge-22-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "return",
+      "frame": 10,
+      "view": "front",
+      "file": "after-return-10-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "return",
+      "frame": 10,
+      "view": "side",
+      "file": "after-return-10-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "return",
+      "frame": 10,
+      "view": "back",
+      "file": "after-return-10-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "return",
+      "frame": 22,
+      "view": "front",
+      "file": "after-return-22-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "return",
+      "frame": 22,
+      "view": "side",
+      "file": "after-return-22-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "return",
+      "frame": 22,
+      "view": "back",
+      "file": "after-return-22-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "defeat",
+      "frame": 10,
+      "view": "front",
+      "file": "after-defeat-10-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "defeat",
+      "frame": 10,
+      "view": "side",
+      "file": "after-defeat-10-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "defeat",
+      "frame": 10,
+      "view": "back",
+      "file": "after-defeat-10-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "defeat",
+      "frame": 22,
+      "view": "front",
+      "file": "after-defeat-22-front.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "defeat",
+      "frame": 22,
+      "view": "side",
+      "file": "after-defeat-22-side.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    },
+    {
+      "revision": "after",
+      "action": "defeat",
+      "frame": 22,
+      "view": "back",
+      "file": "after-defeat-22-back.png",
+      "sourceSHA": "feec1afc93786a232c50b4e21460d9d78558466d628e284abe5b07c6cc44364a",
+      "allMeshesVisible": true
+    }
+  ],
+  "artApproved": false,
+  "includes": "front/side/back extremes; full 132 frames geometrically inspected separately"
+}

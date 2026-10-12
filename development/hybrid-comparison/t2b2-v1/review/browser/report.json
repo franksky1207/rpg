@@ -4,7 +4,7 @@
       1280,
       720
     ],
-    "realImagesDecoded": 8,
+    "realImagesDecoded": 23,
     "noOverflow": true
   },
   {
@@ -12,7 +12,7 @@
       1440,
       1080
     ],
-    "realImagesDecoded": 8,
+    "realImagesDecoded": 23,
     "noOverflow": true
   },
   {
@@ -20,7 +20,7 @@
       390,
       844
     ],
-    "realImagesDecoded": 8,
+    "realImagesDecoded": 23,
     "noOverflow": true
   },
   {
@@ -28,7 +28,7 @@
       360,
       800
     ],
-    "realImagesDecoded": 8,
+    "realImagesDecoded": 23,
     "noOverflow": true
   },
   {
@@ -36,7 +36,7 @@
       844,
       390
     ],
-    "realImagesDecoded": 8,
+    "realImagesDecoded": 23,
     "noOverflow": true
   },
   {
@@ -46,48 +46,48 @@
         "samples": 18,
         "variants": 0,
         "actualG007BindsChecked": false,
-        "foregroundPixels": 12638,
-        "actualScreenshotBytes": 28527
+        "foregroundPixels": 12646,
+        "actualScreenshotBytes": 28487
       },
       {
         "actor": "elite",
         "samples": 18,
         "variants": 0,
         "actualG007BindsChecked": false,
-        "foregroundPixels": 31639,
-        "actualScreenshotBytes": 47684
+        "foregroundPixels": 31731,
+        "actualScreenshotBytes": 46878
       },
       {
         "actor": "boss",
         "samples": 18,
         "variants": 0,
         "actualG007BindsChecked": false,
-        "foregroundPixels": 49530,
-        "actualScreenshotBytes": 57840
+        "foregroundPixels": 54906,
+        "actualScreenshotBytes": 61404
       },
       {
         "actor": "player-low",
         "samples": 18,
         "variants": 33,
         "actualG007BindsChecked": true,
-        "foregroundPixels": 10067,
-        "actualScreenshotBytes": 25326
+        "foregroundPixels": 10066,
+        "actualScreenshotBytes": 25897
       },
       {
         "actor": "player-medium",
         "samples": 18,
         "variants": 33,
         "actualG007BindsChecked": true,
-        "foregroundPixels": 10084,
-        "actualScreenshotBytes": 25588
+        "foregroundPixels": 10073,
+        "actualScreenshotBytes": 26177
       },
       {
         "actor": "player-high",
         "samples": 18,
         "variants": 33,
         "actualG007BindsChecked": true,
-        "foregroundPixels": 10096,
-        "actualScreenshotBytes": 25815
+        "foregroundPixels": 10071,
+        "actualScreenshotBytes": 26383
       }
     ],
     "ownedScenesRemaining": 0,
