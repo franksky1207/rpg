@@ -1,3 +1,9 @@
+## 2026-10-13｜T3-A 首批正式頁模式相容策略施工
+- T2-C 使用者已階段性批准 B（玩家即時 3D／敵方圖集）；美術未封版。開始 T3-A，建立 `3d-test/t3a-hybrid-policy.js`，經正式 `index.html` 版本化載入。輸入為 legacy text/3d、預期 B、三品質、Renderer/WebGL/素材 ready、背景/context-loss/Owner 安全；**只有條件全部成立且非極簡才輸出 hybrid-b，否則一律 text**。
+- 原 `3d-test/mode-foundation.js` 及 `FULL_3D_AVAILABLE=false` 保持，帳號／裝置偏好、正式存檔與遊戲結算完全不寫入；只提供唯讀視覺決策契約 `canCommit=false`／`canCreateCombatEvents=false`。**尚未連接 T3-B 實際戰鬥 Renderer，也不對玩家解鎖 B 戰鬥按鈕。**
+- 新增 `tests/runtime/t3a-hybrid-policy.cjs` 並納入 `.github/workflows/runtime-integrity.yml`；回歸涵蓋舊偏好、標準／高／極簡、素材／WebGL／背景／context loss 安全降級。需要 latest exact-HEAD CI success 和真機 Gate 才可宣稱 T3-A 完整完工。
+- 路線圖 `docs/3D_HYBRID_TRANSITION_EXECUTION_ROADMAP_2026-10-12.md` 已同步。下一個 T3-A 工項仍需正式設定選項及 owner 安全切換／回退驗證；不得在未授權 T3-B 時改正式戰鬥公式或跨玩法接線。
+
 ## 2026-10-13｜T2-C 階段性批准，移交 T3-A
 - 使用者明確認可目前 B 方案美術「目前來說是合格的」，但許多美工作業尚未完成，不能視為最終封版。B 玩家即時 3D＋敵方預渲染 atlas 為下一階段唯一正式方向，不重新選 A/C。
 - 上一個 exact HEAD `9938e4718b84495e7bf789c1650fa5620f6ee486` 六項 Actions 均 success，加上基本桌機手機與既有手機約 30 分鐘使用驗收，T2-C **階段性採用 Gate 結案**。未有實測的 FPS／RAM／溫度／context loss 及未完美術仍列後續 T3／上線前 Gate，絕不冒認完成。
