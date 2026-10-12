@@ -1,7 +1,7 @@
 {
   "baseline": "754acf702325f0a136d21a5948b45807ea5db4f2",
   "baselineActions": "nine exact-HEAD runs completed success; Runtime/Stage4/Optimized Pages included",
-  "implementationCommit": "pending",
+  "implementationCommit": "8e13fb19582dd8217044a28189b71008ca171f68",
   "scope": "T2-A-only; no renderer/runtime/art/selection changes",
   "commands": [
     {
@@ -91,6 +91,11 @@
     {
       "command": "git diff --check / git diff --cached --check",
       "passed": true
+    },
+    {
+      "command": "node tests/runtime/html-cache-version-guard.js 754acf702325f0a136d21a5948b45807ea5db4f2 8e13fb19582dd8217044a28189b71008ca171f68",
+      "passed": true,
+      "log": "/tmp/t2a-html-version-final.log"
     }
   ],
   "coreCounts": {
@@ -599,5 +604,6 @@
   ],
   "T2BReadiness": "Specification and offline input ready; actual player attacks/A-layer art/three enemy source models/B-atlases/C-GLBs/background/VFX unbuilt; author separately before B1",
   "rollback": "Revert this batch implementation/data and handoff commits; preserve all live State/cache/cloud/model binaries",
-  "exactHEADActions": "pending final push; query final main SHA"
+  "exactHEADActions": "Query final handoff commit on main after push; pending at time of this document commit",
+  "endingImplementationHEAD": "8e13fb19582dd8217044a28189b71008ca171f68"
 }

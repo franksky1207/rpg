@@ -1,3 +1,12 @@
+## 2026-10-12｜混合式轉型 T2-A：公平比較規格與隔離事件 fixture（本機驗收完成）
+- 起始main／HEAD `754acf702325f0a136d21a5948b45807ea5db4f2`，工作目錄乾淨，無其他新提交；T1-A/B/C原接線仍在，起始九個exact-HEAD Actions全部success（含Runtime／Stage4／Pages）。真手機／硬體／長背景／真帳號Gate仍待驗，不因CI成功而勾選。本批已獲新的T2-A隔離規格／工具授權。
+- 規格／工具／資料提交 `8e13fb19582dd8217044a28189b71008ca171f68`；新增[比較規格](docs/3D_HYBRID_T2A_COMPARISON_SPEC_2026-10-12.md)、[fixture契約](docs/3D_HYBRID_T2A_FIXTURE_CONTRACT_2026-10-12.md)、[38項驗收矩陣](docs/3D_HYBRID_T2A_ACCEPTANCE_MATRIX_2026-10-12.md)、[T2-B分四小批藍圖](docs/3D_HYBRID_T2A_T2B_IMPLEMENTATION_BLUEPRINT_2026-10-12.md)及[實測證據](docs/3D_HYBRID_T2A_TEST_EVIDENCE_2026-10-12.json)。比較A純2D五槽分層、B即時玩家＋預渲染敵、C即時玩家＋即時敵；同fixture/SHA/外觀/鏡頭/舞台/節奏/VFXbudget/冷熱条件，不預設勝者。
+- development/hybrid-comparison/t2a-v1：五個原core episode、G00732穿卸子集合＋一混穿、18GLB完整SHA／授權／動畫audit。三代表是古代科技遺址的遺址守衛機Lv31／遠古戰爭機甲Lv34／遺址中樞核心Lv35；正式ID不存在即null，陣列locator不冒充正式ID。原53骨／九掛點（含兩FX）／三LOD與G00715GLB保持；唯一idle clip，攻擊動作與三敵真模型／圖集都尚未製作。
+- tools只在隔離Node VM呼叫原Owner，不觸真State／RNG／存檔／網路／結算。gm-fixture lane，computed不等於committed，歷史partial／逐擊HP與pacing unavailable，無loot；純視覺script另schema無權威數值；量測template全not-run，沒有畫質／FPS／GPU／工時實測。正式runtime/index/manifest/asset與36具名來源byte不變。
+- 17新契約＋T1-A15/B10/C26/整合4=72通過；330 A/B/C輸入一致，原標準核心576／鏡像48結果比較通過。391 JS、490 sourceSHA、385成品HTTP/SHA、17音訊解碼／cache/save隔離／publish政策通過。成品仍36482365 bytes，所有新增開發檔排除；初期seed/掛點/VM bootstrap/本機server/guardCLI錯誤均記原因並修正，未放寬断言。
+- 最終main為後續交接／證據提交，exact-HEAD Actions提交後核對；不能宣稱新Renderer／實機Gate通過。本批畫面不變，無玩家新功能要測；T2-B才開始prototype，T2-C驗真硬體和選型。
+- 回復revert本批交接／證據與規格／工具／資料提交，不清玩家資料／快取。**T2-B／T2-C／T3～T5全未施工；本批停止**。下一個可另行授權工作為T2-B1隔離入口與playback殼；美術、B/C敵人、A五槽動作、T1-C硬體未驗及本批CI列Gate，不自動進下一批。
+
 ## 2026-10-12｜混合式轉型 T1-C：正式戰鬥事件唯讀橋接（程式／本機驗收完成）
 - 起始 main `89333ee746dc856eeb0e1349a58a8bfd046793c9`，工作目錄乾淨、無新提交；T1-A／T1-B 接線保留，起始 exact-HEAD 十個 Actions success。程式施工結束 HEAD `e74b9d3a47417b6e1d9dad74e1804b7455d328ed`；最終 main 為本交接／證據提交，提交後須獨立核對該 HEAD 的 Actions／Pages。
 - 新增輕量 `CivilizationCombatEvents` v1，正式／GM fixture 分 lane，原標準／鏡像結果與 combatfx HP／盾／節奏唯讀投影。每場私有 ID／seq、26 契約／負向驗證；不 await consumer，throw／reject／永不完成隔離，每訂閱32佇列／最多16訂閱，256 action 上限與 partial／snapshot-only 明示；跨頁／切紀元／播放結束取消舊 delivery，重訂閱不重播獎勵／聲音。

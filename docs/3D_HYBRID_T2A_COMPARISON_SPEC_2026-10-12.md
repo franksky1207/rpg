@@ -69,4 +69,4 @@ Resource Timing＋HTTP bytes／CDP可取得時區分transfer/encoded/decoded byt
 - [T2-B詳細藍圖](3D_HYBRID_T2A_T2B_IMPLEMENTATION_BLUEPRINT_2026-10-12.md)
 - [本批實測證據](3D_HYBRID_T2A_TEST_EVIDENCE_2026-10-12.json)
 
-完成提交與實際結果在本批證據／最新交接記錄；最終HEAD由GitHub main及交付回報查核。回復revert本批程式／資料與交接提交，不改存檔／雲端／快取。**T2-B、T2-C、T3～T5未施工；本批停止。**
+本批規格／工具／資料完成提交 `8e13fb19582dd8217044a28189b71008ca171f68`；起始HEAD見首節。其後的驗收證據／交接提交為最終main，exact-HEAD Actions與完整SHA由GitHub main及交付回報獨立查核，避免文件自我引用。已執行17項T2-A、T1-A15/T1-B10/T1-C26/整合4共72契約、330資料一致性比對、正式core576/鏡像48比較、385檔HTTP/SHA。最初掛點/seed/VM bootstrap與本機HTTP故障已修正重跑，未放寬斷言；所有指令與未驗項見實測JSON。回復revert本批程式／資料與交接提交，不改存檔／雲端／快取。**T2-B、T2-C、T3～T5未施工；本批停止。**
