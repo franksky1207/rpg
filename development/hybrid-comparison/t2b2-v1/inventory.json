@@ -8882,7 +8882,7 @@
     {
       "path": "tools/inventory.py",
       "bytes": 4334,
-      "sha256": "f84b8e12d7bed10611487d6402ccd3fcda4c271bb88bda392d825aebcfd8e517",
+      "sha256": "71d762bfa09bc503082b8c41ee0bcfaeba2c10826077ec53060b502841a6e727",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
