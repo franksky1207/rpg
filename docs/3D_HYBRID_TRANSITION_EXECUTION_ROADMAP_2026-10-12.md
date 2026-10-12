@@ -65,7 +65,7 @@
 | T2-B1 隔離入口／共用舞台／播放控制 | **程式／本機完成；B2開工核main10ef9222九個CI均success；真機待驗** | `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`，[B1驗收](3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)／[證據](3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)；技术占位，無GPU/FPS驗收 |
 | T2-B2 共用美術與必要動作 | **r2部分根因修正／技術通過；光影與肩甲2項C未過** | `b3a5ab9f5f0607f965f2ed51bbf66e7056b4cd91`，[r2驗收](3D_HYBRID_T2B2_REPAIR_R2_ACCEPTANCE_2026-10-12.md)／[B3前置判定](3D_HYBRID_T2B3_PREREQUISITES_R2_2026-10-12.md)；未建議進B3 |
 | T2-B3 A/B/C Renderer接入 | **已實作開發展示；正式選型／美術Gate未全過** | [B3驗收](3D_HYBRID_T2B3_ACCEPTANCE_2026-10-12.md)；A/C僅供比較與回退，後續 B 導向 |
-| T2-B4 觀測／故障與原型收尾 | 未施工 | **優先 B**：首次／重播載入與圖集解碼、HTTP快取、容量、手機FPS/記憶體／切換/長測；A/C僅必要對照 |
+| T2-B4 觀測／故障與原型收尾 | **程式優化與自動驗證建置已施工；CI／實機 Gate 未全部確認** | B 暖快取、失敗重試、解碼與資源診斷；100 次切換與三次重播測試已設計，需最新 exact-HEAD B3 CI 成功，真手機 FPS／熱／長測仍未驗 |
 | T2-C 桌機／手機實測與 B 正式採用 Gate | **B 方向已由使用者選定；正式驗收未過** | 不再重選 A/B/C；確認 B 真機品質、效能與來源／遊戲安全後才能正式整合與量產 |
 | T3-A 混合模式／品質與舊偏好相容 | 待施工 | 使用者已選 B；須先通過 B 的 T2-C 正式採用 Gate |
 | T3-B 正式戰鬥與玩法轉接 | 待施工 | 全正式 owner 一致、跨紀元合法模式完整 |
@@ -212,3 +212,13 @@ fallback美術、A低中專屬atlas、獨立效果clip未交付；真裝置／�
 本批停止，原27～40正式規格保持有效；B3/B4/T2-C/T3～T5未施工，無勝者。
 先修/審B2 Gate，另授權B3才按immutable來源/clipStart/取消接口接Renderer。
 回復revert交接／證據及507f0385，不清玩家資料或快取。
+
+
+## T2-B4 施工交接與 CI 保留事項（2026-10-13）
+
+- 已選 B：玩家即時 3D／敵方 atlas；A、C 僅開發對照與故障回退。此次所有改動僅 `development/hybrid-comparison/` 與隔離測試、鎖定清冊，不改正式戰鬥算式、音訊、存檔、發布玩家資產。現有硬體、光影、裝備接觸及使用者美術 Gate 不因本批通過。
+- 已實作 24 MiB SHA 驗證素材 bytes 暖快取、單頁 SHA 驗證 manifest 重用、32 MiB RGBA／PNG16 depth 解碼 LRU；Session Renderer、RAF、WebGL Engine 照原有停止與取消機制釋放。加入最近一次 Renderer 準備時間、解碼命中數及容量診斷；尚未取得真機冷／熱延遲、FPS／RAM／熱量的可比證據。
+- 已修正 Renderer 載入失敗不應空播及再次按播放重新建立安全 session。依原 B3 CI 腳本的 100 次競態／取消、GPU 釋放測試，另新增 B 連續三次重播、解碼命中／上限、停止後 Engine／RAF／Renderer 歸零驗證。
+- 2026-10-13 補修 `tests/runtime/hybrid-comparison-renderer-comparison-browser.js`：原腳本故障注入攔截 `shared/background.png`，新暖快取可能使第二次請求完全不發生，卻無期限等待；改用尚未載入的菁英／Boss medium atlas，並對攔截等待加 15 秒失敗界限，保留真 SHA 錯誤與過期載入安全測試。**此修正需以新 CI 結果驗收，不能直接宣稱通過。**
+- 先前 `cf36a07012a15d7943e4fa77b7c35ba6ec29058d` 的 8 個 Actions 其中 7 項成功，B3 瀏覽器檢查長時間執行中；本次修正提交 `433fd463bf1a4098071a10a9a667165f43f4e82a`，本交接之後的 exact-HEAD CI 仍需另查。不可把 pending／cancelled／in_progress 等同 failure 或 success。
+- 尚未完成的 Gate：真機（iOS／Android／桌機 GPU）的 FPS、RAM、發熱、OS 背景／回前台、30 分鐘長測、WebGL context loss 實機，以及使用者確認 B 可正式導入。這些由 T2-C 承接，不靠 SwiftShader 或 viewport 假冒；T3～T5 不得逕行開始。
