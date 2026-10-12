@@ -1,3 +1,8 @@
+## 2026-10-13｜T2-C 長測已完成回報，進入 B 視覺品質 Gate
+- 使用者指出手機 B 方案約 30 分鐘長時間使用**先前已完成**，不再要求重測；未提供量化 FPS／RAM／發熱、WebGL 故障注入細節，因此不冒認所有 C02／C03 細項合格。
+- T2-C 接著以 **C04 B 實際美術／五槽混穿／肩甲背飾穿模／角色接地／手機清晰度** 為優先；只修重大的可見缺陷，無須重選 A/C 或無止境校色。更新於 `docs/3D_HYBRID_TRANSITION_EXECUTION_ROADMAP_2026-10-12.md`。
+- 尚未經整體採用 Gate 批准，不動正式戰鬥程式，不啟動 T3。
+
 ## 2026-10-13｜T2-C 正式啟動：B 採用 Gate
 - T2-B4 exact HEAD `421a00c5bf583f63a68c6f5ffa8694a3eac337d6` 的六項 workflow 已查證 **completed/success 6/6**（T2-A、B1、B2、B3 Renderers、Runtime Integrity、GitHub Pages）；使用者桌機與手機五項基本操作均回報正常。原舊交接中的「B3 running」是歷史快照，不能取代本次最新結論。
 - B 方案已選定：玩家即時 3D、敵方預渲染圖集；不重選 A/C、不將開發展示接進正式戰鬥、不改公式、資料、存檔／雲端／音訊。T2-C 現在正式啟動，但**尚非全 Gate 通過**。
