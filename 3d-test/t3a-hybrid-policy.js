@@ -50,7 +50,8 @@ function receive(e){
  try{sink(e);}catch(_){rejected++;}
 }
 function attach(consumer){
- if(typeof consumer!=="function"||sink||dispose)return false;
+ if(typeof consumer!=="function"||sink)return false;
+ if(dispose){sink=consumer;return true;}
  const events=global.CivilizationCombatEvents;
  if(!events||typeof events.subscribe!=="function")return false;
  sink=consumer;
@@ -66,6 +67,8 @@ function monitor(){
 }
 global.addEventListener?.("pagehide",detach);
 global.addEventListener?.("civilization-auth-signed-out",detach);
+// Formal event owner loads before this script; the relay remains renderer-free.
+monitor();
 global.CivilizationFormalHybridBridge=Object.freeze({version:VERSION,supportedModes:MODES,legalWorlds:legal,
  attach,monitor,detach,diagnostics:()=>Object.freeze({version:VERSION,observed,rejected,subscribed:!!dispose,consumerAttached:!!sink,
  lastBattle,lastSeq,rendererReleased:false,canCommit:false,canCreateEvents:false})});
