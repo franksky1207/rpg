@@ -1,0 +1,18 @@
+{
+  "schema": "cw.t2a.comparison-controls",
+  "version": 1,
+  "status": "comparison-baseline-proposal-not-final-art-or-selection",
+  "schemes": {
+    "A": {"player": "layered-2d-five-independent-slots", "enemy": "2d-frames-from-shared-enemy-art"},
+    "B": {"player": "existing-realtime-3d-five-slots", "enemy": "prerendered-3d-atlas"},
+    "C": {"player": "existing-realtime-3d-five-slots", "enemy": "realtime-3d-shared-enemy-art"}
+  },
+  "camera": {"projection": "orthographic", "yawDegrees": 35, "pitchDegrees": 15, "yawRangeDegrees": [30, 45], "pitchRangeDegrees": [12, 22], "playerFaces": "screen-right", "enemyFaces": "screen-left", "freeCamera": false},
+  "stage": {"units": "normalized-canvas-UV-origin-top-left", "playerFoot": [0.25, 0.78], "enemyFoot": [0.74, 0.78], "playerHeight": 0.38, "enemyHeightByKind": {"normal": 0.36, "elite": 0.42, "boss": 0.56}, "portraitBossHeightCap": 0.5, "foreground": [0.82, 1], "midground": [0.3, 0.82], "background": [0, 0.3], "bossSafeUV": [0.44, 0.14, 0.93, 0.78], "maxApproachUV": 0.12, "maxKnockbackUV": 0.04, "noHUDMotion": true},
+  "presentationScript": {"source": "visual-only-comparison-tempo-not-formal-speed", "version": 1, "oneKnownActionMs": 700, "prepareMs": 120, "impactAtMs": 300, "returnMs": 180, "unknownCoreHP": "start-and-final-only-no-inferred-intermediate-hp", "eventOrder": "source-seq", "liveSpeedControl": "unchanged-1x-or-existing-GM-1-1.5-2"},
+  "viewports": [[1280, 720], [1440, 1080], [390, 844], [360, 800], [844, 390]],
+  "qualityTiers": ["low", "medium", "high"],
+  "runOrders": [["A", "B", "C"], ["B", "C", "A"], ["C", "A", "B"], ["C", "B", "A"], ["B", "A", "C"], ["A", "C", "B"]],
+  "conditions": {"audio": "muted-all-three-no-new-audio-owner", "sharedBackground": "same-unlicensed-material-forbidden-T2B-author-original", "sharedVFXBudget": "same-screen-area-opacity-particle-count-per-quality", "network": "same-isolated-profile-and-network-throttle", "warmupRuns": 3, "measuredRuns": 10, "reopenCycles": 100, "longRunMinutes": 30, "cache": "isolated-test-profile-only-never-clear-player-cache"},
+  "proposedTargets": {"desktopFPS": 60, "mobileFPS": 30, "status": "targets-not-measured-or-winner-selection"}
+}

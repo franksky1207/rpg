@@ -1,0 +1,18 @@
+{
+  "schema": "cw.t2a.visual-script",
+  "version": 1,
+  "authority": "none-pure-visual-demonstration",
+  "formalEvents": false,
+  "audio": "muted",
+  "steps": [
+    {"order": 1, "pose": "attack-preparation", "actor": "player", "durationMs": 120},
+    {"order": 2, "pose": "approach-and-strike", "actor": "player", "durationMs": 300},
+    {"order": 3, "pose": "hit-reaction", "actor": "enemy", "durationMs": 180},
+    {"order": 4, "pose": "dodge-motion", "actor": "enemy", "durationMs": 300},
+    {"order": 5, "pose": "counter-motion", "actor": "enemy", "durationMs": 300},
+    {"order": 6, "pose": "combo-motion", "actor": "player", "durationMs": 450},
+    {"order": 7, "pose": "return-idle", "actor": "player", "durationMs": 180}
+  ],
+  "numbers": "no-HP-damage-crit-loot-or-winner-claims",
+  "status": "script-only-no-animation-assets-created"
+}

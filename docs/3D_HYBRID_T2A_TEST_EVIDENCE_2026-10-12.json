@@ -1,0 +1,603 @@
+{
+  "baseline": "754acf702325f0a136d21a5948b45807ea5db4f2",
+  "baselineActions": "nine exact-HEAD runs completed success; Runtime/Stage4/Optimized Pages included",
+  "implementationCommit": "pending",
+  "scope": "T2-A-only; no renderer/runtime/art/selection changes",
+  "commands": [
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-3d-formal-snapshots-contract.cjs.log"
+    },
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-3d-shared-loader-contract.cjs.log"
+    },
+    {
+      "command": "node tests/runtime/combat-events-contract.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-combat-events-contract.cjs.log"
+    },
+    {
+      "command": "node tests/runtime/combat-events-integration.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-combat-events-integration.cjs.log"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-3d-equipment-contract.cjs.log"
+    },
+    {
+      "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-3d-asset-registry-integrity.cjs.log"
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "passed": true,
+      "log": "/tmp/t2a-js-integrity.js.log"
+    },
+    {
+      "command": "node tests/runtime/resource-manifest-integrity.js",
+      "passed": true,
+      "log": "/tmp/t2a-resource-manifest-integrity.js.log"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-integrity.js",
+      "passed": true,
+      "log": "/tmp/t2a-resource-cache-integrity.js.log"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-contract.cjs",
+      "passed": true,
+      "count": 17,
+      "log": "/tmp/t2a-contract-final.log"
+    },
+    {
+      "command": "node scripts/hybrid-comparison-fixtures.cjs --check",
+      "passed": true,
+      "log": "/tmp/t2a-reproducibility.log"
+    },
+    {
+      "command": "node scripts/hybrid-comparison-measurements.cjs; cmp stdout measurement-report-template.json",
+      "passed": true
+    },
+    {
+      "command": "node tests/runtime/html-cache-version-guard.js --self-test",
+      "passed": true,
+      "log": "/tmp/t2a-html-version-selftest.log"
+    },
+    {
+      "command": "node scripts/build-publish-dry-run.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-build.log"
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "passed": true,
+      "log": "/tmp/t2a-publish-build.log"
+    },
+    {
+      "command": "node tests/runtime/publish-candidate-browser.js",
+      "passed": true,
+      "log": "/tmp/t2a-candidate-browser.log"
+    },
+    {
+      "command": "git diff --exit-code 754acf70 -- index.html resource-manifest.json assets vendor 3d-test audio *.js *.css",
+      "passed": true
+    },
+    {
+      "command": "git diff --check / git diff --cached --check",
+      "passed": true
+    }
+  ],
+  "coreCounts": {
+    "T2A": 17,
+    "T1A": 15,
+    "T1B": 10,
+    "T1C": 26,
+    "T1CIntegration": 4,
+    "coreContractTotal": 72,
+    "A_B_CInputComparisons": 330,
+    "standardCoreStateParityComparisons": 576,
+    "mirrorCoreOutputComparisons": 48,
+    "sourceJSFiles": 391
+  },
+  "sourceAudit": {
+    "combat-events.js": {
+      "SHA256": "587437946de2825287ab168d6490db8e493d21d074f86e22b2e06aa897c727ed",
+      "unchangedFromBaseline": true
+    },
+    "combatfx.js": {
+      "SHA256": "c9ba676d410d39a5abb98d36035c861f2cbceb3012ad05293ef0a340755300c2",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/formal-snapshots.js": {
+      "SHA256": "799590094c8aa4ea2f32695f71fc4cad5ea478d0c5aafafb3852aea985234864",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/shared-loader.js": {
+      "SHA256": "ca99e4943a4e6921886c3da214301bbf8d64afc49f6b95d429d8b6daf35ebdf1",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/runtime.js": {
+      "SHA256": "9144e26d9cd9167ba3cee0a0ce2dc27bd65198b45d37190140256495b2783db9",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/prototype-engine.js": {
+      "SHA256": "0214b42e355bdd81f857f3a8acb9f4a8121e1a8b15d57dece634fd49223f07ff",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/character-assets.js": {
+      "SHA256": "ac7a5a1efb4b24773f22ee68ac984e14150b62bfc27ff9f14807e9ccb9450fe2",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/appearance-snapshot.js": {
+      "SHA256": "3fc24ad4f2ddbc29d65f16f296bd0c8469a38bb9fb2ac77651bf23b826a2bccc",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/test-center.js": {
+      "SHA256": "31dabfce49ca8a769935226073bf6ec3cf56b35e3b8e597b23bee7d363d4cf30",
+      "unchangedFromBaseline": true
+    },
+    "assets/3d/asset-registry.json": {
+      "SHA256": "726f628167c408ea73b845f4fd803e37670f83f4c607cb6cd1a0e49f2dc29577",
+      "unchangedFromBaseline": true
+    },
+    "3d-test/formal-home.js": {
+      "SHA256": "148168d5ba8c41f2cff0eea50ec5ced41dc3fb6885de05cdd5dbd390777feaa2",
+      "unchangedFromBaseline": true
+    },
+    "gm3dprototype.js": {
+      "SHA256": "6bbb9f1b698369c6e6196ae52436d734e2ffb69d4a983bb1fbdd263c57a50aa6",
+      "unchangedFromBaseline": true
+    },
+    "index.html": {
+      "SHA256": "910e05b2c81d0bde15bd6d8d51360075bdc8ec5b8648f6943798f1b2b7140394",
+      "unchangedFromBaseline": true
+    },
+    "combatcore.js": {
+      "SHA256": "f26e8b556618cab2cf3fa65c833b3020b181e6cb60fb5b7d4ea658336689debe",
+      "unchangedFromBaseline": true
+    },
+    "secondworldcombat.js": {
+      "SHA256": "f2ab24be07330430e1359cf654f1840a1bc664f5d151f1584b8ed6b7f31c2f94",
+      "unchangedFromBaseline": true
+    },
+    "thirdworldcombat.js": {
+      "SHA256": "c2a18935309c030f94294720456c0f8d15d5e0f54d96043dc7d9f13ad3c8e0be",
+      "unchangedFromBaseline": true
+    },
+    "dungeoncore.js": {
+      "SHA256": "924827b693904e884e13b9688389966c907b9397fbfe5d65ea82eead959958f5",
+      "unchangedFromBaseline": true
+    },
+    "dungeonarena.js": {
+      "SHA256": "4f483a86b819c9f9b738b5c9f43cb92f3a01c31a8df426a4c2c0fafd2be225ba",
+      "unchangedFromBaseline": true
+    },
+    "thirdworldarena.js": {
+      "SHA256": "3f6f7f6d0d0f6fe5ef466959aa16fef779748e3a859068ce2c3b9104d7bbb716",
+      "unchangedFromBaseline": true
+    },
+    "mirrordungeonrun.js": {
+      "SHA256": "ffd5ad2ecd5ea18e34b58b78525a7a3c1ae6f77f6582332e6c14bb02cc9ac0a9",
+      "unchangedFromBaseline": true
+    },
+    "dungeonvoid.js": {
+      "SHA256": "7cc21e4c0094d11e647bc7aa7b5585553f14e4c98c3b21752016edf059169294",
+      "unchangedFromBaseline": true
+    },
+    "calamitycore.js": {
+      "SHA256": "e4bd2386d657433e4a78a76895950cc55b7f19edfa4943587b94528f328790c9",
+      "unchangedFromBaseline": true
+    },
+    "secondworldcalamityrun.js": {
+      "SHA256": "f4f7bd8d86ce099e14499ec93b0a3946741ae0eec08a43afe628b60773369c6b",
+      "unchangedFromBaseline": true
+    },
+    "alternateuniversecombat.js": {
+      "SHA256": "39b43fa705bd859f0b99d9b22c300c7c245f5ea959716dca30839c1d1266f6c0",
+      "unchangedFromBaseline": true
+    },
+    "specialcore.js": {
+      "SHA256": "b8c7bc8b5c32cd023fedd9288146b9555ac1fc8e10271b2c77b55959427f3221",
+      "unchangedFromBaseline": true
+    },
+    "ui.js": {
+      "SHA256": "3df98783469168635b38e2bfa40daa0220199bf7b8cd32747f2ddd6a763ea5a8",
+      "unchangedFromBaseline": true
+    },
+    "secondworldcalamityui.js": {
+      "SHA256": "68e4efe66eb696005c9b21c275fe9021a5b144c5aa042dc38f9ca4e1b99dc403",
+      "unchangedFromBaseline": true
+    },
+    "gmpowerbenchmark.js": {
+      "SHA256": "315937ddb625ad4d5ee0eff8c8133fddcec5794f046c1d91d5ffad45280b2f8a",
+      "unchangedFromBaseline": true
+    },
+    "gmalternateuniversebenchmark.js": {
+      "SHA256": "4e05cab1edd1af852d0154e50a16e6aa7138c3c045b8b605bdd6a7df5561af33",
+      "unchangedFromBaseline": true
+    },
+    "secondworldmainline.js": {
+      "SHA256": "65f4051232baca753a7ef07658308ffce37698d19437e0b8cde619b2e267ec4f",
+      "unchangedFromBaseline": true
+    },
+    "thirdworldprogress.js": {
+      "SHA256": "c85386065d718c1bf1c59903b5b2b73afa370515580544cddaa43150e44748bb",
+      "unchangedFromBaseline": true
+    },
+    "mirrorcombatcore.js": {
+      "SHA256": "91b5032e53968c97345d0e135f0af893b9e130b78dacf75b65d7ed6d8f65adf9",
+      "unchangedFromBaseline": true
+    },
+    "specialencounter.js": {
+      "SHA256": "0f6a8bc075d84410b20cbe7420069a48bf43ce9fe68d8cba801ca1790a656714",
+      "unchangedFromBaseline": true
+    },
+    "battlepipeline.js": {
+      "SHA256": "c8481ee1b60df10886be495d6aa9d1674d188c7d81ebe8b683335335cd617182",
+      "unchangedFromBaseline": true
+    },
+    "worldmapui.js": {
+      "SHA256": "2fb2d3b0a0c0f50cd9b45eb09eb212941ff8da9f621bf917c585cb1c951370d2",
+      "unchangedFromBaseline": true
+    },
+    "gmpowerbenchmarkworldphase.js": {
+      "SHA256": "18da742e435677d0ca898f2cb6173ba9545d7ec081180031c8b69d1d4c376782",
+      "unchangedFromBaseline": true
+    }
+  },
+  "fixture": {
+    "version": 1,
+    "schema": "cw.t2a.owner-fixtures",
+    "SHA256": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+    "JSONBytes": 437201,
+    "cases": [
+      {
+        "id": "normal-baseline",
+        "SHA256": "33c0e297dbd17b2ee19683af8a8cd8f0dd89358657f6e6c5942c8eee6e69595e",
+        "events": 6,
+        "capture": {
+          "bridgeSchema": 1,
+          "lane": "gm-fixture",
+          "sourceEventCount": 3,
+          "normalizedActions": 3,
+          "omitted": 0,
+          "dropped": 0,
+          "historyAvailability": "partial",
+          "captureCoverage": "complete-known-core-events",
+          "perActionHP": "unavailable",
+          "pacing": "unavailable-no-combatfx-playback",
+          "settlement": "unavailable-no-transactions",
+          "computedOnly": true
+        },
+        "stateUnchanged": true
+      },
+      {
+        "id": "elite-baseline",
+        "SHA256": "50cdb9c6638942cf24e8894127d61d2463d6795026a5504e6f561cc823b2ccc5",
+        "events": 12,
+        "capture": {
+          "bridgeSchema": 1,
+          "lane": "gm-fixture",
+          "sourceEventCount": 9,
+          "normalizedActions": 9,
+          "omitted": 0,
+          "dropped": 0,
+          "historyAvailability": "partial",
+          "captureCoverage": "complete-known-core-events",
+          "perActionHP": "unavailable",
+          "pacing": "unavailable-no-combatfx-playback",
+          "settlement": "unavailable-no-transactions",
+          "computedOnly": true
+        },
+        "stateUnchanged": true
+      },
+      {
+        "id": "boss-baseline",
+        "SHA256": "768bced1b36edfe021e123ba3baba09de03cb4735aaca95d380b964b38e536d8",
+        "events": 10,
+        "capture": {
+          "bridgeSchema": 1,
+          "lane": "gm-fixture",
+          "sourceEventCount": 7,
+          "normalizedActions": 7,
+          "omitted": 0,
+          "dropped": 0,
+          "historyAvailability": "partial",
+          "captureCoverage": "complete-known-core-events",
+          "perActionHP": "unavailable",
+          "pacing": "unavailable-no-combatfx-playback",
+          "settlement": "unavailable-no-transactions",
+          "computedOnly": true
+        },
+        "stateUnchanged": true
+      },
+      {
+        "id": "boss-player-defeat",
+        "SHA256": "b5b9929b6d78c2408874da50cd144e5ea4b28856ca4cb99e519e13412945eb44",
+        "events": 5,
+        "capture": {
+          "bridgeSchema": 1,
+          "lane": "gm-fixture",
+          "sourceEventCount": 2,
+          "normalizedActions": 2,
+          "omitted": 0,
+          "dropped": 0,
+          "historyAvailability": "partial",
+          "captureCoverage": "complete-known-core-events",
+          "perActionHP": "unavailable",
+          "pacing": "unavailable-no-combatfx-playback",
+          "settlement": "unavailable-no-transactions",
+          "computedOnly": true
+        },
+        "stateUnchanged": true
+      },
+      {
+        "id": "elite-effects-owner-input",
+        "SHA256": "44b60424faa2f6a0eb312ce856dde7b7d20dedba621c01d5f1537c4ce3582c4f",
+        "events": 24,
+        "capture": {
+          "bridgeSchema": 1,
+          "lane": "gm-fixture",
+          "sourceEventCount": 22,
+          "normalizedActions": 22,
+          "omitted": 0,
+          "dropped": 0,
+          "historyAvailability": "partial",
+          "captureCoverage": "complete-known-core-events",
+          "perActionHP": "unavailable",
+          "pacing": "unavailable-no-combatfx-playback",
+          "settlement": "unavailable-no-transactions",
+          "computedOnly": true
+        },
+        "stateUnchanged": true
+      }
+    ],
+    "representatives": [
+      {
+        "fixtureKey": "earth-map6-enemy0",
+        "formalId": null,
+        "formalIdAvailability": "unavailable",
+        "name": "遺址守衛機",
+        "world": 1,
+        "regionId": "earth",
+        "regionName": "地球戰爭",
+        "mapIndex": 6,
+        "mapName": "古代科技遺址",
+        "enemyIndex": 0,
+        "level": 31,
+        "kind": "normal",
+        "style": "balanced",
+        "source": {
+          "file": "worldmaps-earth.js",
+          "expression": "EARTH_MAPS[6].enemies[0]",
+          "locator": "MAPS[6].enemies[0]"
+        },
+        "modelAvailability": "unavailable",
+        "atlasAvailability": "unavailable",
+        "unlock": "isolated level35, map6 unlocked, prior kills10 and boss not locked; no real account touched"
+      },
+      {
+        "fixtureKey": "earth-map6-enemy3",
+        "formalId": null,
+        "formalIdAvailability": "unavailable",
+        "name": "遠古戰爭機甲",
+        "world": 1,
+        "regionId": "earth",
+        "regionName": "地球戰爭",
+        "mapIndex": 6,
+        "mapName": "古代科技遺址",
+        "enemyIndex": 3,
+        "level": 34,
+        "kind": "elite",
+        "style": "tank",
+        "source": {
+          "file": "worldmaps-earth.js",
+          "expression": "EARTH_MAPS[6].enemies[3]",
+          "locator": "MAPS[6].enemies[3]"
+        },
+        "modelAvailability": "unavailable",
+        "atlasAvailability": "unavailable",
+        "unlock": "isolated level35, map6 unlocked, prior kills10 and boss not locked; no real account touched"
+      },
+      {
+        "fixtureKey": "earth-map6-enemy4",
+        "formalId": null,
+        "formalIdAvailability": "unavailable",
+        "name": "遺址中樞核心",
+        "world": 1,
+        "regionId": "earth",
+        "regionName": "地球戰爭",
+        "mapIndex": 6,
+        "mapName": "古代科技遺址",
+        "enemyIndex": 4,
+        "level": 35,
+        "kind": "boss",
+        "style": "balanced",
+        "source": {
+          "file": "worldmaps-earth.js",
+          "expression": "EARTH_MAPS[6].enemies[4]",
+          "locator": "MAPS[6].enemies[4]"
+        },
+        "modelAvailability": "unavailable",
+        "atlasAvailability": "unavailable",
+        "unlock": "isolated level35, map6 unlocked, prior kills10 and boss not locked; no real account touched"
+      }
+    ],
+    "appearances": 33,
+    "GLBsAudited": 18,
+    "existingAnimationsOnly": [
+      "CW_Idle_Breathing_Compatibility"
+    ],
+    "attackAnimationAvailable": false,
+    "enemyModelsAvailable": false,
+    "enemyAtlasesAvailable": false,
+    "realAccountOrTransactionUsed": false
+  },
+  "publish": {
+    "sourceSHAValidated": 490,
+    "artifactFiles": 385,
+    "artifactBytes": 36482365,
+    "verifiedHTTPResponses": 385,
+    "baselineArtifactBytes": 36482365,
+    "byteCountUnchanged": true,
+    "developmentAndToolFilesPublished": 0,
+    "browserEvidence": {
+      "artifactBytes": 36482365,
+      "files": 385,
+      "verifiedResponses": 385,
+      "audio": [
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/era-themes/galaxy-theme-loop.ogg",
+          "duration": 148.058792
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/era-themes/universe-theme-loop.ogg",
+          "duration": 93.66325
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/era-themes/higher-theme-loop.ogg",
+          "duration": 107.067396
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/battle-themes/normal-battle-loop.ogg",
+          "duration": 45.283604
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/battle-themes/medium-battle-loop.ogg",
+          "duration": 134.261708
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/battle-themes/high-battle-loop.ogg",
+          "duration": 68.300292
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/normal-attack/sfx-001.ogg",
+          "duration": 0.543719
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/normal-attack/sfx-002.ogg",
+          "duration": 0.774512
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/normal-attack/sfx-003.ogg",
+          "duration": 0.513311
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/critical/sfx-001.ogg",
+          "duration": 0.657664
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/critical/sfx-002.ogg",
+          "duration": 0.833673
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/critical/sfx-003.ogg",
+          "duration": 0.702041
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/dodge/sfx-001.ogg",
+          "duration": 1.306417
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/heavy-hit/sfx-004.ogg",
+          "duration": 1.048549
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/heavy-hit/sfx-005.ogg",
+          "duration": 0.907075
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/heavy-hit/sfx-029.ogg",
+          "duration": 0.680272
+        },
+        {
+          "url": "http://127.0.0.1:4173/.publish-stage3/audio/assets/common-sfx/victory/sfx-001.ogg",
+          "duration": 5.701497
+        }
+      ],
+      "viewports": [
+        {
+          "width": 1280,
+          "height": 800
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "missing": [],
+      "pageErrors": [],
+      "initialTransferredBytes": 5402409,
+      "cache": {
+        "preload": {
+          "phase": "complete",
+          "total": 49,
+          "done": 49,
+          "saved": 39,
+          "failed": 0
+        },
+        "status": {
+          "ok": true,
+          "version": "a024efeeb352096d",
+          "entries": 49,
+          "bytes": 16575038,
+          "measured": 49
+        },
+        "range": {
+          "status": 206,
+          "header": "bytes 2-5/2864574",
+          "bytes": 4
+        },
+        "clear": {
+          "ok": true
+        },
+        "after": {
+          "ok": true,
+          "version": "a024efeeb352096d",
+          "entries": 0,
+          "bytes": 0,
+          "measured": 0
+        },
+        "preserved": true
+      },
+      "passed": true
+    }
+  },
+  "resolvedFailures": [
+    {
+      "failure": "GLB inspection initially attempted non-GLB registry entry",
+      "resolution": "Filtered actual .glb rows and used existing asset-registry parser; no asset changed"
+    },
+    {
+      "failure": "VM bootstrap traits.js expected render()",
+      "resolution": "Isolated no-op bootstrap stub; no visual renderer or production mutation"
+    },
+    {
+      "failure": "Initial T2-A contract 15/17: real critical flag absent and socket-prefix audit saw 7, not9",
+      "resolution": "Kept assertions; chose seed9 that yields original core crit flags; included fx.hit.chest/fx.root via actual rig-contract membership"
+    },
+    {
+      "failure": "First candidate browser attempt connection refused",
+      "resolution": "Restarted local HTTP server and passed original suite without assertion changes"
+    },
+    {
+      "failure": "Cache-version guard invoked without required refs",
+      "resolution": "Read actual CLI, passed self-test and immutable runtime check; exact before/after commit guard to run after implementation commit"
+    }
+  ],
+  "unexecuted": [
+    "T2-B renderers/stage/state-machine/animation art and visual scores",
+    "T2-C actual FPS/load/heap/GPU/heat/cost measurements and technology selection",
+    "physical iOS/Android/desktop GPU/audio and 30-minute prototype runs",
+    "real player account/cloud/loot writes; intentionally no transactions"
+  ],
+  "T2BReadiness": "Specification and offline input ready; actual player attacks/A-layer art/three enemy source models/B-atlases/C-GLBs/background/VFX unbuilt; author separately before B1",
+  "rollback": "Revert this batch implementation/data and handoff commits; preserve all live State/cache/cloud/model binaries",
+  "exactHEADActions": "pending final push; query final main SHA"
+}
