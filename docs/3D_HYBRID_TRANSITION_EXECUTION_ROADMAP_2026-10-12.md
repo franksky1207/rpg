@@ -61,13 +61,13 @@
 | T1-B 預覽載入與控制器解耦 | **程式／本機驗收完成；本批 CI／真機待核對** | 程式 `b2e7b946615f62a9703ef628c1d32426ddeb2a91`，[T1-B 驗收](3D_HYBRID_T1B_ACCEPTANCE_2026-10-12.md)／[49 個具名指令與證據](3D_HYBRID_T1B_TEST_EVIDENCE_2026-10-12.json)；不得自動進 T1-C |
 | T1-C 戰鬥事件唯讀轉接基礎 | **程式／本機驗收完成；exact-HEAD CI／真機待核對** | 程式 `e74b9d3a47417b6e1d9dad74e1804b7455d328ed`，[T1-C 覆蓋與驗收](3D_HYBRID_T1C_ACCEPTANCE_2026-10-12.md)／[實測證據](3D_HYBRID_T1C_TEST_EVIDENCE_2026-10-12.json)；partial／unavailable 明示，不自動進 T2-A |
 | T2-A 同場對照規格與事件 fixture | **規格／資料／本機驗收完成；exact-HEAD CI待核對** | 提交 `8e13fb19582dd8217044a28189b71008ca171f68`，[比較規格](3D_HYBRID_T2A_COMPARISON_SPEC_2026-10-12.md)／[驗收矩陣](3D_HYBRID_T2A_ACCEPTANCE_MATRIX_2026-10-12.md)／[證據](3D_HYBRID_T2A_TEST_EVIDENCE_2026-10-12.json)；沒有Renderer／選型，另行授權T2-B |
-| T2-B 最小對照原型（隔離） | **B1完成、B2候選／技術驗證完成但美術Gate未全過；B3/B4未施工** | 尚無三方案Renderer／效能選型，先核B2未過Gate |
+| T2-B 最小對照原型（隔離） | **B1/B3展示已實作、B2候選待美術Gate；B4未施工** | 使用者已選 B 為後續方向，正式效能與真機 Gate 待測 |
 | T2-B1 隔離入口／共用舞台／播放控制 | **程式／本機完成；B2開工核main10ef9222九個CI均success；真機待驗** | `2f7f1fd94220174d89dfbf8cef66becf6666d1cb`，[B1驗收](3D_HYBRID_T2B1_ACCEPTANCE_2026-10-12.md)／[證據](3D_HYBRID_T2B1_TEST_EVIDENCE_2026-10-12.json)；技术占位，無GPU/FPS驗收 |
 | T2-B2 共用美術與必要動作 | **r2部分根因修正／技術通過；光影與肩甲2項C未過** | `b3a5ab9f5f0607f965f2ed51bbf66e7056b4cd91`，[r2驗收](3D_HYBRID_T2B2_REPAIR_R2_ACCEPTANCE_2026-10-12.md)／[B3前置判定](3D_HYBRID_T2B3_PREREQUISITES_R2_2026-10-12.md)；未建議進B3 |
-| T2-B3 A/B/C Renderer接入 | 未施工 | r2仍有2項C必須先修；B類留正式比較前驗收，不要求B2提前做硬體／完整HUD |
-| T2-B4 觀測／故障與原型收尾 | 未施工 | 冷熱/100次/長測與回退實數據；真GPU不可由B1mock宣稱 |
-| T2-C 桌機／手機量測及選型 Gate | 待驗收 | 未過 Gate 不量產模型、不覆蓋舊正式規格 |
-| T3-A 混合模式／品質與舊偏好相容 | 待施工 | 須先通過 T2-C 並由使用者明確選型 |
+| T2-B3 A/B/C Renderer接入 | **已實作開發展示；正式選型／美術Gate未全過** | [B3驗收](3D_HYBRID_T2B3_ACCEPTANCE_2026-10-12.md)；A/C僅供比較與回退，後續 B 導向 |
+| T2-B4 觀測／故障與原型收尾 | 未施工 | **優先 B**：首次／重播載入與圖集解碼、HTTP快取、容量、手機FPS/記憶體／切換/長測；A/C僅必要對照 |
+| T2-C 桌機／手機實測與 B 正式採用 Gate | **B 方向已由使用者選定；正式驗收未過** | 不再重選 A/B/C；確認 B 真機品質、效能與來源／遊戲安全後才能正式整合與量產 |
+| T3-A 混合模式／品質與舊偏好相容 | 待施工 | 使用者已選 B；須先通過 B 的 T2-C 正式採用 Gate |
 | T3-B 正式戰鬥與玩法轉接 | 待施工 | 全正式 owner 一致、跨紀元合法模式完整 |
 | T3-C 背景／倍速／極簡／音訊長測 | 待施工 | 無阻塞、無幽靈動畫／音效、存檔不變 |
 | T4-A 正式服務／養成裝飾預覽停用 | 待施工 | 解耦完成，GM 原案例與正式操作仍可用 |
