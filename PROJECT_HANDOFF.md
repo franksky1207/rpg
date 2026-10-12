@@ -1,3 +1,8 @@
+## 2026-10-13｜T3-A 正式相容層與來源 SHA 修復
+- T3-A 首批已於正式 `index.html` 引用唯讀 `3d-test/t3a-hybrid-policy.js`：舊 text/3d 偏好不遷移、high/standard/minimal 品質映射，必要時 fail-closed 回文字。權威戰鬥 Owner 不動、`FULL_3D_AVAILABLE=false`、正式 B 尚未解鎖。T3-A 契約測試已加入 Runtime Integrity。
+- `f61d0da335aac4e6e7425a393d5666a91a8fc4c8` 的 B3 CI **確實失敗**：manifest 鎖定的 B2 inventory SHA 過時。修正 B3 manifest、其 verified digest 與 inventory SHA/bytes，程式修正至 `165f80a429f8c677ce6ff32b5ea3e05a60836ce5`；實際 B2 inventory SHA `4a1f64bb446326185381b0f1259961a92f4edf58709b94bb32b5ca1a3469efb4`。
+- 此批繼續驗證 exact-HEAD Actions；新提交觸發中的工作不得預告成功。T3-A 自動監控已重新建立，用於結果到齊後追蹤修正與結案；正式模式切換、更多 owner integration、T3-B 尚未開工。
+
 ## 2026-10-13｜T3-A 首批正式頁模式相容策略施工
 - T2-C 使用者已階段性批准 B（玩家即時 3D／敵方圖集）；美術未封版。開始 T3-A，建立 `3d-test/t3a-hybrid-policy.js`，經正式 `index.html` 版本化載入。輸入為 legacy text/3d、預期 B、三品質、Renderer/WebGL/素材 ready、背景/context-loss/Owner 安全；**只有條件全部成立且非極簡才輸出 hybrid-b，否則一律 text**。
 - 原 `3d-test/mode-foundation.js` 及 `FULL_3D_AVAILABLE=false` 保持，帳號／裝置偏好、正式存檔與遊戲結算完全不寫入；只提供唯讀視覺決策契約 `canCommit=false`／`canCreateCombatEvents=false`。**尚未連接 T3-B 實際戰鬥 Renderer，也不對玩家解鎖 B 戰鬥按鈕。**
