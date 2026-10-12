@@ -48,13 +48,13 @@ function ensureRenderer(session){
 }
 async function visualPlay(method){
  if(!renderersEnabled){playback[method]();return;}
- if(method==='replay'||['completed','cancelled'].includes(playback.mode))playback.select(playback.input,playback.selection);
+ if(method==='replay'||rendererState==='failed'||['completed','cancelled'].includes(playback.mode))playback.select(playback.input,playback.selection);
  const id=playback.id;ensureRenderer(id);
  // Asset preparation belongs to this offline UI. It never waits in formal combat.
  while(!disposed&&playback.id===id&&rendererState==='loading')await bindingTask;
  if(!disposed&&playback.id===id&&!playback.hidden){
   if(rendererState==='ready')playback.play();
-  else if(rendererState==='failed')status('畫面載入失敗：'+(rendererFailure||'未知錯誤')+'；不啟動無畫面的播放。請重新選擇外觀或畫質後重試。',true);
+  else if(rendererState==='failed')status('畫面載入失敗：'+(rendererFailure||'未知錯誤')+'；不啟動無畫面的播放。請再按播放重試，或改選 A。',true);
  }
 }
 
