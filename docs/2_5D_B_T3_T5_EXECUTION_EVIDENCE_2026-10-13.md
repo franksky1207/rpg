@@ -50,3 +50,5 @@ f46d3bd2761e96acbd4c8795b5151659c0361083 的 8 個觸發 Actions 均 success；�
 移除純正式預覽 home/dom 控制與 preview-expand，保留 exact 原始來源於 development/retired-formal-previews/20261013（不發布）。首頁、地圖、劇情與異宇宙的舊 hook 已解除；服務／帳號／雲端／養成／副本的動態注入 owner 一併退出。地圖與紀元入口的正常 CSS 保留。現行正式頁桌機、直向、橫向各 11 路由與 100 次切換測試：零預覽 DOM、Canvas、引擎、GLB、Babylon 請求，State 不變。正式 B broad gate 仍閉合。
 
 既有 53 骨、裝備、快照、晚到 scene／context loss 正面斷言沒有刪除，改使用明確標示的歷史 HTTP harness；它们不代表現行正式入口。另新增現行正式退場負面驗收，GM 真實 iframe 31 案例仍完整保留。原 T2-A Fixture 未重製；B2 source lock 未改，透過逐檔 before/after SHA＋git history 驗證授權退場。
+
+T4 提交 5cc2eaa4750edf41361210ffb0074f22aa927830 的 Runtime Integrity 失敗原因：checkout 預設淺層歷史，無法 `git show 7706f880...:index.html` 驗證移除前原始來源。已修正 workflow `fetch-depth: 0`，保留全部歷史 SHA 斷言，沒有跳過檢查。另補實際 Renderer 三尺寸／context loss 測試，正在執行。

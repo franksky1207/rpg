@@ -39,6 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # exact historical source SHA checks require the retirement baseline
       - name: Check whether this push is still main head
         id: freshness
         if: github.event_name == 'push'
