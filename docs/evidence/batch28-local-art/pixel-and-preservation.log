@@ -1,0 +1,75 @@
+[
+  {
+    "id": "g006",
+    "source": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/equipment-five-slots.webp",
+    "candidate": "development/art-candidates/batch28-g006-g007-2026-10-14/g006/equipment-five-slots.candidate-v1.webp",
+    "dimensions": [
+      1491,
+      1055
+    ],
+    "sourceBytes": 277736,
+    "sourceSha256": "1d84fa4d7c284f4266eb6cff0dddbcdb9f6eb35aedf5322f1786859a751601ce",
+    "candidateBytes": 990216,
+    "candidateSha256": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8",
+    "changedPixels": 75216,
+    "changedBoundsExclusive": [
+      485,
+      724,
+      975,
+      897
+    ],
+    "localCrop": [
+      485,
+      650,
+      490,
+      260
+    ],
+    "outsideMaskChangedPixels": 0,
+    "losslessWebp": true,
+    "formalNames": {
+      "weapon": "霜鋼長刃",
+      "helmet": "極寒封閉盔",
+      "armor": "冰原保溫甲",
+      "shoes": "雪地抓地靴",
+      "accessory": "熱源定位器"
+    },
+    "artStatus": "candidate-awaiting-user-review"
+  },
+  {
+    "id": "g007",
+    "source": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/equipment-five-slots.webp",
+    "candidate": "development/art-candidates/batch28-g006-g007-2026-10-14/g007/equipment-five-slots.candidate-v1.webp",
+    "dimensions": [
+      1491,
+      1055
+    ],
+    "sourceBytes": 201726,
+    "sourceSha256": "2959fd08a50d7968ec228a4c8115f65988d018a4c57d045d876eec5c107d0ac0",
+    "candidateBytes": 1031198,
+    "candidateSha256": "ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c",
+    "changedPixels": 11200,
+    "changedBoundsExclusive": [
+      781,
+      681,
+      891,
+      799
+    ],
+    "localCrop": [
+      748,
+      662,
+      174,
+      138
+    ],
+    "outsideMaskChangedPixels": 0,
+    "losslessWebp": true,
+    "formalNames": {
+      "weapon": "古代光刃",
+      "helmet": "遺物守衛盔",
+      "armor": "自律護衛甲",
+      "shoes": "遺跡浮行靴",
+      "accessory": "古文明鑰印"
+    },
+    "artStatus": "candidate-awaiting-user-review"
+  }
+]
+PASS 143 protected files, 40 originals, candidate decode, zero changed pixels outside masks
