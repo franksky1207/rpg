@@ -15,6 +15,7 @@
     "3d-test/runtime.js": "9144e26d9cd9167ba3cee0a0",
     "3d-test/shared-loader.js": "ca99e4943a4e6921886c3da2",
     "3d-test/t3a-hybrid-policy.js": "bd0ed3de014521503300592c",
+    "3d-test/t3b-formal-projection.js": "6176d7c8ed2bfd48850fbbb9",
     "3d-test/test-center.css": "b42248f227b2939dc699f35b",
     "3d-test/test-center.js": "31dabfce49ca8a7699352260",
     "3d-test/worldphase-b04.css": "b33114a4ff3a5410a7b15c11",
