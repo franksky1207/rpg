@@ -39,7 +39,7 @@ function allowed(e){
   legal[e.mode]?.includes(e.world)===true&&e.availability==="authoritative"&&e.expired===false&&
   global.CivilizationCombatEvents?.validateEvent?.(e)===true&&global.CivilizationCombatEvents?.isCurrent?.(e)===true;
 }
-function receive(e){
+function receive(e,delivery){
  if(!allowed(e)){rejected++;return;}
  if(lastBattle!==e.battleId){lastBattle=e.battleId;lastSeq=-1;}
  // Checkpoints are not exempt from monotonic sequence validation: a stale
@@ -49,7 +49,7 @@ function receive(e){
  observed++;
  if(!sink)return;
  // Observe only. Even hostile/throwing visual sinks cannot change event owners.
- try{sink(e);}catch(_){rejected++;}
+ try{sink(e,delivery);}catch(_){rejected++;}
 }
 function attach(consumer){
  if(typeof consumer!=="function"||sink)return false;

@@ -3,7 +3,7 @@
   "version": 1,
   "publish": false,
   "baselineMainHEAD": "e094f4e8704a808c94551acd9226c2982c67c537",
-  "B2InventorySHA": "3f02d9958f0d34cb7517d10978b31915181df3f136e5b4095680cb6e8fcfef51",
+  "B2InventorySHA": "8131a3c833268243bc715e12989e8e0f72b0a3946151a11f5c12a063758942f5",
   "files": {
     "development/hybrid-comparison/t2b2-v1/enemies/boss/atlases/atlas.json": {
       "bytes": 92822,

@@ -45,3 +45,5 @@ assert.doesNotMatch(formalHTML,/development\/hybrid-comparison\/fixture-input\.m
 assert.equal(b.diagnostics().rendererReleased,false);
 console.log('PASS T3-B release firewall: demo renderer/fixture are not formal runtime');
 console.log('PASS T3-B formal-only bridge, unsupported realms, dedupe, hostile consumer isolation, teardown');
+
+let forwarded;b.detach();b.attach((e,delivery)=>{forwarded=delivery;});const token=Object.freeze({signal:new AbortController().signal,isCurrent:()=>true});handler({...event('main',1,1),battleId:'delivery-test'},token);assert.equal(forwarded,token,'Forward the existing producer delivery token unchanged, including its cancellation signal');b.detach();

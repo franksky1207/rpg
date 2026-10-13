@@ -26,3 +26,9 @@ assert.equal(mapper.enemy(null,{id:'a',world:1,kind:'boss',location:'X',tier:'me
 assert.equal(mapper.enemy({schema:'civilization.formal.b.enemy-atlas.v1',publish:false,approved:true,entries:[]},{id:'a',world:1,kind:'boss',location:'X',tier:'medium'}).ready,false);
 assert.equal(mapper.enemy({schema:'civilization.formal.b.enemy-atlas.v1',publish:true,approved:false,entries:[]},{id:'a',world:1,kind:'boss',location:'X',tier:'medium'}).ready,false);
 console.log('PASS T3-B formal asset mapping: exact named five-slot registry, no GM fixture, enemy catalog fails closed');
+const sourceQuery={id:null,name:'遺址守衛機',mode:'main',world:1,kind:'normal',location:'6:0',tier:'medium'};
+const declared={id:'approved-visual-key-not-a-formal-monster-id',world:1,kind:'normal',location:'6:0',tier:'medium',path:'assets/test/source.png',sha256:'a'.repeat(64),bytes:4,license:'test-only mapping',reviewed:true,sourceIdentity:{mode:'main',world:1,kind:'normal',location:'6:0',name:'遺址守衛機'}};
+const catalog={schema:'civilization.formal.b.enemy-atlas.v1',publish:true,approved:true,entries:[declared]};
+const resolved=mapper.enemy(catalog,sourceQuery);assert.equal(resolved.ready,true);assert.equal(resolved.formalIdAvailable,false);assert.equal(resolved.reason,'verified-source-locator-mapping');assert.equal(sourceQuery.id,null,'Never manufacture a formal ID');
+for(const change of [{name:'遠古戰爭機甲'},{world:2},{mode:'review'},{location:'6:3'},{kind:'boss'},{id:'wrong-authoritative-id'}])assert.equal(mapper.enemy(catalog,{...sourceQuery,...change}).ready,false,'Exact source identity; no alias '+JSON.stringify(change));
+assert.equal(mapper.enemy({...catalog,entries:[declared,{...declared,id:'ambiguous'}]},sourceQuery).ready,false);

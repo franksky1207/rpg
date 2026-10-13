@@ -36,3 +36,11 @@ B2 材質／光影公平性、局部接觸風險、人工美術批准、實體�
 ## 提交後 CI 修正紀錄
 
 `3f4e93142874445b6b25c3f68db937faab6cfc32` 的比較與發布 workflows 實際失敗，不能宣稱全綠。共同根因為兩個記憶體 File 的 GLB label 被發布 scanner 當作缺失的網站資源。本機先前的 policy unit regression 未在新增 tracked 清單上執行真實根目錄 dry-run，因此未捕捉。修正採用已驗證資產的 basename，沒有新增假 GLB、忽略缺件或修改發布白名單。重跑真實 dry-run：389 原始檔＋2 build markers＝391 成品檔、missingRefs=0；T2-A 17 項與原人物／32 換裝／100 次實際引擎切換 browser 再次通過。最新修正 SHA 的 Actions 必須另核對。
+
+## 正式 owner 與路由接線驗證（接續）
+
+新增 formal-owner-clock 與 formal-entry：消費既有 presentation token/index/pacing，不在 computed 事件到達時補播；共用合法模式橋接與原 `.combat-screen`，原 HUD／結算保留。原始 ID 缺少時只允許明確核准的 mode/world/name/kind/location 精確映射，歧義或錯名仍 unavailable。上游取消 signal、背景、結束、晚到載入與場景退場會釋放 Canvas／RAF／引擎。
+
+實際瀏覽器測試通過三敵×三 tier×六動作、原身體與候選動畫多關節重定向、32 槽子集合、100 次真實軟體 WebGL 引擎建立／釋放。修正 atlas 原倒置貼圖；方向檢查正向 RMSE 44.7519、倒置 71.5563，只證明方向，不是 B2 材質公平性通過。避免 Babylon geometry ID 消耗正式 Math.random，100 次測試 RNG 呼叫為零。正式 runCombatCore／原 presentation owner 的可用與 unavailable 情境結算完全相同，HUD 照常更新，存檔／音訊無寫入。測試核准只在記憶體，未將 B2 候選批准為正式美術。
+
+f46d3bd2761e96acbd4c8795b5151659c0361083 的 8 個觸發 Actions 均 success；比較 workflow 未觸發，不冒稱全部適用 CI 完成。T4／T5 尚未完成。正式 B 開關仍關閉，沒有核准 catalog 的身份繼續文字模式。真機與人工美術尚未驗收。

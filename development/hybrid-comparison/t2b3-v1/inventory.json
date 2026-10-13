@@ -25,7 +25,7 @@
     {
       "path": "assets.mjs",
       "bytes": 3721,
-      "sha256": "19eb01ca4e92d3be9da308e71833140c730d58fa5d6343ed18784fce15db23cc",
+      "sha256": "d00df6de254c4a196a3164d436a61300a472a22c21b2af63c86fdb24212a14a7",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -900,7 +900,7 @@
     {
       "path": "manifest.json",
       "bytes": 333019,
-      "sha256": "86b9ddefe2f4630b6e0b85ec80f591438453805c9f6b54fc704e5fa9e094c0bc",
+      "sha256": "ce072d3c159aea8ae6b626e13285e8b1d272798572ad95e12bf1198a61afc06e",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -934,8 +934,8 @@
     },
     {
       "path": "source-version.cjs",
-      "bytes": 1934,
-      "sha256": "060e757981fb96b5d5a8ebf6583643228d1ed7c471af933a1ae5e91a4852fb5c",
+      "bytes": 2505,
+      "sha256": "fa487dae1c5efb440d953f99bbc258b19ef8bcb22445c1e50cbbac5b0fb78f7a",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -954,5 +954,5 @@
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     }
   ],
-  "totalBytes": 12230711
+  "totalBytes": 12231282
 }

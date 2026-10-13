@@ -15,6 +15,7 @@ on:
       - 'tests/runtime/t3b-formal-assets.cjs'
       - 'tests/runtime/t3b-formal-renderer.cjs'
       - 'tests/runtime/t3b-formal-controller.cjs'
+      - 'tests/runtime/t3b-formal-owner-clock.cjs'
       - '3d-test/t3b-formal-projection.js'
       - '3d-test/t3b-formal-session.js'
       - '3d-test/t3b-formal-assets.js'
@@ -73,6 +74,7 @@ jobs:
           node tests/runtime/t3b-formal-assets.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-renderer.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-controller.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t3b-formal-owner-clock.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt

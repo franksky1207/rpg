@@ -25,13 +25,13 @@ function equipment(doc,{name,slot,world,chapter,area,level,tier}={}){
  if(hits.length!==1)return blocked(hits.length?"ambiguous-equipment":"unmapped-equipment");
  const row=hits[0];return Object.freeze({ready:true,reason:"registered",asset:Object.freeze({id:row.id,path:row.path,sha256:row.sha256,bytes:row.bytes,slot,name})});
 }
-function enemy(catalog,{id,world,kind,location,tier}={}){
+function enemy(catalog,{id,name,mode,world,kind,location,tier}={}){
  // A catalog can release only signed, formal, identity-specific entries.
- if(!tiers.includes(tier)||typeof id!=="string"||!id||!Number.isSafeInteger(world)||typeof kind!=="string"||typeof location!=="string")return blocked("invalid-enemy-identity");
+ if(!tiers.includes(tier)||(id!==null&&(typeof id!=="string"||!id))||(id===null&&(typeof name!=="string"||!name||typeof mode!=="string"||!mode))||!Number.isSafeInteger(world)||typeof kind!=="string"||typeof location!=="string")return blocked("invalid-enemy-identity");
  if(catalog?.schema!=="civilization.formal.b.enemy-atlas.v1"||catalog.publish!==true||catalog.approved!==true||!Array.isArray(catalog.entries))return blocked("unreleased-enemy-catalog");
- const hits=catalog.entries.filter(row=>row.id===id&&row.world===world&&row.kind===kind&&row.location===location&&row.tier===tier&&valid(row)&&row.reviewed===true);
+ const hits=catalog.entries.filter(row=>(id===null?row.sourceIdentity?.mode===mode&&row.sourceIdentity?.world===world&&row.sourceIdentity?.name===name&&row.sourceIdentity?.kind===kind&&row.sourceIdentity?.location===location:row.id===id)&&typeof row.id==="string"&&row.id.length>0&&row.world===world&&row.kind===kind&&row.location===location&&row.tier===tier&&valid(row)&&row.reviewed===true);
  if(hits.length!==1)return blocked(hits.length?"ambiguous-enemy":"unmapped-enemy");
- const row=hits[0];return Object.freeze({ready:true,reason:"verified-identity-mapping",asset:Object.freeze({id:row.id,path:row.path,sha256:row.sha256,bytes:row.bytes})});
+ const row=hits[0];return Object.freeze({ready:true,reason:id===null?"verified-source-locator-mapping":"verified-identity-mapping",formalIdAvailable:id!==null,asset:Object.freeze({id:row.id,path:row.path,sha256:row.sha256,bytes:row.bytes})});
 }
 global.CivilizationFormalBAssets=Object.freeze({version:1,slots,tiers,player,equipment,enemy,fixtureAllowed:false});
 })(window);

@@ -19,9 +19,9 @@ async function prepare(options){
   if(!result.ready)throw Error(slot+":"+result.reason);
   equipment.push({asset:result.asset,row:registry.assets.find(x=>x.id===result.asset.id)});
  }
- const atlas=catalog.entries.find(x=>x.id===identity.id&&x.world===identity.world&&x.kind===identity.kind&&x.location===identity.location&&x.tier===tier);
+ const atlas=catalog.entries.find(x=>x.id===enemy.asset.id&&x.world===identity.world&&x.kind===identity.kind&&x.location===identity.location&&x.tier===tier);
  const layout=atlas.layout;
- if(!layout||layout.durationMs!==700||layout.samples!==22||layout.clipStart!==1/30||clips.some(c=>{const row=layout.clips?.[c];return !row||!Array.isArray(row.frames)||row.frames.length!==22||!Array.isArray(row.dimensions)||row.dimensions.length!==2||row.dimensions.some(n=>!Number.isSafeInteger(n)||n<=0)||row.frames.some(f=>!Array.isArray(f.rect)||f.rect.length!==4||f.rect.some(n=>!Number.isSafeInteger(n)||n<0)||f.rect[2]<=0||f.rect[3]<=0||f.rect[0]+f.rect[2]>row.dimensions[0]||f.rect[1]+f.rect[3]>row.dimensions[1])}))throw Error("invalid-atlas-timing");
+ if(!layout||layout.durationMs!==700||layout.samples!==22||layout.clipStart!==1/30||clips.some(c=>{const row=layout.clips?.[c];return !row||!Array.isArray(row.frames)||row.frames.length!==22||!Array.isArray(row.dimensions)||row.dimensions.length!==2||row.dimensions.some(n=>!Number.isSafeInteger(n)||n<=0)||(row.sourceFrameDimensions!==undefined&&(!Array.isArray(row.sourceFrameDimensions)||row.sourceFrameDimensions.length!==2||row.sourceFrameDimensions.some(n=>!Number.isSafeInteger(n)||n<=0)))||row.frames.some(f=>!Array.isArray(f.rect)||f.rect.length!==4||f.rect.some(n=>!Number.isSafeInteger(n)||n<0)||f.rect[2]<=0||f.rect[3]<=0||f.rect[0]+f.rect[2]>row.dimensions[0]||f.rect[1]+f.rect[3]>row.dimensions[1]||(f.pivot!==undefined&&(!Array.isArray(f.pivot)||f.pivot.length!==2||f.pivot.some(n=>!Number.isFinite(n)))))}))throw Error("invalid-atlas-timing");
  async function bytes(row){
   signal.throwIfAborted();const response=await (options.fetch||global.fetch)(row.path,{signal,cache:"no-cache"});
   if(!response.ok)throw Error("asset-http:"+response.status);
@@ -34,19 +34,22 @@ async function prepare(options){
  for(const clip of clips){const row=layout.clips[clip].asset;if(!row||!/^assets\/[a-zA-Z0-9_./-]+$/.test(row.path)||row.path.includes("..")||!row.license?.trim()||!Number.isSafeInteger(row.bytes)||row.bytes<=0||!/^([a-f0-9]{64})$/.test(row.sha256))throw Error("invalid-atlas-asset");images[clip]=await bytes(row);}
  for(const item of equipment)gear.push({...item,bytes:await bytes(item.asset)});
  const token=Object.freeze({tier,identity:Object.freeze({...identity})});
- verified.set(token,{bodyName:player.asset.path.split("/").pop(),animationName:options.animation?.path.split("/").pop(),bodySHA256:player.asset.sha256,body,animation,images,gear,layout:JSON.parse(JSON.stringify(layout)),registry:JSON.parse(JSON.stringify(registry)),identity:{...identity},tier,signal});return token;
+ verified.set(token,{bodyName:player.asset.path.split("/").pop(),animationName:options.animation?.path.split("/").pop(),bodySHA256:player.asset.sha256,body,animation,images,gear,layout:JSON.parse(JSON.stringify(layout)),registry:JSON.parse(JSON.stringify(registry)),identity:{...identity,visualAssetId:enemy.asset.id},tier,signal});return token;
 }
 async function create(options){
  const {host,signal,isCurrent}=options,bundle=verified.get(options.bundle);
  if(!bundle||bundle.signal!==signal||typeof isCurrent!=="function"||!host)throw Error("unverified-renderer-input");
  const B=global.BABYLON;if(!B?.SceneLoader)throw Error("webgl-unavailable");
+ // Babylon Geometry.RandomId delegates to Tools.RandomId. Runtime IDs must not consume game RNG.
+ if(!global.crypto?.getRandomValues||!B.Tools)throw Error("unavailable-isolated-runtime-id-source");
+ B.Tools.RandomId=()=>global.crypto.randomUUID?.()||Array.from(global.crypto.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,"0")).join("");
  let closed=false,engine,scene,canvas,texture,group=null,activeClip=null;
  const boxes=[],urls=[],unsubscribers=[],textures={};
  const current=()=>!closed&&!signal.aborted&&isCurrent();
  function dispose(){
   if(closed)return;closed=true;
   for(const off of unsubscribers)off();for(const box of boxes)box.dispose();
-  scene?.dispose();engine?.dispose();for(const url of urls)global.URL.revokeObjectURL(url);
+  const gl=engine?._gl;scene?.dispose();engine?.dispose();gl?.getExtension("WEBGL_lose_context")?.loseContext();for(const url of urls)global.URL.revokeObjectURL(url);
   canvas?.remove();
  }
  function requireCurrent(){if(!current())throw Error("stale-formal-renderer");}
@@ -55,7 +58,7 @@ async function create(options){
   requireCurrent();canvas=global.document.createElement("canvas");canvas.setAttribute("aria-label","2.5D 戰鬥視覺；正式數值由文字 HUD 顯示");canvas.style.cssText="width:100%;height:100%;display:block";
   engine=new B.Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true});scene=new B.Scene(engine);
   scene.useRightHandedSystem=true;scene.clearColor=new B.Color4(.025,.04,.065,1);
-  const camera=new B.FreeCamera("formal-b-camera",new B.Vector3(5,4,-7),scene);camera.setTarget(new B.Vector3(0,1,0));camera.mode=B.Camera.ORTHOGRAPHIC_CAMERA;scene.activeCamera=camera;
+  const camera=new B.FreeCamera("formal-b-camera",new B.Vector3(5.5403228,3.5131905,7.9124012),scene);camera.setTarget(new B.Vector3(0,1,0));camera.mode=B.Camera.ORTHOGRAPHIC_CAMERA;scene.activeCamera=camera;
   function resize(){if(!current())return;const ratio=Math.max(.5,host.clientWidth/Math.max(1,host.clientHeight));camera.orthoLeft=-3*ratio;camera.orthoRight=3*ratio;camera.orthoTop=3;camera.orthoBottom=-3;engine.resize();}
   const light=new B.HemisphericLight("formal-b-fill",new B.Vector3(0,1,0),scene);light.intensity=.75;
   const key=new B.DirectionalLight("formal-b-key",new B.Vector3(-1,-2,1),scene);key.position=new B.Vector3(4,8,-4);key.intensity=1.1;
@@ -79,7 +82,7 @@ async function create(options){
    animationSource={animationGroups:scene.animationGroups.filter(g=>g.name.startsWith("formal-retarget-"))};
    source.dispose();boxes.splice(boxes.indexOf(source),1);
   }
-  const groups=new Map();for(const clip of clips){const g=animationSource.animationGroups.find(x=>x.name===(bundle.animation?"formal-retarget-B2_":"B2_")+clip);if(!g||g.from>2||g.to<44||g.targetedAnimations.length<6||g.targetedAnimations.some(x=>x.animation.framePerSecond!==60))throw Error("unavailable-player-clip:"+clip);groups.set(clip,g);}
+  const groups=new Map();for(const clip of clips){const g=animationSource.animationGroups.find(x=>x.name===(bundle.animation?"formal-retarget-B2_":"B2_")+clip);if(!g||g.from>2||g.to<44||g.targetedAnimations.length<6||g.targetedAnimations.some(x=>x.animation.framePerSecond!==60))throw Error("unavailable-player-clip:"+clip);const moving=new Set(g.targetedAnimations.filter(x=>{const keys=x.animation.getKeys(),first=keys[0]?.value?.asArray?.();return first&&keys.some(k=>k.value?.asArray?.().some((v,i)=>Math.abs(v-first[i])>1e-5));}).map(x=>x.target.name));if(moving.size<3)throw Error("non-articulated-player-clip:"+clip);groups.set(clip,g);}
   for(const item of bundle.gear){
    const gear=await load(item.bytes,item.asset.id+".glb");
    if(item.row.mount==="skinned"){
@@ -98,13 +101,17 @@ async function create(options){
   for(const box of boxes)for(const mesh of box.meshes)if(mesh.getTotalVertices()>0)shadows.addShadowCaster(mesh);
   for(const clip of clips){
    const imageURL=global.URL.createObjectURL(new global.Blob([bundle.images[clip]],{type:"image/png"}));urls.push(imageURL);
-   textures[clip]=await new Promise((resolve,reject)=>{let timeout;const cancelled=()=>finish(Error("atlas-aborted"));function finish(error,value){clearTimeout(timeout);signal.removeEventListener("abort",cancelled);error?reject(error):resolve(value);}signal.addEventListener("abort",cancelled,{once:true});timeout=setTimeout(()=>finish(Error("atlas-timeout")),15000);const t=new B.Texture(imageURL,scene,false,false,B.Texture.BILINEAR_SAMPLINGMODE,()=>finish(null,t),()=>finish(Error("atlas-decode")));});requireCurrent();
+   textures[clip]=await new Promise((resolve,reject)=>{let timeout;const cancelled=()=>finish(Error("atlas-aborted"));function finish(error,value){clearTimeout(timeout);signal.removeEventListener("abort",cancelled);error?reject(error):resolve(value);}signal.addEventListener("abort",cancelled,{once:true});timeout=setTimeout(()=>finish(Error("atlas-timeout")),15000);const t=new B.Texture(imageURL,scene,true,true,B.Texture.BILINEAR_SAMPLINGMODE,()=>finish(null,t),()=>finish(Error("atlas-decode")));});requireCurrent();
    const t=textures[clip],size=t.getSize(),row=bundle.layout.clips[clip];if(size.width!==row.dimensions[0]||size.height!==row.dimensions[1])throw Error("atlas-dimensions");
    t.hasAlpha=true;t.wrapU=t.wrapV=B.Texture.CLAMP_ADDRESSMODE;
   }
   texture=textures.idle;
   const enemy=B.MeshBuilder.CreatePlane("formal-enemy-atlas",{width:3,height:3},scene);enemy.position.set(1.6,1.5,0);enemy.billboardMode=B.Mesh.BILLBOARDMODE_ALL;
   const material=new B.StandardMaterial("formal-enemy-material",scene);material.diffuseTexture=texture;material.emissiveColor=B.Color3.White();material.disableLighting=true;material.backFaceCulling=false;material.useAlphaFromDiffuseTexture=true;enemy.material=material;
+  const contact=B.MeshBuilder.CreateDisc("formal-enemy-contact",{radius:.55,tessellation:32},scene);contact.rotation.x=Math.PI/2;contact.position.set(1.6,.01,0);
+  const contactMat=new B.StandardMaterial("formal-enemy-contact-material",scene);contactMat.diffuseColor=B.Color3.Black();contactMat.disableLighting=true;contactMat.alpha=.24;contact.material=contactMat;
+  const effect=B.MeshBuilder.CreateTorus("formal-known-impact",{diameter:.7,thickness:.045,tessellation:24},scene);effect.position.y=1.1;effect.isVisible=false;
+  const effectMat=new B.StandardMaterial("formal-known-impact-material",scene);effectMat.disableLighting=true;effect.material=effectMat;
   const onLost=()=>{options.onFallback?.("context-lost");dispose();};canvas.addEventListener("webglcontextlost",onLost);unsubscribers.push(()=>canvas.removeEventListener("webglcontextlost",onLost));
   const abort=()=>dispose();signal.addEventListener("abort",abort,{once:true});unsubscribers.push(()=>signal.removeEventListener("abort",abort));
   global.addEventListener("resize",resize);unsubscribers.push(()=>global.removeEventListener("resize",resize));
@@ -118,14 +125,17 @@ async function create(options){
    const fraction=Math.min(1,p.elapsedMs/700),g=groups.get(p.clip);
    if(g!==group){group?.stop();g.start(false,1);g.pause();group=g;activeClip=p.clip;}
    g.goToFrame((1/30+fraction*.7)*60);
+   const move=x=>Number.isFinite(x)&&x>=0&&x<=.42?x:0;pivot.position.x=-1.6+move(p.approach);contact.position.x=1.6-move(e.approach);
    const row=bundle.layout.clips[e.clip],cell=row.frames[Math.round(Math.min(1,e.elapsedMs/700)*21)],r=cell.rect;
    texture=textures[e.clip];material.diffuseTexture=texture;
    texture.uScale=r[2]/row.dimensions[0];texture.vScale=r[3]/row.dimensions[1];texture.uOffset=r[0]/row.dimensions[0];texture.vOffset=1-(r[1]+r[3])/row.dimensions[1];
-   enemy.scaling.set(r[2]/256,r[3]/256,1);
-   const pivot=cell.pivot;if(Array.isArray(pivot)&&pivot.length===2){enemy.position.y=(pivot[1]-r[3]/2)*3/256;enemy.position.x=1.6+(r[2]/2-pivot[0])*3/256;}
+   const source=row.sourceFrameDimensions||[256,256],extent=cell.masterTrim?cell.masterTrim.slice(2):r.slice(2);enemy.scaling.set(extent[0]/source[0],extent[1]/source[1],1);
+   const atlasPivot=cell.masterPivot||cell.pivot;if(Array.isArray(atlasPivot)&&atlasPivot.length===2){enemy.position.y=(atlasPivot[1]-extent[1]/2)*3/source[1];enemy.position.x=1.6-move(e.approach)+(extent[0]/2-atlasPivot[0])*3/source[0];}
+   const cue=frame.cue;effect.isVisible=!!cue&&["impact","crit","combo","counter","drain"].includes(cue.type)&&Number.isFinite(cue.ageMs)&&cue.ageMs>=0&&cue.ageMs<160;
+   if(effect.isVisible){const role=cue.type==="drain"?cue.actor:cue.target||cue.actor;effect.position.x=role==="player"?pivot.position.x:contact.position.x;effectMat.emissiveColor=cue.type==="drain"?new B.Color3(.25,1,.55):cue.type==="crit"?new B.Color3(1,.75,.2):new B.Color3(.45,.8,1);effectMat.alpha=1-cue.ageMs/160;const scale=1+cue.ageMs/160;effect.scaling.set(scale,scale,scale);}
    scene.render();return true;
   }
-  return Object.freeze({sample,dispose,snapshot:()=>Object.freeze({closed,activeClip,engines:closed?0:1,canCommit:false,canEmitCombatEvents:false})});
+  return Object.freeze({sample,resize,dispose,snapshot:()=>Object.freeze({closed,activeClip,engines:closed?0:1,canCommit:false,canEmitCombatEvents:false})});
  }catch(error){dispose();throw error;}
 }
 global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,rendererReleased:false,fixtureAllowed:false});

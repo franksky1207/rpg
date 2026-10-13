@@ -18,6 +18,7 @@ const options={host:{},bridge,rendererAPI:api,policy:()=>({mode:'hybrid-b'}),clo
  w.document.hidden=false;listeners.get('visibilitychange')();assert.equal(s.accept({...event,seq:4,type:'snapshot'}),false);await flush();assert.equal(engines,1);
  s.accept({...event,type:'presentation-skipped',seq:5,phase:'presentation'});assert.equal(engines,0);
  s.dispose();s.dispose();assert.equal(listeners.size,0);assert.equal(bridge.f,null);
+ const upstream=new AbortController(),cancelled=C.create(options);cancelled.accept(event,{signal:upstream.signal});await flush();assert.equal(engines,1);upstream.abort();await flush();assert.equal(engines,0);assert.equal(cancelled.snapshot().ended,true);cancelled.dispose();
  // An old resolver may settle after a new battle; it must not mount a late renderer.
  const late=C.create({...options,resolve:()=>new Promise(r=>lateResolve=r)});late.accept(event);late.accept({...event,battleId:'b2',sessionId:'b2',seq:1,type:'cancelled'});lateResolve({});await flush();assert.equal(engines,0);late.dispose();
  for(let i=0;i<100;i++){const x=C.create(options);x.accept({...event,battleId:'switch'+i,sessionId:'switch'+i});await flush();assert.equal(engines,1);x.dispose();assert.equal(engines,0);assert.equal(listeners.size,0);}
