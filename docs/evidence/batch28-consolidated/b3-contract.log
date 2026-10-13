@@ -25,10 +25,10 @@ test at tests/runtime/hybrid-comparison-renderer-contract.cjs:18:1
 ✖ all B2 binaries/failure evidence retained; only inventory tool evolves (312.7549ms)
   AssertionError [ERR_ASSERTION]: Exact authorized T4 source
   + actual - expected
-  
+
   + 'cb6778ba6d1cff2b7e166362c781ab5ea40e89e8add1b45375fc07e1c28b9b61'
   - 'f4ed858bd4106584a38683a15bc882f5682ca635438551e83fc5010e346ae506'
-  
+
       at verifySource (/workspace/rpg/development/hybrid-comparison/t2b3-v1/source-version.cjs:30:15)
       at TestContext.<anonymous> (/workspace/rpg/tests/runtime/hybrid-comparison-renderer-contract.cjs:18:553)
       at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

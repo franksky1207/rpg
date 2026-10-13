@@ -228,5 +228,6 @@ jobs:
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
             /tmp/t3b-formal-renderer-browser.json
+            /tmp/batch28-consolidated
           if-no-files-found: ignore
           retention-days: 1
