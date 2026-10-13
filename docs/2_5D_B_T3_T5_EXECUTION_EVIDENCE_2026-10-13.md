@@ -72,3 +72,5 @@ T4 提交 5cc2eaa4750edf41361210ffb0074f22aa927830 的 Runtime Integrity 失敗�
 鏡像實際先計算後DOM，新coordinator先保留有界metadata，不播放、不載入場景，再接同一clock；返回或晚到採當前checkpoint，不補播舊動作，未來新index可播放。原RootSource/Fixture不變。真實Renderer更新測試：pre-DOM後fallback0、非idle13、無額外scene/RNG／存檔／音訊。
 
 b8f1ab9b14項Actions13成功、Stage4因pending誤清失敗。原checkpoint取t再由ensureOfflineState取較新now，可讓正常向前一毫秒誤判回滾。最小T5-C讓此同次normalization使用t；未動收益、時鐘倒退5分鐘門檻、存檔schema。原碼在嚴格遞增時鐘測試實際失敗，新碼保留pending、backup exact／reload／fail closed通過；真正10分鐘倒退仍locked且無gold變化。保留before／after SHA及logs，沒有跳過或放寬斷言。
+
+交付 a4ffafb3 的 Runtime 找出驗證資料命名問題：before 證據以 `.js` 保存，使全庫 save-writer 哨兵正確抓到額外 writer。原件改為非執行 `.txt` 證據（byte/SHA 不變），沒有增加白名單或減少 writer 斷言。新碼／發布成品的正常遞增與真正倒退存檔測試均通過。
