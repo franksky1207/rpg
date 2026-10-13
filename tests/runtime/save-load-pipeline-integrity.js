@@ -4,12 +4,15 @@ const assert=require("assert");
 (async()=>{
  const browser=await chromium.launch({headless:true});
  const page=await browser.newPage();
+ // Deterministically exercise a forward tick between consecutive now() reads;
+ // no frozen clock or relaxed save assertion. This reproduced the checkpoint race.
+ await page.addInitScript(()=>{const origin=Date.now();let tick=0;Date.now=()=>origin+tick++;});
  const pageErrors=[];
  page.on("pageerror",error=>pageErrors.push(String(error?.stack||error?.message||error)));
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.SAVE_LOAD_PIPELINE_VERSION===3&&window.SAVE_VERSION_BACKUP_DELEGATION_VERSION===1&&typeof newState==="function"&&typeof window.makeThirdWorldEquipment==="function"&&typeof window.createBlankSecondWorldState==="function"&&typeof window.createBlankThirdWorldState==="function"&&typeof window.normalizeOfflineSaveState==="function"&&typeof window.normalizePlayerTitleState==="function"&&typeof window.load==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.SAVE_LOAD_PIPELINE_VERSION===3&&window.SAVE_VERSION_BACKUP_DELEGATION_VERSION===1&&typeof newState==="function"&&typeof window.makeThirdWorldEquipment==="function"&&typeof window.createBlankSecondWorldState==="function"&&typeof window.createBlankThirdWorldState==="function"&&typeof window.normalizeOfflineSaveState==="function"&&typeof window.normalizePlayerTitleState==="function"&&typeof window.load==="function"&&typeof window.normalizeOfflinePendingSettlement==="function",{timeout:30000});
 
   const first=await page.evaluate(()=>{
    const SAVE_KEY_VALUE=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save";
@@ -114,6 +117,15 @@ const assert=require("assert");
   assert.equal(first.report?.versionBackupOwner,"saveversionguard","Version backup owner must remain saveversionguard.");
   assert.equal(first.backupReport?.verified,true,"Pre-Schema17 backup was not verified.");
 
+  const rollbackProbe=await page.evaluate(()=>{
+   const key=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save",original=JSON.stringify(state),raw=localStorage.getItem(key),future=Date.now()+600000,gold=state.gold;
+   try{state.offline.maxObservedWallClock=future;state.offline.timeLockUntil=0;state.offline.pendingSettlement={sampleVersion:4,world:3,targetType:"higher-dimensional"};save(false);return {pending:state.offline.pendingSettlement,until:state.offline.timeLockUntil,max:state.offline.maxObservedWallClock,future,goldUnchanged:state.gold===gold};}
+   finally{state=JSON.parse(original);localStorage.setItem(key,raw);}
+  });
+  console.log("Clock rollback probe",rollbackProbe);
+  assert.equal(rollbackProbe.pending,null,"Real wall-clock rollback must still discard pending settlement");
+  assert.ok(rollbackProbe.until>=rollbackProbe.future,"Real rollback lock must not be loosened");
+  assert.equal(rollbackProbe.goldUnchanged,true,"Clock guard cannot grant rewards");
   await page.reload({waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.LAST_SAVE_LOAD_REPORT?.targetVersion===17,{timeout:30000});
   const reloaded=await page.evaluate((backupKey)=>{const SAVE_KEY_VALUE=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save";const current=JSON.parse(localStorage.getItem(SAVE_KEY_VALUE)||"null");return {saveVersion:current?.saveVersion,reincarnationCount:current?.reincarnation?.count,backupRaw:localStorage.getItem(backupKey)||"",report:JSON.parse(JSON.stringify(window.LAST_SAVE_LOAD_REPORT||{}))};},first.backupKey);

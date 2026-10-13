@@ -66,3 +66,9 @@ T4 提交 5cc2eaa4750edf41361210ffb0074f22aa927830 的 Runtime Integrity 失敗�
 實際GM source未有atlas能力，新增原戰場案例内的圖集檢視，不新增案例或中心。實際三敵六動作SourcePNG三畫格pixels各不相同、錯SHA释放bitmap、未核准unavailable、切案例釋放與storage不變通過；正式核准清冊目前缺少。此新增功能未把 B2 development素材發布。原31案例和授權唯讀GM快照以現行GM程式重跑通過。
 
 完整交付説明、人工Gate、后续順序與回復见 `2_5D_B_T3_T5_ACCEPTANCE_2026-10-13.md`。10ba4541451d965d87e44dbe00019f66b691a8cc 的10項觸發Actions成功；最新交付與比較workflow exact HEAD仍須push後核對。
+
+## 收尾正式呼叫順序與 CI 真因修正
+
+鏡像實際先計算後DOM，新coordinator先保留有界metadata，不播放、不載入場景，再接同一clock；返回或晚到採當前checkpoint，不補播舊動作，未來新index可播放。原RootSource/Fixture不變。真實Renderer更新測試：pre-DOM後fallback0、非idle13、無額外scene/RNG／存檔／音訊。
+
+b8f1ab9b14項Actions13成功、Stage4因pending誤清失敗。原checkpoint取t再由ensureOfflineState取較新now，可讓正常向前一毫秒誤判回滾。最小T5-C讓此同次normalization使用t；未動收益、時鐘倒退5分鐘門檻、存檔schema。原碼在嚴格遞增時鐘測試實際失敗，新碼保留pending、backup exact／reload／fail closed通過；真正10分鐘倒退仍locked且無gold變化。保留before／after SHA及logs，沒有跳過或放寬斷言。

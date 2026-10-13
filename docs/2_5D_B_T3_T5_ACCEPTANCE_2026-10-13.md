@@ -9,7 +9,7 @@
 | T4 | 正式 home/dom 控制、host、劇情／首頁／地圖／服務／養成／副本注入、hook、專屬 CSS／預熱引用退場，原件逐 byte 保存 development 歷史區；三 viewport×11 路由×100 次切換零裝飾請求／Canvas／引擎；GM 共用 factory 與 31 案例保留 | 後續人工逐頁確認布局與 GM 返回位置 |
 | T5-A | 依反向依賴解除純預覽發布引用；保留 shared-loader／runtime／prototype／快照／正式模型／歷史 A/B/C、Blender、授權；更新 cache-bust／manifest／源鎖驗證與 meaningful tests | 不刪 GM／B 依賴，不強制清快取／存檔 |
 | T5-B | 核心 576／鏡像48、GM8／31、戰鬥／三紀元／異宇宙／回顧／轉生／存檔／音訊／背景／Fast Catch-up、角色與裝備 browser、發布 HTTP／SHA、Range／存檔隔離；實際軟體 Renderer 32 子集合＋100 次建立／釋放、三敵三 tier 六動作、三尺寸與 context loss 通過 | stage40 最終美術／發布、真機／雲端真帳號／聆聽未驗，不稱全部正式發布完成 |
-| T5-C | 不需要：原舊 3D 偏好仍安全回退文字，未見需要資料／schema／歷史快取強制遷移的問題 | 不新增無必要相容遷移 |
+| T5-C | 必要最小修正：checkpoint與正規化共用同次時間戳，正常時鐘遞增不誤清pending；真正倒退仍按原五分鐘門檻阻擋；原舊3D偏好仍安全回退，無資料／schema／快取遷移 | 不新增無必要相容遷移 |
 
 ## GM 圖集能力與來源隔離
 
@@ -19,7 +19,7 @@
 
 ## 保護、已知限制與回退
 
-正式數值／RNG／掉落／結算／存檔／雲端／離線／音訊 owner 源檔不改；原 T2-A Fixture `5a74c2ee...` 未重製。原身體／三 LOD／G007 十五 GLB／210 套1050名稱、B2 Blender／GLB／PNG 與 r2 失敗數據保留。新增 GM extension 的前後完整源檔 SHA 也保留於 retirement ledger，原 B2 lock 不改。100 次 Renderer 測試 Math.random 呼叫零，避免 GPU 幾何 ID 消耗正式亂數。
+正式數值／RNG／掉落／結算／存檔 schema／雲端／音訊不改；離線 checkpoint 僅時間戳一致性修正，原收益及倒退規則不動；原 T2-A Fixture `5a74c2ee...` 未重製。原身體／三 LOD／G007 十五 GLB／210 套1050名稱、B2 Blender／GLB／PNG 與 r2 失敗數據保留。新增 GM extension 的前後完整源檔 SHA 也保留於 retirement ledger，原 B2 lock 不改。100 次 Renderer 測試 Math.random 呼叫零，避免 GPU 幾何 ID 消耗正式亂數。
 
 B2 native 材質光影公平性及肩甲／護手／劍首局部接觸風險仍保留，不將距離代理稱精確穿深。原 RGBA 貼圖倒置已由實際 source PNG／WebGL crop 驗證修正；方向 RMSE 44.7519 < 倒置71.5563，只證明方向，不能作公平選型或美術封版。
 
@@ -30,3 +30,9 @@ B2 native 材質光影公平性及肩甲／護手／劍首局部接觸風險仍�
 正式桌機／手機：三紀元合法模式、異宇宙／回顧／轉生、裝備養成與存檔正常；正式頁不再有獨立預覽。GM：八分類31案例、正式快照／自由測試分離、五槽／LOD、最大化／返回／故障提示；圖集缺核准素材應 unavailable。至少30分鐘手機操作，直橫向、背景／回前台、倍速／極簡、弱網／熱快取、音樂音效與發熱由真人實測。
 
 正式 B 仍閉合，不能聲稱目前玩家已全面看到新戰鬥；具核准身份清冊與正式啟用批准後，才由真機驗收其畫面及效能。後續固定：01～27 相容性補查 → 承接28既有 G001～G020／40概念圖／五槽成果 → 29～40 B 美術與功能。未進行量產，stage40 Gate 未通過。
+
+## 收尾缺口與精確回歸
+
+鏡像 owner 實際先 runMirrorCombatCore 再 render combat DOM，因此 coordinator 在 DOM 缺少時只保留有界唯讀 metadata，不啟動場景／資產或播放；建立後沿同一 presentation clock。晚到或回前台 checkpoint 保留未來動作 metadata，當前舊動作不補播，新的 sourceIndex 才重新呈現。實際 core-before-DOM 的 Renderer fallback0／非idle samples13通過。
+
+b8f1ab9b 的14項Actions有13成功、Stage4存檔失敗；原checkpoint先取t再由normalizer取較新now，可能把自身一毫秒差誤判倒退。新測試每次Date.now遞增一毫秒（沒有凍結時間），旧程式確實失敗、新程式保留pending；真正10分鐘倒退仍清pending並鎖定，gold不變。只共用時間戳，原有效斷言／5分鐘門檻／公式不動。原件與失敗／通過log在docs/evidence/t3-t5。最終exact HEAD仍以push後核對為準。

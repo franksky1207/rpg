@@ -10,7 +10,7 @@ function mount(options){
  retireScene();
  let notice=null;
  const clearNotice=()=>{notice?.remove();notice=null;};
- const clock=global.CivilizationFormalBOwnerClock.create();
+ const clock=options.clock||global.CivilizationFormalBOwnerClock.create();
  const controller=global.CivilizationFormalBController.create({
   host:options.host,clock,
   resolve:async(frame,signal)=>{
@@ -54,18 +54,20 @@ function mount(options){
  return managed;
 }
 function bindRoutes(options){
- dispose();let id=null,host=null;
+ dispose();let id=null,host=null,clockBattleId=null,clock=null;
  const bridge=global.CivilizationFormalHybridBridge;
  const observer=new MutationObserver(()=>{if(host&&!host.isConnected){retireScene();host=null;id=null;}});
  observer.observe(document.body,{childList:true,subtree:true});
  const attached=bridge.attach((event,delivery)=>{
   const frame=global.CivilizationFormalBProjection.convert(event);if(!frame)return;
+  if(clockBattleId!==frame.battleId){clock=global.CivilizationFormalBOwnerClock.create();clockBattleId=frame.battleId;}
+  clock.observe(event); // Metadata only: some formal owners compute before creating combat DOM.
   const screen=document.querySelector("#main .combat-screen");
   if(!screen||document.hidden){retireScene();host?.remove();host=null;id=null;return;}
   if(id!==frame.battleId||!host?.isConnected){
    retireScene();host?.remove();host=document.createElement("div");host.className="formal-b-battle-stage";host.style.cssText="width:100%;height:clamp(200px,42dvh,380px);position:relative;overflow:hidden";host.hidden=true;
    const anchor=screen.querySelector(".combat-arena");screen.insertBefore(host,anchor?.parentNode===screen?anchor:null);id=frame.battleId;
-   mount({...options,host,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
+   mount({...options,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
   }
   active?.accept(event,delivery);
  });

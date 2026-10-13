@@ -24,7 +24,7 @@ function create(options){
    await options.loadRuntime?.(context,signal);if(!current(ticket,id))return;
    const result=await rendererAPI.create({bundle,host:options.host,signal,isCurrent:()=>current(ticket,id),onFallback:fallback});
    if(!current(ticket,id)){result.dispose();return;}
-   renderer=result;loading=false;options.onReady?.();renderer.resize?.();renderer.sample({clip:"idle",elapsedMs:0});
+   renderer=result;loading=false;options.clock?.reset?.({resume:true});options.onReady?.();renderer.resize?.();renderer.sample({clip:"idle",elapsedMs:0});
    if(global.requestAnimationFrame)raf=global.requestAnimationFrame(draw);
   }catch(error){if(current(ticket,id))fallback(String(error?.message||error));}
  }

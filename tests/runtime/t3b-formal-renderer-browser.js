@@ -75,6 +75,13 @@ const identity={id:'internal-only-normal',world:1,kind:'normal',location:'test-o
    await animateStructuredCombatPresentation(result);
    for(let i=0;i<100;i++)await Promise.resolve();
    const ownerDiagnostic=coordinator.snapshot(),stageHiddenAfterEnd=document.querySelector('#main .formal-b-battle-stage')?.hidden===true,hudValues={player:document.getElementById('combatPlayerHp').textContent,enemy:document.getElementById('combatEnemyHp').textContent};CivilizationFormalBEntry.dispose();
+   const originalClock=CivilizationFormalBOwnerClock;let pacedActionsAfterDOM=0;
+   window.CivilizationFormalBOwnerClock={...originalClock,create:opts=>{const c=originalClock.create(opts);return Object.freeze({...c,sample:(...args)=>{const frame=c.sample(...args);if(frame&&(frame.player.clip!=='idle'||frame.enemy.clip!=='idle'))pacedActionsAfterDOM++;return frame;}});}};
+   const lateHTML=ownerHost.innerHTML;ownerHost.replaceChildren();
+   const lateCoordinator=CivilizationFormalBEntry.bindRoutes({quality:'standard',resolve:async()=>({...options,signal:undefined})});
+   const beforeDOM=runCombatCore({hp:1000,atk:50,def:20,crit:10,dodge:10},{id:identity.id,name:'internal-only-pre-DOM-test',kind:'normal',level:31,hp:500,atk:20,def:0,crit:0,dodge:0},1000,{rng:()=>.5,maxActions:8,preparePresentation:true,visualContext:{mode:'main',world:1,owner:'combatcore.js',location:identity.location,playerName:'internal-only-owner-test'}});
+   if(document.querySelector('.formal-b-battle-stage')||BABYLON.EngineStore.Instances.length)throw Error('No renderer before combat DOM');
+   ownerHost.innerHTML=lateHTML;await animateStructuredCombatPresentation(beforeDOM);for(let i=0;i<100;i++)await Promise.resolve();const lateDOMDiagnostic=lateCoordinator.snapshot();CivilizationFormalBEntry.dispose();window.CivilizationFormalBOwnerClock=originalClock;
    const unavailable=CivilizationFormalBEntry.bindRoutes({quality:'standard',resolve:async()=>({...options,catalog:{...catalog,approved:false},signal:undefined})});
    const textResult=runCombatCore({hp:1000,atk:50,def:20,crit:10,dodge:10},{id:identity.id,name:'internal-only-owner-test-enemy',kind:'normal',level:31,hp:500,atk:20,def:0,crit:0,dodge:0},1000,{rng:()=>.5,maxActions:8,preparePresentation:true,visualContext:{mode:'main',world:1,owner:'combatcore.js',location:identity.location,playerName:'internal-only-owner-test'}});
    await animateStructuredCombatPresentation(textResult);for(let i=0;i<100;i++)await Promise.resolve();
@@ -82,12 +89,13 @@ const identity={id:'internal-only-normal',world:1,kind:'normal',location:'test-o
    if(JSON.stringify(window.state)!==isolatedBefore)throw Error('Renderer changed isolated formal State');
    if(BABYLON.EngineStore.Instances.length!==0||document.querySelectorAll('#main .formal-b-battle-stage canvas').length)throw Error('Formal owner integration leaked an engine/canvas');
    Math.random=originalRandom;
-   return{orientation,visualRandomCalls,randomStacks,hashes,jointPoses,subsets,tierReports,viewportReports,contextLossDisposed:true,diagnostic,disposed,ownerDiagnostic,unavailableDiagnostic,coreResultsEqual,stageHiddenAfterEnd,unavailableNotice,hudValues,remaining:document.querySelectorAll('#test-host canvas').length,saveUnchanged:saved===JSON.stringify(localStorage),audioUnchanged:audioCount===document.querySelectorAll('audio').length};
+   return{orientation,visualRandomCalls,randomStacks,hashes,jointPoses,subsets,tierReports,viewportReports,contextLossDisposed:true,diagnostic,disposed,ownerDiagnostic,lateDOMDiagnostic,pacedActionsAfterDOM,unavailableDiagnostic,coreResultsEqual,stageHiddenAfterEnd,unavailableNotice,hudValues,remaining:document.querySelectorAll('#test-host canvas').length,saveUnchanged:saved===JSON.stringify(localStorage),audioUnchanged:audioCount===document.querySelectorAll('audio').length};
   },{player,animation,catalog,identity,routes,base,official,gear,actorTiers});
   fs.writeFileSync('/tmp/t3-formal-attack-mid.png',Buffer.from(result.hashes.find(x=>x.clip==='attack').frames[1].split(',')[1],'base64'));
   for(const x of result.hashes){assert.equal(new Set(x.frames.map(sha)).size,3,'Actual animated rendered poses '+x.clip);for(const png of x.frames)assert.ok(png.length>2000,'Nonblank rendered stage');x.frames=x.frames.map(sha);}
   assert.ok(result.jointPoses[0].some((v,i)=>Math.abs(v-result.jointPoses[1][i])>.0001),'Actual player skeleton matrices deform at source samples');
   result.jointPoses=result.jointPoses.map(x=>sha(JSON.stringify(x)));
+  assert.equal(result.lateDOMDiagnostic.fallbacks,0,'Compute-before-DOM owner remains renderable');assert.ok(result.pacedActionsAfterDOM>0,'Real paced actions after late DOM, not idle fallback');
   assert.equal(result.stageHiddenAfterEnd,true,'No blank stage after end');assert.match(result.unavailableNotice,/文字戰鬥/,'Visible unavailable fallback');
   assert.equal(result.subsets.length,100);assert.equal(new Set(result.subsets.slice(0,32).map(x=>x.pixelHash)).size,32,'Actual independently visible five-slot subsets');assert.ok(result.subsets.every(x=>x.rig===53));
   for(const name of ['expectedPNG','actualPNG'])fs.writeFileSync('/tmp/t3-orientation-'+name+'.png',Buffer.from(result.orientation[name].split(',')[1],'base64'));

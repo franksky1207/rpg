@@ -7,9 +7,9 @@ function create(options={}){
  const now=options.now||(()=>global.performance.now());
  const read=options.read||(()=>global.getCombatPresentationSnapshot?.());
  const snapshot=options.snapshot||(()=>global.CivilizationCombatEvents?.snapshot?.("formal"));
- let battleId=null,token=null,index=-1,start=0,resumed=false;
+ let battleId=null,token=null,index=-1,start=0,resumed=false,resumeIndex=null;
  const actions=new Map();
- function reset({resume=false}={}){actions.clear();token=null;index=-1;start=now();resumed=resume;}
+ function reset({resume=false}={}){if(!resume)actions.clear();token=null;index=-1;start=now();resumed=resume;resumeIndex=resume&&Number.isSafeInteger(read()?.index)?read().index:null;}
  function observe(e){
   if(e?.lane!=="formal"||e.availability!=="authoritative"||e.expired!==false)return;
   if(e.battleId!==battleId){reset();battleId=e.battleId;}
@@ -22,7 +22,10 @@ function create(options={}){
   const p=read(),session=snapshot();
   if(!p||session?.battleId!==battleId||session.background||global.document?.hidden||session.presentation?.token!==p.token)return null;
   const idle=()=>({player:{clip:"idle",elapsedMs:Math.max(0,now()-start)%700},enemy:{clip:"idle",elapsedMs:Math.max(0,now()-start)%700},cue:null});
-  if(resumed){const frame=idle();for(const role of ["player","enemy"])if(p[role+"Hp"]===0)frame[role]={clip:"defeat",elapsedMs:700};return frame;}
+  if(resumed&&resumeIndex===null)resumeIndex=p.index;
+  if(resumed&&p.index<=resumeIndex){const frame=idle();for(const role of ["player","enemy"])if(p[role+"Hp"]===0)frame[role]={clip:"defeat",elapsedMs:700};return frame;}
+  if(resumed)resumed=false; // A later source index is a new owner action, not a replay.
+
   if(p.index===0)return idle();
   const d=actions.get(p.index-1);if(!d)throw Error("unavailable-authoritative-action-history");
   if(token!==p.token||index!==p.index){token=p.token;index=p.index;start=now();}

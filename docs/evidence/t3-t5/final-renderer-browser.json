@@ -1296,14 +1296,14 @@
       "canEmitCombatEvents": false
     },
     "ownerDiagnostic": {
-      "battleId": "combat-v1-291cf2b1-b6f1-476f-a3d3-3499771035b9-1",
+      "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-1",
       "lastSeq": 33,
       "disposed": false,
       "loading": false,
       "ready": false,
       "ended": true,
       "failed": false,
-      "frames": 19,
+      "frames": 20,
       "rejected": 1,
       "fallbacks": 0,
       "engines": 0,
@@ -1311,8 +1311,25 @@
       "canCommit": false,
       "canEmitCombatEvents": false
     },
+    "lateDOMDiagnostic": {
+      "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-2",
+      "lastSeq": 32,
+      "disposed": false,
+      "loading": false,
+      "ready": false,
+      "ended": true,
+      "failed": false,
+      "frames": 20,
+      "rejected": 1,
+      "fallbacks": 0,
+      "engines": 0,
+      "rafs": 0,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "pacedActionsAfterDOM": 13,
     "unavailableDiagnostic": {
-      "battleId": "combat-v1-291cf2b1-b6f1-476f-a3d3-3499771035b9-2",
+      "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-3",
       "lastSeq": 33,
       "disposed": false,
       "loading": false,

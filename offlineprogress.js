@@ -42,9 +42,9 @@
   return OFFLINE_COMBAT_SPEEDS.includes(speed)?speed:1;
  }
  function yieldThread(){return new Promise(resolve=>setTimeout(resolve,0));}
- function ensureOfflineState(){
+ function ensureOfflineState(currentTime=now()){
   if(typeof window.normalizeOfflineSaveState!=="function")throw new Error("Offline save normalization owner unavailable");
-  return window.normalizeOfflineSaveState(state,{sourceVersion:Number(state?.saveVersion)||Number(window.SAVE_SCHEMA_VERSION)||1,currentTime:now()});
+  return window.normalizeOfflineSaveState(state,{sourceVersion:Number(state?.saveVersion)||Number(window.SAVE_SCHEMA_VERSION)||1,currentTime});
  }
  function wallClockGuard(o,t=now()){
   const maxObserved=Math.max(0,Math.floor(Number(o.maxObservedWallClock)||0));
@@ -57,7 +57,7 @@
   if(t<maxObserved){o.pendingSettlement=null;o.lastSettledAt=t;return {blocked:true,released:false,until:maxObserved};}
   o.maxObservedWallClock=Math.max(maxObserved,t);return {blocked:false,released:false,until:0};
  }
- function checkpoint(ts=now(),persist=false){const t=Math.max(0,Math.floor(Number(ts)||now())),o=ensureOfflineState();wallClockGuard(o,t);o.lastSettledAt=t;if(persist&&baseSave)baseSave(false);}
+ function checkpoint(ts=now(),persist=false){const t=Math.max(0,Math.floor(Number(ts)||now())),o=ensureOfflineState(t);wallClockGuard(o,t);o.lastSettledAt=t;if(persist&&baseSave)baseSave(false);}
  function legalFarmTarget(mapIdx,enemyIdx){
   const m=Number(mapIdx),e=Number(enemyIdx);
   if(!Number.isInteger(m)||m<0||m>=MAPS.length||!Number.isInteger(e)||e<0||e>3)return false;

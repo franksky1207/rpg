@@ -1,13 +1,13 @@
 {
   "schema": "civilization.2_5d_b.t3_t5.execution.v1",
-  "recordedAt": "2026-10-13T09:52:55.666515+00:00",
+  "recordedAt": "2026-10-13T10:22:52.003860+00:00",
   "baselineMainHEAD": "48009e8d8f87afc8bfef0c68cb4c02e854b2944f",
   "status": "engineering-local-acceptance-passed-exact-delivery-CI-pending-not-full-release",
   "phaseStatus": {
     "T3": "formal-renderer-owner-routes-background-pacing-cancellation-local-verified-release-closed",
     "T4": "formal-decorative-preview-retirement-verified-GM-shared-retained",
     "T5": "local-system-regression-passed-exact-delivery-CI-pending",
-    "T5-C": "not-needed-no-save-or-preference-migration"
+    "T5-C": "minimal-checkpoint-timestamp-consistency-fix-no-formula-or-save-schema-change"
   },
   "release": {
     "FULL_3D_AVAILABLE": false,
@@ -657,8 +657,8 @@
       "sha256": "10f628638eafab687b0c3180a4da0c76726877a6ca5811c05a29e6ea2aba8acd"
     },
     "3d-test/t3b-formal-controller.js": {
-      "bytes": 5542,
-      "sha256": "d3e699e9096f58a1d907b0622f7334c7aa51e5c8d9f21bd5850bb15aff5406db"
+      "bytes": 5580,
+      "sha256": "45c2123b4332bc4b3b333bfcaffcb20306c5bb4bf0a76414148a5063c01511e6"
     },
     "3d-test/t3b-formal-projection.js": {
       "bytes": 3573,
@@ -666,7 +666,7 @@
     },
     "resource-manifest.json": {
       "bytes": 32685,
-      "sha256": "be926f750a8a88ff862865acab80808b415bff65c559dbecc2c3fd6a1c50f747"
+      "sha256": "e87d3e76ee4c6631cf939592410961f5288af71c011061cdd96ed65775fa2540"
     },
     "development/hybrid-comparison/t2b2-v1/inventory.json": {
       "bytes": 371584,
@@ -681,12 +681,12 @@
       "sha256": "2d6d1c5eb5b47ccca9632ba8325984077ec815f2d3f3ffa580c5e65fa7b76cdb"
     },
     "3d-test/t3b-formal-entry.js": {
-      "bytes": 5993,
-      "sha256": "00b38618ce2a2cb7faeda1ea31a1f0c583076f57952b24263e7bcbb498268ad6"
+      "bytes": 6261,
+      "sha256": "210ff1402b8462c46cb62ae40812d360c0f3dbadded02cf60f568af7b8fa9f15"
     },
     "3d-test/t3b-formal-owner-clock.js": {
-      "bytes": 3995,
-      "sha256": "60a528fec344238dbf8c287eb1e0643ae26ec197aab20181737d6a82a445047c"
+      "bytes": 4263,
+      "sha256": "7bd01a71640444c1bfd269c27e43dc6be2a40f6ecc4bbb4da71538a9936d2bff"
     },
     "3d-test/t3b-formal-assets.js": {
       "bytes": 3509,
@@ -706,7 +706,12 @@
     },
     "development/retired-formal-previews/20261013/source-evolution.json": {
       "bytes": 3642,
-      "sha256": "f6171a24009e4f32b9f732a92679081f20bd811a0f4af148474ac0f0a4bccd22"
+      "sha256": "897cbe8466870a745c40a805ef1fd933232ac0252346ad8606e5e15635fb239e"
+    },
+    "offlineprogress.js": {
+      "bytes": 52486,
+      "sha256": "f3ca7029b60c1cf29c01e84871e0ff6e934ecb1a2a87b283e9b52eb78efbe86a",
+      "beforeSHA256": "b2646395d864a207c675fe93a3e188bbe628f07bea5dfd6c1116892037b75092"
     }
   },
   "failuresResolved": [
@@ -754,11 +759,11 @@
     "29-40 B art and functionality; no early production"
   ],
   "githubActions": {
-    "validatedPreClosureHEAD": "10ba4541451d965d87e44dbe00019f66b691a8cc",
-    "triggeredCount": 10,
-    "successCount": 10,
-    "comparisonWorkflows": "not-triggered-for-that-head; must run against delivery head",
-    "deliveryHead": "recorded by git commit and final report, cannot self-embed commit SHA",
+    "validatedPreFixHEAD": "b8f1ab9b6d48d7951d42a8a55215355726e954f5",
+    "successCount": 13,
+    "failureCount": 1,
+    "failureWorkflow": "Publish Release Gate (Stage 4)",
+    "failureRootCause": "offline checkpoint now() captured before normalization next now(); forward 1 ms misclassified as rollback clears pending; fixed with same checkpoint timestamp",
     "deliveryStatus": "pending-post-push-exact-HEAD-check"
   },
   "priorExactHEADActions": {
@@ -2065,14 +2070,14 @@
         "canEmitCombatEvents": false
       },
       "ownerDiagnostic": {
-        "battleId": "combat-v1-291cf2b1-b6f1-476f-a3d3-3499771035b9-1",
+        "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-1",
         "lastSeq": 33,
         "disposed": false,
         "loading": false,
         "ready": false,
         "ended": true,
         "failed": false,
-        "frames": 19,
+        "frames": 20,
         "rejected": 1,
         "fallbacks": 0,
         "engines": 0,
@@ -2080,8 +2085,25 @@
         "canCommit": false,
         "canEmitCombatEvents": false
       },
+      "lateDOMDiagnostic": {
+        "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-2",
+        "lastSeq": 32,
+        "disposed": false,
+        "loading": false,
+        "ready": false,
+        "ended": true,
+        "failed": false,
+        "frames": 20,
+        "rejected": 1,
+        "fallbacks": 0,
+        "engines": 0,
+        "rafs": 0,
+        "canCommit": false,
+        "canEmitCombatEvents": false
+      },
+      "pacedActionsAfterDOM": 13,
       "unavailableDiagnostic": {
-        "battleId": "combat-v1-291cf2b1-b6f1-476f-a3d3-3499771035b9-2",
+        "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-3",
         "lastSeq": 33,
         "disposed": false,
         "loading": false,
@@ -4500,5 +4522,34 @@
       "audioUnchanged": true
     },
     "hardware": "Chromium SwiftShader; NOT real GPU/mobile/art approval"
+  },
+  "computeBeforeDOM": {
+    "formalOwnerExample": "mirrordungeonrun.js computes before render",
+    "fix": "bounded metadata retained before DOM; no playback or assets until combat screen; shared same clock",
+    "result": {
+      "battleId": "combat-v1-1b4c305b-fbc0-4376-a9ea-102731b5c9bd-2",
+      "lastSeq": 32,
+      "disposed": false,
+      "loading": false,
+      "ready": false,
+      "ended": true,
+      "failed": false,
+      "frames": 20,
+      "rejected": 1,
+      "fallbacks": 0,
+      "engines": 0,
+      "rafs": 0,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "nonIdlePacedSamples": 13
+  },
+  "checkpointRegression": {
+    "beforeCodeReproducedFailure": true,
+    "afterCodePassed": true,
+    "clockControl": "monotonically advances one ms on every Date.now read; not frozen",
+    "trueRollback": "10-minute rollback remains locked; pending cleared; gold unchanged",
+    "formulaUnchanged": true,
+    "backupAndSchemaAssertionsPreserved": true
   }
 }
