@@ -8,7 +8,7 @@ module.exports=function verifySource(path,oldSHA){
  if(path==='index.html'){
   const baseline=cp.execFileSync('git',['show','11bc4c24b1a2cdbfbbbfdd86921af54f5fbf2e0e:index.html']);
   const marker='<script src="3d-test/mode-foundation.js?v=20261010-dual-mode-preflight3&v2=20261010-b17-mode-policy&v3=20261010-opt5-account-migration"></script>';
-  const addition='\n<script src="3d-test/t3a-hybrid-policy.js?v=20261013-t3b-bridge1"></script>';
+  const addition='\n<script src="3d-test/t3a-hybrid-policy.js?v=20261013-t3b-bridge2"></script>';
   const original=baseline.toString('utf8');
   assert.equal(original.split(marker).length,2,'Unique formal T3-A marker');
   assert.equal(fs.readFileSync(path,'utf8'),original.replace(marker,marker+addition),'Only authorized T3-A HTML addition');
