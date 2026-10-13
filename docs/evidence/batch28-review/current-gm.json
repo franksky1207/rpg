@@ -1,0 +1,125 @@
+{
+  "status": "建議與待使用者審核",
+  "notApprovalAuthority": true,
+  "baseline": "f8d707694835a9bfce555a7eb1a754ded3a174ff",
+  "reviewOnly": true,
+  "source": "existing GM C-08 free fixture, catalog from verified original index via isolated mock receiver, high LOD, enhancement 0; no formal account bridge claim",
+  "physicalGPU": false,
+  "metadata": {
+    "visualOnly": true,
+    "readOnly": true,
+    "assetKind": "skinned-glb",
+    "world": 1,
+    "modelDescriptors": [
+      {
+        "type": "weapon",
+        "present": true,
+        "world": 1,
+        "name": "古代光刃",
+        "visualKey": "古代光刃",
+        "quality": 5,
+        "level": 35,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "helmet",
+        "present": true,
+        "world": 1,
+        "name": "遺物守衛盔",
+        "visualKey": "遺物守衛盔",
+        "quality": 5,
+        "level": 35,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "armor",
+        "present": true,
+        "world": 1,
+        "name": "自律護衛甲",
+        "visualKey": "自律護衛甲",
+        "quality": 5,
+        "level": 35,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "shoes",
+        "present": true,
+        "world": 1,
+        "name": "遺跡浮行靴",
+        "visualKey": "遺跡浮行靴",
+        "quality": 5,
+        "level": 35,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "accessory",
+        "present": true,
+        "world": 1,
+        "name": "古文明鑰印",
+        "visualKey": "古文明鑰印",
+        "quality": 5,
+        "level": 35,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      }
+    ],
+    "appearanceSource": "fixture",
+    "equipmentStatus": {
+      "weapon": "mounted",
+      "helmet": "mounted",
+      "armor": "mounted",
+      "shoes": "mounted",
+      "accessory": "mounted"
+    },
+    "equipmentAssets": {
+      "weapon": "equipment.ancient-ruins.v1.weapon.high",
+      "helmet": "equipment.ancient-ruins.v1.helmet.high",
+      "armor": "equipment.ancient-ruins.v1.armor.high",
+      "shoes": "equipment.ancient-ruins.v1.shoes.high",
+      "accessory": "equipment.ancient-ruins.v1.accessory.high"
+    },
+    "hidePolicy": "verified-covered-triangles-only",
+    "hiddenRegions": [
+      "face-covered",
+      "chest-covered",
+      "boot-covered",
+      "back-core-covered"
+    ],
+    "assetId": "player.foundation.v1.high",
+    "sha256": "127a38244aa23c6cf58617f33eb668bb9f5507bc7eda660401ba0642c53c50a5",
+    "quality": "high",
+    "artStatus": "human-sci-fi-final-polish-awaiting-user-acceptance",
+    "rigContract": "cw.humanoid.rig.v1",
+    "sockets": {
+      "weapon": "socket.weapon.R",
+      "helmet": "socket.helmet",
+      "armor": "socket.armor",
+      "shoes": "socket.shoes.L",
+      "accessory": "socket.accessory.back"
+    },
+    "bones": 53,
+    "meshCount": 5,
+    "animationGroups": 1
+  },
+  "errors": [],
+  "remainingEngines": 0
+}

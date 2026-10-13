@@ -1,0 +1,178 @@
+{
+  "status": "建議與待使用者審核",
+  "notApprovalAuthority": true,
+  "reviewOnly": true,
+  "readOnlyOpen": true,
+  "version": "4.3.2",
+  "armatures": [
+    {
+      "name": "CW_Humanoid_Rig_v1",
+      "bones": 53,
+      "boneNames": [
+        "root",
+        "pelvis",
+        "spine_01",
+        "spine_02",
+        "chest",
+        "neck",
+        "head",
+        "clavicle.L",
+        "upper_arm.L",
+        "forearm.L",
+        "hand.L",
+        "thumb_01.L",
+        "thumb_02.L",
+        "thumb_03.L",
+        "index_01.L",
+        "index_02.L",
+        "index_03.L",
+        "middle_01.L",
+        "middle_02.L",
+        "middle_03.L",
+        "ring_01.L",
+        "ring_02.L",
+        "ring_03.L",
+        "little_01.L",
+        "little_02.L",
+        "little_03.L",
+        "clavicle.R",
+        "upper_arm.R",
+        "forearm.R",
+        "hand.R",
+        "thumb_01.R",
+        "thumb_02.R",
+        "thumb_03.R",
+        "index_01.R",
+        "index_02.R",
+        "index_03.R",
+        "middle_01.R",
+        "middle_02.R",
+        "middle_03.R",
+        "ring_01.R",
+        "ring_02.R",
+        "ring_03.R",
+        "little_01.R",
+        "little_02.R",
+        "little_03.R",
+        "thigh.L",
+        "shin.L",
+        "foot.L",
+        "toe.L",
+        "thigh.R",
+        "shin.R",
+        "foot.R",
+        "toe.R"
+      ]
+    }
+  ],
+  "sockets": [
+    {
+      "name": "fx.hit.chest",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "chest"
+    },
+    {
+      "name": "fx.root",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "root"
+    },
+    {
+      "name": "socket.accessory.back",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "chest"
+    },
+    {
+      "name": "socket.armor",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "chest"
+    },
+    {
+      "name": "socket.helmet",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "head"
+    },
+    {
+      "name": "socket.shoes.L",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "foot.L"
+    },
+    {
+      "name": "socket.shoes.R",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "foot.R"
+    },
+    {
+      "name": "socket.weapon.L",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "hand.L"
+    },
+    {
+      "name": "socket.weapon.R",
+      "parent": "CW_Humanoid_Rig_v1",
+      "parentBone": "hand.R"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "CW_Player_Foundation",
+      "vertices": 84812,
+      "materials": [
+        "CW_Suit_WovenGraphite",
+        "CW_Suit_SoftCeramicWeave",
+        "CW_Trim_TitaniumCyan",
+        "CW_Head_NaturalSkin",
+        "CW_Flex_Charcoal"
+      ]
+    },
+    {
+      "name": "CW_Relic_accessory",
+      "vertices": 92,
+      "materials": [
+        "Relic_Aged_Champagne",
+        "Relic_Quiet_Cyan",
+        "Relic_Satin_Titanium"
+      ]
+    },
+    {
+      "name": "CW_Relic_armor",
+      "vertices": 780,
+      "materials": [
+        "Relic_Satin_Titanium",
+        "Relic_Quiet_Cyan",
+        "Relic_Dark_Ceramic",
+        "Relic_Aged_Champagne"
+      ]
+    },
+    {
+      "name": "CW_Relic_helmet",
+      "vertices": 364,
+      "materials": [
+        "Relic_Dark_Ceramic",
+        "Relic_Satin_Titanium",
+        "Relic_Quiet_Cyan",
+        "Relic_Aged_Champagne"
+      ]
+    },
+    {
+      "name": "CW_Relic_shoes",
+      "vertices": 704,
+      "materials": [
+        "Relic_Flexible_Seal",
+        "Relic_Satin_Titanium",
+        "Relic_Dark_Ceramic",
+        "Relic_Aged_Champagne",
+        "Relic_Quiet_Cyan"
+      ]
+    },
+    {
+      "name": "CW_Relic_weapon",
+      "vertices": 176,
+      "materials": [
+        "Relic_Satin_Titanium",
+        "Relic_Quiet_Cyan",
+        "Relic_Aged_Champagne",
+        "Relic_Flexible_Seal"
+      ]
+    }
+  ]
+}
