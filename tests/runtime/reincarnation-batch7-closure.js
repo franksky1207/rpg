@@ -10,6 +10,9 @@ const assert=require("assert");
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION===2&&window.GM_POWER_BENCHMARK_MODE_STATE_VERSION===2&&typeof window.applyReincarnationResetState==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function",{timeout:30000});
+  // Do not replace the global formal state while startup/restore is still running.
+  // This remains a strict byte-equivalence test; awaiting readiness does not waive it.
+  await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot?.().status==="ready",{timeout:30000});
   const report=await page.evaluate(async()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const qualify=s=>{
@@ -69,6 +72,11 @@ const assert=require("assert");
     const formalBeforeUiRun=JSON.stringify(state);
     benchmark=await window.gmAlternateUniverseBenchmarkRunSelected();
     uiRunFormalStable=formalBeforeUiRun===JSON.stringify(state);
+    if(!uiRunFormalStable){
+     const before=JSON.parse(formalBeforeUiRun),after=JSON.parse(JSON.stringify(state));
+     const keys=[...new Set([...Object.keys(before),...Object.keys(after)])];
+     console.error("[GM AU formal state drift]",keys.filter(k=>JSON.stringify(before[k])!==JSON.stringify(after[k])).map(k=>({key:k,before:JSON.stringify(before[k])?.slice(0,500),after:JSON.stringify(after[k])?.slice(0,500)})));
+    }
     html1=window.gmPowerBenchmarkHtml();summary1=window.gmPowerBenchmarkSummaryText();
     const formalBeforeRefresh=JSON.stringify(state);
     window.gmSetTestBreakthroughLevel(38,true);
