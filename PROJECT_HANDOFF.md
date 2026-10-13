@@ -1,3 +1,9 @@
+## 2026-10-13｜T3-B 本次施工：正式素材身分閘門（整批仍未結案）
+- 新增 `3d-test/t3b-formal-assets.js`：正式玩家資產、五槽裝備以已登錄 SHA/bytes、正式名稱、槽位、紀元、章節、地區、等級和品質**精確匹配**；未登錄/歧義身份一律 unavailable，絕不代換其他裝備。敵方圖集僅接受具獨立正式 catalog schema、`publish=true`、`approved=true`、逐項 `reviewed=true` 的明確身份映射，開發中 T2-B2/B3 `publish=false` 素材不得冒充正式發布。
+- 新增 `tests/runtime/t3b-formal-assets.cjs`，納入 Runtime Integrity，驗證五槽身份不交叉、錯誤紀元/槽位拒絕、敵方未發布拒絕與 Fixture 隔離。現有登錄僅 19 筆，`artStatus` 尚待使用者美術批准，**不能宣稱全部裝備和敵方圖集 ready**。
+- 正式 T3-B Canvas/Renderer 與各合法戰鬥的實際播放端到端整合**尚未完工**；`FULL_3D_AVAILABLE=false` 不可解除。這一輪未修改正式戰鬥公式、結算、音效、存檔、雲端、GM 或離線。新 exact HEAD Actions/桌機手機實機仍待確認，絕不預告全綠。
+- 原 T3-B→T3-C→T4→T5→01～27 補查→28→29～40 順序不變；不為此另開獨立監控。
+
 ## 2026-10-13｜T3-B 延續施工：正式 B 視覺事件投影（尚未啟用 Renderer）
 - 新增 `3d-test/t3b-formal-projection.js`，為**非發佈、無副作用**的正式事件 → B 視覺資料投影。只接受合法的 `CivilizationCombatEvents` formal lane/schema/mode/world/battleId/seq；凍結隔離演員名稱/敵人身份、事件類型、實際已知 HP/盾、有限傷害/暴擊資訊。每次攻擊後 HP history 來源不可得時顯示 `null`／unavailable，**不造假逐擊 HP**；未簽核 atlas 身份為 unmapped，絕不從 GM fixture 推定正式敵圖。
 - 新增 `tests/runtime/t3b-formal-projection.cjs`，驗證 W1/W2/W3 合法模式、拒絕 fixture/錯誤紀元、不可修改輸入、深度唯讀輸出與未知狀態不可推論；納入 Runtime Integrity 與 workflow paths。舊 B A/B/C 候選 Renderer 仍採隔離 fixture 驗證器，**不得直接接到正式遊戲**；新投影模組目前未加入正式 HTML、也未掛 Canvas，並非可玩 2.5D。
