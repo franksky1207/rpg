@@ -1,0 +1,992 @@
+{
+  "schema": "civilization.2_5d_b.t3_t5.execution.v1",
+  "recordedAt": "2026-10-13T06:22:05.074007+00:00",
+  "baselineMainHEAD": "48009e8d8f87afc8bfef0c68cb4c02e854b2944f",
+  "status": "in-progress-not-T3-T5-complete",
+  "phaseStatus": {
+    "T3": "renderer-built-owner-integration-pending",
+    "T4": "not-started-WAIT-T3",
+    "T5": "not-complete"
+  },
+  "release": {
+    "FULL_3D_AVAILABLE": false,
+    "formalBReleased": false,
+    "testApprovalOnly": true
+  },
+  "tests": [
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3a-hybrid-policy.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-bridge.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-projection.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-session.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-assets.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-renderer.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-controller.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/t3b-formal-renderer-browser.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/combat-events-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/combat-events-integration.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-playback-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "NODE_PATH=/tmp/t3-deps/node_modules node tests/runtime/hybrid-comparison-art-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-renderer-contract.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "python3 development/hybrid-comparison/t2b2-v1/tools/inventory.py --check",
+      "status": "passed"
+    },
+    {
+      "command": "python3 development/hybrid-comparison/t2b3-v1/inventory.py --check",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/resource-manifest-integrity.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-integrity.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-behavior.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/audio-settings-persistence-integrity.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/save-global-writers.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/3d-b18-coverage-guard.js",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/html-cache-version-guard.js --self-test",
+      "status": "passed"
+    },
+    {
+      "command": "node tests/runtime/docs-integrity.js",
+      "status": "passed"
+    }
+  ],
+  "actualRender": {
+    "passed": true,
+    "result": {
+      "hashes": [
+        {
+          "clip": "idle",
+          "frames": [
+            "7d831f784fda710449546951b94863b8e4cd18bd17ca0199a1c474b89cf00961",
+            "d95d5bfced7a345801d1d616d6277651ce94fdbafee559b48f1824fddda2ee3e",
+            "660dd06a9c5955aae4b72b88bc63fda5ded74a959b87919f661264b28fb75791"
+          ]
+        },
+        {
+          "clip": "attack",
+          "frames": [
+            "2a3d2e9455a372055f33a3ee27f89c966a30c2d6c25463d32d522e56c6df0fec",
+            "8e781fb57b4f42d845fd84c8dd1564a28527834a765f19961ef8f759c792c842",
+            "9df6a597eb04f9d07ed47861da49fcb48133b11178cd7030e13f997bde60a8b7"
+          ]
+        },
+        {
+          "clip": "hit",
+          "frames": [
+            "0eaeab2b81398833581ea332e1515bb0c65c4ea0676859af72e1b19147b96e86",
+            "248d22646077aa019336942427658c23a9ba4db8a64d7f2aaba0f02599501d6d",
+            "747054a0b2534ded776c7e4d2e0816ad681417ad0b42a26d1782a1077c4c8a24"
+          ]
+        },
+        {
+          "clip": "dodge",
+          "frames": [
+            "173a09b8b1f31cfa277131d335c0d1ccceede3ad1bffe5058d24b1e2d8bd55a2",
+            "b306a79d804f2716d582c3bc8ec33792cd09bf94a53fcf83f1a2a5e7d4914f4f",
+            "c4f020d710c2e815ae264ff2563c2c600df105cadee998a87dfb751320ce21be"
+          ]
+        },
+        {
+          "clip": "return",
+          "frames": [
+            "50ca941b3ba4f8543fe5a17fe74187cd6622e28e3dabeaef109afa2ee7d6188d",
+            "3e9bef3289af855b981ee514667ec7e18ca593631cb90df56f02f597899fe8e5",
+            "d7b77c0a857233bfa0aa6d2b93cb742db7609dd44586ee1001a7f4dd84b6d9b3"
+          ]
+        },
+        {
+          "clip": "defeat",
+          "frames": [
+            "bbca3a2ee90061ea05e71cfc3b14788ece065f0d1ef0e3946af60ef3c2f9f330",
+            "fa1520cf7ec58e7bdbfac77c9aa813f0e65340fb3b26936a67e2abbd112f0841",
+            "4842ab93bffe61e715e460ef55a377d70304b900dcd27468ed322ef04e818754"
+          ]
+        }
+      ],
+      "jointPoses": [
+        "011a39f78240192142e794c920ff31692554ec0b03919ae4d6557f437015908f",
+        "ea10b76524a267602bd1e2b181514efc5468f4764ea6488e9f069c7c60887086",
+        "5239699651fa3e8a56f9e7760906a077cef902a9f99123800e84dd3d83659394"
+      ],
+      "subsets": [
+        {
+          "iteration": 0,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 1,
+          "mask": 1,
+          "pixelHash": "0bf584f67d3a3e058874172c7d0f5e3df031cc05f4f433998d0ecf3331012470",
+          "meshCount": 11,
+          "rig": 53
+        },
+        {
+          "iteration": 2,
+          "mask": 2,
+          "pixelHash": "a2fd0c96187788ada770046d287a7d7370cccfa376ec8210b51f107e73d85b7b",
+          "meshCount": 11,
+          "rig": 53
+        },
+        {
+          "iteration": 3,
+          "mask": 3,
+          "pixelHash": "e661f3592c92a2104e340cf6933a7a2d5a6a11593e76f82dcf92f968a9b7c9df",
+          "meshCount": 15,
+          "rig": 53
+        },
+        {
+          "iteration": 4,
+          "mask": 4,
+          "pixelHash": "b6801f19f5e89f5b3d6be123641ffad0f6c833582f16be55671de22bc5006c5b",
+          "meshCount": 11,
+          "rig": 53
+        },
+        {
+          "iteration": 5,
+          "mask": 5,
+          "pixelHash": "b1e1ef0d047c319c195f9616e8e2c14bf513710165799e3d9d282b9ad6cd7300",
+          "meshCount": 15,
+          "rig": 53
+        },
+        {
+          "iteration": 6,
+          "mask": 6,
+          "pixelHash": "a0f61edc17f013d79212cde8cf67681c45862f002dd0a535878a2d664b44e6f0",
+          "meshCount": 15,
+          "rig": 53
+        },
+        {
+          "iteration": 7,
+          "mask": 7,
+          "pixelHash": "e2877f0441839be69d01b77f1aa0175196f264d0c65cf92a107e29f9b517ea96",
+          "meshCount": 19,
+          "rig": 53
+        },
+        {
+          "iteration": 8,
+          "mask": 8,
+          "pixelHash": "cd2930eec8b3f751468898e03a0fd66cafdac9b909e78847a44284cda74c6687",
+          "meshCount": 12,
+          "rig": 53
+        },
+        {
+          "iteration": 9,
+          "mask": 9,
+          "pixelHash": "fadffbcee60ea3b46e9037fa41fbbfe1384a42276ded10aa9e5138386916b130",
+          "meshCount": 16,
+          "rig": 53
+        },
+        {
+          "iteration": 10,
+          "mask": 10,
+          "pixelHash": "a8c070d6c51d172ba1ee5b2a7763a2bcdcdf87fd35ed1dc988677641436f3c8d",
+          "meshCount": 16,
+          "rig": 53
+        },
+        {
+          "iteration": 11,
+          "mask": 11,
+          "pixelHash": "3c7dcc4660aa9ea4ea8ca7f726f1e63f1923fdf21b844f989b8e5f5273bf4a52",
+          "meshCount": 20,
+          "rig": 53
+        },
+        {
+          "iteration": 12,
+          "mask": 12,
+          "pixelHash": "8b4842634a3544146177d33b8055d6cbd6e5c0e8f7692aa7762e8647dd6cc3a1",
+          "meshCount": 16,
+          "rig": 53
+        },
+        {
+          "iteration": 13,
+          "mask": 13,
+          "pixelHash": "cda60b4d199a13b1d20b3a65dd915acf35e4831846f11dc1595867bc5520c0eb",
+          "meshCount": 20,
+          "rig": 53
+        },
+        {
+          "iteration": 14,
+          "mask": 14,
+          "pixelHash": "db69331f3dda02435cb9e56d3f7de29462783bf9c6eaf9542590f34439649cbd",
+          "meshCount": 20,
+          "rig": 53
+        },
+        {
+          "iteration": 15,
+          "mask": 15,
+          "pixelHash": "2cae63efb4fbffe5b0c64e87a7d3eff77eb31a9c9dd525c531a487b6ddb8f2c4",
+          "meshCount": 24,
+          "rig": 53
+        },
+        {
+          "iteration": 16,
+          "mask": 16,
+          "pixelHash": "3aa9f0d32cc3eca4b817d1f3a58db595a636b55a1e6ee3450c081c7aae9a5c8a",
+          "meshCount": 10,
+          "rig": 53
+        },
+        {
+          "iteration": 17,
+          "mask": 17,
+          "pixelHash": "4d6394e16221852330efb3236c48d547b928b34198a0e64003052633eebbf0d3",
+          "meshCount": 14,
+          "rig": 53
+        },
+        {
+          "iteration": 18,
+          "mask": 18,
+          "pixelHash": "a1db907c973ced0a121c5fad3f29425cd7ef10a606187ab52d2d1034a74f5a65",
+          "meshCount": 14,
+          "rig": 53
+        },
+        {
+          "iteration": 19,
+          "mask": 19,
+          "pixelHash": "a7c7b1e9a5f65ed945ccc991999e7bf2f3d52bbf839a4c134a5144d61d7ea181",
+          "meshCount": 18,
+          "rig": 53
+        },
+        {
+          "iteration": 20,
+          "mask": 20,
+          "pixelHash": "e4728a8c7788bab6b4c9ca35729229599fceb80c46e0b3d3f4d4b8de42bd2ba9",
+          "meshCount": 14,
+          "rig": 53
+        },
+        {
+          "iteration": 21,
+          "mask": 21,
+          "pixelHash": "14309eee6f2cc5079eb1d5ddbf2908b639c059f7d82d00623b1363efa4fdc334",
+          "meshCount": 18,
+          "rig": 53
+        },
+        {
+          "iteration": 22,
+          "mask": 22,
+          "pixelHash": "a451b54efc5ce38c8b0b8f42c6d6ed5fb241d962560c65bdcd37c2889a80ca52",
+          "meshCount": 18,
+          "rig": 53
+        },
+        {
+          "iteration": 23,
+          "mask": 23,
+          "pixelHash": "46d59648060eb472d70ab7f603d7096af98f2e30f59b0fbe00d909b50be11544",
+          "meshCount": 22,
+          "rig": 53
+        },
+        {
+          "iteration": 24,
+          "mask": 24,
+          "pixelHash": "6a9a56c9faac85c4374979dac3940ce8f2c45ab59631c1db8567d3f3597e8402",
+          "meshCount": 15,
+          "rig": 53
+        },
+        {
+          "iteration": 25,
+          "mask": 25,
+          "pixelHash": "16ab25d5a32c25eef7a94e19b02670a1243c63342a7c384b9af103e1d3c1918e",
+          "meshCount": 19,
+          "rig": 53
+        },
+        {
+          "iteration": 26,
+          "mask": 26,
+          "pixelHash": "bff31342be7a8ca0fc56ff03b23a52973299258f9c34fc8005f34b3e5595bef6",
+          "meshCount": 19,
+          "rig": 53
+        },
+        {
+          "iteration": 27,
+          "mask": 27,
+          "pixelHash": "5239c1100cd8ef85a4f35ea269edfa6a846299dc8b7634d674b50a00b4b926b7",
+          "meshCount": 23,
+          "rig": 53
+        },
+        {
+          "iteration": 28,
+          "mask": 28,
+          "pixelHash": "bbcca6d26d0701468840c8193a5be39a5298957ed23e901918f83381b881321e",
+          "meshCount": 19,
+          "rig": 53
+        },
+        {
+          "iteration": 29,
+          "mask": 29,
+          "pixelHash": "1fcb7385b7c420173066107334c69636263b93bc9911b1052311f9c52f3e1d54",
+          "meshCount": 23,
+          "rig": 53
+        },
+        {
+          "iteration": 30,
+          "mask": 30,
+          "pixelHash": "cce0f3ebf41b905c94e7ff650d25c17da905da57478bb1c697388d20112a0078",
+          "meshCount": 23,
+          "rig": 53
+        },
+        {
+          "iteration": 31,
+          "mask": 31,
+          "pixelHash": "2eaff8481d6bd82ca5f9e69ce3278949754f2ef23436c92826aa0a9267f334e5",
+          "meshCount": 27,
+          "rig": 53
+        },
+        {
+          "iteration": 32,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 33,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 34,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 35,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 36,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 37,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 38,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 39,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 40,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 41,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 42,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 43,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 44,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 45,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 46,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 47,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 48,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 49,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 50,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 51,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 52,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 53,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 54,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 55,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 56,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 57,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 58,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 59,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 60,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 61,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 62,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 63,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 64,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 65,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 66,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 67,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 68,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 69,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 70,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 71,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 72,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 73,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 74,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 75,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 76,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 77,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 78,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 79,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 80,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 81,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 82,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 83,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 84,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 85,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 86,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 87,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 88,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 89,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 90,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 91,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 92,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 93,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 94,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 95,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 96,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 97,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 98,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        },
+        {
+          "iteration": 99,
+          "mask": 0,
+          "pixelHash": "c585309bc981ac8ce16e0404b00351d45297f35a7fffb8c271fdc415cf85efc8",
+          "meshCount": 7,
+          "rig": 53
+        }
+      ],
+      "diagnostic": {
+        "closed": false,
+        "activeClip": "defeat",
+        "engines": 1,
+        "canCommit": false,
+        "canEmitCombatEvents": false
+      },
+      "disposed": {
+        "closed": true,
+        "activeClip": "defeat",
+        "engines": 0,
+        "canCommit": false,
+        "canEmitCombatEvents": false
+      },
+      "remaining": 0,
+      "saveUnchanged": true,
+      "audioUnchanged": true
+    },
+    "hardware": "Chromium SwiftShader; NOT real GPU/mobile/art approval"
+  },
+  "files": {
+    "3d-test/t3b-formal-renderer.js": {
+      "bytes": 13301,
+      "sha256": "ca94d4e359f2794d39fb3b5af9285207a39f07405635e0f88eb8f84a2bd01d9a"
+    },
+    "3d-test/t3b-formal-controller.js": {
+      "bytes": 3805,
+      "sha256": "98a335c2f3390f5d9f5a24ddb7956e119b7971cd964e18f26834947456213e83"
+    },
+    "3d-test/t3b-formal-projection.js": {
+      "bytes": 3573,
+      "sha256": "b71e47e400ee7a42df4727c209c6e20d3cbd65c17d5099299d0466e8a80acfbd"
+    },
+    "resource-manifest.json": {
+      "bytes": 32671,
+      "sha256": "f0ffb6e975ed42c950b9d349cc42fbd7524b4626ac830732e03d19362b989c31"
+    },
+    "development/hybrid-comparison/t2b2-v1/inventory.json": {
+      "bytes": 371584,
+      "sha256": "3f02d9958f0d34cb7517d10978b31915181df3f136e5b4095680cb6e8fcfef51"
+    },
+    "development/hybrid-comparison/t2b3-v1/manifest.json": {
+      "bytes": 333019,
+      "sha256": "86b9ddefe2f4630b6e0b85ec80f591438453805c9f6b54fc704e5fa9e094c0bc"
+    },
+    "development/hybrid-comparison/t2b3-v1/inventory.json": {
+      "bytes": 37634,
+      "sha256": "2534cdbbb5ddc8d0ad5514e28cb51dc51e3a98587eb0c3813c0f25bd8b153dc7"
+    }
+  },
+  "failuresResolved": [
+    {
+      "check": "B2/B3 protected index source",
+      "cause": "expected bridge2, current main checkpoint-guard1",
+      "fix": "exact query evolution; historical SHA and Fixture unchanged"
+    },
+    {
+      "check": "B2 published-source count",
+      "cause": "385 historical count predates assets/session and renderer/controller",
+      "fix": "require exactly 389 and assert all four explicit closed modules; development exclusion retained"
+    },
+    {
+      "check": "B2 art contract dependency",
+      "cause": "local gltf-validator missing",
+      "fix": "installed exact CI version under /tmp, reran all six zero-error/zero-warning GLBs"
+    }
+  ],
+  "notRun": [
+    "complete formal owner-to-renderer E2E",
+    "formal lifecycle 100 scene switches",
+    "all three enemy identities at all tiers",
+    "GM 31 browser cases",
+    "full runtime/browser workflow locally",
+    "T4 preview removal tests",
+    "long soak/weak network",
+    "physical phone/GPU/art approval",
+    "exact HEAD GitHub Actions after commit"
+  ],
+  "openGates": [
+    "formal presentation owner clock and lazy boot",
+    "T3-C full integration",
+    "T4 dependency inventory and actual retirement",
+    "T5 complete system regression/publication acceptance",
+    "approved identity-specific formal enemy atlas"
+  ],
+  "nextOrder": [
+    "finish T3-B",
+    "T3-C",
+    "T4-A/B/C",
+    "T5-A/B",
+    "original 01-27 compatibility",
+    "continue original batch28 existing concepts",
+    "original29-40 art/function gates"
+  ],
+  "githubActions": {
+    "baselineExactHEAD": "no-runs-returned",
+    "newCommitExactHEAD": "pending-after-commit"
+  }
+}

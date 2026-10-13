@@ -13,6 +13,8 @@ on:
       - 'tests/runtime/t3b-formal-projection.cjs'
       - 'tests/runtime/t3b-formal-session.cjs'
       - 'tests/runtime/t3b-formal-assets.cjs'
+      - 'tests/runtime/t3b-formal-renderer.cjs'
+      - 'tests/runtime/t3b-formal-controller.cjs'
       - '3d-test/t3b-formal-projection.js'
       - '3d-test/t3b-formal-session.js'
       - '3d-test/t3b-formal-assets.js'
@@ -69,6 +71,8 @@ jobs:
           node tests/runtime/t3b-formal-projection.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-session.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-assets.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t3b-formal-renderer.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t3b-formal-controller.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -110,6 +114,7 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -208,5 +213,6 @@ jobs:
             audio-lifecycle-browser-report.json
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
+            /tmp/t3b-formal-renderer-browser.json
           if-no-files-found: ignore
           retention-days: 1

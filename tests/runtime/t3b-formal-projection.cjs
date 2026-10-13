@@ -16,3 +16,8 @@ state.player.hp=999;assert.equal(start.authoritativeState.player.hp,7);
 assert.equal(p.convert({...e,type:'combat-action',data:{state:{player:{hp:999,maxHp:10},enemy:{hp:1,maxHp:10}}}}).authoritativeState,null);
 for(const [mode,world] of [['main',3],['arena',3],['mirror',3],['void',3],['alternate',3],['review',3],['special',2],['calamity',2],['bounty',2]])assert.ok(p.convert({...e,mode,world}));
 console.log('PASS T3-B fixture-free formal projection, safe unknown HP, source identity, immutable no-owner consumer');
+
+const observedState={player:{hp:6,maxHp:10,shield:2},enemy:{hp:3,maxHp:20,shield:0}};
+assert.equal(p.convert({...e,type:'snapshot',phase:'presentation',data:{kind:'presentation',after:observedState}}).authoritativeState.player.hp,6,'Use the actual owner presentation checkpoint, never final computed HP');
+assert.equal(p.convert({...e,type:'snapshot',data:{snapshot:{presentation:{state:observedState},computed:{final:{player:{hp:1,maxHp:10},enemy:{hp:0,maxHp:20}}}}}}).authoritativeState.player.hp,6);
+const drain=p.convert({...e,data:{sourceType:'drain',healed:5,actualDamage:2}});assert.equal(drain.sourceEvent.healed,5);assert.equal(drain.sourceEvent.actualDamage,2);assert.equal(drain.sourceEvent.hpAfterAction,null);

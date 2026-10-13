@@ -1,3 +1,9 @@
+## 2026-10-13｜T3～T5 連續施工：實際 Renderer 已建立，整體仍施工中
+- 使用者本次已授權 T3-B/C → T4-A/B/C → T5-A/B 連續施工、提交並推送 main，取代下方歷史紀錄中逐小批重新授權的要求；不代表解除正式啟用或美術 Gate。
+- 遠端實際基準 `48009e8d8f87afc8bfef0c68cb4c02e854b2944f`。新增真實 Babylon 玩家 GLB／敵方 atlas Renderer、動畫重定向、五槽掛載、SHA／批准檢查、取消及生命週期 Controller；原模型／裝備／Fixture 不改。
+- 詳見 `docs/2_5D_B_T3_T5_EXECUTION_EVIDENCE_2026-10-13.md` 與 JSON。已做真實軟體渲染，不是只有空白 adapter；**正式 owner clock／HTML 接線、T3-C、T4、T5 仍未完成**，不能宣稱整體完工。正式 release 維持 false。
+- B2/B3 來源 query 已依最新 main 精確修正，保留來源鎖／原 Fixture／失敗美術證據。真機與人工美術未批准；exact-HEAD Actions 須另核對。本施工不開始後續美術量產。
+
 ## 2026-10-13｜T3-B 本次施工：正式素材身分閘門（整批仍未結案）
 - 新增 `3d-test/t3b-formal-assets.js`：正式玩家資產、五槽裝備以已登錄 SHA/bytes、正式名稱、槽位、紀元、章節、地區、等級和品質**精確匹配**；未登錄/歧義身份一律 unavailable，絕不代換其他裝備。敵方圖集僅接受具獨立正式 catalog schema、`publish=true`、`approved=true`、逐項 `reviewed=true` 的明確身份映射，開發中 T2-B2/B3 `publish=false` 素材不得冒充正式發布。
 - 新增 `tests/runtime/t3b-formal-assets.cjs`，納入 Runtime Integrity，驗證五槽身份不交叉、錯誤紀元/槽位拒絕、敵方未發布拒絕與 Fixture 隔離。現有登錄僅 19 筆，`artStatus` 尚待使用者美術批准，**不能宣稱全部裝備和敵方圖集 ready**。

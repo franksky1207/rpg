@@ -18,7 +18,7 @@ def collect():
    # previously verified post-T2-C index; never authorize unrelated edits.
    previous=subprocess.check_output(['git','show','11bc4c24b1a2cdbfbbbfdd86921af54f5fbf2e0e:index.html'],cwd=ROOT)
    anchor=b'<script src="3d-test/mode-foundation.js?v=20261010-dual-mode-preflight3&v2=20261010-b17-mode-policy&v3=20261010-opt5-account-migration"></script>'
-   addition=b'\n<script src="3d-test/t3a-hybrid-policy.js?v=20261013-t3b-bridge2"></script>'
+   addition=b'\n<script src="3d-test/t3a-hybrid-policy.js?v=20261013-t3b-checkpoint-guard1"></script>'
    assert previous.count(anchor)==1 and (ROOT/s).read_bytes()==previous.replace(anchor,anchor+addition),('Unauthorized T3-A formal HTML evolution',s)
    # This root HTML exception is not a B1 source evolution entry.
    continue

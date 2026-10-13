@@ -16,7 +16,8 @@ function convert(e){
  if(!actors||typeof actors!=="object")return null;
  const raw=e.data&&typeof e.data==="object"?e.data:{};
  // Per-action HP history is intentionally unknown unless supplied by the authoritative owner.
- const state=raw.state&&availableHp(raw.state.player)&&availableHp(raw.state.enemy)?clone(raw.state):null;
+ const observed=raw.state||raw.after||raw.snapshot?.presentation?.state;
+ const state=observed&&availableHp(observed.player)&&availableHp(observed.enemy)?clone(observed):null;
  const checkpoint=raw.snapshot&&typeof raw.snapshot==="object"&&availableHp(raw.snapshot.computed?.final?.player)&&availableHp(raw.snapshot.computed?.final?.enemy)
   ?clone(raw.snapshot.computed.final):null;
  const sourceEvent=e.type==="combat-action"?{
@@ -24,11 +25,13 @@ function convert(e){
    actor:e.actor==="player"?"player":e.actor==="enemy"?"enemy":null,
    target:e.target==="player"?"player":e.target==="enemy"?"enemy":null,
    damage:Number.isFinite(raw.damage)&&raw.damage>=0?raw.damage:null,
+   actualDamage:Number.isFinite(raw.actualDamage)&&raw.actualDamage>=0?raw.actualDamage:null,
+   healed:Number.isFinite(raw.healed)&&raw.healed>=0?raw.healed:null,
    crit:typeof raw.crit==="boolean"?raw.crit:null,
    hpAfterAction:null
  }:null;
  const projection={schema:VERSION,nonAuthoritative:true,battleId:e.battleId,seq:e.seq,
-  mode:e.mode,world:e.world,type:e.type,checkpoint:e.checkpoint===true,
+  mode:e.mode,world:e.world,type:e.type,phase:e.phase==="presentation"?"presentation":"computed",sourceIndex:Number.isSafeInteger(e.sourceIndex)?e.sourceIndex:null,checkpoint:e.checkpoint===true,
   actorNames:{player:typeof actors.player?.name==="string"?actors.player.name:null,enemy:typeof actors.enemy?.name==="string"?actors.enemy.name:null},
   enemyIdentity:{id:typeof actors.enemy?.id==="string"?actors.enemy.id:null,kind:typeof actors.enemy?.kind==="string"?actors.enemy.kind:null,location:typeof actors.enemy?.location==="string"?actors.enemy.location:null},
   authoritativeState:state||checkpoint,perActionHpAvailable:false,sourceEvent,

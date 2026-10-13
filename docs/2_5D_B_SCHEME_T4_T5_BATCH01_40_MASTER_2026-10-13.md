@@ -1,3 +1,5 @@
+> 2026-10-13 執行紀錄：使用者已授權 T3～T5 連續施工；目前已新增真實 Renderer／Controller、來源鎖修復與實際軟體渲染驗證。T3 owner 端到端時序接線仍施工中，T4／T5 尚未完成。詳見 `docs/2_5D_B_T3_T5_EXECUTION_EVIDENCE_2026-10-13.md`、JSON 及 `docs/2_5D_B_T4_DEPENDENCY_INVENTORY_2026-10-13.md`。本更新不解除全面啟用或最後美術 Gate。
+
 # 《文明戰線》2.5D B 方案／正式預覽退場／T4–T5／原第 01～40 批修訂總規格
 > 決議日：2026-10-13。**規劃／施工契約**，不是已完成的程式刪除或美術封版；以每次施工前最新 `main` 真實程式及 Actions 為準。
 > 優先級：在「正式介面預覽處置、2.5D B 視覺架構、第 27～40 批未來工作、GM 視覺驗收」方面，本規格**覆蓋** `3D_IMPLEMENTATION_PLAN.md`、`docs/3D_BATCH27_40_SOURCE_VS_PUBLISH_MASTER_PLAN_2026-10-11.md`、`docs/3D_BATCH19_40_ACCEPTANCE_RULES.md`、`3D_GM_TEST_CENTER_CATALOG.md` 及其他舊「全介面全 3D」設計中的衝突敘述。舊文件保留歷史實作／缺陷證據與不衝突之資料契約，不倒填或改寫歷史成功狀態。
