@@ -44,3 +44,9 @@ B2 材質／光影公平性、局部接觸風險、人工美術批准、實體�
 實際瀏覽器測試通過三敵×三 tier×六動作、原身體與候選動畫多關節重定向、32 槽子集合、100 次真實軟體 WebGL 引擎建立／釋放。修正 atlas 原倒置貼圖；方向檢查正向 RMSE 44.7519、倒置 71.5563，只證明方向，不是 B2 材質公平性通過。避免 Babylon geometry ID 消耗正式 Math.random，100 次測試 RNG 呼叫為零。正式 runCombatCore／原 presentation owner 的可用與 unavailable 情境結算完全相同，HUD 照常更新，存檔／音訊無寫入。測試核准只在記憶體，未將 B2 候選批准為正式美術。
 
 f46d3bd2761e96acbd4c8795b5151659c0361083 的 8 個觸發 Actions 均 success；比較 workflow 未觸發，不冒稱全部適用 CI 完成。T4／T5 尚未完成。正式 B 開關仍關閉，沒有核准 catalog 的身份繼續文字模式。真機與人工美術尚未驗收。
+
+## T4 實際退場
+
+移除純正式預覽 home/dom 控制與 preview-expand，保留 exact 原始來源於 development/retired-formal-previews/20261013（不發布）。首頁、地圖、劇情與異宇宙的舊 hook 已解除；服務／帳號／雲端／養成／副本的動態注入 owner 一併退出。地圖與紀元入口的正常 CSS 保留。現行正式頁桌機、直向、橫向各 11 路由與 100 次切換測試：零預覽 DOM、Canvas、引擎、GLB、Babylon 請求，State 不變。正式 B broad gate 仍閉合。
+
+既有 53 骨、裝備、快照、晚到 scene／context loss 正面斷言沒有刪除，改使用明確標示的歷史 HTTP harness；它们不代表現行正式入口。另新增現行正式退場負面驗收，GM 真實 iframe 31 案例仍完整保留。原 T2-A Fixture 未重製；B2 source lock 未改，透過逐檔 before/after SHA＋git history 驗證授權退場。

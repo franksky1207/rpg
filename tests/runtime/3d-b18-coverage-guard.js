@@ -2,7 +2,10 @@
 "use strict";
 const fs=require("node:fs"),path=require("node:path"),assert=require("node:assert/strict");
 const root=path.resolve(__dirname,"../..");
-const read=file=>fs.readFileSync(path.join(root,file),"utf8");
+const archive=JSON.parse(fs.readFileSync(path.join(root,'development/retired-formal-previews/20261013/source-evolution.json')));
+// Historical preview assertions continue against exact retired source. Current UI is checked separately.
+const read=file=>fs.readFileSync(path.join(root,archive.files[file]?.archive||file),"utf8");
+require('./t4-preview-retirement.cjs');
 const index=read("index.html");
 const ui=read("ui.js");
 const controller=read("3d-test/formal-home.js");

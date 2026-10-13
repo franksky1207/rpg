@@ -74,6 +74,7 @@ jobs:
           node tests/runtime/t3b-formal-assets.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-renderer.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-controller.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t4-preview-retirement.cjs
           node tests/runtime/t3b-formal-owner-clock.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -121,6 +122,7 @@ jobs:
           node tests/runtime/combat-events-owner-browser.js
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t4-preview-retirement-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-formal-snapshots-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-preview-dom-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-gm-loader-browser.js 2>&1 | tee -a runtime-integrity-report.txt

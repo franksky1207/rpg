@@ -15,7 +15,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   window.gmRuntimeAuthorizationAuthorized=()=>true;window.getArenaCoreState=()=>({phase:'select'});
   window.Civilization3DFormalSnapshots={galaxy:()=>({}),universe:()=>({}),higher:()=>({}),growth:()=>({growthLevels:[]}),dungeon:()=>({dungeonVisibleModes:['arena'],dungeonAvailableModes:[false,true,false,false]}),calamity:()=>({}),alternate:()=>({}),battle:()=>({battleAvailable:true,playerHpRatio:.8,enemyHpRatio:.5,shieldRatio:.2})};
  });
- for(const file of ['shared-loader.js','formal-dom.js','formal-home.js'])await page.addScriptTag({url:new URL('3d-test/'+file,base).href});
+ for(const file of ['shared-loader.js','formal-dom.js','formal-home.js']){if(file==='shared-loader.js')await page.addScriptTag({url:new URL('3d-test/'+file,base).href});else await page.addScriptTag({content:require('node:fs').readFileSync('development/retired-formal-previews/20261013/3d-test/'+file,'utf8')});}
  const fixtures=[
  ['adventure',1,'galaxy','<section class="map-screen"><div class="world-region-list"></div></section>','civilization3dGalaxyToggle'],
  ['adventure',2,'galaxy-review','<section class="galaxy-review-adventure-screen"><div class="galaxy-review-region-list"></div></section>','civilization3dGalaxyToggle'],

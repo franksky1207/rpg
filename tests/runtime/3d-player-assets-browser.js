@@ -53,6 +53,7 @@ async function finishIntro(page){
   const cdp=await context.newCDPSession(page);await cdp.send('Network.enable');let transferred=0,modelRequests=0;
   cdp.on('Network.loadingFinished',e=>transferred+=e.encodedDataLength);
   page.on('request',r=>{if(/\.glb(?:\?|$)/.test(r.url()))modelRequests++;});
+  await require('./retired-preview-harness.cjs')(page);
   await page.goto(new URL('index.html',base).href,{waitUntil:'load',timeout:60000});
   await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});
   report.homeAtReadyTransferredBytes=transferred;

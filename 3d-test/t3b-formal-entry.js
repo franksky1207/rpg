@@ -29,7 +29,13 @@ function mount(options){
    const bytes=await response.arrayBuffer(),digest=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",bytes)),x=>x.toString(16).padStart(2,"0")).join("");
    signal.throwIfAborted();if(bytes.byteLength!==row.bytes||digest!==row.sha256)throw Error("decoder-integrity");
    const url=URL.createObjectURL(new Blob([bytes],{type:"text/javascript"}));
-   try{await new Promise((resolve,reject)=>{const s=document.createElement("script");s.src=url;s.onload=()=>{s.remove();resolve();};s.onerror=()=>{s.remove();reject(Error("decoder-load"));};document.head.appendChild(s);});}finally{URL.revokeObjectURL(url);}
+   try{await new Promise((resolve,reject)=>{
+    const s=document.createElement("script");let settled=false,timer;
+    const cancelled=()=>finish(Error("decoder-aborted"));
+    function finish(error){if(settled)return;settled=true;clearTimeout(timer);signal.removeEventListener("abort",cancelled);s.onload=s.onerror=null;s.remove();error?reject(error):resolve();}
+    signal.addEventListener("abort",cancelled,{once:true});timer=setTimeout(()=>finish(Error("decoder-timeout")),15000);
+    s.src=url;s.onload=()=>finish();s.onerror=()=>finish(Error("decoder-load"));if(signal.aborted)cancelled();else document.head.appendChild(s);
+   });}finally{URL.revokeObjectURL(url);}
    signal.throwIfAborted();
   },
   policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),

@@ -6,7 +6,8 @@ const assert = require("node:assert/strict");
   const failures = [];
   page.on("pageerror", e => failures.push(String(e)));
   try {
-    await page.goto(process.env.SMOKE_URL || "http://127.0.0.1:4173/index.html", { waitUntil: "domcontentloaded", timeout: 45000 });
+    await require('./retired-preview-harness.cjs')(page);
+  await page.goto(process.env.SMOKE_URL || "http://127.0.0.1:4173/index.html", { waitUntil: "domcontentloaded", timeout: 45000 });
     await page.waitForFunction(() => typeof window.go === "function" && typeof window.adventureMapPage === "function", { timeout: 45000 });
     const result = await page.evaluate(() => {
       // Use formal mainline route, not the review branch. Do not save or start combat.

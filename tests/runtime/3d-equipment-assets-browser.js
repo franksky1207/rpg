@@ -41,6 +41,7 @@ async function views(p,prefix){
   await context.addInitScript(()=>{localStorage.setItem('civilization-war-gm-authorized-v2-account-batch27-preview-test','1');});
   const page=await context.newPage();page.on('pageerror',e=>report.errors.push(String(e)));let glbRequests=0;
   page.on('request',r=>{if(/\.glb(?:\?|$)/.test(r.url()))glbRequests++;});
+  await require('./retired-preview-harness.cjs')(page);
   await page.goto(new URL('index.html',root).href,{waitUntil:'load'});
   await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});
   await page.locator('#civilizationModeChooseText').click();await finishIntro(page);

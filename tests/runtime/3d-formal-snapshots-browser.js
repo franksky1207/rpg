@@ -34,7 +34,8 @@ async function finishIntro(page){
    // Fix only Date.now before owners create checkpoints. Keep native timers,
    // animation frames and Date construction for actual UI / renderer behavior.
    await page.addInitScript(()=>{const fixed=Date.now();Date.now=()=>fixed;});
-   await page.goto(base,{waitUntil:"domcontentloaded"});
+   await require('./retired-preview-harness.cjs')(page);
+  await page.goto(base,{waitUntil:"domcontentloaded"});
    await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot?.().status==="ready"&&typeof openGm3DPrototype==="function",null,{timeout:60000});
    await finishIntro(page);
    assert.equal(await page.evaluate(()=>document.body.classList.contains("background-preloading")),false);
