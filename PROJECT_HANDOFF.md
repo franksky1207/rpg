@@ -1,3 +1,8 @@
+## 2026-10-13｜T3-B 延續施工：正式 B 視覺事件投影（尚未啟用 Renderer）
+- 新增 `3d-test/t3b-formal-projection.js`，為**非發佈、無副作用**的正式事件 → B 視覺資料投影。只接受合法的 `CivilizationCombatEvents` formal lane/schema/mode/world/battleId/seq；凍結隔離演員名稱/敵人身份、事件類型、實際已知 HP/盾、有限傷害/暴擊資訊。每次攻擊後 HP history 來源不可得時顯示 `null`／unavailable，**不造假逐擊 HP**；未簽核 atlas 身份為 unmapped，絕不從 GM fixture 推定正式敵圖。
+- 新增 `tests/runtime/t3b-formal-projection.cjs`，驗證 W1/W2/W3 合法模式、拒絕 fixture/錯誤紀元、不可修改輸入、深度唯讀輸出與未知狀態不可推論；納入 Runtime Integrity 與 workflow paths。舊 B A/B/C 候選 Renderer 仍採隔離 fixture 驗證器，**不得直接接到正式遊戲**；新投影模組目前未加入正式 HTML、也未掛 Canvas，並非可玩 2.5D。
+- 待續 Gate：正式可發布且版本驗證的 B 玩家/敵方 atlas 和場景資產映射、正式 Renderer 與視覺 session/Canvas、根據合法戰鬥路由 lazy 接入／故障回退、全部玩法與手機/瀏覽器回歸。保留 `FULL_3D_AVAILABLE=false`、原戰鬥/音訊/雲端/存檔與 GM 快補播。**T3-B 仍在施工中**。只依最新 exact-HEAD Actions success 判定檢查，不為批次建立新監控。
+
 ## 2026-10-13｜使用者確認 T4/T5 後施工順序（規劃已鎖定）
 - 正式總規格 `docs/2_5D_B_SCHEME_T4_T5_BATCH01_40_MASTER_2026-10-13.md` 第 7 節最新有效順序：**T3-B/C → T4 → T5（階段性清理驗收）→ 第 01～27 批已完成成果相容性補查／必要微調 → 第 28 批現有概念圖與五槽技術成果接續 → 第 29～40 批 B 方案施工及最後完整上線 Gate**。不把 01～27 重做，也不再預設 28～34 和 T3／T4 同步量產。
 - **第 28 批目前已入庫 20 套、40 張概念圖**：概念批次 **G01＝G001～G010，各兩張、共20張**；**G02＝G011～G020，各兩張、共20張**。每套為 `overview-front-side-back.webp` 和 `equipment-five-slots.webp`，皆位於 `development/3d-source/equipment/concepts/galaxy/`；`_concept-index.json` 仍標示待使用者審核、`conceptApproved=false`。兩個批次都必須保留、沿用，不得把 G02 誤寫為全部概念圖或重新生成已完成的 40 張。概念圖不是可穿戴正式資產或最終美術封版；28-A/B/C 技術成果保留。
