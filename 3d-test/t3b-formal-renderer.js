@@ -34,7 +34,7 @@ async function prepare(options){
  for(const clip of clips){const row=layout.clips[clip].asset;if(!row||!/^assets\/[a-zA-Z0-9_./-]+$/.test(row.path)||row.path.includes("..")||!row.license?.trim()||!Number.isSafeInteger(row.bytes)||row.bytes<=0||!/^([a-f0-9]{64})$/.test(row.sha256))throw Error("invalid-atlas-asset");images[clip]=await bytes(row);}
  for(const item of equipment)gear.push({...item,bytes:await bytes(item.asset)});
  const token=Object.freeze({tier,identity:Object.freeze({...identity})});
- verified.set(token,{bodySHA256:player.asset.sha256,body,animation,images,gear,layout:JSON.parse(JSON.stringify(layout)),registry:JSON.parse(JSON.stringify(registry)),identity:{...identity},tier,signal});return token;
+ verified.set(token,{bodyName:player.asset.path.split("/").pop(),animationName:options.animation?.path.split("/").pop(),bodySHA256:player.asset.sha256,body,animation,images,gear,layout:JSON.parse(JSON.stringify(layout)),registry:JSON.parse(JSON.stringify(registry)),identity:{...identity},tier,signal});return token;
 }
 async function create(options){
  const {host,signal,isCurrent}=options,bundle=verified.get(options.bundle);
@@ -65,13 +65,13 @@ async function create(options){
    const box=await B.SceneLoader.LoadAssetContainerAsync("",new global.File([bytes],name,{type:"model/gltf-binary"}),scene,undefined,".glb");
    if(!current()){box.dispose();requireCurrent();}boxes.push(box);box.addAllToScene();for(const g of box.animationGroups)g.stop();return box;
   }
-  const body=await load(bundle.body,"formal-player.glb"),skin=body.skeletons[0];
+  const body=await load(bundle.body,bundle.bodyName),skin=body.skeletons[0];
   if(!skin||skin.bones.length!==53)throw Error("invalid-player-rig");
   const pivot=new B.TransformNode("formal-player-position",scene);pivot.position.x=-1.6;
   for(const n of body.rootNodes)n.parent=pivot;
   let animationSource=body;
   if(bundle.animation){
-   const source=await load(bundle.animation,"formal-approved-animation.glb"),sourceSkin=source.skeletons[0];
+   const source=await load(bundle.animation,bundle.animationName),sourceSkin=source.skeletons[0];
    if(!sourceSkin||sourceSkin.bones.length!==53||sourceSkin.bones.some((b,i)=>b.name!==skin.bones[i].name||!b.getBindPose().m.every((v,j)=>Math.abs(v-skin.bones[i].getBindPose().m[j])<1e-5)))throw Error("incompatible-animation-rig");
    const targets=[...body.transformNodes,...body.meshes];
    // Retarget animation data only; never replace the registered body or its topology.

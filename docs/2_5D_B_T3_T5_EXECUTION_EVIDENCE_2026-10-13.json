@@ -913,8 +913,8 @@
   },
   "files": {
     "3d-test/t3b-formal-renderer.js": {
-      "bytes": 13301,
-      "sha256": "ca94d4e359f2794d39fb3b5af9285207a39f07405635e0f88eb8f84a2bd01d9a"
+      "bytes": 13385,
+      "sha256": "4c0cc47bdf33ab3abbaa47293142bd55e8542be8d43922eb1dfd2732f75c7992"
     },
     "3d-test/t3b-formal-controller.js": {
       "bytes": 3805,
@@ -926,7 +926,7 @@
     },
     "resource-manifest.json": {
       "bytes": 32671,
-      "sha256": "f0ffb6e975ed42c950b9d349cc42fbd7524b4626ac830732e03d19362b989c31"
+      "sha256": "911120d6dafc22f7f124b7b0f4508553035099cfe549c3e9acd1e39eb0826658"
     },
     "development/hybrid-comparison/t2b2-v1/inventory.json": {
       "bytes": 371584,
@@ -956,6 +956,11 @@
       "check": "B2 art contract dependency",
       "cause": "local gltf-validator missing",
       "fix": "installed exact CI version under /tmp, reran all six zero-error/zero-warning GLBs"
+    },
+    {
+      "check": "exact HEAD 3f4e9314 publication closure",
+      "cause": "Memory File labels were interpreted as missing deployed GLB dependencies; local policy unit test did not inspect the full newly tracked root before push",
+      "fix": "Use verified asset path filenames for in-memory GLB loading; retain all missing-resource assertions; actual root dry-run 391 files / zero missing refs, rerun T2-A 17 checks and actual renderer 100 switches"
     }
   ],
   "notRun": [
@@ -987,6 +992,28 @@
   ],
   "githubActions": {
     "baselineExactHEAD": "no-runs-returned",
-    "newCommitExactHEAD": "pending-after-commit"
+    "newCommitExactHEAD": "pending-after-commit",
+    "previousCommit": {
+      "sha": "3f4e93142874445b6b25c3f68db937faab6cfc32",
+      "status": "publication/comparison failures; Runtime still running when checked",
+      "failureRunIds": [
+        38356490779,
+        38356490777,
+        38356490706,
+        38356490737,
+        38356490671,
+        38356490719,
+        38356490799,
+        38356491564
+      ]
+    }
+  },
+  "actualPublication": {
+    "command": "node scripts/build-publish-dry-run.cjs",
+    "status": "passed",
+    "copiedSources": 389,
+    "deployedFiles": 391,
+    "missingRefs": 0,
+    "includesDevelopmentAssets": false
   }
 }

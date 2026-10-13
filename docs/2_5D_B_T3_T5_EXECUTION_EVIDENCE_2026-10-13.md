@@ -32,3 +32,7 @@ B2 材質／光影公平性、局部接觸風險、人工美術批准、實體�
 測試命令和實際結果見同名機器證據 JSON。browser 使用 `T3B_BASE_URL`（預設 `http://127.0.0.1:4173/`）；有系統 Chromium 時使用它，CI 則使用 Playwright 安裝的 Chromium。原 Fixture 不重製。所有新增程式預設不啟動引擎、不訂閱正式戰鬥，不存在正式入口。
 
 回復本階段提交使用 `git revert <包含此紀錄的提交 SHA>`；不清除或遷移玩家資料。提交 SHA 和 exact-HEAD Actions 應以 Git／GitHub 實際結果核對，不能把本文含於同一提交造成的自指 SHA 當成完整性證據。
+
+## 提交後 CI 修正紀錄
+
+`3f4e93142874445b6b25c3f68db937faab6cfc32` 的比較與發布 workflows 實際失敗，不能宣稱全綠。共同根因為兩個記憶體 File 的 GLB label 被發布 scanner 當作缺失的網站資源。本機先前的 policy unit regression 未在新增 tracked 清單上執行真實根目錄 dry-run，因此未捕捉。修正採用已驗證資產的 basename，沒有新增假 GLB、忽略缺件或修改發布白名單。重跑真實 dry-run：389 原始檔＋2 build markers＝391 成品檔、missingRefs=0；T2-A 17 項與原人物／32 換裝／100 次實際引擎切換 browser 再次通過。最新修正 SHA 的 Actions 必須另核對。
