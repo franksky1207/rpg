@@ -22,6 +22,12 @@ handler({...event(),lane:'gm-fixture'});handler({...event(),valid:false});handle
 assert.equal(b.diagnostics().observed,1);
 b.detach();assert.equal(disposals,1);assert.equal(b.attach(()=>{calls++;throw Error('visual failed')}),true);
 handler(event('alternate',3,1));assert.equal(calls,1);
+// A delayed checkpoint must not replay an already observed event or rewind the cursor.
+handler({...event('alternate',3,2),checkpoint:true});assert.equal(calls,2);
+handler({...event('alternate',3,1),checkpoint:true});assert.equal(calls,2);
+handler(event('alternate',3,2));assert.equal(calls,2);
+handler(event('alternate',3,3));assert.equal(calls,3);
+assert.equal(b.diagnostics().lastSeq,3);
 assert.equal(b.diagnostics().canCommit,false);assert.equal(b.diagnostics().canCreateEvents,false);
 listeners.pagehide();assert.equal(b.diagnostics().subscribed,false);
 assert.equal(p.resolve({requestedMode:'hybrid-b',rendererReady:false}).effectiveMode,'text');
