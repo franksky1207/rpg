@@ -1,3 +1,11 @@
+## 2026-10-13｜T3～T5 本機工程驗收完成；交付 CI 核對中，正式啟用／真機／美術未批准
+- 已完成正式 B Renderer、53 骨／9掛點／三 LOD 相容動畫與五槽、敵方 atlas、共用正式事件／presentation clock／合法路由、安全取消／背景／極簡／故障文字回退；正式來源缺材仍 unavailable，不將記憶體測試核准当正式素材。
+- T4 正式裝飾預覽入口、DOM／host／控制／hook／純展示 JS／CSS／預熱引用已退場，逐 byte 歷史來源留在 development；GM 共用 factory、原模型與八分類31案例保留。新增原戰場案例的 GM 圖集檢視，無核准清冊顯示 unavailable，沒有新增權威事件／音訊／戰鬥時鐘。
+- T5 本機核心576／鏡像48、完整 system browser、角色／裝備、GM31／唯讀快照、source lock、實際 WebGL 32子集合／100次／三敵三tier六動作、三尺寸／context loss、發布HTTP／SHA／音訊／快取／存檔隔離通過。SwiftShader不是實機；30分鐘手機／GPU發熱／真帳號雲端／人工美術仍未驗收。
+- 10ba4541451d965d87e44dbe00019f66b691a8cc 的10個觸發 Actions成功；新交付 exact HEAD（含未自動觸發的比較workflow）須push後核對，不把前SHA結果套用。驗收與機器證據：docs/2_5D_B_T3_T5_ACCEPTANCE_2026-10-13.md、docs/2_5D_B_T3_T5_EXECUTION_EVIDENCE_2026-10-13.json。
+- FULL_3D_AVAILABLE=false、formalReleased=false，尚無核准敵方清冊，正式玩家仍文字安全回退；B2 native材質光影及局部接觸歷史 Gate不改成通過，stage40未過。未做無必要T5-C存檔遷移。
+- 後續固定：01～27相容性補查 → 承接28既有G001～G020／40張概念圖／五槽成果 → 29～40 B美術與功能。本任務未開始後續量產。下方舊記錄僅供歷史追溯。
+
 > 2026-10-13 連續施工更新：T3-B 已新增可實際渲染原玩家 GLB／五槽／atlas 的正式 Renderer 模組與 Controller；正式 owner clock／路由端到端接線仍施工中，T3-C、T4、T5 未結案。完整範圍、證據與未過 Gate：`docs/2_5D_B_T3_T5_EXECUTION_EVIDENCE_2026-10-13.md`。保留 FULL_3D_AVAILABLE=false、B 全面啟用限制及 B2 失敗證據，後續順序不變。
 
 > **2026-10-13 新總規格覆蓋 T4/T5 與舊 01～40 批未來責任：** `docs/2_5D_B_SCHEME_T4_T5_BATCH01_40_MASTER_2026-10-13.md`。T4 是**整套正式頁獨立開發預覽的功能／程式／資源引用退場**，不是僅隱藏；GM 為唯一預覽中心；正式 2.5D B 戰鬥保留。T3-B 現階段僅唯讀正式事件橋，不能將正式 Renderer 全覆蓋冒稱完工。下方舊路線作歷史追溯；未執行新清理。

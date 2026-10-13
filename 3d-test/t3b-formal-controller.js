@@ -12,7 +12,7 @@ function create(options){
  let frames=0,rejected=0,fallbacks=0,raf=0;
  const policy=()=>options.policy?.({rendererReady:!!renderer,assetsVerified:!!renderer,webglAvailable:!!renderer});
  const allowed=()=>{const p=policy();return (p?.requestedMode==="hybrid-b"||p?.mode==="hybrid-b")&&p?.quality!=="minimal"&&!global.document?.hidden;};
- function retire(){if(upstream&&upstreamAbort)upstream.removeEventListener("abort",upstreamAbort);upstream=null;upstreamAbort=null;if(raf){global.cancelAnimationFrame?.(raf);raf=0;}epoch++;abort?.abort();abort=null;renderer?.dispose();renderer=null;loading=false;}
+ function retire(){if(upstream&&upstreamAbort)upstream.removeEventListener("abort",upstreamAbort);upstream=null;upstreamAbort=null;if(raf){global.cancelAnimationFrame?.(raf);raf=0;}epoch++;abort?.abort();abort=null;renderer?.dispose();renderer=null;loading=false;try{options.onRetire?.();}catch(_){} }
  function fallback(reason){retire();failed=true;fallbacks++;try{options.onFallback?.(reason);}catch(_){} }
  function current(ticket,id){return !disposed&&!ended&&ticket===epoch&&battleId===id&&!global.document?.hidden;}
  async function initialize(frame){

@@ -329,6 +329,7 @@ function renderInfo(){
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
 function safeStop(){
+ const review=document.getElementById("gmAtlasReview");review?.__review?.dispose();review?.remove();
  serial++;
  const old=runtime;runtime=null;
  if(old)old.dispose();
@@ -349,6 +350,12 @@ async function start(){
  if(ticket!==serial)return;
  status.hidden=false;status.textContent="正在載入 3D 測試場景…";
  const c=entry(),B=window.Civilization3DPrototype;
+ const oldReview=document.getElementById('gmAtlasReview');oldReview?.__review?.dispose();oldReview?.remove();
+ if(c.kind==='battle-battle'){
+  const details=document.createElement('details');details.id='gmAtlasReview';const summary=document.createElement('summary');summary.textContent='動畫圖集檢視（自由測試）';const content=document.createElement('div');details.append(summary,content);document.getElementById('centerWorkspace').append(details);
+  details.addEventListener('toggle',()=>{details.__review?.dispose();details.__review=null;if(details.open)details.__review=window.CivilizationGMAtlasReview.mount({host:content,catalog:window.CivilizationGMApprovedAtlasCatalog,source:scenarioMode==="free"?"fixture":"formal"});});
+ }
+
  const effectiveWorld=scenarioMode==="formal"&&formalScenario?.dungeon?.arena&&entry().kind==="dungeon-arena"?Number(formalScenario.dungeon.arena.world):Number(snapshot.world);
  const factory=c.kind==="dungeon-arena"&&effectiveWorld===3?B.createDungeonAdvancedScene:c.kind.startsWith("service-")?B.createServiceConsoleScene:c.kind.startsWith("chronicle-")?B.createChronicleTransitionScene:c.kind.startsWith("battle-")?B.createBattlePresentationScene:c.kind.startsWith("frontier-")?B.createFrontierScene:c.kind.startsWith("advanced-")?B.createDungeonAdvancedScene:c.kind.startsWith("dungeon-")?B.createDungeonScene:["specialization","marks","civilization","core"].includes(c.kind)?B.createGrowthScene:c.kind==="forge"?B.createForgeScene:c.kind==="equipment"?B.createEquipmentScene:c.kind==="character"?B.createCharacterScene:c.kind==="higher"?B.createHigherDimensionalScene:c.kind==="universe"?B.createUniverseScene:c.kind==="galaxy"?B.createGalaxyScene:c.kind==="epoch"?B.createEpochScene:B.createScene;
  try{window.Civilization3DLoader.requireFactory(factory);}catch(error){fail(error.message);return;}

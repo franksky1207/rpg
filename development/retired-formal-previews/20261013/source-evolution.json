@@ -6,7 +6,7 @@
     "index.html": {
       "archive": "development/retired-formal-previews/20261013/index.html",
       "beforeSHA256": "947295b186793b0fcc23f92937e7bf5d4e23b6a4202183678a2ba3569f7dff43",
-      "afterSHA256": "dc75a6447954af368be271c86638405891da6ff5a434bc8a9f98476a278da253"
+      "afterSHA256": "bf1e60eb5e83e32c2e656f53e4b0050b5828bfe8edae543ff449e8dab2e874c2"
     },
     "ui.js": {
       "archive": "development/retired-formal-previews/20261013/ui.js",
@@ -52,6 +52,18 @@
       "archive": "development/retired-formal-previews/20261013/3d-test/galaxy-b05.css",
       "beforeSHA256": "e26a8e93120a471eb8971342300b0b8020fe8e2177dd7a70345a2593ee957cc5",
       "afterSHA256": "42d02f4f7fce926f7240ec107076ec464969648a1dbdc8433489616ada43e27b"
+    },
+    "3d-test/test-center.js": {
+      "archive": "development/retired-formal-previews/20261013/3d-test/test-center.js",
+      "beforeSHA256": "31dabfce49ca8a769935226073bf6ec3cf56b35e3b8e597b23bee7d363d4cf30",
+      "afterSHA256": "89abf6912a13fa5c30295d1317179a47443fe53b3131e689fc0835a48a14bbd5",
+      "classification": "KEEP-SHARED with GM atlas review extension"
+    },
+    "3d-test/index.html": {
+      "archive": "development/retired-formal-previews/20261013/3d-test/index.html",
+      "beforeSHA256": "26a373f4c66c9c42f5c7b01d0b3808b6da9490cf0d906c7b996c8197bd1153a6",
+      "afterSHA256": "3faa189dd7789201cb3f55475cd263a930c2c4d3a6d39581237756b9baedbe96",
+      "classification": "KEEP-SHARED with GM atlas review extension"
     }
   }
 }

@@ -8,6 +8,8 @@ function dispose(){const close=routeDispose;routeDispose=null;close?.();retireSc
 function mount(options){
  if(!options?.host||typeof options.resolve!=="function")throw Error("missing-approved-formal-resolver");
  retireScene();
+ let notice=null;
+ const clearNotice=()=>{notice?.remove();notice=null;};
  const clock=global.CivilizationFormalBOwnerClock.create();
  const controller=global.CivilizationFormalBController.create({
   host:options.host,clock,
@@ -39,11 +41,17 @@ function mount(options){
    signal.throwIfAborted();
   },
   policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
-  onReady:()=>{options.host.hidden=false;},
-  onFallback:reason=>{options.host.hidden=true;options.onFallback?.(reason);}
+  onRetire:()=>{options.host.hidden=true;},
+  onReady:()=>{clearNotice();options.host.hidden=false;},
+  onFallback:reason=>{
+   options.host.hidden=true;clearNotice();notice=document.createElement("p");notice.className="formal-b-visual-fallback";notice.dataset.status="unavailable";notice.setAttribute("role","status");
+   notice.textContent=reason==="text-or-minimal-policy"?"戰鬥視覺已關閉，保留文字戰鬥。":"戰鬥視覺暫不可用，已保留文字戰鬥。";
+   options.host.after(notice);options.onFallback?.(reason);
+  }
  });
- active=controller;if(options.subscribe!==false&&!controller.attach()){dispose();throw Error("unavailable-formal-event-bridge");}
- return controller;
+ const managed=Object.freeze({...controller,dispose:()=>{clearNotice();controller.dispose();}});
+ active=managed;if(options.subscribe!==false&&!controller.attach()){dispose();throw Error("unavailable-formal-event-bridge");}
+ return managed;
 }
 function bindRoutes(options){
  dispose();let id=null,host=null;

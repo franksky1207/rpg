@@ -58,3 +58,11 @@ T4 提交 5cc2eaa4750edf41361210ffb0074f22aa927830 的 Runtime Integrity 失敗�
 隔離成品實際 HTTP／SHA、17 音訊解碼、桌機／手機設定、49 cached media、Range 與清除／存檔隔離通過。正式 Renderer 新增三種 Canvas 尺寸與 context loss 實際釋放通過，100 次建立／釋放依然無 RNG 消耗。母圖裁切／pivot metadata 新增精確 NaN、無效範圍拒絕測試；三敵三 tier 的實際 metadata 與 bytes/SHA 通過原程式驗證。
 
 裝備歷史 shell 的 fault 新頁漏套 harness，造成按鈕不存在（現行正式退場正確），已修正每個隔離故障 context 使用同一歷史 shell；原 404／SHA、其他四槽、face mask 恢復斷言不改。現行正式負面驗收始終不使用 harness。實際渲染參考圖保留於 docs/evidence/t3-t5；不是批准美術或真機證據。完整 T5 browser／exact HEAD Actions 仍執行中。
+
+## 收尾本機工程驗收
+
+正式 Renderer 追加驗證：結束後 stage 隱藏、缺材可見文字回退、三尺寸／context loss、零 Math.random 消耗皆通過。完整63項既有 browser commands 無失敗，57項靜態／契約通過；原失敗的 combat-events-browser 已在正確套件路徑成功重跑。角色／裝備／原DOM正面斷言使用明示歷史shell，但 GM保持現行程式（KEEP-SHARED不被harness替代）；現行正式退場另有完整負面測試。
+
+實際GM source未有atlas能力，新增原戰場案例内的圖集檢視，不新增案例或中心。實際三敵六動作SourcePNG三畫格pixels各不相同、錯SHA释放bitmap、未核准unavailable、切案例釋放與storage不變通過；正式核准清冊目前缺少。此新增功能未把 B2 development素材發布。原31案例和授權唯讀GM快照以現行GM程式重跑通過。
+
+完整交付説明、人工Gate、后续順序與回復见 `2_5D_B_T3_T5_ACCEPTANCE_2026-10-13.md`。10ba4541451d965d87e44dbe00019f66b691a8cc 的10項觸發Actions成功；最新交付與比較workflow exact HEAD仍須push後核對。

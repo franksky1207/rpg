@@ -17,4 +17,6 @@
 | preview-expand.css、galaxy-b05.css、worldphase-b04.css | 正式 host／地圖／手機最大化 | 需逐 selector 核對 GM iframe 與正式非預覽 map layout | preview-expand 僅正式 host，已搬歷史來源；galaxy CSS 僅刪控制 selector，保留 map card；worldphase CSS 全保留正常紀元入口。 |
 | development/hybrid-comparison 與 development/3d-source | A/B/C、Blender、動畫、來源鎖、美術及失敗證據 | 歷史研究與原批次接續 | HISTORICAL-SOURCE，publish=false，保留 |
 
-GM 的正式快照、自由展示、授權／iframe、最大化／返回位置仍在本批完整 browser 回歸中。本表不表示已完成八分類 31 案例實機驗收。
+GM 的正式快照、自由展示、授權／iframe、最大化／返回位置已完成本批實際 browser 回歸；真手機仍待驗。本表不表示已完成八分類 31 案例實機驗收。
+
+新增 GM atlas-review 為 KEEP-SHARED／MOVE-TO-GM 能力延伸：原戰場案例内檢視已核准清冊，無來源 unavailable；test-center／GM index 的 before/after SHA 與原件同保留在 ledger。31案例數量不變，不在正式頁建立入口。

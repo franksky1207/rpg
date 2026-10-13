@@ -1,0 +1,170 @@
+{
+  "passed": true,
+  "hardware": false,
+  "testApprovalOnly": true,
+  "source": "GM free review; not formal game",
+  "report": [
+    {
+      "actor": 0,
+      "clip": "idle",
+      "hashes": [
+        "76534139a45e26a6091a0a985448f7de9e3b6c219e4dd1d8f2ff250f2fb4f729",
+        "7143bfd5720727c871794d198a903abef68febedb44374dbd30cbb17f7fe07f8",
+        "88748446e1641a77b383a66d3673572db46653cc42e815458c54a48364cda9e7"
+      ]
+    },
+    {
+      "actor": 0,
+      "clip": "attack",
+      "hashes": [
+        "fdabcd6a8dac942fedf768f34a8b7a91759d652685e28e6c88acc747676448a6",
+        "1ba353e2017bbcf20af4974d1ed3804dd0023591bff2b66a5b5dabb9c1bef0c8",
+        "cbf6bc520a11ead305a66bff73f49af2ee600f593a16486bb0962a1dfd9e9f5e"
+      ]
+    },
+    {
+      "actor": 0,
+      "clip": "hit",
+      "hashes": [
+        "6b2febcc3254efeaba2b15fe6ac32ba20a805bdcd8c84623551d312660dbbbbf",
+        "506452245c514e5f6e9f9b32ebb7d7b85db548f5027ca40e54111870488e7cf0",
+        "00c375b47e5b7ecaee5e713162287d3f346161f29e2d042cf709224686887e52"
+      ]
+    },
+    {
+      "actor": 0,
+      "clip": "dodge",
+      "hashes": [
+        "a34b8141e603c2fd72d40c0afe119e5fccf422c6f3a02238bcbb43c2ec8b2b5c",
+        "80907df6a35f5aaa184338ee42110fd4dc4035fdb3050dd944a2cb7b8837754d",
+        "d126fb2b1be3673de8bec23825c6961f9cab38b80c39cfe2ef1b512581396c83"
+      ]
+    },
+    {
+      "actor": 0,
+      "clip": "return",
+      "hashes": [
+        "73818a7919aa7f0d80b1bce9fc48068d84ccafb28b1a004cad732db2e9c897bf",
+        "56ed0efe4ec3cacaa5e86aa42b061b7f83563cef089691dc600a26654fe0d20f",
+        "c1065fac3aed1e8b4e07c0641d83786198cff93784473ae32827d54b7b51b671"
+      ]
+    },
+    {
+      "actor": 0,
+      "clip": "defeat",
+      "hashes": [
+        "e2c3004fe5496358b58281162c18e7398f7aba3b643e141fb15486edcd663409",
+        "d37f1d310ff4057ecfceb40d05cec551689c0ca84aa25b0ef27eba9d4c3dfc65",
+        "f90a49b80a5d2b81b2f2169ed3150dad7a7e0013a976c6104a5007b0d9d514c1"
+      ]
+    },
+    {
+      "actor": 1,
+      "clip": "idle",
+      "hashes": [
+        "2465117ef44acb20d3418beb2f1a437af552ad453a4d8b60b77c9711dc87002e",
+        "a42cda97d3881841d9c138c9b921de5f2e4b476eb26bbf95704b2b8e9957dbc6",
+        "0aa74295f198724f17a3eab474eca62be6c5fe2814e5e35d5f46493292355be7"
+      ]
+    },
+    {
+      "actor": 1,
+      "clip": "attack",
+      "hashes": [
+        "80d7c22bdfc9bdf355384e513e36e0ecab3378640a1388afdfcadf714e796aae",
+        "4f7655ebfb126d5b8539b0f6e299c28a65f54cebc24c483a00ee1ab2bfe7824e",
+        "2bcde9067f0203ffd553355c31b8da45dd90ca14d1cf0db04bdb78797aad876f"
+      ]
+    },
+    {
+      "actor": 1,
+      "clip": "hit",
+      "hashes": [
+        "6174b232894ca39f8be2a2e873db706ad569fd354f44fe80d82220556a207462",
+        "9fe80883d46bae2cb1f6408f4b9913a8623607974dd2873ca78b66ce8a73dada",
+        "344b3e9318ae9c987460c65e87551841ad4acc7970f84ebe1962969792e95af7"
+      ]
+    },
+    {
+      "actor": 1,
+      "clip": "dodge",
+      "hashes": [
+        "9df76d24dcea6d00db4a4b4db09cf1caab53974ca0ac5784f8fa7e61011d5dce",
+        "40795d4eb989c2443bb761bc26b666c943ba67a7578b8c0b6dd18fa44fb5d3de",
+        "5d8a5b5c545524b07b1a5fcbf26c1fc46ab46782364ac6b3de1fa654c8808176"
+      ]
+    },
+    {
+      "actor": 1,
+      "clip": "return",
+      "hashes": [
+        "a961cf26c40bc6bcfabbd118bc50ac229e831e0fa00b2bba372557a7938247be",
+        "9f4b894696d58237cae1dd24eee5e6c2ee29628661a203eb0495f5bf9917e6aa",
+        "f8bd9a00671b88ed96d14922b05411dbb4b92e94d80b217688a7c38b067c9ed1"
+      ]
+    },
+    {
+      "actor": 1,
+      "clip": "defeat",
+      "hashes": [
+        "eb89652d8f019f808343b65cae7e8e5031a0311f5026962f2e885102dd4e78b5",
+        "f5ab623f74ca103f3467e7bad519d736e4da7a2ec23c7beb11b82a61d15a2076",
+        "94574db2a415884be25890c622bf26365a0e685c129240ac72707df0c51c5ff7"
+      ]
+    },
+    {
+      "actor": 2,
+      "clip": "idle",
+      "hashes": [
+        "580a839c5a0b19ceb2eabeef7c1a1ca700d7c833fe49a16c2ba446bd4d029eb4",
+        "91f34dbddb027a60777313f4f3e871219e0197ff12863a98050e82295ab8b1df",
+        "5038220733e97ecc8ba46218fc4685a12e5547397819f2cbea31a15d6739bbaa"
+      ]
+    },
+    {
+      "actor": 2,
+      "clip": "attack",
+      "hashes": [
+        "81a4b74f25a0458545502ef9f4a2cb7a28376a3f3c218a8237660613728b95f2",
+        "c3879c8a4934f0dc87e6af8de65220b0bdaa7f83f7c2f01e811b7261340645ab",
+        "5ddce9eb12d4c6bb2cdc545b9daeea11504b96bf898eecafaa1763a862fe902f"
+      ]
+    },
+    {
+      "actor": 2,
+      "clip": "hit",
+      "hashes": [
+        "6464333e0cd1e248c00e6fc168730d895b7b9a25c4701a9ae74a4df29dfac39f",
+        "6951e14eb7fe3cdc9eeb0ede02f8491f6391110e7e38d84369fef148b1462689",
+        "7361a9c4caf74d4d42ba1b2c2965e7e91f1d2bc1c1bd3274e57330c4988defb0"
+      ]
+    },
+    {
+      "actor": 2,
+      "clip": "dodge",
+      "hashes": [
+        "7467df980492a8ea9bee6679883c6863a8f2708c2df198d391fff7de8638c949",
+        "0dfd0e0b201939413ed67c37ea76c13cbba310a24a01dc38831050bac55ce03f",
+        "687df1c8dae1fb2322764c6bd7307353a0c5b02cc26a829ea7e6c6ac54d1ee78"
+      ]
+    },
+    {
+      "actor": 2,
+      "clip": "return",
+      "hashes": [
+        "5f567e707d1a16406609a3b64f36825975e19becb364e60dd4707baedfc0e71e",
+        "c66a8b106a7798bd1312e8d6afc9031cfa26a32ad445b069bbdd8578711ce60e",
+        "06546ce4b4732538aff834afa7af989197879489d8f9f2c59c7ea980e7b15d3b"
+      ]
+    },
+    {
+      "actor": 2,
+      "clip": "defeat",
+      "hashes": [
+        "095c678faad46ace2288f61dfcbeef0dac3bd686009522230183325f94fc5739",
+        "fcaae919274fbb13c8a6ada78a69a0588823de420248dda88b4efde841729b78",
+        "b3753845d4604b739cd514229b5384e10218f21039bfd7994a0ec9a261012713"
+      ]
+    }
+  ]
+}
