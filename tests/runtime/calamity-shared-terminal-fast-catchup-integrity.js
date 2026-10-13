@@ -32,7 +32,7 @@ assert.ok(w2Ui.includes("if(uiDecision.shouldConsumeDuration)await consumeCatchU
 assert.ok(!w2Ui.includes("function catchUpStep()"),"W2 UI must not own a second catch-up-step decision.");
 
 for(const token of [
- "backgroundprogress.js?v=20260927-run-opt-batch1&v2=20261007-calamity-terminal-catchup1",
+ "backgroundprogress.js?v=20261013-background-hud-recovery1",
  "calamitycore.js?v=20261004-reincarnation-batch5-2&v2=20261007-calamity-terminal-catchup1",
  "calamityrun.js?v=20261010-six-track-battle-integration2&v2=20261007-calamity-terminal-catchup1",
  "calamityui.js?v=20260922-universe-calamity-batch2&v2=20261006-calamity-entry-scroll1&v3=20261006-calamity-ui-opt-batch3&v4=20261007-calamity-terminal-catchup1",

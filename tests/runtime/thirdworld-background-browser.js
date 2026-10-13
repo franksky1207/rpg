@@ -30,12 +30,14 @@ async function finishIntro(page){
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
  await page.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);await page.evaluate(()=>ensureCivilizationScriptGroup('integrity'));
+ await page.evaluate(fault=>{window.__visualFault=fault;},process.env.W3_B_VISUAL_FAILURE==='1');
  await page.evaluate(()=>{
- state=newState();state.level=1000;state.secondWorld.entered=true;state.secondWorld.civilizationLevel=10;state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.story.unlockedStage=2;view='adventure';setAdventureEraView('higher');
+ state=newState();state.level=1000;state.secondWorld.entered=true;state.secondWorld.civilizationLevel=10;state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.story.unlockedStage=2;ensureCivilizationCalamityState();state.marks.entries.ward={acquired:true,level:10,progress:0};view='adventure';setAdventureEraView('higher');
  // Disposable numerical input; real W3 core, run, rewards, render and minimal owners.
- window.playerCombatStats=()=>({hp:50000,atk:20000,def:0,crit:0,dodge:0});window.effectiveCombatSpeed=()=>2;Math.random=()=>.99;
+ if(window.__visualFault)CivilizationFormalBEntry.bindRoutes({resolve:async()=>{throw Error('injected-B-visual-unavailable');}});
+ window.playerCombatStats=()=>({hp:50000,atk:20000,def:0,crit:0,dodge:0});window.effectiveCombatSpeed=()=>2;Math.random=()=>.5;
  gmSetBackgroundBattlePreference(true);render();window.__flow=startThirdWorldPlayerFlow(0);
- window.__hpSamples=[];window.__sampleTimer=setInterval(()=>{const p=getCombatPresentationSnapshot();if(!p)return;__hpSamples.push({token:p.token,index:p.index,player:p.playerHp,enemy:p.enemyHp,playerText:document.getElementById('combatPlayerHp')?.textContent,enemyText:document.getElementById('combatEnemyHp')?.textContent,bar:document.getElementById('combatPlayerBar')?.style.width});},20);
+ window.__hpSamples=[];window.__sampleTimer=setInterval(()=>{const p=getCombatPresentationSnapshot();if(!p)return;__hpSamples.push({token:p.token,index:p.index,player:p.playerHp,enemy:p.enemyHp,playerText:document.getElementById('combatPlayerHp')?.textContent,enemyText:document.getElementById('combatEnemyHp')?.textContent,bar:document.getElementById('combatPlayerBar')?.style.width,shield:p.playerShield,shieldMax:p.playerShieldMax,shieldWidth:document.querySelector('#combatPlayerBar + .combat-shield-bar')?.style.width});},20);
  window.__environment=(hidden,persisted=null)=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>hidden});Object.defineProperty(document,'visibilityState',{configurable:true,get:()=>hidden?'hidden':'visible'});document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event(hidden?'blur':'focus'));if(persisted!==null)window.dispatchEvent(new PageTransitionEvent(hidden?'pagehide':'pageshow',{persisted}));};
  });
  await page.waitForFunction(()=>getCombatPresentationSnapshot()?.index>=2);
@@ -48,7 +50,8 @@ async function finishIntro(page){
  const minimalBefore=await page.locator('[data-third-world-minimal-round]').textContent();
  for(let i=0;i<3;i++){
  const before=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);
- await page.evaluate(()=>__environment(true,true));
+ const oldToken=await page.evaluate(()=>getCombatPresentationSnapshot()?.token??null);
+ await page.evaluate(()=>__environment(true,true));assert.equal(await page.evaluate(()=>getCombatPresentationSnapshot()),null,'background retires expired presentation without replay');
  assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().active),true,'persisted pagehide preserves same runtime');
  await page.waitForTimeout(100);
  await page.evaluate(()=>{const native=Date.now;window.__nativeNow=native;Date.now=()=>native()+3000;__environment(false,true);Date.now=native;});
@@ -56,7 +59,7 @@ async function finishIntro(page){
  await page.waitForFunction(()=>backgroundProgressSnapshot()?.fastCatchUp===false&&getThirdWorldPlayerFlowContext()?.catchingUp===false,{timeout:20000});
  assert.equal(await page.locator('#thirdWorldCatchUpStatus').count(),0,'completed catch-up removes checkpoint notice');
  await page.waitForFunction(()=>getCombatPresentationSnapshot()?.playerHp>0&&getCombatPresentationSnapshot()?.playerHp<getCombatPresentationSnapshot()?.playerMaxHp,{timeout:15000});
- const synced=await page.evaluate(()=>{const p=getCombatPresentationSnapshot();return {player:document.getElementById('combatPlayerHp').textContent===`${p.playerHp} / ${p.playerMaxHp}`,enemy:document.getElementById('combatEnemyHp').textContent===`${p.enemyHp} / ${p.enemyMaxHp}`,run:thirdWorldContinuousRunSnapshot().battles};});assert.equal(synced.player,true);assert.equal(synced.enemy,true);
+ const synced=await page.evaluate(()=>{const p=getCombatPresentationSnapshot();return {player:document.getElementById('combatPlayerHp').textContent===`${p.playerHp} / ${p.playerMaxHp}`,enemy:document.getElementById('combatEnemyHp').textContent===`${p.enemyHp} / ${p.enemyMaxHp}`,run:thirdWorldContinuousRunSnapshot().battles};});assert.equal(synced.player,true);assert.equal(synced.enemy,true);if(oldToken!==null)assert.notEqual(await page.evaluate(()=>getCombatPresentationSnapshot()?.token),oldToken,'foreground uses a new owner presentation');
  }
  assert.notEqual(await page.locator('[data-third-world-minimal-round]').textContent(),minimalBefore);
  await page.evaluate(()=>{closeMinimalMode();openThirdWorldMinimalMode();});
@@ -65,12 +68,12 @@ async function finishIntro(page){
  const disabled=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);await page.waitForTimeout(1500);assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles),disabled,'GM off pauses after current settled battle');
  await page.evaluate(()=>__environment(false));await page.waitForFunction(n=>thirdWorldContinuousRunSnapshot().battles>n,disabled);
  const samples=await page.evaluate(()=>{clearInterval(__sampleTimer);return __hpSamples;});
- assert.ok(samples.some(s=>s.player>0&&s.player<50000),'partial damage observed, not just death');
+ assert.ok(samples.some(s=>s.player>0&&s.player<50000),'partial damage observed, not just death');assert.ok(samples.some(s=>s.shield>0),'formal ward activated');assert.ok(samples.some(s=>s.shield===0&&s.shieldMax>0),'formal ward absorbed damage');assert.ok(samples.some(s=>s.shield>0&&Math.abs(parseFloat(s.shieldWidth)-s.shield/s.shieldMax*100)<.01),'shield DOM follows same presentation owner');
  assert.ok(new Set(samples.map(s=>s.enemy)).size>3,'enemy HP changes through actual attacks');
  await page.evaluate(()=>{stopThirdWorldPlayerFlow('manual');closeMinimalMode();});await page.waitForFunction(()=>getThirdWorldPlayerFlowContext()===null);
  await page.evaluate(()=>{closeThirdWorldRunSummaryModal();window.__restart=startThirdWorldPlayerFlow(0);});await page.waitForFunction(()=>thirdWorldContinuousRunSnapshot().active);
  await page.evaluate(()=>__environment(true,false));assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().active),false,'real departure releases runtime');
- assert.deepEqual(errors,[]);reports.push({engine,viewport,initial,minimal,samples,backgroundCycles:3,gmOffSafe:true,persistedResumes:true,departureStops:true});console.log('PASS W3 actual background/HUD/minimal',engine,viewport);await page.close();
+ assert.deepEqual(errors,[]);reports.push({engine,viewport,visualFailureInjected:process.env.W3_B_VISUAL_FAILURE==='1',initial,minimal,samples,backgroundCycles:3,gmOffSafe:true,persistedResumes:true,departureStops:true});console.log('PASS W3 actual background/HUD/minimal',engine,viewport);await page.close();
  }}finally{await browser.close();}
  }
  fs.writeFileSync(process.env.BACKGROUND_REPORT||'/tmp/thirdworld-background-browser.json',JSON.stringify({passed:true,reports,realIosAppSwitch:false},null,2));

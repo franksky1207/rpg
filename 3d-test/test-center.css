@@ -174,3 +174,21 @@ html{scroll-behavior:auto!important}
 .center-appearance-names span{white-space:normal;overflow-wrap:anywhere}
 .center-appearance-panel .center-appearance-free>label select{width:100%;min-width:0;max-width:100%}
 .center-appearance-panel .center-appearance-free>label[hidden],.center-appearance-panel .center-appearance-names[hidden]{display:none!important}
+
+/* B sandbox lives in the existing GM stage and maximum/return lifecycle. */
+.gm-b-view-picker{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.gm-b-simulation{height:100%;overflow:auto;padding:52px 12px 12px;box-sizing:border-box;color:#f0d494;background:#11151b}
+.gm-b-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gm-b-controls label{display:flex;flex-direction:column;gap:4px;font-size:12px;min-width:0;max-width:100%}
+.gm-b-controls select{max-width:100%;min-height:36px}
+.gm-b-buttons{display:flex;flex-wrap:wrap;gap:6px}
+.gm-b-buttons button{min-height:40px;touch-action:manipulation}
+.gm-b-status{font-size:12px;margin:8px 0}
+.gm-b-arena{position:relative;width:100%;height:clamp(180px,35dvh,340px);overflow:hidden;background:#090e16}
+.gm-b-arena canvas{position:absolute;inset:0;width:100%;height:100%}
+.gm-b-hud{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.gm-b-hud>div{min-width:0;display:flex;flex-direction:column;gap:4px;padding:8px;border:1px solid #79684e;border-radius:10px;background:#18202b}
+.gm-b-hud span,.gm-b-hud small{font-size:12px;overflow-wrap:anywhere}
+.gm-b-hud progress{width:100%;accent-color:#b95050}
+.center-workspace.center-maximized>.gm-b-view-picker{display:none}
+@media(max-width:600px){.gm-b-controls label{flex:1 1 42%;}.gm-b-buttons{width:100%}.gm-b-simulation{padding-left:8px;padding-right:8px}}

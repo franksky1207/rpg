@@ -25,7 +25,7 @@ const cases=[
 {id:"C-14-GALAXY-CALAMITY",cat:"frontier",title:"銀河文明災厄封印",kind:"frontier-galaxy",detail:"銀河十道災厄封印的立體排列。"},
 {id:"C-14-UNIVERSE-CALAMITY",cat:"frontier",title:"宇宙文明災厄封印",kind:"frontier-universe",detail:"宇宙十大文明災厄封印的立體排列。"},
 {id:"C-14-ALTERNATE",cat:"frontier",title:"異宇宙前線",kind:"frontier-alternate",detail:"異宇宙層域進度的立體前線。"},
-{id:"C-15-BATTLE",cat:"combat",title:"戰場與生命顯示",kind:"battle-battle",detail:"角色與敵人的立體戰場及生命狀態。"},
+{id:"C-15-BATTLE",cat:"combat",title:"2.5D 戰鬥模擬",kind:"battle-battle",detail:"B 方案沙盒模擬；亦保留原戰場生命顯示與正式唯讀快照。"},
 {id:"C-15-SHIELD",cat:"combat",title:"護盾防護演出",kind:"battle-shield",detail:"立體防護盾與生命顯示的視覺效果。"},
 {id:"C-15-ENCOUNTER",cat:"combat",title:"特殊遭遇演出",kind:"battle-encounter",detail:"特殊敵人的立體警示演出。"},
 {id:"C-15-SETTLEMENT",cat:"combat",title:"結算與戰利品",kind:"battle-settlement",detail:"戰鬥結束後的立體戰利品視覺。"},
@@ -94,7 +94,7 @@ window.addEventListener("message",event=>{
  // Validate the read-only bridge contract; never promote malformed data to formal.
  if(!data.battle||data.battle.schema!==1||!["active","unavailable"].includes(data.battle.status)||data.battle.source!=="formal-combat")return;
  if(data.battle.status==="active"&&(!Number.isFinite(data.battle.playerHpRatio)||!Number.isFinite(data.battle.enemyHpRatio)||!Number.isFinite(data.battle.shieldRatio)))return;
- formalScenario=data;renderInfo();if(scenarioMode==="formal"&&scenarioKinds.has(entry().kind))start();
+ formalScenario=data;renderInfo();if(scenarioMode==="formal"&&scenarioKinds.has(entry().kind)&&!(entry().kind==="battle-battle"&&battleSimulationView))start();
 });
 function sceneCalamityStates(world){
  const {selected,state}=calamitySimulation[world];
@@ -248,25 +248,25 @@ window.addEventListener("message",event=>{
  if(appearanceMode==="formal")status.textContent="正式角色快照同步失敗："+appearanceError;
 });
 const entry=()=>cases.find(c=>c.id===selected)||cases[0];
-let maximized=false;
+let maximized=false,maximumScroll=null;
 const maximizeButton=$("maximizePreview");
 function setMaximized(value){
  const next=!!value;
  if(next===maximized)return;
+ if(next)maximumScroll={left:window.scrollX,top:window.scrollY};
  maximized=next;
  document.body.classList.toggle("gm-3d-maximized",maximized);
  $("centerWorkspace").classList.toggle("center-maximized",maximized);
  maximizeButton.setAttribute("aria-pressed",String(maximized));
  maximizeButton.setAttribute("aria-label",maximized?"還原 3D 預覽":"最大化 3D 預覽");
  maximizeButton.textContent=maximized?"⛶ 還原預覽":"⛶ 最大化預覽";
- runtime?.resize();
+ runtime?.resize?.();
  requestAnimationFrame(()=>{
    if(!maximized){
-     const stage=host.closest(".stage");
-     const target=stage.getBoundingClientRect().top+window.scrollY-Math.max(12,Math.min(64,innerHeight*.08));
-     window.scrollTo({top:Math.max(0,target),behavior:"instant"});
+     if(maximumScroll)window.scrollTo({...maximumScroll,behavior:"instant"});
+     maximumScroll=null;
    }
-   runtime?.resize();
+   runtime?.resize?.();
  });
 }
 maximizeButton.addEventListener("click",()=>setMaximized(!maximized));
@@ -328,7 +328,9 @@ function renderInfo(){
  for(const [id,show] of [["dungeonArenaRankLabel",arena&&!high],["dungeonArenaPositionLabel",arena&&!high],["dungeonHigherModeLabel",high],["dungeonHigherStageLabel",high],["dungeonBountyTierLabel",c.kind==="dungeon-bounty"],["dungeonMirrorWinsLabel",c.kind==="advanced-mirror"],["dungeonVoidFloorLabel",c.kind==="advanced-void"]])$(id).hidden=!show;
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
+let battleSimulationView=true;
 function safeStop(){
+ const picker=document.getElementById("gmBattleViewPicker");picker?.remove();
  const review=document.getElementById("gmAtlasReview");review?.__review?.dispose();review?.remove();
  serial++;
  const old=runtime;runtime=null;
@@ -342,8 +344,21 @@ function fail(reason){
 }
 async function start(){
  safeStop();
+ syncScenarioPanel();
  const ticket=serial;
  if(disabled){fail("3D 已停用，不影響正式遊戲。");return;}
+ if(entry().kind==="battle-battle"){
+  const picker=document.createElement('div');picker.id='gmBattleViewPicker';picker.className='gm-b-view-picker';
+  for(const [simulation,label] of [[true,'2.5D 戰鬥模擬'],[false,'戰場與生命顯示']]){const button=document.createElement('button');button.type='button';button.textContent=label;button.setAttribute('aria-pressed',String(battleSimulationView===simulation));button.onclick=()=>{battleSimulationView=simulation;start();};picker.append(button);}
+  document.getElementById('centerWorkspace').insertBefore(picker,document.querySelector('#centerWorkspace .stage'));
+  if(battleSimulationView){
+   scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 沙盒：B 方案，不影響正式角色、戰鬥或音效';
+   const abort=new AbortController();let simulation=null;runtime={dispose:()=>{abort.abort();simulation?.dispose();},setQuality:value=>simulation?.setQuality(value)};
+   try{const module=await import('./gm-battle-simulation.js?v=20261013-gm-b1');if(ticket!==serial)return;simulation=await module.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial){simulation.dispose();return;}}
+   catch(error){if(ticket===serial)fail('2.5D 模擬無法載入：'+error.message);}
+   return;
+  }
+ }
  if(!["engine","scenes","runtime","appearance"].every(kind=>window.Civilization3DLoader.ready(kind))){
   try{await window.Civilization3DLoader.load();}catch(error){if(ticket===serial)fail(error.message);return;}
  }

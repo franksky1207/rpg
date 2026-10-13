@@ -59,6 +59,7 @@ const assert=require("node:assert/strict");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),3);
   for(const title of ["副本作戰中心","懸賞戰準備區","競技場","鏡像戰紀錄","虛空幻境樓層"]){
     await page.locator("#caseList").getByRole("button",{name:title,exact:true}).click();
+    if(title==="2.5D 戰鬥模擬")await page.locator("#gmBattleViewPicker").getByRole("button",{name:"戰場與生命顯示",exact:true}).click();
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,null,{timeout:20000});
     assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
   }
@@ -167,8 +168,9 @@ const assert=require("node:assert/strict");
   await page.locator("#scenarioFree").click();
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().scenarioMode),"free");
   assert.equal(await page.locator("#caseList .center-case").count(),4);
-  for(const title of ["戰場與生命顯示","護盾防護演出","特殊遭遇演出","結算與戰利品"]){
+  for(const title of ["2.5D 戰鬥模擬","護盾防護演出","特殊遭遇演出","結算與戰利品"]){
     await page.locator("#caseList").getByRole("button",{name:title,exact:true}).click();
+    if(title==="2.5D 戰鬥模擬")await page.locator("#gmBattleViewPicker").getByRole("button",{name:"戰場與生命顯示",exact:true}).click();
     await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,null,{timeout:20000});
   }
   // Verify one shared readonly snapshot contract and independent GM test inputs.
@@ -280,6 +282,8 @@ const assert=require("node:assert/strict");
   await page.keyboard.press("Escape");
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),false);
   await page.setViewportSize({width:390,height:844});
+  await page.locator("#maximizePreview").scrollIntoViewIfNeeded();
+  const mobileScrollBefore=await page.evaluate(()=>scrollY);
   await page.locator("#maximizePreview").click();
   const mobile=await page.evaluate(()=>{
    const stage=document.querySelector(".center-workspace .stage").getBoundingClientRect();
@@ -298,7 +302,7 @@ const assert=require("node:assert/strict");
    return {maximized:window.Civilization3DTestCenter.isMaximized(),top:stage.top,bottom:stage.bottom,viewHeight:innerHeight,scrollY};
   });
   assert.equal(restore.maximized,false);
-  assert.ok(restore.top>=-75&&restore.top<restore.viewHeight*.3,"Mobile restore jumped away from 3D preview: "+JSON.stringify(restore));
+  assert.ok(Math.abs(restore.scrollY-mobileScrollBefore)<=2,"Mobile restore did not preserve scroll: "+JSON.stringify({restore,mobileScrollBefore}));
   assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
   assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
   console.log("PASS GM visual center: 8 categories plus all, 31 scenes, no engineering text, mobile maximize/restore",mobile,restore);

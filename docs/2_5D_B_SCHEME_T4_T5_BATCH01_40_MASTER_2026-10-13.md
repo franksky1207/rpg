@@ -1,3 +1,5 @@
+> 2026-10-13最新補查：本次優先B正式HUD／背景同步→A GM單一B入口→C原01～27補查均已工程完成。原T3～T5不重建；驗收與回退見2_5D_GM_BACKGROUND_BATCH01_27_EXECUTION_2026-10-13.md，27批台帳見3D_BATCH01_27_B_COMPATIBILITY_LEDGER_2026-10-13.md。最終HEAD Actions另核對；iPhone/美術/全面正式發布仍不冒認，28→29～40界線不變。
+
 > 收尾補充：已補鏡像等 owner 先計算後建 DOM 的有界中繼資料保留，以及背景／晚到返回 checkpoint 後只播放新動作。本機真實 Renderer：fallbacks=0、非 idle paced samples=13。T5-C 實際需要最小修正：同一次離線 checkpoint／正規化使用同一時間戳，避免毫秒遞增誤清 pending；正常遞增／真正10分鐘倒退／backup／schema檢查通過，獎勵公式與倒退門檻不動。b8f1ab9b 的Stage4此項失敗證據保留；新HEAD全部CI須另核對。
 
 ## 2026-10-13｜T3～T5 本機工程驗收完成；交付 CI 核對中，正式啟用／真機／美術未批准

@@ -6,7 +6,7 @@
     "index.html": {
       "archive": "development/retired-formal-previews/20261013/index.html",
       "beforeSHA256": "947295b186793b0fcc23f92937e7bf5d4e23b6a4202183678a2ba3569f7dff43",
-      "afterSHA256": "fcc46556a7bb2f2e80991963a59869ee1239cf25f9f8f2893a2ac312d816d716",
+      "afterSHA256": "9ac13ab9777340fb1e53039074056280bf6226a09e660ebd0d80c4afb5cd2cfb",
       "classification": "KEEP with authorized background/HUD recovery cache versions"
     },
     "ui.js": {
@@ -57,14 +57,20 @@
     "3d-test/test-center.js": {
       "archive": "development/retired-formal-previews/20261013/3d-test/test-center.js",
       "beforeSHA256": "31dabfce49ca8a769935226073bf6ec3cf56b35e3b8e597b23bee7d363d4cf30",
-      "afterSHA256": "89abf6912a13fa5c30295d1317179a47443fe53b3131e689fc0835a48a14bbd5",
-      "classification": "KEEP-SHARED with GM atlas review extension"
+      "afterSHA256": "f4ed858bd4106584a38683a15bc882f5682ca635438551e83fc5010e346ae506",
+      "classification": "KEEP-SHARED with authorized single-B GM sandbox integration"
     },
     "3d-test/index.html": {
       "archive": "development/retired-formal-previews/20261013/3d-test/index.html",
       "beforeSHA256": "26a373f4c66c9c42f5c7b01d0b3808b6da9490cf0d906c7b996c8197bd1153a6",
-      "afterSHA256": "3faa189dd7789201cb3f55475cd263a930c2c4d3a6d39581237756b9baedbe96",
-      "classification": "KEEP-SHARED with GM atlas review extension"
+      "afterSHA256": "8ad5303c8119f1ff9a7d2a40846243bc860208e261dd9b7145b60b55923405b7",
+      "classification": "KEEP-SHARED with authorized single-B GM sandbox integration"
+    },
+    "combatfx.js": {
+      "archive": "development/retired-formal-previews/20261013/combatfx.js",
+      "beforeSHA256": "c9ba676d410d39a5abb98d36035c861f2cbceb3012ad05293ef0a340755300c2",
+      "afterSHA256": "d20d954a836f6a0f75f957023778fa262816eb54ce1991dac4e6556244137e1f",
+      "classification": "FIX-SHARED authorized same-token HUD reconnection; original presentation source retained"
     }
   }
 }

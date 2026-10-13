@@ -18,6 +18,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  const titles=await page.locator('#caseList .center-case-label').allTextContents();
  for(const title of titles){
   await page.locator('#caseList').getByRole('button',{name:title,exact:true}).click();
+  if(title==="2.5D 戰鬥模擬")await page.locator("#gmBattleViewPicker").getByRole("button",{name:"戰場與生命顯示",exact:true}).click();
   await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'),null,{timeout:60000});
   assert.equal(await page.evaluate(()=>BABYLON.EngineStore.Instances.length),1,'Scene engine leak: '+title);
  }

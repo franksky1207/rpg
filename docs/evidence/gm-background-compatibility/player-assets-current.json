@@ -1,0 +1,196 @@
+{
+  "shell": "retired-preview-harness; current formal retirement separately tested",
+  "commit": null,
+  "url": "http://127.0.0.1:4173/",
+  "auth": "isolated SDK session fixture; no real account or cloud save operations",
+  "pageErrors": [],
+  "cases": [
+    "native pointer rotation, actual zoom controls and reset",
+    "formal readonly source, real PBR/skin animation, 10 reopens, mobile low LOD, landscape, actual context loss and release",
+    "authorized GM iframe formal capture, free fixture, three eras, high LOD, source isolation and close",
+    "failed GLB explicit geometry fallback"
+  ],
+  "homeAtReadyTransferredBytes": 5404525,
+  "homeTransferredBytes": 12289026,
+  "characterFirstReadyMs": 4413,
+  "nativeJointPoses": [
+    {
+      "bone": "forearm.L",
+      "degrees": 80,
+      "maxMovement": 0.6177600797885386,
+      "finite": true
+    },
+    {
+      "bone": "shin.L",
+      "degrees": 75,
+      "maxMovement": 0.7394570170041833,
+      "finite": true
+    },
+    {
+      "bone": "upper_arm.L",
+      "degrees": 45,
+      "maxMovement": 0.5932266779106057,
+      "finite": true
+    },
+    {
+      "bone": "thigh.L",
+      "degrees": 50,
+      "maxMovement": 0.8538828040800882,
+      "finite": true
+    },
+    {
+      "bone": "index_02.L",
+      "degrees": 55,
+      "maxMovement": 0.06095827224346195,
+      "finite": true
+    },
+    {
+      "bone": "head",
+      "degrees": 25,
+      "maxMovement": 0.09091427471604255,
+      "finite": true
+    },
+    {
+      "bone": "neck",
+      "degrees": 15,
+      "maxMovement": 0.08354061395609078,
+      "finite": true
+    }
+  ],
+  "characterFirstTransferredBytes": 9179145,
+  "characterFirst": {
+    "downloads": 2,
+    "downloadedBytes": 1983051,
+    "containers": 1,
+    "equipmentContainers": 0,
+    "failures": 0,
+    "cacheLimitBuffers": 8,
+    "cacheLimitBytes": 16777216,
+    "cachedBuffers": 2,
+    "cachedBytes": 1983051,
+    "pending": 0
+  },
+  "characterHotReadyMs": 3612,
+  "characterHotTransferredBytes": 0,
+  "mobile": {
+    "visualOnly": true,
+    "readOnly": true,
+    "assetKind": "skinned-glb",
+    "world": 1,
+    "modelDescriptors": [
+      {
+        "type": "weapon",
+        "present": true,
+        "world": 1,
+        "name": "破門短刃",
+        "visualKey": "破門短刃",
+        "quality": 0,
+        "level": 1,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "helmet",
+        "present": true,
+        "world": 1,
+        "name": "巷戰防護盔",
+        "visualKey": "巷戰防護盔",
+        "quality": 0,
+        "level": 1,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "armor",
+        "present": true,
+        "world": 1,
+        "name": "城防插板甲",
+        "visualKey": "城防插板甲",
+        "quality": 0,
+        "level": 1,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "shoes",
+        "present": true,
+        "world": 1,
+        "name": "街區突進靴",
+        "visualKey": "街區突進靴",
+        "quality": 0,
+        "level": 1,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      },
+      {
+        "type": "accessory",
+        "present": true,
+        "world": 1,
+        "name": "戰場識別牌",
+        "visualKey": "戰場識別牌",
+        "quality": 0,
+        "level": 1,
+        "enhancement": 0,
+        "assetKind": "geometry-fallback",
+        "assetId": null,
+        "fallback": "procedural-geometry",
+        "source": "read-only-appearance"
+      }
+    ],
+    "appearanceSource": "formal",
+    "equipmentStatus": {
+      "weapon": "geometry-fallback",
+      "helmet": "geometry-fallback",
+      "armor": "geometry-fallback",
+      "shoes": "geometry-fallback",
+      "accessory": "geometry-fallback"
+    },
+    "equipmentAssets": {},
+    "hidePolicy": "verified-covered-triangles-only",
+    "hiddenRegions": [],
+    "assetId": "player.foundation.v1.low",
+    "sha256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f",
+    "quality": "low",
+    "artStatus": "human-sci-fi-final-polish-awaiting-user-acceptance",
+    "rigContract": "cw.humanoid.rig.v1",
+    "sockets": {
+      "weapon": "socket.weapon.R",
+      "helmet": "socket.helmet",
+      "armor": "socket.armor",
+      "shoes": "socket.shoes.L",
+      "accessory": "socket.accessory.back"
+    },
+    "bones": 53,
+    "meshCount": 5,
+    "animationGroups": 1
+  },
+  "released": {
+    "assets": {
+      "downloads": 3,
+      "downloadedBytes": 2724647,
+      "containers": 0,
+      "equipmentContainers": 0,
+      "failures": 0,
+      "cacheLimitBuffers": 8,
+      "cacheLimitBytes": 16777216,
+      "cachedBuffers": 3,
+      "cachedBytes": 2724647,
+      "pending": 0
+    },
+    "engines": 0,
+    "jsHeapUsedBytes": 54977693
+  },
+  "passed": true
+}

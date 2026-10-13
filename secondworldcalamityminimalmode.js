@@ -54,7 +54,13 @@
   if(!run?.active||run.mode!=="continuous"||typeof html!=="string"||html.includes("openSecondWorldCalamityMinimalMode()"))return html;
   return html.replace(/<div class="calamity-combat-head"><span>([\s\S]*?)<\/span><\/div>/,`<div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span><button type="button" class="main-minimal-mode-enter" onclick="openSecondWorldCalamityMinimalMode()">極簡模式</button></div>`);
  }
- if(typeof originalPage==="function")window.secondWorldCivilizationCalamityPageHtml=function(){return injectEntry(originalPage.apply(this,arguments));};
+ if(typeof originalPage==="function"){
+  const decorated=function(){return injectEntry(originalPage.apply(this,arguments));};
+  // Keep the existing renderer discoverable by read-only diagnostics after
+  // the minimal-mode button decorator, without creating a second UI owner.
+  Object.defineProperty(decorated,"formalRenderer",{value:originalPage});
+  window.secondWorldCivilizationCalamityPageHtml=decorated;
+ }
 
  function applyEndState(run){
   retainedRun=run||retainedRun;
@@ -88,6 +94,7 @@
    async onEnd(run){retainedRun=run||liveRun()||retainedRun;if(userEnd)await userEnd(run);applyEndState(retainedRun);}
   });
  };
+ if(typeof originalContinuous==="function")Object.defineProperty(window.runSecondWorldCalamityContinuous,"formalRunner",{value:originalContinuous});
 
  registerAdapter();
  window.SECOND_WORLD_CALAMITY_MINIMAL_MODE_VERSION=VERSION;

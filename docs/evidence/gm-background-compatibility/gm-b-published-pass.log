@@ -1,0 +1,4 @@
+PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 1280, height: 800 }
+PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 390, height: 844 }
+PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 844, height: 390 }
+PASS real authorized GM B iframe, formal identity/save isolation and return

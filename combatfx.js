@@ -347,6 +347,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
     if(evt.type==="dodge"){
      const target=standardEventTarget(evt),attacker=standardOtherTarget(target);
      directMotion(attacker);await sleep(impactDelay);
+     if(!p.active)break;
      directPulse(target,"閃避");
      syncCombatHpDom();
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
@@ -356,6 +357,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
     if(evt.type==="attack"){
      const actor=standardEventActor(evt),target=standardEventTarget(evt);
      directMotion(actor);await sleep(impactDelay);
+     if(!p.active)break;
      const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0)),actualDamage=Math.max(0,Math.floor(Number(evt.actualDamage)||0));
      if(target==="player"){
       if(shieldAbsorbed>0)p.playerShield=Math.max(0,p.playerShield-shieldAbsorbed);
@@ -379,7 +381,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    }
    syncCombatHpDom();
    if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),{type:"end"});
-   await sleep(endDelay);
+   if(p.active)await sleep(endDelay);
    
    return window.getCombatPresentationSnapshot();
   }finally{

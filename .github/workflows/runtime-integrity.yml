@@ -122,9 +122,13 @@ jobs:
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
+          node tests/runtime/cross-era-background-browser.js
+          BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js
           node tests/runtime/thirdworld-background-browser.js
           BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js
+          W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-battle-simulation-browser.js
           node tests/runtime/gm-atlas-review-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t4-preview-retirement-browser.js 2>&1 | tee -a runtime-integrity-report.txt

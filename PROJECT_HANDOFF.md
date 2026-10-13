@@ -1,3 +1,11 @@
+## 2026-10-13｜2.5D GM／背景同步／01～27補查工程完成；收尾HEAD Actions另核對
+- 起始main `b2e4f3c69a387f7c86412ed4cd4687f6b13a6552`；首修`c846461b`，其三項CI失敗已讀log並修源鎖／舊cache斷言，原失敗證據保留，不稱該SHA全綠。最終交付HEAD由本任務最終回報與GitHub Actions核對。
+- A：原C-15-BATTLE整併「2.5D 戰鬥模擬」，八分類31案例保留；直接重用B Renderer/Fixture/Playback，非iframe比較頁，沒有A/C切換。原戰場／atlas與正式唯讀來源仍可用；五戰況、三LOD、混穿空槽、播放控制、三視窗／授權iframe／實際發布包均實跑。修共用SDK重載、取消持有與手機最大化還原位置。
+- B：背景正式計算原本仍在跑；真正重現是DOM重建後同token仍綁舊screen，敵我HP／盾／極簡與checkpoint呈現失同步。限定同token重綁、正式計數同步、final提示退出、原呈現耗時計入補算、背景取消過期視覺不重播；persisted頁面保留高維run，真離頁清理。原公式/RNG/掉落/結算/存檔不改。
+- 真Chromium/WebKit桌機與手機尺寸：高維逐擊／護盾／背景3循環／極簡／停止重開／GM關閉／真離頁／B故障文字回退通過；銀河／宇宙／虛空真背景與極簡通過，虛空原機制不改。
+- C：27批逐項台帳、十五factory反向consumer、19登錄素材、53骨／9掛點／三LOD、原32五槽組合／100次GPU釋放、原玩家／裝備／GM31、原source/publish驗證完成；必要診斷對齊真owner，無共享factory誤刪。詳見docs/3D_BATCH01_27_B_COMPATIBILITY_LEDGER_2026-10-13.md與docs/2_5D_GM_BACKGROUND_BATCH01_27_EXECUTION_2026-10-13.md，機器證據在docs/evidence/gm-background-compatibility/。
+- iPhone真App切換、真GPU／熱／雲端真帳號與人工美術仍需真人驗收；FULL_3D_AVAILABLE=false/formalReleased=false不解除，G001～G020／40圖與批准狀態不動。下一正式階段28既有成果→29～40；回退反序git revert本任務提交，不清玩家資料。下方施工中／舊全3D描述保留歷史。
+
 ## 2026-10-13｜背景／GM／01～27 補查連續施工中（未全部完工）
 - 本任務授權直接修正、測試、提交及推送 main；順序 B → A → C，無需每個小修重新批准。起始 main `b2e4f3c69a387f7c86412ed4cd4687f6b13a6552`，14項 exact-HEAD Actions 成功。
 - 使用者最新確認：高維背景有正式結算，敵我 HUD／極簡數字不同步，補算提示殘留；不得誤寫成計算完全停止。已實際重現舊 DOM presentation token 繼續扣血但新 DOM 停滿血，新增同 token／舊 DOM 已斷開的限定重綁，不改公式／獎勵。

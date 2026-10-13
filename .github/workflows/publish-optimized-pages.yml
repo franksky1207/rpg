@@ -86,6 +86,18 @@ jobs:
       # candidate, game manifest and release acceptance were finalized above.
       - name: Stage SHA-verified B3 visual preview separately
         run: node scripts/stage-hybrid-preview.cjs
+      - name: Verify the published GM B sandbox closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4181 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/rpg-gm-b-publish.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4181/3d-test/ >/dev/null; then break; fi
+            sleep 0.3
+          done
+          RUNTIME_SMOKE_URL=http://127.0.0.1:4181/index.html node tests/runtime/gm-battle-simulation-browser.js
       - name: Check preview entry and production homepage
         shell: bash
         run: |

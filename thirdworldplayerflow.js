@@ -225,7 +225,7 @@
   node.className="notice";
   node.setAttribute("role","status");
   const completed=whole(activeContext.catchUpCompleted);
-  node.innerHTML=`<b>正在快速補算背景進度</b><div class="muted" style="margin-top:4px">${completed>0?`已快速補算 ${fmt(completed)} 場；`:""}戰線資料會依共用 Fast Catch-up checkpoint 更新。</div>`;
+  node.innerHTML=`<b>正在快速補算背景進度</b><div class="muted" style="margin-top:4px">${completed>0?`已快速補算 ${fmt(completed)} 場；`:""}背景進度同步完成後會恢復戰鬥畫面。</div>`;
   if(!existing){const head=screen.querySelector(".third-world-combat-head");if(head?.after)head.after(node);else screen.prepend(node);}
   return true;
  }
@@ -254,7 +254,13 @@
  function registerEnvironmentSync(){
   if(typeof window.backgroundProgressOnEnvironmentChange!=="function")return false;
   window.backgroundProgressOnEnvironmentChange(isBackground=>{
-   if(isBackground||!activeContext)return;
+   if(!activeContext)return;
+   if(isBackground){
+    // The core has already settled this step. Retire only its presentation;
+    // returning to the page must not replay old hits or sound cues.
+    if(activeContext.presenting===true)window.clearCombatPresentation?.("third-world-background-skip");
+    return;
+   }
    if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("third-world")===true)beginCatchUpUi();
    else syncMinimal();
   });

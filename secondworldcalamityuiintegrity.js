@@ -28,7 +28,10 @@
  ];
  required.forEach(name=>{if(typeof window[name]!=="function")fail("UI_API",name+" 未載入");});
  try{
-  const pageSource=Function.prototype.toString.call(window.secondWorldCivilizationCalamityPageHtml);
+  const page=window.secondWorldCivilizationCalamityPageHtml;
+  const decoratorSource=Function.prototype.toString.call(page);
+  if(page.formalRenderer&&(!/injectEntry/.test(decoratorSource)||!/originalPage\.apply/.test(decoratorSource)))fail("PAGE_DECORATOR_OWNER","極簡按鈕不得更換正式renderer");
+  const pageSource=Function.prototype.toString.call(page.formalRenderer||page);
   const startSource=Function.prototype.toString.call(window.startSecondWorldCalamityUI);
   const reviewSource=Function.prototype.toString.call(window.startUniverseCalamityReview);
   const prepareSource=Function.prototype.toString.call(window.prepareSecondWorldCivilizationCalamityEntry);

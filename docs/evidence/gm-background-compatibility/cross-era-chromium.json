@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "reports": [
+    {
+      "mode": "galaxy",
+      "engine": "chromium",
+      "start": 0,
+      "after": 15,
+      "minimal": "第 13 場",
+      "backgroundCycles": 2,
+      "stopped": true
+    },
+    {
+      "mode": "universe",
+      "engine": "chromium",
+      "start": 0,
+      "after": 14,
+      "minimal": "第 8 場",
+      "backgroundCycles": 2,
+      "stopped": true
+    },
+    {
+      "mode": "void",
+      "engine": "chromium",
+      "start": 1,
+      "after": 15,
+      "minimal": "13 層",
+      "backgroundCycles": 2,
+      "stopped": true
+    }
+  ]
+}

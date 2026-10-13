@@ -35,6 +35,7 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/3d-test/ >/dev/null; then break; fi
             sleep 0.3
           done
+          node tests/runtime/gm-battle-simulation-browser.js
           node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee gm-3d-browser-report.txt
 
       - name: Upload GM browser diagnostic log
