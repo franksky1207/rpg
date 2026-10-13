@@ -7,6 +7,8 @@ const listeners={};const window={CivilizationCombatEvents:events,addEventListene
 vm.runInNewContext(fs.readFileSync('3d-test/t3a-hybrid-policy.js','utf8'),{window});
 const b=window.CivilizationFormalHybridBridge,p=window.CivilizationHybridBattlePolicy;
 assert.equal(b.version,1);assert.equal(b.supportedModes.length,9);
+assert.equal(handler,null,'Formal bridge must not consume a subscriber slot before visuals attach');
+assert.equal(b.diagnostics().subscribed,false);
 assert.equal(b.monitor(),true);
 let calls=0;
 const event=(mode='main',world=1,seq=1)=>({lane:'formal',schema:1,battleId:'b1',seq,mode,world,availability:'authoritative',expired:false,valid:true,current:true});
