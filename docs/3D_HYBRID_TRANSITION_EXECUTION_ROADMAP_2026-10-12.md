@@ -295,3 +295,9 @@ fallback美術、A低中專屬atlas、獨立效果clip未交付；真裝置／�
 - 針對 HEAD `f61d0da335aac4e6e7425a393d5666a91a8fc4c8` 的 B3 Actions **確認 failure**，Job `115049663064` 指向 B2 inventory SHA 實際 `4a1f64bb446326185381b0f1259961a92f4edf58709b94bb32b5ca1a3469efb4`、manifest 舊值 `da5f7e932c2e6c514a4acff22d4af3f08cbe7a0536b91590f17de19d5b577b93`。根因是 T3-A 正式 HTML 授權後 B2 inventory 變更，B3 上游鎖未同步；非戰鬥計算失敗。
 - 已將 `t2b3-v1/manifest.json` B2 SHA、`assets.mjs` manifest SHA 與 `inventory.json` 逐檔 SHA／bytes 鏈修正，最新清冊提交 `165f80a429f8c677ce6ff32b5ea3e05a60836ce5`；修正前後保留 `publish=false`、原有 source lock 與正式戰鬥 Owner，不刪任何美術。新 exact HEAD Actions 需等結果核准，不能以提交即等於全部 success。
 - 已重新建立 T3-A 自動監控：發現 CI failures 則讀日誌並修正、全部應跑 Gate 成功再告知。**本紀錄不冒稱 T3-A 已全面完成**；正式設定 UI、切換持有者、模式可用性仍待更深度驗證與後續接線。
+
+## 2026-10-13｜T3-B 最新 main 重新稽核與繼續施工（尚未結案）
+- 使用者詢問是否 T3-B 已結案。經 latest main 程式核對：`CivilizationFormalHybridBridge` 是正式事件唯讀／lazy 訂閱的安全基礎；`3d-test/mode-foundation.js` 仍 `FULL_3D_AVAILABLE=false`。正式 `index.html` 沒有載入 B 的正式 Renderer。隔離 `development/hybrid-comparison/t2b3-v1/renderer.mjs` **明確依賴** `fixture-input.mjs` 的 `isVerifiedInput(context.input)`（GM fixture 身分與輸入），不能把這個 A/B/C 展示直接當成正式玩家戰鬥 Renderer。
+- 已補強 `tests/runtime/t3b-formal-bridge.cjs` 的**發布防火牆**，明確測試隔離 Renderer 仍須 fixture、正式頁不直接引用隔離 Renderer／fixture、正式模式仍鎖住、正式 bridge 不擁有 Renderer 的發布權。這是安全增量施工，**不代表**正式 B 畫面已可用。
+- T3-B 待完成項目（依序）：(1) 獨立的正式 B visual adapter：只讀正式事件、正式玩家外觀／敵人身份／正式場次與現有 2D HUD，**不能依賴 GM fixture 驗證器**；(2) 已授權正式發布、完備 SHA 與 license 的 B 玩家 GLB／敵方 atlas／背景素材，需透過既有發布資產 registry 而非 `development/` 開發檔載入；(3) 把 Renderer 僅掛在真正正式戰鬥容器、按需求 lazy attach，切頁/登出/中斷/後台/Context Lost 保證完整釋放；(4) 銀河／宇宙／高維、銀河回顧、異宇宙、全部合法副本與特殊模式覆蓋矩陣及文字回退；(5) 正式 State/收益/音樂/GM/雲端/連戰的瀏覽器與手機回歸。前置素材尚未完成時，不得解鎖 `FULL_3D_AVAILABLE`。
+- 最新 exact-HEAD Actions 仍須獨立核對；正在跑的 CI 不能當成完工。本節是**未完成實情與下一步施工契約**，不將 T3-B 違實標記 completed。
