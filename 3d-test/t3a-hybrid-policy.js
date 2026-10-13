@@ -41,9 +41,11 @@ function allowed(e){
 }
 function receive(e){
  if(!allowed(e)){rejected++;return;}
- if(e.checkpoint){lastBattle=e.battleId;lastSeq=e.seq;}
- else{if(lastBattle!==e.battleId){lastBattle=e.battleId;lastSeq=-1;}
-  if(e.seq<=lastSeq){rejected++;return;}lastSeq=e.seq;}
+ if(lastBattle!==e.battleId){lastBattle=e.battleId;lastSeq=-1;}
+ // Checkpoints are not exempt from monotonic sequence validation: a stale
+ // checkpoint must never rewind the formal visual session.
+ if(e.seq<=lastSeq){rejected++;return;}
+ lastSeq=e.seq;
  observed++;
  if(!sink)return;
  // Observe only. Even hostile/throwing visual sinks cannot change event owners.
