@@ -988,7 +988,7 @@
         "classification": "KEEP-SHARED with authorized single-B GM sandbox integration"
       },
       "combatfx.js": {
-        "archive": "development/retired-formal-previews/20261013/combatfx.js",
+        "archive": "development/retired-formal-previews/20261013/combatfx.source.txt",
         "beforeSHA256": "c9ba676d410d39a5abb98d36035c861f2cbceb3012ad05293ef0a340755300c2",
         "afterSHA256": "d20d954a836f6a0f75f957023778fa262816eb54ce1991dac4e6556244137e1f",
         "classification": "FIX-SHARED authorized same-token HUD reconnection; original presentation source retained"
