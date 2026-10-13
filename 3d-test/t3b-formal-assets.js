@@ -6,7 +6,7 @@ const slots=Object.freeze(["weapon","helmet","armor","shoes","accessory"]);
 const tiers=Object.freeze(["low","medium","high"]);
 const blocked=reason=>Object.freeze({ready:false,reason,asset:null});
 function safePath(v){return typeof v==="string"&&!v.startsWith("/")&&!v.includes("..")&&!v.includes(":")&&v.startsWith("assets/");}
-function valid(row){return !!row&&safePath(row.path)&&/^[a-f0-9]{64}$/.test(row.sha256||"")&&Number.isSafeInteger(row.bytes)&&row.bytes>0;}
+function valid(row){return !!row&&safePath(row.path)&&/^[a-f0-9]{64}$/.test(row.sha256||"")&&Number.isSafeInteger(row.bytes)&&row.bytes>0&&typeof row.license==="string"&&row.license.trim().length>0;}
 function identityMatch(row,details){
  const id=row.identity;
  return !!id&&id.world===details.world&&id.chapter===details.chapter&&id.area===details.area&&
