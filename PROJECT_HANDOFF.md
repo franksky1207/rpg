@@ -1,3 +1,5 @@
+> CI收尾：0059bb05的Runtime正式背景／HP／極簡回歸已通過，但授權GM iframe首張來源畫格逾時。已保留log並修正測試前置：可見舞台＋實際首張frames，再播放，原斷言及逾時不放寬；新HEAD待Actions驗證，詳見本次施工紀錄。
+
 ## 2026-10-13｜2.5D GM／背景同步／01～27補查工程完成；收尾HEAD Actions另核對
 - 起始main `b2e4f3c69a387f7c86412ed4cd4687f6b13a6552`；首修`c846461b`，其三項CI失敗已讀log並修源鎖／舊cache斷言，原失敗證據保留，不稱該SHA全綠。最終交付HEAD由本任務最終回報與GitHub Actions核對。
 - A：原C-15-BATTLE整併「2.5D 戰鬥模擬」，八分類31案例保留；直接重用B Renderer/Fixture/Playback，非iframe比較頁，沒有A/C切換。原戰場／atlas與正式唯讀來源仍可用；五戰況、三LOD、混穿空槽、播放控制、三視窗／授權iframe／實際發布包均實跑。修共用SDK重載、取消持有與手機最大化還原位置。

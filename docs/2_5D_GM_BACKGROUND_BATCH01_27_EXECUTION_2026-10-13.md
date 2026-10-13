@@ -50,3 +50,7 @@ iPhone：第三紀元GM背景開啟→切其他App數分鐘→返回，補算完
 手機與桌機GM：新B五戰況、三品質與混穿空槽、五播放控制、最大化還原／返回，以及原31案例／正式唯讀快照。正式帳號雲端往返、實體GPU／弱網／30分鐘發熱与美術最終批准仍待真人，不冒認。
 
 FULL_3D_AVAILABLE=false、formalReleased=false、Stage40未批准。回退反序git revert本任務提交，連同HTML cache-bust／manifest／source lock恢復，不reset main、不刪存檔。下一正式階段：承接28既有20套／40概念圖與五槽成果，再29～40。
+
+## 最終 CI iframe 檢查修正
+
+0059bb05 Runtime 的三紀元 Chromium／WebKit、W3逐擊HP／盾／極簡／視覺故障與GM三視窗均通過，但授權iframe來源畫格等待逾時；原log收錄`ci-runtime-0059-failure.log`。原檢查僅等待素材載入dataset，未確認首張實際繪製。授權iframe測試改為展開可見舞台，先驗證Renderer實際frames>0，再操作播放，維持原15秒sourceFrames>0、正式身份／save不變斷言，並補完整失敗診斷。本機實際授權iframe重跑通過；這是瀏覽器測試前置修正，不改播放引擎或正式遊戲，不延長逾時。CI具體觸發條件未完全證實，最新修正HEAD仍須確認。GM工作流程補該測試檔paths，維持統一既有工作流程。

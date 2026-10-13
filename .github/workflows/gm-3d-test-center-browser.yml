@@ -6,6 +6,7 @@ on:
       - '3d-test/**'
       - 'gm3dprototype.js'
       - 'tests/runtime/gm-3d-test-center-browser.js'
+      - 'tests/runtime/gm-battle-simulation-browser.js'
       - 'tests/runtime/3d-player-snapshot-contract.js'
       - '.github/workflows/gm-3d-test-center-browser.yml'
   workflow_dispatch:
