@@ -7,6 +7,7 @@ on:
       - 'gm3dprototype.js'
       - 'tests/runtime/gm-3d-test-center-browser.js'
       - 'tests/runtime/gm-battle-simulation-browser.js'
+      - 'tests/runtime/3d-gm-loader-browser.js'
       - 'tests/runtime/3d-player-snapshot-contract.js'
       - '.github/workflows/gm-3d-test-center-browser.yml'
   workflow_dispatch:
@@ -36,6 +37,7 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/3d-test/ >/dev/null; then break; fi
             sleep 0.3
           done
+          node tests/runtime/3d-gm-loader-browser.js
           node tests/runtime/gm-battle-simulation-browser.js
           node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee gm-3d-browser-report.txt
 

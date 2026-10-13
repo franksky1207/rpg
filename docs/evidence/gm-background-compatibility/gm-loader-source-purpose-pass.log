@@ -1,0 +1,18 @@
+PASS GM loader retry, 8 categories / 31 real scenes, decoration isolation and release { width: 1280, height: 800 } {
+  modules: {
+    '/vendor/babylonjs/7.54.3/babylon.js': 1,
+    '/3d-test/prototype-engine.js': 2,
+    '/3d-test/runtime.js': 1,
+    '/3d-test/appearance-snapshot.js': 1
+  },
+  sourceReads: { '/3d-test/appearance-snapshot.js': 1 }
+}
+PASS GM loader retry, 8 categories / 31 real scenes, decoration isolation and release { width: 390, height: 844 } {
+  modules: {
+    '/vendor/babylonjs/7.54.3/babylon.js': 1,
+    '/3d-test/prototype-engine.js': 2,
+    '/3d-test/runtime.js': 1,
+    '/3d-test/appearance-snapshot.js': 1
+  },
+  sourceReads: { '/3d-test/appearance-snapshot.js': 1 }
+}

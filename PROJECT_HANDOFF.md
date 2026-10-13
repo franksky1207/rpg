@@ -1,3 +1,5 @@
+> 最新CI收尾：e2c29bdd的13項流程已成功；Runtime末段原loader誤將immutable Fixture源文字驗證fetch計為重複腳本。已保留失敗log，精確分別要求腳本一次、必要源文字一次；發布前候選零次與安全回退亦在兩視窗通過，原SHA驗證和模組單次斷言保留。收尾提交待最新HEAD Actions，詳施工紀錄。
+
 > CI收尾：0059bb05的Runtime正式背景／HP／極簡回歸已通過，但授權GM iframe首張來源畫格逾時。已保留log並修正測試前置：可見舞台＋實際首張frames，再播放，原斷言及逾時不放寬；新HEAD待Actions驗證，詳見本次施工紀錄。
 
 ## 2026-10-13｜2.5D GM／背景同步／01～27補查工程完成；收尾HEAD Actions另核對

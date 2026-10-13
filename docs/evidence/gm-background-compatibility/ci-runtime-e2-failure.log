@@ -1,0 +1,341 @@
+runtime-integrity	Run real browser runtime smoke	﻿2026-10-13T14:23:19.1769477Z ##[group]Run set -o pipefail
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1769881Z [36;1mset -o pipefail[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1770261Z [36;1mpython3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1770672Z [36;1mserver_pid=$![0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1770953Z [36;1mtrap 'kill "$server_pid" 2>/dev/null || true' EXIT[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1771270Z [36;1mfor i in {1..20}; do[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1771638Z [36;1m  if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1772043Z [36;1m  sleep 0.25[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1772250Z [36;1mdone[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1772671Z [36;1mnode tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1773239Z [36;1mnode tests/runtime/combat-events-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1773650Z [36;1mnode tests/runtime/combat-events-owner-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1774050Z [36;1mnode tests/runtime/cross-era-background-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1774549Z [36;1mBACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1775040Z [36;1mnode tests/runtime/thirdworld-background-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1775521Z [36;1mBACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1776547Z [36;1mW3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1777124Z [36;1mnode tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1777642Z [36;1mnode tests/runtime/gm-battle-simulation-browser.js[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1778163Z [36;1mnode tests/runtime/gm-atlas-review-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1778822Z [36;1mnode tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1779521Z [36;1mnode tests/runtime/t4-preview-retirement-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1780217Z [36;1mnode tests/runtime/3d-formal-snapshots-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1780879Z [36;1mnode tests/runtime/3d-preview-dom-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1781500Z [36;1mnode tests/runtime/3d-gm-loader-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1782139Z [36;1mnode tests/runtime/3d-mode-browser-regression.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1782775Z [36;1mnode tests/runtime/3d-glb-validation.cjs 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1783409Z [36;1mnode tests/runtime/3d-player-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1784099Z [36;1mnode tests/runtime/3d-equipment-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1784963Z [36;1mnode tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1785855Z [36;1mnode tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1786522Z [36;1mnode tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1787212Z [36;1mnode tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1787955Z [36;1mnode tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1788751Z [36;1mnode tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1789522Z [36;1mnode tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1790298Z [36;1mnode tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1791331Z [36;1mnode tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1792196Z [36;1mnode tests/runtime/first-world-target-context-ui-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1793061Z [36;1mnode tests/runtime/first-world-target-context-combat-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1793969Z [36;1mnode tests/runtime/first-world-target-context-continuous-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1794940Z [36;1mnode tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1796328Z [36;1mnode tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1797291Z [36;1mnode tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1798188Z [36;1mnode tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1799081Z [36;1mnode tests/runtime/first-world-target-context-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1799961Z [36;1mnode tests/runtime/first-world-target-context-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1800784Z [36;1mnode tests/runtime/reincarnation-rerun-entry-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1801540Z [36;1mnode tests/runtime/reincarnation-rerun-world1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1802300Z [36;1mnode tests/runtime/reincarnation-rerun-world2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1803046Z [36;1mnode tests/runtime/reincarnation-rerun-world3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1803848Z [36;1mnode tests/runtime/thirdworld-rerun-settlement-stage-regression.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1804665Z [36;1mnode tests/runtime/reincarnation-rerun-batch5-closure.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1805435Z [36;1mnode tests/runtime/reincarnation-rerun-batch5-e2e-regression.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1806477Z [36;1mnode tests/runtime/reincarnation-overlevel-batch6-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1807278Z [36;1mnode tests/runtime/offline-sample-provenance-opt4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1808223Z [36;1mnode tests/runtime/player-batch-upgrades-batch6-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1809042Z [36;1mnode tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1809819Z [36;1mnode tests/runtime/reincarnation-batch6-closure.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1810515Z [36;1mnode tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1811216Z [36;1mnode tests/runtime/save-level-migration-regression.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1811942Z [36;1mnode tests/runtime/save-schema17-compatibility-matrix.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1812694Z [36;1mnode tests/story/reincarnation-three-era-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1813441Z [36;1mnode tests/runtime/recent-optimization-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1814247Z [36;1mnode tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1815195Z [36;1mnode tests/runtime/calamity-terminal-dynamic-opt-batch2.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1816181Z [36;1mnode tests/runtime/calamity-shared-ui-policy-opt-batch3.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1817000Z [36;1mnode tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1817747Z [36;1mnode tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1818471Z [36;1mnode tests/runtime/breakthrough-final-damage-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1819266Z [36;1mnode tests/runtime/gm-breakthrough-management-batch7-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1820102Z [36;1mnode tests/runtime/gm-character-breakthrough-batch7-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1820964Z [36;1mnode tests/runtime/gm-alternate-universe-management-batch7-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1821847Z [36;1mnode tests/runtime/gm-alternate-universe-benchmark-batch7-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1822712Z [36;1mnode tests/runtime/alternate-universe-title-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1823526Z [36;1mnode tests/runtime/gm-formal-writer-convergence-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1824371Z [36;1mnode tests/runtime/reincarnation-batch7-closure.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1825094Z [36;1mnode tests/runtime/batch7-post-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1826103Z [36;1mnode tests/runtime/batch7-post-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1826859Z [36;1mnode tests/runtime/batch7-post-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1827583Z [36;1mnode tests/runtime/reincarnation-reset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1828375Z [36;1mnode tests/runtime/reincarnation-permanent-gear-carryover-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1829257Z [36;1mnode tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1830107Z [36;1mnode tests/runtime/equipment-world-semantics-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1830895Z [36;1mnode tests/runtime/reincarnation-transaction-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1831751Z [36;1mnode tests/runtime/reincarnation-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1832464Z [36;1mnode tests/runtime/reincarnation-opt-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1833200Z [36;1mnode tests/runtime/reincarnation-opt-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1833932Z [36;1mnode tests/runtime/reincarnation-opt-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1834656Z [36;1mnode tests/runtime/special-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1835346Z [36;1mnode tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1836284Z [36;1mnode tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt[0m
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1899460Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.1899809Z ##[endgroup]
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:23:19.2061131Z curl: (7) Failed to connect to 127.0.0.1 port 4173 after 0 ms: Couldn't connect to server
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:38.9067789Z PASS actual formal renderer code, original registered player GLB, compatible retargeted B2 animation and six atlas clips, endpoints/midpoints, 32 visible equipment subsets, 100 actual engine switches/dispose, actual formal core/presentation-owner integration, State/save/audio unchanged; test-only approval, SwiftShader
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:41.0706980Z PASS audio: actual galaxy ordinary
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:41.1988565Z PASS audio: actual galaxy elite
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:41.3274264Z PASS audio: actual galaxy Boss
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:41.4485843Z PASS audio: actual galaxy ordinary
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:41.5768972Z PASS audio: actual galaxy Boss
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:41.8601546Z PASS audio: actual galaxy continuous two rounds/manual stop
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:42.0554335Z PASS audio: actual universe Boss single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:42.1768325Z PASS audio: actual higher run/start/battle/manual stop
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:42.4117014Z PASS audio: actual galaxy bounty single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:25:43.1313315Z PASS audio: actual galaxy arena single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:26.9267330Z PASS audio: actual galaxy mirror 15 rounds/settlement
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:27.1982166Z PASS audio: actual galaxy void/manual exit
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:27.4507498Z PASS audio: actual galaxy calamity/single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:27.6282229Z PASS audio: actual universe calamity/single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:27.9383256Z PASS audio: actual higher arena/single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:28.1064829Z PASS audio: actual alternate universe/formal
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:28.3210385Z PASS audio: actual higher player galaxy review/return scene
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:28.5341664Z PASS audio: actual higher review/read-only
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:28.7723991Z PASS audio: actual higher player universe review/read-only return scene
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:29.3354198Z PASS audio: actual higher player galaxy calamity review/return scene
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:29.5427658Z PASS audio: actual higher player universe calamity review/return scene
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:29.7204397Z PASS audio: actual universe bounty single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:26:30.0399133Z PASS audio: actual universe arena single
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.2633625Z PASS audio: actual universe mirror 15 rounds/settlement
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.5307120Z PASS audio: actual universe void/manual exit
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.6322670Z PASS audio: native controller galaxy/normal
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.6721713Z PASS audio: native controller galaxy/elite
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.7174755Z PASS audio: native controller galaxy/boss
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.7673640Z PASS audio: native controller universe/boss
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.8171788Z PASS audio: native controller higher/higher-stage
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.8719991Z PASS audio: native controller galaxy/bounty
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.9176978Z PASS audio: native controller universe/bounty
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:12.9670811Z PASS audio: native controller galaxy/arena
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.0198906Z PASS audio: native controller universe/arena
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.0676856Z PASS audio: native controller higher/arena-fixed
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.1226945Z PASS audio: native controller galaxy/mirror
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.1672079Z PASS audio: native controller universe/mirror
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.2178041Z PASS audio: native controller galaxy/void
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.2677184Z PASS audio: native controller universe/void
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.3162614Z PASS audio: native controller galaxy/calamity
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.3671111Z PASS audio: native controller universe/calamity
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.4262685Z PASS audio: native controller higher/alternateBattle
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.4887581Z PASS audio: music toggle preserves run
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.5412953Z PASS audio: native GM preview isolation/restoration
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.5899296Z PASS audio: simulated visibility/native stop-resume
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.6412626Z PASS audio: actual main presentation exception/cleanup
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.8378553Z PASS audio: actual main missing result modal/cleanup
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:13.9015935Z PASS audio: actual higher-to-galaxy reincarnation/local backup transaction
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:17.4467630Z PASS audio: actual reload first galaxy battle/native gesture unlock
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7356781Z PASS audio: actual post-reincarnation galaxy Boss
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7392875Z PASS T1-C actual mode observations / hostile consumers / native audio {
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7396148Z   modes: {
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7396538Z     'calamity:1:': 13,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7396908Z     'main:1:normal': 6,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7397312Z     'main:1:': 182,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7398038Z     'main:1:elite': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7398637Z     'main:1:boss': 2,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7399027Z     'main:2:boss': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7399410Z     'main:2:': 14,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7399769Z     'main:3:': 2,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7400148Z     'bounty:1:bounty': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7400543Z     'bounty:1:': 15,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7400916Z     'arena:1:normal': 3,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7401313Z     'arena:1:': 66,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7401662Z     'mirror:1:': 1133,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7402015Z     'void:1:': 8,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7402364Z     'calamity:2:': 15,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7402738Z     'arena:3:fixed': 2,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7403106Z     'arena:3:': 47,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7403699Z     'alternate:3:au-0-1-e8855af8-7508-496b-a4e8-9d5f507a926e': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7408041Z     'alternate:3:': 12,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7409778Z     'review:1:boss': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7410872Z     'review:1:': 304,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7411600Z     'review:3:': 4,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7412183Z     'review:2:boss': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7412735Z     'review:2:': 27,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7413116Z     'review:1:calamity': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7413508Z     'review:2:calamity': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7413891Z     'bounty:2:bounty': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7414261Z     'bounty:2:': 11,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7414613Z     'arena:2:normal': 2,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7414991Z     'arena:2:': 59,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7415323Z     'mirror:2:': 1094,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7415935Z     'void:2:': 10
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7416274Z   },
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7416572Z   types: {
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7416907Z     snapshot: 1894,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7417265Z     'battle-start': 67,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7417639Z     'combat-action': 859,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7418033Z     'actor-defeated': 67,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7418405Z     outcome: 66,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7418731Z     settlement: 12,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7419224Z     'presentation-ended': 70,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7419765Z     'presentation-skipped': 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7420160Z     cancelled: 4
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7420466Z   },
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7420744Z   invalid: 0,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7421053Z   settlements: [
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7421550Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-12:14',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7422239Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-13:21',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7422906Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-14:24',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7423990Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-15:11',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7424666Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-16:22',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7425332Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-17:7',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7426231Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-20:7',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7426893Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-44:57',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7427555Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-50:17',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7428217Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-78:57',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7428874Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-80:6',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7429522Z     'combat-v1-32b8690d-e9f3-40b0-b271-1e4df298dc8f-81:6'
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7430017Z   ],
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7430308Z   maxQueue: 127
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7430617Z }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:19.7441780Z Audio native browser PASS: 50 cases; real galaxy entries; playing events; one voice; no cloud access
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:23.5450250Z PASS actual W3 fixed/varied three-stage State parity and 200x5 AU identity fixtures { width: 1280, height: 800 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:25.9472327Z PASS actual W3 fixed/varied three-stage State parity and 200x5 AU identity fixtures { width: 390, height: 844 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:30.6734454Z PASS actual cross-era background/minimal galaxy chromium
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:34.4032578Z PASS actual cross-era background/minimal universe chromium
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:38.0037579Z PASS actual cross-era background/minimal void chromium
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:52.1026819Z PASS actual cross-era background/minimal galaxy webkit
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:27:57.1703951Z PASS actual cross-era background/minimal universe webkit
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:28:02.2243132Z PASS actual cross-era background/minimal void webkit
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:28:13.4617028Z PASS W3 actual background/HUD/minimal chromium { width: 1280, height: 800 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:28:22.2524718Z PASS W3 actual background/HUD/minimal chromium { width: 390, height: 844 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:28:38.7983523Z PASS W3 actual background/HUD/minimal webkit { width: 1280, height: 800 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:28:50.8100968Z PASS W3 actual background/HUD/minimal webkit { width: 390, height: 844 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:29:01.8769063Z PASS W3 actual background/HUD/minimal chromium { width: 1280, height: 800 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:29:10.7298909Z PASS W3 actual background/HUD/minimal chromium { width: 390, height: 844 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:29:12.5174302Z Browser runtime smoke passed: {"versions":{"contract":3,"runtime":21,"final":21,"offline":4,"sample":4,"offlineOwner":2,"offlinePolicy":1,"mainSample":4,"mainConvergence":1,"w3Dungeon":7,"saveSafety":2,"saveCapacity":1,"migrationStaircase":1,"saveHook":2,"scriptLoad":4,"scriptGroupLoader":1,"retiredStateMigrationOnly":1,"worldTransitionSafety":5,"worldTransitionInstall":2,"combatAdapter":1,"dungeonAdapter":1,"secondWorldAdapter":1,"legacyCompatibility":5,"legacyGlobalPolicy":1,"w3SaveGuard":2,"w3SaveHook":1},"offlinePolicy":{"version":1,"sampleVersion":4,"samplesPerSpeed":8,"combatSpeeds":[1,1.5,2],"realBattleMinMs":100,"realBattleMaxActualMs":300000,"realBattleMaxCycleMs":601000,"rewardContextProvenanceVersion":1},"arena":{"mode":"arena","visible":true,"enabled":true,"buttonLabel":"進入高維競技場","statusText":"","reason":"","titleText":"高維競技場","rewardText":"VIP 積分","unlockText":"高維紀元可挑戰","descriptionText":"選擇定相或異相競技場，完成三戰取得 VIP 積分。","phase":3},"bounty":{"mode":"bounty","visible":false,"enabled":false,"buttonLabel":"","statusText":"","reason":"高維紀元已關閉懸賞戰。","titleText":null,"rewardText":null,"unlockText":null,"descriptionText":null,"phase":3},"saveCapacity":{"projectedSaveBytes":8931,"capacityLevel":"normal","inventoryCount":0,"lostGearCount":0},"migrationStagesV1":["legacy-exp-progress","pre-schema16-compatibility","pre-schema17-reincarnation","canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"],"loadPolicies":{"gm":{"version":4,"group":"gm","startupCritical":false,"deferRecommended":true,"fetchPriority":"low","activationMode":"on-demand-or-post-load","loaderRequired":true},"story":{"version":4,"group":"story","startupCritical":false,"deferRecommended":true,"fetchPriority":"low","activationMode":"post-load-sequenced","loaderRequired":true},"integrity":{"version":4,"group":"integrity","startupCritical":false,"deferRecommended":true,"fetchPriority":"low","activationMode":"post-story-gm-diagnostics","loaderRequired":true},"core":{"version":4,"group":"core","startupCritical":true,"deferRecommended":false,"fetchPriority":"auto","activationMode":"startup","loaderRequired":false}},"scriptGroups":{"version":1,"routingVersion":1,"order":["story","gm","integrity"],"autoGroups":["story"],"activation":{"version":3,"behaviorVersion":5,"story":"post-load-sequenced","gm":"account-local-authorization-or-password-modal-on-demand","integrity":"diagnostics-explicit-only","autoGroups":["story"],"savedGmAuthorized":false,"gmAuthorization":{"version":1,"authorizationVersion":2,"scope":"account-local-runtime","accountBound":true,"accountPresent":false,"authorized":false,"runtimeFlag":false,"saveStateAuthoritative":false,"key":"","saveBoundaryInstalled":true}},"groups":{"story":{"version":1,"group":"story","status":"ready","count":27,"loaded":27,"startedAt":1791901751997,"completedAt":1791901752160},"gm":{"version":1,"group":"gm","status":"ready","count":33,"loaded":33,"startedAt":1791901751999,"completedAt":1791901752177},"integrity":{"version":1,"group":"integrity","status":"ready","count":38,"loaded":38,"startedAt":1791901752177,"completedAt":1791901752455}},"storyRuntimeIntegrityGroup":"integrity"},"saveHooks":{"runtimeOwner":"compatibilityowners","wrapperOwner":null,"coreVersion":2,"before":["gm-runtime-authorization-v1","reincarnation-permanent-gear-levels","save-capacity-diagnostic","third-world-combat-transient-cleanup"],"after":["cloud-local-meta"],"settlement":["gm-runtime-authorization-v1","save-capacity-diagnostic"],"saveAvailable":true,"safetyHookId":"save-capacity-diagnostic"},"transitionGuards":{"version":2,"bountyGateInstalled":true,"offlineGuardsInstalled":true},"legacyGlobals":{"version":1,"policy":"read-compatible-no-duplicate-write","saveVersion":{"legacy":13,"canonical":17,"owner":"savemigration"},"maxLevel":{"legacy":500,"windowAlias":500,"firstWorld":500,"absolute":2000,"owner":"levelprogression"},"arena":{"policy":"legacy-read-through-only","owner":"arenaByWorld"}},"adapterProbe":{"multiplier":1.5,"direct":{"hp":856,"enemyHp":702,"turns":2,"win":false},"adaptedMultiplier":1.5,"adapted":{"hp":856,"enemyHp":702,"turns":2,"win":false}},"runtimeWarnings":12,"finalWarnings":2}
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:31:22.3187914Z PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 1280, height: 800 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:33:30.3737380Z PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 390, height: 844 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:35:39.3665437Z PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 844, height: 390 }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:35:54.9193016Z PASS real authorized GM B iframe, formal identity/save isolation and return
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:13.7562631Z PASS existing GM case atlas review: unavailable, three real B2 atlases, six clips, source-frame pixels, no storage/RAF/official art promotion, route disposal
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1399007Z PASS GM visual center: 8 categories plus all, 31 scenes, no engineering text, mobile maximize/restore {
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1400644Z   maximized: true,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1401986Z   stageWidth: 390,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1404794Z   stageHeight: 844,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1406193Z   buttonWithin: true,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1406622Z   controlsWithin: true
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1409244Z } {
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1410717Z   maximized: false,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1412657Z   top: 388.796875,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1413213Z   bottom: 846.546875,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1414101Z   viewHeight: 844,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1420345Z   scrollY: 703
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:36:45.1422184Z }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:37:22.3164922Z PASS T4 current formal desktop/portrait/landscape routes, 100 switches, zero decorative requests/DOM/canvas/engine and release closed
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:37:22.9283948Z Historical preview source harness only; NOT current formal UI acceptance
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:37:42.8094242Z T1-A preview 1280 home
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:37:48.9579801Z T1-A preview 1280 character
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:37:53.1476548Z T1-A preview 1280 inventory
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:00.2370609Z T1-A preview 1280 enhancement
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:04.1291685Z T1-A preview 1280 specialization
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:09.7016662Z T1-A preview 1280 adventure
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:13.6860163Z T1-A preview 1280 dungeon
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:17.1166944Z T1-A preview 1280 storyrecord
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:21.2156479Z T1-A preview 1280 settings
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:25.7512931Z T1-A preview 1280 guide
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2322202Z PASS T1-A formal routes, detached snapshots, real authorized iframe bridge and fixture isolation { width: 1280, height: 800 } [
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2323573Z   'home',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2324154Z   'character',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2324686Z   'inventory',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2325261Z   'enhancement',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2326028Z   'specialization',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2326540Z   'adventure',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2327002Z   'dungeon',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2327475Z   'storyrecord',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2328399Z   'settings',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2328986Z   'guide'
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:44.2329505Z ]
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:45.1590200Z Historical preview source harness only; NOT current formal UI acceptance
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:54.7941583Z T1-A preview 390 home
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:38:57.6554100Z T1-A preview 390 character
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:00.2196698Z T1-A preview 390 inventory
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:02.5490727Z T1-A preview 390 enhancement
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:04.3061314Z T1-A preview 390 specialization
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:06.8978067Z T1-A preview 390 adventure
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:08.6359977Z T1-A preview 390 dungeon
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:10.1226482Z T1-A preview 390 storyrecord
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:11.8243832Z T1-A preview 390 settings
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:14.1891668Z T1-A preview 390 guide
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0086101Z PASS T1-A formal routes, detached snapshots, real authorized iframe bridge and fixture isolation { width: 390, height: 844 } [
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0087197Z   'home',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0087599Z   'character',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0087981Z   'inventory',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0088367Z   'enhancement',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0088720Z   'specialization',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0089126Z   'adventure',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0089444Z   'dungeon',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0089744Z   'storyrecord',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0090066Z   'settings',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0090363Z   'guide'
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:24.0090650Z ]
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:25.6507425Z PASS DOM hook fixture 1280 adventure galaxy
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:25.9818145Z PASS DOM hook fixture 1280 adventure galaxy-review
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:26.7384062Z PASS DOM hook fixture 1280 adventure universe
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:27.1411989Z PASS DOM hook fixture 1280 adventure universe-review
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:27.4637615Z PASS DOM hook fixture 1280 adventure higher-dimensional
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:27.8779463Z PASS DOM hook fixture 1280 calamity 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:28.3671552Z PASS DOM hook fixture 1280 alternateuniverse 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:29.1453227Z PASS DOM hook fixture 1280 dungeon 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:29.3790363Z PASS DOM hook fixture 1280 dungeon-arena 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:29.6586663Z PASS DOM hook fixture 1280 dungeon-mirror 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:30.1474594Z PASS DOM hook fixture 1280 dungeon-void-mirage 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:30.4281257Z PASS DOM hook fixture 1280 storyrecord 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:30.8236902Z PASS DOM hook fixture 1280 home 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:31.1104373Z PASS DOM hook fixture 1280 adventure galaxy
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:31.3790035Z PASS DOM hook fixture 1280 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:31.7288365Z PASS DOM hook fixture 1280 guide 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:32.0110681Z PASS DOM hook fixture 1280 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:32.3308670Z PASS DOM hook fixture 1280 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:32.6607142Z PASS DOM hook fixture 1280 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:33.5831825Z PASS DOM hook fixture 390 adventure galaxy
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:33.8964497Z PASS DOM hook fixture 390 adventure galaxy-review
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:34.3321482Z PASS DOM hook fixture 390 adventure universe
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:34.6925187Z PASS DOM hook fixture 390 adventure universe-review
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:35.1954244Z PASS DOM hook fixture 390 adventure higher-dimensional
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:35.4788513Z PASS DOM hook fixture 390 calamity 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:35.7470184Z PASS DOM hook fixture 390 alternateuniverse 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:36.0105823Z PASS DOM hook fixture 390 dungeon 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:36.2459859Z PASS DOM hook fixture 390 dungeon-arena 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:36.5248532Z PASS DOM hook fixture 390 dungeon-mirror 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:36.7610205Z PASS DOM hook fixture 390 dungeon-void-mirage 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:36.9958767Z PASS DOM hook fixture 390 storyrecord 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:37.2444533Z PASS DOM hook fixture 390 home 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:37.5441387Z PASS DOM hook fixture 390 adventure galaxy
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:37.7751160Z PASS DOM hook fixture 390 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:37.9915396Z PASS DOM hook fixture 390 guide 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:38.2102944Z PASS DOM hook fixture 390 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:38.4413809Z PASS DOM hook fixture 390 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:38.6946637Z PASS DOM hook fixture 390 settings 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9021027Z AssertionError [ERR_ASSERTION]: Duplicate module: /3d-test/appearance-snapshot.js
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9021691Z 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9021833Z 2 !== 1
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9022013Z 
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9022454Z     at /home/runner/work/rpg/rpg/tests/runtime/3d-gm-loader-browser.js:33:101 {
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9023058Z   generatedMessage: false,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9023484Z   code: 'ERR_ASSERTION',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9023842Z   actual: 2,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9024144Z   expected: 1,
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9024462Z   operator: 'strictEqual',
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9024827Z   diff: 'simple'
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9025106Z }
+runtime-integrity	Run real browser runtime smoke	2026-10-13T14:39:51.9158752Z ##[error]Process completed with exit code 1.

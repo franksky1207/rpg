@@ -54,3 +54,9 @@ FULL_3D_AVAILABLE=false、formalReleased=false、Stage40未批准。回退反序
 ## 最終 CI iframe 檢查修正
 
 0059bb05 Runtime 的三紀元 Chromium／WebKit、W3逐擊HP／盾／極簡／視覺故障與GM三視窗均通過，但授權iframe來源畫格等待逾時；原log收錄`ci-runtime-0059-failure.log`。原檢查僅等待素材載入dataset，未確認首張實際繪製。授權iframe測試改為展開可見舞台，先驗證Renderer實際frames>0，再操作播放，維持原15秒sourceFrames>0、正式身份／save不變斷言，並補完整失敗診斷。本機實際授權iframe重跑通過；這是瀏覽器測試前置修正，不改播放引擎或正式遊戲，不延長逾時。CI具體觸發條件未完全證實，最新修正HEAD仍須確認。GM工作流程補該測試檔paths，維持統一既有工作流程。
+
+## GM來源讀取與腳本載入的相容性驗收
+
+e2c29bdd共有13項Actions成功（含完整B3／GM／Pages／Stage4），Runtime正式三紀元／HP／極簡／故障與授權iframe通過後，原loader測試把appearance source原文fetch與script載入合併計數而失敗。Immutable Fixture原本必須以no-store讀源做精確SHA驗證，不可刪除或省略。測試現依request.resourceType區分，仍嚴格要求Babylon／Runtime／appearance腳本各一次、注入故障的scenes模組剛好重試一次；完整來源另嚴格要求appearance原文驗證剛好一次。沒有development的Stage3候選則要求原文讀取零次、B安全回退後原31案例正常；既有post-stage發布包真B正向測試不改、不省略。
+
+本機完整repo與獨立`.publish-stage-loader-test`候選各在1280×800／390×844實際通過，log分別`gm-loader-source-purpose-pass.log`／`gm-loader-unstaged-candidate-pass.log`，失敗原log`ci-runtime-e2-failure.log`保留。必要的單次模組與原source-SHA檢查保留，不重新製作／改Fixture。GM既有工作流程增加此原loader回歸並先執行，讓loader缺陷能提早被看見；未建立額外監控。最新收尾HEAD需再次逐項驗證Actions。
