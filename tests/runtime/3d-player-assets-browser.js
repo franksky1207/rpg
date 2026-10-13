@@ -1,7 +1,7 @@
 'use strict';
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
 const base=new URL('./',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html');
-const report={commit:process.env.GITHUB_SHA||null,url:base.href,auth:'isolated SDK session fixture; no real account or cloud save operations',pageErrors:[],cases:[]};
+const report={shell:"retired-preview-harness; current formal retirement separately tested",commit:process.env.GITHUB_SHA||null,url:base.href,auth:'isolated SDK session fixture; no real account or cloud save operations',pageErrors:[],cases:[]};
 const sdk=`window.supabase={createClient(){return{auth:{onAuthStateChange(){return{data:{subscription:{unsubscribe(){}}}}},async getSession(){return{data:{session:{user:{id:'batch27-preview-test'}}},error:null}}},from(){return{select(){return this},eq(){return this},single(){return Promise.resolve({data:null,error:null})}}}}}};`;
 const metadata=page=>page.evaluate(()=>BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter)?.metadata.civilization3dCharacter);
 const waitModel=(page,quality,source=null,world=null)=>page.waitForFunction(q=>{

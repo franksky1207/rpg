@@ -57,6 +57,15 @@ const identity={id:'internal-only-normal',world:1,kind:'normal',location:'test-o
     const clips=[];for(const clip of ['idle','attack','hit','dodge','return','defeat']){const hashes=[];for(const elapsedMs of [0,350,700]){r.sample({clip,elapsedMs});const image=document.createElement('canvas'),c=document.querySelector('#test-host canvas');image.width=c.width;image.height=c.height;image.getContext('2d').drawImage(c,0,0);hashes.push(Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(image.toDataURL()))),x=>x.toString(16).padStart(2,'0')).join(''));}if(new Set(hashes).size!==3)throw Error('Tier/clip static '+test.kind+'/'+test.tier+'/'+clip);clips.push({clip,hashes});}
     tierReports.push({kind:test.kind,tier:test.tier,clips});controller.abort();r.dispose();if(BABYLON.EngineStore.Instances.length)throw Error('Tier engine leaked');
    }
+   const safetyAbort=new AbortController(),safety=await R.create({bundle:await R.prepare({...options,signal:safetyAbort.signal}),host:document.getElementById('test-host'),signal:safetyAbort.signal,isCurrent:()=>true});
+   const viewportReports=[];for(const size of [{width:1280,height:380},{width:390,height:320},{width:844,height:240}]){
+    const host=document.getElementById('test-host');host.style.width=size.width+'px';host.style.height=size.height+'px';safety.resize();safety.sample({player:{clip:'attack',elapsedMs:350},enemy:{clip:'hit',elapsedMs:350},cue:{type:'crit',ageMs:50}});
+    const c=host.querySelector('canvas'),engine=BABYLON.EngineStore.Instances.at(-1);if(c.width!==size.width||c.height!==size.height)throw Error('Actual viewport backing size mismatch');
+    viewportReports.push({...size,renderWidth:engine.getRenderWidth(),renderHeight:engine.getRenderHeight()});
+   }
+   document.querySelector('#test-host canvas').dispatchEvent(new Event('webglcontextlost',{cancelable:true}));
+   if(!safety.snapshot().closed||BABYLON.EngineStore.Instances.length||document.querySelector('#test-host canvas'))throw Error('Context loss failed to retire actual scene');safetyAbort.abort();
+   document.getElementById('test-host').style.width='800px';document.getElementById('test-host').style.height='400px';
    // Run the actual formal core and its existing structured presentation owner, not a second event player.
    window.state={playerName:'internal-only-owner-test',worldPhase:1,level:35,hp:1000,equipment:{},inventory:[],enhancement:{levels:{}},specializations:{},marks:{entries:{}}};
    state=window.state;window.playerCombatStats=()=>({hp:1000,atk:50,def:20,crit:10,dodge:10});
@@ -73,7 +82,7 @@ const identity={id:'internal-only-normal',world:1,kind:'normal',location:'test-o
    if(JSON.stringify(window.state)!==isolatedBefore)throw Error('Renderer changed isolated formal State');
    if(BABYLON.EngineStore.Instances.length!==0||document.querySelectorAll('#main .formal-b-battle-stage canvas').length)throw Error('Formal owner integration leaked an engine/canvas');
    Math.random=originalRandom;
-   return{orientation,visualRandomCalls,randomStacks,hashes,jointPoses,subsets,tierReports,diagnostic,disposed,ownerDiagnostic,unavailableDiagnostic,coreResultsEqual,hudValues,remaining:document.querySelectorAll('#test-host canvas').length,saveUnchanged:saved===JSON.stringify(localStorage),audioUnchanged:audioCount===document.querySelectorAll('audio').length};
+   return{orientation,visualRandomCalls,randomStacks,hashes,jointPoses,subsets,tierReports,viewportReports,contextLossDisposed:true,diagnostic,disposed,ownerDiagnostic,unavailableDiagnostic,coreResultsEqual,hudValues,remaining:document.querySelectorAll('#test-host canvas').length,saveUnchanged:saved===JSON.stringify(localStorage),audioUnchanged:audioCount===document.querySelectorAll('audio').length};
   },{player,animation,catalog,identity,routes,base,official,gear,actorTiers});
   fs.writeFileSync('/tmp/t3-formal-attack-mid.png',Buffer.from(result.hashes.find(x=>x.clip==='attack').frames[1].split(',')[1],'base64'));
   for(const x of result.hashes){assert.equal(new Set(x.frames.map(sha)).size,3,'Actual animated rendered poses '+x.clip);for(const png of x.frames)assert.ok(png.length>2000,'Nonblank rendered stage');x.frames=x.frames.map(sha);}

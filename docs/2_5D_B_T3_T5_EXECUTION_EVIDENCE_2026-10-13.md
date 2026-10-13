@@ -52,3 +52,9 @@ f46d3bd2761e96acbd4c8795b5151659c0361083 的 8 個觸發 Actions 均 success；�
 既有 53 骨、裝備、快照、晚到 scene／context loss 正面斷言沒有刪除，改使用明確標示的歷史 HTTP harness；它们不代表現行正式入口。另新增現行正式退場負面驗收，GM 真實 iframe 31 案例仍完整保留。原 T2-A Fixture 未重製；B2 source lock 未改，透過逐檔 before/after SHA＋git history 驗證授權退場。
 
 T4 提交 5cc2eaa4750edf41361210ffb0074f22aa927830 的 Runtime Integrity 失敗原因：checkout 預設淺層歷史，無法 `git show 7706f880...:index.html` 驗證移除前原始來源。已修正 workflow `fetch-depth: 0`，保留全部歷史 SHA 斷言，沒有跳過檢查。另補實際 Renderer 三尺寸／context loss 測試，正在執行。
+
+## T5 進行中：發布與渲染安全
+
+隔離成品實際 HTTP／SHA、17 音訊解碼、桌機／手機設定、49 cached media、Range 與清除／存檔隔離通過。正式 Renderer 新增三種 Canvas 尺寸與 context loss 實際釋放通過，100 次建立／釋放依然無 RNG 消耗。母圖裁切／pivot metadata 新增精確 NaN、無效範圍拒絕測試；三敵三 tier 的實際 metadata 與 bytes/SHA 通過原程式驗證。
+
+裝備歷史 shell 的 fault 新頁漏套 harness，造成按鈕不存在（現行正式退場正確），已修正每個隔離故障 context 使用同一歷史 shell；原 404／SHA、其他四槽、face mask 恢復斷言不改。現行正式負面驗收始終不使用 harness。實際渲染參考圖保留於 docs/evidence/t3-t5；不是批准美術或真機證據。完整 T5 browser／exact HEAD Actions 仍執行中。

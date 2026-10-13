@@ -22,7 +22,7 @@ const root=new URL('./',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/in
 const registry=JSON.parse(fs.readFileSync('assets/3d/asset-registry.json'));
 const slots=['weapon','helmet','armor','shoes','accessory'];
 const names=Object.fromEntries(slots.map(s=>[s,registry.assets.find(a=>a.type==='equipment'&&a.slot===s).names[0]]));
-const report={commit:process.env.GITHUB_SHA||null,realIPhone:false,cases:[],errors:[]};
+const report={shell:"retired-preview-harness; current formal retirement separately tested",commit:process.env.GITHUB_SHA||null,realIPhone:false,cases:[],errors:[]};
 const scene=()=>BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter);
 const meta=p=>p.evaluate(()=>BABYLON.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter)?.metadata.civilization3dCharacter);
 async function ready(p,q,count=5,source=null){await p.waitForFunction(({q,count,source})=>{const s=window.BABYLON?.EngineStore.Instances.flatMap(e=>e.scenes).find(s=>s.metadata?.civilization3dCharacter);const m=s?.metadata.civilization3dCharacter;return m?.assetKind==='skinned-glb'&&m.quality===q&&(!source||m.appearanceSource===source)&&Object.keys(m.equipmentAssets||{}).length===count&&s.isReady();},{q,count,source},{timeout:60000});}
@@ -124,7 +124,7 @@ async function views(p,prefix){
   for(const fault of ['missing','sha']){
    const ctx=await browser.newContext();await ctx.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({status:200,contentType:'text/javascript',body:sdk}));
    await ctx.route('**/helmet-*.glb*',r=>r.fulfill(fault==='missing'?{status:404,body:'fixture missing'}:{status:200,body:Buffer.alloc(registry.assets.find(a=>a.slot==='helmet'&&a.quality==='medium').bytes)}));
-   const p=await ctx.newPage();await p.goto(new URL('index.html',root).href);await p.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await p.locator('#civilizationModeChooseText').click();await finishIntro(p);
+   const p=await ctx.newPage();await require('./retired-preview-harness.cjs')(p);await p.goto(new URL('index.html',root).href);await p.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await p.locator('#civilizationModeChooseText').click();await finishIntro(p);
    await p.evaluate(names=>{for(const [slot,name] of Object.entries(names))state.equipment[slot]={...state.equipment[slot],name,world:1,q:3,level:31};go('character');},names);
    await p.locator('#civilization3dCharacterToggle').click();await ready(p,'medium',4);const m=await meta(p);assert.equal(m.equipmentStatus.helmet,'fallback');assert.ok(!m.hiddenRegions.includes('face-covered'));assert.equal(m.assetKind,'skinned-glb');await ctx.close();report.cases.push(fault+' helmet: other four slots and original face survive');
   }

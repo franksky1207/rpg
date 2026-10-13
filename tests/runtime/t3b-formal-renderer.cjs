@@ -15,6 +15,10 @@ const options={registry:{schema:1,player:{low:'p'},assets:[row]},catalog:{schema
  await assert.rejects(R.prepare({...options,identity:{...identity,id:'wrong'}}),/unmapped/);
  await assert.rejects(R.prepare({...options,fetch:async()=>({ok:true,arrayBuffer:async()=>new Uint8Array(bytes.length).buffer})}),/integrity/);
  await assert.rejects(R.prepare({...options,appearance:{helmet:{name:'G006',world:1,chapter:1,area:1,level:31}}}),/unmapped-equipment/);
+ for(const field of [{masterPivot:[NaN,0]},{masterTrim:[0,0,1,0]},{masterTrim:[0,0,23,1]}]){
+  const bad={...clip,sourceFrameDimensions:[22,1],frames:clip.frames.map((f,i)=>i===0?{...f,...field}:f)};
+  await assert.rejects(R.prepare({...options,catalog:{...options.catalog,entries:[{...options.catalog.entries[0],layout:{...layout,clips:{...layout.clips,idle:bad}}}]}}),/invalid-atlas-timing/);
+ }
  const token=await R.prepare(options);assert.ok(Object.isFrozen(token));assert.equal(token.body,undefined,'Verified bytes must not be exposed for post-verification mutation');
  await assert.rejects(R.create({bundle:{...token},host:{},signal,isCurrent:()=>true}),/unverified/);
  controller.abort();await assert.rejects(R.prepare(options));assert.equal(R.rendererReleased,false);assert.equal(R.fixtureAllowed,false);

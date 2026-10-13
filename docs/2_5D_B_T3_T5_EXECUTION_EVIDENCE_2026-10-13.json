@@ -1,12 +1,12 @@
 {
   "schema": "civilization.2_5d_b.t3_t5.execution.v1",
-  "recordedAt": "2026-10-13T08:45:11.517850+00:00",
+  "recordedAt": "2026-10-13T08:54:24.926017+00:00",
   "baselineMainHEAD": "48009e8d8f87afc8bfef0c68cb4c02e854b2944f",
   "status": "in-progress-not-T3-T5-complete",
   "phaseStatus": {
-    "T3": "formal-route-renderer-and-owner-integration-locally-passed-CI-pending",
-    "T4": "formal-decorations-retired-current-route-browser-passed-GM-regression-pending",
-    "T5": "not-complete"
+    "T3": "formal-route-owner-renderer-technical-tests-passed-release-closed",
+    "T4": "retired-negative-browser-passed-legacy-fault-harness-corrected",
+    "T5": "system-browser-regression-running"
   },
   "release": {
     "FULL_3D_AVAILABLE": false,
@@ -917,32 +917,44 @@
   },
   "files": {
     "3d-test/t3b-formal-renderer.js": {
-      "bytes": 13385,
-      "sha256": "4c0cc47bdf33ab3abbaa47293142bd55e8542be8d43922eb1dfd2732f75c7992"
+      "bytes": 16504,
+      "sha256": "10f628638eafab687b0c3180a4da0c76726877a6ca5811c05a29e6ea2aba8acd"
     },
     "3d-test/t3b-formal-controller.js": {
-      "bytes": 3805,
-      "sha256": "98a335c2f3390f5d9f5a24ddb7956e119b7971cd964e18f26834947456213e83"
+      "bytes": 5505,
+      "sha256": "12ae4248cc81708881ff638ac68ecf667713140623db5b6708dda9e3d7aa0f78"
     },
     "3d-test/t3b-formal-projection.js": {
       "bytes": 3573,
       "sha256": "b71e47e400ee7a42df4727c209c6e20d3cbd65c17d5099299d0466e8a80acfbd"
     },
     "resource-manifest.json": {
-      "bytes": 32671,
-      "sha256": "911120d6dafc22f7f124b7b0f4508553035099cfe549c3e9acd1e39eb0826658"
+      "bytes": 32626,
+      "sha256": "a276cd53c454e478e24783f61fafa08daba338eb5e391521d371ae17cdf78fd7"
     },
     "development/hybrid-comparison/t2b2-v1/inventory.json": {
       "bytes": 371584,
-      "sha256": "3f02d9958f0d34cb7517d10978b31915181df3f136e5b4095680cb6e8fcfef51"
+      "sha256": "b6c09670c460dd7bb3027a3cb54020d54b771f17762c0f8907edfc755509268a"
     },
     "development/hybrid-comparison/t2b3-v1/manifest.json": {
       "bytes": 333019,
-      "sha256": "86b9ddefe2f4630b6e0b85ec80f591438453805c9f6b54fc704e5fa9e094c0bc"
+      "sha256": "e0bd56a3a8ddc39d1f8870bfb83f72751b6198f7f32f6aa9f8e101bf63621d47"
     },
     "development/hybrid-comparison/t2b3-v1/inventory.json": {
       "bytes": 37634,
-      "sha256": "2534cdbbb5ddc8d0ad5514e28cb51dc51e3a98587eb0c3813c0f25bd8b153dc7"
+      "sha256": "2d6d1c5eb5b47ccca9632ba8325984077ec815f2d3f3ffa580c5e65fa7b76cdb"
+    },
+    "3d-test/t3b-formal-entry.js": {
+      "bytes": 5407,
+      "sha256": "9940a8152fdb10d8babf72014b0710c35db17a5b39ee6bac9acad5d66587f38a"
+    },
+    "3d-test/t3b-formal-owner-clock.js": {
+      "bytes": 3995,
+      "sha256": "60a528fec344238dbf8c287eb1e0643ae26ec197aab20181737d6a82a445047c"
+    },
+    "3d-test/t3b-formal-assets.js": {
+      "bytes": 3509,
+      "sha256": "6606a61b83ccc8f59eb5753776deb1e00215ba3934d216c6a2c2d6c1d2822994"
     }
   },
   "failuresResolved": [
@@ -965,7 +977,9 @@
       "check": "exact HEAD 3f4e9314 publication closure",
       "cause": "Memory File labels were interpreted as missing deployed GLB dependencies; local policy unit test did not inspect the full newly tracked root before push",
       "fix": "Use verified asset path filenames for in-memory GLB loading; retain all missing-resource assertions; actual root dry-run 391 files / zero missing refs, rerun T2-A 17 checks and actual renderer 100 switches"
-    }
+    },
+    "Runtime checkout shallow history; fetch-depth 0 preserves exact SHA checks",
+    "Retired equipment fault contexts also need isolated historical shell; all model/slot/fault assertions retained"
   ],
   "notRun": [
     "complete formal owner-to-renderer E2E",
@@ -995,22 +1009,10 @@
     "original29-40 art/function gates"
   ],
   "githubActions": {
-    "baselineExactHEAD": "no-runs-returned",
-    "newCommitExactHEAD": "pending-after-commit",
-    "previousCommit": {
-      "sha": "3f4e93142874445b6b25c3f68db937faab6cfc32",
-      "status": "publication/comparison failures; Runtime still running when checked",
-      "failureRunIds": [
-        38356490779,
-        38356490777,
-        38356490706,
-        38356490737,
-        38356490671,
-        38356490719,
-        38356490799,
-        38356491564
-      ]
-    }
+    "latestRecordedHead": "1ad04e73f457aad2e6a5b63284f6ab442ecb9475",
+    "status": "running-not-success",
+    "priorFailureHead": "5cc2eaa4750edf41361210ffb0074f22aa927830",
+    "priorFailure": "Runtime shallow checkout cannot read retirement baseline"
   },
   "actualPublication": {
     "command": "node scripts/build-publish-dry-run.cjs",
@@ -2288,6 +2290,27 @@
           ]
         }
       ],
+      "viewportReports": [
+        {
+          "width": 1280,
+          "height": 380,
+          "renderWidth": 1280,
+          "renderHeight": 380
+        },
+        {
+          "width": 390,
+          "height": 320,
+          "renderWidth": 390,
+          "renderHeight": 320
+        },
+        {
+          "width": 844,
+          "height": 240,
+          "renderWidth": 844,
+          "renderHeight": 240
+        }
+      ],
+      "contextLossDisposed": true,
       "diagnostic": {
         "closed": false,
         "activeClip": "idle",
@@ -2303,14 +2326,14 @@
         "canEmitCombatEvents": false
       },
       "ownerDiagnostic": {
-        "battleId": "combat-v1-00245bc5-5e45-495c-b5fd-79f2bc0efed4-1",
+        "battleId": "combat-v1-32288743-c2a8-4a03-8ec1-7d42a68fe2ba-1",
         "lastSeq": 33,
         "disposed": false,
         "loading": false,
         "ready": false,
         "ended": true,
         "failed": false,
-        "frames": 54,
+        "frames": 13,
         "rejected": 1,
         "fallbacks": 0,
         "engines": 0,
@@ -2319,7 +2342,7 @@
         "canEmitCombatEvents": false
       },
       "unavailableDiagnostic": {
-        "battleId": "combat-v1-00245bc5-5e45-495c-b5fd-79f2bc0efed4-2",
+        "battleId": "combat-v1-32288743-c2a8-4a03-8ec1-7d42a68fe2ba-2",
         "lastSeq": 33,
         "disposed": false,
         "loading": false,
@@ -2346,8 +2369,7 @@
     "hardware": "Chromium SwiftShader; NOT real GPU/mobile/art approval"
   },
   "remaining": [
-    "T4 preview retirement",
-    "T5 full regression",
+    "complete T5 system regression and exact HEAD Actions",
     "formal art approval and physical GPU/mobile acceptance",
     "broad release remains closed"
   ],
