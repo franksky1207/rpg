@@ -1,3 +1,9 @@
+## 2026-10-13｜T3-B 正式事件接入：安全基礎層已施工（非 2.5D 正式畫面全場景上線）
+- T3-A 的 `3d-test/t3a-hybrid-policy.js` 目前增設 `CivilizationFormalHybridBridge`：於正式頁在既有 `CivilizationCombatEvents` 準備後註冊**僅 formal lane** 的唯讀訂閱，嚴格比對來源 schema、battleId、seq、合法 mode/world、`isCurrent`、過期狀態。涵蓋主線 1～3、懸賞 1～2、競技場 1～3、鏡像／虛空 1～3、災厄 1～2、異宇宙 1～3、特殊 1～2、回顧 1～3；故意不把 GM fixture 當正式戰鬥。接收者只讀、不得取得結算權限；故障拋例與登入登出／離頁可安全斷開。
+- 此層保留原戰鬥 owner／音效／存檔不變，並未新增第二個戰鬥時鐘、重演傷害或改寫 state。繼續保留 `FULL_3D_AVAILABLE=false`，**不表示正式 B 2.5D Renderer 或 210 套素材已接進正式玩家畫面**；後續仍須視覺畫布、素材出版與三紀元全部合法場景的真正端到端測試（T3-B 完整 Gate）。
+- 新增 `tests/runtime/t3b-formal-bridge.cjs`、更新 Runtime Integrity CI；更動正式政策檔時已將 `index.html` query 升級為 `t3b-bridge1`。B2/B3 的精確來源差異驗證、二層來源 SHA 清冊、B3 Manifest SHA／assets SHA 已同時修訂，不停用來源安全機制。
+- 本批提交後必須以最新 exact HEAD Actions 核對；之前 HTML Cache Version Guard 曾因版本未更新報錯，後續修正和新 SHA 各自核驗，running 不得宣告 success。不得在 T3-B 完整正式畫面覆蓋／異常降級／回歸證據完成前解鎖 B 模式。
+
 ## 2026-10-13｜T3-A 正式相容層與來源 SHA 修復
 - T3-A 首批已於正式 `index.html` 引用唯讀 `3d-test/t3a-hybrid-policy.js`：舊 text/3d 偏好不遷移、high/standard/minimal 品質映射，必要時 fail-closed 回文字。權威戰鬥 Owner 不動、`FULL_3D_AVAILABLE=false`、正式 B 尚未解鎖。T3-A 契約測試已加入 Runtime Integrity。
 - `f61d0da335aac4e6e7425a393d5666a91a8fc4c8` 的 B3 CI **確實失敗**：manifest 鎖定的 B2 inventory SHA 過時。修正 B3 manifest、其 verified digest 與 inventory SHA/bytes，程式修正至 `165f80a429f8c677ce6ff32b5ea3e05a60836ce5`；實際 B2 inventory SHA `4a1f64bb446326185381b0f1259961a92f4edf58709b94bb32b5ca1a3469efb4`。
