@@ -25,7 +25,7 @@
     {
       "path": "assets.mjs",
       "bytes": 3721,
-      "sha256": "a89cff5e6bbded415c3b8b7744a5ffd81ed70651d066526a4d2b89dacd08bd35",
+      "sha256": "d1f2651a0684296d47801eb0062e8c653e4aedb05570a08de8eb7ae3735e4aa8",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -900,7 +900,7 @@
     {
       "path": "manifest.json",
       "bytes": 333019,
-      "sha256": "5ac30dd60cd35e7a0eea00ad9afe1a69ead3d59bed47145d08539d2e6cea5eb8",
+      "sha256": "89eb933eea6a79cc8d386ffcfe670b984610fa3e0008ea446f3bf076bf695176",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
