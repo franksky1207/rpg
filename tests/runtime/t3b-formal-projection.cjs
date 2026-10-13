@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const w={};w.window=w;vm.runInNewContext(fs.readFileSync('3d-test/t3b-formal-projection.js','utf8'),w);
+const p=w.CivilizationFormalBProjection;assert.equal(p.version,1);
+const e={schema:1,lane:'formal',mode:'main',world:1,type:'combat-action',availability:'authoritative',expired:false,battleId:'formal1',sessionId:'formal1',seq:2,actors:{player:{name:'P'},enemy:{name:'Boss',id:'B',kind:'boss',location:'map'}},actor:'player',target:'enemy',data:{sourceType:'attack',damage:17,crit:false,stateAvailability:'unavailable'}};
+const original=JSON.stringify(e),out=p.convert(e);
+assert.equal(out.sourceEvent.damage,17);assert.equal(out.sourceEvent.hpAfterAction,null);assert.equal(out.authoritativeState,null);
+assert.equal(out.canCommit,false);assert.equal(out.canEmitCombatEvents,false);
+assert.equal(out.assetStatus,'unmapped');assert.equal(p.capabilities.fixtureAllowed,false);
+assert.ok(Object.isFrozen(out));assert.ok(Object.isFrozen(out.enemyIdentity));assert.equal(JSON.stringify(e),original);
+for(const changed of [{lane:'gm-fixture'},{schema:2},{mode:'bounty',world:3},{mode:'gm-benchmark'},{expired:true},{sessionId:'other'},{seq:NaN}])assert.equal(p.convert({...e,...changed}),null);
+const state={player:{hp:7,maxHp:10,shield:1},enemy:{hp:4,maxHp:20,shield:0}};
+const start=p.convert({...e,type:'battle-start',seq:1,data:{state}});
+assert.equal(start.authoritativeState.player.hp,7);assert.ok(Object.isFrozen(start.authoritativeState));assert.equal(start.perActionHpAvailable,false);
+state.player.hp=999;assert.equal(start.authoritativeState.player.hp,7);
+assert.equal(p.convert({...e,type:'combat-action',data:{state:{player:{hp:999,maxHp:10},enemy:{hp:1,maxHp:10}}}}).authoritativeState,null);
+for(const [mode,world] of [['main',3],['arena',3],['mirror',3],['void',3],['alternate',3],['review',3],['special',2],['calamity',2],['bounty',2]])assert.ok(p.convert({...e,mode,world}));
+console.log('PASS T3-B fixture-free formal projection, safe unknown HP, source identity, immutable no-owner consumer');
