@@ -3,7 +3,7 @@
   "version": 1,
   "publish": false,
   "baselineMainHEAD": "e094f4e8704a808c94551acd9226c2982c67c537",
-  "B2InventorySHA": "873ea63c37c35f8d1113ad333ead045d14762392b905520b1f3e6b4124da78c7",
+  "B2InventorySHA": "2bec335d9197a76ac6c8712a1bf5e033f647cf6027b70c2142c1a7e3add8dff2",
   "files": {
     "development/hybrid-comparison/t2b2-v1/enemies/boss/atlases/atlas.json": {
       "bytes": 92822,
@@ -3306,7 +3306,7 @@
   },
   "registry": {
     "schema": 1,
-    "version": "batch28c-ancient-ruins-v1",
+    "version": "batch28-consolidated-refinement-20261014",
     "rigContract": "cw.humanoid.rig.v1",
     "artStatus": "human-sci-fi-final-polish-awaiting-user-acceptance",
     "coordinates": {
@@ -7736,7 +7736,7 @@
         ]
       }
     },
-    "equipmentArtStatus": "first-set-awaiting-user-visual-acceptance"
+    "equipmentArtStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
   },
   "candidateCoverage": {
     "low": {

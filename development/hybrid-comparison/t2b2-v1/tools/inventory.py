@@ -18,6 +18,10 @@ def collect():
   if refinement.exists() and s in json.loads(refinement.read_text())['files']:
    subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
    continue
+  if s in {'development/hybrid-comparison/fixture-input.mjs','scripts/hybrid-comparison-fixtures.cjs'}:
+   # Exact original/archive/current chains, not a new permissive allowlist.
+   subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
+   continue
   current=sha(ROOT/s)
   if current==h:continue
   assert s in allowed,('Protected non-B1 source changed',s)

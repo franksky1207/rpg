@@ -32,7 +32,9 @@ jobs:
         run: |
           python development/hybrid-comparison/t2b2-v1/tools/inventory.py --check
           python development/hybrid-comparison/t2b2-v1/tools/verify_pixels.py
-          python development/hybrid-comparison/t2b2-v1/tools/verify_repair.py
+          # Runs current wearable contracts/Khronos/source chains AND the
+          # unchanged B2 validator against its exact original cost files.
+          python scripts/verify-historical-b2-repair.py
           python development/hybrid-comparison/t2b2-v1/tools/verify_r2.py
           node tests/runtime/hybrid-comparison-art-contract.cjs
           node scripts/hybrid-comparison-fixtures.cjs --check

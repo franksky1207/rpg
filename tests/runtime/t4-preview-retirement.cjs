@@ -7,7 +7,16 @@ for(const [p,row] of Object.entries(ledger.files)){
  assert.equal(sha(fs.readFileSync(row.archive)),row.beforeSHA256,p+' archive altered');
  assert.equal(sha(cp.execFileSync('git',['show',ledger.baselineHEAD+':'+p])),row.beforeSHA256,p+' baseline');
  if(row.afterSHA256===null)assert.equal(fs.existsSync(p),false,p+' must remain retired');
- else assert.equal(sha(fs.readFileSync(p)),row.afterSHA256,p+' exact authorized retirement');
+ else if(p==='3d-test/test-center.js'||p==='3d-test/index.html'){
+  const verify=require('../../development/hybrid-comparison/t2b3-v1/source-version.cjs');
+  const oldSHA=sha(cp.execFileSync('git',['show','10ef9222427050eadf42b8f61b4d153da7b049b6:'+p]));
+  verify(p,oldSHA); // Original T4 lock + exact one-query Batch28 transform.
+  const read=fs.readFileSync,current=read(p,'utf8');
+  try{
+   fs.readFileSync=function(file,...args){return file===p?current+'\n// unauthorized extra change':read.call(fs,file,...args);};
+   assert.throws(()=>verify(p,oldSHA),/Only authorized GM cache-bust changes/);
+  }finally{fs.readFileSync=read;}
+ }else assert.equal(sha(fs.readFileSync(p)),row.afterSHA256,p+' exact authorized retirement');
 }
 for(const p of ['index.html','ui.js','worldmapui.js','storyui.js','alternateuniverseui.js','story.css']){
  const s=fs.readFileSync(p,'utf8');assert.doesNotMatch(s,/civilization3d(?:FormalHost|StoryHost|HomeToggle|GalaxyToggle|Toggle|HideStoryPreview|HomeRouteRendered)|galaxy3dPreviewControl|formal-home\.js|formal-dom\.js|preview-expand\.css|story-3d-preview/,p+' decorative dependency');

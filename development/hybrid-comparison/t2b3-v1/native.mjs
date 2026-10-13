@@ -1,4 +1,4 @@
-import {ART} from './assets.mjs?v=20261014-b28-refined1';
+import {ART} from './assets.mjs?v=20261014-b28-refined2';
 import {CLIPS,GRID} from './contract.mjs?v=20261012-t2b3-v1';
 export class NativeActor{
  constructor(assets,actor,tier,input,registry,source,coverage,counters){Object.assign(this,{assets,actor,tier,input,registry,source,coverage,counters});this.canvas=document.createElement('canvas');this.canvas.width=this.canvas.height=GRID[tier];this.boxes=[];this.urls=[];this.closed=false;this.group=null;}

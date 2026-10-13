@@ -1,0 +1,117 @@
+JavaScript structural integrity passed: {"files":421,"localScripts":270,"normalScripts":270,"delayedScripts":98,"saveHook":"savehookcore","schema":17,"cleanupBatch":7,"runtimeApi":1,"migrationRegression":"ci-only","reincarnationPermanentGearSaveGuard":"evidence-gated-fallback-only","gmAuthorization":"account-local-runtime","gmLazyRetry":true,"gmFormalPolicy":1,"lazyLoading":"story-auto-gm-browser-authorized-or-modal-integrity-explicit"}
+PASS T4 exact retirement/history/source protection, no formal decoration references, shared GM/B preserved, publish isolated
+PASS repair 5: 100/100/10 formal equipment sets, eight groups, 31 scenes and GM source isolation.
+PASS B18 static coverage: core routes, optional visuals, mode isolation, GM, story and lazy loading.
+[文明戰線] Second World data integrity warning [ { code: 'GEAR_NAME_DUPLICATE', names: [ '主機同步環' ] } ]
+✔ galaxy last region uses the real last Boss, not 101/501 (6.099514ms)
+✔ galaxy review and progress focus are explicit presentation contexts (1.193909ms)
+✔ universe selected/review focus and defeated Bosses use live owners (1.196704ms)
+✔ higher uses late reincarnation owner overrides (1.285688ms)
+✔ mixed epochs, empty slots and external appearance API remain supported (4.113169ms)
+✔ returned appearance and snapshots never alias formal state or owner output (38.832235ms)
+✔ alternate separates active, next and historical focus (1.581954ms)
+✔ locked/missing/invalid alternate owners cannot fabricate an active challenge (1.032537ms)
+✔ calamity status/HP/review are shared, absent definitions stay unavailable (1.414902ms)
+✔ W3 bounty is unavailable and visible-mode availability stays aligned (2.349562ms)
+✔ missing formal sources are not filled by GM fixtures (1.069392ms)
+✔ battle uses only authoritative finite HP/shield; encounter/results unavailable (1.740423ms)
+✔ real formal catalog retains 100/100/10 sets and all 1050 names (9.788825ms)
+✔ catalog rejects missing identity data rather than guessing names (1.493742ms)
+✔ GM bridge rejects unauthorized, foreign-origin and foreign-window messages (2.552137ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.231753
+✔ versioned schema and bounded limits, unavailable without an owner (4.403277ms)
+✔ same-battle ordering, official identities and raw crit flags never inferred (5.43388ms)
+✔ missing owner context and unsupported W3 bounty are rejected (0.810582ms)
+✔ nonfinite HP/shields and event numeric values are rejected, not coerced (13.255941ms)
+✔ duplicate source result cannot create a second battle or settlement (2.636314ms)
+✔ read-only consumer data, raw results and caller State never share references (6.623033ms)
+✔ no renderer cannot change the authoritative result (2.135419ms)
+✔ throw and rejected Promise are isolated from producer and other consumers (7.156047ms)
+✔ permanently slow consumer has one in-flight callback and a finite queue (298.311694ms)
+✔ high volume source history is honestly partial, never another full combat log (45.521127ms)
+✔ fresh battle IDs are monotonic and no old delta reaches a new session (8.268914ms)
+✔ old presentation token and late committed result cannot overwrite new battle (4.841818ms)
+✔ presentation snapshots carry real before/after without synthesizing attack history (3.27753ms)
+✔ background flood omits intermediate actions and foreground only supplies a snapshot (236.965222ms)
+✔ duplicate subscriptions, AbortSignal and repeated disposal retain no listeners (49.369748ms)
+✔ re-subscription gives a marked checkpoint, not a replayed settlement/audio (4.650099ms)
+✔ formal and GM fixture computations have isolated lanes (2.887292ms)
+✔ explicit cancellation rejects late events; pagehide releases consumers (5.324256ms)
+✔ mirror actor vocabulary and explicit battleEnd remain authoritative (3.90792ms)
+✔ reward details remain unavailable until an explicit successful commit (2.75971ms)
+✔ caller-assigned duplicate battle IDs are rejected; producer IDs remain private (0.929181ms)
+✔ pacing comes only from the existing owner and never creates an awaited timer (3.403741ms)
+✔ unknown owner or unhooked reward source cannot claim authoritative events (1.500382ms)
+✔ headless and foreground checkpoints cannot freeze owner settlement bookkeeping (3.669882ms)
+✔ schema validation rejects corrupted event identity and nonfinite payloads (4.189776ms)
+✔ playback end aborts old delivery and rejects late presentation updates (9.945372ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 797.054427
+PASS identical standard core results / complete State: 576 comparisons
+✔ actual core RNG/results and complete State identical without Bridge / throw / reject / never consumer (4037.807881ms)
+✔ actual mirror core output, symmetry and RNG are unchanged by a broken consumer (607.082408ms)
+✔ mode producer hooks are present in each actual owner, not guessed from DOM (64.693463ms)
+✔ Bridge never calls audio, storage, combat calculation, or a long-running timer (18.269991ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4750.866344
+✔ text startup does not fetch, evaluate 3D, or create GPU resources (7.239089ms)
+✔ concurrent formal/GM loads and appearance requests deduplicate each module (7.681905ms)
+✔ partial failure retains successful APIs and retries only failed module (5.454375ms)
+✔ missing engine API fails closed and allows retry (2.136414ms)
+✔ missing Runtime API fails closed and allows retry (5.89716ms)
+✔ absence of service, battle, chronicle factories does not invalidate shared modules (1.438143ms)
+✔ manifest versions use correct document base and validated per-file fallback (1.337402ms)
+✔ manifest unavailable retains fallback and can refresh next time (4.81972ms)
+✔ GM warm deduplicates and fetches only Babylon/scene bytes (1.65514ms)
+✔ GM warm failure retries instead of retaining a rejected Promise (1.159774ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.910431
+PASS T3-A read-only policy / legacy preference / quality / fail-closed / formal release isolation
+PASS T3-B release firewall: demo renderer/fixture are not formal runtime
+PASS T3-B formal-only bridge, unsupported realms, dedupe, hostile consumer isolation, teardown
+PASS T3-B fixture-free formal projection, safe unknown HP, source identity, immutable no-owner consumer
+PASS T3-B formal visual session: unmapped fail-closed, fixture rejected, dedupe, cancellation, detach, no owner writes
+PASS T3-B formal asset mapping: exact named five-slot registry, no GM fixture, enemy catalog fails closed
+PASS formal renderer: art approval, exact identity, SHA/bytes, unavailable G006, opaque verified token, abort; no raster claim
+PASS formal B controller: formal-only, computed history excluded, dedupe, background, stop, late load, missing assets, 100 lifecycle switches; mocked resource counter, not GPU measurement
+PASS T4 exact retirement/history/source protection, no formal decoration references, shared GM/B preserved, publish isolated
+PASS one formal visual clock: owner token/index/pacing, no computed replay, real cue fields, zero-HP death, foreground suppression, GM speed and missing history fail-closed
+GM and 3D per-file version manifest structural integrity passed 497
+Global save writer audit passed: engine base + Save Hook Core + audited Offline checkpoint wrapper only.
+New-state / save backup owner integrity passed
+GM runtime first-render authorization integrity passed
+GM runtime auth preference sync integrity passed
+Alternate Universe Data Integrity OK
+200 universes / 1000U mapping / 20 cultures / five depths / enemy curve / 20% crit-dodge baseline are synchronized.
+Alternate Universe attempt lifecycle integrity passed.
+Alternate Universe combat adapter integrity passed.
+Alternate Universe failure lifecycle integrity passed.
+Alternate Universe U1-U1000 progression integrity passed.
+Alternate Universe player UI / home composition / transient-state integrity passed.
+Alternate Universe Batch 4-3 finalized balance/lifecycle regression passed.
+Alternate Universe old-save normalization integrity passed.

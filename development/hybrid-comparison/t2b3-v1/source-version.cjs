@@ -44,11 +44,12 @@ module.exports=function verifySource(path,oldSHA){
   assert.equal(sha(cp.execFileSync('git',['show',retirement.baselineHEAD+':'+path])),row.beforeSHA256,'Retirement baseline exact source');
   assert.equal(sha(cp.execFileSync('git',['show','10ef9222427050eadf42b8f61b4d153da7b049b6:'+path])),oldSHA,'Original B2 history lock');
   if(row.afterSHA256===null)assert.ok(!fs.existsSync(path),'Retired controller cannot return to formal root');
-  else if(path==='3d-test/test-center.js'){
+  else if(path==='3d-test/test-center.js'||path==='3d-test/index.html'){
    // Keep the T4 lock intact. This task only changes the GM import query.
    const previous=cp.execFileSync('git',['show','ff91116c655fbec22047d01e61e3554fa47451e9:'+path]);
    assert.equal(sha(previous),row.afterSHA256,'Exact pre-refinement GM source');
-   const from='gm-battle-simulation.js?v=20261013-gm-b1',to='gm-battle-simulation.js?v=20261014-b28-refined1';
+   const script=path.endsWith('.html')?'test-center.js':'gm-battle-simulation.js';
+   const from=script+'?v=20261013-gm-b1',to=script+'?v=20261014-b28-refined2';
    assert.equal(previous.toString().split(from).length,2,'One GM cache version only');
    assert.equal(fs.readFileSync(path,'utf8'),previous.toString().replace(from,to),'Only authorized GM cache-bust changes');
   }else assert.equal(sha(fs.readFileSync(path)),row.afterSHA256,'Exact authorized T4 source');

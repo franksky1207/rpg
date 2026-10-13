@@ -4,7 +4,7 @@ export async function mount({host,signal,quality='medium'}){
  const root=new URL('../development/hybrid-comparison/',import.meta.url);
  const [{loadData,selectInput},{Playback,bindRenderer},{createRenderer,diagnostics},{elapsedClock}]=await Promise.all([
   import(new URL('fixture-input.mjs?v=20261014-b28-refined1',root)),import(new URL('playback.mjs?v=20261014-b28-refined1',root)),
-  import(new URL('t2b3-v1/renderer.mjs?v=20261014-b28-refined1',root)),import(new URL('t2b3-v1/contract.mjs?v=20261012-t2b3-v1',root))]);
+  import(new URL('t2b3-v1/renderer.mjs?v=20261014-b28-refined2',root)),import(new URL('t2b3-v1/contract.mjs?v=20261012-t2b3-v1',root))]);
  signal.throwIfAborted();
  host.innerHTML=`<div class="gm-b-simulation"><div class="gm-b-controls">
  <label>基準戰<select data-b="case"><option value="normal-baseline">普通怪基準戰</option><option value="elite-baseline">菁英怪基準戰</option><option value="boss-baseline">Boss 基準戰</option><option value="boss-player-defeat">Boss 擊敗玩家</option><option value="elite-effects-owner-input">菁英特殊效果測試</option></select></label>

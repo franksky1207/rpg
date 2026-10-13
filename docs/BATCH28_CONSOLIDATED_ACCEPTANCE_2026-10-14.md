@@ -83,3 +83,11 @@ GM初次失敗是舊Fixture鎖原registry／裝備SHA，与精修資產不一致
 - 第二套真模型完成前的跨兩套／跨接口族真实混穿待驗；目前32種G007子集合与G006缺材拒絕不能代替。
 
 以上兩項依使用者規則不阻工程結案。本機完整驗收已通過，本輪工程成果已完成。exact-HEAD Actions未完成或失败仍要继续核對／修正，不能只凭本機宣稱發布驗收全綠。G007 Blender精修已在本輪实际做完，不再留为下一個小批；G016完整模型與G021／宇宙／高維素材仍不施工。
+
+## 6. 首輪Actions失敗與精確入口修正
+
+9637011b的Runtime／B2／B3，以及e02594e6的Runtime失敗log已讀取並保留在ci-failures。根因為兩個本機未逐入口檢查的分支：Python inventory還沒將adapter／producer送進嚴格source鏈，T4退場測試仍直接比GM舊query SHA。已接上同一來源鏈，T4原歷史lock完全不動，逐byte驗ff91116c原GM來源＋唯一query替換，另新增額外改動必拒絕負例；CI原core命令含200×5／存檔／GM／三紀元已在本機逐條通過，见ci-core-exact-commands.log。
+
+B2的原repair容量表是精修前歷史成本。最初只用歷史視圖的方案被自動審核拒絕，理由是可能弱化現行資產驗證；已採加強方案：verify-historical-b2-repair.py**先強制執行目前15GLB契約／450KB原門檻與19項Khronos檢查及原／新source鏈**，再在暫存唯讀歷史檔案視圖完整執行原verify_repair.py。原腳本／原表／所有原斷言均未改，歷史SHA与bytes核對仍有效，不跳過現行模型；本機已PASS。原r2的C／native parity未過歷史Gate保留，不冒稱本輪重新通过ABC美術比較。
+
+每次新提交的exact-HEAD Actions必須重新核對；上述失敗SHA不稱全綠，不能套用其成功流程到最後HEAD。
