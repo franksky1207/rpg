@@ -12,8 +12,10 @@ on:
       - 'tests/runtime/t3a-hybrid-policy.cjs'
       - 'tests/runtime/t3b-formal-projection.cjs'
       - 'tests/runtime/t3b-formal-session.cjs'
+      - 'tests/runtime/t3b-formal-assets.cjs'
       - '3d-test/t3b-formal-projection.js'
       - '3d-test/t3b-formal-session.js'
+      - '3d-test/t3b-formal-assets.js'
       - '3d-test/t3a-hybrid-policy.js'
       - 'tests/runtime/combat-events-contract.cjs'
       - 'tests/runtime/combat-events-integration.cjs'
@@ -66,6 +68,7 @@ jobs:
           node tests/runtime/t3b-formal-bridge.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-projection.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-session.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t3b-formal-assets.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
