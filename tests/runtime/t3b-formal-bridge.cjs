@@ -25,4 +25,17 @@ handler(event('alternate',3,1));assert.equal(calls,1);
 assert.equal(b.diagnostics().canCommit,false);assert.equal(b.diagnostics().canCreateEvents,false);
 listeners.pagehide();assert.equal(b.diagnostics().subscribed,false);
 assert.equal(p.resolve({requestedMode:'hybrid-b',rendererReady:false}).effectiveMode,'text');
+// T3-B release firewall: the demonstrator is backed by signed offline GM fixtures,
+// and must not be mistaken for the unpublished formal renderer.
+const formalHTML=fs.readFileSync('index.html','utf8');
+const modeSource=fs.readFileSync('3d-test/mode-foundation.js','utf8');
+const demoRenderer=fs.readFileSync('development/hybrid-comparison/t2b3-v1/renderer.mjs','utf8');
+const fixtureSource=fs.readFileSync('development/hybrid-comparison/fixture-input.mjs','utf8');
+assert.match(demoRenderer,/isVerifiedInput\(context\.input\)/);
+assert.match(fixtureSource,/gm-fixture/);
+assert.match(modeSource,/FULL_3D_AVAILABLE=false/);
+assert.doesNotMatch(formalHTML,/development\/hybrid-comparison\/t2b3-v1\/renderer\.mjs/);
+assert.doesNotMatch(formalHTML,/development\/hybrid-comparison\/fixture-input\.mjs/);
+assert.equal(b.diagnostics().rendererReleased,false);
+console.log('PASS T3-B release firewall: demo renderer/fixture are not formal runtime');
 console.log('PASS T3-B formal-only bridge, unsupported realms, dedupe, hostile consumer isolation, teardown');
