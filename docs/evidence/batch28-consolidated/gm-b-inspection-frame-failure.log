@@ -1,0 +1,12 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'hit' !== 'attack'
+
+    at /workspace/rpg/tests/runtime/gm-battle-simulation-browser.js:25:80 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'hit',
+  expected: 'attack',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

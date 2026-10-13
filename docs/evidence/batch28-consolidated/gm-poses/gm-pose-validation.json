@@ -1,0 +1,229 @@
+{
+  "source": "current GM C-08 free fixture; isolated catalog receiver, not formal account acceptance",
+  "physicalGPU": false,
+  "realIPhone": false,
+  "tiers": [
+    {
+      "quality": "low",
+      "poses": [
+        {
+          "name": "idle",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.low",
+            "helmet": "equipment.ancient-ruins.v1.helmet.low",
+            "armor": "equipment.ancient-ruins.v1.armor.low",
+            "shoes": "equipment.ancient-ruins.v1.shoes.low",
+            "accessory": "equipment.ancient-ruins.v1.accessory.low"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "headTurn",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.low",
+            "helmet": "equipment.ancient-ruins.v1.helmet.low",
+            "armor": "equipment.ancient-ruins.v1.armor.low",
+            "shoes": "equipment.ancient-ruins.v1.shoes.low",
+            "accessory": "equipment.ancient-ruins.v1.accessory.low"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "headPitch",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.low",
+            "helmet": "equipment.ancient-ruins.v1.helmet.low",
+            "armor": "equipment.ancient-ruins.v1.armor.low",
+            "shoes": "equipment.ancient-ruins.v1.shoes.low",
+            "accessory": "equipment.ancient-ruins.v1.accessory.low"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "deepSquat",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.low",
+            "helmet": "equipment.ancient-ruins.v1.helmet.low",
+            "armor": "equipment.ancient-ruins.v1.armor.low",
+            "shoes": "equipment.ancient-ruins.v1.shoes.low",
+            "accessory": "equipment.ancient-ruins.v1.accessory.low"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "stride",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.low",
+            "helmet": "equipment.ancient-ruins.v1.helmet.low",
+            "armor": "equipment.ancient-ruins.v1.armor.low",
+            "shoes": "equipment.ancient-ruins.v1.shoes.low",
+            "accessory": "equipment.ancient-ruins.v1.accessory.low"
+          },
+          "finiteMeshes": 18
+        }
+      ],
+      "singleSlots": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "maskRestored": true
+    },
+    {
+      "quality": "medium",
+      "poses": [
+        {
+          "name": "idle",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.medium",
+            "helmet": "equipment.ancient-ruins.v1.helmet.medium",
+            "armor": "equipment.ancient-ruins.v1.armor.medium",
+            "shoes": "equipment.ancient-ruins.v1.shoes.medium",
+            "accessory": "equipment.ancient-ruins.v1.accessory.medium"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "headTurn",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.medium",
+            "helmet": "equipment.ancient-ruins.v1.helmet.medium",
+            "armor": "equipment.ancient-ruins.v1.armor.medium",
+            "shoes": "equipment.ancient-ruins.v1.shoes.medium",
+            "accessory": "equipment.ancient-ruins.v1.accessory.medium"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "headPitch",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.medium",
+            "helmet": "equipment.ancient-ruins.v1.helmet.medium",
+            "armor": "equipment.ancient-ruins.v1.armor.medium",
+            "shoes": "equipment.ancient-ruins.v1.shoes.medium",
+            "accessory": "equipment.ancient-ruins.v1.accessory.medium"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "deepSquat",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.medium",
+            "helmet": "equipment.ancient-ruins.v1.helmet.medium",
+            "armor": "equipment.ancient-ruins.v1.armor.medium",
+            "shoes": "equipment.ancient-ruins.v1.shoes.medium",
+            "accessory": "equipment.ancient-ruins.v1.accessory.medium"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "stride",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.medium",
+            "helmet": "equipment.ancient-ruins.v1.helmet.medium",
+            "armor": "equipment.ancient-ruins.v1.armor.medium",
+            "shoes": "equipment.ancient-ruins.v1.shoes.medium",
+            "accessory": "equipment.ancient-ruins.v1.accessory.medium"
+          },
+          "finiteMeshes": 18
+        }
+      ],
+      "singleSlots": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "maskRestored": true
+    },
+    {
+      "quality": "high",
+      "poses": [
+        {
+          "name": "idle",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.high",
+            "helmet": "equipment.ancient-ruins.v1.helmet.high",
+            "armor": "equipment.ancient-ruins.v1.armor.high",
+            "shoes": "equipment.ancient-ruins.v1.shoes.high",
+            "accessory": "equipment.ancient-ruins.v1.accessory.high"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "headTurn",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.high",
+            "helmet": "equipment.ancient-ruins.v1.helmet.high",
+            "armor": "equipment.ancient-ruins.v1.armor.high",
+            "shoes": "equipment.ancient-ruins.v1.shoes.high",
+            "accessory": "equipment.ancient-ruins.v1.accessory.high"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "headPitch",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.high",
+            "helmet": "equipment.ancient-ruins.v1.helmet.high",
+            "armor": "equipment.ancient-ruins.v1.armor.high",
+            "shoes": "equipment.ancient-ruins.v1.shoes.high",
+            "accessory": "equipment.ancient-ruins.v1.accessory.high"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "deepSquat",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.high",
+            "helmet": "equipment.ancient-ruins.v1.helmet.high",
+            "armor": "equipment.ancient-ruins.v1.armor.high",
+            "shoes": "equipment.ancient-ruins.v1.shoes.high",
+            "accessory": "equipment.ancient-ruins.v1.accessory.high"
+          },
+          "finiteMeshes": 18
+        },
+        {
+          "name": "stride",
+          "bones": 53,
+          "assets": {
+            "weapon": "equipment.ancient-ruins.v1.weapon.high",
+            "helmet": "equipment.ancient-ruins.v1.helmet.high",
+            "armor": "equipment.ancient-ruins.v1.armor.high",
+            "shoes": "equipment.ancient-ruins.v1.shoes.high",
+            "accessory": "equipment.ancient-ruins.v1.accessory.high"
+          },
+          "finiteMeshes": 18
+        }
+      ],
+      "singleSlots": [
+        "weapon",
+        "helmet",
+        "armor",
+        "shoes",
+        "accessory"
+      ],
+      "maskRestored": true
+    }
+  ],
+  "passed": true,
+  "remainingEngines": 0,
+  "errors": []
+}

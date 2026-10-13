@@ -41,4 +41,6 @@ for(const quality of ['low','medium','high']){
  doc.occlusion[quality]={characterSHA256:a.sha256,policy:'covered-triangles-only; immutable vertex buffers; restore original indices',meshes:rows};
 }
 doc.version='batch28c-ancient-ruins-v1';doc.equipmentArtStatus='first-set-awaiting-user-visual-acceptance';
+const reviewPath='development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/model-review.json';
+if(fs.existsSync(reviewPath)){const review=JSON.parse(fs.readFileSync(reviewPath));if(review.reviewer==='user-delegated-chatgpt'&&review.sourceSha256===sha(fs.readFileSync(source))&&doc.assets.filter(a=>a.type==='equipment').every(a=>review.assetSha256[a.id]===a.sha256)){doc.version='batch28-consolidated-refinement-20261014';doc.equipmentArtStatus='refined-model-art-reviewed-by-user-delegated-chatgpt';}}
 fs.writeFileSync(file,JSON.stringify(doc,null,2)+'\n');console.log('Registered 15 real equipment GLBs and digest-bound conservative coverage partitions');

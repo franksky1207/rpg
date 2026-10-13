@@ -1,0 +1,4434 @@
+{
+  "schema": 1,
+  "version": "batch28c-ancient-ruins-v1",
+  "rigContract": "cw.humanoid.rig.v1",
+  "artStatus": "human-sci-fi-final-polish-awaiting-user-acceptance",
+  "coordinates": {
+    "unit": "metre",
+    "height": 1.9,
+    "gltf": "right-handed +Y up +Z forward",
+    "source": "Blender +Z up -Y forward",
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "rotation": "socket-local quaternion; equipment pivot matches socket origin"
+  },
+  "slots": {
+    "weapon": "socket.weapon.R",
+    "helmet": "socket.helmet",
+    "armor": "socket.armor",
+    "shoes": "socket.shoes.L",
+    "accessory": "socket.accessory.back"
+  },
+  "sourceRevision": {
+    "baseCommit": "894babdbc484176c6a71aaf2d689283db9445f00",
+    "socketChanges": "none; same local transforms and 53-bone rig",
+    "hideRegions": [
+      "region.head",
+      "region.torso",
+      "region.legs",
+      "region.feet",
+      "region.back"
+    ],
+    "hidePolicy": "source masks only; equipment hiding deferred to batches 28-30"
+  },
+  "player": {
+    "low": "player.foundation.v1.low",
+    "medium": "player.foundation.v1.medium",
+    "high": "player.foundation.v1.high"
+  },
+  "assets": [
+    {
+      "id": "babylon.gltf-loader.v7.54.3",
+      "path": "vendor/babylonjs/7.54.3/babylonjs.loaders.min.js",
+      "sha256": "02a6782cf71693218165ae87b114697a74b9cb081c8123e3fcc310e159598d6c",
+      "bytes": 288275,
+      "type": "decoder",
+      "quality": "shared",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-decoder"
+      ],
+      "lod": "shared",
+      "source": {
+        "path": "vendor/babylonjs/7.54.3/SOURCE.md",
+        "sha256": "5412109c4dc5b8eb857d7f6733aa598b95914bf8ede4cf31d854d2c8c7417af4"
+      },
+      "license": "Apache-2.0",
+      "dependencies": [],
+      "preload": false,
+      "fallback": "procedural-geometry"
+    },
+    {
+      "id": "player.foundation.v1.low",
+      "path": "assets/3d/characters/player-v1/player-low.glb",
+      "sha256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f",
+      "bytes": 741596,
+      "type": "character",
+      "quality": "low",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "low",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410"
+      },
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 8480,
+        "vertices": 7125,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 2,
+        "textureDimensions": [
+          [
+            512,
+            512
+          ],
+          [
+            1024,
+            1024
+          ]
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "player.foundation.v1.medium",
+      "path": "assets/3d/characters/player-v1/player-medium.glb",
+      "sha256": "a88dbfcb0245833ddb7c9c09cc9fa434699c415916641e5a07b2e8ed50318842",
+      "bytes": 1694776,
+      "type": "character",
+      "quality": "medium",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "medium",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410"
+      },
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 27140,
+        "vertices": 20268,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 2,
+        "textureDimensions": [
+          [
+            512,
+            512
+          ],
+          [
+            1024,
+            1024
+          ]
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "player.foundation.v1.high",
+      "path": "assets/3d/characters/player-v1/player-high.glb",
+      "sha256": "127a38244aa23c6cf58617f33eb668bb9f5507bc7eda660401ba0642c53c50a5",
+      "bytes": 5006948,
+      "type": "character",
+      "quality": "high",
+      "epochs": [
+        1,
+        2,
+        3
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character"
+      ],
+      "lod": "high",
+      "source": {
+        "path": "development/3d-source/characters/player-v1/player-foundation.blend",
+        "sha256": "36b4c62def7029616d9d1125b88314ced90483a2e6f728ee0036e48e09451410"
+      },
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "metrics": {
+        "triangles": 108566,
+        "vertices": 64386,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 2,
+        "textureDimensions": [
+          [
+            512,
+            512
+          ],
+          [
+            1024,
+            1024
+          ]
+        ],
+        "animations": [
+          "CW_Idle_Breathing_Compatibility"
+        ]
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.weapon.low",
+      "type": "equipment",
+      "slot": "weapon",
+      "quality": "low",
+      "mount": "rigid",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "古代光刃"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.weapon.R",
+      "displayRotation": [
+        -0.6478211283683777,
+        0.2834215760231018,
+        2.300196833004975e-8,
+        0.7071068286895752
+      ],
+      "path": "assets/3d/equipment/ancient-ruins-v1/weapon-low.glb",
+      "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+      "bytes": 14908,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "low",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [],
+      "metrics": {
+        "triangles": 192,
+        "joints": 0,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.weapon.medium",
+      "type": "equipment",
+      "slot": "weapon",
+      "quality": "medium",
+      "mount": "rigid",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "古代光刃"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.weapon.R",
+      "displayRotation": [
+        -0.6478211283683777,
+        0.2834215760231018,
+        2.300196833004975e-8,
+        0.7071068286895752
+      ],
+      "path": "assets/3d/equipment/ancient-ruins-v1/weapon-medium.glb",
+      "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+      "bytes": 18700,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "medium",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [],
+      "metrics": {
+        "triangles": 272,
+        "joints": 0,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.weapon.high",
+      "type": "equipment",
+      "slot": "weapon",
+      "quality": "high",
+      "mount": "rigid",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "古代光刃"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.weapon.R",
+      "displayRotation": [
+        -0.6478211283683777,
+        0.2834215760231018,
+        2.300196833004975e-8,
+        0.7071068286895752
+      ],
+      "path": "assets/3d/equipment/ancient-ruins-v1/weapon-high.glb",
+      "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+      "bytes": 20504,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "high",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [],
+      "metrics": {
+        "triangles": 332,
+        "joints": 0,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.helmet.low",
+      "type": "equipment",
+      "slot": "helmet",
+      "quality": "low",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "遺物守衛盔"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.helmet",
+      "path": "assets/3d/equipment/ancient-ruins-v1/helmet-low.glb",
+      "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+      "bytes": 61060,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "low",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "face-covered"
+      ],
+      "metrics": {
+        "triangles": 402,
+        "joints": 53,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.helmet.medium",
+      "type": "equipment",
+      "slot": "helmet",
+      "quality": "medium",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "遺物守衛盔"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.helmet",
+      "path": "assets/3d/equipment/ancient-ruins-v1/helmet-medium.glb",
+      "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+      "bytes": 75540,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "medium",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "face-covered"
+      ],
+      "metrics": {
+        "triangles": 570,
+        "joints": 53,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.helmet.high",
+      "type": "equipment",
+      "slot": "helmet",
+      "quality": "high",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "遺物守衛盔"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.helmet",
+      "path": "assets/3d/equipment/ancient-ruins-v1/helmet-high.glb",
+      "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+      "bytes": 82280,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "high",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "face-covered"
+      ],
+      "metrics": {
+        "triangles": 696,
+        "joints": 53,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.armor.low",
+      "type": "equipment",
+      "slot": "armor",
+      "quality": "low",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "自律護衛甲"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.armor",
+      "path": "assets/3d/equipment/ancient-ruins-v1/armor-low.glb",
+      "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+      "bytes": 104348,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "low",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "chest-covered"
+      ],
+      "metrics": {
+        "triangles": 838,
+        "joints": 53,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.armor.medium",
+      "type": "equipment",
+      "slot": "armor",
+      "quality": "medium",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "自律護衛甲"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.armor",
+      "path": "assets/3d/equipment/ancient-ruins-v1/armor-medium.glb",
+      "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+      "bytes": 128620,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "medium",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "chest-covered"
+      ],
+      "metrics": {
+        "triangles": 1186,
+        "joints": 53,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.armor.high",
+      "type": "equipment",
+      "slot": "armor",
+      "quality": "high",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "自律護衛甲"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.armor",
+      "path": "assets/3d/equipment/ancient-ruins-v1/armor-high.glb",
+      "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+      "bytes": 147012,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "high",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "chest-covered"
+      ],
+      "metrics": {
+        "triangles": 1448,
+        "joints": 53,
+        "materials": 4,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.shoes.low",
+      "type": "equipment",
+      "slot": "shoes",
+      "quality": "low",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "遺跡浮行靴"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.shoes.L",
+      "path": "assets/3d/equipment/ancient-ruins-v1/shoes-low.glb",
+      "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+      "bytes": 94728,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "low",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "boot-covered"
+      ],
+      "metrics": {
+        "triangles": 778,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.shoes.medium",
+      "type": "equipment",
+      "slot": "shoes",
+      "quality": "medium",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "遺跡浮行靴"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.shoes.L",
+      "path": "assets/3d/equipment/ancient-ruins-v1/shoes-medium.glb",
+      "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+      "bytes": 118412,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "medium",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "boot-covered"
+      ],
+      "metrics": {
+        "triangles": 1102,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.shoes.high",
+      "type": "equipment",
+      "slot": "shoes",
+      "quality": "high",
+      "mount": "skinned",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "遺跡浮行靴"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.shoes.L",
+      "path": "assets/3d/equipment/ancient-ruins-v1/shoes-high.glb",
+      "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+      "bytes": 133348,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "high",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "boot-covered"
+      ],
+      "metrics": {
+        "triangles": 1344,
+        "joints": 53,
+        "materials": 5,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.accessory.low",
+      "type": "equipment",
+      "slot": "accessory",
+      "quality": "low",
+      "mount": "rigid",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "古文明鑰印"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.accessory.back",
+      "displayRotation": [
+        0.7071067690849304,
+        0,
+        0,
+        0.7071067690849304
+      ],
+      "path": "assets/3d/equipment/ancient-ruins-v1/accessory-low.glb",
+      "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+      "bytes": 8040,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "low",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "back-core-covered"
+      ],
+      "metrics": {
+        "triangles": 102,
+        "joints": 0,
+        "materials": 3,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.accessory.medium",
+      "type": "equipment",
+      "slot": "accessory",
+      "quality": "medium",
+      "mount": "rigid",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "古文明鑰印"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.accessory.back",
+      "displayRotation": [
+        0.7071067690849304,
+        0,
+        0,
+        0.7071067690849304
+      ],
+      "path": "assets/3d/equipment/ancient-ruins-v1/accessory-medium.glb",
+      "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+      "bytes": 9912,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "medium",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "back-core-covered"
+      ],
+      "metrics": {
+        "triangles": 144,
+        "joints": 0,
+        "materials": 3,
+        "embeddedImages": 0
+      }
+    },
+    {
+      "id": "equipment.ancient-ruins.v1.accessory.high",
+      "type": "equipment",
+      "slot": "accessory",
+      "quality": "high",
+      "mount": "rigid",
+      "rigContract": "cw.humanoid.rig.v1",
+      "names": [
+        "古文明鑰印"
+      ],
+      "identity": {
+        "world": 1,
+        "chapter": "地球戰爭",
+        "area": "古代科技遺址",
+        "minLevel": 31,
+        "maxLevel": 35
+      },
+      "socket": "socket.accessory.back",
+      "displayRotation": [
+        0.7071067690849304,
+        0,
+        0,
+        0.7071067690849304
+      ],
+      "path": "assets/3d/equipment/ancient-ruins-v1/accessory-high.glb",
+      "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+      "bytes": 11448,
+      "source": {
+        "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+        "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+      },
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "epochs": [
+        1
+      ],
+      "scenes": [
+        "character-formal",
+        "gm-character",
+        "equipment-display"
+      ],
+      "lod": "high",
+      "dependencies": [
+        "babylon.gltf-loader.v7.54.3"
+      ],
+      "preload": false,
+      "fallback": "procedural-geometry",
+      "hideRegions": [
+        "back-core-covered"
+      ],
+      "metrics": {
+        "triangles": 176,
+        "joints": 0,
+        "materials": 3,
+        "embeddedImages": 0
+      }
+    }
+  ],
+  "equipment": {
+    "weapon": {
+      "low": "equipment.ancient-ruins.v1.weapon.low",
+      "medium": "equipment.ancient-ruins.v1.weapon.medium",
+      "high": "equipment.ancient-ruins.v1.weapon.high"
+    },
+    "helmet": {
+      "low": "equipment.ancient-ruins.v1.helmet.low",
+      "medium": "equipment.ancient-ruins.v1.helmet.medium",
+      "high": "equipment.ancient-ruins.v1.helmet.high"
+    },
+    "armor": {
+      "low": "equipment.ancient-ruins.v1.armor.low",
+      "medium": "equipment.ancient-ruins.v1.armor.medium",
+      "high": "equipment.ancient-ruins.v1.armor.high"
+    },
+    "shoes": {
+      "low": "equipment.ancient-ruins.v1.shoes.low",
+      "medium": "equipment.ancient-ruins.v1.shoes.medium",
+      "high": "equipment.ancient-ruins.v1.shoes.high"
+    },
+    "accessory": {
+      "low": "equipment.ancient-ruins.v1.accessory.low",
+      "medium": "equipment.ancient-ruins.v1.accessory.medium",
+      "high": "equipment.ancient-ruins.v1.accessory.high"
+    }
+  },
+  "equipmentFamilies": {
+    "ancient-ruins-v1": {
+      "weapon": {
+        "low": "equipment.ancient-ruins.v1.weapon.low",
+        "medium": "equipment.ancient-ruins.v1.weapon.medium",
+        "high": "equipment.ancient-ruins.v1.weapon.high"
+      },
+      "helmet": {
+        "low": "equipment.ancient-ruins.v1.helmet.low",
+        "medium": "equipment.ancient-ruins.v1.helmet.medium",
+        "high": "equipment.ancient-ruins.v1.helmet.high"
+      },
+      "armor": {
+        "low": "equipment.ancient-ruins.v1.armor.low",
+        "medium": "equipment.ancient-ruins.v1.armor.medium",
+        "high": "equipment.ancient-ruins.v1.armor.high"
+      },
+      "shoes": {
+        "low": "equipment.ancient-ruins.v1.shoes.low",
+        "medium": "equipment.ancient-ruins.v1.shoes.medium",
+        "high": "equipment.ancient-ruins.v1.shoes.high"
+      },
+      "accessory": {
+        "low": "equipment.ancient-ruins.v1.accessory.low",
+        "medium": "equipment.ancient-ruins.v1.accessory.medium",
+        "high": "equipment.ancient-ruins.v1.accessory.high"
+      }
+    }
+  },
+  "occlusion": {
+    "low": {
+      "characterSHA256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f",
+      "policy": "covered-triangles-only; immutable vertex buffers; restore original indices",
+      "meshes": [
+        {
+          "material": "CW_Suit_WovenGraphite",
+          "vertices": 2091,
+          "indexCount": 6276,
+          "regions": {
+            "chest-covered": [
+              [
+                591,
+                15
+              ],
+              [
+                1854,
+                6
+              ],
+              [
+                1866,
+                3
+              ],
+              [
+                1875,
+                6
+              ],
+              [
+                3834,
+                18
+              ],
+              [
+                4986,
+                3
+              ]
+            ],
+            "back-core-covered": [
+              [
+                4674,
+                6
+              ],
+              [
+                4683,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Suit_SoftCeramicWeave",
+          "vertices": 1325,
+          "indexCount": 3699,
+          "regions": {
+            "chest-covered": [
+              [
+                558,
+                18
+              ],
+              [
+                1074,
+                3
+              ],
+              [
+                1080,
+                3
+              ],
+              [
+                2997,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Trim_TitaniumCyan",
+          "vertices": 418,
+          "indexCount": 1197,
+          "regions": {
+            "chest-covered": [
+              [
+                99,
+                12
+              ],
+              [
+                117,
+                3
+              ],
+              [
+                429,
+                3
+              ],
+              [
+                435,
+                6
+              ],
+              [
+                681,
+                18
+              ],
+              [
+                951,
+                9
+              ]
+            ],
+            "back-core-covered": [
+              [
+                306,
+                6
+              ],
+              [
+                315,
+                3
+              ],
+              [
+                333,
+                9
+              ],
+              [
+                1116,
+                6
+              ],
+              [
+                1125,
+                3
+              ],
+              [
+                1137,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Head_NaturalSkin",
+          "vertices": 1427,
+          "indexCount": 8448,
+          "regions": {
+            "face-covered": [
+              [
+                33,
+                3
+              ],
+              [
+                48,
+                3
+              ],
+              [
+                63,
+                63
+              ],
+              [
+                474,
+                12
+              ],
+              [
+                495,
+                3
+              ],
+              [
+                513,
+                3
+              ],
+              [
+                573,
+                3
+              ],
+              [
+                594,
+                6
+              ],
+              [
+                606,
+                3
+              ],
+              [
+                669,
+                3
+              ],
+              [
+                681,
+                159
+              ],
+              [
+                843,
+                27
+              ],
+              [
+                873,
+                15
+              ],
+              [
+                891,
+                21
+              ],
+              [
+                939,
+                3
+              ],
+              [
+                2136,
+                3
+              ],
+              [
+                2154,
+                3
+              ],
+              [
+                2220,
+                129
+              ],
+              [
+                2352,
+                18
+              ],
+              [
+                2373,
+                18
+              ],
+              [
+                2394,
+                12
+              ],
+              [
+                2409,
+                9
+              ],
+              [
+                2421,
+                18
+              ],
+              [
+                2568,
+                3
+              ],
+              [
+                2586,
+                3
+              ],
+              [
+                2607,
+                3
+              ],
+              [
+                2622,
+                84
+              ],
+              [
+                2967,
+                9
+              ],
+              [
+                2982,
+                6
+              ],
+              [
+                4203,
+                3
+              ],
+              [
+                4227,
+                3
+              ],
+              [
+                4239,
+                57
+              ],
+              [
+                4638,
+                3
+              ],
+              [
+                4647,
+                9
+              ],
+              [
+                4662,
+                3
+              ],
+              [
+                4743,
+                3
+              ],
+              [
+                4767,
+                3
+              ],
+              [
+                4794,
+                3
+              ],
+              [
+                4800,
+                3
+              ],
+              [
+                4821,
+                3
+              ],
+              [
+                4833,
+                174
+              ],
+              [
+                5010,
+                15
+              ],
+              [
+                6357,
+                3
+              ],
+              [
+                6378,
+                3
+              ],
+              [
+                6387,
+                3
+              ],
+              [
+                6396,
+                3
+              ],
+              [
+                6408,
+                3
+              ],
+              [
+                6417,
+                3
+              ],
+              [
+                6429,
+                3
+              ],
+              [
+                6438,
+                108
+              ],
+              [
+                6549,
+                12
+              ],
+              [
+                6564,
+                12
+              ],
+              [
+                6579,
+                12
+              ],
+              [
+                6594,
+                21
+              ],
+              [
+                6618,
+                6
+              ],
+              [
+                6630,
+                12
+              ],
+              [
+                6645,
+                9
+              ],
+              [
+                6762,
+                3
+              ],
+              [
+                6783,
+                3
+              ],
+              [
+                6825,
+                93
+              ],
+              [
+                7212,
+                3
+              ],
+              [
+                7221,
+                3
+              ],
+              [
+                7230,
+                12
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "medium": {
+      "characterSHA256": "a88dbfcb0245833ddb7c9c09cc9fa434699c415916641e5a07b2e8ed50318842",
+      "policy": "covered-triangles-only; immutable vertex buffers; restore original indices",
+      "meshes": [
+        {
+          "material": "CW_Suit_WovenGraphite",
+          "vertices": 5065,
+          "indexCount": 16554,
+          "regions": {
+            "chest-covered": [
+              [
+                1530,
+                12
+              ],
+              [
+                1668,
+                3
+              ],
+              [
+                4731,
+                9
+              ],
+              [
+                4752,
+                9
+              ],
+              [
+                4773,
+                9
+              ],
+              [
+                10008,
+                42
+              ],
+              [
+                10197,
+                3
+              ],
+              [
+                13008,
+                3
+              ],
+              [
+                13122,
+                3
+              ],
+              [
+                13128,
+                3
+              ]
+            ],
+            "back-core-covered": [
+              [
+                3897,
+                3
+              ],
+              [
+                3903,
+                3
+              ],
+              [
+                3951,
+                3
+              ],
+              [
+                12360,
+                9
+              ],
+              [
+                12375,
+                3
+              ],
+              [
+                12417,
+                3
+              ],
+              [
+                12423,
+                6
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Suit_SoftCeramicWeave",
+          "vertices": 3784,
+          "indexCount": 12204,
+          "regions": {
+            "chest-covered": [
+              [
+                2049,
+                42
+              ],
+              [
+                3447,
+                3
+              ],
+              [
+                3453,
+                3
+              ],
+              [
+                3459,
+                3
+              ],
+              [
+                8019,
+                12
+              ],
+              [
+                9561,
+                3
+              ],
+              [
+                9576,
+                24
+              ],
+              [
+                9603,
+                12
+              ]
+            ],
+            "boot-covered": [
+              [
+                225,
+                3
+              ],
+              [
+                324,
+                6
+              ],
+              [
+                3240,
+                6
+              ],
+              [
+                6276,
+                3
+              ],
+              [
+                6291,
+                3
+              ],
+              [
+                9276,
+                6
+              ],
+              [
+                9288,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Trim_TitaniumCyan",
+          "vertices": 1008,
+          "indexCount": 3066,
+          "regions": {
+            "chest-covered": [
+              [
+                273,
+                3
+              ],
+              [
+                288,
+                42
+              ],
+              [
+                336,
+                9
+              ],
+              [
+                1074,
+                3
+              ],
+              [
+                1086,
+                3
+              ],
+              [
+                1101,
+                30
+              ],
+              [
+                1137,
+                18
+              ],
+              [
+                1761,
+                3
+              ],
+              [
+                1776,
+                51
+              ],
+              [
+                1842,
+                3
+              ],
+              [
+                2442,
+                3
+              ],
+              [
+                2454,
+                3
+              ],
+              [
+                2469,
+                39
+              ],
+              [
+                2520,
+                9
+              ]
+            ],
+            "back-core-covered": [
+              [
+                798,
+                9
+              ],
+              [
+                813,
+                3
+              ],
+              [
+                834,
+                3
+              ],
+              [
+                840,
+                12
+              ],
+              [
+                1398,
+                3
+              ],
+              [
+                1404,
+                3
+              ],
+              [
+                1422,
+                3
+              ],
+              [
+                2154,
+                3
+              ],
+              [
+                2160,
+                3
+              ],
+              [
+                2178,
+                6
+              ],
+              [
+                2916,
+                9
+              ],
+              [
+                2931,
+                3
+              ],
+              [
+                2949,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Head_NaturalSkin",
+          "vertices": 4458,
+          "indexCount": 26520,
+          "regions": {
+            "face-covered": [
+              [
+                57,
+                3
+              ],
+              [
+                84,
+                6
+              ],
+              [
+                120,
+                6
+              ],
+              [
+                159,
+                15
+              ],
+              [
+                177,
+                3
+              ],
+              [
+                183,
+                3
+              ],
+              [
+                189,
+                3
+              ],
+              [
+                195,
+                3
+              ],
+              [
+                204,
+                6
+              ],
+              [
+                213,
+                3
+              ],
+              [
+                219,
+                183
+              ],
+              [
+                1440,
+                6
+              ],
+              [
+                1449,
+                21
+              ],
+              [
+                1512,
+                24
+              ],
+              [
+                1563,
+                18
+              ],
+              [
+                1818,
+                3
+              ],
+              [
+                1869,
+                6
+              ],
+              [
+                1896,
+                3
+              ],
+              [
+                1902,
+                6
+              ],
+              [
+                1941,
+                3
+              ],
+              [
+                1995,
+                6
+              ],
+              [
+                2031,
+                3
+              ],
+              [
+                2037,
+                6
+              ],
+              [
+                2073,
+                3
+              ],
+              [
+                2088,
+                3
+              ],
+              [
+                2115,
+                3
+              ],
+              [
+                2121,
+                6
+              ],
+              [
+                2151,
+                462
+              ],
+              [
+                2616,
+                45
+              ],
+              [
+                2670,
+                33
+              ],
+              [
+                2706,
+                42
+              ],
+              [
+                2751,
+                36
+              ],
+              [
+                2790,
+                36
+              ],
+              [
+                2922,
+                9
+              ],
+              [
+                6456,
+                6
+              ],
+              [
+                6660,
+                6
+              ],
+              [
+                6696,
+                3
+              ],
+              [
+                6729,
+                6
+              ],
+              [
+                6747,
+                3
+              ],
+              [
+                6780,
+                3
+              ],
+              [
+                6801,
+                3
+              ],
+              [
+                6831,
+                3
+              ],
+              [
+                6867,
+                3
+              ],
+              [
+                6882,
+                6
+              ],
+              [
+                6915,
+                3
+              ],
+              [
+                6939,
+                3
+              ],
+              [
+                6966,
+                3
+              ],
+              [
+                6990,
+                366
+              ],
+              [
+                7359,
+                36
+              ],
+              [
+                7398,
+                45
+              ],
+              [
+                7446,
+                33
+              ],
+              [
+                7482,
+                48
+              ],
+              [
+                7533,
+                45
+              ],
+              [
+                7581,
+                48
+              ],
+              [
+                7632,
+                51
+              ],
+              [
+                7779,
+                3
+              ],
+              [
+                8133,
+                3
+              ],
+              [
+                8157,
+                3
+              ],
+              [
+                8187,
+                3
+              ],
+              [
+                8211,
+                3
+              ],
+              [
+                8238,
+                3
+              ],
+              [
+                8262,
+                3
+              ],
+              [
+                8280,
+                156
+              ],
+              [
+                8451,
+                3
+              ],
+              [
+                8466,
+                108
+              ],
+              [
+                8577,
+                3
+              ],
+              [
+                9399,
+                12
+              ],
+              [
+                9417,
+                21
+              ],
+              [
+                9450,
+                30
+              ],
+              [
+                13299,
+                3
+              ],
+              [
+                13326,
+                6
+              ],
+              [
+                13362,
+                6
+              ],
+              [
+                13401,
+                15
+              ],
+              [
+                13419,
+                3
+              ],
+              [
+                13425,
+                3
+              ],
+              [
+                13431,
+                3
+              ],
+              [
+                13437,
+                3
+              ],
+              [
+                13443,
+                3
+              ],
+              [
+                13449,
+                3
+              ],
+              [
+                13455,
+                3
+              ],
+              [
+                13461,
+                102
+              ],
+              [
+                13566,
+                78
+              ],
+              [
+                14682,
+                3
+              ],
+              [
+                14688,
+                3
+              ],
+              [
+                14697,
+                3
+              ],
+              [
+                14703,
+                3
+              ],
+              [
+                14709,
+                3
+              ],
+              [
+                14751,
+                24
+              ],
+              [
+                14802,
+                18
+              ],
+              [
+                15048,
+                3
+              ],
+              [
+                15099,
+                6
+              ],
+              [
+                15132,
+                6
+              ],
+              [
+                15168,
+                6
+              ],
+              [
+                15225,
+                6
+              ],
+              [
+                15267,
+                6
+              ],
+              [
+                15300,
+                6
+              ],
+              [
+                15318,
+                3
+              ],
+              [
+                15351,
+                6
+              ],
+              [
+                15381,
+                462
+              ],
+              [
+                15846,
+                51
+              ],
+              [
+                15900,
+                33
+              ],
+              [
+                15936,
+                42
+              ],
+              [
+                15981,
+                36
+              ],
+              [
+                16020,
+                36
+              ],
+              [
+                16167,
+                9
+              ],
+              [
+                19731,
+                6
+              ],
+              [
+                19944,
+                9
+              ],
+              [
+                19983,
+                3
+              ],
+              [
+                20019,
+                3
+              ],
+              [
+                20031,
+                6
+              ],
+              [
+                20067,
+                3
+              ],
+              [
+                20088,
+                3
+              ],
+              [
+                20118,
+                3
+              ],
+              [
+                20154,
+                3
+              ],
+              [
+                20169,
+                6
+              ],
+              [
+                20202,
+                3
+              ],
+              [
+                20226,
+                3
+              ],
+              [
+                20253,
+                3
+              ],
+              [
+                20277,
+                366
+              ],
+              [
+                20646,
+                36
+              ],
+              [
+                20685,
+                45
+              ],
+              [
+                20733,
+                33
+              ],
+              [
+                20769,
+                45
+              ],
+              [
+                20820,
+                42
+              ],
+              [
+                20868,
+                48
+              ],
+              [
+                20919,
+                51
+              ],
+              [
+                21069,
+                3
+              ],
+              [
+                21423,
+                3
+              ],
+              [
+                21447,
+                3
+              ],
+              [
+                21477,
+                3
+              ],
+              [
+                21501,
+                3
+              ],
+              [
+                21528,
+                3
+              ],
+              [
+                21552,
+                3
+              ],
+              [
+                21570,
+                156
+              ],
+              [
+                21747,
+                3
+              ],
+              [
+                21756,
+                114
+              ],
+              [
+                22689,
+                12
+              ],
+              [
+                22707,
+                21
+              ],
+              [
+                22740,
+                27
+              ],
+              [
+                22815,
+                3
+              ],
+              [
+                22821,
+                3
+              ],
+              [
+                22833,
+                6
+              ],
+              [
+                22845,
+                3
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "high": {
+      "characterSHA256": "127a38244aa23c6cf58617f33eb668bb9f5507bc7eda660401ba0642c53c50a5",
+      "policy": "covered-triangles-only; immutable vertex buffers; restore original indices",
+      "meshes": [
+        {
+          "material": "CW_Suit_WovenGraphite",
+          "vertices": 30009,
+          "indexCount": 155172,
+          "regions": {
+            "chest-covered": [
+              [
+                13767,
+                3
+              ],
+              [
+                13782,
+                3
+              ],
+              [
+                13797,
+                3
+              ],
+              [
+                13803,
+                57
+              ],
+              [
+                13866,
+                3
+              ],
+              [
+                15504,
+                3
+              ],
+              [
+                15516,
+                3
+              ],
+              [
+                15528,
+                3
+              ],
+              [
+                15540,
+                3
+              ],
+              [
+                15549,
+                45
+              ],
+              [
+                15600,
+                12
+              ],
+              [
+                15615,
+                6
+              ],
+              [
+                15627,
+                3
+              ],
+              [
+                15636,
+                9
+              ],
+              [
+                43761,
+                3
+              ],
+              [
+                43773,
+                3
+              ],
+              [
+                43788,
+                3
+              ],
+              [
+                43800,
+                3
+              ],
+              [
+                43812,
+                3
+              ],
+              [
+                43824,
+                3
+              ],
+              [
+                43830,
+                42
+              ],
+              [
+                43878,
+                6
+              ],
+              [
+                43893,
+                6
+              ],
+              [
+                43905,
+                12
+              ],
+              [
+                43920,
+                3
+              ],
+              [
+                44622,
+                3
+              ],
+              [
+                44640,
+                3
+              ],
+              [
+                44661,
+                3
+              ],
+              [
+                44694,
+                75
+              ],
+              [
+                44775,
+                21
+              ],
+              [
+                44808,
+                9
+              ],
+              [
+                92442,
+                3
+              ],
+              [
+                92454,
+                3
+              ],
+              [
+                92478,
+                69
+              ],
+              [
+                92559,
+                12
+              ],
+              [
+                94173,
+                3
+              ],
+              [
+                94182,
+                3
+              ],
+              [
+                94203,
+                3
+              ],
+              [
+                94215,
+                3
+              ],
+              [
+                94227,
+                3
+              ],
+              [
+                94236,
+                48
+              ],
+              [
+                94290,
+                3
+              ],
+              [
+                94302,
+                6
+              ],
+              [
+                94314,
+                3
+              ],
+              [
+                94326,
+                6
+              ],
+              [
+                121368,
+                3
+              ],
+              [
+                121380,
+                3
+              ],
+              [
+                121392,
+                3
+              ],
+              [
+                121404,
+                3
+              ],
+              [
+                121416,
+                3
+              ],
+              [
+                121428,
+                45
+              ],
+              [
+                121476,
+                3
+              ],
+              [
+                121482,
+                6
+              ],
+              [
+                121491,
+                3
+              ],
+              [
+                121497,
+                3
+              ],
+              [
+                121506,
+                6
+              ],
+              [
+                121518,
+                6
+              ],
+              [
+                121527,
+                6
+              ],
+              [
+                122208,
+                3
+              ],
+              [
+                122220,
+                3
+              ],
+              [
+                122235,
+                3
+              ],
+              [
+                122244,
+                3
+              ],
+              [
+                122256,
+                3
+              ],
+              [
+                122277,
+                48
+              ],
+              [
+                122331,
+                12
+              ],
+              [
+                122349,
+                9
+              ]
+            ],
+            "back-core-covered": [
+              [
+                37743,
+                6
+              ],
+              [
+                37752,
+                3
+              ],
+              [
+                37842,
+                9
+              ],
+              [
+                61566,
+                12
+              ],
+              [
+                61584,
+                3
+              ],
+              [
+                61662,
+                15
+              ],
+              [
+                115404,
+                3
+              ],
+              [
+                115410,
+                12
+              ],
+              [
+                115428,
+                3
+              ],
+              [
+                115503,
+                3
+              ],
+              [
+                115509,
+                9
+              ],
+              [
+                138741,
+                6
+              ],
+              [
+                138750,
+                3
+              ],
+              [
+                138756,
+                3
+              ],
+              [
+                138831,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Suit_SoftCeramicWeave",
+          "vertices": 13939,
+          "indexCount": 69084,
+          "regions": {
+            "chest-covered": [
+              [
+                10509,
+                3
+              ],
+              [
+                10524,
+                3
+              ],
+              [
+                10530,
+                3
+              ],
+              [
+                10542,
+                3
+              ],
+              [
+                10587,
+                60
+              ],
+              [
+                10653,
+                39
+              ],
+              [
+                10698,
+                6
+              ],
+              [
+                10710,
+                6
+              ],
+              [
+                11079,
+                3
+              ],
+              [
+                11241,
+                3
+              ],
+              [
+                11265,
+                48
+              ],
+              [
+                11319,
+                9
+              ],
+              [
+                11340,
+                9
+              ],
+              [
+                11355,
+                18
+              ],
+              [
+                21453,
+                3
+              ],
+              [
+                21462,
+                24
+              ],
+              [
+                21489,
+                9
+              ],
+              [
+                21504,
+                15
+              ],
+              [
+                21522,
+                9
+              ],
+              [
+                21642,
+                3
+              ],
+              [
+                21657,
+                3
+              ],
+              [
+                21669,
+                3
+              ],
+              [
+                21690,
+                3
+              ],
+              [
+                21702,
+                66
+              ],
+              [
+                21771,
+                6
+              ],
+              [
+                21789,
+                6
+              ],
+              [
+                21801,
+                6
+              ],
+              [
+                21816,
+                9
+              ],
+              [
+                21831,
+                9
+              ],
+              [
+                21846,
+                21
+              ],
+              [
+                45207,
+                6
+              ],
+              [
+                45240,
+                15
+              ],
+              [
+                45258,
+                42
+              ],
+              [
+                45306,
+                24
+              ],
+              [
+                45333,
+                18
+              ],
+              [
+                45354,
+                12
+              ],
+              [
+                45837,
+                3
+              ],
+              [
+                45858,
+                36
+              ],
+              [
+                45897,
+                12
+              ],
+              [
+                45915,
+                12
+              ],
+              [
+                45930,
+                12
+              ],
+              [
+                55896,
+                3
+              ],
+              [
+                55917,
+                36
+              ],
+              [
+                55956,
+                12
+              ],
+              [
+                55980,
+                12
+              ],
+              [
+                56001,
+                9
+              ],
+              [
+                56136,
+                3
+              ],
+              [
+                56154,
+                3
+              ],
+              [
+                56166,
+                3
+              ],
+              [
+                56187,
+                3
+              ],
+              [
+                56196,
+                78
+              ],
+              [
+                56286,
+                6
+              ],
+              [
+                56301,
+                15
+              ],
+              [
+                56319,
+                6
+              ],
+              [
+                56331,
+                27
+              ]
+            ],
+            "boot-covered": [
+              [
+                441,
+                21
+              ],
+              [
+                468,
+                36
+              ],
+              [
+                516,
+                30
+              ],
+              [
+                558,
+                18
+              ],
+              [
+                579,
+                24
+              ],
+              [
+                612,
+                21
+              ],
+              [
+                639,
+                18
+              ],
+              [
+                708,
+                120
+              ],
+              [
+                831,
+                27
+              ],
+              [
+                864,
+                27
+              ],
+              [
+                897,
+                18
+              ],
+              [
+                921,
+                12
+              ],
+              [
+                1050,
+                3
+              ],
+              [
+                1056,
+                3
+              ],
+              [
+                1062,
+                3
+              ],
+              [
+                1068,
+                3
+              ],
+              [
+                1074,
+                3
+              ],
+              [
+                1095,
+                15
+              ],
+              [
+                2184,
+                6
+              ],
+              [
+                2193,
+                6
+              ],
+              [
+                2208,
+                12
+              ],
+              [
+                2223,
+                24
+              ],
+              [
+                2256,
+                21
+              ],
+              [
+                2286,
+                24
+              ],
+              [
+                2319,
+                27
+              ],
+              [
+                2358,
+                42
+              ],
+              [
+                2403,
+                6
+              ],
+              [
+                2412,
+                6
+              ],
+              [
+                2421,
+                12
+              ],
+              [
+                2436,
+                18
+              ],
+              [
+                2457,
+                21
+              ],
+              [
+                2484,
+                27
+              ],
+              [
+                2514,
+                3
+              ],
+              [
+                2520,
+                45
+              ],
+              [
+                2640,
+                6
+              ],
+              [
+                2649,
+                3
+              ],
+              [
+                2655,
+                3
+              ],
+              [
+                2661,
+                3
+              ],
+              [
+                3408,
+                9
+              ],
+              [
+                3420,
+                3
+              ],
+              [
+                3426,
+                9
+              ],
+              [
+                3438,
+                3
+              ],
+              [
+                3447,
+                3
+              ],
+              [
+                3453,
+                18
+              ],
+              [
+                3474,
+                12
+              ],
+              [
+                3489,
+                3
+              ],
+              [
+                3585,
+                3
+              ],
+              [
+                3591,
+                3
+              ],
+              [
+                3600,
+                3
+              ],
+              [
+                3606,
+                3
+              ],
+              [
+                3612,
+                3
+              ],
+              [
+                17523,
+                3
+              ],
+              [
+                17595,
+                3
+              ],
+              [
+                17610,
+                3
+              ],
+              [
+                17631,
+                3
+              ],
+              [
+                17637,
+                3
+              ],
+              [
+                18090,
+                30
+              ],
+              [
+                18132,
+                27
+              ],
+              [
+                18165,
+                27
+              ],
+              [
+                18204,
+                24
+              ],
+              [
+                18231,
+                18
+              ],
+              [
+                18255,
+                30
+              ],
+              [
+                18291,
+                138
+              ],
+              [
+                18435,
+                24
+              ],
+              [
+                18465,
+                18
+              ],
+              [
+                18489,
+                6
+              ],
+              [
+                18498,
+                9
+              ],
+              [
+                18510,
+                3
+              ],
+              [
+                18576,
+                24
+              ],
+              [
+                18603,
+                3
+              ],
+              [
+                18609,
+                3
+              ],
+              [
+                18621,
+                9
+              ],
+              [
+                19431,
+                12
+              ],
+              [
+                19449,
+                27
+              ],
+              [
+                19479,
+                21
+              ],
+              [
+                19509,
+                15
+              ],
+              [
+                19539,
+                24
+              ],
+              [
+                19578,
+                27
+              ],
+              [
+                19611,
+                3
+              ],
+              [
+                19617,
+                27
+              ],
+              [
+                19647,
+                9
+              ],
+              [
+                19668,
+                15
+              ],
+              [
+                19686,
+                12
+              ],
+              [
+                19701,
+                18
+              ],
+              [
+                19722,
+                21
+              ],
+              [
+                19749,
+                27
+              ],
+              [
+                19782,
+                30
+              ],
+              [
+                19815,
+                39
+              ],
+              [
+                19857,
+                6
+              ],
+              [
+                19866,
+                6
+              ],
+              [
+                19878,
+                3
+              ],
+              [
+                19884,
+                3
+              ],
+              [
+                19890,
+                6
+              ],
+              [
+                19962,
+                3
+              ],
+              [
+                19968,
+                3
+              ],
+              [
+                19974,
+                18
+              ],
+              [
+                19995,
+                3
+              ],
+              [
+                20001,
+                3
+              ],
+              [
+                20034,
+                3
+              ],
+              [
+                35463,
+                24
+              ],
+              [
+                35499,
+                30
+              ],
+              [
+                35541,
+                30
+              ],
+              [
+                35580,
+                24
+              ],
+              [
+                35610,
+                21
+              ],
+              [
+                35637,
+                21
+              ],
+              [
+                35664,
+                21
+              ],
+              [
+                35736,
+                39
+              ],
+              [
+                35778,
+                75
+              ],
+              [
+                35856,
+                27
+              ],
+              [
+                35889,
+                24
+              ],
+              [
+                35919,
+                21
+              ],
+              [
+                35943,
+                15
+              ],
+              [
+                36072,
+                3
+              ],
+              [
+                36078,
+                3
+              ],
+              [
+                36084,
+                3
+              ],
+              [
+                36090,
+                3
+              ],
+              [
+                36096,
+                3
+              ],
+              [
+                36108,
+                3
+              ],
+              [
+                36114,
+                12
+              ],
+              [
+                37194,
+                18
+              ],
+              [
+                37215,
+                9
+              ],
+              [
+                37227,
+                6
+              ],
+              [
+                37239,
+                18
+              ],
+              [
+                37263,
+                21
+              ],
+              [
+                37290,
+                3
+              ],
+              [
+                37296,
+                21
+              ],
+              [
+                37329,
+                24
+              ],
+              [
+                37362,
+                42
+              ],
+              [
+                37407,
+                9
+              ],
+              [
+                37419,
+                6
+              ],
+              [
+                37428,
+                9
+              ],
+              [
+                37440,
+                12
+              ],
+              [
+                37455,
+                27
+              ],
+              [
+                37488,
+                30
+              ],
+              [
+                37521,
+                3
+              ],
+              [
+                37527,
+                42
+              ],
+              [
+                37638,
+                6
+              ],
+              [
+                37647,
+                3
+              ],
+              [
+                37653,
+                3
+              ],
+              [
+                38379,
+                6
+              ],
+              [
+                38388,
+                3
+              ],
+              [
+                38394,
+                9
+              ],
+              [
+                38406,
+                3
+              ],
+              [
+                38415,
+                6
+              ],
+              [
+                38424,
+                3
+              ],
+              [
+                38430,
+                12
+              ],
+              [
+                38445,
+                18
+              ],
+              [
+                38544,
+                6
+              ],
+              [
+                38556,
+                3
+              ],
+              [
+                38562,
+                3
+              ],
+              [
+                38568,
+                9
+              ],
+              [
+                51906,
+                3
+              ],
+              [
+                51915,
+                3
+              ],
+              [
+                51924,
+                3
+              ],
+              [
+                51999,
+                3
+              ],
+              [
+                52011,
+                6
+              ],
+              [
+                52026,
+                3
+              ],
+              [
+                52032,
+                3
+              ],
+              [
+                52503,
+                30
+              ],
+              [
+                52542,
+                3
+              ],
+              [
+                52548,
+                27
+              ],
+              [
+                52581,
+                24
+              ],
+              [
+                52614,
+                27
+              ],
+              [
+                52647,
+                21
+              ],
+              [
+                52674,
+                24
+              ],
+              [
+                52704,
+                21
+              ],
+              [
+                52731,
+                126
+              ],
+              [
+                52863,
+                24
+              ],
+              [
+                52893,
+                18
+              ],
+              [
+                52914,
+                12
+              ],
+              [
+                52932,
+                6
+              ],
+              [
+                52941,
+                9
+              ],
+              [
+                53013,
+                30
+              ],
+              [
+                53046,
+                3
+              ],
+              [
+                53058,
+                9
+              ],
+              [
+                53904,
+                9
+              ],
+              [
+                53916,
+                21
+              ],
+              [
+                53940,
+                21
+              ],
+              [
+                53970,
+                21
+              ],
+              [
+                54000,
+                6
+              ],
+              [
+                54009,
+                12
+              ],
+              [
+                54036,
+                33
+              ],
+              [
+                54072,
+                30
+              ],
+              [
+                54105,
+                3
+              ],
+              [
+                54111,
+                3
+              ],
+              [
+                54120,
+                9
+              ],
+              [
+                54132,
+                12
+              ],
+              [
+                54147,
+                15
+              ],
+              [
+                54168,
+                15
+              ],
+              [
+                54189,
+                36
+              ],
+              [
+                54231,
+                33
+              ],
+              [
+                54267,
+                33
+              ],
+              [
+                54306,
+                3
+              ],
+              [
+                54312,
+                3
+              ],
+              [
+                54318,
+                3
+              ],
+              [
+                54324,
+                3
+              ],
+              [
+                54330,
+                3
+              ],
+              [
+                54336,
+                3
+              ],
+              [
+                54342,
+                3
+              ],
+              [
+                54351,
+                3
+              ],
+              [
+                54405,
+                3
+              ],
+              [
+                54411,
+                3
+              ],
+              [
+                54417,
+                18
+              ],
+              [
+                54438,
+                3
+              ],
+              [
+                54471,
+                3
+              ],
+              [
+                54480,
+                3
+              ],
+              [
+                54489,
+                3
+              ],
+              [
+                54519,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Trim_TitaniumCyan",
+          "vertices": 1737,
+          "indexCount": 7212,
+          "regions": {
+            "chest-covered": [
+              [
+                774,
+                3
+              ],
+              [
+                789,
+                42
+              ],
+              [
+                837,
+                9
+              ],
+              [
+                2541,
+                3
+              ],
+              [
+                2553,
+                3
+              ],
+              [
+                2568,
+                36
+              ],
+              [
+                2610,
+                18
+              ],
+              [
+                4347,
+                3
+              ],
+              [
+                4362,
+                51
+              ],
+              [
+                4428,
+                3
+              ],
+              [
+                6042,
+                3
+              ],
+              [
+                6054,
+                3
+              ],
+              [
+                6069,
+                39
+              ],
+              [
+                6120,
+                9
+              ]
+            ],
+            "back-core-covered": [
+              [
+                1737,
+                12
+              ],
+              [
+                1755,
+                3
+              ],
+              [
+                1779,
+                3
+              ],
+              [
+                1785,
+                15
+              ],
+              [
+                3306,
+                3
+              ],
+              [
+                3321,
+                3
+              ],
+              [
+                3330,
+                3
+              ],
+              [
+                3336,
+                3
+              ],
+              [
+                3351,
+                6
+              ],
+              [
+                3360,
+                3
+              ],
+              [
+                3378,
+                9
+              ],
+              [
+                5223,
+                3
+              ],
+              [
+                5229,
+                3
+              ],
+              [
+                5238,
+                3
+              ],
+              [
+                5262,
+                12
+              ],
+              [
+                6906,
+                3
+              ],
+              [
+                6927,
+                12
+              ],
+              [
+                6945,
+                3
+              ],
+              [
+                6960,
+                6
+              ],
+              [
+                6987,
+                12
+              ]
+            ]
+          }
+        },
+        {
+          "material": "CW_Head_NaturalSkin",
+          "vertices": 5137,
+          "indexCount": 30594,
+          "regions": {
+            "face-covered": [
+              [
+                57,
+                3
+              ],
+              [
+                84,
+                6
+              ],
+              [
+                120,
+                6
+              ],
+              [
+                159,
+                15
+              ],
+              [
+                177,
+                3
+              ],
+              [
+                183,
+                3
+              ],
+              [
+                189,
+                3
+              ],
+              [
+                195,
+                3
+              ],
+              [
+                204,
+                6
+              ],
+              [
+                213,
+                3
+              ],
+              [
+                219,
+                183
+              ],
+              [
+                1578,
+                6
+              ],
+              [
+                1587,
+                21
+              ],
+              [
+                1650,
+                24
+              ],
+              [
+                1701,
+                18
+              ],
+              [
+                2025,
+                3
+              ],
+              [
+                2076,
+                6
+              ],
+              [
+                2103,
+                3
+              ],
+              [
+                2109,
+                6
+              ],
+              [
+                2148,
+                3
+              ],
+              [
+                2202,
+                6
+              ],
+              [
+                2238,
+                3
+              ],
+              [
+                2244,
+                6
+              ],
+              [
+                2280,
+                3
+              ],
+              [
+                2295,
+                3
+              ],
+              [
+                2322,
+                3
+              ],
+              [
+                2328,
+                6
+              ],
+              [
+                2358,
+                462
+              ],
+              [
+                2823,
+                45
+              ],
+              [
+                2877,
+                33
+              ],
+              [
+                2913,
+                42
+              ],
+              [
+                2958,
+                36
+              ],
+              [
+                2997,
+                36
+              ],
+              [
+                3369,
+                9
+              ],
+              [
+                7461,
+                6
+              ],
+              [
+                7773,
+                6
+              ],
+              [
+                7809,
+                3
+              ],
+              [
+                7842,
+                6
+              ],
+              [
+                7860,
+                3
+              ],
+              [
+                7893,
+                3
+              ],
+              [
+                7914,
+                3
+              ],
+              [
+                7944,
+                3
+              ],
+              [
+                7980,
+                3
+              ],
+              [
+                7995,
+                6
+              ],
+              [
+                8028,
+                3
+              ],
+              [
+                8052,
+                3
+              ],
+              [
+                8079,
+                3
+              ],
+              [
+                8103,
+                366
+              ],
+              [
+                8472,
+                36
+              ],
+              [
+                8511,
+                45
+              ],
+              [
+                8559,
+                33
+              ],
+              [
+                8595,
+                48
+              ],
+              [
+                8646,
+                45
+              ],
+              [
+                8694,
+                48
+              ],
+              [
+                8745,
+                51
+              ],
+              [
+                9096,
+                3
+              ],
+              [
+                9450,
+                3
+              ],
+              [
+                9474,
+                3
+              ],
+              [
+                9504,
+                3
+              ],
+              [
+                9528,
+                3
+              ],
+              [
+                9555,
+                3
+              ],
+              [
+                9579,
+                3
+              ],
+              [
+                9597,
+                156
+              ],
+              [
+                9768,
+                3
+              ],
+              [
+                9783,
+                108
+              ],
+              [
+                9894,
+                3
+              ],
+              [
+                10893,
+                12
+              ],
+              [
+                10911,
+                21
+              ],
+              [
+                10944,
+                30
+              ],
+              [
+                15360,
+                3
+              ],
+              [
+                15387,
+                6
+              ],
+              [
+                15423,
+                6
+              ],
+              [
+                15462,
+                15
+              ],
+              [
+                15480,
+                3
+              ],
+              [
+                15486,
+                3
+              ],
+              [
+                15492,
+                3
+              ],
+              [
+                15498,
+                3
+              ],
+              [
+                15504,
+                3
+              ],
+              [
+                15510,
+                3
+              ],
+              [
+                15516,
+                3
+              ],
+              [
+                15522,
+                102
+              ],
+              [
+                15627,
+                78
+              ],
+              [
+                16887,
+                3
+              ],
+              [
+                16893,
+                3
+              ],
+              [
+                16902,
+                3
+              ],
+              [
+                16908,
+                3
+              ],
+              [
+                16914,
+                3
+              ],
+              [
+                16956,
+                24
+              ],
+              [
+                17007,
+                18
+              ],
+              [
+                17331,
+                3
+              ],
+              [
+                17382,
+                6
+              ],
+              [
+                17415,
+                6
+              ],
+              [
+                17451,
+                6
+              ],
+              [
+                17508,
+                6
+              ],
+              [
+                17550,
+                6
+              ],
+              [
+                17583,
+                6
+              ],
+              [
+                17601,
+                3
+              ],
+              [
+                17634,
+                6
+              ],
+              [
+                17664,
+                462
+              ],
+              [
+                18129,
+                51
+              ],
+              [
+                18183,
+                33
+              ],
+              [
+                18219,
+                42
+              ],
+              [
+                18264,
+                36
+              ],
+              [
+                18303,
+                36
+              ],
+              [
+                18672,
+                9
+              ],
+              [
+                22734,
+                6
+              ],
+              [
+                23043,
+                9
+              ],
+              [
+                23082,
+                3
+              ],
+              [
+                23118,
+                3
+              ],
+              [
+                23130,
+                6
+              ],
+              [
+                23166,
+                3
+              ],
+              [
+                23187,
+                3
+              ],
+              [
+                23217,
+                3
+              ],
+              [
+                23253,
+                3
+              ],
+              [
+                23268,
+                6
+              ],
+              [
+                23301,
+                3
+              ],
+              [
+                23325,
+                3
+              ],
+              [
+                23352,
+                3
+              ],
+              [
+                23376,
+                366
+              ],
+              [
+                23745,
+                36
+              ],
+              [
+                23784,
+                45
+              ],
+              [
+                23832,
+                33
+              ],
+              [
+                23868,
+                45
+              ],
+              [
+                23919,
+                42
+              ],
+              [
+                23967,
+                48
+              ],
+              [
+                24018,
+                51
+              ],
+              [
+                24372,
+                3
+              ],
+              [
+                24726,
+                3
+              ],
+              [
+                24750,
+                3
+              ],
+              [
+                24780,
+                3
+              ],
+              [
+                24804,
+                3
+              ],
+              [
+                24831,
+                3
+              ],
+              [
+                24855,
+                3
+              ],
+              [
+                24873,
+                156
+              ],
+              [
+                25050,
+                3
+              ],
+              [
+                25059,
+                114
+              ],
+              [
+                26166,
+                12
+              ],
+              [
+                26184,
+                21
+              ],
+              [
+                26217,
+                27
+              ],
+              [
+                26292,
+                3
+              ],
+              [
+                26298,
+                3
+              ],
+              [
+                26310,
+                6
+              ],
+              [
+                26322,
+                3
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "equipmentArtStatus": "first-set-awaiting-user-visual-acceptance"
+}

@@ -3,7 +3,7 @@
   "version": 1,
   "publish": false,
   "baselineMainHEAD": "e094f4e8704a808c94551acd9226c2982c67c537",
-  "B2InventorySHA": "b6c09670c460dd7bb3027a3cb54020d54b771f17762c0f8907edfc755509268a",
+  "B2InventorySHA": "873ea63c37c35f8d1113ad333ead045d14762392b905520b1f3e6b4124da78c7",
   "files": {
     "development/hybrid-comparison/t2b2-v1/enemies/boss/atlases/atlas.json": {
       "bytes": 92822,
@@ -3204,92 +3204,92 @@
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/weapon-low.glb": {
-      "bytes": 14908,
-      "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+      "bytes": 17516,
+      "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/weapon-medium.glb": {
-      "bytes": 18700,
-      "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+      "bytes": 22640,
+      "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/weapon-high.glb": {
-      "bytes": 20504,
-      "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+      "bytes": 24408,
+      "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/helmet-low.glb": {
-      "bytes": 61060,
-      "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+      "bytes": 63784,
+      "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/helmet-medium.glb": {
-      "bytes": 75540,
-      "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+      "bytes": 79124,
+      "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/helmet-high.glb": {
-      "bytes": 82280,
-      "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+      "bytes": 86900,
+      "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/armor-low.glb": {
-      "bytes": 104348,
-      "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+      "bytes": 115544,
+      "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/armor-medium.glb": {
-      "bytes": 128620,
-      "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+      "bytes": 142860,
+      "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/armor-high.glb": {
-      "bytes": 147012,
-      "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+      "bytes": 166848,
+      "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/shoes-low.glb": {
-      "bytes": 94728,
-      "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+      "bytes": 110884,
+      "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/shoes-medium.glb": {
-      "bytes": 118412,
-      "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+      "bytes": 142620,
+      "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/shoes-high.glb": {
-      "bytes": 133348,
-      "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+      "bytes": 161432,
+      "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/accessory-low.glb": {
-      "bytes": 8040,
-      "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+      "bytes": 7924,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/accessory-medium.glb": {
-      "bytes": 9912,
-      "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+      "bytes": 7924,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     },
     "assets/3d/equipment/ancient-ruins-v1/accessory-high.glb": {
-      "bytes": 11448,
-      "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+      "bytes": 7924,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
       "license": "CC0-1.0; original ancient-civilization wearable designs",
       "publish": false
     }
@@ -3540,11 +3540,11 @@
           0.7071068286895752
         ],
         "path": "assets/3d/equipment/ancient-ruins-v1/weapon-low.glb",
-        "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
-        "bytes": 14908,
+        "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
+        "bytes": 17516,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3563,9 +3563,9 @@
         "fallback": "procedural-geometry",
         "hideRegions": [],
         "metrics": {
-          "triangles": 192,
+          "triangles": 224,
           "joints": 0,
-          "materials": 4,
+          "materials": 5,
           "embeddedImages": 0
         }
       },
@@ -3594,11 +3594,11 @@
           0.7071068286895752
         ],
         "path": "assets/3d/equipment/ancient-ruins-v1/weapon-medium.glb",
-        "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
-        "bytes": 18700,
+        "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
+        "bytes": 22640,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3617,9 +3617,9 @@
         "fallback": "procedural-geometry",
         "hideRegions": [],
         "metrics": {
-          "triangles": 272,
+          "triangles": 318,
           "joints": 0,
-          "materials": 4,
+          "materials": 5,
           "embeddedImages": 0
         }
       },
@@ -3648,11 +3648,11 @@
           0.7071068286895752
         ],
         "path": "assets/3d/equipment/ancient-ruins-v1/weapon-high.glb",
-        "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
-        "bytes": 20504,
+        "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
+        "bytes": 24408,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3671,9 +3671,9 @@
         "fallback": "procedural-geometry",
         "hideRegions": [],
         "metrics": {
-          "triangles": 332,
+          "triangles": 388,
           "joints": 0,
-          "materials": 4,
+          "materials": 5,
           "embeddedImages": 0
         }
       },
@@ -3696,11 +3696,11 @@
         },
         "socket": "socket.helmet",
         "path": "assets/3d/equipment/ancient-ruins-v1/helmet-low.glb",
-        "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
-        "bytes": 61060,
+        "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
+        "bytes": 63784,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3721,7 +3721,7 @@
           "face-covered"
         ],
         "metrics": {
-          "triangles": 402,
+          "triangles": 436,
           "joints": 53,
           "materials": 4,
           "embeddedImages": 0
@@ -3746,11 +3746,11 @@
         },
         "socket": "socket.helmet",
         "path": "assets/3d/equipment/ancient-ruins-v1/helmet-medium.glb",
-        "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
-        "bytes": 75540,
+        "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
+        "bytes": 79124,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3771,7 +3771,7 @@
           "face-covered"
         ],
         "metrics": {
-          "triangles": 570,
+          "triangles": 616,
           "joints": 53,
           "materials": 4,
           "embeddedImages": 0
@@ -3796,11 +3796,11 @@
         },
         "socket": "socket.helmet",
         "path": "assets/3d/equipment/ancient-ruins-v1/helmet-high.glb",
-        "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
-        "bytes": 82280,
+        "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
+        "bytes": 86900,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3821,7 +3821,7 @@
           "face-covered"
         ],
         "metrics": {
-          "triangles": 696,
+          "triangles": 752,
           "joints": 53,
           "materials": 4,
           "embeddedImages": 0
@@ -3846,11 +3846,11 @@
         },
         "socket": "socket.armor",
         "path": "assets/3d/equipment/ancient-ruins-v1/armor-low.glb",
-        "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
-        "bytes": 104348,
+        "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
+        "bytes": 115544,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3871,7 +3871,7 @@
           "chest-covered"
         ],
         "metrics": {
-          "triangles": 838,
+          "triangles": 964,
           "joints": 53,
           "materials": 4,
           "embeddedImages": 0
@@ -3896,11 +3896,11 @@
         },
         "socket": "socket.armor",
         "path": "assets/3d/equipment/ancient-ruins-v1/armor-medium.glb",
-        "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
-        "bytes": 128620,
+        "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
+        "bytes": 142860,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3921,7 +3921,7 @@
           "chest-covered"
         ],
         "metrics": {
-          "triangles": 1186,
+          "triangles": 1364,
           "joints": 53,
           "materials": 4,
           "embeddedImages": 0
@@ -3946,11 +3946,11 @@
         },
         "socket": "socket.armor",
         "path": "assets/3d/equipment/ancient-ruins-v1/armor-high.glb",
-        "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
-        "bytes": 147012,
+        "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
+        "bytes": 166848,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -3971,7 +3971,7 @@
           "chest-covered"
         ],
         "metrics": {
-          "triangles": 1448,
+          "triangles": 1664,
           "joints": 53,
           "materials": 4,
           "embeddedImages": 0
@@ -3996,11 +3996,11 @@
         },
         "socket": "socket.shoes.L",
         "path": "assets/3d/equipment/ancient-ruins-v1/shoes-low.glb",
-        "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
-        "bytes": 94728,
+        "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
+        "bytes": 110884,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -4021,7 +4021,7 @@
           "boot-covered"
         ],
         "metrics": {
-          "triangles": 778,
+          "triangles": 968,
           "joints": 53,
           "materials": 5,
           "embeddedImages": 0
@@ -4046,11 +4046,11 @@
         },
         "socket": "socket.shoes.L",
         "path": "assets/3d/equipment/ancient-ruins-v1/shoes-medium.glb",
-        "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
-        "bytes": 118412,
+        "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
+        "bytes": 142620,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -4071,7 +4071,7 @@
           "boot-covered"
         ],
         "metrics": {
-          "triangles": 1102,
+          "triangles": 1370,
           "joints": 53,
           "materials": 5,
           "embeddedImages": 0
@@ -4096,11 +4096,11 @@
         },
         "socket": "socket.shoes.L",
         "path": "assets/3d/equipment/ancient-ruins-v1/shoes-high.glb",
-        "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
-        "bytes": 133348,
+        "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
+        "bytes": 161432,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -4121,7 +4121,7 @@
           "boot-covered"
         ],
         "metrics": {
-          "triangles": 1344,
+          "triangles": 1672,
           "joints": 53,
           "materials": 5,
           "embeddedImages": 0
@@ -4152,11 +4152,11 @@
           0.7071067690849304
         ],
         "path": "assets/3d/equipment/ancient-ruins-v1/accessory-low.glb",
-        "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
-        "bytes": 8040,
+        "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+        "bytes": 7924,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -4177,7 +4177,7 @@
           "back-core-covered"
         ],
         "metrics": {
-          "triangles": 102,
+          "triangles": 100,
           "joints": 0,
           "materials": 3,
           "embeddedImages": 0
@@ -4208,11 +4208,11 @@
           0.7071067690849304
         ],
         "path": "assets/3d/equipment/ancient-ruins-v1/accessory-medium.glb",
-        "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
-        "bytes": 9912,
+        "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+        "bytes": 7924,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -4233,7 +4233,7 @@
           "back-core-covered"
         ],
         "metrics": {
-          "triangles": 144,
+          "triangles": 100,
           "joints": 0,
           "materials": 3,
           "embeddedImages": 0
@@ -4264,11 +4264,11 @@
           0.7071067690849304
         ],
         "path": "assets/3d/equipment/ancient-ruins-v1/accessory-high.glb",
-        "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
-        "bytes": 11448,
+        "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+        "bytes": 7924,
         "source": {
           "path": "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
-          "sha256": "907c15a3ce66f078f948309ba0603ade51c9dea3e7a7c223e759ac25c55dfcec"
+          "sha256": "b42449192ecdb652b7cfeb6f9ea49e73ec7449a2be13e35da8da6dc710f3e5a0"
         },
         "license": "CC0-1.0; original ancient-civilization wearable designs",
         "epochs": [
@@ -4289,7 +4289,7 @@
           "back-core-covered"
         ],
         "metrics": {
-          "triangles": 176,
+          "triangles": 100,
           "joints": 0,
           "materials": 3,
           "embeddedImages": 0

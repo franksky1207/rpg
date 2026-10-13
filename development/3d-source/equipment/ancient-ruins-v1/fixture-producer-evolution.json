@@ -1,0 +1,9 @@
+{
+  "schema": "cw.batch28.authorized-fixture-history-reader.v1",
+  "baselineHEAD": "ff91116c655fbec22047d01e61e3554fa47451e9",
+  "path": "scripts/hybrid-comparison-fixtures.cjs",
+  "archive": "development/3d-source/equipment/ancient-ruins-v1/history/fixture-producer-before-refinement.source.txt",
+  "beforeSHA256": "8d7c6877267fbe788152d86780658afddd9379656152f34b38127f77b43faa32",
+  "afterSHA256": "849bba444a45b2057df11fc7786e18e7caa5c03ca3ca8ab58de6e3bdac91d565",
+  "scope": "Reproduce original immutable fixtures from exact archived original equipment bytes, no new numeric cases"
+}

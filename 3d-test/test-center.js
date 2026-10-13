@@ -354,7 +354,7 @@ async function start(){
   if(battleSimulationView){
    scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 沙盒：B 方案，不影響正式角色、戰鬥或音效';
    const abort=new AbortController();let simulation=null;runtime={dispose:()=>{abort.abort();simulation?.dispose();},setQuality:value=>simulation?.setQuality(value)};
-   try{const module=await import('./gm-battle-simulation.js?v=20261013-gm-b1');if(ticket!==serial)return;simulation=await module.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial){simulation.dispose();return;}}
+   try{const module=await import('./gm-battle-simulation.js?v=20261014-b28-refined1');if(ticket!==serial)return;simulation=await module.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial){simulation.dispose();return;}}
    catch(error){if(ticket===serial)fail('2.5D 模擬無法載入：'+error.message);}
    return;
   }

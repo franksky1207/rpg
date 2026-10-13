@@ -139,6 +139,7 @@ jobs:
           node tests/runtime/3d-glb-validation.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-player-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-equipment-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          BATCH28_BASE_URL=http://127.0.0.1:4173/ node tests/runtime/batch28-consolidated-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt

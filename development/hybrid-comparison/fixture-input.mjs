@@ -3,6 +3,7 @@ export const FIXTURE_SHA='5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5a
 export const CONTROLS_SHA='0a5f25b26f3e9500125fe406a358c53da6d722680c03ac33ffd85dc9d4dd6e27';
 export const SOURCE_PATHS=Object.freeze(['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json']);
 export const CASE_IDS=Object.freeze(['normal-baseline','elite-baseline','boss-baseline','boss-player-defeat','elite-effects-owner-input']);
+export const REFINEMENT_SHA='dc1b873b07740ba2542bad833e0e165cda387d35baa8eb7d8ac38d436f8e1006';
 const verified=new WeakSet(),inputs=new WeakSet();
 export const isVerifiedInput=value=>inputs.has(value);
 const requireValue=(ok,message)=>{if(!ok)throw Error(message);};
@@ -26,7 +27,16 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
  requireValue(bundle.sha256===FIXTURE_SHA&&await sha(unsigned)===FIXTURE_SHA,'Fixture SHA mismatch; do not regenerate silently');
  requireValue(controls.schema==='cw.t2a.comparison-controls'&&controls.version===1&&await sha(controls)===CONTROLS_SHA,'Controls SHA mismatch');
  requireValue(typeof readSource==='function'&&JSON.stringify(Object.keys(bundle.sources))===JSON.stringify(SOURCE_PATHS),'Missing authority source reader/manifest');
- const sourceTexts=await Promise.all(SOURCE_PATHS.map(async file=>{aborted(signal);const text=await readSource(file,signal);aborted(signal);requireValue(await sha(text)===bundle.sources[file],'Source SHA changed: '+file);return [file,text];}));
+ let currentRegistry=null;
+ const sourceTexts=await Promise.all(SOURCE_PATHS.map(async file=>{aborted(signal);const text=await readSource(file,signal);aborted(signal);const digest=await sha(text);
+  if(file==='assets/3d/asset-registry.json'&&digest!==bundle.sources[file]){
+   const proofText=await readSource('development/3d-source/equipment/ancient-ruins-v1/refinement-source-evolution.json',signal);
+   requireValue(await sha(proofText)===REFINEMENT_SHA,'Refinement version SHA changed');const proof=JSON.parse(proofText),row=proof.files[file];
+   requireValue(proof.schema==='cw.batch28.authorized-g007-refinement.v1'&&row.beforeSHA256===bundle.sources[file]&&row.afterSHA256===digest,'Source SHA changed: '+file);
+   const original=await readSource('development/3d-source/equipment/ancient-ruins-v1/history/original-asset-registry.source.txt',signal);
+   requireValue(await sha(original)===bundle.sources[file],'Original registry SHA changed');currentRegistry=JSON.parse(text);return[file,original];
+  }
+  requireValue(digest===bundle.sources[file],'Source SHA changed: '+file);return [file,text];}));
  aborted(signal);
  const registry=JSON.parse(sourceTexts.find(([p])=>p==='assets/3d/asset-registry.json')[1]);
  const identities=[['遺址守衛機','normal',31,0],['遠古戰爭機甲','elite',34,3],['遺址中樞核心','boss',35,4]];
@@ -43,13 +53,19 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
   requireValue(hp(c.computed.start.player)&&hp(c.computed.start.enemy)&&hp(c.computed.final.player)&&hp(c.computed.final.enemy)&&c.computed.result.settlementAvailability==='unavailable','Invalid known HP/shield/settlement');
  }
  for(const a of bundle.assets){const r=registry.assets.find(r=>r.id===a.id);requireValue(r&&a.sha256===r.sha256&&a.path===r.path&&a.bytes===r.bytes&&a.license===r.license&&a.preload===false,'Asset registration mismatch');}
- const pack=copyFrozen({bundle,controls,fixtureSHA:FIXTURE_SHA,controlsSHA:CONTROLS_SHA});verified.add(pack);return pack;
+ const pack=copyFrozen({bundle,controls,fixtureSHA:FIXTURE_SHA,controlsSHA:CONTROLS_SHA,currentRegistry});verified.add(pack);return pack;
 }
 export function selectInput(pack,{caseId,variantId,lod,scheme}){
  requireValue(verified.has(pack),'Only verified data may be selected');requireValue(['A','B','C'].includes(scheme)&&['low','medium','high'].includes(lod),'Unknown scheme/LOD');
  const c=pack.bundle.cases.find(c=>c.id===caseId),variant=pack.bundle.appearanceVariants.find(v=>v.id===variantId);requireValue(c&&variant,'Unknown Case/appearance');
  // Scheme is deliberately excluded. A/B/C receive identical immutable values.
- const input=copyFrozen({schema:'cw.t2b1.playback-input',version:1,scope:'development-only-not-live-state',lane:'gm-fixture',fixtureSHA:pack.fixtureSHA,caseSHA:c.sha256,controlsSHA:pack.controlsSHA,caseId,variantId,lod,representative:pack.bundle.representatives.find(r=>r.fixtureKey===c.representative),playerName:pack.bundle.player.name,events:c.events,computed:c.computed,capture:c.capture,appearance:variant.appearance,equipment:variant.resolved[lod],controls:pack.controls});inputs.add(input);return input;
+ const equipment=variant.resolved[lod].map(d=>{
+  if(!pack.currentRegistry||!d.assetId)return d;
+  const old=pack.bundle.assets.find(a=>a.id===d.assetId&&a.sha256===d.sha256),a=pack.currentRegistry.assets.find(a=>a.id===d.assetId);
+  requireValue(old&&a&&a.slot===d.type&&a.quality===lod&&a.mount===old.mount&&JSON.stringify(a.names)===JSON.stringify(old.names),'Refined equipment identity mismatch');
+  return {...d,sha256:a.sha256,bytes:a.bytes,fixtureAssetSHA256:d.sha256};
+ });
+ const input=copyFrozen({schema:'cw.t2b1.playback-input',version:1,scope:'development-only-not-live-state',lane:'gm-fixture',fixtureSHA:pack.fixtureSHA,caseSHA:c.sha256,controlsSHA:pack.controlsSHA,caseId,variantId,lod,representative:pack.bundle.representatives.find(r=>r.fixtureKey===c.representative),playerName:pack.bundle.player.name,events:c.events,computed:c.computed,capture:c.capture,appearance:variant.appearance,equipment,controls:pack.controls});inputs.add(input);return input;
 }
 export async function loadData({signal,fetcher=globalThis.fetch,base=new URL('./',import.meta.url)}={}){
  const read=async url=>{const response=await fetcher(url,{signal,cache:'no-store'});if(!response.ok)throw Error('Fixture/source HTTP '+response.status+': '+url.pathname);return response.text();};

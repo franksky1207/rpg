@@ -20,7 +20,7 @@ IMAGES = ('overview-front-side-back.webp', 'equipment-five-slots.webp')
 START, END = '<!-- formal-equipment:start -->', '<!-- formal-equipment:end -->'
 G007_HASHES = {
     IMAGES[0]: '0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645',
-    IMAGES[1]: '2959fd08a50d7968ec228a4c8115f65988d018a4c57d045d876eec5c107d0ac0',
+    IMAGES[1]: 'ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c',
 }
 # Execute only formal owners in an isolated VM, with no filesystem/network/process
 # bindings. Galaxy registration uses the real registerRegionMaps implementation.
@@ -176,6 +176,10 @@ def statuses(root, row):
             file = directory / name
             if not file.is_file() or sha(file.read_bytes()) != expected:
                 fail(f'Protected G007 original image changed/missing: {name}')
+    if row['id'] == 'g007':
+        original = directory / 'history/2026-10-14/equipment-five-slots.webp'
+        if not original.is_file() or sha(original.read_bytes()) != '2959fd08a50d7968ec228a4c8115f65988d018a4c57d045d876eec5c107d0ac0':
+            fail('Protected G007 archived original changed/missing')
     approved, evidence = False, None
     review = directory / 'art-review.json'
     if review.exists():
@@ -188,8 +192,13 @@ def statuses(root, row):
             if row['id'] not in proof_text or '使用者' not in proof_text or len(proof_text) < 30:
                 fail(f'{row["id"]}: incomplete user approval evidence')
             formal_hash = sha(dumps({k:row[k] for k in ('id','sourceKey','regionOrBoss','equipmentNames')}).encode())
-            if record.get('reviewer') != 'user' or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',record.get('approvedAt','')):
+            if record.get('reviewer') not in ('user', 'user-delegated-chatgpt') or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',record.get('approvedAt','')):
                 fail(f'{row["id"]}: explicit user/date approval required')
+            if record.get('reviewer') == 'user-delegated-chatgpt':
+                authority = 'docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md'
+                auth = root / authority
+                if record.get('authorizationFile') != authority or not auth.is_file() or record.get('authorizationSha256') != sha(auth.read_bytes()) or '代理' not in proof_text or 'ChatGPT' not in proof_text:
+                    fail(f'{row["id"]}: delegated approval needs exact authorization and proxy evidence')
             if len(images) != 2 or record.get('imageSha256') != {x['file']:x['sha256'] for x in images} or record.get('formalSha256') != formal_hash:
                 fail(f'{row["id"]}: approval does not bind current images and formal identity')
             approved, evidence = True, (pathlib.Path(row['directory']) / proof).as_posix()
@@ -207,8 +216,17 @@ def statuses(root, row):
         file = root / a['path']
         if not file.is_file() or sha(file.read_bytes()) != a['sha256']: fail(f'{row["id"]}: registry model missing/hash mismatch')
         models.append(a['id'])
+    model_status='existing-model-concept-alignment-unverified' if models else 'not-started'
+    model_review=directory/'model-review.json'
+    if models and model_review.is_file():
+        mr=load(model_review);actual={a['id']:a['sha256'] for a in registry['assets'] if a['id'] in models}
+        proof=directory/mr.get('evidenceFile','')
+        authority=root/'docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md'
+        if mr.get('reviewer')!='user-delegated-chatgpt' or not re.fullmatch(r'[a-zA-Z0-9_-]+\.md',mr.get('evidenceFile','')) or mr.get('authorizationFile')!='docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md' or mr.get('formalReleaseApproved') is not False or mr.get('assetSha256')!=actual or any(a['source']['sha256']!=mr.get('sourceSha256') for a in registry['assets'] if a['id'] in models) or not proof.is_file() or '代理' not in proof.read_text() or not authority.is_file() or sha(authority.read_bytes())!=mr.get('authorizationSha256'):
+            fail(f'{row["id"]}: model review does not bind current assets/source/delegation')
+        model_status='refined-model-art-reviewed'
     return dict(notesStatus='generated-formal-manual-art-separated',conceptStatus='approved' if approved else 'images-present-awaiting-user-review' if len(images)==2 else 'partial-images' if images else 'not-generated',
-        conceptApproved=approved,modelStatus='existing-model-concept-alignment-unverified' if models else 'not-started',
+        conceptApproved=approved,modelStatus=model_status,
         images=images,approvalEvidence=evidence,modelEvidence=models)
 
 def level_text(row):

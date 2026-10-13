@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `approved`；使用者批准 `true`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -111,3 +111,8 @@
 - ChatGPT適合補分件／材質說明及另授權局部修圖；Codex適合Blender局部建模／LOD／量測／身份SHA与GM驗證。先補尺寸剖面、再按決定製作；不恢復正式角色／背包／地圖獨立預覽。
 - GM驗收沿用C-08角色／C-09裝備及C-15 B模擬：空槽、各單件、移任意槽、真跨套混穿、頭轉／肩肘／腰髖／膝踝／握持及B可用動作；三LOD／局部mask恢復、快速切換／缺材錯SHA／WebGL故障与返回釋放。未有真模型者標待驗，不能把缺材拒絕當混穿通過。
 - 本次只完成設計資料，G007原技術版另見專項；其他19套不冒称模型完成。概念完成／概念批准／模型技術通過／混穿動作通過／正式發布批准各別記錄，現有批准與發布開關不改。
+
+
+## 2026-10-14｜合併施工最終分件定案（人工增補）
+
+使用者授權 ChatGPT 代理美術審查；已實際檢視局部候選，正式拆件圖採候選v1，原版保留history/2026-10-14。armor脛部只含柔性保溫內襯，完整硬脛殼、踝與冰爪鞋底唯一歸shoes；原三視圖不變。正式版本与批准證據見art-review.json／delegated-art-acceptance-2026-10-14.md。前文「待修」是歷史，不是本輪待辦。

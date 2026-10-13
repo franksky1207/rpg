@@ -1,0 +1,32 @@
+{
+  "baseline": "ff91116c655fbec22047d01e61e3554fa47451e9",
+  "changedProtectedPaths": [
+    "3d-test/gm-battle-simulation.js",
+    "3d-test/index.html",
+    "3d-test/test-center.js",
+    "assets/3d/equipment/ancient-ruins-v1/accessory-high.glb",
+    "assets/3d/equipment/ancient-ruins-v1/accessory-low.glb",
+    "assets/3d/equipment/ancient-ruins-v1/accessory-medium.glb",
+    "assets/3d/equipment/ancient-ruins-v1/armor-high.glb",
+    "assets/3d/equipment/ancient-ruins-v1/armor-low.glb",
+    "assets/3d/equipment/ancient-ruins-v1/armor-medium.glb",
+    "assets/3d/equipment/ancient-ruins-v1/helmet-high.glb",
+    "assets/3d/equipment/ancient-ruins-v1/helmet-low.glb",
+    "assets/3d/equipment/ancient-ruins-v1/helmet-medium.glb",
+    "assets/3d/equipment/ancient-ruins-v1/shoes-high.glb",
+    "assets/3d/equipment/ancient-ruins-v1/shoes-low.glb",
+    "assets/3d/equipment/ancient-ruins-v1/shoes-medium.glb",
+    "assets/3d/equipment/ancient-ruins-v1/weapon-high.glb",
+    "assets/3d/equipment/ancient-ruins-v1/weapon-low.glb",
+    "assets/3d/equipment/ancient-ruins-v1/weapon-medium.glb",
+    "development/3d-source/equipment/ancient-ruins-v1/ancient-ruins.blend",
+    "development/3d-source/equipment/concepts/galaxy/g006-polar-front/equipment-five-slots.webp",
+    "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/equipment-five-slots.webp",
+    "development/hybrid-comparison/index.html"
+  ],
+  "other38ConceptImagesUnchanged": true,
+  "playerAssetsAndSourcesUnchanged": true,
+  "rigContract53Bones9SocketsUnchanged": true,
+  "formalRootJsCssHtmlUnchanged": true,
+  "oldG007Archive": "development/3d-source/equipment/ancient-ruins-v1/history/before-refinement-2026-10-14.tar.gz"
+}

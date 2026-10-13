@@ -14,6 +14,10 @@ def collect():
   if s in json.loads((ROOT/'development/retired-formal-previews/20261013/source-evolution.json').read_text())['files']:
    subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
    continue
+  refinement=ROOT/'development/3d-source/equipment/ancient-ruins-v1/refinement-source-evolution.json'
+  if refinement.exists() and s in json.loads(refinement.read_text())['files']:
+   subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
+   continue
   current=sha(ROOT/s)
   if current==h:continue
   assert s in allowed,('Protected non-B1 source changed',s)

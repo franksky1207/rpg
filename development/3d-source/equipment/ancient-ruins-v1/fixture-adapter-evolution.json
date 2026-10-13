@@ -1,0 +1,10 @@
+{
+  "schema": "cw.batch28.authorized-visual-adapter.v1",
+  "baselineHEAD": "ff91116c655fbec22047d01e61e3554fa47451e9",
+  "path": "development/hybrid-comparison/fixture-input.mjs",
+  "archive": "development/3d-source/equipment/ancient-ruins-v1/history/fixture-input-before-refinement.source.txt",
+  "beforeSHA256": "83122f78b3cff1113a2b7a3d22561fd69e2f3fe4cbd3acafaae7c83395d7cb15",
+  "afterSHA256": "dbc1bc90212c557b9dd460f37c2af04845c14f035e3647b28ff2f7897a4f1a8c",
+  "fixtureSHA256": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99",
+  "scope": "Exact SHA-gated current visual assets; original fixture numeric/events/controls unchanged"
+}

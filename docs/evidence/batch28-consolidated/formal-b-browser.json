@@ -1,0 +1,1359 @@
+{
+  "passed": true,
+  "result": {
+    "orientation": {
+      "correctRMSE": 44.769700278307354,
+      "flippedRMSE": 71.71605444599366,
+      "samples": 22695,
+      "actualOpaquePixels": 15036,
+      "bounds": {
+        "left": 487,
+        "top": 255,
+        "width": 84,
+        "height": 179
+      }
+    },
+    "visualRandomCalls": 0,
+    "randomStacks": [],
+    "hashes": [
+      {
+        "clip": "idle",
+        "frames": [
+          "49432ff631c8d37b84bfd291f78dae4d4e14f349d40e8c536c102f063f9ee621",
+          "57bd21eb0dbbf76e8bb70781f3b86eb506eef6bafed6d15f67fbf3d7247e8ac7",
+          "ea4acdb1056abfbcb32c2d47c7c51617e43056623368dca93e460fcb2933c3af"
+        ]
+      },
+      {
+        "clip": "attack",
+        "frames": [
+          "e3d99c6a72d91b7de7f6077adfa5a093e87bd08ad92d4856286fb80fdafbf593",
+          "d282f33fae95303503ee610a0b400a02ace473d5ff0d43d359ca9d3e4ab4bf35",
+          "1a31556b38ff6e3ffa91a4076462de676c960e9da3e16a7c93dc885bdd94fde1"
+        ]
+      },
+      {
+        "clip": "hit",
+        "frames": [
+          "f96d7e7ee6d31fb6722cdbef53a805632f2e20b9cc407350ed6881f62771f6ad",
+          "764655d6f42e9ae65075c70441331bf1353ff886036ebde570e935a1195fc56a",
+          "4bfc5332af9312ff78829f43536054733da6bd21854cbd855c6e61b471672fc6"
+        ]
+      },
+      {
+        "clip": "dodge",
+        "frames": [
+          "cad8616cc93595006cb96c4d861cf481a838a34a410a7dc23e35769001ae5f5c",
+          "c4c1773b2e18a4fe61a9087e2cdd3e06c67345e2cdbd4b28af11693ed06f1243",
+          "214400201ec2160815f00f5f5221c5bc4f35cd023a0785943e2759e91d81e973"
+        ]
+      },
+      {
+        "clip": "return",
+        "frames": [
+          "449d14c8562bc3c5b81e3b8a01fe28986cfca2eada9b2a58a7caf60019a2cf0d",
+          "824e2dc860c8596ac9577b4f75b31c04a699f29d56c73e73186c6852cbc235d7",
+          "5e825fae46da3ff690c317416d8fdf7a274ca7617a69ef9f03b4bb562e70804b"
+        ]
+      },
+      {
+        "clip": "defeat",
+        "frames": [
+          "fdb688f1ae52bce090fc413f47e13b550c075ec1679e4e859f2aa96c1d05b8d9",
+          "9b6788213bbb1e267edcedc9540b87be10d0353be5f13a0bdaa04aa5d14ffdfc",
+          "23d7f718d1fee055ecc2445eaf178b77e3817c1541e1d386620eff1800cc9fe4"
+        ]
+      }
+    ],
+    "jointPoses": [
+      "011a39f78240192142e794c920ff31692554ec0b03919ae4d6557f437015908f",
+      "ea10b76524a267602bd1e2b181514efc5468f4764ea6488e9f069c7c60887086",
+      "5239699651fa3e8a56f9e7760906a077cef902a9f99123800e84dd3d83659394"
+    ],
+    "subsets": [
+      {
+        "iteration": 0,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 1,
+        "mask": 1,
+        "pixelHash": "11b3e0bde99db99941a0a27686e8bc758b4355043a7163690fbd98466eac7295",
+        "meshCount": 14,
+        "rig": 53
+      },
+      {
+        "iteration": 2,
+        "mask": 2,
+        "pixelHash": "0548b2225d9a20d44e41fb3a67fbd32316b0260ec843167c30a0f9620a7b221a",
+        "meshCount": 13,
+        "rig": 53
+      },
+      {
+        "iteration": 3,
+        "mask": 3,
+        "pixelHash": "97a3e1115585550fdd7919a470d4569fc7b74bbc05378348a172bf99cb01e952",
+        "meshCount": 18,
+        "rig": 53
+      },
+      {
+        "iteration": 4,
+        "mask": 4,
+        "pixelHash": "dde56054b988065e230f758b883fa697108c57a0de6a326bd05fb1eaa8d751f6",
+        "meshCount": 13,
+        "rig": 53
+      },
+      {
+        "iteration": 5,
+        "mask": 5,
+        "pixelHash": "42d8bf697446846175fe3866701054bc0bdfdcd61efa31826549f5d72da97119",
+        "meshCount": 18,
+        "rig": 53
+      },
+      {
+        "iteration": 6,
+        "mask": 6,
+        "pixelHash": "3bc6ddc5aca5ed83591e877e0b84eb2dfec1664ade3bd43173c77d543455401f",
+        "meshCount": 17,
+        "rig": 53
+      },
+      {
+        "iteration": 7,
+        "mask": 7,
+        "pixelHash": "6ccbb5f08af321319b1bf0edc66c46dfcfe2b3971498530ff671709c0497fa7c",
+        "meshCount": 22,
+        "rig": 53
+      },
+      {
+        "iteration": 8,
+        "mask": 8,
+        "pixelHash": "2488d5c6ff52877af6eff37c092f5bfd2fb0e6e41c3783e6431ab5b8637968e6",
+        "meshCount": 14,
+        "rig": 53
+      },
+      {
+        "iteration": 9,
+        "mask": 9,
+        "pixelHash": "1614141b16cc1c86ee75cfc3a264b47aee108e4f45cf5cfdf52bb5912e6585ec",
+        "meshCount": 19,
+        "rig": 53
+      },
+      {
+        "iteration": 10,
+        "mask": 10,
+        "pixelHash": "69f89107dde890334e44580efa533ecd695d7943dc9a800d33a91b9abacaf394",
+        "meshCount": 18,
+        "rig": 53
+      },
+      {
+        "iteration": 11,
+        "mask": 11,
+        "pixelHash": "35d3e00701d4fcbfe7222e8a7577dd718ea40cde595b9d3d81fb2e23615109f5",
+        "meshCount": 23,
+        "rig": 53
+      },
+      {
+        "iteration": 12,
+        "mask": 12,
+        "pixelHash": "ad227db01ad7f85fb15c6e943e751374ba8ee050f19a01ee564931c7502bc28e",
+        "meshCount": 18,
+        "rig": 53
+      },
+      {
+        "iteration": 13,
+        "mask": 13,
+        "pixelHash": "c10832097a66a74c5c9edd0cabce5a20dc124f2a38aa6d1a03403c19b33b666e",
+        "meshCount": 23,
+        "rig": 53
+      },
+      {
+        "iteration": 14,
+        "mask": 14,
+        "pixelHash": "bcb1883bab632f72765267f9989b05cbd93f4bce3adb6420feedb9bbb39f688c",
+        "meshCount": 22,
+        "rig": 53
+      },
+      {
+        "iteration": 15,
+        "mask": 15,
+        "pixelHash": "556c9e4f846a9af8770030cceebc8a7dca9bf71f488b0a1270baef2bb968fec8",
+        "meshCount": 27,
+        "rig": 53
+      },
+      {
+        "iteration": 16,
+        "mask": 16,
+        "pixelHash": "6211df457712d7552f5c17ed7ee3f6f3f194fa940585dd196b5977a3989b1e89",
+        "meshCount": 12,
+        "rig": 53
+      },
+      {
+        "iteration": 17,
+        "mask": 17,
+        "pixelHash": "f99b2e1ace270f4b2403d026d486fd0ee6020a428fdd00dd0ce4baee2a52f726",
+        "meshCount": 17,
+        "rig": 53
+      },
+      {
+        "iteration": 18,
+        "mask": 18,
+        "pixelHash": "33f9f6e28585ae3653d4f5874cd9c7f3aef86bf1eda308d394d563c53d62ed53",
+        "meshCount": 16,
+        "rig": 53
+      },
+      {
+        "iteration": 19,
+        "mask": 19,
+        "pixelHash": "0e6bfb446192bf168c76e3517995af080978ec260250ad2b0b3713bfeff1634a",
+        "meshCount": 21,
+        "rig": 53
+      },
+      {
+        "iteration": 20,
+        "mask": 20,
+        "pixelHash": "289a30cb560343144e1e89a85c88c0875ac6394d90607b2108a11eab20a14f09",
+        "meshCount": 16,
+        "rig": 53
+      },
+      {
+        "iteration": 21,
+        "mask": 21,
+        "pixelHash": "21e7b10913aa2db720cebc43964c79b1fb5ce619519a290d05fc3f4aa39f8c72",
+        "meshCount": 21,
+        "rig": 53
+      },
+      {
+        "iteration": 22,
+        "mask": 22,
+        "pixelHash": "c5d96c6d11bb61ec397a4ae9e0cd05c4b1147d598fa55eda08f1abfce3956a17",
+        "meshCount": 20,
+        "rig": 53
+      },
+      {
+        "iteration": 23,
+        "mask": 23,
+        "pixelHash": "dcad15b2332224c116d5ffacaba4038fb2442d4db150c218ab1a7be530062026",
+        "meshCount": 25,
+        "rig": 53
+      },
+      {
+        "iteration": 24,
+        "mask": 24,
+        "pixelHash": "0e441585ddb1cd2f5a962f5dedcad8cf01123019f122f31c0a417b5e01750dfe",
+        "meshCount": 17,
+        "rig": 53
+      },
+      {
+        "iteration": 25,
+        "mask": 25,
+        "pixelHash": "1e576c1eeeb08c8692ecbeff3798fd0a4cf146a6a4a2a89e78261514c6800b3b",
+        "meshCount": 22,
+        "rig": 53
+      },
+      {
+        "iteration": 26,
+        "mask": 26,
+        "pixelHash": "5b1d1d809102c764baaab107791fac2176bd5884cd8ee3c9976a8419a8f76577",
+        "meshCount": 21,
+        "rig": 53
+      },
+      {
+        "iteration": 27,
+        "mask": 27,
+        "pixelHash": "a1dc4b785b29e42a4c7ac1f0be38e77dd8f1b3cd7bf7a75f80d0f94974bbe70e",
+        "meshCount": 26,
+        "rig": 53
+      },
+      {
+        "iteration": 28,
+        "mask": 28,
+        "pixelHash": "bf66e1926d7f6b1141075bc3c8348455526d55c7eda1333f09aedeba6a785755",
+        "meshCount": 21,
+        "rig": 53
+      },
+      {
+        "iteration": 29,
+        "mask": 29,
+        "pixelHash": "e557548d51ab15155b996dda8425b5bccd18b028d3564ad2ddfc234120f46e64",
+        "meshCount": 26,
+        "rig": 53
+      },
+      {
+        "iteration": 30,
+        "mask": 30,
+        "pixelHash": "14ee08bc3af92d9d246167ee4dd9dd8345361f0faef848ecfccf90e94528675a",
+        "meshCount": 25,
+        "rig": 53
+      },
+      {
+        "iteration": 31,
+        "mask": 31,
+        "pixelHash": "27be14cc26164616dddccc25a5e4b79caf7c25efd5fc426137caac093945ef2b",
+        "meshCount": 30,
+        "rig": 53
+      },
+      {
+        "iteration": 32,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 33,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 34,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 35,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 36,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 37,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 38,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 39,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 40,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 41,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 42,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 43,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 44,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 45,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 46,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 47,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 48,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 49,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 50,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 51,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 52,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 53,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 54,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 55,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 56,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 57,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 58,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 59,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 60,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 61,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 62,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 63,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 64,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 65,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 66,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 67,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 68,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 69,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 70,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 71,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 72,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 73,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 74,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 75,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 76,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 77,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 78,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 79,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 80,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 81,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 82,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 83,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 84,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 85,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 86,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 87,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 88,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 89,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 90,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 91,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 92,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 93,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 94,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 95,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 96,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 97,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 98,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      },
+      {
+        "iteration": 99,
+        "mask": 0,
+        "pixelHash": "5d626699fe7e3892a898d98c185b193ff14a57540ecb8842aaaec6fc2a78b6bb",
+        "meshCount": 9,
+        "rig": 53
+      }
+    ],
+    "tierReports": [
+      {
+        "kind": "normal",
+        "tier": "low",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "d03c9cdd5c07894b8947d5b5dd325ae380687366ff04d602e411cab28fdaadab",
+              "fa05224ba3dc8ed5b6684109b7caebd408f9501b3a56ef3cbd761a87b31aa765",
+              "23717014f7ea6ebdf08ac83cdcff2329ce7dd2d5b4e80db65c1e1374c697b46e"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "f71dfce2bff035d9fbc7b491f63e20b6d3c2b6d9344ac2125249fcbdc33bb08f",
+              "89b6bfd2370fdf4eea19836582a71211a624f8f5433ff2f5694e507f9ba8b77a",
+              "d7affca2ef92b564f0d85396fec620f552996a53d0675f122743de71e51887ba"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "b7000469847ace5fc2f0a9548a7f7f0fb543fee9eba90084eb6d50813eb870ca",
+              "19c875cbce0cd2da4f69e46d3afc624479fe7620ae181fd52beef8678f7c51e4",
+              "144a4903a9160111498e4bc949bfe6ce8698b285a2833a0696df8073381e7120"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "74d954a7aa64d4120d3c1b21888270aff1c377464b526d8da20d3ef70dbbd58e",
+              "e46635ea1498232d859ce5bca3706657b6a20a3c724a11c7abd83d9bd0453f81",
+              "191d52120cdfda2534ed39376846289127043cdc9454c062400719429dfd3836"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "238154e7cacadb0a98b0ad07e59cd069d1175372942ca4cf83e657765c287060",
+              "d34c4310cef7727fa57c36f2320e24bd8db0eebc434063a9dc0fa7d51be4e1e2",
+              "77544d63bcfb1309bee7ca10abac7fa0e2f04495deda643e8bba483ef971b5ba"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "fd6711852d568e755ec9414aa423f5bca596b60f35e35e54fedfbd0fd37b17ce",
+              "0c5a69934fd388b333fe7d7698c37cef41392236ef1d3bfc1f3b5a4ea430e2a9",
+              "fc907593d703d7932fe29b84a8be8ab0ee66ad3d24ad0a1298fb305694c51eb2"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "normal",
+        "tier": "medium",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "98867a43f39426df0a67176c422ed82cd02887f8d4338ad1a3d68596e7082572",
+              "3ba918c433a0e7cb590bd887e2969c5a80e50d5c2267582a2e78e5708c8281f2",
+              "4ee8594900f7a96d1572f60710bb054b000cd2e77633b6c3125bc3562db187ee"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "5a0e55b01c0a4697ca423bfbcc1062734a16c8d81d55a341e06e91a25778b7d2",
+              "7f11c002a456045c9a54a388482483d67e5e20622825f2b2867e1d0dd4bbccf2",
+              "b712e3a7ccbc9af80d0a9c3f16ce0cc06f119eadf4c5b1f75b7d5288e2d6a2e7"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "a990858a53ac550c08b09fc5405108efa450bdd217f85839f873a7ea048c27bd",
+              "af24f9065246967c215a5c7cf16545b19b50d1fbf7664471ca39b40f78d5efbd",
+              "a1822ab9b4e0961f0e6d82fe22fabe27bcf096590c0a7ed733ed013af9220486"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "0d6b32334e4558236fc863f9137ce745ebf74a7b905e51329d450fb676a89022",
+              "0a44db0bf66b6b41d9f3aa1f3be89e671bbf4a05fe090b8cadfe298de57b5b21",
+              "a6a47584c7b57aa9603a0d7e185372bd99cb41015a92136fdc9af2cddd3ad9b6"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "2f0380159dc663b3da76083f4e3b4531f489f2a269b03ab3d36c4eb0f7dbb524",
+              "c3bdce5526c17dd95065f71966db0d045973af6b5dc3cb259cf8096dad634f27",
+              "024ac45652f811c116c05784cd3d41e65ad0f4ffec225632ca21ae243be1687b"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "ff2afa9758d26ac05f578d5f3d32359b452e1151522e3b4460dd7a6f1ab718ec",
+              "c483294834588b104eb6a4316bb1a25227b170274084a3ae3cc1421151dfd7a2",
+              "8b472fbc2d578df04c853845f9039b5b80e823e435be7e943617b3f2d8065bf1"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "normal",
+        "tier": "high",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "24f5b769561a6160a86f7a632489f464e20c5f20611c17d2fa54c35ae0c232e8",
+              "e8352e226e8d56f46118c88efc45b017f1314e8b6ea960808033decf4a67c662",
+              "e5cb2962bff274187981e21955183d63c8f56550d9503aa593c84b87524d9100"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "dfc5e6a0e560829672f90c2a15faa62b2ec785394191eb5956435289ca28b826",
+              "218977cd2383198697cb776c47481eeb99a82e396ed19502a8aa00fff54737ac",
+              "b315cac326562d6b36bda08db31ea51f46a9a4de23147d1620104b0ae4c29fdc"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "a736dc7b3142db3ca6ef4ed2cda1cba48206e61026fd7e25de1c3b84bc940ea2",
+              "76c053ea2ffdd4a7781326a54fa33ca76ffef9dc8d1f77b51e0568b4a406e279",
+              "26d5496daa4b0c4925c43684309fe4d8075f29a4f7bd8b67693d1d49d0336c88"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "2a8c0999b1030fcc35d8c2acf422451798f12403bf40b9641ccfc0654271caf6",
+              "18c7307d0dad82f20205d982249ab560ccb0d3f8adce6fb209ecd4835c85f84c",
+              "b4eb7e8c6a31c42c45b83dc0ed1698b72354b62a34dbfb0e852526492d58a57e"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "d676a9e6f4079791ea1b89f6c3d28ceaff3dc5f6394b4273cbe2e911caaa9512",
+              "29e483b988656acf4fd3e44fdcb2104407d8ce224f65f0276577ea8a3052f931",
+              "7022b6051280d8782718e2a5447602607b5df21f6aa819b57bb81445a056c38b"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "9ea62054a4af168f5faccb3e38b21aa383a8033872dcd28065c2620edb908b77",
+              "0257140f52014785e1ad99305abba31a3cf80de9754c3632baf931ac93a10187",
+              "5287421556ccba8b1f839bddcc8a7daaa83ce264f4eaf438138479ab4ce2a00c"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "elite",
+        "tier": "low",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "a86ff4015b684cf10dd3883f220929cc8c4f3ea498f2a70c2619c03ec7327129",
+              "85e8b8342c7f04c831e8114235eaa720207030e698d5be88d28b9d5e272de0b6",
+              "6aa722699ba6d58e3309646a54a2c764e4777dcd06b917a2216a7bd667ec5d05"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "18faa18ba47b8b8a3be5f3fd31cbb92e622dffe21ff1aab3fe69a5f680b4d755",
+              "8bfaf2d71ecdbdee3e253d916f10eac5410b9b9f71a0a709565b6122cec217f3",
+              "de8e47ba125498084f46168ea35d5a15c5d9ec232fae840456218defcb84ff7d"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "df729a04b05aee0bb6b5831e7114148b7bb957a2460482320bf8885dff5196f3",
+              "d7fbf5baccfd58dd8fc7e8997568d3a4a51d009924eee705a48120e93c6c82da",
+              "e135eaf777360c4c5346e11d941342e6edcca23a1b2563a7e777de5ff669a338"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "4a0672911bf701e6fdca0ee103250b82520917a642bd1464555368bfbd3ef5a1",
+              "fa1a5568d698d7be9c3aeda0784d5f5f3fa81853a4bb6fd4c799b23a93fb487d",
+              "7acddb20ecd46899e8194db480df21b5791ed4e7cd84e291aed5d61636824027"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "ed7488d1c45501fe7d1143daf18f09b1b6fd4ee180bf73fd1339d0bb3151e3d2",
+              "7d01395f6033353d12a39289211e2002c55f666df6c8f11b7c07ca84610ba57e",
+              "8b6b6a56aa228625c22dc9cb48a89fbb4ac122d98fce48c63c4c974244ba0fe5"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "9c35f385d3ca4003b6785761ca4728dd1b3aa7af0840fa4e1c14e32601aa20a6",
+              "34a13a324f4fba7af10e72e30c14022da97ca93ab4b5a31e9bcbf44e54128d8b",
+              "9d9a9b75ff4af6b713b1c4a9a956876fb05d0a79cc1c0b8f42c044fc8e792d73"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "elite",
+        "tier": "medium",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "1964c601756c77cd8a2e655d5b5a769eb080082048d4980b7b64621e8e586447",
+              "9fb9dc30cc0b0009517c85f5778e38d91fd7d3be8e51c073c1fa7f943ddf747b",
+              "316a265ca2993868c1e9bd858227ee7547ff5ead61015be9cb81c01251508019"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "90b0ab6eb7716f64ef8ceeff406bd88f1342f85587388164ad4a2e09ca0da0cb",
+              "3f783718ca760f45df42cf1a19eddec7b177975f25bf2dd0d3d0bc0def73cf44",
+              "7fb6f127127eea7a1bf2550ba25d177a293457e70d636d5a64c4581e355fdb71"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "86f83f8cdb1a8dae77a7f55923719f8341113fffe8802e556c980402c49234d7",
+              "76c4c6f2e57343f9a619a2ba434b0d6f340c5285c6962c9b80f54d8218960912",
+              "4d934c87ed8ddcf4cd409d193da6af88e2680b0b36bcbb23e0229f21d224219c"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "f0572e3cb2b7bc4f1ec21b61fe3e6b206fa0030b26b3c6f8fc83ee1354869d33",
+              "154a32fdf21a1b940625e46c35e5f337f9aeb49a3d526d3e869b8c0ff34477e2",
+              "7d32192ffb5c0c2b9dd17d4af6abf4f0c011f858cc081c9b32c2654cd3eb23e5"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "a2964c3ca5bae18e49d22b85679e85d6e3eb9cc0d78ae0a10992176ea6594816",
+              "69e67aff9dffc08e7ee4cca709e7b82465fc1840a7428927a7bca57e9de38ee3",
+              "3d2b82d3e480fdd54b13497335b2653dc36412088354c1fc244e22f4ac3e417a"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "a7ece387d029a5ee273be671d1c7287028c742e7b51bd6871160b6e0704c2fda",
+              "24759d7663ba5c3e1d0b7012341be963399474631a293cc585e55cac2a24a04f",
+              "153ebc6e992919775914a31bcaa0163c4650b22a6cad72368a8395e753791cb2"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "elite",
+        "tier": "high",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "f251880739bff8e7e2ecd6212eeeeddc9db113f1375f5a985cc7ae1413888b8a",
+              "5cd81d82c33c5fdf7a48d97a5958a8e0c9aabf46872ad9d8b7ba63da28793d21",
+              "7de7170b8033bd6396c6aeff0d8ba7722044b0f375e6fae14fe2ee2842aa18c2"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "4c74f78cc95dce911d9457f4f26fcd2f79b3cf9643f1d6e56f8f77a151eebfa6",
+              "18613850c66a7561937d23443e242c514811b371ffac37604f058b6b7c2fcc5a",
+              "f12ade7bd9cea2b83d873a87e58ee9d83927d536f8bf859a2e021dd0dd3a4607"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "37afe578055376950e0c6c0064fcdab3137d619dfedced0d13943a82fd5c52b4",
+              "51ea2a3c2267d7eb6b42844d9b272caa6c4e3a138d897b292830cd4a89060c02",
+              "3c3e7c227bc3eb48370ad9ef869998e2a7373462079ae27b75f208965fb01a00"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "01a9c9b8538d35a972da86539ee663181f5599c0405bc66ce4b721b2024a0ed6",
+              "cb829d07e231a571e8b8a37b52c87c9b325a686a3412644198e52e39b33331d9",
+              "7a64a73587eccfb38d8b90f1385188f4f88f0aa0531bed1faacd609a1b5971f4"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "f567cc89b3cd5356d4639d0c66c935d569f10f8ef6114e889aa306fc12b6e898",
+              "a4c1ab8c2615a71641ea6e26ad3421f27733d1f96a5d206067582468730bd74f",
+              "b3917c4b5b5e75b6dd454f0697233c66d5e138a78ecc59b1c5eeb4de6daa6944"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "b8cc6e2f131109538f79db2d68a82c71848e8e60d14b0c9f7a1001435178746e",
+              "c5e6eaf48770b99e7fcdadbeebd8fca6c8f0ef5fb9ed7b2f2153fbae9e8f0981",
+              "1f33601b3ecafeddf6b6dbb95d68949bdd95509ccd524bf8b4c9f6197f3deb7c"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "boss",
+        "tier": "low",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "45341f37a0ef0ef1ee0aa660ff5f2d524da2cfb508f83e090570d8c46e827a35",
+              "665b235ce97617d7931e0ac895aa929922546c5eb66c95ea2ff560e078748caa",
+              "b8f839e1019ea870c44620f4a728be3962baa67bcaa3bd45a75edff0f8e17991"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "727e34d14f536f3d649af9d78da41d08d6e61731c0afe478c2e3ef406f1e63c5",
+              "44b7c798ec5ea772ec6b2e097babf78fc6ad27111cf3cf12ba8f5564f5e9efe4",
+              "b92ab7dafa6c80f59d964ca53e5547dfc413ab64b5c6ab4f94c9488b7d5e87c7"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "15694d965734ef059847d6644123a16944cc8c036386cc5cf6e57befb1b00d8c",
+              "b2e17c8f988310b6e41cec7d79803e1018b7c8445ee429be261837109d4252b1",
+              "c8cade48b41b1e0d73577144c048942075076527c818851ff29a0c35493739fd"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "df0b154f9cdee6419cf7d2057a0a73ec956b8683ba53c9ee14faa4768f1e4a60",
+              "2ed5c936ab1bc3651f238811658e706898080a02dcfa07033a6b7fd1f240efe5",
+              "244dfdd25fc07c12b0f61eb383209d531120d551928f735ed3b5b24de22b225f"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "5d563b25a603c999df9dc0f920abb1075b9a5d17b1725a99a21c8e001df832ac",
+              "39eea439240935240bfbef9e60d90161ffde1036041ea509b7e7d67bb48338b7",
+              "f0e109a8388d3d43e072244121102007aa5999f706999dab0a160c309ccfd299"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "b750f55e73d0213d69c1e6c866d71f0a7505da2875fa8a00438ff4be9cec52cf",
+              "81ed53c46803ab87e04354a49ea34e383e721f9cbaa52f640a3c64f473100fef",
+              "3bdb3f12703a76c3b9efdea94d3af553ca6c52fefe45566acd489f10b5c67002"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "boss",
+        "tier": "medium",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "5a21b570b923b06541c5e84f11d15b3b91fe1d69811f681c55b615a790e779e2",
+              "9631a0aa794c34362fe79596e432072f55ec405ea7ba372a45b56b6baf0a6355",
+              "be2a984ec28f00872d51cd258886ac1a34d96c934cf7d6499986f8c9bca54de9"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "e088202e42d117731edf463f24b2349cc634b9b8ce522962a711f588c9039715",
+              "7327a7007d69a20733c96c3a5a0b72c8b22ca0407945d42f67c9d5c60f3f3195",
+              "30e9c40efabd3894ec717e1cee08a2392e61358f4aa2897b02cbb609ba68b575"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "58efd8d2ab6ebf1bf9d971c76a1bae4f9060b9687efe56337261da6755be8c41",
+              "e36dcf1f968be42d5fbb27ca4f78ee232a8d610d24cf0f342608a18ce7e436df",
+              "b8a2ffd44fc4203dd71a745b9bc7b8fe1a3a10bd73b0552adc571ff29f52f3e0"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "843da94f0fc3fe4a3c8ad395b630ce418440f86a26a3ab3f159f7aa139ed2507",
+              "ffa712cc51eeb84305da4cf7fcf373aa8746e459f337e2e998f694f3641db85d",
+              "212bdf2579240839fd0a22882176fdd3ded16504a59042e60d468199ab32a30b"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "37fa321f6b73d2577b374cdf62874712e3a576b5f26c83ebb4e9680df08794b2",
+              "8857c0f230d45370b5762b96379dd72166930d58b702c3f26426f47c36e11b5b",
+              "8f1c339b660172214f4f36eab3b88dae694def5d28800d485b699dbea94b5de3"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "89a6adf53d9180f35efb94ee92b59d30765f617345656e334801b4255b6b9fd8",
+              "183f1b619124263fa8be9b479101f93021c853535e593151e2d5742d696ade43",
+              "74bbe9135e73161c0990fb34b79d0046765a2661b7cdc1afa652227a5619e66b"
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "boss",
+        "tier": "high",
+        "clips": [
+          {
+            "clip": "idle",
+            "hashes": [
+              "e4a93ef02fc833600ad3fba64de9abdff0dcd84758c3c171f4ea7a325d330bcb",
+              "36de1cfacb4063994c8ddf9a31feb816df147b4dcbe6b7de6e35b20ab981680d",
+              "c531a5393ba4c15dafe3058f4c72b4567acbdd637b04dcdcfb1b0cc0603098ed"
+            ]
+          },
+          {
+            "clip": "attack",
+            "hashes": [
+              "d09a282cf2177e50964da88a41938b7bb89ed57ae9c9862502ef4436ac65dc4b",
+              "d3dce72f03d07613ac5576cbfd8b5b1d5433700898f49182383216fa524bd078",
+              "d84f87360171c49673249273eecddaefe4454227336625ee6ba46fa117b8a5c3"
+            ]
+          },
+          {
+            "clip": "hit",
+            "hashes": [
+              "8441459957d3ccd1cbde78effcaf337d2478bad6941cc5b75455bf9e00a473c1",
+              "b185f6e4a1efccd12a149e7dbcf3a4d581390f93f398b6855d09f1ec0e4e97df",
+              "b8bc1e47770ce7c643c5d67e508642f5b621c7a42fafc350a414d7a27739babd"
+            ]
+          },
+          {
+            "clip": "dodge",
+            "hashes": [
+              "08cfdefeecf31b51bf6c1464bf3026505d05e0712450481ca4b9283a82edb667",
+              "8d0597af1b9f5deb46b48caa4971d79710b28ebf6fb61ed9768536243cac46cd",
+              "55811d2dc2df18a11d2153b368cf9bcbf4ca6f8eb53e4ea40448106247091b5a"
+            ]
+          },
+          {
+            "clip": "return",
+            "hashes": [
+              "51e910cc03bfd31b16504f462b94ae8989235994eb6db47720c959137149845e",
+              "32247f00d7e854b8dbfeb988b9f631630dd6b58a29ac3ff0074254b61d58fd9f",
+              "96e09497e19e4fcc08e8930ccded09b1e216c03da2b0dbb7c21d44336b412465"
+            ]
+          },
+          {
+            "clip": "defeat",
+            "hashes": [
+              "4d7f71db4b26bcc77e0d4af5cc89e15fbb97e9257fb5bdb1a8b91b8a73f290fa",
+              "3bd25dee51cee1d4a52ed64d58e2fdc12bb6a45835dad891955c60bb1e241bb7",
+              "54f3db353d5aa89ba6d0b3dd923c3a766d1534957b7da517410a31570c906922"
+            ]
+          }
+        ]
+      }
+    ],
+    "viewportReports": [
+      {
+        "width": 1280,
+        "height": 380,
+        "renderWidth": 1280,
+        "renderHeight": 380
+      },
+      {
+        "width": 390,
+        "height": 320,
+        "renderWidth": 390,
+        "renderHeight": 320
+      },
+      {
+        "width": 844,
+        "height": 240,
+        "renderWidth": 844,
+        "renderHeight": 240
+      }
+    ],
+    "contextLossDisposed": true,
+    "diagnostic": {
+      "closed": false,
+      "activeClip": "idle",
+      "engines": 1,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "disposed": {
+      "closed": true,
+      "activeClip": "idle",
+      "engines": 0,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "ownerDiagnostic": {
+      "battleId": "combat-v1-9684c828-7884-435c-aabf-3885d08c2841-1",
+      "lastSeq": 33,
+      "disposed": false,
+      "loading": false,
+      "ready": false,
+      "ended": true,
+      "failed": false,
+      "frames": 12,
+      "rejected": 1,
+      "fallbacks": 0,
+      "engines": 0,
+      "rafs": 0,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "lateDOMDiagnostic": {
+      "battleId": "combat-v1-9684c828-7884-435c-aabf-3885d08c2841-2",
+      "lastSeq": 32,
+      "disposed": false,
+      "loading": false,
+      "ready": false,
+      "ended": true,
+      "failed": false,
+      "frames": 14,
+      "rejected": 1,
+      "fallbacks": 0,
+      "engines": 0,
+      "rafs": 0,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "pacedActionsAfterDOM": 12,
+    "unavailableDiagnostic": {
+      "battleId": "combat-v1-9684c828-7884-435c-aabf-3885d08c2841-3",
+      "lastSeq": 33,
+      "disposed": false,
+      "loading": false,
+      "ready": false,
+      "ended": true,
+      "failed": false,
+      "frames": 0,
+      "rejected": 1,
+      "fallbacks": 1,
+      "engines": 0,
+      "rafs": 0,
+      "canCommit": false,
+      "canEmitCombatEvents": false
+    },
+    "coreResultsEqual": true,
+    "stageHiddenAfterEnd": true,
+    "unavailableNotice": "戰鬥視覺暫不可用，已保留文字戰鬥。",
+    "hudValues": {
+      "player": "964 / 1000",
+      "enemy": "300 / 500"
+    },
+    "remaining": 0,
+    "saveUnchanged": true,
+    "audioUnchanged": true
+  },
+  "hardware": "Chromium SwiftShader; NOT real GPU/mobile/art approval"
+}

@@ -7,7 +7,9 @@ const ROOT=path.resolve(__dirname,'..'),DIR='development/hybrid-comparison/t2a-v
 const BASELINE='754acf702325f0a136d21a5948b45807ea5db4f2';
 const SLOTS=['weapon','helmet','armor','shoes','accessory'];
 const SOURCES=['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json'];
-const read=p=>fs.readFileSync(path.join(ROOT,p),'utf8'),plain=x=>JSON.parse(JSON.stringify(x)),sha=x=>crypto.createHash('sha256').update(typeof x==='string'||Buffer.isBuffer(x)?x:JSON.stringify(x)).digest('hex');
+const history='development/3d-source/equipment/ancient-ruins-v1/history/';
+const historical=p=>p==='assets/3d/asset-registry.json'&&fs.existsSync(path.join(ROOT,history+'original-asset-registry.source.txt'))?history+'original-asset-registry.source.txt':p.startsWith('assets/3d/equipment/ancient-ruins-v1/')&&fs.existsSync(path.join(ROOT,history+path.basename(p)))?history+path.basename(p):p;
+const read=p=>fs.readFileSync(path.join(ROOT,historical(p)),'utf8'),plain=x=>JSON.parse(JSON.stringify(x)),sha=x=>crypto.createHash('sha256').update(typeof x==='string'||Buffer.isBuffer(x)?x:JSON.stringify(x)).digest('hex');
 function frozen(x){if(x&&typeof x==='object'){Object.values(x).forEach(frozen);Object.freeze(x);}return x;}
 function rng(seed){let n=seed>>>0;return()=>((n=(Math.imul(n,1664525)+1013904223)>>>0)/4294967296);}
 function boot(){
@@ -22,7 +24,7 @@ const drain=async()=>{for(let i=0;i<160;i++)await Promise.resolve();};
 function assets(){
  const r=JSON.parse(read('assets/3d/asset-registry.json'));
  return r.assets.filter(a=>a.type==='character'||a.type==='equipment').map(a=>{
-  const b=fs.readFileSync(path.join(ROOT,a.path));assert.equal(sha(b),a.sha256,a.id+' SHA');const j=glb(b,a.id);
+  const b=fs.readFileSync(path.join(ROOT,historical(a.path)));assert.equal(sha(b),a.sha256,a.id+' SHA');const j=glb(b,a.id);
   return {id:a.id,path:a.path,sha256:a.sha256,bytes:b.length,type:a.type,slot:a.slot||null,quality:a.quality,mount:a.mount||null,names:a.names||[],license:a.license,preload:a.preload,joints:j.skins?.[0]?.joints.length||0,sockets:Object.keys(JSON.parse(read('development/3d-source/equipment/ancient-ruins-v1/rig-contract.json')).sockets).filter(name=>j.nodes.some(n=>n.name===name)),animations:(j.animations||[]).map(a=>a.name),artStatus:a.type==='character'?r.artStatus:r.equipmentArtStatus};
  });
 }
@@ -67,7 +69,7 @@ function validate(bundle){
  const w=boot();const maps=vm.runInContext('MAPS',w),ids=new Set();
  for(const r of bundle.representatives){const row=maps[r.mapIndex].enemies[r.enemyIndex];assert.equal(row[0],r.name);assert.equal(row[2],r.kind);assert.equal(row[1],r.level);assert.equal(r.formalId,null);}
  for(const c of bundle.cases){const copy=plain(c),h=copy.sha256;delete copy.sha256;assert.equal(sha(copy),h);assert.equal(c.capture.computedOnly,true);assert.equal(c.capture.historyAvailability,'partial');assert.equal(c.capture.perActionHP,'unavailable');assert.equal(c.capture.omitted,0);assert.equal(c.capture.normalizedActions,c.events.filter(e=>e.type==='combat-action').length);assert.equal(c.capture.sourceEventCount,c.capture.normalizedActions);assert.equal(c.computed.result.settlementAvailability,'unavailable');assert.equal(c.capture.settlement,'unavailable-no-transactions');assert.equal(c.capture.dropped,0);assert.equal(c.stateUnchanged,true);assert.ok(c.events.length<=32);let last=0,battle=null;for(const e of c.events){assert.ok(w.CivilizationCombatEvents.validateEvent(e),'Bridge schema');assert.equal(e.lane,'gm-fixture');assert.equal(e.mode,'main');assert.equal(e.source,'combatcore.js');assert.notEqual(e.type,'settlement');assert.equal(e.seq,++last);assert.equal(e.expired,false);battle=battle||e.battleId;assert.equal(e.battleId,battle);assert.equal(e.actors.enemy.name,c.input.enemy.name);}assert.ok(!ids.has(battle));ids.add(battle);}
- for(const a of bundle.assets){const bytes=fs.readFileSync(path.join(ROOT,a.path));assert.equal(sha(bytes),a.sha256);assert.ok(a.license);assert.equal(a.preload,false);}
+ for(const a of bundle.assets){const bytes=fs.readFileSync(path.join(ROOT,historical(a.path)));assert.equal(sha(bytes),a.sha256);assert.ok(a.license);assert.equal(a.preload,false);}
  assert.equal(bundle.appearanceVariants.length,33);return true;
 }
 function comparisonInput(bundle,id,scheme,variant='g007-subset-31'){

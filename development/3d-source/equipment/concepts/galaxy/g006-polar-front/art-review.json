@@ -1,0 +1,13 @@
+{
+  "conceptApproved": true,
+  "reviewer": "user-delegated-chatgpt",
+  "approvedAt": "2026-10-14",
+  "evidenceFile": "delegated-art-acceptance-2026-10-14.md",
+  "authorizationFile": "docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md",
+  "authorizationSha256": "574c211fb9fffbd8de1809743410d7847da551bf78425a03c355a80c4adf1dd9",
+  "imageSha256": {
+    "overview-front-side-back.webp": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd",
+    "equipment-five-slots.webp": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8"
+  },
+  "formalSha256": "2e24477b64e1e563a4fa036b07e59b053c2f37df9766c1d0c6d448fe34245b71"
+}

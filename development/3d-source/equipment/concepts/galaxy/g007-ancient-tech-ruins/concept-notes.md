@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `existing-model-concept-alignment-unverified`。
+狀態：notes 已建立；概念圖 `approved`；使用者批准 `true`；模型 `refined-model-art-reviewed`。
 
 <!-- formal-equipment:end -->
 
@@ -117,3 +117,8 @@
 - ChatGPT適合補分件／材質說明及另授權局部修圖；Codex適合Blender局部建模／LOD／量測／身份SHA与GM驗證。先補尺寸剖面、再按決定製作；不恢復正式角色／背包／地圖獨立預覽。
 - GM驗收沿用C-08角色／C-09裝備及C-15 B模擬：空槽、各單件、移任意槽、真跨套混穿、頭轉／肩肘／腰髖／膝踝／握持及B可用動作；三LOD／局部mask恢復、快速切換／缺材錯SHA／WebGL故障与返回釋放。未有真模型者標待驗，不能把缺材拒絕當混穿通過。
 - 本次只完成設計資料，G007原技術版另見專項；其他19套不冒称模型完成。概念完成／概念批准／模型技術通過／混穿動作通過／正式發布批准各別記錄，現有批准與發布開關不改。
+
+
+## 2026-10-14｜合併施工最終分件定案（人工增補）
+
+使用者授權 ChatGPT 代理美術審查；正式拆件圖移除背甲重複鑰印，保留空掛座，原版保留history/2026-10-14。完整高脛靴已定案：硬脛殼／踝／雙鞋底與推進器归shoes，大腿／膝片归armor，原53骨／9掛點不變。固定立體菱形核心＋分層金屬框唯一屬accessory，無持續自由漂浮；本輪未新增光脈動／音效／戰鬥owner。精修原件與15GLB沿原ancient-ruins-v1身份，舊版存來源history壓縮封存。前文C選項及未決描述保留歷史，本節及授權決策文件優先。技術與實圖驗收見docs/BATCH28_CONSOLIDATED_ACCEPTANCE_2026-10-14.md；概念批准不解除正式B發布開關。

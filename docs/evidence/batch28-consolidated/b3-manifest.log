@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/rpg/development/hybrid-comparison/t2b2-v1/tools/inventory.py", line 40, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--write',action='store_true');p.add_argument('--check',action='store_true');args=p.parse_args();result=collect();file=HERE/'inventory.json'
+                                                                                                                                                       ^^^^^^^^^
+  File "/workspace/rpg/development/hybrid-comparison/t2b2-v1/tools/inventory.py", line 23, in collect
+    assert s in allowed,('Protected non-B1 source changed',s)
+           ^^^^^^^^^^^^
+AssertionError: ('Protected non-B1 source changed', 'development/hybrid-comparison/fixture-input.mjs')
+Traceback (most recent call last):
+  File "/workspace/rpg/development/hybrid-comparison/t2b3-v1/build-manifest.py", line 7, in <module>
+    subprocess.run(['python3',str(ART/'tools/inventory.py'),'--write'],cwd=ROOT,check=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['python3', '/workspace/rpg/development/hybrid-comparison/t2b2-v1/tools/inventory.py', '--write']' returned non-zero exit status 1.

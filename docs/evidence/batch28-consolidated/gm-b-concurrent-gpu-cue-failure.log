@@ -1,0 +1,65 @@
+PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return { width: 1280, height: 800 }
+GM B playback failure normal-baseline { width: 390, height: 844 } {
+  scheme: 'B',
+  failed: false,
+  rendererLoading: false,
+  playback: {
+    disposed: false,
+    timers: 0,
+    subscribers: 1,
+    pending: 0,
+    inFlight: 0,
+    consumerErrors: 0,
+    pendingFactory: 0,
+    coalesced: 0,
+    maxPending: 0,
+    steps: 23,
+    generation: 2
+  },
+  resources: {
+    factories: 0,
+    renderers: 1,
+    engines: 1,
+    rafs: 1,
+    maxFactories: 1,
+    created: 2,
+    disposed: 1,
+    lastPrepareMs: 1068,
+    decodedAtlas: { entries: 6, bytes: 8332632, limit: 33554432, hits: 6 }
+  },
+  current: {
+    scheme: 'B',
+    frames: 71,
+    sourceFrames: 12,
+    cueFrames: 0,
+    closed: false,
+    selectedLayers: null,
+    mounted: [ 'weapon', 'helmet', 'armor', 'shoes', 'accessory' ],
+    hiddenTriangles: 1579,
+    plan: {
+      roles: [Object],
+      cue: null,
+      fixtureSHA: '5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99',
+      caseSHA: '33c0e297dbd17b2ee19683af8a8cd8f0dd89358657f6e6c5942c8eee6e69595e',
+      sourceEventId: null,
+      computedOnly: true,
+      inspection: false
+    },
+    knownCueEventId: 'combat-v1-t2a-isolated-v1-1:6',
+    actorKinds: { player: 'NativeActor', enemy: 'AtlasActor' },
+    sourcePixelGrid: 192,
+    knownLimits: {
+      nativeMaterialLighting: 'B2 C still unresolved; Babylon ACES vs source AgX, quadrature/IBL and dynamic shadow mismatch; not selection evidence',
+      geometryContact: 'B2 C shoulder/guard/pommel risks remain; source failed evidence untouched',
+      humanArtApproved: false,
+      physicalMobileGPUVerified: false,
+      B4PerformanceMeasured: false
+    }
+  },
+  mode: 'completed',
+  caseId: 'normal-baseline'
+}
+page.waitForFunction: Timeout 15000ms exceeded.
+    at /workspace/rpg/tests/runtime/gm-battle-simulation-browser.js:22:14 {
+  name: 'TimeoutError'
+}

@@ -1,0 +1,43 @@
+✔ B3 has one immutable source input, same projection for A/B/C (130.453386ms)
+✔ exact 22 samples, 700ms, authored 1/30 origin; loader zero frame excluded (0.663491ms)
+✔ clock adapter reads the B1 due/remaining clock and pauses without a new timer (0.579624ms)
+✔ G007 32 independent combinations plus G006 unavailable use correct replacement patches (43.422599ms)
+✔ damage/cues only use exact raw event; marker counter/combo do not invent a hit (1.648005ms)
+✔ dodge moves the true target; return starts at matching attack impact sample (0.632654ms)
+✔ defeat only at known computed HP zero; action-budget stop is not death (3.221668ms)
+✔ all six visual inspections are marked non-authority and same sampler (0.774808ms)
+✔ actual PNG16 depth decoded losslessly, malformed depth rejected (147.299856ms)
+✔ every manifest reference has exact bytes/SHA/publish isolation and retained C limits (175.791367ms)
+✖ all B2 binaries/failure evidence retained; only inventory tool evolves (312.7549ms)
+✔ original death event animates full 700ms on same owner clock, no fabricated death (2.072395ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 837.462663
+
+✖ failing tests:
+
+test at tests/runtime/hybrid-comparison-renderer-contract.cjs:18:1
+✖ all B2 binaries/failure evidence retained; only inventory tool evolves (312.7549ms)
+  AssertionError [ERR_ASSERTION]: Exact authorized T4 source
+  + actual - expected
+  
+  + 'cb6778ba6d1cff2b7e166362c781ab5ea40e89e8add1b45375fc07e1c28b9b61'
+  - 'f4ed858bd4106584a38683a15bc882f5682ca635438551e83fc5010e346ae506'
+  
+      at verifySource (/workspace/rpg/development/hybrid-comparison/t2b3-v1/source-version.cjs:30:15)
+      at TestContext.<anonymous> (/workspace/rpg/tests/runtime/hybrid-comparison-renderer-contract.cjs:18:553)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'cb6778ba6d1cff2b7e166362c781ab5ea40e89e8add1b45375fc07e1c28b9b61',
+    expected: 'f4ed858bd4106584a38683a15bc882f5682ca635438551e83fc5010e346ae506',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,62 +1,62 @@
 {
   "weapon.low": {
-    "bytes": 14908,
-    "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe"
+    "bytes": 17516,
+    "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4"
   },
   "helmet.low": {
-    "bytes": 61060,
-    "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd"
+    "bytes": 63784,
+    "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56"
   },
   "armor.low": {
-    "bytes": 104348,
-    "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b"
+    "bytes": 115544,
+    "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0"
   },
   "shoes.low": {
-    "bytes": 94728,
-    "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87"
+    "bytes": 110884,
+    "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5"
   },
   "accessory.low": {
-    "bytes": 8040,
-    "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b"
+    "bytes": 7924,
+    "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b"
   },
   "weapon.medium": {
-    "bytes": 18700,
-    "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b"
+    "bytes": 22640,
+    "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883"
   },
   "helmet.medium": {
-    "bytes": 75540,
-    "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097"
+    "bytes": 79124,
+    "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde"
   },
   "armor.medium": {
-    "bytes": 128620,
-    "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18"
+    "bytes": 142860,
+    "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2"
   },
   "shoes.medium": {
-    "bytes": 118412,
-    "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4"
+    "bytes": 142620,
+    "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c"
   },
   "accessory.medium": {
-    "bytes": 9912,
-    "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4"
+    "bytes": 7924,
+    "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b"
   },
   "weapon.high": {
-    "bytes": 20504,
-    "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a"
+    "bytes": 24408,
+    "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a"
   },
   "helmet.high": {
-    "bytes": 82280,
-    "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810"
+    "bytes": 86900,
+    "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59"
   },
   "armor.high": {
-    "bytes": 147012,
-    "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d"
+    "bytes": 166848,
+    "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec"
   },
   "shoes.high": {
-    "bytes": 133348,
-    "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c"
+    "bytes": 161432,
+    "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb"
   },
   "accessory.high": {
-    "bytes": 11448,
-    "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d"
+    "bytes": 7924,
+    "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b"
   }
 }

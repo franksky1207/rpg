@@ -1,3 +1,7 @@
+> **2026-10-14整合精修版**：原53骨／9掛點與人物資產不變；鞋屬完整高脛殼、甲屬大腿／膝片／空背座、固定立體菱形鑰印已完成，15GLB三LOD同步。使用者授權ChatGPT代理美術審查，版本綁定concepts/galaxy/g007-ancient-tech-ruins/model-review.json；工程實測與真機待驗分別見docs/BATCH28_CONSOLIDATED_ACCEPTANCE_2026-10-14.md。下文28-C是原技術歷史。
+
+當前版本重匯出：`blender -b --python-exit-code 1 --python development/3d-source/equipment/ancient-ruins-v1/export_refined.py`，再執行validate_source、registry與來源版本驗證。`refine_equipment.py`只從原source局部增補一次，有重跑guard；要重現精修，先在隔離副本解開history/before-refinement-2026-10-14.tar.gz的原source。不要對精修版再次執行下方歷史build_equipment.py而誤還原造型。舊15GLB／source／registry／review封存與原SHA可追溯，history舊GLB及inert source.txt為Fixture重現，非正式備用裝備或預載。
+
 # 古代科技遺址：第一套正式五槽（28-C）
 
 Original CC0-1.0 design and tooling. No third-party model, texture, font or CDN.

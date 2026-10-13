@@ -19,7 +19,7 @@ class DatabaseTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory()
         self.root=pathlib.Path(self.temp.name)
         files=['data.js','engine.js','secondworlddata.js','secondworldrewards.js','thirdworlddata.js','thirdworldloot.js',
-               'resource-manifest.json','resource-cache-sw.js','resource-cache-client.js','assets/3d/asset-registry.json',str(m.MASTER)]
+               'resource-manifest.json','resource-cache-sw.js','resource-cache-client.js','assets/3d/asset-registry.json',str(m.MASTER),'docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md']
         files += [p.name for p in REPO.glob('worldmaps-*.js')]
         registry=m.load(REPO/'assets/3d/asset-registry.json')
         files += [a['path'] for a in registry['assets'] if a['type']=='equipment']
@@ -45,12 +45,22 @@ class DatabaseTests(unittest.TestCase):
             expected=[m.image_info(self.root/row['directory']/name) for name in m.IMAGES
                       if (self.root/row['directory']/name).is_file()]
             self.assertEqual(row['images'],expected)
-            self.assertEqual(row['conceptStatus'], 'images-present-awaiting-user-review' if len(expected)==2
+            self.assertEqual(row['conceptStatus'], 'approved' if row['conceptApproved'] else 'images-present-awaiting-user-review' if len(expected)==2
                              else 'partial-images' if expected else 'not-generated')
-        self.assertFalse(any(r['conceptApproved'] for r in rows))
+        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{'g006','g007'})
         self.assertEqual(rows[6]['regionOrBoss'],'地球戰爭 → 古代科技遺址')
-        self.assertEqual(rows[6]['modelStatus'],'existing-model-concept-alignment-unverified')
+        self.assertEqual(rows[6]['modelStatus'],'refined-model-art-reviewed')
         self.assertEqual(rows[-1]['level']['fixedLevel'],None)
+    def test_delegated_approval_exact_authority_required(self):
+        directory=self.note('g007').parent
+        record=m.load(directory/'art-review.json')
+        record['authorizationSha256']='0'*64
+        (directory/'art-review.json').write_text(m.dumps(record))
+        with self.assertRaisesRegex(ValueError,'exact authorization'):self.run_db()
+    def test_archived_g007_original_protected(self):
+        file=self.note('g007').parent/'history/2026-10-14/equipment-five-slots.webp'
+        file.write_bytes(file.read_bytes()+b'x')
+        with self.assertRaisesRegex(ValueError,'archived original'):self.run_db()
     def test_rerun_byte_identical(self):
         before=self.snapshot();self.run_db(True);self.run_db(True);self.assertEqual(before,self.snapshot())
     def test_manual_text_preserved(self):

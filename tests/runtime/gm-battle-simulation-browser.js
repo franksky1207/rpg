@@ -21,7 +21,10 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   await page.locator('[data-b="resume"]').click();assert.equal((await diag()).mode,'playing');
   await page.waitForFunction(()=>document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics().current?.sourceFrames>0&&document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics().current?.cueFrames>0,null,{timeout:15000}).catch(async error=>{console.error('GM B playback failure',id,viewport,await diag());throw error;});
 
-  await page.locator('[data-b="clip"]').selectOption('attack');await page.locator('[data-b="time"]').evaluate(e=>{e.value='300';e.dispatchEvent(new Event('input',{bubbles:true}));});await page.waitForTimeout(60);
+  await page.locator('[data-b="clip"]').selectOption('attack');await page.locator('[data-b="time"]').evaluate(e=>{e.value='300';e.dispatchEvent(new Event('input',{bubbles:true}));});
+  // Inspect the actual asynchronously rendered frame, not the previous source
+  // event's pose after an arbitrary 60ms sleep on a software GPU.
+  await page.waitForFunction(()=>{const plan=document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics().current?.plan,time=Number(document.querySelector('[data-b="time"]').value);return plan?.inspection===true&&plan.roles.player.clip==='attack'&&Math.abs(plan.roles.player.ms-time)<1e-6;},null,{timeout:15000});
   const current=(await diag()).current;assert.equal(current.scheme,'B');assert.equal(current.plan.roles.player.clip,'attack');assert.ok(current.frames>1);cases.push({id,actors:current.actorKinds,frames:current.frames,sourceFrames:current.sourceFrames,cueFrames:current.cueFrames});
   await page.locator('[data-b="stop"]').click();assert.equal((await diag()).resources.engines,0);assert.equal((await diag()).resources.rafs,0);
  }
