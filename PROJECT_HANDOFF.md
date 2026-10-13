@@ -1,3 +1,10 @@
+## 2026-10-13｜背景／GM／01～27 補查連續施工中（未全部完工）
+- 本任務授權直接修正、測試、提交及推送 main；順序 B → A → C，無需每個小修重新批准。起始 main `b2e4f3c69a387f7c86412ed4cd4687f6b13a6552`，14項 exact-HEAD Actions 成功。
+- 使用者最新確認：高維背景有正式結算，敵我 HUD／極簡數字不同步，補算提示殘留；不得誤寫成計算完全停止。已實際重現舊 DOM presentation token 繼續扣血但新 DOM 停滿血，新增同 token／舊 DOM 已斷開的限定重綁，不改公式／獎勵。
+- 修復 persisted pagehide 不當成手動停止；非 persisted 真離頁仍釋放高維 runtime。背景共用 owner 只向原回呼傳遞事件，其餘流程不變。極簡以相同 runId 的權威 counters 同步；補算 final 恢復最後正式 step 並退出提示；跳過的戰鬥消耗既有正式呈現時間，不只場間 gap。
+- 真 Chromium／WebKit 桌機與390×844測試均通過：部分扣血、敵方逐擊、重建HUD、極簡、三次背景循環、GM關閉暫停、停止重開與真離頁。修前測試失敗保留於 docs/evidence/gm-background-compatibility/。Linux WebKit 不等於 iPhone App 真切換。
+- B 尚需第一／二紀元、虛空與視覺失敗回歸；A GM實際整合施工中；C全面依賴台帳未完成。不可提前宣稱三工作完工。FULL_3D_AVAILABLE=false、formalReleased=false、28概念批准狀態不動。回退以本任務 commit 逐一 git revert，保留存檔。
+
 > 收尾補充：已補鏡像等 owner 先計算後建 DOM 的有界中繼資料保留，以及背景／晚到返回 checkpoint 後只播放新動作。本機真實 Renderer：fallbacks=0、非 idle paced samples=13。T5-C 實際需要最小修正：同一次離線 checkpoint／正規化使用同一時間戳，避免毫秒遞增誤清 pending；正常遞增／真正10分鐘倒退／backup／schema檢查通過，獎勵公式與倒退門檻不動。b8f1ab9b 的Stage4此項失敗證據保留；新HEAD全部CI須另核對。
 
 ## 2026-10-13｜T3～T5 本機工程驗收完成；交付 CI 核對中，正式啟用／真機／美術未批准

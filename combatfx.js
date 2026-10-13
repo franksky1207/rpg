@@ -73,7 +73,13 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   syncCombatShieldTarget("enemy",Math.max(0,Number(p?.enemyShield)||0),Math.max(0,Number(p?.enemyShieldMax)||0));
  }
  function syncCombatHpDom(){
-  const p=presentation,screen=combatScreen();if(!p||p.active!==true||!screen||(p.screen&&p.screen!==screen))return;
+  const p=presentation,screen=combatScreen();if(!p||p.active!==true||!screen)return;
+  if(p.screen&&p.screen!==screen){
+   // Only the same owner's explicit token may reconnect a replaced HUD.
+   // A new battle or another route must never inherit an old presentation.
+   if(p.screen.isConnected||screen.dataset.combatPresentationToken!==String(p.token))return;
+   p.screen=screen;
+  }
   syncingHp=true;
   try{
    [["player",p.playerHp,p.playerMaxHp],["enemy",p.enemyHp,p.enemyMaxHp]].forEach(([target,current,max])=>{
@@ -524,7 +530,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  const hpObserver=new MutationObserver(mutations=>{
   if(syncingHp||!presentation?.active||!combatScreen())return;
   const ids=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar","combatEnemyHp","voidEnemyHp","combatEnemyBar","voidEnemyBar"]);
-  if(mutations.some(m=>ids.has(m.target?.id)))queueMicrotask(syncCombatHpDom);
+  if(mutations.some(m=>ids.has(m.target?.id)||m.target?.id==="main"&&combatScreen()?.dataset.combatPresentationToken===String(presentation.token)))queueMicrotask(syncCombatHpDom);
  });
  hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 

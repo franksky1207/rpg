@@ -297,6 +297,14 @@
     if(fastCatchUp)catchUpNeedsFinalSync=true;
     const notify=!fastCatchUp||shouldNotifyDuringCatchUp(step,policy);
     if(notify&&typeof options.onBattle==="function"){try{await options.onBattle(step,{fastCatchUp,catchUpPolicy:policy});}catch(error){console.error(error);}}
+    // A skipped battle consumes its original presentation time as well as
+    // the outer gap. Charging only the gap leaves long-lived checkpoint UI
+    // and converts background time into far too many settled battles.
+    if(fastCatchUp&&runtime?.active===true&&step?.ok===true){
+     const duration=window.structuredCombatPresentationDurationMs?.(step.combat?.combat);
+     if(!Number.isFinite(duration))throw new Error("高維補算缺少正式呈現時間 owner。");
+     await consumeCatchUpDelay(duration);
+    }
     if(fastCatchUp){const infra=runInfra();if(infra)await infra.uiYield();}
     if(step.ok!==true||runtime?.active!==true||runSerial!==serial)break;
     await sleepBetweenBattles();
@@ -365,7 +373,10 @@
   return freeze({version:INTEGRITY_VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,foregroundWaitVersion:FOREGROUND_WAIT_VERSION,backgroundPolicyVersion:BACKGROUND_POLICY_VERSION,ownMinimalModeGuardVersion:OWN_MINIMAL_MODE_GUARD_VERSION,runTotalsVersion:RUN_TOTALS_VERSION,runIdentityVersion:RUN_IDENTITY_VERSION,exceptionCleanupVersion:EXCEPTION_CLEANUP_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
  function stopRun(reason="manual"){return clearRuntime(reason);}
- function onPageHide(){if(runtime?.active)clearRuntime("pagehide");}
+ // A persisted page is suspended in the page cache, not a manual stop.
+ // A discarded document cannot resume this in-memory runtime; real departure
+ // still releases it. New documents always start with runtime=null.
+ function onPageHide(event){if(event?.persisted===true)return;if(runtime?.active)clearRuntime("pagehide");}
  const sharedInfra=runInfra();
  if(sharedInfra){sharedInfra.onPageHide(onPageHide);pageHideSubscribed=true;blockerRegistered=sharedInfra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);}
 

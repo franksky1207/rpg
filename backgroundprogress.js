@@ -357,9 +357,9 @@
  document.addEventListener("visibilitychange",()=>{pageHidden=document.visibilityState==="hidden";syncEnvironment("visibilitychange");});
  window.addEventListener("blur",()=>{windowBlurred=true;syncEnvironment("blur");});
  window.addEventListener("focus",()=>{windowBlurred=false;pageHidden=document.visibilityState==="hidden";syncEnvironment("focus");});
- window.addEventListener("pagehide",()=>{
+ window.addEventListener("pagehide",event=>{
   pageHidden=true;syncEnvironment("pagehide");
-  pageHideListeners.forEach(listener=>{try{listener();}catch(e){console.error(e);}});
+  pageHideListeners.forEach(listener=>{try{listener(event);}catch(e){console.error(e);}});
  });
  window.addEventListener("pageshow",()=>{pageHidden=document.visibilityState==="hidden";windowBlurred=typeof document.hasFocus==="function"?!document.hasFocus():false;syncEnvironment("pageshow");});
 

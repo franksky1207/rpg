@@ -239,10 +239,12 @@
  }
  function finishCatchUpUi(payload={}){
   if(!activeContext)return;
+  if(payload.lastResult?.ok===true){refreshContextFromStep(payload.lastResult);refreshContextAfterSettledStep(payload.lastResult);}
   const snapshot=payload?.snapshot||{},cap=snapshot?.hpCap||{};
   activeContext.catchingUp=false;
   activeContext.catchUpCompleted=0;
   activeContext.deaths=whole(snapshot?.deaths??activeContext.deaths);
+  activeContext.battleNumber=Math.max(1,whole(snapshot?.battles??activeContext.battleNumber));
   if(Number.isFinite(Number(cap.hpCap)))activeContext.hpCap=whole(cap.hpCap);
   if(Number.isFinite(Number(cap.hpCapPercent)))activeContext.hpCapPercent=clamp(cap.hpCapPercent,0,100);
   syncMinimal();
@@ -254,6 +256,7 @@
   window.backgroundProgressOnEnvironmentChange(isBackground=>{
    if(isBackground||!activeContext)return;
    if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("third-world")===true)beginCatchUpUi();
+   else syncMinimal();
   });
   environmentSubscribed=true;
   return true;
@@ -355,6 +358,15 @@
    <div class="main-minimal-mode-block main-minimal-mode-stats"><div data-third-world-minimal-exp>EXP　${expText()}</div><div data-third-world-minimal-strings>維度之弦　${fmt(state?.thirdWorld?.dimensionalStrings)}</div></div>`;
  }
  function syncMinimalValues(root,mode="running"){
+  // Catch-up notifications are intentionally throttled. Read the same run's
+  // authoritative counters rather than a presentation callback's older step.
+  const runtime=runSnapshot(),context=displayContext();
+  if(context&&runtime?.runId===context.runId){
+   context.battleNumber=Math.max(1,whole(runtime.battles));
+   context.deaths=whole(runtime.deaths);
+   context.hpCap=whole(runtime.hpCap?.hpCap??context.hpCap);
+   context.hpCapPercent=clamp(runtime.hpCap?.hpCapPercent??context.hpCapPercent,0,100);
+  }
   const ctx=displayContext(),enemy=root.querySelector("[data-third-world-minimal-enemy]"),round=root.querySelector("[data-third-world-minimal-round]"),deaths=root.querySelector("[data-third-world-minimal-deaths]"),cap=root.querySelector("[data-third-world-minimal-cap]"),level=root.querySelector("[data-third-world-minimal-level]"),exp=root.querySelector("[data-third-world-minimal-exp]"),strings=root.querySelector("[data-third-world-minimal-strings]"),note=root.querySelector("[data-main-minimal-mode-note]");
   if(enemy)enemy.textContent=ctx?.bossName||"高維存在";
   if(round)round.textContent=`第 ${Math.max(1,whole(ctx?.battleNumber||1))} 場`;

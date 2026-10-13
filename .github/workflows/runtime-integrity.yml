@@ -106,7 +106,7 @@ jobs:
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
           npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
       - name: Run real browser runtime smoke
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
@@ -122,6 +122,8 @@ jobs:
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
+          node tests/runtime/thirdworld-background-browser.js
+          BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js
           node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-atlas-review-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt

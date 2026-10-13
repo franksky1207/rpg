@@ -6,7 +6,8 @@
     "index.html": {
       "archive": "development/retired-formal-previews/20261013/index.html",
       "beforeSHA256": "947295b186793b0fcc23f92937e7bf5d4e23b6a4202183678a2ba3569f7dff43",
-      "afterSHA256": "163a096b0c3e0486d7d38c558c50787ab0b903abcc5014ac4b7d4a45ea7064e4"
+      "afterSHA256": "fcc46556a7bb2f2e80991963a59869ee1239cf25f9f8f2893a2ac312d816d716",
+      "classification": "KEEP with authorized background/HUD recovery cache versions"
     },
     "ui.js": {
       "archive": "development/retired-formal-previews/20261013/ui.js",
