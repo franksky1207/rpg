@@ -67,8 +67,7 @@ function monitor(){
 }
 global.addEventListener?.("pagehide",detach);
 global.addEventListener?.("civilization-auth-signed-out",detach);
-// Formal event owner loads before this script; the relay remains renderer-free.
-monitor();
+// No eager subscription: keep formal consumer count zero until visual mode attaches.
 global.CivilizationFormalHybridBridge=Object.freeze({version:VERSION,supportedModes:MODES,legalWorlds:legal,
  attach,monitor,detach,diagnostics:()=>Object.freeze({version:VERSION,observed,rejected,subscribed:!!dispose,consumerAttached:!!sink,
  lastBattle,lastSeq,rendererReleased:false,canCommit:false,canCreateEvents:false})});
