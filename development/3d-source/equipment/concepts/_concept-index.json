@@ -1261,13 +1261,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277224,
+          "sha256": "3f4d9ab3e39e5f85d511e0ef99795ae54788a85248869f797f2fa8be9a199696"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 269060,
+          "sha256": "8d147c7293db4768797a5f905ca74455266d783ca6c5f99096e22a8ec6508442"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g022",
@@ -1306,13 +1321,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 328464,
+          "sha256": "54ae9c16b0b1f6bb75a879cec5cbc185290b1b28837d7687dd71720e81011b50"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 295420,
+          "sha256": "7a97da23aa876292399aff350829ba0a69233d1016b0898bde089e89fc881a1c"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g023",
@@ -1351,13 +1381,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 336100,
+          "sha256": "377afb423249215d6028506419ac828b6c9a158dbf50565851776b3ebab40f7b"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277770,
+          "sha256": "c4d54b4dbe14c00ca1b87b3a44f9c54330b55c3312e291f302b5f09a5b6e4872"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g024",
@@ -1396,13 +1441,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 328450,
+          "sha256": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 217974,
+          "sha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g025",
@@ -1441,13 +1501,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 408602,
+          "sha256": "35f06410e6f19c18d5802500f7c40ed7576883204d654d97b3ccc517ed3f23ed"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277742,
+          "sha256": "e7e6a76bcb160795cf557251116aea4399d3b65a4703207553c36e7bda57cb98"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g026",

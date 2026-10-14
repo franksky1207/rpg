@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,12 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. 2026-10-14 附件入庫與目視審查（未批准）
+
+- 原始 ZIP 提供兩張 WebP，逐 byte 保留；來源與完整 SHA 見 `docs/BATCH28_G021_G025_IMPORT_2026-10-14.json`。
+- 三視圖：寬肩重型動力甲、厚聚能刃、矩形防衛背模組；三視圖主要造型一致。
+- 拆件圖：五槽可辨但鞋欄上端疑似包含完整膝關節圓盤，甲欄亦有膝片，屬重要分槽疑義，建模前待修或補充分件圖；不得直接視為五槽契約通過。圖中部分「沃夫」字形近似「沃夭」，以正式索引文字為準。
+- 全罩頭盔未見可辨識五官。與前20套科幻硬表面風格相容；五套共享白灰甲／裙片／圓背核家族，相鄰差異主要為尖冠、肩寬、工業筒、武器輪廓與星芒翼，非完全獨立五種造型家族。
+- 膝歸armor、脛踝與雙鞋歸shoes；完整背飾歸accessory，甲只留空座；概念圖尚非精確工程分件圖，未知尺寸／碰撞／跨套混穿皆待驗。
+- 入庫可接受，藝術與工程審查仍有待補；`conceptApproved=false`，不製作GLB、不解除正式發布限制。

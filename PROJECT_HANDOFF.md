@@ -1,3 +1,5 @@
+> **2026-10-14｜G021～G025 概念圖附件入庫**：新增五套十張原始 WebP，依正式索引與 nearstar owner 核對；狀態維持待審、conceptApproved=false，未建模。逐圖觀察與分槽待補見 `docs/BATCH28_G021_G025_IMPORT_2026-10-14.json` 及各套 notes E 節，G024膝關節所有權疑義不冒稱通過。G001～G020與正式玩法／T3～T5／01～27不動；發布限制不解除。下一批G026～G030。提交後 exact-HEAD Actions 另核對。
+
 > CI收尾：9637011b／e02594e6的失敗入口已讀log，補Python inventory嚴格source鏈与T4唯一GM query变更驗證（舊lock不動）；B2加強為現行15GLB／19 Khronos／source鏈＋原历史repair断言雙驗證。本機CI core逐命令通過，失敗证据保留；新HEAD Actions继续核對，不预告全綠。
 
 > **2026-10-14｜第28批剩餘整合施工／本機完整驗收完成**：本輪承接ff91116c，依使用者授權ChatGPT代理美術審查，G006／G007局部候選已正式取代拆件圖，原SHA与版本保留history；原另外38圖未變。G007原Blender局部精修完整高脛靴、甲屬大腿膝片／空背座、固定立體菱形鑰印与分層框、面甲刀背補強，15真GLB／三LOD同步，原53骨／9掛點／人物基底不變。G016長甲腿分件定案，20套名稱／notes／210-1050索引收尾。詳 `docs/BATCH28_CONSOLIDATED_ACCEPTANCE_2026-10-14.md`。代理概念批准2套、G007模型藝術版本綁SHA，非使用者親自逐圖看過；其他18套狀態保留不冒稱模型完成。原Fixture逐byte可重現，GM／B以嚴格source版本銜接，無舊SHA放寬；GM模組query／manifest同步，正式玩法／存檔／雲端／音訊／背景／極簡與發布false開關不動。實跑穿卸／故障／53骨／19GLB／29資料測試、現GM三LOD姿勢、B32子集合／100engine等证据已寫入；GM三尺寸／授權父頁与實際發布包亦已通過；提交後exact-HEAD Actions另核對，未完不預告全綠。只有真iPhone長測与第二套真模型混穿是使用者允許待驗；不得重做T3～T5／01～27，不再把本輪精修排成下一小批。回退整組本輪提交／原圖與source封存，不遷移玩家資料。

@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,12 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. 2026-10-14 附件入庫與目視審查（未批准）
+
+- 原始 ZIP 提供兩張 WebP，逐 byte 保留；來源與完整 SHA 見 `docs/BATCH28_G021_G025_IMPORT_2026-10-14.json`。
+- 三視圖：殖民工業板甲、紫色震盪刃、雙筒環境核；正側背主要造型一致。
+- 拆件圖：五槽獨立、雙靴完整；甲欄膝片與高靴接口需量測；環境核管線必須全部隨飾品卸除，甲背空座待補。
+- 全罩頭盔未見可辨識五官。與前20套科幻硬表面風格相容；五套共享白灰甲／裙片／圓背核家族，相鄰差異主要為尖冠、肩寬、工業筒、武器輪廓與星芒翼，非完全獨立五種造型家族。
+- 膝歸armor、脛踝與雙鞋歸shoes；完整背飾歸accessory，甲只留空座；概念圖尚非精確工程分件圖，未知尺寸／碰撞／跨套混穿皆待驗。
+- 入庫可接受，藝術與工程審查仍有待補；`conceptApproved=false`，不製作GLB、不解除正式發布限制。
