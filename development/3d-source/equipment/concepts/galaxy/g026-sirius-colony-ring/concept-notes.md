@@ -66,3 +66,9 @@
 - attachment：沿用socket.weapon.R、socket.helmet、socket.armor、socket.shoes.L/R、socket.accessory.back；local transform、bounds、coverage、關節包絡、mask與LOD皆待真模型量測，不虛填數值。
 - 生成順序為本套overview後本套five-slots，兩次真正影像生成，原始PNG保留；只轉檔壓縮，未裁切跨套拼貼。詳細來源／SHA見本輪證據。
 - 圖片待使用者審核，conceptApproved=false，模型未開始，不加入正式Pages／Service Worker。
+
+## 雙階段 SOP 審查狀態｜2026-10-15
+
+- 概念圖兩檔已入庫並完成前輪圖面複查及技術驗證；**不需使用者逐套美術批准**。
+- 本套圖面審查結論：已完成概念圖面複查；已列出的部件接口／遮擋等建模工程待驗項仍有效，並非實際模型驗收通過。
+- 現有 `conceptApproved=false` 依尚未改造的程式契約保留，不能由本段文字冒稱批准旗標已改寫或模型已完成。
