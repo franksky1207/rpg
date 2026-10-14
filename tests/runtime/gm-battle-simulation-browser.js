@@ -21,6 +21,16 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   await page.locator('[data-b="resume"]').click();assert.equal((await diag()).mode,'playing');
   await page.waitForFunction(()=>document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics().current?.sourceFrames>0&&document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics().current?.cueFrames>0,null,{timeout:15000}).catch(async error=>{console.error('GM B playback failure',id,viewport,await diag());throw error;});
 
+  if(id==='normal-baseline'){
+   // Regression: actual recorded hits must change both HP displays before the outcome.
+   await page.waitForFunction(()=>{
+    const host=document.querySelector('#prototypeHost'),api=host?.__gmBattleSimulation,frame=api?.diagnostics().frame;
+    const hp=role=>Number(host.querySelector('[data-b="'+role+'-bar"]')?.value);
+    return frame?.mode==='playing'&&hp('player')<1600&&hp('enemy')<975;
+   },null,{timeout:20000});
+   assert.match(await page.locator('[data-b="player-hp"]').innerText(),/模擬/);
+   assert.match(await page.locator('[data-b="enemy-hp"]').innerText(),/模擬/);
+  }
   await page.locator('[data-b="clip"]').selectOption('attack');await page.locator('[data-b="time"]').evaluate(e=>{e.value='300';e.dispatchEvent(new Event('input',{bubbles:true}));});
   // Inspect the actual asynchronously rendered frame, not the previous source
   // event's pose after an arbitrary 60ms sleep on a software GPU.
