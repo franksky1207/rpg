@@ -1,0 +1,392 @@
+{
+  "baseMain": "2b561169bb6148e709c0db714f8066f9bc01b992",
+  "zipSha256": "c7b137218ea8ba626c3edaae7593b7adadb622f9ead5865cb72a2b59f99cfd37",
+  "sourceManifest": {
+    "batch": "G021-G025",
+    "source": "ChatGPT image generation",
+    "license": "AI-generated imagery; no external third-party image assets used",
+    "imageData": [
+      {
+        "id": "g021",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost",
+        "images": [
+          {
+            "file": "overview-front-side-back.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 277224,
+            "sha256": "3f4d9ab3e39e5f85d511e0ef99795ae54788a85248869f797f2fa8be9a199696",
+            "originalPng": "g021未來裝甲士兵三視圖.png"
+          },
+          {
+            "file": "equipment-five-slots.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 269060,
+            "sha256": "8d147c7293db4768797a5f905ca74455266d783ca6c5f99096e22a8ec6508442",
+            "originalPng": "g021_近星戰爭裝備圖鑑.png"
+          }
+        ],
+        "conceptStatus": "images-present-awaiting-review",
+        "conceptApproved": false,
+        "gitUploaded": false
+      },
+      {
+        "id": "g022",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route",
+        "images": [
+          {
+            "file": "overview-front-side-back.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 328464,
+            "sha256": "54ae9c16b0b1f6bb75a879cec5cbc185290b1b28837d7687dd71720e81011b50",
+            "originalPng": "g022_近星航道裝甲騎士設定圖.png"
+          },
+          {
+            "file": "equipment-five-slots.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 295420,
+            "sha256": "7a97da23aa876292399aff350829ba0a69233d1016b0898bde089e89fc881a1c",
+            "originalPng": "g022_星際裝備概念圖譜.png"
+          }
+        ],
+        "conceptStatus": "images-present-awaiting-review",
+        "conceptApproved": false,
+        "gitUploaded": false
+      },
+      {
+        "id": "g023",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony",
+        "images": [
+          {
+            "file": "overview-front-side-back.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 336100,
+            "sha256": "377afb423249215d6028506419ac828b6c9a158dbf50565851776b3ebab40f7b",
+            "originalPng": "g023_巴納德殖民裝甲圖鑑.png"
+          },
+          {
+            "file": "equipment-five-slots.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 277770,
+            "sha256": "c4d54b4dbe14c00ca1b87b3a44f9c54330b55c3312e291f302b5f09a5b6e4872",
+            "originalPng": "g023紅星殖民裝備概念圖.png"
+          }
+        ],
+        "conceptStatus": "images-present-awaiting-review",
+        "conceptApproved": false,
+        "gitUploaded": false
+      },
+      {
+        "id": "g024",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
+        "images": [
+          {
+            "file": "overview-front-side-back.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 328450,
+            "sha256": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f",
+            "originalPng": "g024_沃夫359防線裝甲設計圖.png"
+          },
+          {
+            "file": "equipment-five-slots.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 217974,
+            "sha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3",
+            "originalPng": "g024沃夫防線裝備分解圖.png"
+          }
+        ],
+        "conceptStatus": "images-present-awaiting-review",
+        "conceptApproved": false,
+        "gitUploaded": false
+      },
+      {
+        "id": "g025",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts",
+        "images": [
+          {
+            "file": "overview-front-side-back.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 408602,
+            "sha256": "35f06410e6f19c18d5802500f7c40ed7576883204d654d97b3ccc517ed3f23ed",
+            "originalPng": "g025_星艦騎士三視圖設定稿.png"
+          },
+          {
+            "file": "equipment-five-slots.webp",
+            "width": 1491,
+            "height": 1055,
+            "bytes": 277742,
+            "sha256": "e7e6a76bcb160795cf557251116aea4399d3b65a4703207553c36e7bda57cb98",
+            "originalPng": "g025_天狼星光譜機甲裝備圖譜.png"
+          }
+        ],
+        "conceptStatus": "images-present-awaiting-review",
+        "conceptApproved": false,
+        "gitUploaded": false
+      }
+    ],
+    "status": "prepared locally; not yet committed to GitHub",
+    "important": "Do not manually overwrite derived _concept-index.json. Run scripts/equipment-concepts.py generate then validate after importing assets."
+  },
+  "review": [
+    {
+      "id": "g021",
+      "epoch": "galaxy",
+      "sourceKey": "galaxy:nearstar:map:0",
+      "regionOrBoss": "近星戰爭 → 比鄰星前哨區",
+      "level": {
+        "kind": "region-range",
+        "min": 101,
+        "max": 105
+      },
+      "equipmentNames": {
+        "weapon": "比鄰星航刃",
+        "helmet": "紅矮星作戰盔",
+        "armor": "近星複合甲",
+        "shoes": "光帆推進靴",
+        "accessory": "比鄰座標器"
+      },
+      "sourceIndex": 20,
+      "sources": [
+        {
+          "file": "worldmaps-nearstar.js",
+          "line": 3,
+          "symbol": "REGION_MAPS[0].gear"
+        },
+        {
+          "file": "data.js",
+          "line": 13,
+          "symbol": "WORLD_REGIONS / registerRegionMaps"
+        },
+        {
+          "file": "engine.js",
+          "line": 132,
+          "symbol": "makeItem / MAPS[mapIdx].gear"
+        }
+      ],
+      "directory": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost",
+      "notesStatus": "generated-formal-manual-art-separated",
+      "conceptStatus": "not-generated",
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "images": [],
+      "approvalEvidence": null,
+      "modelEvidence": [],
+      "lastUpdated": "2026-10-11",
+      "visualReview": {
+        "overview": "白灰偵察甲、青色航刃、雙天線圓盤座標器；三視圖主要輪廓一致。",
+        "fiveSlots": "五槽獨立、雙靴完整；甲欄膝片與靴上緣需在建模前界定接縫，甲背空掛座未另畫。",
+        "approved": false
+      }
+    },
+    {
+      "id": "g022",
+      "epoch": "galaxy",
+      "sourceKey": "galaxy:nearstar:map:1",
+      "regionOrBoss": "近星戰爭 → 半人馬座航道",
+      "level": {
+        "kind": "region-range",
+        "min": 106,
+        "max": 110
+      },
+      "equipmentNames": {
+        "weapon": "星路切割刃",
+        "helmet": "航道導航盔",
+        "armor": "星航防護甲",
+        "shoes": "曲率機動靴",
+        "accessory": "半人馬導航核"
+      },
+      "sourceIndex": 21,
+      "sources": [
+        {
+          "file": "worldmaps-nearstar.js",
+          "line": 4,
+          "symbol": "REGION_MAPS[1].gear"
+        },
+        {
+          "file": "data.js",
+          "line": 13,
+          "symbol": "WORLD_REGIONS / registerRegionMaps"
+        },
+        {
+          "file": "engine.js",
+          "line": 132,
+          "symbol": "makeItem / MAPS[mapIdx].gear"
+        }
+      ],
+      "directory": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route",
+      "notesStatus": "generated-formal-manual-art-separated",
+      "conceptStatus": "not-generated",
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "images": [],
+      "approvalEvidence": null,
+      "modelEvidence": [],
+      "lastUpdated": "2026-10-11",
+      "visualReview": {
+        "overview": "尖冠導航盔、白金長裙片、星芒導航核；主要輪廓一致。",
+        "fiveSlots": "五槽獨立、雙靴完整；甲欄長腿護片與鞋欄高脛殼的接縫有歧義，長背片歸甲或飾品需明確指派。",
+        "approved": false
+      }
+    },
+    {
+      "id": "g023",
+      "epoch": "galaxy",
+      "sourceKey": "galaxy:nearstar:map:2",
+      "regionOrBoss": "近星戰爭 → 巴納德星殖民區",
+      "level": {
+        "kind": "region-range",
+        "min": 111,
+        "max": 115
+      },
+      "equipmentNames": {
+        "weapon": "殖民震盪刃",
+        "helmet": "紅星殖民盔",
+        "armor": "遠星防衛甲",
+        "shoes": "殖民疾行靴",
+        "accessory": "巴納德環境核"
+      },
+      "sourceIndex": 22,
+      "sources": [
+        {
+          "file": "worldmaps-nearstar.js",
+          "line": 5,
+          "symbol": "REGION_MAPS[2].gear"
+        },
+        {
+          "file": "data.js",
+          "line": 13,
+          "symbol": "WORLD_REGIONS / registerRegionMaps"
+        },
+        {
+          "file": "engine.js",
+          "line": 132,
+          "symbol": "makeItem / MAPS[mapIdx].gear"
+        }
+      ],
+      "directory": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony",
+      "notesStatus": "generated-formal-manual-art-separated",
+      "conceptStatus": "not-generated",
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "images": [],
+      "approvalEvidence": null,
+      "modelEvidence": [],
+      "lastUpdated": "2026-10-11",
+      "visualReview": {
+        "overview": "殖民工業板甲、紫色震盪刃、雙筒環境核；正側背主要造型一致。",
+        "fiveSlots": "五槽獨立、雙靴完整；甲欄膝片與高靴接口需量測；環境核管線必須全部隨飾品卸除，甲背空座待補。",
+        "approved": false
+      }
+    },
+    {
+      "id": "g024",
+      "epoch": "galaxy",
+      "sourceKey": "galaxy:nearstar:map:3",
+      "regionOrBoss": "近星戰爭 → 沃夫359防線",
+      "level": {
+        "kind": "region-range",
+        "min": 116,
+        "max": 120
+      },
+      "equipmentNames": {
+        "weapon": "沃夫聚能刃",
+        "helmet": "近星戰術盔",
+        "armor": "防線動力甲",
+        "shoes": "恆星機動靴",
+        "accessory": "沃夫防衛模組"
+      },
+      "sourceIndex": 23,
+      "sources": [
+        {
+          "file": "worldmaps-nearstar.js",
+          "line": 6,
+          "symbol": "REGION_MAPS[3].gear"
+        },
+        {
+          "file": "data.js",
+          "line": 13,
+          "symbol": "WORLD_REGIONS / registerRegionMaps"
+        },
+        {
+          "file": "engine.js",
+          "line": 132,
+          "symbol": "makeItem / MAPS[mapIdx].gear"
+        }
+      ],
+      "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
+      "notesStatus": "generated-formal-manual-art-separated",
+      "conceptStatus": "not-generated",
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "images": [],
+      "approvalEvidence": null,
+      "modelEvidence": [],
+      "lastUpdated": "2026-10-11",
+      "visualReview": {
+        "overview": "寬肩重型動力甲、厚聚能刃、矩形防衛背模組；三視圖主要造型一致。",
+        "fiveSlots": "五槽可辨但鞋欄上端疑似包含完整膝關節圓盤，甲欄亦有膝片，屬重要分槽疑義，建模前待修或補充分件圖；不得直接視為五槽契約通過。圖中部分「沃夫」字形近似「沃夭」，以正式索引文字為準。",
+        "approved": false
+      }
+    },
+    {
+      "id": "g025",
+      "epoch": "galaxy",
+      "sourceKey": "galaxy:nearstar:map:4",
+      "regionOrBoss": "近星戰爭 → 天狼星外圍",
+      "level": {
+        "kind": "region-range",
+        "min": 121,
+        "max": 125
+      },
+      "equipmentNames": {
+        "weapon": "天狼裂光刃",
+        "helmet": "高亮星戰盔",
+        "armor": "星際強化甲",
+        "shoes": "光譜推進靴",
+        "accessory": "天狼定位器"
+      },
+      "sourceIndex": 24,
+      "sources": [
+        {
+          "file": "worldmaps-nearstar.js",
+          "line": 7,
+          "symbol": "REGION_MAPS[4].gear"
+        },
+        {
+          "file": "data.js",
+          "line": 13,
+          "symbol": "WORLD_REGIONS / registerRegionMaps"
+        },
+        {
+          "file": "engine.js",
+          "line": 132,
+          "symbol": "makeItem / MAPS[mapIdx].gear"
+        }
+      ],
+      "directory": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts",
+      "notesStatus": "generated-formal-manual-art-separated",
+      "conceptStatus": "not-generated",
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "images": [],
+      "approvalEvidence": null,
+      "modelEvidence": [],
+      "lastUpdated": "2026-10-11",
+      "visualReview": {
+        "overview": "白金星芒甲、藍色裂光刃、長尖翼與星形定位器；主要識別相符。",
+        "fiveSlots": "五槽完整、雙靴成對；長翼在甲欄與背部重疊，需確認唯一所有權；發光遮蔽刃緣與胸核細節，建模前需無光結構圖，鞋上口與膝片接縫待驗。",
+        "approved": false
+      }
+    }
+  ],
+  "sourceClaim": "附件清單自述 ChatGPT 生圖；本輪未重新生成，未取得原始 PNG，授權敘述為來源提供者聲明。",
+  "method": "Work 雲端瀏覽器二進位上傳至暫存分支，再以 Git tree 映射正式路徑並單一提交 main；結果須提交後核對。"
+}
