@@ -1,3 +1,5 @@
+> **2026-10-14｜裝備概念圖五套一批 SOP 正式建立**：後續 G026～G100／U001～U100／H01～H10，依 `docs/BATCH28_EQUIPMENT_CONCEPT_WORKFLOW_SOP_2026-10-14.md` 執行：ChatGPT 讀正式資料並製圖、Work 整批入庫、必要範圍預檢、main 提交、exact-HEAD Actions 驗證。補入本次來源版本鎖／B3 inventory SHA-bytes-totalBytes 連動教訓；不強制建立統一預檢入口或每批跑無關測試。入庫不等於批准，發布隔離與既有功能不動。
+
 > **2026-10-14｜G021～G025 概念圖附件入庫**：新增五套十張原始 WebP，依正式索引與 nearstar owner 核對；狀態維持待審、conceptApproved=false，未建模。逐圖觀察與分槽待補見 `docs/BATCH28_G021_G025_IMPORT_2026-10-14.json` 及各套 notes E 節，G024膝關節所有權疑義不冒稱通過。G001～G020與正式玩法／T3～T5／01～27不動；發布限制不解除。下一批G026～G030。提交後 exact-HEAD Actions 另核對。
 
 > CI收尾：9637011b／e02594e6的失敗入口已讀log，補Python inventory嚴格source鏈与T4唯一GM query变更驗證（舊lock不動）；B2加強為現行15GLB／19 Khronos／source鏈＋原历史repair断言雙驗證。本機CI core逐命令通過，失敗证据保留；新HEAD Actions继续核對，不预告全綠。
