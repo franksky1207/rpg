@@ -10,7 +10,7 @@ function displayHp(frame){
  // Use cursor instead of sourceRef: idle frames have no ref but must retain previous damage.
  let row=1;
  for(const event of frame.input.events){
-  if(event.type!=='combat-action'){row++;continue;}
+  if(event.type!=='combat-action'||event.data.sourceType==='combatSafety'){row++;continue;}
   const appliedAt=row+4;row+=6;
   if(frame.cursor<appliedAt)break;
   const d=event.data,who=d.target;
