@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-art-review`；概念審查通過 `false`；審查模式 `unreviewed`；可進入建模 `false`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 

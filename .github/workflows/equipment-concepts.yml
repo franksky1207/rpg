@@ -6,6 +6,10 @@ on:
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment-concepts.py'
       - 'scripts/equipment-concept-batches.py'
+      - 'scripts/equipment-art-review.py'
+      - 'scripts/equipment-modeling-gate.py'
+      - 'docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md'
+      - '.github/workflows/equipment-concepts.yml'
       - 'tests/equipment-concepts/**'
       - 'docs/3D_EQUIPMENT_210_SET_*'
       - 'data.js'
@@ -21,6 +25,10 @@ on:
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment-concepts.py'
       - 'scripts/equipment-concept-batches.py'
+      - 'scripts/equipment-art-review.py'
+      - 'scripts/equipment-modeling-gate.py'
+      - 'docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md'
+      - '.github/workflows/equipment-concepts.yml'
       - 'tests/equipment-concepts/**'
       - 'docs/3D_EQUIPMENT_210_SET_*'
       - 'data.js'
@@ -42,6 +50,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image decoder for strict repair evidence
+        run: python3 -m pip install Pillow==11.3.0
       - name: Validate formal identities, notes, images and statuses
         run: python3 scripts/equipment-concepts.py validate
       - name: Test preservation and failure detection in isolated copies

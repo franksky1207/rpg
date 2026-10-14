@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `auto-art-reviewed`；概念審查通過 `true`；審查模式 `autonomous-two-stage`；可進入建模 `true`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -80,3 +80,7 @@
 - 概念圖兩檔已入庫並完成前輪圖面複查及技術驗證；**不需使用者逐套美術批准**。
 - 本套圖面審查結論：已完成概念圖面複查；已列出的部件接口／遮擋等建模工程待驗項仍有效，並非實際模型驗收通過。
 - 現有 `conceptApproved=false` 依尚未改造的程式契約保留，不能由本段文字冒稱批准旗標已改寫或模型已完成。
+
+## 2026-10-15 正式自動審查制度接管
+
+雙階段SOP v2.0 已取代逐套使用者批准門檻。結論 `pass`；證據见 [本套審查](autonomous-art-review.md) 與 art-review.json。兩圖原檔保留，驗證通過後可進入建模入口，尚未建模或允許正式發布。 早期人工審批文字為歷史，不再作為新批准門檻。

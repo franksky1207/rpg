@@ -1,0 +1,42 @@
+{
+  "baselineMain": "26d953f7ff42f4d56546970dfc48abe6dd0b4e1e",
+  "originalSha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3",
+  "canonicalUnchanged": true,
+  "candidateFile": "g024-rejected-mask.webp",
+  "candidateSha256": "d0972c5ae176cdac8e81a278892b69d62be92763c7e6bc8175035a7d8f0e9b3e",
+  "dimensions": [
+    1491,
+    1055
+  ],
+  "targetBoxes": [
+    [
+      995,
+      395,
+      1095,
+      535
+    ],
+    [
+      1130,
+      465,
+      1200,
+      580
+    ]
+  ],
+  "outsideChangedPixels": 0,
+  "insideChangedPixels": [
+    9274,
+    5730
+  ],
+  "imageGenerationCandidates": [
+    {
+      "sha256": "e6f8ee660ae83302df2f1e559cfff3146cf69e61e8d281c3bf08b5417696ff36",
+      "adopted": false
+    },
+    {
+      "sha256": "ff941894dd0bb17bbb9f2ecf980dfb9d06ba3d4fb40da74788c77f6463903042",
+      "adopted": false
+    }
+  ],
+  "outcome": "needs-local-correction",
+  "reason": "遮罩候選非目標像素差異為零，但靴口有不自然斷面；第二影像候選新增側護片。兩者未通過圖面品質與原設計保留，正式原圖不得覆寫。"
+}

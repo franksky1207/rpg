@@ -1,0 +1,473 @@
+{
+  "baselineMain": "26d953f7ff42f4d56546970dfc48abe6dd0b4e1e",
+  "conceptResults": [
+    {
+      "command": [
+        "python3",
+        "scripts/equipment-concepts.py",
+        "generate"
+      ],
+      "exitCode": 0,
+      "log": "final-check-0.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/equipment-concepts.py",
+        "validate"
+      ],
+      "exitCode": 0,
+      "log": "final-check-1.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/equipment-concepts",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "final-check-2.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/equipment-concept-batches.py",
+        "status"
+      ],
+      "exitCode": 0,
+      "log": "final-check-3.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/equipment-modeling-gate.py",
+        "--set",
+        "g026"
+      ],
+      "exitCode": 0,
+      "log": "final-check-4.log"
+    }
+  ],
+  "unitTests": {
+    "count": 47,
+    "passed": true
+  },
+  "runtimeResults": [
+    {
+      "command": [
+        "node",
+        "tests/runtime/3d-asset-registry-integrity.cjs"
+      ],
+      "exitCode": 0,
+      "log": "3d-asset-registry-integrity.verified.log"
+    },
+    {
+      "command": [
+        "node",
+        "tests/runtime/js-integrity.js"
+      ],
+      "exitCode": 0,
+      "log": "js-integrity.verified.log"
+    },
+    {
+      "command": [
+        "node",
+        "tests/runtime/asset-integrity.js"
+      ],
+      "exitCode": 0,
+      "log": "asset-integrity.verified.log"
+    },
+    {
+      "command": [
+        "node",
+        "tests/runtime/docs-integrity.js"
+      ],
+      "exitCode": 0,
+      "log": "docs-integrity.verified.log"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/publish-asset-audit.cjs",
+        "--json"
+      ],
+      "exitCode": 0,
+      "log": "publish-asset-audit.verified.log"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/batch01-27-compatibility-audit.py"
+      ],
+      "exitCode": 1,
+      "log": "batch01-27-compatibility-audit.verified.log"
+    },
+    {
+      "command": [
+        "node",
+        "tests/runtime/equipment-world-semantics-batch2-integrity.js"
+      ],
+      "exitCode": 0,
+      "environment": "原測試斷言不變；本機既有Chromium替代未安裝的Playwright下載瀏覽器",
+      "log": "world-semantics-system-browser.log"
+    }
+  ],
+  "additionalPassed": [
+    "node tests/runtime/3d-equipment-contract.cjs",
+    "node tests/runtime/3d-batch28-preflight.cjs",
+    "git diff --check"
+  ],
+  "knownBaselineFailure": {
+    "command": "python3 scripts/batch01-27-compatibility-audit.py",
+    "reason": "歷史source-evolution afterSHA對3d-test/test-center.js與3d-test/index.html已過期；HEAD原檔即不符，未改這兩個正式檔案、不移除驗證。"
+  },
+  "counts": {
+    "galaxy": 100,
+    "universe": 100,
+    "higher": 10,
+    "total": 210,
+    "equipmentPositions": 1050
+  },
+  "approvedSets": [
+    "g006",
+    "g007",
+    "g026",
+    "g027",
+    "g028",
+    "g029"
+  ],
+  "canonicalImagesUnchanged": 60,
+  "formalReleaseAllowed": false,
+  "protected": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city/overview-front-side-back.webp",
+      "sha256": "97aef696fce7b1754839f5f469ab9ac051cb1e678d990139ff5c058e96d92184",
+      "bytes": 218994
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city/equipment-five-slots.webp",
+      "sha256": "b325ec1a0fe01da367cf92883c79b6bcf350da980e55db79d7b686f87d59c139",
+      "bytes": 235752
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/overview-front-side-back.webp",
+      "sha256": "ac69b16d73368dc16bfeb6d8b45a0ac229963ae66a51fe89cba7235a34365510",
+      "bytes": 261866
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/equipment-five-slots.webp",
+      "sha256": "3325ceb1ff3b234778c0e601ce0c5c9d00a968a31b5ce5b457900de86bf61510",
+      "bytes": 274886
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g003-underground-military/overview-front-side-back.webp",
+      "sha256": "035df705ff62e46722740ad02dc5f888f88ad7bf9102a3288b678b31c7828525",
+      "bytes": 221198
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g003-underground-military/equipment-five-slots.webp",
+      "sha256": "b3aeb221c3164b7d914748a4094aa71a3c9a258f47a7a18398a8ae1f9bcfc480",
+      "bytes": 229566
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/overview-front-side-back.webp",
+      "sha256": "914c0660395cb60f13cd013d05a2bffa306a36843928bd20b13abb22167b9295",
+      "bytes": 239094
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/equipment-five-slots.webp",
+      "sha256": "6bee8e939ace7865b8a92abd71dff0e91d71f649e93034c07516b66047ce48eb",
+      "bytes": 315710
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/overview-front-side-back.webp",
+      "sha256": "f3cfb23f7b04d5edd8d1d06aa59a302b9cf0ff15323077e17c68685b7691f055",
+      "bytes": 228040
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/equipment-five-slots.webp",
+      "sha256": "902c80ac9d20bca96397916c34a7080a4a408e19da0f02f4c76e88b07c06e940",
+      "bytes": 269020
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/overview-front-side-back.webp",
+      "sha256": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd",
+      "bytes": 248964
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/equipment-five-slots.webp",
+      "sha256": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8",
+      "bytes": 990216
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/overview-front-side-back.webp",
+      "sha256": "0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645",
+      "bytes": 224974
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/equipment-five-slots.webp",
+      "sha256": "ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c",
+      "bytes": 1031198
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/overview-front-side-back.webp",
+      "sha256": "5d3dec09b6a0259b42a7fbb2aee9dfb512f75a6e2984d13a5bf7f8bc3761d975",
+      "bytes": 298646
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/equipment-five-slots.webp",
+      "sha256": "1ca2a6449af8240f5cfcc478db46a2af6c1882de5bcda3185dba2f7323a163bc",
+      "bytes": 321186
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g009-global-command/overview-front-side-back.webp",
+      "sha256": "51b4485dbc14e71bc172edbf26000ce3edf8a3d9058aa9249dcb409bdb529948",
+      "bytes": 239930
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g009-global-command/equipment-five-slots.webp",
+      "sha256": "ebf438c5c75dfc2cbad70cda71991281ff727777306e89f93c95becb253605f5",
+      "bytes": 220084
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g010-earth-final-battle/overview-front-side-back.webp",
+      "sha256": "407f2d57cb6b074e4f2d9f550121fc2710fcfde43dad8913b354cccb8929e6f8",
+      "bytes": 295298
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g010-earth-final-battle/equipment-five-slots.webp",
+      "sha256": "c5684aae47af5123f8b19940b6b2915b5aeb4b2cce01aac71a2496f246dc53ce",
+      "bytes": 294518
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g011-lunar-landing/overview-front-side-back.webp",
+      "sha256": "1a5e4e177883cceda4627fdfbfa418c59cbb9b214501e278b8621d470207fac7",
+      "bytes": 282330
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g011-lunar-landing/equipment-five-slots.webp",
+      "sha256": "296bbbb102119d0de525db63f763d93579e170158d2222e588a3b00d299d9788",
+      "bytes": 281700
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g012-lunar-orbital-station/overview-front-side-back.webp",
+      "sha256": "8e4c7b13915f7d56fba3a647d5ff043f95117fc506478d8022441049383fcd47",
+      "bytes": 208768
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g012-lunar-orbital-station/equipment-five-slots.webp",
+      "sha256": "f02e690f1836f93237803e591d40f45910781c55a1b9f6bb7ff4ab77d64cd666",
+      "bytes": 231800
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony/overview-front-side-back.webp",
+      "sha256": "6062b968a6ffc2616dbb23b3da8bb7e74aa1635cf24b1f79cc6b18626d971849",
+      "bytes": 350862
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony/equipment-five-slots.webp",
+      "sha256": "899a87f369b21037818246e5a7fe94fcd04de3d3c4ab1b0e55c729c0ab80defa",
+      "bytes": 331162
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g014-mars-red-plains/overview-front-side-back.webp",
+      "sha256": "b366a95b47b1bc1ab55c0b4231df1a05d93ab0d4bcd07e04e4a03b784deec3f2",
+      "bytes": 311356
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g014-mars-red-plains/equipment-five-slots.webp",
+      "sha256": "956fb7158385058f3686ae6c15415bf928c0763b910eb784533d633093786078",
+      "bytes": 309736
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g015-asteroid-mining/overview-front-side-back.webp",
+      "sha256": "7db6a6860becdb4dc6d1f8279579691a5eca87a78b620f56211821ea4a18cc94",
+      "bytes": 377854
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g015-asteroid-mining/equipment-five-slots.webp",
+      "sha256": "1d0659d71c414eeab43211f45a037ea56c9b3a5e188dda2dd2616f5f5f98397d",
+      "bytes": 387978
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g016-jovian-moon-war/overview-front-side-back.webp",
+      "sha256": "7239b312b4e3e5ba525d67f779154bf051817cf6832a25c93e7c4d9dcaf60cb6",
+      "bytes": 244882
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g016-jovian-moon-war/equipment-five-slots.webp",
+      "sha256": "b5eb3b7779615ce5f11771f8a4091174def09ba3a6bba021a65d68d5d9cba9a1",
+      "bytes": 293564
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g017-jupiter-orbit/overview-front-side-back.webp",
+      "sha256": "5588161b8b19f02fb84180a566d76c641ef2249531a6e2861c66f0538617a125",
+      "bytes": 330288
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g017-jupiter-orbit/equipment-five-slots.webp",
+      "sha256": "60a670dcf3ea92bba37724a62cc59f48d369d3581bce8ee61bce0be83d973e41",
+      "bytes": 336194
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/overview-front-side-back.webp",
+      "sha256": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+      "bytes": 260864
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/equipment-five-slots.webp",
+      "sha256": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062",
+      "bytes": 273190
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g019-outer-solar-frontier/overview-front-side-back.webp",
+      "sha256": "2877d42e51da3bbb8f18db21a964711dc2fa4eb01d90bd4eb94432aaee588968",
+      "bytes": 229056
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g019-outer-solar-frontier/equipment-five-slots.webp",
+      "sha256": "317aa6e5702152e0e9fe8ac4915d1d3418a86bf9eac11fad90c86ef7a0afae1f",
+      "bytes": 253668
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g020-solar-final-front/overview-front-side-back.webp",
+      "sha256": "be74681baa90b1cd1eaa80bab2777f8bfe1fe0a2f1a234c3182c1b11b0605d9c",
+      "bytes": 329654
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g020-solar-final-front/equipment-five-slots.webp",
+      "sha256": "ad91922ed12174edd81e2071a4682915b14370c269ebdadba50a5191ce0d86e0",
+      "bytes": 312418
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost/overview-front-side-back.webp",
+      "sha256": "3f4d9ab3e39e5f85d511e0ef99795ae54788a85248869f797f2fa8be9a199696",
+      "bytes": 277224
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost/equipment-five-slots.webp",
+      "sha256": "8d147c7293db4768797a5f905ca74455266d783ca6c5f99096e22a8ec6508442",
+      "bytes": 269060
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route/overview-front-side-back.webp",
+      "sha256": "54ae9c16b0b1f6bb75a879cec5cbc185290b1b28837d7687dd71720e81011b50",
+      "bytes": 328464
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route/equipment-five-slots.webp",
+      "sha256": "7a97da23aa876292399aff350829ba0a69233d1016b0898bde089e89fc881a1c",
+      "bytes": 295420
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony/overview-front-side-back.webp",
+      "sha256": "377afb423249215d6028506419ac828b6c9a158dbf50565851776b3ebab40f7b",
+      "bytes": 336100
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony/equipment-five-slots.webp",
+      "sha256": "c4d54b4dbe14c00ca1b87b3a44f9c54330b55c3312e291f302b5f09a5b6e4872",
+      "bytes": 277770
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/overview-front-side-back.webp",
+      "sha256": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f",
+      "bytes": 328450
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/equipment-five-slots.webp",
+      "sha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3",
+      "bytes": 217974
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts/overview-front-side-back.webp",
+      "sha256": "35f06410e6f19c18d5802500f7c40ed7576883204d654d97b3ccc517ed3f23ed",
+      "bytes": 408602
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts/equipment-five-slots.webp",
+      "sha256": "e7e6a76bcb160795cf557251116aea4399d3b65a4703207553c36e7bda57cb98",
+      "bytes": 277742
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring/overview-front-side-back.webp",
+      "sha256": "dd12540c48de59d6b995316fe911d0a0055c97989c12362e90be6333e84f0751",
+      "bytes": 197458
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring/equipment-five-slots.webp",
+      "sha256": "687b2e5ee0f0bcc346631b1ec1c485f8fd7c7bfd60c69b6d41ff31af6f581893",
+      "bytes": 247610
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport/overview-front-side-back.webp",
+      "sha256": "1c02e11eaa42611cd01b6adf4a5cab9975f5ba76b1e6f36196152b48e2330081",
+      "bytes": 265716
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport/equipment-five-slots.webp",
+      "sha256": "c116e9d068812eb860a0ddf884adf93c6876f6efcd4048db168da1ac9007beb5",
+      "bytes": 342610
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/overview-front-side-back.webp",
+      "sha256": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+      "bytes": 175830
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/equipment-five-slots.webp",
+      "sha256": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789",
+      "bytes": 238648
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/overview-front-side-back.webp",
+      "sha256": "a97ae205a6a9d0077888e4beea40a2d85b977aa49cec237f64eba9829963e0eb",
+      "bytes": 239850
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/equipment-five-slots.webp",
+      "sha256": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db",
+      "bytes": 272524
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade/overview-front-side-back.webp",
+      "sha256": "3f714bcd2ef4ba467f01285ab38f564b46dc6c76b6b60ffe8e26d1cd3bbf57b8",
+      "bytes": 255102
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade/equipment-five-slots.webp",
+      "sha256": "0db944610b79e610aea57470d8f8f08341ffc1a6482648c16a09a29a7bdbf128",
+      "bytes": 264606
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/art-review.json",
+      "sha256": "812d586155d30452d89fcd26f4852629452f4faf37d07f33e19ba815a5d8a8e2",
+      "bytes": 669
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/delegated-art-acceptance-2026-10-14.md",
+      "sha256": "27d4043d6c2d1954a7034d3b60cfd4bcb5e317e5da7d7f09b6fbb21430c4746f",
+      "bytes": 807
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/art-review.json",
+      "sha256": "ef42ea891133e3bf0f36fc35281629ad6fbd2cbf26d6d08b21ad44e4aeb9fca0",
+      "bytes": 669
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/delegated-art-acceptance-2026-10-14.md",
+      "sha256": "b79bbbb173deeb99061e6f6bfb4a25fe76b33e637f26399a2f73a1f2b7d6ef9f",
+      "bytes": 807
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/_concept-identities.json",
+      "sha256": "10908b6dd787f037bf76c4b3e427ba832db27f556fc6b619830cc61c95581eab",
+      "bytes": 28330
+    }
+  ],
+  "notesPreservation": "210套只重建A區塊；G024/G026～G030追加新結論，其他人工區塊逐字相同；歷史授權與批准原檔不改。"
+}

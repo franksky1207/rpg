@@ -1,0 +1,121 @@
+{
+  "schema": 2,
+  "conceptApproved": true,
+  "reviewer": "chatgpt-codex-autonomous",
+  "reviewedAt": "2026-10-15",
+  "authorizationFile": "docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md",
+  "authorizationSha256": "f7e281bb156f65ccc14e2544fb5bf853dc106446d1422ab4a92c00fce584a123",
+  "evidenceFile": "autonomous-art-review.md",
+  "evidenceSha256": "f153dbb7cb8ed79ace761b70a86fca19e98cf14aa3ecd04e19bf2168ec89fe55",
+  "formalSha256": "57496b125abb3707523143ef0c72a12f98a5dfdcbaaab8ec492459748a3a98b9",
+  "imageSha256": {
+    "overview-front-side-back.webp": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+    "equipment-five-slots.webp": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+  },
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "passed": true,
+      "imageSha256": {
+        "overview-front-side-back.webp": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+        "equipment-five-slots.webp": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g028 正式sourceKey為galaxy:nearstar:map:7；五槽名稱逐字核對正式owner及永久identity。 第一階段製圖／既有問題初審記錄。"
+        },
+        "independentImages": {
+          "result": "pass",
+          "observation": "g028 兩張分別是三視總覽與五槽拆件，獨立WebP實際解碼，尺寸、bytes及SHA逐檔核對。 第一階段製圖／既有問題初審記錄。"
+        },
+        "threeViewConsistency": {
+          "result": "pass",
+          "observation": "斜層白色胸片、紫色長刃、光學頭框、三鏡儀於正側背皆可對照。 第一階段製圖／既有問題初審記錄。"
+        },
+        "fiveSlotOwnership": {
+          "result": "pass",
+          "observation": "雙膝與腿片只在甲欄，鞋欄為完整左右長踝靴／双底，不含膝盤。 第一階段製圖／既有問題初審記錄。"
+        },
+        "fullFaceCover": {
+          "result": "pass",
+          "observation": "g028 頭盔欄及三視均為不透明封閉面罩，未露可辨識眼鼻口，密封圈與衣領接口分屬盔／甲。 第一階段製圖／既有問題初審記錄。"
+        },
+        "pairedShoes": {
+          "result": "pass",
+          "observation": "g028 五槽鞋欄顯示完整左右成對足部、腳踝與鞋底，三視正背可對照左右腳，底紋非新增第三鞋。 第一階段製圖／既有問題初審記錄。"
+        },
+        "weaponGrip": {
+          "result": "pass",
+          "observation": "g028 武器欄握柄、護手和作用刃完整，總覽有實際握持；多角度展示是同一件武器。 第一階段製圖／既有問題初審記錄。"
+        },
+        "accessoryDetachability": {
+          "result": "pass",
+          "observation": "拆件甲背有空座，三鏡儀連完整偏置連桿獨立；支架全屬accessory。 第一階段製圖／既有問題初審記錄。"
+        },
+        "regionalDesign": {
+          "result": "pass",
+          "observation": "全黑面罩與白紫斜層屏蔽材質、三鏡觀測儀，具獨有觀測區輪廓。 第一階段製圖／既有問題初審記錄。"
+        },
+        "imageQuality": {
+          "result": "pass",
+          "observation": "g028 圖片完整解碼且標題、輪廓、材質在原尺寸可辨；以G001～G020科技寫實参考，非單純換色。 第一階段製圖／既有問題初審記錄。"
+        }
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "passed": true,
+      "imageSha256": {
+        "overview-front-side-back.webp": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+        "equipment-five-slots.webp": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g028 正式sourceKey為galaxy:nearstar:map:7；五槽名稱逐字核對正式owner及永久identity。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "independentImages": {
+          "result": "pass",
+          "observation": "g028 兩張分別是三視總覽與五槽拆件，獨立WebP實際解碼，尺寸、bytes及SHA逐檔核對。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "threeViewConsistency": {
+          "result": "pass",
+          "observation": "斜層白色胸片、紫色長刃、光學頭框、三鏡儀於正側背皆可對照。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "fiveSlotOwnership": {
+          "result": "pass",
+          "observation": "雙膝與腿片只在甲欄，鞋欄為完整左右長踝靴／双底，不含膝盤。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "fullFaceCover": {
+          "result": "pass",
+          "observation": "g028 頭盔欄及三視均為不透明封閉面罩，未露可辨識眼鼻口，密封圈與衣領接口分屬盔／甲。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "pairedShoes": {
+          "result": "pass",
+          "observation": "g028 五槽鞋欄顯示完整左右成對足部、腳踝與鞋底，三視正背可對照左右腳，底紋非新增第三鞋。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "weaponGrip": {
+          "result": "pass",
+          "observation": "g028 武器欄握柄、護手和作用刃完整，總覽有實際握持；多角度展示是同一件武器。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "accessoryDetachability": {
+          "result": "pass",
+          "observation": "拆件甲背有空座，三鏡儀連完整偏置連桿獨立；支架全屬accessory。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "regionalDesign": {
+          "result": "pass",
+          "observation": "全黑面罩與白紫斜層屏蔽材質、三鏡觀測儀，具獨有觀測區輪廓。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        },
+        "imageQuality": {
+          "result": "pass",
+          "observation": "g028 圖片完整解碼且標題、輪廓、材質在原尺寸可辨；以G001～G020科技寫實参考，非單純換色。 第二階段重新開啟正式兩圖比對，工程穿卸不在本概念審查宣稱範圍。"
+        }
+      }
+    }
+  ],
+  "outstandingDefects": [],
+  "outcome": "pass",
+  "generationEvidenceFile": "docs/evidence/batch28-autonomous-review/generation-stage1-review.md",
+  "generationEvidenceSha256": "fa4100c1062c36c51f813efb8b38a6f437a989230526f3110d543681794602e7"
+}

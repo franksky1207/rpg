@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `needs-local-correction`；概念審查通過 `false`；審查模式 `autonomous-two-stage`；可進入建模 `false`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -72,3 +72,7 @@
 - 完整卸裝、單槽／混穿、53骨／9掛點／三LOD、遮蔽恢復、碰撞与真手機表現均待模型階段驗證，未由圖面推定。
 
 - 本輪已嘗試僅去除鞋欄靴頂膝盤的真影像編輯候選；因非目标四欄亦有附帶像素變動，候選未採用，原圖維持。原／候選SHA與原因見docs/evidence/batch28-g021-g030/g024-local-attempt.json；不將局部修正宣稱完成。
+
+## 2026-10-15 正式自動審查制度接管
+
+雙階段SOP v2.0 已取代逐套使用者批准門檻。結論 `needs-local-correction`；證據见 [本套審查](autonomous-art-review.md) 與 art-review.json。維持conceptApproved=false；不可進入建模，不能以notes或Actions替代缺陷修正／缺少圖面證據。 早期人工審批文字為歷史，不再作為新批准門檻。

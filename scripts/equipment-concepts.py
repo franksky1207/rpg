@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Development-only formal equipment catalog. No runtime/source-asset writes."""
+import importlib.util
 import argparse
 import datetime
 import hashlib
@@ -18,6 +19,10 @@ LABELS = ('武器', '頭盔', '鎧甲', '鞋子', '飾品')
 EPOCH_LABELS = {'galaxy':'銀河紀元','universe':'宇宙紀元','higher':'高維紀元'}
 IMAGES = ('overview-front-side-back.webp', 'equipment-five-slots.webp')
 START, END = '<!-- formal-equipment:start -->', '<!-- formal-equipment:end -->'
+_review_spec=importlib.util.spec_from_file_location('equipment_art_review', pathlib.Path(__file__).with_name('equipment-art-review.py'))
+art_review=importlib.util.module_from_spec(_review_spec)
+_review_spec.loader.exec_module(art_review)
+
 G007_HASHES = {
     IMAGES[0]: '0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645',
     IMAGES[1]: 'ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c',
@@ -181,10 +186,15 @@ def statuses(root, row):
         if not original.is_file() or sha(original.read_bytes()) != '2959fd08a50d7968ec228a4c8115f65988d018a4c57d045d876eec5c107d0ac0':
             fail('Protected G007 archived original changed/missing')
     approved, evidence = False, None
+    review_mode, review_outcome = 'unreviewed', None
     review = directory / 'art-review.json'
     if review.exists():
         record = load(review)
-        if record.get('conceptApproved') is True:
+        if record.get('schema') == 2:
+            approved, evidence, review_outcome = art_review.verify(root,row,images,record)
+            review_mode = 'autonomous-two-stage'
+        elif record.get('conceptApproved') is True:
+            review_mode = 'legacy-user-approval'
             proof = record.get('evidenceFile','')
             if not re.fullmatch(r'[a-zA-Z0-9_-]+\.md',proof) or not (directory / proof).is_file():
                 fail(f'{row["id"]}: approval needs local Markdown user acceptance evidence')
@@ -225,8 +235,10 @@ def statuses(root, row):
         if mr.get('reviewer')!='user-delegated-chatgpt' or not re.fullmatch(r'[a-zA-Z0-9_-]+\.md',mr.get('evidenceFile','')) or mr.get('authorizationFile')!='docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md' or mr.get('formalReleaseApproved') is not False or mr.get('assetSha256')!=actual or any(a['source']['sha256']!=mr.get('sourceSha256') for a in registry['assets'] if a['id'] in models) or not proof.is_file() or '代理' not in proof.read_text() or not authority.is_file() or sha(authority.read_bytes())!=mr.get('authorizationSha256'):
             fail(f'{row["id"]}: model review does not bind current assets/source/delegation')
         model_status='refined-model-art-reviewed'
-    return dict(notesStatus='generated-formal-manual-art-separated',conceptStatus='approved' if approved else 'images-present-awaiting-user-review' if len(images)==2 else 'partial-images' if images else 'not-generated',
-        conceptApproved=approved,modelStatus=model_status,
+    concept_status = ('auto-art-reviewed' if review_mode=='autonomous-two-stage' else 'approved') if approved else review_outcome or ('images-present-awaiting-art-review' if len(images)==2 else 'partial-images' if images else 'not-generated')
+    return dict(notesStatus='generated-formal-manual-art-separated',conceptStatus=concept_status,
+        conceptApproved=approved,artReviewMode=review_mode,modelingEligible=approved,
+        formalReleaseAllowed=False,modelStatus=model_status,
         images=images,approvalEvidence=evidence,modelEvidence=models)
 
 def level_text(row):
@@ -241,7 +253,7 @@ def formal_block(row):
         links.append(f"- `{source['file']}:{source['line']}` — `{source['symbol']}`")
     text = [START,'## A. 正式身份（此區由工具維護）',f"- 套裝 ID：`{row['id']}`；紀元：{EPOCH_LABELS[row['epoch']]}（`{row['epoch']}`）",f"- 正式區域／Boss／階數：{row['regionOrBoss']}",f"- 對應等級：{level_text(row)}",f"- 永久來源鍵：`{row['sourceKey']}`",'', '| 槽位 | 正式中文名稱 |','| --- | --- |']
     text += [f'| {slot}（{label}） | {row["equipmentNames"][slot]} |' for slot,label in zip(SLOTS,LABELS)]
-    text += ['', '程式資料來源：', *links, '', f"狀態：notes 已建立；概念圖 `{row['conceptStatus']}`；使用者批准 `{str(row['conceptApproved']).lower()}`；模型 `{row['modelStatus']}`。",'', END]
+    text += ['', '程式資料來源：', *links, '', f"狀態：notes 已建立；概念圖 `{row['conceptStatus']}`；概念審查通過 `{str(row['conceptApproved']).lower()}`；審查模式 `{row['artReviewMode']}`；可進入建模 `{str(row['modelingEligible']).lower()}`；正式發布允許 `false`；模型 `{row['modelStatus']}`。",'', END]
     return '\n'.join(text)+'\n'
 
 def manual_template(row):
@@ -282,7 +294,7 @@ def manual_template(row):
 - `overview-front-side-back.webp`：同套正面、側面、背面及材質參考。
 - `equipment-five-slots.webp`：五槽單品、遮面、接點與結構拆解。
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
-- 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
+- 未生成時不建立圖片；有圖片不等於概念審查通過、模型完成或正式發布允許。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
 '''
 
@@ -303,7 +315,7 @@ def overview(rows):
     text=['# 《文明戰線》210 套正式裝備概念資料庫','',
         '正式名稱從最新程式 owner 讀取；ID 是永久身份，英文 slug 僅為檔案標籤。',
         '工具及維護方法：[資料庫維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)。',
-        '概念圖存在、使用者批准、模型存在是三種獨立證據；本索引不宣布美術封版。','']
+        '概念圖審查通過、模型完成、正式發布允許是三種獨立狀態；雙階段自動審查不需逐套人工批准，不能代替模型或發布驗證。','']
     for epoch,label in [('galaxy','銀河紀元'),('universe','宇宙紀元'),('higher','高維紀元')]:
         group=[r for r in rows if r['epoch']==epoch]
         text += [f'## {label}（{len(group)} 套）','','| ID / notes 目錄 | 正式區域／Boss／階數 | 等級 | 武器 | 頭盔 | 鎧甲 | 鞋子 | 飾品 | 概念／批准／模型 |','| --- | --- | --- | --- | --- | --- | --- | --- | --- |']

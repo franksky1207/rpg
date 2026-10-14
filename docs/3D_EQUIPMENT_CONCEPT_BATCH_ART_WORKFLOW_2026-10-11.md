@@ -1,10 +1,12 @@
+> 2026-10-15：批准與建模入口以雙階段 SOP v2.0 為準；本文美術與技術標準持續有效，末節 G007 為歷史基線。
+
 # 《文明戰線》210 套裝備｜概念圖分批生成、入庫、審核與建模交接 SOP
 日期：2026-10-11。共同約束：[跨資產量產總規範](3D_ASSET_PRODUCTION_MASTER_RULES.md)、[三紀元裝備美術方向](3D_EQUIPMENT_ART_DIRECTION.md)。狀態：正式作業流程；**不代表任何套裝已取得美術批准**。資料真實來源為 GitHub `main`，正式身份與五槽名稱由 `scripts/equipment-concepts.py`／`_concept-index.json` 對應程式 owner；美術構想不可改正式名稱。
 
 ## 0. 工作切分與責任
 - **ChatGPT／可用的影像生成器**：按正式名稱產生精緻角色三視圖與五槽拆解概念圖。若 Codex 環境無圖片生成服務，不能假稱 Codex 自行繪圖；可先由 ChatGPT 生成，再交給 Codex 做整理、壓縮、驗證、入庫。
-- **Codex**：讀正式 `main`、整理批次清單、核對命名、無損保留已批准資產、圖片規格驗證／壓縮、更新資料庫、待批准後依圖建模。沒有圖片生成功能時停止在「待製圖」而不是造假圖片。
-- **使用者**：審查美術方向與最終批准。**只有明確使用者批准才可記錄 `conceptApproved=true`**；不得根據圖片存在、模型完成、CI 成功或 Codex 自評推定批准。
+- **Codex**：讀正式 `main`、整理批次清單、核對命名、無損保留已批准資產、圖片規格驗證／壓縮、更新資料庫、通過可驗證雙階段審查後依圖建模。沒有圖片生成功能時停止在「待製圖」而不是造假圖片。
+- **ChatGPT／Codex**：依[雙階段 SOP v2.0](BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md)初審／複查，自動審查通過不需逐套使用者批准。不得根據圖片存在、模型完成、CI 成功或無證據自評推定批准。
 
 ## 1. 批次規模及順序
 - 初次正式試行：銀河紀元地球戰爭 G001～G010（G007 兩圖已入庫，但仍須重新審核）；建議之後固定**每批 10 套**，相鄰大區的共同美術語言先定義，再確保每套輪廓獨特。宇宙依連續 10 Boss 分組；高維 10 階為一批但逐階各自設計。
@@ -25,7 +27,7 @@
 - 標準目錄：`development/3d-source/equipment/concepts/<epoch>/<stable-id>-<slug>/`。每套只能有一組正式命名的兩張圖；候選草稿若需保留可在 GitHub 外封存。**有圖即可入庫待審**，不需要先批准才能存圖；入庫與批准是兩個不同狀態。
 
 ## 4. 入庫驗證與狀態
-1. 寫入符合固定命名的兩張 WebP，不覆寫已批准版本；覆寫既有待審圖也須先明示差異和備份策略。使用者尚未決定改版時不可默默覆蓋。
+1. 寫入符合固定命名的兩張 WebP，不覆寫已批准版本；覆寫既有待審圖也須先明示差異和備份策略。局部修正需真影像編輯、原圖備份、差異證據及重新雙階段審查。
 2. 核對 WebP RIFF 格式、長寬、容量、SHA-256、兩張相互不同、ID 與目錄一致；記錄在 `_concept-index.json`（由腳本自動生成，禁止手改衍生欄位）。
 3. 執行：`python3 scripts/equipment-concepts.py generate`、`python3 scripts/equipment-concepts.py validate`、`python3 -m unittest discover -s tests/equipment-concepts -v`。重跑生成必須零差異；禁止讓生成器覆寫 notes 人工美術段落。
 4. `conceptStatus`：無圖 `not-generated`、部分圖 `partial-images`、兩圖有但未批 `images-present-awaiting-user-review`、有明確證據才 `approved`。索引 `conceptApproved` 與模型狀態獨立。
@@ -40,8 +42,8 @@
 - 判定僅三類：**批准**（指定 ID 與圖片版本）、**退回重畫**（逐項原因）、**暫緩**。批次完成不代表每套都批准；若 10 套只有 6 套通過，其餘 4 套不得自動進建模。
 
 ## 6. 批准證據及模型交接
-- 現行腳本支援各套 `art-review.json`：批准須 `conceptApproved: true` 且有對應 Markdown `evidenceFile`，內容包含套裝 ID 與使用者批准紀錄，並通過腳本影像指紋檢查。**只有收到使用者明確對應版本批准後才能製作這些證據**，不得由 Codex 自行表決。
-- 記錄批准的套裝 ID、日期、圖片 SHA-256、使用者確認的方案與不允許再自動改動的要點。圖片一旦修改，必須重新驗收，不得沿用舊批准。
+- 現行腳本支援各套 `art-review.json`：批准須 `conceptApproved: true` 且有對應 Markdown `evidenceFile`，內容包含套裝 ID 與實際審查紀錄，並通過腳本影像指紋檢查。新增自動批准採 SOP v2.0 的 schema2 雙階段證據；既有人工／代理批准保留原格式，不得偽造人工紀錄。
+- 記錄批准的套裝 ID、日期、圖片 SHA-256、審查通過的方案與不允許再自動改動的要點。圖片一旦修改，必須重新驗收，不得沿用舊批准。
 - 批准後才讓 Codex 建模：先比對概念圖與舊模型，保留第 27 批人物 53 骨骼、9 掛點、五槽相容、完整面部遮蔽、三 LOD；交付可編輯 Blender、正式 GLB、registry/hash、正側背對照驗收圖、測試結果。不要把美術圖的錯誤文字／不一致視角當成精確尺寸。
 - 模型完成另行做人機與手機驗收；`conceptApproved` 不等於 `modelStatus` 或正式 3D 視覺驗收通過。
 

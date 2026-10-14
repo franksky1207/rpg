@@ -19,7 +19,7 @@ class DatabaseTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory()
         self.root=pathlib.Path(self.temp.name)
         files=['data.js','engine.js','secondworlddata.js','secondworldrewards.js','thirdworlddata.js','thirdworldloot.js',
-               'resource-manifest.json','resource-cache-sw.js','resource-cache-client.js','assets/3d/asset-registry.json',str(m.MASTER),'docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md']
+               'resource-manifest.json','resource-cache-sw.js','resource-cache-client.js','assets/3d/asset-registry.json',str(m.MASTER),'docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md',m.art_review.AUTHORITY,'docs/evidence/batch28-autonomous-review/generation-stage1-review.md']
         files += [p.name for p in REPO.glob('worldmaps-*.js')]
         registry=m.load(REPO/'assets/3d/asset-registry.json')
         files += [a['path'] for a in registry['assets'] if a['type']=='equipment']
@@ -45,9 +45,13 @@ class DatabaseTests(unittest.TestCase):
             expected=[m.image_info(self.root/row['directory']/name) for name in m.IMAGES
                       if (self.root/row['directory']/name).is_file()]
             self.assertEqual(row['images'],expected)
-            self.assertEqual(row['conceptStatus'], 'approved' if row['conceptApproved'] else 'images-present-awaiting-user-review' if len(expected)==2
-                             else 'partial-images' if expected else 'not-generated')
-        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{'g006','g007'})
+            self.assertEqual(row['modelingEligible'],row['conceptApproved'])
+            self.assertIs(row['formalReleaseAllowed'],False)
+            if row['artReviewMode']=='autonomous-two-stage':
+                self.assertEqual(row['conceptStatus'],'auto-art-reviewed' if row['conceptApproved'] else 'needs-local-correction' if row['id']=='g024' else 'needs-art-evidence')
+            else:
+                self.assertEqual(row['conceptStatus'],'approved' if row['conceptApproved'] else 'images-present-awaiting-art-review' if len(expected)==2 else 'partial-images' if expected else 'not-generated')
+        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{'g006','g007','g026','g027','g028','g029'})
         self.assertEqual(rows[6]['regionOrBoss'],'地球戰爭 → 古代科技遺址')
         self.assertEqual(rows[6]['modelStatus'],'refined-model-art-reviewed')
         self.assertEqual(rows[-1]['level']['fixedLevel'],None)

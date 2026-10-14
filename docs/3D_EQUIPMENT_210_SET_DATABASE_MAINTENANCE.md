@@ -20,34 +20,20 @@
 - B 節初始建議明確標示「待確認的美術方向」；後續人工美術不得寫進生成區塊。工具不會再產生或重寫 B／C／D。
 - `lastUpdated` 僅在該筆索引內容／證據變更時更新日期；單純重跑沒有時間戳差異。人工 notes 編輯本身由 Git 歷史追蹤，這個日期不冒充美術批准時間。
 - 兩張標準 WebP 只在真的生成後放入；未生成不建立假的圖檔。檢查 RIFF／實際圖像串流、尺寸、容量及 SHA；若現有 Python 有 Pillow，另實際解碼。無 Pillow 時清楚區分為結構檢查；工具不安裝任何套件。
-- 每張 300～800 KB 以下是建議上限；小於 300 KB 可接受，超過 800,000 bytes 提示而不自動重壓。尺寸有讀取並記錄，沒有杜撰必需的固定畫布；建模辨識度仍由使用者審查。
+- 每張 300～800 KB 以下是建議上限；小於 300 KB 可接受，超過 800,000 bytes 提示而不自動重壓。尺寸有讀取並記錄，沒有杜撰必需的固定畫布；建模辨識度仍須雙階段圖面審查。
 
 ## 狀態與批准證據
 
-目前：G007 兩圖已存在；其餘 209 套未生成；210 套均未批准。G007 第 28-C v1 有 15 筆五槽三 LOD 登錄，只有「既有模型存在、與概念稿對齊尚未驗證」，不能冒稱按新圖重製完成。
+當前數量與狀態以 `_concept-index.json` 為準。`conceptApproved` 由審查證據推導，不能由圖片存在、GLB、CI 或直接寫 true 推定；generate 永遠不建立／改寫批准檔。
 
-- `conceptStatus`：`not-generated`、`partial-images`、`images-present-awaiting-user-review` 或 `approved`。
-- `conceptApproved`：預設 false，不能由有 notes、有圖、有 GLB 推定。
-- `modelStatus`：`not-started` 或 `existing-model-concept-alignment-unverified`；由 registry 的 world、正式名字、區域／Boss／band 與檔案 SHA 核對，沒有美術批准含義。
-- 模型技術、美術與手機驗收仍需要後續批次的獨立紀錄，本工具不代替那些 Gate。
-
-後續只有取得明確使用者驗收紀錄，才可人工建立該套的 `art-review.json`：
-
-```json
-{
-  "conceptApproved": true,
-  "reviewer": "user",
-  "approvedAt": "YYYY-MM-DD",
-  "evidenceFile": "user-acceptance.md",
-  "imageSha256": {
-    "overview-front-side-back.webp": "完整 SHA-256",
-    "equipment-five-slots.webp": "完整 SHA-256"
-  },
-  "formalSha256": "以下指定正式身份 JSON 的 SHA-256"
-}
-```
-
-`evidenceFile` 必須為同目錄真實 Markdown，包含本套 ID、使用者與具體批准紀錄（至少 30 字元）；不可把工具測試治具當成真實批准。工具只能驗證證據結構與內容綁定，不能替使用者作出批准。`formalSha256` 為 Python `dumps()` 的 UTF-8 bytes 雜湊，欄位次序固定：`id, sourceKey, regionOrBoss, equipmentNames`。圖片或正式五槽身份有變化時，舊批准失效並使驗證失敗，重新取得批准後才能更新記錄。產生工具永遠不建立批准檔、不覆寫它或證據 Markdown。
+- 新雙階段自動審查依 [SOP v2.0](BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md)與 `scripts/equipment-art-review.py`：ChatGPT 初審、Codex 複查完整十項，綁正式身份／兩圖／SOP／審查文件 SHA，未解缺陷、缺項、fail／unverified 不得批准。
+- `conceptStatus`：未製／缺圖／`images-present-awaiting-art-review`／`auto-art-reviewed`／`needs-local-correction`／`needs-art-evidence`／`rejected`；既有批准保留 `approved`。
+- `artReviewMode`：`unreviewed`、`legacy-user-approval`、`autonomous-two-stage`。既有 `user`／`user-delegated-chatgpt` 原始批准與授權證據不改、不取消，仍驗證本來的正式身份與圖片版本。
+- `modelingEligible` 是經驗證概念批准的建模入口資格，不是模型完成。先執行 `equipment-modeling-gate.py --set ID`；此唯讀程式重驗真實 owner、全索引與審查，拒絕未批准套装。
+- `modelStatus` 仍按實際 registry／模型證據推導；`formalReleaseAllowed=false`，不因概念審查通過而允許發布。Runtime／Pages／SW 不讀概念圖，不預載210套。
+- `formalSha256` 保留 Python UTF-8 indent2 加結尾換行、欄位順序 `id, sourceKey, regionOrBoss, equipmentNames`。版本變動使舊審查失效，不可沿用或忽略。
+- G024已知膝盤缺陷有專項防繞過：通過前必須保留原始hash、真修補、兩個固定鞋上端區有變更，其餘解碼像素完全相同，並完成圖面複查。沒有 Pillow 不跳過此驗證；CI安裝固定 Pillow11.3.0。
+- 程式驗證證據結構與版本，不能自動判斷美感或以文字替代實際目視；完整的逐套審查 Markdown 記錄可見內容、限制與工程待驗。
 
 ## G007 原始素材保護
 

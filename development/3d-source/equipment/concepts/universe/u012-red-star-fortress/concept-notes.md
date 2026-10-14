@@ -19,7 +19,7 @@
 - `secondworlddata.js:277` — `SECOND_WORLD_BOSSES[11].equipment`
 - `secondworldrewards.js:125` — `makeSecondWorldEquipmentForBoss`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；可進入建模 `false`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 

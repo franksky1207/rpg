@@ -77,7 +77,7 @@ high保留主分件厚度、關節接口和辨識輪廓；medium減次級刻線�
 | 關卡 | 可宣稱內容 | 必要證據／批准者 |
 | --- | --- | --- |
 | 概念完成 | 兩圖存在、資料與SHA正確、notes齊全 | 機器／設計交付，不等於好看或批准 |
-| 概念批准 | 使用者明確認可指定版本與主要造型 | 使用者證據綁正式身份與圖SHA；CI不能代簽 |
+| 概念審查通過 | ChatGPT初審／Codex複查逐項通過指定版本 | SOP v2.0 schema2證據綁正式身份、兩圖、審查文與授權SHA；CI不能代替圖面審查 |
 | 模型技術通過 | 真資產、三LOD、rig／source／SHA／loader通過 | 工程測試；不等於概念對齊 |
 | 混穿與動作通過 | 指定真組合、動作／mask／故障／釋放驗證 | Blender及實際GM／B證據；列未驗組合 |
 | 正式發布批准 | 美術／玩法／真機／容量及發布Gate通過 | 使用者發布批准；不改本次false開關 |
@@ -96,7 +96,7 @@ high保留主分件厚度、關節接口和辨識輪廓；medium減次級刻線�
 - [ ] 手機直横可讀、弱網冷熱載入、bytes及真機30分鐘性能；記錄設備／GPU／時間，viewport另列。
 - [ ] 缺材、404、錯SHA、WebGL失敗／context loss、快速相反切換、關閉重開、不重複listener／container／engine；原安全回退與狀態不變。
 - [ ] source／授權／可編輯原件／SHA／registry／manifest／publish隔離正確，未批准來源不發布，按需下載。
-- [ ] 使用者概念、美術、混穿／手機及發布批准分層记录；exact-HEAD Actions另核對。
+- [ ] 概念自動審查、模型／混穿／手機及正式發布批准分層记录；exact-HEAD Actions另核對。
 
 ChatGPT適合分件／美術選項及經另授權的局部修圖；Codex適合資料核對、Blender局部幾何／材質、LOD／joint／source／Runtime驗證。任何工具都不能自行批准。剩餘190套僅沿用本契約，不在本次生成／建模。
 

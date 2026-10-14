@@ -22,7 +22,7 @@ development/3d-source/equipment/
 
 - 目錄只用英文小寫 `a-z0-9-`，固定序號與紀元前綴，避免手機檔案系統與 URL 問題；slug 可讀、但身份以固定序號與程式 index 決定。
 - 所有套裝保持 `concept-notes.md`、`overview-front-side-back.webp`、`equipment-five-slots.webp` 這組一致檔名，方便 Codex 批次掃描。目前 210 套目錄與 notes 均已建立，G001～G020 均已有兩張待審概念圖。
-- 版本不可藏在唯一身份目錄名（不要無限制建立 `ancient-ruins-v2/v3/v4`）：美術版本寫在 `concept-notes.md` 和 Git commit；如需多候選可在 `drafts/` 下短暫存放，兩張待使用者審核的正式候選圖採標準檔名；批准另需明確證據。
+- 版本不可藏在唯一身份目錄名（不要無限制建立 `ancient-ruins-v2/v3/v4`）：美術版本寫在 `concept-notes.md` 和 Git commit；如需多候選可在 `drafts/` 下短暫存放，兩張待双階段審查的正式候選圖採標準檔名；批准另需明確證據。
 - 圖片是美術參考，不等於可直接推導的 Blender 準確尺度、左右對稱、權重、LOD 或 GLB 交付。先由使用者美術確認，再讓 Codex 做幾何和 rig 驗證。
 - 概念參考 WebP 與必要的 `.blend`／驗收素材置於 GitHub 開發目錄；高容量原始無損概念圖可外部封存，**不得進 Pages、Service Worker 的 49 預載項**；發布只含批准、優化且登錄 registry 的正式必要模型。
 - 若主遊戲改了套裝名稱、順序或正式來源，先依最新 main 核對並修正 note；不得透過資料夾名稱覆寫正式遊戲資料。
@@ -34,3 +34,5 @@ development/3d-source/equipment/
 ## 跨批次入口
 - 後續裝備量產須同時遵守 [跨資產量產總規範](3D_ASSET_PRODUCTION_MASTER_RULES.md)及[三紀元裝備美術方向](3D_EQUIPMENT_ART_DIRECTION.md)。
 - 各批進度以正式資料 owner、現有圖片檔及腳本衍生 `_concept-index.json` 為準，不新增需人工同步的第二份真實狀態。已生成、待審、批准、建模需分開判斷。
+
+> 2026-10-15 狀態更新：上節數量為早期基線；當前圖片、既有批准、自動審查與建模狀態以衍生索引及雙階段 SOP v2.0 為準，無需逐套人工批准。

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Read-only equipment concept batch planner; never creates/replaces artwork."""
+import contextlib
+import importlib.util
+import io
 import argparse
 import json
 from pathlib import Path
@@ -8,6 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = Path("development/3d-source/equipment/concepts")
 IMAGES = ("overview-front-side-back.webp", "equipment-five-slots.webp")
 
+
+spec=importlib.util.spec_from_file_location('catalog',ROOT/'scripts/equipment-concepts.py')
+catalog=importlib.util.module_from_spec(spec);spec.loader.exec_module(catalog)
 
 def plan(root=ROOT, batch=None):
     data = json.loads((root / BASE / "_concept-index.json").read_text(encoding="utf-8"))
@@ -34,7 +40,7 @@ def plan(root=ROOT, batch=None):
                 recorded = [item["file"] for item in r["images"]]
                 if actual != recorded:
                     raise ValueError(f"{identity}: image list differs from index; run catalog generate/validate first")
-                if bool(r["conceptApproved"]) != (r["conceptStatus"] == "approved"):
+                if bool(r["conceptApproved"]) != (r["conceptStatus"] in ("approved", "auto-art-reviewed")):
                     raise ValueError(f"{identity}: approval status contradiction")
                 if r["conceptApproved"] and len(actual) != 2:
                     raise ValueError(f"{identity}: approved without two images")
@@ -58,6 +64,7 @@ def plan(root=ROOT, batch=None):
         groups = [g for g in groups if g["batch"].lower() == batch.lower()]
         if not groups:
             raise ValueError(f"Unknown batch {batch!r}; examples G01, U01, H01")
+    with contextlib.redirect_stdout(io.StringIO()): catalog.run(root)
     return groups
 
 
@@ -76,7 +83,7 @@ def main():
                             "sourceKey": row["sourceKey"], "regionOrBoss": row["regionOrBoss"],
                             "equipmentNames": row["equipmentNames"], "directory": row["directory"],
                             "missing": row["missing"], "preserveExisting": row["present"],
-                            "requiresUserApproval": True}, ensure_ascii=False))
+                            "requiresUserApproval": False, "requiresVerifiedTwoStageArtReview": True}, ensure_ascii=False))
         else:
             print(json.dumps({"batches": [{k: v for k, v in g.items() if k != "sets"} for g in groups],
                 "totalImagesPresent": sum(g["imagesPresent"] for g in groups),

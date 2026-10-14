@@ -22,9 +22,9 @@ index='development/3d-source/equipment/concepts/_concept-index.json';concept=jso
 images=[]
 for row in concept['sets']:
  if row['id'] not in ['g'+str(i).zfill(3) for i in range(1,21)]:continue
- assert row['conceptApproved'] is False and len(row['images'])==2
+ assert len(row['images'])==2 and row['formalReleaseAllowed'] is False
  for image in row['images']:
-  p=row['directory']+'/'+image['file'];b=(ROOT/p).read_bytes();assert len(b)==image['bytes'] and digest(p)==image['sha256'];images.append({'path':p,'sha256':image['sha256'],'bytes':image['bytes'],'conceptApproved':False,'classification':'FUTURE-28-40'})
+  p=row['directory']+'/'+image['file'];b=(ROOT/p).read_bytes();assert len(b)==image['bytes'] and digest(p)==image['sha256'];images.append({'path':p,'sha256':image['sha256'],'bytes':image['bytes'],'conceptApproved':row['conceptApproved'],'classification':'FUTURE-28-40'})
 assert len(images)==40
 factories=re.findall(r'function (create\w+Scene)\(',texts['3d-test/prototype-engine.js'])
 factory_consumers={f:sorted(p for p,s in texts.items() if p!='3d-test/prototype-engine.js' and f in s) for f in factories}

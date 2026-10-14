@@ -45,8 +45,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -66,7 +69,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g002",
@@ -105,8 +108,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -126,7 +132,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g003",
@@ -165,8 +171,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g003-underground-military",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -186,7 +195,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g004",
@@ -225,8 +234,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -246,7 +258,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g005",
@@ -285,8 +297,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -306,7 +321,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g006",
@@ -347,6 +362,9 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "approved",
       "conceptApproved": true,
+      "artReviewMode": "legacy-user-approval",
+      "modelingEligible": true,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -366,7 +384,7 @@
       ],
       "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/delegated-art-acceptance-2026-10-14.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-13"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g007",
@@ -407,6 +425,9 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "approved",
       "conceptApproved": true,
+      "artReviewMode": "legacy-user-approval",
+      "modelingEligible": true,
+      "formalReleaseAllowed": false,
       "modelStatus": "refined-model-art-reviewed",
       "images": [
         {
@@ -442,7 +463,7 @@
         "equipment.ancient-ruins.v1.accessory.medium",
         "equipment.ancient-ruins.v1.accessory.high"
       ],
-      "lastUpdated": "2026-10-13"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g008",
@@ -481,8 +502,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -502,7 +526,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g009",
@@ -541,8 +565,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g009-global-command",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -562,7 +589,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g010",
@@ -601,8 +628,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g010-earth-final-battle",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -622,7 +652,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g011",
@@ -661,8 +691,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g011-lunar-landing",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -682,7 +715,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g012",
@@ -721,8 +754,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g012-lunar-orbital-station",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -742,7 +778,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g013",
@@ -781,8 +817,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -802,7 +841,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g014",
@@ -841,8 +880,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g014-mars-red-plains",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -862,7 +904,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g015",
@@ -901,8 +943,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g015-asteroid-mining",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -922,7 +967,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g016",
@@ -961,8 +1006,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g016-jovian-moon-war",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -982,7 +1030,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g017",
@@ -1021,8 +1069,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g017-jupiter-orbit",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1042,7 +1093,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g018",
@@ -1081,8 +1132,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1102,7 +1156,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g019",
@@ -1141,8 +1195,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g019-outer-solar-frontier",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1162,7 +1219,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g020",
@@ -1201,8 +1258,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g020-solar-final-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1222,7 +1282,7 @@
       ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g021",
@@ -1261,8 +1321,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1321,8 +1384,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1381,8 +1447,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1441,8 +1510,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "needs-local-correction",
       "conceptApproved": false,
+      "artReviewMode": "autonomous-two-stage",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1460,7 +1532,7 @@
           "sha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
         }
       ],
-      "approvalEvidence": null,
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/autonomous-art-review.md",
       "modelEvidence": [],
       "lastUpdated": "2026-10-14"
     },
@@ -1501,8 +1573,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "images-present-awaiting-art-review",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1561,8 +1636,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
-      "conceptApproved": false,
+      "conceptStatus": "auto-art-reviewed",
+      "conceptApproved": true,
+      "artReviewMode": "autonomous-two-stage",
+      "modelingEligible": true,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1580,7 +1658,7 @@
           "sha256": "687b2e5ee0f0bcc346631b1ec1c485f8fd7c7bfd60c69b6d41ff31af6f581893"
         }
       ],
-      "approvalEvidence": null,
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring/autonomous-art-review.md",
       "modelEvidence": [],
       "lastUpdated": "2026-10-14"
     },
@@ -1621,8 +1699,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
-      "conceptApproved": false,
+      "conceptStatus": "auto-art-reviewed",
+      "conceptApproved": true,
+      "artReviewMode": "autonomous-two-stage",
+      "modelingEligible": true,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1640,7 +1721,7 @@
           "sha256": "c116e9d068812eb860a0ddf884adf93c6876f6efcd4048db168da1ac9007beb5"
         }
       ],
-      "approvalEvidence": null,
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport/autonomous-art-review.md",
       "modelEvidence": [],
       "lastUpdated": "2026-10-14"
     },
@@ -1681,8 +1762,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
-      "conceptApproved": false,
+      "conceptStatus": "auto-art-reviewed",
+      "conceptApproved": true,
+      "artReviewMode": "autonomous-two-stage",
+      "modelingEligible": true,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1700,7 +1784,7 @@
           "sha256": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
         }
       ],
-      "approvalEvidence": null,
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/autonomous-art-review.md",
       "modelEvidence": [],
       "lastUpdated": "2026-10-14"
     },
@@ -1741,8 +1825,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
-      "conceptApproved": false,
+      "conceptStatus": "auto-art-reviewed",
+      "conceptApproved": true,
+      "artReviewMode": "autonomous-two-stage",
+      "modelingEligible": true,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1760,7 +1847,7 @@
           "sha256": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db"
         }
       ],
-      "approvalEvidence": null,
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/autonomous-art-review.md",
       "modelEvidence": [],
       "lastUpdated": "2026-10-14"
     },
@@ -1801,8 +1888,11 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "images-present-awaiting-user-review",
+      "conceptStatus": "needs-art-evidence",
       "conceptApproved": false,
+      "artReviewMode": "autonomous-two-stage",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [
         {
@@ -1820,7 +1910,7 @@
           "sha256": "0db944610b79e610aea57470d8f8f08341ffc1a6482648c16a09a29a7bdbf128"
         }
       ],
-      "approvalEvidence": null,
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade/autonomous-art-review.md",
       "modelEvidence": [],
       "lastUpdated": "2026-10-14"
     },
@@ -1863,11 +1953,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g032",
@@ -1908,11 +2001,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g033",
@@ -1953,11 +2049,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g034",
@@ -1998,11 +2097,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g035",
@@ -2043,11 +2145,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g036",
@@ -2088,11 +2193,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g037",
@@ -2133,11 +2241,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g038",
@@ -2178,11 +2289,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g039",
@@ -2223,11 +2337,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g040",
@@ -2268,11 +2385,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g041",
@@ -2313,11 +2433,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g042",
@@ -2358,11 +2481,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g043",
@@ -2403,11 +2529,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g044",
@@ -2448,11 +2577,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g045",
@@ -2493,11 +2625,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g046",
@@ -2538,11 +2673,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g047",
@@ -2583,11 +2721,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g048",
@@ -2628,11 +2769,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g049",
@@ -2673,11 +2817,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g050",
@@ -2718,11 +2865,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g051",
@@ -2763,11 +2913,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g052",
@@ -2808,11 +2961,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g053",
@@ -2853,11 +3009,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g054",
@@ -2898,11 +3057,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g055",
@@ -2943,11 +3105,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g056",
@@ -2988,11 +3153,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g057",
@@ -3033,11 +3201,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g058",
@@ -3078,11 +3249,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g059",
@@ -3123,11 +3297,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g060",
@@ -3168,11 +3345,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g061",
@@ -3213,11 +3393,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g062",
@@ -3258,11 +3441,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g063",
@@ -3303,11 +3489,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g064",
@@ -3348,11 +3537,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g065",
@@ -3393,11 +3585,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g066",
@@ -3438,11 +3633,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g067",
@@ -3483,11 +3681,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g068",
@@ -3528,11 +3729,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g069",
@@ -3573,11 +3777,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g070",
@@ -3618,11 +3825,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g071",
@@ -3663,11 +3873,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g072",
@@ -3708,11 +3921,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g073",
@@ -3753,11 +3969,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g074",
@@ -3798,11 +4017,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g075",
@@ -3843,11 +4065,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g076",
@@ -3888,11 +4113,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g077",
@@ -3933,11 +4161,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g078",
@@ -3978,11 +4209,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g079",
@@ -4023,11 +4257,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g080",
@@ -4068,11 +4305,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g081",
@@ -4113,11 +4353,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g082",
@@ -4158,11 +4401,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g083",
@@ -4203,11 +4449,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g084",
@@ -4248,11 +4497,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g085",
@@ -4293,11 +4545,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g086",
@@ -4338,11 +4593,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g087",
@@ -4383,11 +4641,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g088",
@@ -4428,11 +4689,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g089",
@@ -4473,11 +4737,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g090",
@@ -4518,11 +4785,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g091",
@@ -4563,11 +4833,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g092",
@@ -4608,11 +4881,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g093",
@@ -4653,11 +4929,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g094",
@@ -4698,11 +4977,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g095",
@@ -4743,11 +5025,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g096",
@@ -4788,11 +5073,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g097",
@@ -4833,11 +5121,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g098",
@@ -4878,11 +5169,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g099",
@@ -4923,11 +5217,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g100",
@@ -4968,11 +5265,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u001",
@@ -5008,11 +5308,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u002",
@@ -5048,11 +5351,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u003",
@@ -5088,11 +5394,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u004",
@@ -5128,11 +5437,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u005",
@@ -5168,11 +5480,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u006",
@@ -5208,11 +5523,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u007",
@@ -5248,11 +5566,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u008",
@@ -5288,11 +5609,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u009",
@@ -5328,11 +5652,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u010",
@@ -5368,11 +5695,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u011",
@@ -5408,11 +5738,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u012",
@@ -5448,11 +5781,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u013",
@@ -5488,11 +5824,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u014",
@@ -5528,11 +5867,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u015",
@@ -5568,11 +5910,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u016",
@@ -5608,11 +5953,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u017",
@@ -5648,11 +5996,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u018",
@@ -5688,11 +6039,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u019",
@@ -5728,11 +6082,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u020",
@@ -5768,11 +6125,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u021",
@@ -5808,11 +6168,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u022",
@@ -5848,11 +6211,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u023",
@@ -5888,11 +6254,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u024",
@@ -5928,11 +6297,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u025",
@@ -5968,11 +6340,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u026",
@@ -6008,11 +6383,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u027",
@@ -6048,11 +6426,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u028",
@@ -6088,11 +6469,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u029",
@@ -6128,11 +6512,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u030",
@@ -6168,11 +6555,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u031",
@@ -6208,11 +6598,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u032",
@@ -6248,11 +6641,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u033",
@@ -6288,11 +6684,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u034",
@@ -6328,11 +6727,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u035",
@@ -6368,11 +6770,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u036",
@@ -6408,11 +6813,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u037",
@@ -6448,11 +6856,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u038",
@@ -6488,11 +6899,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u039",
@@ -6528,11 +6942,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u040",
@@ -6568,11 +6985,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u041",
@@ -6608,11 +7028,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u042",
@@ -6648,11 +7071,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u043",
@@ -6688,11 +7114,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u044",
@@ -6728,11 +7157,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u045",
@@ -6768,11 +7200,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u046",
@@ -6808,11 +7243,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u047",
@@ -6848,11 +7286,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u048",
@@ -6888,11 +7329,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u049",
@@ -6928,11 +7372,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u050",
@@ -6968,11 +7415,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u051",
@@ -7008,11 +7458,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u052",
@@ -7048,11 +7501,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u053",
@@ -7088,11 +7544,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u054",
@@ -7128,11 +7587,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u055",
@@ -7168,11 +7630,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u056",
@@ -7208,11 +7673,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u057",
@@ -7248,11 +7716,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u058",
@@ -7288,11 +7759,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u059",
@@ -7328,11 +7802,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u060",
@@ -7368,11 +7845,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u061",
@@ -7408,11 +7888,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u062",
@@ -7448,11 +7931,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u063",
@@ -7488,11 +7974,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u064",
@@ -7528,11 +8017,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u065",
@@ -7568,11 +8060,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u066",
@@ -7608,11 +8103,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u067",
@@ -7648,11 +8146,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u068",
@@ -7688,11 +8189,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u069",
@@ -7728,11 +8232,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u070",
@@ -7768,11 +8275,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u071",
@@ -7808,11 +8318,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u072",
@@ -7848,11 +8361,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u073",
@@ -7888,11 +8404,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u074",
@@ -7928,11 +8447,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u075",
@@ -7968,11 +8490,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u076",
@@ -8008,11 +8533,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u077",
@@ -8048,11 +8576,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u078",
@@ -8088,11 +8619,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u079",
@@ -8128,11 +8662,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u080",
@@ -8168,11 +8705,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u081",
@@ -8208,11 +8748,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u082",
@@ -8248,11 +8791,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u083",
@@ -8288,11 +8834,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u084",
@@ -8328,11 +8877,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u085",
@@ -8368,11 +8920,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u086",
@@ -8408,11 +8963,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u087",
@@ -8448,11 +9006,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u088",
@@ -8488,11 +9049,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u089",
@@ -8528,11 +9092,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u090",
@@ -8568,11 +9135,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u091",
@@ -8608,11 +9178,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u092",
@@ -8648,11 +9221,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u093",
@@ -8688,11 +9264,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u094",
@@ -8728,11 +9307,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u095",
@@ -8768,11 +9350,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u096",
@@ -8808,11 +9393,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u097",
@@ -8848,11 +9436,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u098",
@@ -8888,11 +9479,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u099",
@@ -8928,11 +9522,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "u100",
@@ -8968,11 +9565,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h01",
@@ -9024,11 +9624,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h02",
@@ -9080,11 +9683,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h03",
@@ -9136,11 +9742,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h04",
@@ -9192,11 +9801,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h05",
@@ -9248,11 +9860,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h06",
@@ -9304,11 +9919,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h07",
@@ -9360,11 +9978,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h08",
@@ -9416,11 +10037,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h09",
@@ -9472,11 +10096,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "h10",
@@ -9528,11 +10155,14 @@
       "notesStatus": "generated-formal-manual-art-separated",
       "conceptStatus": "not-generated",
       "conceptApproved": false,
+      "artReviewMode": "unreviewed",
+      "modelingEligible": false,
+      "formalReleaseAllowed": false,
       "modelStatus": "not-started",
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     }
   ]
 }
