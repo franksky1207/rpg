@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,27 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. 2026-10-15 本輪具體製圖設計（候選、未批准）
+
+此段為本輪待審美術提案，正式名稱／sourceKey仍以A節與owner為準；取代B節通用候選在本輪的具體造型，不代表正式世界觀新增設定。
+
+- 主輪廓：封鎖主戰楔形胸甲、外張多層盾肩、短指揮盔脊、六邊控制背框。
+- 材質：深藍槍鐵／鈦金屬／灰陶瓷、暗紅小面積航道燈。
+- weapon／星航封鎖刃：厚長雙導軌封鎖刃、實體刃端、長單握柄與护手。
+- helmet／星航主控盔：扁楔閉面、短中央指揮脊和兩側嵌入感測條，全臉不透明。
+- armor／近星主戰甲：楔形胸／分節盾肩／胸背臂腰胯大腿膝片，背空軌座。
+- shoes／封鎖曲率靴：左右短脛曲率靴、踝部雙C形致動器與雙鞋底、膝下有間隙。
+- accessory／星航封鎖中樞：六邊外框內交叉實體航道閘條與中央控制箱、自帶支架、非星環圓盤。
+- partId使用g030:slot:part格式；雙腿片與鞋分.L/.R。膝歸armor、脛踝歸shoes；甲背只留空座，完整背飾及所有裝置管線歸accessory。盔端密封圈歸helmet、衣領護圈歸armor，接口不焊死。
+- armor無飾品仍完整；accessory自帶架可使用socket.accessory.back而不要求穿本套甲。沿用socket.weapon.R、socket.helmet、socket.armor、socket.shoes.L/R及原53骨／9掛點，不新增骨架。
+- local transform／pivot／bounds／coverage／関節包絡／mask恢復／三LOD簽章待真模型量測；圖面不虛構公尺或碰撞結果。LOD需保留本套weapon／helmet／armor／双鞋／accessory辨識輪廓，微刻線以材質表現。
+- 總覽僅同套正側背；拆件另一次生成、五槽全部獨立、雙鞋完整。先本套兩圖再下一套；不使用跨套拼貼／裁切／複製換色。影像原稿及轉檔SHA見本輪來源證據。
+- 所有新圖維持conceptApproved=false、modelStatus=not-started；正式Pages／Service Worker隔離，真混穿與手機驗收待模型階段。
+
+## F. 本輪兩圖目視驗證（未批准）
+
+- 三視圖楔形胸、盾肩、扁楔封面、雙導軌刃与六邊交叉閘框主要相符。拆件圖雙大腿與膝片列在armor，双脛靴不含膝片；多個武器／鞋／背飾角度是同一件／同一双，非重複裝備。
+- 盔欄有下顎／盔端密封圈的拆分近景，均歸helmet；甲領圈歸armor。雙踝圓致動器是本輪C形曲率機構的實際封閉外殼提案，並非額外槽。
+- 拆件圖未提供完整甲背視圖；總覽背部显示穿戴完整封鎖中樞，不能推定卸飾品後仍有X閘條。X交叉條、六邊框、中央控制箱及整架全歸accessory；armor僅留空固定軌。甲背空座細部與界面剖面仍待補／量測。
+- 全遮面未見可辨識五官，雙鞋完整成對、握柄可辨、飾品單列。肩甲與六邊框厚度、膝—脛接口、武器重心與全動作包絡待模型階段，不宣稱零碰撞或實際混穿通過。

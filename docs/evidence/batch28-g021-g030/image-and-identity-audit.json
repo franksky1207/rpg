@@ -1,0 +1,500 @@
+{
+  "baseMain": "f8d2171862ea2d530b6b21f4d2be69ff73a19359",
+  "clientDate": "2026-10-15",
+  "existingReview": [
+    {
+      "id": "g021",
+      "sourceKey": "galaxy:nearstar:map:0",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost",
+      "regionOrBoss": "近星戰爭 → 比鄰星前哨區",
+      "equipmentNames": {
+        "weapon": "比鄰星航刃",
+        "helmet": "紅矮星作戰盔",
+        "armor": "近星複合甲",
+        "shoes": "光帆推進靴",
+        "accessory": "比鄰座標器"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277224,
+          "sha256": "3f4d9ab3e39e5f85d511e0ef99795ae54788a85248869f797f2fa8be9a199696"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 269060,
+          "sha256": "8d147c7293db4768797a5f905ca74455266d783ca6c5f99096e22a8ec6508442"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "visualReview": {
+        "overview": "正側背白灰偵察甲、黑色封面、青色直航刃及雙天線圓盤相符；側視靴外側推進翼與背視雙鞋可讀。",
+        "fiveSlots": "五欄是同套獨立裝備的不同角度，並非多套拼貼；甲含大腿／膝片，鞋到脛；武器握柄完整、雙鞋成對、背飾單列。",
+        "ownershipClarification": "頸巾歸armor；盔的下顎密封邊歸helmet。裙片、大腿與膝片歸armor；脛殼／踝翼／雙底歸shoes。背盤、兩天線與盤下尖片歸accessory，甲僅留空座。",
+        "remainingIssues": "甲背空座未畫、膝—靴止口缺剖面；以notes補清单，圖面非精確工程圖，尺寸與動作待驗。",
+        "faceCovered": true,
+        "pairedShoes": true,
+        "weaponGripVisible": true,
+        "accessorySeparatelyShown": true,
+        "artApproval": false,
+        "originalImagesRetained": true,
+        "independentRuntimeDetachVerified": false
+      }
+    },
+    {
+      "id": "g022",
+      "sourceKey": "galaxy:nearstar:map:1",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route",
+      "regionOrBoss": "近星戰爭 → 半人馬座航道",
+      "equipmentNames": {
+        "weapon": "星路切割刃",
+        "helmet": "航道導航盔",
+        "armor": "星航防護甲",
+        "shoes": "曲率機動靴",
+        "accessory": "半人馬導航核"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 328464,
+          "sha256": "54ae9c16b0b1f6bb75a879cec5cbc185290b1b28837d7687dd71720e81011b50"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 295420,
+          "sha256": "7a97da23aa876292399aff350829ba0a69233d1016b0898bde089e89fc881a1c"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "visualReview": {
+        "overview": "尖冠盔、白金長裙、琥珀刃及星芒導航核三視識別一致；側視肩／頭冠及背飾厚度可見。",
+        "fiveSlots": "五槽齊全、雙靴有完整鞋底；甲欄延伸長裙及膝片，鞋欄長脛殼無明確剖面。盔近景下方另見領口。",
+        "ownershipClarification": "長裙／背面長布片／大腿膝甲歸armor；星芒盤、天線及盤自身金色下支架歸accessory；領口屬armor，盔近景領口僅作接口參考，非第二件領甲。",
+        "remainingIssues": "背盤下尖長片與甲長背裙需按上述唯一owner辨明；甲背空座省略；膝—脛、裙片活動待量測，notes可補功能歸屬但不證明無碰撞。",
+        "faceCovered": true,
+        "pairedShoes": true,
+        "weaponGripVisible": true,
+        "accessorySeparatelyShown": true,
+        "artApproval": false,
+        "originalImagesRetained": true,
+        "independentRuntimeDetachVerified": false
+      }
+    },
+    {
+      "id": "g023",
+      "sourceKey": "galaxy:nearstar:map:2",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony",
+      "regionOrBoss": "近星戰爭 → 巴納德星殖民區",
+      "equipmentNames": {
+        "weapon": "殖民震盪刃",
+        "helmet": "紅星殖民盔",
+        "armor": "遠星防衛甲",
+        "shoes": "殖民疾行靴",
+        "accessory": "巴納德環境核"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 336100,
+          "sha256": "377afb423249215d6028506419ac828b6c9a158dbf50565851776b3ebab40f7b"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277770,
+          "sha256": "c4d54b4dbe14c00ca1b87b3a44f9c54330b55c3312e291f302b5f09a5b6e4872"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "visualReview": {
+        "overview": "板甲、紫色震盪刃、紅星標記與雙筒環境核三視一致；側視雙筒厚度、後視管路可讀。",
+        "fiveSlots": "五槽完整且成對長靴；甲含膝片，鞋殼止於膝下；武器完整握柄，環境核及其迴圈管線單列。",
+        "ownershipClarification": "頸巾／裙片／膝片歸armor，脛踝／鞋底歸shoes；雙筒、中心核、自帶框與全段迴圈管線歸accessory，不跨槽永久焊接。",
+        "remainingIssues": "甲背空座未畫；短管插接端與膝—脛需量測。部分圖中文字「殖民／刃」形似錯字；正式名稱以owner及notes為準，不為字形重畫。",
+        "faceCovered": true,
+        "pairedShoes": true,
+        "weaponGripVisible": true,
+        "accessorySeparatelyShown": true,
+        "artApproval": false,
+        "originalImagesRetained": true,
+        "independentRuntimeDetachVerified": false
+      }
+    },
+    {
+      "id": "g024",
+      "sourceKey": "galaxy:nearstar:map:3",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
+      "regionOrBoss": "近星戰爭 → 沃夫359防線",
+      "equipmentNames": {
+        "weapon": "沃夫聚能刃",
+        "helmet": "近星戰術盔",
+        "armor": "防線動力甲",
+        "shoes": "恆星機動靴",
+        "accessory": "沃夫防衛模組"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 328450,
+          "sha256": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 217974,
+          "sha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "visualReview": {
+        "overview": "寬肩重甲、厚聚能刃、全封面與方形防衛背模組三視主要相符；側視膝關節圓盤清楚。",
+        "fiveSlots": "五欄完整、双鞋成對，但鞋上端出現完整圓形關節，甲欄同時有膝防護。屬重要圖面分槽疑義；頭盔近景亦帶領口。",
+        "ownershipClarification": "膝片／完整膝關節歸armor，shoes僅脛踝／雙鞋／鞋底；甲領歸armor，盔端密封圈歸helmet；方形模組與天線歸accessory。",
+        "remainingIssues": "不能僅以notes宣稱鞋上端膝關節已消失；原圖保留待審，需局部候選去除鞋欄完整膝關節並維持雙脛靴。候選通過前不作五槽藝術／工程通過。圖中字形「沃夭」非正式名稱。",
+        "faceCovered": true,
+        "pairedShoes": true,
+        "weaponGripVisible": true,
+        "accessorySeparatelyShown": true,
+        "artApproval": false,
+        "originalImagesRetained": true,
+        "independentRuntimeDetachVerified": false
+      }
+    },
+    {
+      "id": "g025",
+      "sourceKey": "galaxy:nearstar:map:4",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts",
+      "regionOrBoss": "近星戰爭 → 天狼星外圍",
+      "equipmentNames": {
+        "weapon": "天狼裂光刃",
+        "helmet": "高亮星戰盔",
+        "armor": "星際強化甲",
+        "shoes": "光譜推進靴",
+        "accessory": "天狼定位器"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 408602,
+          "sha256": "35f06410e6f19c18d5802500f7c40ed7576883204d654d97b3ccc517ed3f23ed"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1491,
+          "height": 1055,
+          "bytes": 277742,
+          "sha256": "e7e6a76bcb160795cf557251116aea4399d3b65a4703207553c36e7bda57cb98"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "visualReview": {
+        "overview": "白金星芒甲、藍色裂光刃、封閉Y形面甲及星形背定位器一致；正側背長尖翼屬腰裙輪廓。",
+        "fiveSlots": "五槽齊、双鞋成對；甲欄長翼位於腰／腿側，獨立定位器未複製長翼，不足以認定重複飾品；亮光掩盖刀刃／胸核局部邊緣。",
+        "ownershipClarification": "胸部星形裝甲核心、腰側長翼及膝片歸armor；背圓定位器、天線與盤下短尖片歸accessory；鞋脛踝推進片歸shoes。胸核與背定位器是不同功能部件。",
+        "remainingIssues": "主要造型保留；背座／膝靴止口待量測。建模前需低光材質／作用刃截面證據，不能按光暈當實體。領口畫在盔近景僅作armor接口参考。",
+        "faceCovered": true,
+        "pairedShoes": true,
+        "weaponGripVisible": true,
+        "accessorySeparatelyShown": true,
+        "artApproval": false,
+        "originalImagesRetained": true,
+        "independentRuntimeDetachVerified": false
+      }
+    }
+  ],
+  "newSets": [
+    {
+      "id": "g026",
+      "sourceKey": "galaxy:nearstar:map:5",
+      "regionOrBoss": "近星戰爭 → 天狼星殖民環",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring",
+      "equipmentNames": {
+        "weapon": "星環脈衝刃",
+        "helmet": "殖民環戰盔",
+        "armor": "天狼環軌甲",
+        "shoes": "環域推進靴",
+        "accessory": "星環控制模組"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 197458,
+          "sha256": "dd12540c48de59d6b995316fe911d0a0055c97989c12362e90be6333e84f0751",
+          "originalPng": "exec-4a423974-f26c-45a5-979b-14ad4f8e1e94.png",
+          "originalPngBytes": 2257440,
+          "originalPngSha256": "d340ae3a967702e081f442b27be41d7d9318980bf511e394189e0d0a549567a0",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "overview",
+          "referenceOriginal": null,
+          "originalPngArchivePath": "g026/overview-front-side-back.png"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1983,
+          "height": 793,
+          "bytes": 247610,
+          "sha256": "687b2e5ee0f0bcc346631b1ec1c485f8fd7c7bfd60c69b6d41ff31af6f581893",
+          "originalPng": "exec-c9ccc2d3-28bd-4a44-b430-e5214a3e14ea.png",
+          "originalPngBytes": 2308511,
+          "originalPngSha256": "c75f4130e55cfe056ca9a60e0b148d302a6d7b8a901da7b9e3a9b9ed297fd382",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "five-slots",
+          "referenceOriginal": "exec-4a423974-f26c-45a5-979b-14ad4f8e1e94.png",
+          "originalPngArchivePath": "g026/equipment-five-slots.png"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "generationService": "image_gen.imagegen",
+      "status": "images-present-awaiting-user-review"
+    },
+    {
+      "id": "g027",
+      "sourceKey": "galaxy:nearstar:map:6",
+      "regionOrBoss": "近星戰爭 → 南河三星港",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport",
+      "equipmentNames": {
+        "weapon": "星港截航刃",
+        "helmet": "深港作戰盔",
+        "armor": "星港重甲",
+        "shoes": "港區磁靴",
+        "accessory": "星港調度節點"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 265716,
+          "sha256": "1c02e11eaa42611cd01b6adf4a5cab9975f5ba76b1e6f36196152b48e2330081",
+          "originalPng": "exec-0cedf728-c38c-49d6-9afe-aa0adac96c30.png",
+          "originalPngBytes": 2462986,
+          "originalPngSha256": "ae2ebb3bc1fd3ce6b1987664e4e9f57d932e067d41804b957f04f77882cfeffa",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "overview",
+          "referenceOriginal": null,
+          "originalPngArchivePath": "g027/overview-front-side-back.png"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1774,
+          "height": 887,
+          "bytes": 342610,
+          "sha256": "c116e9d068812eb860a0ddf884adf93c6876f6efcd4048db168da1ac9007beb5",
+          "originalPng": "exec-5006c375-34c7-43d5-ad4f-2d53e2a9d204.png",
+          "originalPngBytes": 2636230,
+          "originalPngSha256": "367aa8e6595b4e1209a5ec02a02bebb7326f8c4627efe0919ea8c168435dffb6",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "five-slots",
+          "referenceOriginal": "exec-0cedf728-c38c-49d6-9afe-aa0adac96c30.png",
+          "originalPngArchivePath": "g027/equipment-five-slots.png"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "generationService": "image_gen.imagegen",
+      "status": "images-present-awaiting-user-review"
+    },
+    {
+      "id": "g028",
+      "sourceKey": "galaxy:nearstar:map:7",
+      "regionOrBoss": "近星戰爭 → 織女星觀測區",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory",
+      "equipmentNames": {
+        "weapon": "織女光譜刃",
+        "helmet": "觀測戰盔",
+        "armor": "高能屏蔽甲",
+        "shoes": "光譜浮行靴",
+        "accessory": "織女觀測儀"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 175830,
+          "sha256": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+          "originalPng": "exec-b0816418-f411-4833-b44d-cb05480caf29.png",
+          "originalPngBytes": 2157108,
+          "originalPngSha256": "d6d2f699f72f6e4d0c170568c5d539c3512f95cf631d81340ced72ec1b16f4d8",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "overview",
+          "referenceOriginal": null,
+          "originalPngArchivePath": "g028/overview-front-side-back.png"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 238648,
+          "sha256": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789",
+          "originalPng": "exec-a87cee2f-955f-4379-9082-e63c65e277f4.png",
+          "originalPngBytes": 2291154,
+          "originalPngSha256": "93ac68312b1b7b1bc092d64d71bf9b175acf2b4e00f0ed812f7f5a56386b92c9",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "five-slots",
+          "referenceOriginal": "exec-b0816418-f411-4833-b44d-cb05480caf29.png",
+          "originalPngArchivePath": "g028/equipment-five-slots.png"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "generationService": "image_gen.imagegen",
+      "status": "images-present-awaiting-user-review"
+    },
+    {
+      "id": "g029",
+      "sourceKey": "galaxy:nearstar:map:8",
+      "regionOrBoss": "近星戰爭 → 近星文明遺址",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins",
+      "equipmentNames": {
+        "weapon": "遠古星刃",
+        "helmet": "遺址密封盔",
+        "armor": "近星遺物甲",
+        "shoes": "遺跡躍遷靴",
+        "accessory": "古星文明鑰核"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 239850,
+          "sha256": "a97ae205a6a9d0077888e4beea40a2d85b977aa49cec237f64eba9829963e0eb",
+          "originalPng": "exec-5808c501-3c56-48fa-8258-a6e1ee6a6522.png",
+          "originalPngBytes": 2392755,
+          "originalPngSha256": "00f611ea7a28f0b1d17c03a0f48f236295ebf9b22e2bf30fdc147419b19d2932",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "overview",
+          "referenceOriginal": null,
+          "originalPngArchivePath": "g029/overview-front-side-back.png"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1983,
+          "height": 793,
+          "bytes": 272524,
+          "sha256": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db",
+          "originalPng": "exec-0fd5ab30-77a2-427b-b4c9-4674b228417a.png",
+          "originalPngBytes": 2384098,
+          "originalPngSha256": "6b3f6c8f900a996f5f10f4016998dca55b956ad07399bf756884d4ceb6ea85fb",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "five-slots",
+          "referenceOriginal": "exec-5808c501-3c56-48fa-8258-a6e1ee6a6522.png",
+          "originalPngArchivePath": "g029/equipment-five-slots.png"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "generationService": "image_gen.imagegen",
+      "status": "images-present-awaiting-user-review"
+    },
+    {
+      "id": "g030",
+      "sourceKey": "galaxy:nearstar:map:9",
+      "regionOrBoss": "近星戰爭 → 近星封鎖航域",
+      "directory": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade",
+      "equipmentNames": {
+        "weapon": "星航封鎖刃",
+        "helmet": "星航主控盔",
+        "armor": "近星主戰甲",
+        "shoes": "封鎖曲率靴",
+        "accessory": "星航封鎖中樞"
+      },
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 255102,
+          "sha256": "3f714bcd2ef4ba467f01285ab38f564b46dc6c76b6b60ffe8e26d1cd3bbf57b8",
+          "originalPng": "exec-44dbbcf7-99bd-461a-9d6d-d574c712cbd4.png",
+          "originalPngBytes": 2444421,
+          "originalPngSha256": "96d301cbd4e0bbbf8c9af7c0876cdb2c146e6944c8c7f3ceb791e26346f87e95",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "overview",
+          "referenceOriginal": null,
+          "originalPngArchivePath": "g030/overview-front-side-back.png"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1983,
+          "height": 793,
+          "bytes": 264606,
+          "sha256": "0db944610b79e610aea57470d8f8f08341ffc1a6482648c16a09a29a7bdbf128",
+          "originalPng": "exec-22db8d40-de26-4081-960d-e13ce0a08cf2.png",
+          "originalPngBytes": 2422628,
+          "originalPngSha256": "f17ca9967207aba0e071feaca687995f74cef102f852724f0af98e1bd0cbc880",
+          "conversion": "Pillow RGB WebP quality=90 method=6; no crop, no resize, no composite",
+          "generationCallType": "five-slots",
+          "referenceOriginal": "exec-44dbbcf7-99bd-461a-9d6d-d574c712cbd4.png",
+          "originalPngArchivePath": "g030/equipment-five-slots.png"
+        }
+      ],
+      "conceptApproved": false,
+      "modelStatus": "not-started",
+      "generationService": "image_gen.imagegen",
+      "status": "images-present-awaiting-user-review"
+    }
+  ],
+  "generationOrder": [
+    "g026/overview-front-side-back.webp",
+    "g026/equipment-five-slots.webp",
+    "g027/overview-front-side-back.webp",
+    "g027/equipment-five-slots.webp",
+    "g028/overview-front-side-back.webp",
+    "g028/equipment-five-slots.webp",
+    "g029/overview-front-side-back.webp",
+    "g029/equipment-five-slots.webp",
+    "g030/overview-front-side-back.webp",
+    "g030/equipment-five-slots.webp"
+  ],
+  "newImageCount": 10,
+  "newImageTotalBytes": 2499954,
+  "originalImagesRetained": 10,
+  "originalImageTotalBytes": 3016806,
+  "artApproved": false,
+  "modelingStarted": false,
+  "sourceClaim": "本輪新圖由image_gen.imagegen十次逐套逐類型真實生成；拆件以同套總覽原稿為參考。PNG封存於本機原稿ZIP（開發原件未進Git／正式發布），WebP只轉檔壓縮。既有G021-G025來源聲明仍以2026-10-14入庫紀錄為準。",
+  "rawSourceArchive": {
+    "storage": "/workspace/work/b28/deliverables (local, outside git)",
+    "file": "G026-G030-original-png.zip",
+    "bytes": 23758733,
+    "sha256": "27a7de99d27e18443342d736715fedc10625abf9b4330c9960b563353d35666b",
+    "imageCount": 10
+  },
+  "webpArchive": {
+    "file": "G026-G030-webp.zip",
+    "bytes": 2501772,
+    "sha256": "6ad336e073d3937578a5a513eba72d6993531f8377963b441d729bca3250f0f8",
+    "imageCount": 10
+  },
+  "submissionBaseMain": "f0df89a05fae032e02d7872901e04f3b955ef2aa",
+  "concurrentMainPreserved": [
+    "PROJECT_HANDOFF.md流程調整",
+    "舊Work SOP刪除"
+  ]
+}

@@ -1561,13 +1561,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 197458,
+          "sha256": "dd12540c48de59d6b995316fe911d0a0055c97989c12362e90be6333e84f0751"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1983,
+          "height": 793,
+          "bytes": 247610,
+          "sha256": "687b2e5ee0f0bcc346631b1ec1c485f8fd7c7bfd60c69b6d41ff31af6f581893"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g027",
@@ -1606,13 +1621,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 265716,
+          "sha256": "1c02e11eaa42611cd01b6adf4a5cab9975f5ba76b1e6f36196152b48e2330081"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1774,
+          "height": 887,
+          "bytes": 342610,
+          "sha256": "c116e9d068812eb860a0ddf884adf93c6876f6efcd4048db168da1ac9007beb5"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g028",
@@ -1651,13 +1681,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 175830,
+          "sha256": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 238648,
+          "sha256": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g029",
@@ -1696,13 +1741,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 239850,
+          "sha256": "a97ae205a6a9d0077888e4beea40a2d85b977aa49cec237f64eba9829963e0eb"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1983,
+          "height": 793,
+          "bytes": 272524,
+          "sha256": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g030",
@@ -1741,13 +1801,28 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
+      "conceptStatus": "images-present-awaiting-user-review",
       "conceptApproved": false,
       "modelStatus": "not-started",
-      "images": [],
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 255102,
+          "sha256": "3f714bcd2ef4ba467f01285ab38f564b46dc6c76b6b60ffe8e26d1cd3bbf57b8"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1983,
+          "height": 793,
+          "bytes": 264606,
+          "sha256": "0db944610b79e610aea57470d8f8f08341ffc1a6482648c16a09a29a7bdbf128"
+        }
+      ],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-11"
+      "lastUpdated": "2026-10-14"
     },
     {
       "id": "g031",

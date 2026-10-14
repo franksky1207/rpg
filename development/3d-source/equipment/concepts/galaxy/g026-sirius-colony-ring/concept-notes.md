@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,17 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. 2026-10-15 本輪具體設計與兩圖（未批准）
+
+- 候選造型：象牙陶瓷／鈦金屬／石墨柔性內層，少量青色指示；胸肩弧形環軌肋、頭盔實體環冠、背部獨立控制環為辨識點，不複製天狼外圍的尖星長翼。
+- weapon／星環脈衝刃：直刃三段脈衝槽、實體刀背、單握柄與護手；兩圖多角度表示同一武器，不是兩件。
+- helmet／殖民環戰盔：不透明黑面、顎殼、實體環冠均隨盔卸除；環冠不是背飾。
+- armor／天狼環軌甲：胸背肩臂腰、短裙、大腿與雙膝片；拆件圖另列的膝下短翼屬膝防護延伸，僅止於上脛，非第二套完整硬脛殼。本輪概念採短靴，需在模型前量測並確認膝翼的例外覆蓋／接口。
+- shoes／環域推進靴：左右踝靴、獨立鞋底、短推進翼；中段柔性小腿為人物基底，鞋不含膝片。與B節長脛候選不同，本輪以實際兩圖短靴造型為待審提案。
+- accessory／星環控制模組：獨立機械環、中心輪轂、雙支架及裝置端接頭；甲背只留空扣座。胸小青核歸armor，不是第二件控制環。
+- 五槽附加部件須有套內穩定partId，例如g026:helmet:crest、g026:armor:knee.L/R、g026:shoes:boot.L/R、g026:accessory:ring；正式identity仍以A節sourceKey／槽名。
+- 概念能看見全遮臉、雙鞋、握柄、甲空背座與獨立背飾；外觀主要一致。拆件圖大腿長度／總覽膝翼覆蓋需後續工程對齊，不能用概念當尺度圖。
+- attachment：沿用socket.weapon.R、socket.helmet、socket.armor、socket.shoes.L/R、socket.accessory.back；local transform、bounds、coverage、關節包絡、mask與LOD皆待真模型量測，不虛填數值。
+- 生成順序為本套overview後本套five-slots，兩次真正影像生成，原始PNG保留；只轉檔壓縮，未裁切跨套拼貼。詳細來源／SHA見本輪證據。
+- 圖片待使用者審核，conceptApproved=false，模型未開始，不加入正式Pages／Service Worker。

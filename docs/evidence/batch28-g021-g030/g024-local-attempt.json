@@ -1,0 +1,13 @@
+{
+  "originalSha256": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3",
+  "candidatePngSha256": "14776248c938ec30a0c916fa2edef072eda33f7e9b6c0097753aa8da3e79525a",
+  "dimensions": [
+    1491,
+    1055
+  ],
+  "outsideTargetMeanAbsolutePixelDelta": 4.84874208804192,
+  "outsideTargetChangedPixelRatioThreshold10": 0.1374275198245835,
+  "scope": "靴欄上端膝關節；其他區域要求保留",
+  "adopted": false,
+  "reason": "候選去除靴頂膝盤，但非靴欄有實際像素／細節變動；不覆寫原圖。可作局部修正方向參考，正式修正仍待保留其餘區域的版本。"
+}

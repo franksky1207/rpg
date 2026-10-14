@@ -1,0 +1,119 @@
+{
+  "schema": 2,
+  "policy": "conservative-audit-only",
+  "includedBytes": 36651177,
+  "includedCount": 390,
+  "excludedCount": 2414,
+  "hardMissing": [],
+  "notes": [
+    "Included bytes are a source selection estimate; build report measures real output.",
+    "No deployment was changed; referenced candidates retained.",
+    "Dynamic constructed URLs require browser validation."
+  ],
+  "all20ScopedImagesExcluded": true,
+  "scopedImages": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost/equipment-five-slots.webp",
+      "bytes": 269060,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost/overview-front-side-back.webp",
+      "bytes": 277224,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route/equipment-five-slots.webp",
+      "bytes": 295420,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route/overview-front-side-back.webp",
+      "bytes": 328464,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony/equipment-five-slots.webp",
+      "bytes": 277770,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony/overview-front-side-back.webp",
+      "bytes": 336100,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/equipment-five-slots.webp",
+      "bytes": 217974,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/overview-front-side-back.webp",
+      "bytes": 328450,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts/equipment-five-slots.webp",
+      "bytes": 277742,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts/overview-front-side-back.webp",
+      "bytes": 408602,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring/equipment-five-slots.webp",
+      "bytes": 247610,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring/overview-front-side-back.webp",
+      "bytes": 197458,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport/equipment-five-slots.webp",
+      "bytes": 342610,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport/overview-front-side-back.webp",
+      "bytes": 265716,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/equipment-five-slots.webp",
+      "bytes": 238648,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/overview-front-side-back.webp",
+      "bytes": 175830,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/equipment-five-slots.webp",
+      "bytes": 272524,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/overview-front-side-back.webp",
+      "bytes": 239850,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade/equipment-five-slots.webp",
+      "bytes": 264606,
+      "category": "development"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade/overview-front-side-back.webp",
+      "bytes": 255102,
+      "category": "development"
+    }
+  ],
+  "rawAuditSha256": "2b38fa36abce49ca770da0477ac0d76ace18a7dba0a01825e59f196b1536b6e3",
+  "developmentConceptsInServiceWorker": false,
+  "validatedSubmissionBase": "f0df89a05fae032e02d7872901e04f3b955ef2aa"
+}

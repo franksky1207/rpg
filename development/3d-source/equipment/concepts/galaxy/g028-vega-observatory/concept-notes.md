@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,25 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. 2026-10-15 本輪具體製圖設計（候選、未批准）
+
+此段為本輪待審美術提案，正式名稱／sourceKey仍以A節與owner為準；取代B節通用候選在本輪的具體造型，不代表正式世界觀新增設定。
+
+- 主輪廓：纖長觀測甲、斜層屏蔽胸板、收窄肩與透鏡框封面。
+- 材質：珠白陶瓷／銀色屏蔽層／石墨接縫、克制紫藍光。
+- weapon／織女光譜刃：長而窄的三棱光譜刃、稜鏡實體刀背與單握柄。
+- helmet／觀測戰盔：非傳統三片光學額框、實體不透明深色全臉遮罩，非露臉視域。
+- armor／高能屏蔽甲：斜層屏蔽片、肩臂腰胯／大腿／膝片；甲背空架座。
+- shoes／光譜浮行靴：左右流線浮行靴、鞋底狹縫推進與踝部導流翼、不含膝片。
+- accessory／織女觀測儀：偏置三鏡觀測儀、折疊短框與自带掛架，非普通背包。
+- partId使用g028:slot:part格式；雙腿片與鞋分.L/.R。膝歸armor、脛踝歸shoes；甲背只留空座，完整背飾及所有裝置管線歸accessory。盔端密封圈歸helmet、衣領護圈歸armor，接口不焊死。
+- armor無飾品仍完整；accessory自帶架可使用socket.accessory.back而不要求穿本套甲。沿用socket.weapon.R、socket.helmet、socket.armor、socket.shoes.L/R及原53骨／9掛點，不新增骨架。
+- local transform／pivot／bounds／coverage／関節包絡／mask恢復／三LOD簽章待真模型量測；圖面不虛構公尺或碰撞結果。LOD需保留本套weapon／helmet／armor／双鞋／accessory辨識輪廓，微刻線以材質表現。
+- 總覽僅同套正側背；拆件另一次生成、五槽全部獨立、雙鞋完整。先本套兩圖再下一套；不使用跨套拼貼／裁切／複製換色。影像原稿及轉檔SHA見本輪來源證據。
+- 所有新圖維持conceptApproved=false、modelStatus=not-started；正式Pages／Service Worker隔離，真混穿與手機驗收待模型階段。
+
+## F. 本輪兩圖目視驗證（未批准）
+
+- 三視圖斜層胸片／三片光學頭框／窄光譜刃／偏置三鏡儀主要一致；拆件圖双大腿／膝片独立列在armor，鞋不帶膝片。頭盔底環屬盔端密封，甲衣領屬armor。觀測儀完整折架只在accessory，甲背留空座；偏置折架與頭肩動作包絡待量測。
+- 全遮面未見可辨識五官，雙鞋成對、握柄可辨、飾品獨立。概念中可分離的表達不等同實際Runtime穿卸或碰撞驗證。

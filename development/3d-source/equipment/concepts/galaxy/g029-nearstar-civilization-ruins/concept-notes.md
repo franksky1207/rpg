@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；使用者批准 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `images-present-awaiting-user-review`；使用者批准 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -52,3 +52,27 @@
 - 每張建議 300～800 KB 以下；若建模細節仍清楚可更小。超過 800 KB 由驗證工具提示，並非自動壓縮授權。
 - 未生成時不建立圖片；有圖片不等於使用者批准或模型已照圖完成。
 - 只留 GitHub 開發資料，不進 GitHub Pages 或 Service Worker 預載。
+
+## E. 2026-10-15 本輪具體製圖設計（候選、未批准）
+
+此段為本輪待審美術提案，正式名稱／sourceKey仍以A節與owner為準；取代B節通用候選在本輪的具體造型，不代表正式世界觀新增設定。
+
+- 主輪廓：古星石瓷碑形甲、階梯肩、拱頂密封頭盔與梯形鑰核。
+- 材質：風化黑陶／暖鈦銅／象牙嵌板、低亮冷白槽線。
+- weapon／遠古星刃：不對稱缺口的寬碑形遠古星刃，實體作用刃和可握持柄。
+- helmet／遺址密封盔：拱形封閉殼、平面不透明面甲、無五官。
+- armor／近星遺物甲：階梯胸背肩、分段臂甲、短梯形腰片／大腿／雙膝片；空背座。
+- shoes／遺跡躍遷靴：左右短脛躍遷靴、厚分層底和踝雙弧機構、膝下間隙。
+- accessory／古星文明鑰核：梯形框內立體鑰形核、單一固定自帶支架，無漂浮另骨。
+- partId使用g029:slot:part格式；雙腿片與鞋分.L/.R。膝歸armor、脛踝歸shoes；甲背只留空座，完整背飾及所有裝置管線歸accessory。盔端密封圈歸helmet、衣領護圈歸armor，接口不焊死。
+- armor無飾品仍完整；accessory自帶架可使用socket.accessory.back而不要求穿本套甲。沿用socket.weapon.R、socket.helmet、socket.armor、socket.shoes.L/R及原53骨／9掛點，不新增骨架。
+- local transform／pivot／bounds／coverage／関節包絡／mask恢復／三LOD簽章待真模型量測；圖面不虛構公尺或碰撞結果。LOD需保留本套weapon／helmet／armor／双鞋／accessory辨識輪廓，微刻線以材質表現。
+- 總覽僅同套正側背；拆件另一次生成、五槽全部獨立、雙鞋完整。先本套兩圖再下一套；不使用跨套拼貼／裁切／複製換色。影像原稿及轉檔SHA見本輪來源證據。
+- 所有新圖維持conceptApproved=false、modelStatus=not-started；正式Pages／Service Worker隔離，真混穿與手機驗收待模型階段。
+
+## F. 本輪兩圖目視驗證（未批准）
+
+- 三視圖拱頂盔／階梯甲／碑形刃／梯形鑰核一致；拆件圖双大腿与膝片分列armor，双短脛靴完整独立，武器单握柄與全刃可讀。
+- chest與腰的長矩形象牙片是armor的刻線加固板，沒有鑰柄／鑰齒，不能當作第二個古星文明鑰核。背甲的空梯形導軌屬armor；獨立飾品完整自帶外框／鑰核／插接件屬accessory。兩框裝配深度與是否有冗餘外殼待真模型量測。
+- 拆件圖膝片有較長膝下延伸翼，總覽亦有同一段；屬armor膝防護延伸的候選例外，止於上脛且不複製鞋短脛硬殼。建模前需界定實際coverage、接口、單槽效果与卸甲恢復，不宣稱圖面已證明混穿無碰撞。
+- 全遮面未見可辨識五官，雙鞋成對、握柄可辨、飾品獨立。功能所有權可用notes補明，不改正式五名／sourceKey，仍待使用者美術審核。

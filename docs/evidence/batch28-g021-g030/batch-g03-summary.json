@@ -1,0 +1,221 @@
+{
+  "batch": "G03",
+  "range": "g021..g030",
+  "epoch": "galaxy",
+  "status": "images-ready-awaiting-review",
+  "imagesPresent": 20,
+  "imagesMissing": 0,
+  "approvedSets": 0,
+  "sets": [
+    {
+      "id": "g021",
+      "sourceKey": "galaxy:nearstar:map:0",
+      "regionOrBoss": "近星戰爭 → 比鄰星前哨區",
+      "equipmentNames": {
+        "weapon": "比鄰星航刃",
+        "helmet": "紅矮星作戰盔",
+        "armor": "近星複合甲",
+        "shoes": "光帆推進靴",
+        "accessory": "比鄰座標器"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g021-proxima-outpost",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g022",
+      "sourceKey": "galaxy:nearstar:map:1",
+      "regionOrBoss": "近星戰爭 → 半人馬座航道",
+      "equipmentNames": {
+        "weapon": "星路切割刃",
+        "helmet": "航道導航盔",
+        "armor": "星航防護甲",
+        "shoes": "曲率機動靴",
+        "accessory": "半人馬導航核"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g022-centauri-route",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g023",
+      "sourceKey": "galaxy:nearstar:map:2",
+      "regionOrBoss": "近星戰爭 → 巴納德星殖民區",
+      "equipmentNames": {
+        "weapon": "殖民震盪刃",
+        "helmet": "紅星殖民盔",
+        "armor": "遠星防衛甲",
+        "shoes": "殖民疾行靴",
+        "accessory": "巴納德環境核"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g023-barnard-colony",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g024",
+      "sourceKey": "galaxy:nearstar:map:3",
+      "regionOrBoss": "近星戰爭 → 沃夫359防線",
+      "equipmentNames": {
+        "weapon": "沃夫聚能刃",
+        "helmet": "近星戰術盔",
+        "armor": "防線動力甲",
+        "shoes": "恆星機動靴",
+        "accessory": "沃夫防衛模組"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g025",
+      "sourceKey": "galaxy:nearstar:map:4",
+      "regionOrBoss": "近星戰爭 → 天狼星外圍",
+      "equipmentNames": {
+        "weapon": "天狼裂光刃",
+        "helmet": "高亮星戰盔",
+        "armor": "星際強化甲",
+        "shoes": "光譜推進靴",
+        "accessory": "天狼定位器"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g025-sirius-outskirts",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g026",
+      "sourceKey": "galaxy:nearstar:map:5",
+      "regionOrBoss": "近星戰爭 → 天狼星殖民環",
+      "equipmentNames": {
+        "weapon": "星環脈衝刃",
+        "helmet": "殖民環戰盔",
+        "armor": "天狼環軌甲",
+        "shoes": "環域推進靴",
+        "accessory": "星環控制模組"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g026-sirius-colony-ring",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g027",
+      "sourceKey": "galaxy:nearstar:map:6",
+      "regionOrBoss": "近星戰爭 → 南河三星港",
+      "equipmentNames": {
+        "weapon": "星港截航刃",
+        "helmet": "深港作戰盔",
+        "armor": "星港重甲",
+        "shoes": "港區磁靴",
+        "accessory": "星港調度節點"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g027-procyon-starport",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g028",
+      "sourceKey": "galaxy:nearstar:map:7",
+      "regionOrBoss": "近星戰爭 → 織女星觀測區",
+      "equipmentNames": {
+        "weapon": "織女光譜刃",
+        "helmet": "觀測戰盔",
+        "armor": "高能屏蔽甲",
+        "shoes": "光譜浮行靴",
+        "accessory": "織女觀測儀"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g029",
+      "sourceKey": "galaxy:nearstar:map:8",
+      "regionOrBoss": "近星戰爭 → 近星文明遺址",
+      "equipmentNames": {
+        "weapon": "遠古星刃",
+        "helmet": "遺址密封盔",
+        "armor": "近星遺物甲",
+        "shoes": "遺跡躍遷靴",
+        "accessory": "古星文明鑰核"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    },
+    {
+      "id": "g030",
+      "sourceKey": "galaxy:nearstar:map:9",
+      "regionOrBoss": "近星戰爭 → 近星封鎖航域",
+      "equipmentNames": {
+        "weapon": "星航封鎖刃",
+        "helmet": "星航主控盔",
+        "armor": "近星主戰甲",
+        "shoes": "封鎖曲率靴",
+        "accessory": "星航封鎖中樞"
+      },
+      "directory": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade",
+      "present": [
+        "overview-front-side-back.webp",
+        "equipment-five-slots.webp"
+      ],
+      "missing": [],
+      "approved": false,
+      "conceptStatus": "images-present-awaiting-user-review",
+      "modelStatus": "not-started"
+    }
+  ]
+}
