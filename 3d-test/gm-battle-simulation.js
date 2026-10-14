@@ -6,10 +6,13 @@ function displayHp(frame){
  if(!start)return frame.knownState;
  if(frame.phase==='outcome'||frame.phase==='closed'||frame.mode==='completed'||frame.mode==='background')return frame.input.computed.final;
  const state={player:{...start.player},enemy:{...start.enemy}};
- const currentSeq=frame.sourceRef?.seq??-1;
+ // Timeline is one initial idle row, then six phases per combat-action.
+ // Use cursor instead of sourceRef: idle frames have no ref but must retain previous damage.
+ let row=1;
  for(const event of frame.input.events){
-  if(event.type!=='combat-action')continue;
-  if(event.seq>currentSeq || (event.seq===currentSeq&&!['known-effect','return'].includes(frame.phase)))break;
+  if(event.type!=='combat-action'){row++;continue;}
+  const appliedAt=row+4;row+=6;
+  if(frame.cursor<appliedAt)break;
   const d=event.data,who=d.target;
   if(!['player','enemy'].includes(who))continue;
   const damage=d.actualDamage;
