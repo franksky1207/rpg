@@ -21,6 +21,12 @@ class DatabaseTests(unittest.TestCase):
         files=['data.js','engine.js','secondworlddata.js','secondworldrewards.js','thirdworlddata.js','thirdworldloot.js',
                'resource-manifest.json','resource-cache-sw.js','resource-cache-client.js','assets/3d/asset-registry.json',str(m.MASTER),'docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md',m.art_review.AUTHORITY,'docs/evidence/batch28-autonomous-review/generation-stage1-review.md']
         files += [p.name for p in REPO.glob('worldmaps-*.js')]
+        files += [str(p.relative_to(REPO)) for p in (REPO/'docs/evidence/equipment-policy').glob('*')]
+        files += [m.art_review.POLICY_FILE,m.art_review.LEGACY_AUTHORITY,m.art_review.ACCEPTANCE,
+                  'docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md',
+                  'docs/BATCH28_G021_G025_IMPORT_2026-10-14.json',
+                  'docs/BATCH28_G021_G030_REVIEW_2026-10-15.md',
+                  'docs/3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md']
         registry=m.load(REPO/'assets/3d/asset-registry.json')
         files += [a['path'] for a in registry['assets'] if a['type']=='equipment']
         for file in files:
@@ -47,11 +53,11 @@ class DatabaseTests(unittest.TestCase):
             self.assertEqual(row['images'],expected)
             self.assertEqual(row['modelingEligible'],row['conceptApproved'])
             self.assertIs(row['formalReleaseAllowed'],False)
-            if row['artReviewMode']=='autonomous-two-stage':
-                self.assertEqual(row['conceptStatus'],'auto-art-reviewed' if row['conceptApproved'] else 'needs-local-correction' if row['id']=='g024' else 'needs-art-evidence')
-            else:
-                self.assertEqual(row['conceptStatus'],'approved' if row['conceptApproved'] else 'images-present-awaiting-art-review' if len(expected)==2 else 'partial-images' if expected else 'not-generated')
-        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{'g006','g007','g026','g027','g028','g029'})
+            self.assertIs(row['assetProductionEligible'],row['conceptApproved'])
+            self.assertEqual(row['asset2_5dStatus'],'not-started')
+            self.assertEqual(row['gm2_5dTestStatus'],'not-tested')
+            self.assertEqual(row['conceptStatus'],'pass-with-advisory' if row['conceptApproved'] else 'not-generated')
+        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{f'g{i:03}' for i in range(1,31)})
         self.assertEqual(rows[6]['regionOrBoss'],'地球戰爭 → 古代科技遺址')
         self.assertEqual(rows[6]['modelStatus'],'refined-model-art-reviewed')
         self.assertEqual(rows[-1]['level']['fixedLevel'],None)
@@ -128,7 +134,7 @@ class DatabaseTests(unittest.TestCase):
     def test_approval_without_evidence_rejected(self):
         (self.note().parent/'art-review.json').write_text(m.dumps({'conceptApproved':True}))
         with self.assertRaisesRegex(ValueError,'approval needs'):self.run_db(True)
-    def test_valid_approval_requires_current_images_and_keeps_manual_text(self):
+    def test_new_legacy_approval_cannot_bypass_schema3(self):
         rows=self.run_db();row=rows[0];directory=self.note().parent
         for name in m.IMAGES:shutil.copyfile(self.note('g007').parent/name,directory/name)
         evidence=directory/'acceptance.md';evidence.write_text('g001 使用者驗收紀錄：測試治具，非真實批准。確認兩張圖片與當下五槽身份；僅供負向測試。')
@@ -138,7 +144,7 @@ class DatabaseTests(unittest.TestCase):
                 'formalSha256':m.sha(m.dumps({k:row[k] for k in ('id','sourceKey','regionOrBoss','equipmentNames')}).encode())}
         review=directory/'art-review.json';review.write_text(m.dumps(record))
         note=self.note();manual=note.read_text().split(m.END,1)[1]
-        self.assertTrue(self.run_db(True)[0]['conceptApproved']);self.run_db()
+        with self.assertRaisesRegex(ValueError,'legacy evidence is historical only'):self.run_db(True)
         self.assertEqual(note.read_text().split(m.END,1)[1],manual)
         record['imageSha256'][m.IMAGES[0]]='0'*64;review.write_text(m.dumps(record))
         before=self.snapshot()

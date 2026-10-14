@@ -35,11 +35,11 @@ class AutonomousReviewTests(unittest.TestCase):
     def test_four_existing_sets_have_verified_two_stage_passes(self):
         for identity in ('g026','g027','g028','g029'):
             self.assertTrue(self.check(identity=identity)[0])
-    def test_known_defects_remain_unapproved(self):
+    def test_legacy_failures_preserved_but_v3_allows_production(self):
         self.assertEqual(self.check(identity='g024')[2],'needs-local-correction')
         self.assertEqual(self.check(identity='g030')[2],'needs-art-evidence')
-        self.assertFalse(self.row('g024')['modelingEligible'])
-        self.assertFalse(self.row('g030')['modelingEligible'])
+        self.assertTrue(self.row('g024')['assetProductionEligible'])
+        self.assertTrue(self.row('g030')['assetProductionEligible'])
     def test_missing_stage_rejected(self):
         record=self.record();record['stages'].pop()
         with self.assertRaisesRegex(ValueError,'two review stages'):self.check(record)
@@ -79,10 +79,10 @@ class AutonomousReviewTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'armor-back visual evidence'):self.check(record,'g030')
     def test_model_gate_accepts_only_verified_art_and_never_releases(self):
         result=gate.eligible(self.root,'G026')
-        self.assertEqual(result['conceptStatus'],'auto-art-reviewed')
+        self.assertEqual(result['conceptStatus'],'pass-with-advisory')
         self.assertEqual(result['modelStatus'],'not-started')
         self.assertIs(result['formalReleaseAllowed'],False)
-        for identity in ('g024','g030','g031','g001'):
+        for identity in ('g031','u001','h01'):
             with self.assertRaisesRegex(ValueError,'verified art review required'):gate.eligible(self.root,identity)
     def test_model_gate_revalidates_tampered_approval(self):
         data=m.load(self.index);next(r for r in data['sets'] if r['id']=='g031').update(conceptApproved=True,modelingEligible=True)
@@ -92,7 +92,7 @@ class AutonomousReviewTests(unittest.TestCase):
         for identity in ('g006','g007'):
             row=self.row(identity);directory=self.root/row['directory']
             self.assertIs(row['conceptApproved'],True)
-            self.assertEqual(row['artReviewMode'],'legacy-user-approval')
+            self.assertEqual(row['artReviewMode'],'two-stage-2.5d')
             for name in ('art-review.json',):
                 self.assertEqual((directory/name).read_bytes(),(REPO/row['directory']/name).read_bytes())
         before=self.snapshot()

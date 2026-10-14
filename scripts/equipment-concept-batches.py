@@ -40,7 +40,7 @@ def plan(root=ROOT, batch=None):
                 recorded = [item["file"] for item in r["images"]]
                 if actual != recorded:
                     raise ValueError(f"{identity}: image list differs from index; run catalog generate/validate first")
-                if bool(r["conceptApproved"]) != (r["conceptStatus"] in ("approved", "auto-art-reviewed")):
+                if bool(r["conceptApproved"]) != (r["conceptStatus"] in ("approved", "auto-art-reviewed", "pass", "pass-with-advisory")):
                     raise ValueError(f"{identity}: approval status contradiction")
                 if r["conceptApproved"] and len(actual) != 2:
                     raise ValueError(f"{identity}: approved without two images")

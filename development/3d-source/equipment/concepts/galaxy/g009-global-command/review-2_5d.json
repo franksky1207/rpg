@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g009",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:earth:map:8",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g009-global-command",
+    "regionOrBoss": "地球戰爭 → 全球指揮中心",
+    "equipmentNames": {
+      "weapon": "禁衛脈衝刃",
+      "helmet": "中樞禁衛盔",
+      "armor": "指揮級複合甲",
+      "shoes": "戰略機動靴",
+      "accessory": "戰場指揮模組"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "51b4485dbc14e71bc172edbf26000ce3edf8a3d9058aa9249dcb409bdb529948",
+    "equipment-five-slots.webp": "ebf438c5c75dfc2cbad70cda71991281ff727777306e89f93c95becb253605f5"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "53d3bc8491e57aefbf7467f438d2fc9911d3a3d8483950552edec27a7476c3a8",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g009-global-command/review-2_5d.md",
+        "sha256": "53d3bc8491e57aefbf7467f438d2fc9911d3a3d8483950552edec27a7476c3a8"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "51b4485dbc14e71bc172edbf26000ce3edf8a3d9058aa9249dcb409bdb529948",
+        "equipment-five-slots.webp": "ebf438c5c75dfc2cbad70cda71991281ff727777306e89f93c95becb253605f5"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g009 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:8，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g009 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g009 可見尖肩黑色裙甲、窄面盔與雙天線指揮器；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g009 主體完整，尖肩黑色裙甲、窄面盔與雙天線指揮器在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g009 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g009-global-command/review-2_5d.md",
+        "sha256": "53d3bc8491e57aefbf7467f438d2fc9911d3a3d8483950552edec27a7476c3a8"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "51b4485dbc14e71bc172edbf26000ce3edf8a3d9058aa9249dcb409bdb529948",
+        "equipment-five-slots.webp": "ebf438c5c75dfc2cbad70cda71991281ff727777306e89f93c95becb253605f5"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g009 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:8，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g009 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g009 可見尖肩黑色裙甲、窄面盔與雙天線指揮器；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g009 主體完整，尖肩黑色裙甲、窄面盔與雙天線指揮器在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g009 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g009：頭轉與天線避讓未動態實測，概念不證明3D碰撞。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "ff40ed7caa4b12b0d78bcf8d1ff625b63ff47bcd126389b6e421ff4f505fa190"
+}

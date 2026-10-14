@@ -1,0 +1,164 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g024",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:nearstar:map:3",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
+    "regionOrBoss": "近星戰爭 → 沃夫359防線",
+    "equipmentNames": {
+      "weapon": "沃夫聚能刃",
+      "helmet": "近星戰術盔",
+      "armor": "防線動力甲",
+      "shoes": "恆星機動靴",
+      "accessory": "沃夫防衛模組"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f",
+    "equipment-five-slots.webp": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "c5cc4eb2cac57d75442ef7a11960c4078590cfbf765ac28e129eb4a4ab97befd",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/review-2_5d.md",
+        "sha256": "c5cc4eb2cac57d75442ef7a11960c4078590cfbf765ac28e129eb4a4ab97befd"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f",
+        "equipment-five-slots.webp": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g024 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:nearstar:map:3，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g024 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g024 可見白灰寬肩重甲、聚能刃與方形防衛背模組；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g024 主體完整，白灰寬肩重甲、聚能刃與方形防衛背模組在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g024 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/art-review.json",
+        "sha256": "1c2a81cc6fa8be9709a652dd583704ac503f6eb7e63d7d7d66666b5a86ef8370"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/review-2_5d.md",
+        "sha256": "c5cc4eb2cac57d75442ef7a11960c4078590cfbf765ac28e129eb4a4ab97befd"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f",
+        "equipment-five-slots.webp": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g024 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:nearstar:map:3，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g024 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g024 可見白灰寬肩重甲、聚能刃與方形防衛背模組；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g024 主體完整，白灰寬肩重甲、聚能刃與方形防衛背模組在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g024 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "kneeBootBoundary",
+      "observation": "g024：膝甲與鞋口重複視覺已由使用者接受；原圖不修補。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [
+    {
+      "exceptionId": "accepted-g024-knee-boot",
+      "advisoryCode": "kneeBootBoundary",
+      "formalIdentity": {
+        "id": "g024",
+        "epoch": "galaxy",
+        "sourceKey": "galaxy:nearstar:map:3",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense",
+        "regionOrBoss": "近星戰爭 → 沃夫359防線",
+        "equipmentNames": {
+          "weapon": "沃夫聚能刃",
+          "helmet": "近星戰術盔",
+          "armor": "防線動力甲",
+          "shoes": "恆星機動靴",
+          "accessory": "沃夫防衛模組"
+        }
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "60fad11f7553e65fcd113e04428174708adb8b7118903a6c0c66e57cfc6b3f7f",
+        "equipment-five-slots.webp": "a4e2fa69aa573ad92f5a25702bbe0334fa76faf5440f1bfee4f2cb0266a56de3"
+      },
+      "acceptedBy": "user",
+      "source": "user-explicit-instruction-2026-10-15",
+      "scope": "concept-review-only",
+      "acceptedAt": "2026-10-15"
+    }
+  ],
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g024-wolf-359-defense/art-review.json",
+      "sha256": "1c2a81cc6fa8be9709a652dd583704ac503f6eb7e63d7d7d66666b5a86ef8370"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/user-source-declaration-g021-g025.json",
+      "sha256": "b35bb0da9457e2d31ccb01602be6d3568c1b0f10c68a3a3ab714b2e8d9e0a5d9"
+    },
+    {
+      "path": "docs/evidence/equipment-phase2/user-acceptance.json",
+      "sha256": "06c16708fc533c4dc925029da5297ac844d826adb8f8e0df52edbc51a7810dc9"
+    }
+  ],
+  "provenance": {
+    "basis": "user-supplied-generation-declaration",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/user-source-declaration-g021-g025.json",
+      "sha256": "b35bb0da9457e2d31ccb01602be6d3568c1b0f10c68a3a3ab714b2e8d9e0a5d9"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "35c8c35aa06ba4c06773c5f312857e8760de662288cbb373a12ccb857363cec4"
+}

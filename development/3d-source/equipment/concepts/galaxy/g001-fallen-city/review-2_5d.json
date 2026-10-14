@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g001",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:earth:map:0",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city",
+    "regionOrBoss": "地球戰爭 → 城市淪陷區",
+    "equipmentNames": {
+      "weapon": "破門短刃",
+      "helmet": "巷戰防護盔",
+      "armor": "城防插板甲",
+      "shoes": "街區突進靴",
+      "accessory": "戰場識別牌"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "97aef696fce7b1754839f5f469ab9ac051cb1e678d990139ff5c058e96d92184",
+    "equipment-five-slots.webp": "b325ec1a0fe01da367cf92883c79b6bcf350da980e55db79d7b686f87d59c139"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "7a7687fbdbb75bba2b1528da86560fb07c2e4858fdf04cca83b5f964c1ee6747",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city/review-2_5d.md",
+        "sha256": "7a7687fbdbb75bba2b1528da86560fb07c2e4858fdf04cca83b5f964c1ee6747"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "97aef696fce7b1754839f5f469ab9ac051cb1e678d990139ff5c058e96d92184",
+        "equipment-five-slots.webp": "b325ec1a0fe01da367cf92883c79b6bcf350da980e55db79d7b686f87d59c139"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g001 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:0，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g001 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g001 可見矩形插板、短破門刃與扣環識別牌；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g001 主體完整，矩形插板、短破門刃與扣環識別牌在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g001 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city/review-2_5d.md",
+        "sha256": "7a7687fbdbb75bba2b1528da86560fb07c2e4858fdf04cca83b5f964c1ee6747"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "97aef696fce7b1754839f5f469ab9ac051cb1e678d990139ff5c058e96d92184",
+        "equipment-five-slots.webp": "b325ec1a0fe01da367cf92883c79b6bcf350da980e55db79d7b686f87d59c139"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g001 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:0，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g001 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g001 可見矩形插板、短破門刃與扣環識別牌；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g001 主體完整，矩形插板、短破門刃與扣環識別牌在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g001 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g001：短靴圖省略長脛護板，作整套外觀參考不影響主輪廓。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "3f2d335c2b961a36944ebc0595193d7eaf60039372e79c41c57b7eb16c521237"
+}

@@ -1,3 +1,13 @@
+> **第2批實作規則（2026-10-15，優先於下方歷史schema2說明）**：已導入schema3／`equipment-2.5d-v3.0`，機器政策為`scripts/equipment-review-policy-v3.json`並鎖定SHA。可編輯SOP文字不再充當新批准的政策指紋；歷史schema2使用逐byte保留的`docs/evidence/equipment-policy/sop-v2-2026-10-15.md`驗證原授權SHA，並保留其原有嚴格結論。新`review-2_5d.json`／`.md`是逐套補充證據，不覆寫舊`art-review.json`。schema1只允許當前main既存G006/G007原批准紀錄；不能新增偽造舊批准繞過雙階段。
+
+- schema3綁policyVersion／policySha256、完整formalIdentity（含epoch、directory與五槽名）、兩圖SHA、ChatGPT歷史初審來源與政策遷移方式、Codex本輪複查、blockers／advisories／explicitlyAcceptedExceptions、來源SHA／日期、Markdown SHA與canonical evidenceFingerprint。初審來源與現版本兩圖須匹配，不捏造新增獨立審查者。
+- blocker：正式身份錯誤、缺圖／損毀／版本SHA錯誤、錯套／偽造／嚴重造型不符、缺主體／小尺寸完全不可辨識、來源或授權不符。局部膝鞋、空背座、三視微差及裝飾細節屬advisory，不能用來要求新套裝五GLB／53骨／9掛點／三LOD。
+- G024/G030例外由`docs/evidence/equipment-phase2/user-acceptance.json`固定指紋，綁定各自正式身份與兩圖SHA，scope僅concept-review-only；不能挪到別套、不能豁免真正blocker。原圖、舊fail歷史及拒絕候選保留，不修圖不補證。
+- 五階段：`conceptApproved`（驗證推導）、`assetProductionEligible`（製作資格，舊`modelingEligible`相容別名）、`asset2_5dStatus`（本批全not-started）、`gm2_5dTestStatus`（本批全not-tested）、`formalReleaseAllowed`（本批全false）。G007的`modelStatus`獨立保留，不能冒認新2.5D素材完成。
+- G001～G030依逐套目視與歷史證據遷移pass-with-advisory；全部60圖及8舊審查原檔保留。G031～G100／U001～U100／H01～H10維持未製／未批准。來源限制詳逐套證據：G021～G025使用附件提供者的生成聲明，沒有獨立PNG生成追蹤；僅開發用途審核，不宣稱商用發布權利。
+- 先執行`python3 scripts/equipment-asset-production-gate.py --set G024`（舊`equipment-modeling-gate.py`仍可用），再進第3批素材製作。generate從真owner、實際檔案與證據推導資格，不建立審查、不讀快取true批准；validate／入口均重驗全索引。
+- 發布／Pages／SW仍排除所有概念及開發source；正式JS/CSS／GM／存檔／音訊／B功能本批未改。詳[第2批成果](2_5D_EQUIPMENT_PHASE2_ACCEPTANCE_2026-10-15.md)。
+
 > **2026-10-15｜第1批政策升版：雙階段 SOP v3.0（文件階段）**：以下v2.0原文保留作歷史schema2／Runtime相容依據；新概念審查以六批總規格第1、2節為優先。每批五套十圖，ChatGPT初審→Codex複查；blocker僅限缺損、錯身份、重大造型不符、完全不可辨識、偽造或授權問題。膝鞋交界、背座細節、微小視角差異屬advisory；不再要求五槽獨立GLB或全視角工程精度。G024、G030原圖使用者明確接受，禁止再依下文舊G024修補條款阻擋；第2批須建立policyVersion、兩圖SHA、正式身份、兩階段與explicitlyAcceptedExceptions的可驗證schema及回歸，不可直接改true。正式發布仍false，既有G007歷史審查與模型契約不變。
 
 # 《文明戰線》第28批｜裝備概念圖雙階段 SOP v2.0

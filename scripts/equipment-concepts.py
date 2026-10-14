@@ -160,11 +160,11 @@ def image_info(file):
         pos += 8 + size + (size & 1)
     if pos != len(data) or not dimensions or not bitstream or min(dimensions) < 1:
         fail(f'Missing/invalid WebP dimensions or static image stream: {file}')
-    # Decode when the existing optional Pillow tool is available; no installation.
+    # Full decoding is mandatory: a plausible RIFF header cannot prove a usable image.
     try:
         from PIL import Image
-    except ImportError:
-        pass
+    except ImportError as error:
+        raise ValueError('Pillow required for full concept image decoding') from error
     else:
         with Image.open(file) as image:
             image.load()
@@ -193,6 +193,9 @@ def statuses(root, row):
         if record.get('schema') == 2:
             approved, evidence, review_outcome = art_review.verify(root,row,images,record)
             review_mode = 'autonomous-two-stage'
+        elif record.get('schema') == 3:
+            approved, evidence, review_outcome = art_review.verify(root,row,images,record)
+            review_mode = 'two-stage-2.5d'
         elif record.get('conceptApproved') is True:
             review_mode = 'legacy-user-approval'
             proof = record.get('evidenceFile','')
@@ -211,7 +214,17 @@ def statuses(root, row):
                     fail(f'{row["id"]}: delegated approval needs exact authorization and proxy evidence')
             if len(images) != 2 or record.get('imageSha256') != {x['file']:x['sha256'] for x in images} or record.get('formalSha256') != formal_hash:
                 fail(f'{row["id"]}: approval does not bind current images and formal identity')
+            historical_approvals = {
+                'g006': '812d586155d30452d89fcd26f4852629452f4faf37d07f33e19ba815a5d8a8e2',
+                'g007': 'ef42ea891133e3bf0f36fc35281629ad6fbd2cbf26d6d08b21ad44e4aeb9fca0',
+            }
+            if sha(review.read_bytes()) != historical_approvals.get(row['id']):
+                fail(f'{row["id"]}: new approval requires verified schema3; legacy evidence is historical only')
             approved, evidence = True, (pathlib.Path(row['directory']) / proof).as_posix()
+    review_2_5d = directory / 'review-2_5d.json'
+    if review_2_5d.exists():
+        approved, evidence, review_outcome = art_review.verify(root,row,images,load(review_2_5d))
+        review_mode = 'two-stage-2.5d'
     registry = load(root / 'assets/3d/asset-registry.json')
     world = {'galaxy':1,'universe':2,'higher':3}[row['epoch']]
     models = []
@@ -235,9 +248,15 @@ def statuses(root, row):
         if mr.get('reviewer')!='user-delegated-chatgpt' or not re.fullmatch(r'[a-zA-Z0-9_-]+\.md',mr.get('evidenceFile','')) or mr.get('authorizationFile')!='docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md' or mr.get('formalReleaseApproved') is not False or mr.get('assetSha256')!=actual or any(a['source']['sha256']!=mr.get('sourceSha256') for a in registry['assets'] if a['id'] in models) or not proof.is_file() or '代理' not in proof.read_text() or not authority.is_file() or sha(authority.read_bytes())!=mr.get('authorizationSha256'):
             fail(f'{row["id"]}: model review does not bind current assets/source/delegation')
         model_status='refined-model-art-reviewed'
-    concept_status = ('auto-art-reviewed' if review_mode=='autonomous-two-stage' else 'approved') if approved else review_outcome or ('images-present-awaiting-art-review' if len(images)==2 else 'partial-images' if images else 'not-generated')
+    if approved:
+        concept_status = (review_outcome if review_mode=='two-stage-2.5d' else
+                          'auto-art-reviewed' if review_mode=='autonomous-two-stage' else 'approved')
+    else:
+        concept_status = review_outcome or ('images-present-awaiting-art-review' if len(images)==2
+                                           else 'partial-images' if images else 'not-generated')
     return dict(notesStatus='generated-formal-manual-art-separated',conceptStatus=concept_status,
         conceptApproved=approved,artReviewMode=review_mode,modelingEligible=approved,
+        assetProductionEligible=approved,asset2_5dStatus='not-started',gm2_5dTestStatus='not-tested',
         formalReleaseAllowed=False,modelStatus=model_status,
         images=images,approvalEvidence=evidence,modelEvidence=models)
 
@@ -253,7 +272,7 @@ def formal_block(row):
         links.append(f"- `{source['file']}:{source['line']}` — `{source['symbol']}`")
     text = [START,'## A. 正式身份（此區由工具維護）',f"- 套裝 ID：`{row['id']}`；紀元：{EPOCH_LABELS[row['epoch']]}（`{row['epoch']}`）",f"- 正式區域／Boss／階數：{row['regionOrBoss']}",f"- 對應等級：{level_text(row)}",f"- 永久來源鍵：`{row['sourceKey']}`",'', '| 槽位 | 正式中文名稱 |','| --- | --- |']
     text += [f'| {slot}（{label}） | {row["equipmentNames"][slot]} |' for slot,label in zip(SLOTS,LABELS)]
-    text += ['', '程式資料來源：', *links, '', f"狀態：notes 已建立；概念圖 `{row['conceptStatus']}`；概念審查通過 `{str(row['conceptApproved']).lower()}`；審查模式 `{row['artReviewMode']}`；可進入建模 `{str(row['modelingEligible']).lower()}`；正式發布允許 `false`；模型 `{row['modelStatus']}`。",'', END]
+    text += ['', '程式資料來源：', *links, '', f"狀態：notes 已建立；概念圖 `{row['conceptStatus']}`；概念審查通過 `{str(row['conceptApproved']).lower()}`；審查模式 `{row['artReviewMode']}`；2.5D素材製作資格 `{str(row['assetProductionEligible']).lower()}`；2.5D素材 `{row['asset2_5dStatus']}`；GM `{row['gm2_5dTestStatus']}`；正式發布允許 `false`；模型 `{row['modelStatus']}`。",'', END]
     return '\n'.join(text)+'\n'
 
 def manual_template(row):
@@ -315,7 +334,7 @@ def overview(rows):
     text=['# 《文明戰線》210 套正式裝備概念資料庫','',
         '正式名稱從最新程式 owner 讀取；ID 是永久身份，英文 slug 僅為檔案標籤。',
         '工具及維護方法：[資料庫維護規格](3D_EQUIPMENT_210_SET_DATABASE_MAINTENANCE.md)。',
-        '概念圖審查通過、模型完成、正式發布允許是三種獨立狀態；雙階段自動審查不需逐套人工批准，不能代替模型或發布驗證。','']
+        '概念審查、2.5D素材製作資格、素材完成、GM通過及正式發布是五個獨立階段；modelingEligible僅為素材資格的相容別名，既有G007模型另計。','']
     for epoch,label in [('galaxy','銀河紀元'),('universe','宇宙紀元'),('higher','高維紀元')]:
         group=[r for r in rows if r['epoch']==epoch]
         text += [f'## {label}（{len(group)} 套）','','| ID / notes 目錄 | 正式區域／Boss／階數 | 等級 | 武器 | 頭盔 | 鎧甲 | 鞋子 | 飾品 | 概念／批准／模型 |','| --- | --- | --- | --- | --- | --- | --- | --- | --- |']
@@ -340,7 +359,7 @@ def run(root, generate=False):
               if (root/BASE/epoch).exists() for p in (root/BASE/epoch).iterdir() if p.is_dir()}
     if existing-wanted: fail(f'Directory/notes mismatch: extra={sorted(existing-wanted)}')
     for file in ('resource-manifest.json','assets/3d/asset-registry.json','resource-cache-sw.js','resource-cache-client.js'):
-        if BASE.as_posix() in (root/file).read_text(encoding='utf-8'): fail(f'Development concepts referenced by runtime: {file}')
+        if any(token in (root/file).read_text(encoding='utf-8') for token in (BASE.as_posix(), *IMAGES)): fail(f'Development concepts referenced by runtime: {file}')
     previous=load(index) if index.exists() else {'sets':[]}
     old_rows=previous.get('sets',[])
     if len({r['id'] for r in old_rows})!=len(old_rows): fail('Existing index duplicate ID')

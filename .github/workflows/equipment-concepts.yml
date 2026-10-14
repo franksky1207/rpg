@@ -8,6 +8,10 @@ on:
       - 'scripts/equipment-concept-batches.py'
       - 'scripts/equipment-art-review.py'
       - 'scripts/equipment-modeling-gate.py'
+      - 'scripts/equipment-asset-production-gate.py'
+      - 'scripts/equipment-review-policy-v3.json'
+      - 'docs/evidence/equipment-policy/**'
+      - 'docs/evidence/equipment-phase2/**'
       - 'docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md'
       - '.github/workflows/equipment-concepts.yml'
       - 'tests/equipment-concepts/**'
@@ -27,6 +31,10 @@ on:
       - 'scripts/equipment-concept-batches.py'
       - 'scripts/equipment-art-review.py'
       - 'scripts/equipment-modeling-gate.py'
+      - 'scripts/equipment-asset-production-gate.py'
+      - 'scripts/equipment-review-policy-v3.json'
+      - 'docs/evidence/equipment-policy/**'
+      - 'docs/evidence/equipment-phase2/**'
       - 'docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md'
       - '.github/workflows/equipment-concepts.yml'
       - 'tests/equipment-concepts/**'
@@ -53,10 +61,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install image decoder for strict repair evidence
+      - name: Install image decoder for concept integrity and legacy repair evidence
         run: python3 -m pip install Pillow==11.3.0
       - name: Validate formal identities, notes, images and statuses
         run: python3 scripts/equipment-concepts.py validate
+      - name: Validate accepted originals and 2.5D production eligibility
+        run: |
+          python3 scripts/equipment-asset-production-gate.py --set G024
+          python3 scripts/equipment-asset-production-gate.py --set G030
       - name: Test preservation and failure detection in isolated copies
         run: python3 -m unittest discover -s tests/equipment-concepts -v
       - name: Check resumable batches and index drift

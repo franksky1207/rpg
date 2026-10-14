@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g029",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:nearstar:map:8",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins",
+    "regionOrBoss": "近星戰爭 → 近星文明遺址",
+    "equipmentNames": {
+      "weapon": "遠古星刃",
+      "helmet": "遺址密封盔",
+      "armor": "近星遺物甲",
+      "shoes": "遺跡躍遷靴",
+      "accessory": "古星文明鑰核"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "a97ae205a6a9d0077888e4beea40a2d85b977aa49cec237f64eba9829963e0eb",
+    "equipment-five-slots.webp": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "8ba2238e0d6b3027cfb60b6216fa12be3c4e68372246e6e4d74f0fcce4c64b35",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/review-2_5d.md",
+        "sha256": "8ba2238e0d6b3027cfb60b6216fa12be3c4e68372246e6e4d74f0fcce4c64b35"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "a97ae205a6a9d0077888e4beea40a2d85b977aa49cec237f64eba9829963e0eb",
+        "equipment-five-slots.webp": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g029 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:nearstar:map:8，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g029 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g029 可見古銅裂紋遺物甲、厚石刃與長方文明鑰核；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g029 主體完整，古銅裂紋遺物甲、厚石刃與長方文明鑰核在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g029 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/art-review.json",
+        "sha256": "a0f97a260cfc6901c2f829166d0bfdbfa9f06c59c0c6bb14565f6d741c6776c3"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/review-2_5d.md",
+        "sha256": "8ba2238e0d6b3027cfb60b6216fa12be3c4e68372246e6e4d74f0fcce4c64b35"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "a97ae205a6a9d0077888e4beea40a2d85b977aa49cec237f64eba9829963e0eb",
+        "equipment-five-slots.webp": "bbeed8f1317db03febe3ec47b338c8e55d332cb48f01b48b248b12150ff953db"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g029 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:nearstar:map:8，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g029 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g029 可見古銅裂紋遺物甲、厚石刃與長方文明鑰核；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g029 主體完整，古銅裂紋遺物甲、厚石刃與長方文明鑰核在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g029 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g029：裂紋與微小符號縮小不可見，保留古銅厚板外輪廓。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g029-nearstar-civilization-ruins/art-review.json",
+      "sha256": "a0f97a260cfc6901c2f829166d0bfdbfa9f06c59c0c6bb14565f6d741c6776c3"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/generation-source-g026-g030.md",
+      "sha256": "4888dcb6b7d6ada6dbaac2bb7d5fcb6cad63913e9e92ed059c57aad7a6969a42"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/generation-source-g026-g030.md",
+      "sha256": "4888dcb6b7d6ada6dbaac2bb7d5fcb6cad63913e9e92ed059c57aad7a6969a42"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "ca5a9c7acbc1716a9140a4c44d89597e68b78cd5a55a7eb5db188043d689c9c8"
+}

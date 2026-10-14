@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g004",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:earth:map:3",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone",
+    "regionOrBoss": "地球戰爭 → 荒漠戰區",
+    "equipmentNames": {
+      "weapon": "沙暴斬刀",
+      "helmet": "防砂戰術盔",
+      "armor": "沙地複合甲",
+      "shoes": "荒漠疾行靴",
+      "accessory": "熱源追獵器"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "914c0660395cb60f13cd013d05a2bffa306a36843928bd20b13abb22167b9295",
+    "equipment-five-slots.webp": "6bee8e939ace7865b8a92abd71dff0e91d71f649e93034c07516b66047ce48eb"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "e39cf9c1ea056704b3cb909198b19d2dab59e9ad739508201e1bf52fd28eaa95",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/review-2_5d.md",
+        "sha256": "e39cf9c1ea056704b3cb909198b19d2dab59e9ad739508201e1bf52fd28eaa95"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "914c0660395cb60f13cd013d05a2bffa306a36843928bd20b13abb22167b9295",
+        "equipment-five-slots.webp": "6bee8e939ace7865b8a92abd71dff0e91d71f649e93034c07516b66047ce48eb"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g004 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:3，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g004 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g004 可見沙色交叉腹甲、弧刃與三角感測枝；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g004 主體完整，沙色交叉腹甲、弧刃與三角感測枝在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g004 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/review-2_5d.md",
+        "sha256": "e39cf9c1ea056704b3cb909198b19d2dab59e9ad739508201e1bf52fd28eaa95"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "914c0660395cb60f13cd013d05a2bffa306a36843928bd20b13abb22167b9295",
+        "equipment-five-slots.webp": "6bee8e939ace7865b8a92abd71dff0e91d71f649e93034c07516b66047ce48eb"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g004 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:3，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g004 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g004 可見沙色交叉腹甲、弧刃與三角感測枝；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g004 主體完整，沙色交叉腹甲、弧刃與三角感測枝在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g004 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g004：頸巾及大腿拆件歸屬未完整，保留整套造型。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "498d84b42be99ca689e15ebbd9600f8350380db9ebb2a9e181001abd7f1bec68"
+}

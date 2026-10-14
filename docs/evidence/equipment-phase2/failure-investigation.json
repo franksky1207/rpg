@@ -1,0 +1,12 @@
+{
+  "run": 38652498691,
+  "job": 116154404372,
+  "commit": "04e898de378e312f8e1b34d62532185d4f1495d3",
+  "source": "https://github.com/franksky1207/rpg/actions/runs/38652498691",
+  "log": "2026-10-14T23:11:30.0779372Z FAIL equipment concepts: g024: autonomous authorization changed/missing",
+  "rootCause": "schema2 authorization SHA binds SOP bytes; phase1 editorial/policy text changed them; image/identity checks were not the failing condition",
+  "originalAuthorizationSha256": "f7e281bb156f65ccc14e2544fb5bf853dc106446d1422ab4a92c00fce584a123",
+  "reproducedBeforeChanges": "FAIL equipment concepts: g024: autonomous authorization changed/missing",
+  "fix": "Verify legacy evidence against exact archived original SOP and bind schema3 to immutable versioned policy; preserve all original review bytes.",
+  "checksDisabled": false
+}

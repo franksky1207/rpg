@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g002",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:earth:map:1",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense",
+    "regionOrBoss": "地球戰爭 → 郊區防衛線",
+    "equipmentNames": {
+      "weapon": "壕溝軍刀",
+      "helmet": "哨戒戰盔",
+      "armor": "防線重甲",
+      "shoes": "越野作戰靴",
+      "accessory": "前線測距儀"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "ac69b16d73368dc16bfeb6d8b45a0ac229963ae66a51fe89cba7235a34365510",
+    "equipment-five-slots.webp": "3325ceb1ff3b234778c0e601ce0c5c9d00a968a31b5ce5b457900de86bf61510"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "d8b080abf7ac433fde1ccce16c2673744d7fc25fa77d32efaad9d3e8b0960d99",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/review-2_5d.md",
+        "sha256": "d8b080abf7ac433fde1ccce16c2673744d7fc25fa77d32efaad9d3e8b0960d99"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "ac69b16d73368dc16bfeb6d8b45a0ac229963ae66a51fe89cba7235a34365510",
+        "equipment-five-slots.webp": "3325ceb1ff3b234778c0e601ce0c5c9d00a968a31b5ce5b457900de86bf61510"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g002 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:1，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g002 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g002 可見橫向厚板、直軍刀與雙鏡測距器；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g002 主體完整，橫向厚板、直軍刀與雙鏡測距器在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g002 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/review-2_5d.md",
+        "sha256": "d8b080abf7ac433fde1ccce16c2673744d7fc25fa77d32efaad9d3e8b0960d99"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "ac69b16d73368dc16bfeb6d8b45a0ac229963ae66a51fe89cba7235a34365510",
+        "equipment-five-slots.webp": "3325ceb1ff3b234778c0e601ce0c5c9d00a968a31b5ce5b457900de86bf61510"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g002 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:1，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g002 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g002 可見橫向厚板、直軍刀與雙鏡測距器；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g002 主體完整，橫向厚板、直軍刀與雙鏡測距器在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g002 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g002：膝脛零件未在短靴欄完整指派，屬細小分件建議。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "a95b322458d42f0f5bba7ec3a7d89a8c89f0cc187d7d3db571311aa864dc1aff"
+}

@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g006",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:earth:map:5",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g006-polar-front",
+    "regionOrBoss": "地球戰爭 → 極地戰線",
+    "equipmentNames": {
+      "weapon": "霜鋼長刃",
+      "helmet": "極寒封閉盔",
+      "armor": "冰原保溫甲",
+      "shoes": "雪地抓地靴",
+      "accessory": "熱源定位器"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd",
+    "equipment-five-slots.webp": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "bfa711ec5a283c3cff6b1ca3d01cd1b66fa6ea5e871605b8703484325f4ef7b0",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/review-2_5d.md",
+        "sha256": "bfa711ec5a283c3cff6b1ca3d01cd1b66fa6ea5e871605b8703484325f4ef7b0"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd",
+        "equipment-five-slots.webp": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g006 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:5，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g006 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g006 可見白灰保溫裙片、霜刃與冰爪底；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g006 主體完整，白灰保溫裙片、霜刃與冰爪底在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g006 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/art-review.json",
+        "sha256": "812d586155d30452d89fcd26f4852629452f4faf37d07f33e19ba815a5d8a8e2"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/review-2_5d.md",
+        "sha256": "bfa711ec5a283c3cff6b1ca3d01cd1b66fa6ea5e871605b8703484325f4ef7b0"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd",
+        "equipment-five-slots.webp": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g006 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:5，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g006 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g006 可見白灰保溫裙片、霜刃與冰爪底；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g006 主體完整，白灰保溫裙片、霜刃與冰爪底在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g006 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g006：保留既有代理批准；新2.5D不要求沿用三LOD精密分槽。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/art-review.json",
+      "sha256": "812d586155d30452d89fcd26f4852629452f4faf37d07f33e19ba815a5d8a8e2"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "5dae6dce18b5d9e289c4457316bf3390d455c20112027c892860c4bfe819b395"
+}

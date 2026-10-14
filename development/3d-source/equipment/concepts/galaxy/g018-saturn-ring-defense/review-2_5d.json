@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g018",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:solar:map:7",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense",
+    "regionOrBoss": "太陽系戰爭 → 土星環防線",
+    "equipmentNames": {
+      "weapon": "環帶光刃",
+      "helmet": "碎冰防衛盔",
+      "armor": "環軌防護甲",
+      "shoes": "環帶機動靴",
+      "accessory": "土星環定位器"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+    "equipment-five-slots.webp": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "645bc373da3f20536428e8f8afdffb3c89a66a2d94d454d1659d5f96b20eb284",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/review-2_5d.md",
+        "sha256": "645bc373da3f20536428e8f8afdffb3c89a66a2d94d454d1659d5f96b20eb284"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+        "equipment-five-slots.webp": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g018 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:solar:map:7，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g018 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g018 可見銀色尖葉層甲、細長刃與土星環裝置；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g018 主體完整，銀色尖葉層甲、細長刃與土星環裝置在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g018 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/review-2_5d.md",
+        "sha256": "645bc373da3f20536428e8f8afdffb3c89a66a2d94d454d1659d5f96b20eb284"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+        "equipment-five-slots.webp": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g018 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:solar:map:7，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g018 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g018 可見銀色尖葉層甲、細長刃與土星環裝置；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g018 主體完整，銀色尖葉層甲、細長刃與土星環裝置在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g018 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g018：尖葉接縫視角微差不影響整體環形主題。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "d662aa0b999890f4cb870226f2f12de9558128eba204b7cbaefef8fc3d3a501f"
+}

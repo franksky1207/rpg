@@ -36,7 +36,14 @@ for p in removed:
 ledger=json.loads((ROOT/'development/retired-formal-previews/20261013/source-evolution.json').read_text())
 for p,row in ledger['files'].items():
  assert digest(row['archive'])==row['beforeSHA256']
- if row['afterSHA256'] is not None:assert digest(p)==row['afterSHA256']
+ if row['afterSHA256'] is not None:
+  if p in ('3d-test/test-center.js','3d-test/index.html'):
+   # Reuse T4/B3's exact historical transformation; never update the original lock.
+   subprocess.run(['node','-e',
+    "const cp=require('node:child_process'),crypto=require('node:crypto');"
+    "const p=process.argv[1],old=cp.execFileSync('git',['show','10ef9222427050eadf42b8f61b4d153da7b049b6:'+p]);"
+    "require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(p,crypto.createHash('sha256').update(old).digest('hex'));",p],cwd=ROOT,check=True)
+  else:assert digest(p)==row['afterSHA256']
 assert 'const FULL_3D_AVAILABLE=false' in texts['3d-test/mode-foundation.js']
 assert 'const FORMAL_B_RELEASED=false' in texts['3d-test/t3b-formal-controller.js']
 output={'schema':'cw.batch01-27.compatibility.v1','baselineMain':'b2e4f3c69a387f7c86412ed4cd4687f6b13a6552','approvedFormalRelease':False,'modules':modules,'factoryConsumers':factory_consumers,'registeredAssets':assets,'rigs':rigs,'conceptIndexSHA256':digest(index),'futureConceptImages':images,'removedFormalControllers':removed,'historicalArchives':ledger,'limitations':['Lexical reverse references supplement actual browser/contract tests, not replace them.','Linux Chromium/WebKit and SwiftShader are not physical iPhone GPU or OS App switching.']}

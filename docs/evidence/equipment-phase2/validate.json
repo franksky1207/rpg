@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "counts": {
+    "galaxy": 100,
+    "universe": 100,
+    "higher": 10,
+    "total": 210,
+    "equipmentPositions": 1050
+  },
+  "changedFiles": 0,
+  "conceptImages": 60,
+  "setsWithBothImages": 30,
+  "conceptApproved": 30,
+  "setsWithoutImages": 180,
+  "setsWithExistingModels": 1,
+  "officialRepeatedNames": {
+    "主機同步環": [
+      "u019:helmet",
+      "u068:helmet"
+    ]
+  },
+  "warnings": [
+    "g006/equipment-five-slots.webp: 990216 bytes exceeds suggested 800 KB",
+    "g007/equipment-five-slots.webp: 1031198 bytes exceeds suggested 800 KB"
+  ]
+}

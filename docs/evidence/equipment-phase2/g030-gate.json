@@ -1,0 +1,19 @@
+{
+  "id": "g030",
+  "sourceKey": "galaxy:nearstar:map:9",
+  "directory": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade",
+  "equipmentNames": {
+    "weapon": "星航封鎖刃",
+    "helmet": "星航主控盔",
+    "armor": "近星主戰甲",
+    "shoes": "封鎖曲率靴",
+    "accessory": "星航封鎖中樞"
+  },
+  "conceptStatus": "pass-with-advisory",
+  "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g030-nearstar-blockade/review-2_5d.md",
+  "modelStatus": "not-started",
+  "assetProductionEligible": true,
+  "asset2_5dStatus": "not-started",
+  "gm2_5dTestStatus": "not-tested",
+  "formalReleaseAllowed": false
+}

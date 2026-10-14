@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g028",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:nearstar:map:7",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory",
+    "regionOrBoss": "近星戰爭 → 織女星觀測區",
+    "equipmentNames": {
+      "weapon": "織女光譜刃",
+      "helmet": "觀測戰盔",
+      "armor": "高能屏蔽甲",
+      "shoes": "光譜浮行靴",
+      "accessory": "織女觀測儀"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+    "equipment-five-slots.webp": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "1c75d8e4aea77dabd131522ad6408230d2b80339c0da117b5c858a90817937bc",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/review-2_5d.md",
+        "sha256": "1c75d8e4aea77dabd131522ad6408230d2b80339c0da117b5c858a90817937bc"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+        "equipment-five-slots.webp": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g028 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:nearstar:map:7，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g028 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g028 可見銀紫尖冠、斜面層甲與三鏡觀測儀；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g028 主體完整，銀紫尖冠、斜面層甲與三鏡觀測儀在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g028 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/art-review.json",
+        "sha256": "abef7c4234a6ae61927448946ffab95fd090dc88c093f414c007189759f9dab2"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/review-2_5d.md",
+        "sha256": "1c75d8e4aea77dabd131522ad6408230d2b80339c0da117b5c858a90817937bc"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "31670897af9ff3b98899f8432968b24cee382b298e490ed23d83c246d13fee68",
+        "equipment-five-slots.webp": "b26bf9b854a50e74dbb8dddf2e5a277e80e43b150d2add99351e997d2db5b789"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g028 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:nearstar:map:7，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g028 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g028 可見銀紫尖冠、斜面層甲與三鏡觀測儀；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g028 主體完整，銀紫尖冠、斜面層甲與三鏡觀測儀在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g028 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g028：尖甲局部三視差異列建議，非嚴重造型不符。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g028-vega-observatory/art-review.json",
+      "sha256": "abef7c4234a6ae61927448946ffab95fd090dc88c093f414c007189759f9dab2"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/generation-source-g026-g030.md",
+      "sha256": "4888dcb6b7d6ada6dbaac2bb7d5fcb6cad63913e9e92ed059c57aad7a6969a42"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/generation-source-g026-g030.md",
+      "sha256": "4888dcb6b7d6ada6dbaac2bb7d5fcb6cad63913e9e92ed059c57aad7a6969a42"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "9dbb04ef3be3eae90aa7f874dbd2a7b8921a0126249e45e1de3aad9614f70a07"
+}

@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g008",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:earth:map:7",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons",
+    "regionOrBoss": "地球戰爭 → 火山兵器基地",
+    "equipmentNames": {
+      "weapon": "熔蝕重刃",
+      "helmet": "高熱隔離盔",
+      "armor": "熔核耐熱甲",
+      "shoes": "熱區推進靴",
+      "accessory": "反應爐調節器"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "5d3dec09b6a0259b42a7fbb2aee9dfb512f75a6e2984d13a5bf7f8bc3761d975",
+    "equipment-five-slots.webp": "1ca2a6449af8240f5cfcc478db46a2af6c1882de5bcda3185dba2f7323a163bc"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "3866b4e7a9e7a8d13db6307c456536130e9efdb776329d43feb1ada548ed73da",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/review-2_5d.md",
+        "sha256": "3866b4e7a9e7a8d13db6307c456536130e9efdb776329d43feb1ada548ed73da"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "5d3dec09b6a0259b42a7fbb2aee9dfb512f75a6e2984d13a5bf7f8bc3761d975",
+        "equipment-five-slots.webp": "1ca2a6449af8240f5cfcc478db46a2af6c1882de5bcda3185dba2f7323a163bc"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g008 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:7，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g008 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g008 可見陶瓷重層甲、寬熱刃與三輻環爐；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g008 主體完整，陶瓷重層甲、寬熱刃與三輻環爐在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g008 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/review-2_5d.md",
+        "sha256": "3866b4e7a9e7a8d13db6307c456536130e9efdb776329d43feb1ada548ed73da"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "5d3dec09b6a0259b42a7fbb2aee9dfb512f75a6e2984d13a5bf7f8bc3761d975",
+        "equipment-five-slots.webp": "1ca2a6449af8240f5cfcc478db46a2af6c1882de5bcda3185dba2f7323a163bc"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g008 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:earth:map:7，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g008 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g008 可見陶瓷重層甲、寬熱刃與三輻環爐；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g008 主體完整，陶瓷重層甲、寬熱刃與三輻環爐在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g008 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g008：高靴上口和厚肩活動餘量屬素材階段建議。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "e2e18c69e17930a302653906c8b4d2fe078b054584690c2fa44539a7017221cf"
+}

@@ -1,0 +1,133 @@
+{
+  "schema": 3,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g013",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:solar:map:2",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony",
+    "regionOrBoss": "太陽系戰爭 → 火星殖民區",
+    "equipmentNames": {
+      "weapon": "赤原脈衝刃",
+      "helmet": "火星戰術盔",
+      "armor": "殖民防衛甲",
+      "shoes": "赤塵機動靴",
+      "accessory": "火星環境模組"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "6062b968a6ffc2616dbb23b3da8bb7e74aa1635cf24b1f79cc6b18626d971849",
+    "equipment-five-slots.webp": "899a87f369b21037818246e5a7fe94fcd04de3d3c4ab1b0e55c729c0ab80defa"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "review-2_5d.md",
+  "evidenceSha256": "e56e7c2a2592d1875990ca96857a3c37b03021278494ba5066aa0b041ad15b1a",
+  "stages": [
+    {
+      "reviewer": "ChatGPT",
+      "reviewedAt": "2026-10-15",
+      "mode": "historical-review-policy-migration",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony/review-2_5d.md",
+        "sha256": "e56e7c2a2592d1875990ca96857a3c37b03021278494ba5066aa0b041ad15b1a"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "6062b968a6ffc2616dbb23b3da8bb7e74aa1635cf24b1f79cc6b18626d971849",
+        "equipment-five-slots.webp": "899a87f369b21037818246e5a7fe94fcd04de3d3c4ab1b0e55c729c0ab80defa"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g013 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:solar:map:2，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g013 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g013 可見紅白防塵軟服、短脈衝刃與筒式濾芯；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g013 主體完整，紅白防塵軟服、短脈衝刃與筒式濾芯在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g013 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true,
+      "historicalSource": {
+        "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+        "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+      }
+    },
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "mode": "current-owner-and-image-review",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony/review-2_5d.md",
+        "sha256": "e56e7c2a2592d1875990ca96857a3c37b03021278494ba5066aa0b041ad15b1a"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "6062b968a6ffc2616dbb23b3da8bb7e74aa1635cf24b1f79cc6b18626d971849",
+        "equipment-five-slots.webp": "899a87f369b21037818246e5a7fe94fcd04de3d3c4ab1b0e55c729c0ab80defa"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g013 已從正式owner重抽核對epoch/sourceKey/目錄及五槽中文名；galaxy:solar:map:2，名稱以notes而非AI小字判定。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g013 兩張WebP完整解碼、bytes/尺寸/SHA符合起始main索引，內容分別為總覽與五槽參考且SHA不同。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g013 可見紅白防塵軟服、短脈衝刃與筒式濾芯；兩圖主要材質、武器和背件對應，未見錯套或整套缺失。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g013 主體完整，紅白防塵軟服、短脈衝刃與筒式濾芯在縮小參考檢視仍有主要形體；此為概念靜態檢視，不宣稱正式戰鬥或手機實測。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g013 沿用專案既存生成／使用者提供來源聲明，僅開發概念用途；未導入第三方素材，無新增授權衝突證據，不宣稱已取得商用發布授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "smallSlotDetails",
+      "observation": "g013：腿片分槽與濾芯插接面屬後續素材建議。素材完成與GM實測須另驗。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "sources": [
+    {
+      "path": "docs/BATCH28_G001_G020_IMAGE_AUDIT_2026-10-13.md",
+      "sha256": "3a774497c2398c597e31c4febfa1c4e368c37fa895f8c39aeb3e8bed7268f25c"
+    },
+    {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "docs/evidence/equipment-policy/concept-workflow-source-2026-10-15.md",
+      "sha256": "96ae35f0abe4afef4f8dda75c3284396cf97bdf260c6690acda2aafc1572d05a"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "96d4984c298914abea64c2a81525c6185054ec050a5ae790ef5aef7e5ab6353c"
+}

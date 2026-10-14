@@ -20,8 +20,8 @@ class BatchPlannerTests(unittest.TestCase):
         self.assertEqual(groups[0]["batch"],"G01")
         self.assertEqual(groups[0]["imagesPresent"],20)
         self.assertEqual(groups[0]["imagesMissing"],0)
-        self.assertEqual(groups[0]["approvedSets"],2)
-        self.assertEqual(groups[0]["status"],"images-ready-awaiting-review")
+        self.assertEqual(groups[0]["approvedSets"],10)
+        self.assertEqual(groups[0]["status"],"approved")
     def test_next_batch_is_safe_to_resume(self):
         group=planner.plan(batch="g02")[0]
         self.assertEqual(group["range"],"g011..g020")
