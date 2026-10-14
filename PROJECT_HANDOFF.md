@@ -1,3 +1,5 @@
+> **2026-10-15｜裝備概念圖雙階段 SOP v1.0**：新增 `docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md`，每批五套十圖由 ChatGPT 按 G001～G020 原始美術規範製圖、自檢並打包 ZIP，Codex 重新核對 `_concept-index.json` 的真實 directory、審查／必要修正、入庫與 exact-HEAD Actions。取消使用者逐套美術批准作為入庫前置，但不擅自變更現行 conceptApproved 契約；保留原 SOP、既有已批准狀態與發布隔離。下一批以最新索引與實際入庫進度為準。
+
 > **2026-10-15｜第28批G021～G030概念工作**：承接GitHub main `f8d2171862ea2d530b6b21f4d2be69ff73a19359`。G021～G025十圖完整解碼／尺寸bytesSHA／身份與逐張目視核對，原圖全部保留、notes補唯一所有權與待驗項；G024靴頂膝盤的局部編輯候選因非目标區域附帶變動未採用，正式局部修正仍待補。G026～G030依序十次真影像生成取得各兩張獨立WebP、逐張複查並入庫待審，未裁切跨套拼貼／複製換色；索引60圖／30套完整，原2套批准維持，新圖false、未建模。generate／validate／29 unittest／重生成零差異、裝備契約／preflight／發布稽核與建置回歸PASS；20圖发布excluded，B3 135項inventory SHA-bytes-totalBytes不變。詳 `docs/BATCH28_G021_G030_REVIEW_2026-10-15.md` 與證據目錄。正式遊戲／GM／背景／極簡／音訊／2.5D／發布開關不動；exact-HEAD Actions推送後核對，不預告全綠。下一批G031～G035；本批美術與接口待使用者審查，不以入庫當批准。
 
 > **2026-10-15｜裝備概念圖流程調整**：取消原先 ChatGPT 製圖、Work 入庫的專用 SOP，已刪除 `docs/BATCH28_EQUIPMENT_CONCEPT_WORKFLOW_SOP_2026-10-14.md`。後續以 `docs/3D_EQUIPMENT_CONCEPT_BATCH_ART_WORKFLOW_2026-10-11.md`、正式五槽契約與最新 main 為依據，由 Codex 先檢查 G021～G025 既有兩圖，再依實際影像工具能力處理 G026～G030；無生圖能力不得偽造圖檔。新圖入庫不等於批准，既有發布隔離與遊戲功能不變。
