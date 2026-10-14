@@ -49,7 +49,7 @@ module.exports=function verifySource(path,oldSHA){
    const previous=cp.execFileSync('git',['show','ff91116c655fbec22047d01e61e3554fa47451e9:'+path]);
    assert.equal(sha(previous),row.afterSHA256,'Exact pre-refinement GM source');
    const script=path.endsWith('.html')?'test-center.js':'gm-battle-simulation.js';
-   const from=script+'?v=20261013-gm-b1',to=script+'?v=20261014-b28-refined2';
+   const from=script+'?v=20261013-gm-b1',to=script+'?v=20261014-b28-hp-visual1';
    assert.equal(previous.toString().split(from).length,2,'One GM cache version only');
    assert.equal(fs.readFileSync(path,'utf8'),previous.toString().replace(from,to),'Only authorized GM cache-bust changes');
   }else assert.equal(sha(fs.readFileSync(path)),row.afterSHA256,'Exact authorized T4 source');
