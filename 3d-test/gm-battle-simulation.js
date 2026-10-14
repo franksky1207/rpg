@@ -1,5 +1,27 @@
 /* GM-only adapter for the existing B comparison Renderer/Fixture/Playback.
  * No formal combat, audio, storage or cloud owner is imported or called. */
+// GM-only visual estimate from recorded owner-fixture damage; never an authoritative per-hit HP snapshot.
+function displayHp(frame){
+ const start=frame.input?.computed?.start;
+ if(!start)return frame.knownState;
+ if(frame.phase==='outcome'||frame.phase==='closed'||frame.mode==='completed'||frame.mode==='background')return frame.input.computed.final;
+ const state={player:{...start.player},enemy:{...start.enemy}};
+ const currentSeq=frame.sourceRef?.seq??-1;
+ for(const event of frame.input.events){
+  if(event.type!=='combat-action')continue;
+  if(event.seq>currentSeq || (event.seq===currentSeq&&!['known-effect','return'].includes(frame.phase)))break;
+  const d=event.data,who=d.target;
+  if(!['player','enemy'].includes(who))continue;
+  const damage=d.actualDamage;
+  if(Number.isFinite(damage)&&damage>=0)state[who].hp=Math.max(0,state[who].hp-damage);
+  if(Number.isFinite(d.shieldAbsorbed)&&d.shieldAbsorbed>0&&Number.isFinite(state[who].shield))
+   state[who].shield=Math.max(0,state[who].shield-d.shieldAbsorbed);
+  if(['player','enemy'].includes(d.actor)&&Number.isFinite(d.healed)&&d.healed>0)
+   state[d.actor].hp=Math.min(state[d.actor].maxHp,state[d.actor].hp+d.healed);
+ }
+ return state;
+}
+
 export async function mount({host,signal,quality='medium'}){
  const root=new URL('../development/hybrid-comparison/',import.meta.url);
  const [{loadData,selectInput},{Playback,bindRenderer},{createRenderer,diagnostics},{elapsedClock}]=await Promise.all([
@@ -13,7 +35,7 @@ export async function mount({host,signal,quality='medium'}){
  <div class="gm-b-buttons">${[['play','播放'],['pause','暫停'],['resume','繼續'],['replay','重播'],['stop','停止']].map(([x,n])=>`<button type="button" data-b="${x}">${n}</button>`).join('')}</div></div>
  <p class="gm-b-status" data-b="status" role="status">正在驗證沙盒素材…</p><div class="gm-b-arena" data-b="stage"></div>
  <div class="gm-b-hud">${['player','enemy'].map(x=>`<div><b data-b="${x}-name">${x==='player'?'測試玩家':'測試敵人'}</b><span data-b="${x}-hp"></span><progress data-b="${x}-bar" max="1" value="1"></progress><small data-b="${x}-shield"></small></div>`).join('')}</div>
- <p data-b="effect"></p><details><summary>裝備來源與效果檢視</summary><ul data-b="slots"></ul><p>GM 沙盒素材；固定 3/4 視角、即時 3D 玩家／敵人預渲染圖集。逐擊 HP 未收錄時保留已知快照，不推算正式數值。</p></details></div>`;
+ <p data-b="effect"></p><details><summary>裝備來源與效果檢視</summary><ul data-b="slots"></ul><p>GM 沙盒素材；固定 3/4 視角、即時 3D 玩家／敵人預渲染圖集。逐擊 HP 未收錄；過程血量依已記錄傷害推算，僅供 GM 視覺測試。結束值採正式樣本快照，不代表逐擊正式結算。</p></details></div>`;
  const $=name=>host.querySelector(`[data-b="${name}"]`),cleanups=[];
  let closed=false,pack=null,renderer=null,binding=null,bound=null,failed=false,lastFrame=null;
  const listen=(target,event,fn)=>{target.addEventListener(event,fn);cleanups.push(()=>target.removeEventListener(event,fn));};
@@ -29,7 +51,7 @@ export async function mount({host,signal,quality='medium'}){
  const playback=new Playback({onFrame:frame=>{
   if(closed)return;lastFrame=frame;
   if(frame.input){$('player-name').textContent=frame.input.playerName+'（沙盒）';$('enemy-name').textContent=frame.input.representative.name;
-   for(const role of ['player','enemy']){const s=frame.knownState[role];$(role+'-hp').textContent=`HP ${s.hp.toLocaleString()} / ${s.maxHp.toLocaleString()}`;$(role+'-bar').max=s.maxHp;$(role+'-bar').value=s.hp;$(role+'-shield').textContent=s.shield===null?'護盾來源未收錄':`護盾 ${s.shield}`;}
+   for(const role of ['player','enemy']){const s=displayHp(frame)[role];$(role+'-hp').textContent=`HP ${s.hp.toLocaleString()} / ${s.maxHp.toLocaleString()}${frame.phase==='outcome'||frame.mode==='completed'?'':'（模擬）'}`;$(role+'-bar').max=s.maxHp;$(role+'-bar').value=s.hp;$(role+'-shield').textContent=s.shield===null?'護盾來源未收錄':`護盾 ${s.shield}`;}
    const d=frame.sourceEvent?.data;const names={attack:'攻擊',dodge:'閃避',combo:'連擊',counter:'反擊',drain:'汲取',mark:'印記'};
    $('effect').textContent=d?`${d.actor==='player'?'玩家':'敵人'} ${names[d.sourceType]||''}${d.actualDamage===undefined?'':` 傷害 ${d.actualDamage}`}${d.healed===undefined?'':` 回復 ${d.healed}`}`:frame.mode==='completed'?'播放完成；未發放收益':'';
   }controls();
