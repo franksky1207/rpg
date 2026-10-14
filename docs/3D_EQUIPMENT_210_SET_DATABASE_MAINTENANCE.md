@@ -1,3 +1,5 @@
+> **2026-10-15｜第1批資料庫政策優先權**：以下schema2、G024強制像素修補及modelingEligible規則記錄既有實作，**尚未在本批改程式**。新政策依六批總規格：2.5D素材製作資格不等於五GLB建模資格；G024/G030原圖由使用者接受，非阻擋例外；第2批須保留原SHA、以policyVersion及雙階段可驗證證據更新審查器、索引與負例測試，不得僅將conceptApproved硬設true。正式五槽210／1050、H01～H10、來源owner、舊schema相容、G007原模型與formalReleaseAllowed=false不變。
+
 # 210 套裝備概念資料庫：維護與驗證
 
 建立日期：2026-10-11。起始 main：`c2a92794342027b5fc68fef8abbc75612a49974b`。
