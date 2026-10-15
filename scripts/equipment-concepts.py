@@ -222,7 +222,7 @@ def statuses(root, row):
                 'g007': 'ef42ea891133e3bf0f36fc35281629ad6fbd2cbf26d6d08b21ad44e4aeb9fca0',
             }
             if sha(review.read_bytes()) != historical_approvals.get(row['id']):
-                fail(f'{row["id"]}: new approval requires verified schema3; legacy evidence is historical only')
+                fail(f'{row["id"]}: new approval requires verified schema4 Codex-only evidence (schema3 retained for history); legacy evidence is historical only')
             approved, evidence = True, (pathlib.Path(row['directory']) / proof).as_posix()
     review_2_5d = directory / 'review-2_5d.json'
     if review_2_5d.exists():
