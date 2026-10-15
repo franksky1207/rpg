@@ -314,7 +314,7 @@
       "artReviewMode": "two-stage-2.5d",
       "modelingEligible": true,
       "assetProductionEligible": true,
-      "asset2_5dStatus": "not-started",
+      "asset2_5dStatus": "complete",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
@@ -336,7 +336,7 @@
       ],
       "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/review-2_5d.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g006",
@@ -446,7 +446,7 @@
       "artReviewMode": "two-stage-2.5d",
       "modelingEligible": true,
       "assetProductionEligible": true,
-      "asset2_5dStatus": "not-started",
+      "asset2_5dStatus": "complete",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "refined-model-art-reviewed",
@@ -484,7 +484,7 @@
         "equipment.ancient-ruins.v1.accessory.medium",
         "equipment.ancient-ruins.v1.accessory.high"
       ],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g008",
@@ -1188,7 +1188,7 @@
       "artReviewMode": "two-stage-2.5d",
       "modelingEligible": true,
       "assetProductionEligible": true,
-      "asset2_5dStatus": "not-started",
+      "asset2_5dStatus": "complete",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
@@ -1210,7 +1210,7 @@
       ],
       "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/review-2_5d.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g019",

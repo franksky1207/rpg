@@ -171,6 +171,9 @@ def image_info(file):
             if image.size != dimensions: fail(f'WebP decoded dimensions disagree: {file}')
     return dict(file=file.name,width=dimensions[0],height=dimensions[1],bytes=len(data),sha256=sha(data))
 
+_sprite_spec=importlib.util.spec_from_file_location('equipment_sprite_assets',pathlib.Path(__file__).with_name('equipment_sprite_assets.py'))
+sprite_assets=importlib.util.module_from_spec(_sprite_spec);_sprite_spec.loader.exec_module(sprite_assets)
+
 def statuses(root, row):
     directory = root / row['directory']
     images = [image_info(directory / name) for name in IMAGES if (directory / name).is_file()]
@@ -256,7 +259,7 @@ def statuses(root, row):
                                            else 'partial-images' if images else 'not-generated')
     return dict(notesStatus='generated-formal-manual-art-separated',conceptStatus=concept_status,
         conceptApproved=approved,artReviewMode=review_mode,modelingEligible=approved,
-        assetProductionEligible=approved,asset2_5dStatus='not-started',gm2_5dTestStatus='not-tested',
+        assetProductionEligible=approved,asset2_5dStatus=sprite_assets.state(root,{**row,'images':images},approved),gm2_5dTestStatus='not-tested',
         formalReleaseAllowed=False,modelStatus=model_status,
         images=images,approvalEvidence=evidence,modelEvidence=models)
 

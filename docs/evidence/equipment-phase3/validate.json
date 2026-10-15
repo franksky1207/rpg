@@ -1,0 +1,25 @@
+{
+  "schema": "cw.equipment.sprite.validation.v1",
+  "entries": [
+    {
+      "id": "g005",
+      "status": "complete",
+      "gm": "not-tested",
+      "release": false
+    },
+    {
+      "id": "g007",
+      "status": "complete",
+      "gm": "not-tested",
+      "release": false
+    },
+    {
+      "id": "g018",
+      "status": "complete",
+      "gm": "not-tested",
+      "release": false
+    }
+  ],
+  "complete": 3,
+  "publish": false
+}

@@ -1,0 +1,59 @@
+name: Equipment 2.5D Sprite Pipeline
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'development/equipment-2_5d/**'
+      - 'development/3d-source/equipment/concepts/**'
+      - 'scripts/equipment*'
+      - 'tests/equipment-sprites/**'
+      - '.github/workflows/equipment-sprites.yml'
+  pull_request:
+    paths:
+      - 'development/equipment-2_5d/**'
+      - 'development/3d-source/equipment/concepts/**'
+      - 'scripts/equipment*'
+      - 'tests/equipment-sprites/**'
+      - '.github/workflows/equipment-sprites.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0
+      - name: Verify real sprites and production states
+        run: |
+          python3 scripts/equipment-concepts.py validate
+          python3 scripts/equipment-sprites.py validate
+          python3 -m unittest discover -s tests/equipment-sprites -v
+          node --test tests/equipment-sprites/runtime.test.mjs
+      - name: Install isolated browser
+        run: |
+          npm install --prefix /tmp/equipment-sprite-test --no-save playwright@1.55.0
+          /tmp/equipment-sprite-test/node_modules/.bin/playwright install --with-deps chromium
+      - name: Raster real characters, animations and lifecycle
+        env:
+          NODE_PATH: /tmp/equipment-sprite-test/node_modules
+          CHROMIUM_PATH: ''
+        run: node tests/equipment-sprites/browser.cjs
+      - name: Verify development stays outside publication and generator is repeatable
+        run: |
+          node scripts/publish-asset-audit.cjs --json > /tmp/sprite-publish-audit.json
+          python3 scripts/equipment-concepts.py generate
+          git diff --exit-code -- development/3d-source/equipment/concepts docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: equipment-sprite-browser
+          path: |
+            /tmp/equipment-phase3-browser.json
+            /tmp/equipment-phase3-browser.png

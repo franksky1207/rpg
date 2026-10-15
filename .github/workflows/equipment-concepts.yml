@@ -5,6 +5,9 @@ on:
     paths:
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment-concepts.py'
+      - 'scripts/equipment_sprite_assets.py'
+      - 'scripts/equipment-sprites.py'
+      - 'development/equipment-2_5d/**'
       - 'scripts/equipment-concept-batches.py'
       - 'scripts/equipment-art-review.py'
       - 'scripts/equipment-modeling-gate.py'
@@ -28,6 +31,9 @@ on:
     paths:
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment-concepts.py'
+      - 'scripts/equipment_sprite_assets.py'
+      - 'scripts/equipment-sprites.py'
+      - 'development/equipment-2_5d/**'
       - 'scripts/equipment-concept-batches.py'
       - 'scripts/equipment-art-review.py'
       - 'scripts/equipment-modeling-gate.py'

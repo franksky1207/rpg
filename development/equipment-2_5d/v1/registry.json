@@ -1,0 +1,235 @@
+{
+  "schema": "cw.equipment.sprite.v1",
+  "version": "1.0.0",
+  "publish": false,
+  "entries": [
+    {
+      "id": "g005",
+      "formalIdentity": {
+        "id": "g005",
+        "epoch": "galaxy",
+        "sourceKey": "galaxy:earth:map:4",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion",
+        "regionOrBoss": "地球戰爭 → 污染禁區",
+        "equipmentNames": {
+          "weapon": "蝕毒軍刃",
+          "helmet": "全罩防化面盔",
+          "armor": "生化隔離甲",
+          "shoes": "污染區封閉靴",
+          "accessory": "異變偵測器"
+        }
+      },
+      "conceptSha256": {
+        "overview-front-side-back.webp": "f3cfb23f7b04d5edd8d1d06aa59a302b9cf0ff15323077e17c68685b7691f055",
+        "equipment-five-slots.webp": "902c80ac9d20bca96397916c34a7080a4a408e19da0f02f4c76e88b07c06e940"
+      },
+      "version": "1.0.0",
+      "facing": "right-3/4",
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "selectionReason": "圓罩面盔、寬軟隔離服、紅罐背具，與分節硬甲輪廓不同。",
+      "status": "complete",
+      "asset": {
+        "path": "development/equipment-2_5d/v1/characters/g005/v1/character.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 86324,
+        "sha256": "e398cfb81571e18083e898d0ac8b240b0331ce19e22e09aaaf84817b677ef097",
+        "alphaBounds": [
+          74,
+          59,
+          438,
+          461
+        ],
+        "coverage": {
+          "128": 2725,
+          "180": 5279,
+          "256": 10523
+        }
+      },
+      "review": {
+        "path": "development/equipment-2_5d/v1/characters/g005/v1/review.md",
+        "sha256": "11b2824186a2db0c2fb4a24176a4b3cfc8d0925d81987244cb4dacd10633fb1e",
+        "reviewer": "Codex",
+        "date": "2026-10-15",
+        "checks": {
+          "identity": true,
+          "transparent": true,
+          "silhouette": true,
+          "smallSize": true,
+          "orientation": true
+        }
+      },
+      "gmTestStatus": "not-tested",
+      "formalReleaseAllowed": false,
+      "source": {
+        "kind": "image-generation",
+        "tool": "image_gen",
+        "licenseBasis": "user-authorized-development-generation",
+        "path": "development/equipment-2_5d/v1/sources/g005/generated.png",
+        "sha256": "b7123be2abb892f454a21fe36cd487ae165f3721f273c9169a60a5769669a3f7",
+        "conceptSha256": {
+          "overview-front-side-back.webp": "f3cfb23f7b04d5edd8d1d06aa59a302b9cf0ff15323077e17c68685b7691f055",
+          "equipment-five-slots.webp": "902c80ac9d20bca96397916c34a7080a4a408e19da0f02f4c76e88b07c06e940"
+        },
+        "prompt": "Prepare this actual single G005 character as a clean game sprite. Preserve the exact hazmat character, pose, knife and red backpack cylinder. Remove ALL gray fog/glow/background and all exterior haze, leaving genuinely empty alpha around a crisp opaque character with only antialiased silhouette edge. The black suit and visor must be fully opaque, not translucent. No ground or shadow. Fit whole intact character in a SQUARE transparent canvas with 8% clear margin; do not cut any body or weapon. Keep right-facing 3/4 view. This is a cleanup of this single character, no added design or text.\n",
+        "parentSource": {
+          "path": "development/equipment-2_5d/v1/sources/g005/initial-generated.png",
+          "sha256": "0444596a034c30fbcb91be9e323577a3d294bbcfc73b00ca65c6265e54f15ac9",
+          "tool": "image_gen",
+          "note": "Initial G005 concept-to-character generation, then transparent cleanup using the initial character reference; never a crop of a concept board."
+        }
+      }
+    },
+    {
+      "id": "g007",
+      "formalIdentity": {
+        "id": "g007",
+        "epoch": "galaxy",
+        "sourceKey": "galaxy:earth:map:6",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins",
+        "regionOrBoss": "地球戰爭 → 古代科技遺址",
+        "equipmentNames": {
+          "weapon": "古代光刃",
+          "helmet": "遺物守衛盔",
+          "armor": "自律護衛甲",
+          "shoes": "遺跡浮行靴",
+          "accessory": "古文明鑰印"
+        }
+      },
+      "conceptSha256": {
+        "overview-front-side-back.webp": "0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645",
+        "equipment-five-slots.webp": "ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c"
+      },
+      "version": "1.0.0",
+      "facing": "right-3/4",
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "selectionReason": "固定歷史基準：石墨分節甲、青銅邊與菱形青色核心；保留15GLB。",
+      "status": "complete",
+      "asset": {
+        "path": "development/equipment-2_5d/v1/characters/g007/v1/character.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 81846,
+        "sha256": "3313e2657afee4c3c210b9c049af3d4e96d01fae9b66c0cc15f70a0e3056ce4a",
+        "alphaBounds": [
+          61,
+          72,
+          451,
+          461
+        ],
+        "coverage": {
+          "128": 2486,
+          "180": 4783,
+          "256": 9513
+        }
+      },
+      "review": {
+        "path": "development/equipment-2_5d/v1/characters/g007/v1/review.md",
+        "sha256": "98ee6a6db0cf39f6cb5b766659e717de4c2c48f7b385ce6fb3deb326435bfa6a",
+        "reviewer": "Codex",
+        "date": "2026-10-15",
+        "checks": {
+          "identity": true,
+          "transparent": true,
+          "silhouette": true,
+          "smallSize": true,
+          "orientation": true
+        }
+      },
+      "gmTestStatus": "not-tested",
+      "formalReleaseAllowed": false,
+      "source": {
+        "kind": "image-generation",
+        "tool": "image_gen",
+        "licenseBasis": "user-authorized-development-generation",
+        "path": "development/equipment-2_5d/v1/sources/g007/generated.png",
+        "sha256": "12731292fdd0df69b1cbb6fb67f291a9f5116bcf1c5fb1235a8bf9105188cc6b",
+        "conceptSha256": {
+          "overview-front-side-back.webp": "0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645",
+          "equipment-five-slots.webp": "ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c"
+        },
+        "prompt": "Create a NEW game-ready single isolated full-body 2.5D character sprite from this G007 concept reference. Do not crop the reference board. Exactly ONE humanoid on a truly transparent background, no ground, no text, no frame, no contact shadow. Preserve G007 graphite silver segmented sci-fi armor, antique bronze edges, cyan slit visor, cyan diamond civilization-key chest/back core, cyan ancient light sword in right hand. Entire helmet face opaque. Fixed 3/4 combat view facing screen RIGHT, neutral battle-ready stance with both feet visible, sword diagonally downward clear of feet, entire character and weapon comfortably within square canvas with ~10% margins. Realistic painted game asset, crisp clear major forms designed to read at 128-180 px tall. Centered feet line near 90% canvas height. This is a single whole-suit character, not a turnaround or concept sheet. Match the reference identity, not generic recolored armor.\n"
+      }
+    },
+    {
+      "id": "g018",
+      "formalIdentity": {
+        "id": "g018",
+        "epoch": "galaxy",
+        "sourceKey": "galaxy:solar:map:7",
+        "directory": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense",
+        "regionOrBoss": "太陽系戰爭 → 土星環防線",
+        "equipmentNames": {
+          "weapon": "環帶光刃",
+          "helmet": "碎冰防衛盔",
+          "armor": "環軌防護甲",
+          "shoes": "環帶機動靴",
+          "accessory": "土星環定位器"
+        }
+      },
+      "conceptSha256": {
+        "overview-front-side-back.webp": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+        "equipment-five-slots.webp": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062"
+      },
+      "version": "1.0.0",
+      "facing": "right-3/4",
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "selectionReason": "尖葉肩甲、長層裙、土星環背具，與圓罩／短甲明顯不同。",
+      "status": "complete",
+      "asset": {
+        "path": "development/equipment-2_5d/v1/characters/g018/v1/character.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 104822,
+        "sha256": "bb4456ec08fe6d48062801d3295552b370f8cca87ba43ba82b7f6fad84c15e82",
+        "alphaBounds": [
+          137,
+          75,
+          375,
+          461
+        ],
+        "coverage": {
+          "128": 2544,
+          "180": 4890,
+          "256": 9708
+        }
+      },
+      "review": {
+        "path": "development/equipment-2_5d/v1/characters/g018/v1/review.md",
+        "sha256": "e9eb8ddd264b870ec46823773d057f1d2d5893055045664a24d8d3e68df043c4",
+        "reviewer": "Codex",
+        "date": "2026-10-15",
+        "checks": {
+          "identity": true,
+          "transparent": true,
+          "silhouette": true,
+          "smallSize": true,
+          "orientation": true
+        }
+      },
+      "gmTestStatus": "not-tested",
+      "formalReleaseAllowed": false,
+      "source": {
+        "kind": "image-generation",
+        "tool": "image_gen",
+        "licenseBasis": "user-authorized-development-generation",
+        "path": "development/equipment-2_5d/v1/sources/g018/generated.png",
+        "sha256": "fce836b574ec1c88bd3019aadb88a84e396dc175097b01d70918b2791668ea6f",
+        "conceptSha256": {
+          "overview-front-side-back.webp": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+          "equipment-five-slots.webp": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062"
+        },
+        "prompt": "Make one NEW full-body transparent 2.5D RPG character sprite faithfully based on this G018 concept; do not crop the board. ONE fully armored humanoid, right-facing three-quarter battle-ready neutral stance, both complete feet, long slim violet energy blade held in right hand angled downward. G018 distinctive silver sharp overlapping leaf plates, angular pointed opaque helmet, wing-like spiked shoulders, tapered layered hip skirt and ornate ringed Saturn locator on back peeking past silhouette. Preserve this unique silver-violet angular silhouette, do not imitate a round hazmat suit or generic segmented armor. Entire figure and weapon isolated on genuinely empty transparent alpha background, absolutely no fog, ground, shadow, glow halo, scenery, text or extra views. Crisp painted realistic game art, clear bold shapes readable at 128-180px. Full character must fit inside canvas with at least 8% margin, centered, feet line at 90% height. Single character sprite, no frame.\n"
+      }
+    }
+  ]
+}

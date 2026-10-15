@@ -32,6 +32,8 @@ class DatabaseTests(unittest.TestCase):
         for file in files:
             dest=self.root/file;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(REPO/file,dest)
         shutil.copytree(REPO/m.BASE,self.root/m.BASE)
+        sprite=REPO/'development/equipment-2_5d'
+        if sprite.exists():shutil.copytree(sprite,self.root/'development/equipment-2_5d')
         self.index=self.root/m.BASE/'_concept-index.json'
     def tearDown(self): self.temp.cleanup()
     def run_db(self,generate=False):
@@ -54,7 +56,7 @@ class DatabaseTests(unittest.TestCase):
             self.assertEqual(row['modelingEligible'],row['conceptApproved'])
             self.assertIs(row['formalReleaseAllowed'],False)
             self.assertIs(row['assetProductionEligible'],row['conceptApproved'])
-            self.assertEqual(row['asset2_5dStatus'],'not-started')
+            self.assertEqual(row['asset2_5dStatus'],'complete' if row['id'] in ('g005','g007','g018') else 'not-started')
             self.assertEqual(row['gm2_5dTestStatus'],'not-tested')
             self.assertEqual(row['conceptStatus'],'pass-with-advisory' if row['conceptApproved'] else 'not-generated')
         self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{f'g{i:03}' for i in range(1,31)})

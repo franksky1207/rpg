@@ -1,4 +1,6 @@
-> **2026-10-15｜第2批實作成果**：G001～G030逐套schema3審查補充證據已落地，60原圖／8舊審查原檔保留；G024/G030依原圖SHA與使用者限定例外通過，無重製或補證。30套可進2.5D素材製作，180未生成套不批准；素材not-started、GM not-tested、發布false。驗證器、雙入口、索引、生成器、負例及CI同步，67裝備unittest通過。run38652498691實際錯誤`g024: autonomous authorization changed/missing`，因SOP編輯使舊授權SHA過期；固定歷史SOP＋穩定政策版本已修復，未停用驗證。額外回歸／Actions以[第2批成果](2_5D_EQUIPMENT_PHASE2_ACCEPTANCE_2026-10-15.md)及提交後exact-HEAD結果為準。**下一批為第3批；第3～6批尚未完成。** 以下第1批／待施工描述屬歷史快照。
+> **2026-10-15｜第3批成果**：G007/G005/G018三套透明整套角色已真生成、匯出及逐套審查，素材complete，GM not-tested／發布false。可重複素材產線、共用五動作、沿B draw(plan)的adapter、來源SHA登錄、快取／取消釋放與隔離瀏覽器測試已實作。沒有改正式Renderer／GM／玩法或用概念板當角色。詳[第3批驗收](2_5D_EQUIPMENT_PHASE3_ACCEPTANCE_2026-10-15.md)與[素材產線規格](2_5D_EQUIPMENT_SPRITE_PIPELINE_SPEC_2026-10-15.md)。**下一批為第4批GM整合，第4～6批未完成；其餘207套角色尚待製作。** 以下待施工描述屬歷史紀錄。
+
+> **2026-10-15｜第2批實作成果**：G001～G030逐套schema3審查補充證據已落地，60原圖／8舊審查原檔保留；G024/G030依原圖SHA與使用者限定例外通過，無重製或補證。30套可進2.5D素材製作，180未生成套不批准；素材not-started、GM not-tested、發布false。驗證器、雙入口、索引、生成器、負例及CI同步，68裝備unittest通過。run38652498691實際錯誤`g024: autonomous authorization changed/missing`，因SOP編輯使舊授權SHA過期；固定歷史SOP＋穩定政策版本已修復，未停用驗證。額外回歸／Actions以[第2批成果](2_5D_EQUIPMENT_PHASE2_ACCEPTANCE_2026-10-15.md)及提交後exact-HEAD結果為準。**下一批為第3批；第3～6批尚未完成。** 以下第1批／待施工描述屬歷史快照。
 
 > **施工狀態更新（2026-10-15）**：第1批核心規範文件與 `PROJECT_HANDOFF.md` 已更新至 `main`；第1批只處理文件優先權與交接，不代表程式／索引／驗證器已完成遷移。舊文件中與2.5D新量產牴觸的3D細節條款僅供歷史G007及既有Runtime相容參考。第2批須追查 Equipment Concept Database 在提交 `04e898de378e312f8e1b34d62532185d4f1495d3` 的失敗（Actions run `38652498691`），並將G024／G030原圖已接受例外實際落地；不得跳過負例測試、不得宣稱全綠。第3～6批尚未施工。
 
@@ -73,4 +75,4 @@
 - `tests/equipment-concepts/`、相關GM／B／publish／Actions工作流程
 
 ## 8. 下一個對話承接
-先讀本文件及PROJECT_HANDOFF.md，再檢查最新main與Actions；**直接從第3批開始**（第1批文件及第2批驗證器／資料遷移已完成），除非使用者另指定。G024/G030已由使用者明確接受，**不要再要求修圖或補背座證據**；第2批落實驗證器與資料狀態，正式發布仍獨立。所有施工以最新main為準，歷史文檔不應蓋過本次2.5D決議。
+先讀本文件及PROJECT_HANDOFF.md，再檢查最新main與Actions；**直接從第4批開始**（第1～3批工程及三套素材已完成），除非使用者另指定。G024/G030已由使用者明確接受，**不要再要求修圖或補背座證據**；第2批落實驗證器與資料狀態，正式發布仍獨立。所有施工以最新main為準，歷史文檔不應蓋過本次2.5D決議。

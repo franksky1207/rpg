@@ -1,0 +1,121 @@
+{
+  "checks": [
+    {
+      "id": "g005",
+      "hashes": {
+        "idle": [
+          159745044,
+          159439437
+        ],
+        "attack": [
+          159745044,
+          183339257
+        ],
+        "hit": [
+          159745044,
+          290055897
+        ],
+        "dodge": [
+          159745044,
+          173630966
+        ],
+        "defeat": [
+          159745044,
+          117029299
+        ]
+      },
+      "pixels": 128,
+      "complete": true
+    },
+    {
+      "id": "g007",
+      "hashes": {
+        "idle": [
+          159528342,
+          160645928
+        ],
+        "attack": [
+          159528342,
+          182963819
+        ],
+        "hit": [
+          159528342,
+          274996758
+        ],
+        "dodge": [
+          159528342,
+          187207643
+        ],
+        "defeat": [
+          159528342,
+          99274682
+        ]
+      },
+      "pixels": 128,
+      "complete": true
+    },
+    {
+      "id": "g018",
+      "hashes": {
+        "idle": [
+          185400727,
+          186149430
+        ],
+        "attack": [
+          185400727,
+          210644791
+        ],
+        "hit": [
+          185400727,
+          284838010
+        ],
+        "dodge": [
+          185400727,
+          214012278
+        ],
+        "defeat": [
+          185400727,
+          133899728
+        ]
+      },
+      "pixels": 128,
+      "complete": true
+    }
+  ],
+  "warm": {
+    "entries": 3,
+    "bytes": 3145728,
+    "limit": 16777216,
+    "hits": 20,
+    "loads": 3,
+    "pending": 0,
+    "refs": 0,
+    "closed": false
+  },
+  "after": {
+    "entries": 0,
+    "bytes": 0,
+    "limit": 16777216,
+    "hits": 20,
+    "loads": 3,
+    "pending": 0,
+    "refs": 0,
+    "closed": false
+  },
+  "badSHA": true,
+  "bad404": true,
+  "canCommit": false,
+  "physicalDevice": false,
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844
+    },
+    {
+      "width": 1365,
+      "height": 900
+    }
+  ],
+  "browser": "Chromium headless at 390x844 CSS px; actual image decode and canvas raster, not a physical phone",
+  "pageErrors": []
+}

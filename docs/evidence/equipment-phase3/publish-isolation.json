@@ -1,0 +1,24 @@
+{
+  "includedCount": 390,
+  "includedBytes": 36651177,
+  "newDevelopmentFilesExcluded": [
+    "development/equipment-2_5d/v1/preview.mjs",
+    "development/equipment-2_5d/v1/index.html",
+    "development/equipment-2_5d/v1/actor.mjs",
+    "development/equipment-2_5d/v1/assets.mjs",
+    "development/equipment-2_5d/v1/animation.mjs",
+    "development/equipment-2_5d/v1/registry.json",
+    "development/equipment-2_5d/v1/characters/g005/v1/review.md",
+    "development/equipment-2_5d/v1/characters/g005/v1/character.webp",
+    "development/equipment-2_5d/v1/characters/g018/v1/review.md",
+    "development/equipment-2_5d/v1/characters/g018/v1/character.webp",
+    "development/equipment-2_5d/v1/characters/g007/v1/review.md",
+    "development/equipment-2_5d/v1/characters/g007/v1/character.webp",
+    "development/equipment-2_5d/v1/sources/g005/initial-generated.png",
+    "development/equipment-2_5d/v1/sources/g005/generated.png",
+    "development/equipment-2_5d/v1/sources/g018/generated.png",
+    "development/equipment-2_5d/v1/sources/g007/generated.png"
+  ],
+  "newRuntimeReferences": [],
+  "hardMissing": []
+}
