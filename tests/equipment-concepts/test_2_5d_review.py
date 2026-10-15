@@ -25,7 +25,7 @@ class Review25DTests(unittest.TestCase):
         record['schema']=4
         record['stages']=[record['stages'][1]]
         self.assertEqual(record['stages'][0]['reviewer'],'Codex')
-        self.assertEqual(self.verify(self.seal(record),'g026')[::2],(True,'pass'))
+        self.assertEqual(self.verify(self.seal(record),'g026')[::2],(True,'pass-with-advisory'))
         directory=self.root/row['directory']
         (directory/'review-2_5d.json').write_text(m.dumps(record),encoding='utf-8')
         result=m.statuses(self.root,row)
