@@ -40,3 +40,11 @@
 ## GitHub與待補
 
 本任務驗證後直接推送main。最終SHA與Actions以推送後該提交實際執行結果為準，不引用舊SHA成功。真實手機／遊戲內G09驗收、透明角色、GM與正式戰鬥發布均未完成，且不在本批範圍。G046未製作。
+
+## 首次推送CI與必要修正
+
+首次提交 `e1a16ba417e9a667667ac5cea4f8b5cffdbd0b8c`：
+
+- [Equipment Concept Database 38754428155](https://github.com/franksky1207/rpg/actions/runs/38754428155) 的83項中82項通過，新G09歷史索引測試因checkout預設fetch-depth=1而無法git show固定G08基準。將此workflow checkout明確設為fetch-depth=0，與既有GM／Formal歷史驗證做法一致。保留原測試與全部205筆歷史／未製作索引逐筆比較，不改SHA鎖、不跳過檢查。補跑G09三項測試及validate／generate通過，最終SHA須再查完整CI。
+- [GM Integration 38754428166](https://github.com/franksky1207/rpg/actions/runs/38754428166/attempts/1) 先前來源驗證及前段互動通過，截圖前scrollIntoViewIfNeeded於browser.cjs:51遇DOM元素已脫離。本機121斷言通過，對同SHA重跑原CI；不刪斷言或修改Runtime。
+- 原失敗log保存在[證據目錄](evidence/equipment-g09/)。修正只影響CI歷史取得方式及本報告，不修改十張圖片、原PNG、來源、schema4證據或政策。

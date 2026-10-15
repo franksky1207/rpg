@@ -1,0 +1,8 @@
+test_five_sets_ten_independent_outputs_and_originals (test_g09_artifacts.G09ArtifactTests.test_five_sets_ten_independent_outputs_and_originals) ... ok
+test_g001_g040_all_historical_bytes_unchanged (test_g09_artifacts.G09ArtifactTests.test_g001_g040_all_historical_bytes_unchanged) ... ok
+test_historical_index_and_unmade_g046_unchanged (test_g09_artifacts.G09ArtifactTests.test_historical_index_and_unmade_g046_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 1.151s
+
+OK

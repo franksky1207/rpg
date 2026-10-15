@@ -1,4 +1,4 @@
-> **2026-10-15｜G09五套十圖入庫**：G041～G045獨立三視／五槽真WebP、原始PNG與來源SHA、schema4單一Codex審查（blocker=0）完成；索引45套批准／90圖、165套未製作，G046未動。G001～G040共262個歷史檔與原索引保留並新增SHA回歸鎖。角色素材not-started、GM not-tested、正式發布false；未改正式戰鬥介面或動畫。驗收及查看連結見 [G09驗收](docs/2_5D_EQUIPMENT_G09_ACCEPTANCE_2026-10-15.md)；最終提交Actions須依該SHA核對。
+> **2026-10-15｜G09五套十圖入庫**：G041～G045獨立三視／五槽真WebP、原始PNG與來源SHA、schema4單一Codex審查（blocker=0）完成；索引45套批准／90圖、165套未製作，G046未動。G001～G040共262個歷史檔與原索引保留並新增SHA回歸鎖。角色素材not-started、GM not-tested、正式發布false；未改正式戰鬥介面或動畫。驗收及查看連結見 [G09驗收](docs/2_5D_EQUIPMENT_G09_ACCEPTANCE_2026-10-15.md)；首次CI歷史索引測試因淺層checkout缺G08基準失敗，已改完整歷史而保留全部斷言；最終提交Actions須依該SHA核對。
 
 > **2026-10-15｜G08五套十圖入庫**：G036～G040獨立三視／五槽真WebP、原始PNG與來源SHA、schema4單一Codex階段（blocker=0）完成；索引40套批准／80圖、170套未製作，G041未動。G001～G035全部217個歷史檔與證據SHA保留並鎖定回歸。角色素材not-started、GM not-tested、正式發布false；未改正式戰鬥介面。驗證及查看連結見 [G08驗收](docs/2_5D_EQUIPMENT_G08_ACCEPTANCE_2026-10-15.md)；最終commit Actions推送後逐項核對，不預告成功。
 
