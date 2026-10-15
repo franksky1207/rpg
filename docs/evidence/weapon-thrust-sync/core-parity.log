@@ -1,0 +1,13 @@
+PASS identical standard core results / complete State: 576 comparisons
+✔ actual core RNG/results and complete State identical without Bridge / throw / reject / never consumer (1693.105752ms)
+✔ actual mirror core output, symmetry and RNG are unchanged by a broken consumer (168.893129ms)
+✔ mode producer hooks are present in each actual owner, not guessed from DOM (8.310385ms)
+✔ Bridge never calls audio, storage, combat calculation, or a long-running timer (6.032857ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1951.13676

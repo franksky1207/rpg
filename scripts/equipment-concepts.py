@@ -284,7 +284,7 @@ def manual_template(row):
     accent=('青藍','琥珀','銀紫','冷白','暗紅')[row['sourceIndex']%5]
     def suggestion(name, rules, fallback):
         return next((hint for terms,hint in rules if any(term in name for term in terms)),fallback)
-    weapon=suggestion(names['weapon'],[(('炮',),'以炮口、散熱段與握持段形成明確前後重量分布'),(('槍',),'以修長槍身／槍尖和握持區建立方向性，先確認是射擊槍或長柄槍'),(('戟',),'以長柄與側刃形成多方向刃部輪廓'),(('杖',),'以握持杖身與頂端能量焦點形成垂直輪廓'),(('劍',),'以劍身、護手與握柄形成清楚單手持握輪廓'),(('刀','刃','鋒'),'以作用刃、刀背厚度與握柄區分切斬方向')],'以名稱中的場／線／式／相構成可辨識作用端，另保留實體持握核心')
+    weapon='以刀劍刃身、護手與握柄建立近戰輪廓；抽象高維名稱亦須為刀劍外觀，適合小尺寸2.5D共用突刺模板'
     helmet=suggestion(names['helmet'],[(('冠','冕','環'),'保留冠冕／環狀主輪廓，另外加完整不透明能量面或懸浮遮面結構'),(('視','眼','覺','識','感','觀','知','思'),'採視域／感知場的非傳統頭部結構，以全臉維度遮罩隔絕五官'),(('盔','面甲'),'採有厚度的完整封閉面罩，分開額頂、感知面與下顎保護')],'依正式名稱建立頭部特徵，採完整不透明遮面而非露臉裝飾')
     armor=suggestion(names['armor'],[(('衣','披','幕','織','層'),'以柔性層次、垂覆邊界與關節織層形成衣裝輪廓'),(('甲','鎧','壁'),'以胸背護片厚度、肩腰分段與內層柔性關節形成裝甲輪廓')],'以包絡／場／相的層疊截面形成軀幹邊界，避免只換色')
     shoes=suggestion(names['shoes'],[(('浮','航','推進'),'以腳踝推進結構與可辨識鞋底分離層表達航行／浮行'),(('步','履','靴'),'以鞋頭、腳踝與鞋底抓地／導向分區表達步行方向')],'以成對足部投影與穩定接地輪廓表達特殊移動語意')
@@ -355,6 +355,10 @@ def write_if_changed(file, text):
 
 def run(root, generate=False):
     rows=identities(root,formal_sets(root))
+    for row in rows:
+        name=row['equipmentNames']['weapon']
+        if re.search('[槍炮戟矛鐮斧鎚錘]',name) or (row['epoch']!='higher' and not re.search('[刀劍刃鋒]',name)):
+            fail(f"{row['id']}: weapon must be a blade: {name}")
     index=root/BASE/'_concept-index.json'
     # Fail preflight before touching any generated note or index.
     wanted={row['directory'] for row in rows}

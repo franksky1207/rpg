@@ -25,14 +25,14 @@ function displayHp(frame){
  return state;
 }
 
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261015-weapons1';
-import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261015-weapons1';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261015-thrust1';
+import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261015-thrust1';
 import './armor-selection.js?v=20261015-phase5';
 export async function mount({host,signal,quality='medium'}){
  const root=new URL('../development/hybrid-comparison/',import.meta.url);
  const [{loadData,selectInput},{Playback,bindRenderer},{createRenderer,diagnostics},{elapsedClock}]=await Promise.all([
   import(new URL('fixture-input.mjs?v=20261015-phase5',root)),import(new URL('playback.mjs?v=20261015-phase5',root)),
-  import(new URL('t2b3-v1/renderer.mjs?v=20261015-weapons1',root)),import(new URL('t2b3-v1/contract.mjs?v=20261015-weapons1',root))]);
+  import(new URL('t2b3-v1/renderer.mjs?v=20261015-thrust1',root)),import(new URL('t2b3-v1/contract.mjs?v=20261015-thrust1',root))]);
  signal.throwIfAborted();
  host.innerHTML=`<div class="gm-b-simulation"><div class="gm-b-controls">
  <label>角色來源<select data-b="source"><option value="formal">正式角色</option><option value="free">自由測試</option><option value="legacy">原3D裝備測試</option></select></label><label data-b="suit-label" hidden>套裝選擇<select data-b="suit"><option value="g005">G005 · 生化隔離甲</option><option value="g007">G007 · 自律護衛甲</option><option value="g018">G018 · 環軌防護甲</option></select></label><button type="button" data-b="sync">重新同步角色</button><span data-b="appearance" role="status"></span>

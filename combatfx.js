@@ -101,7 +101,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  window.isCombatPresentationActive=function(){return presentation?.active===true;};
  window.getCombatPresentationSnapshot=function(){
   const p=presentation;if(!p?.active)return null;
-  return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,action:window.CivilizationCombatEvents?.projectAction?.(p.events[p.index-1])||null,index:p.index,eventCount:p.events.length,lockPlayerFullHp:p.lockPlayerFullHp===true};
+  return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,actionStartedAt:p.actionStartedAt??null,action:window.CivilizationCombatEvents?.projectAction?.(p.events[p.index-1])||null,index:p.index,eventCount:p.events.length,lockPlayerFullHp:p.lockPlayerFullHp===true};
  };
  window.clearCombatPresentation=function(reason="clear"){
   if(!presentation)return null;
@@ -313,7 +313,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   try{
    await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
-    const evt=p.events[p.index++];
+    const evt=p.events[p.index++];p.actionStartedAt=performance.now();
     if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudio?.combatEvent?.(evt,{major:isMajorCombatAudioImpact(evt,p,result)});}
     if(!evt)continue;
     if(evt.type==="mark"){
@@ -432,6 +432,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   return window.getCombatPresentationSnapshot();
  };
  window.animateMirrorStructuredCombatPresentation=async function(result,options={}){
+  const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
   if(!presentation?.active||presentation.mode!=="mirror")window.prepareMirrorCombatPresentation(result);
   const p=presentation;if(!p?.active)throw new Error("Mirror Combat Presentation 尚未初始化。");
   p.screen=combatScreen()||p.screen||null;
@@ -440,45 +441,45 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   window.CivilizationCombatEvents?.setPacing?.(p.token,pacing);
   structuredPlayback=true;ensureCombatExtras();syncCombatHpDom();
   try{
-   await structuredSleep(openingDelay);
+   await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
-    const evt=p.events[p.index++];
+    const evt=p.events[p.index++];p.actionStartedAt=performance.now();
     if(evt&&evt.type!=="firstActor"&&evt.type!=="battleEnd"){window.CivilizationAudio?.combatEvent?.(evt,{major:isMajorCombatAudioImpact(evt,p,result)});}if(!evt)continue;
-    if(evt.type==="firstActor"){await structuredSleep(Math.min(stepDelay,55));continue;}
+    if(evt.type==="firstActor"){await sleep(Math.min(stepDelay,55));continue;}
     if(evt.type==="mark"){
      const desc=markFxDescriptor(evt),target=mirrorMarkUiTarget(evt);
      applyMirrorMarkPresentation(evt);
      if(desc&&target)spawnFx(target,desc.kind,desc.text,0);
      syncCombatHpDom();
-     if(desc)await structuredSleep(Math.min(stepDelay,70));
+     if(desc)await sleep(Math.min(stepDelay,70));
      continue;
     }
-    if(evt.type==="combo"){spawnFx(mirrorUiTarget(evt.actor==="player"?"mirror":"player"),"combo");await structuredSleep(Math.min(stepDelay,60));continue;}
-    if(evt.type==="counter"){spawnFx(mirrorUiTarget(evt.actor==="player"?"mirror":"player"),"counter");await structuredSleep(Math.min(stepDelay,60));continue;}
+    if(evt.type==="combo"){spawnFx(mirrorUiTarget(evt.actor==="player"?"mirror":"player"),"combo");await sleep(Math.min(stepDelay,60));continue;}
+    if(evt.type==="counter"){spawnFx(mirrorUiTarget(evt.actor==="player"?"mirror":"player"),"counter");await sleep(Math.min(stepDelay,60));continue;}
     if(evt.type==="drain"){
      const actor=mirrorUiTarget(evt.actor),healed=Math.max(0,Math.floor(Number(evt.healed)||0));
      if(actor==="player")p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);else p.enemyHp=Math.min(p.enemyMaxHp,p.enemyHp+healed);
      spawnFx(actor,"drain");if(healed>0)spawnFx(actor,"heal",`+${healed} HP`,60);
-     syncCombatHpDom();await structuredSleep(stepDelay);continue;
+     syncCombatHpDom();await sleep(stepDelay);continue;
     }
     if(evt.type==="dodge"){
      const actor=mirrorUiTarget(evt.actor),target=mirrorUiTarget(evt.target);
-     directMotion(actor);await structuredSleep(impactDelay);directPulse(target,"閃避");syncCombatHpDom();await structuredSleep(stepDelay);continue;
+     directMotion(actor);await sleep(impactDelay);directPulse(target,"閃避");syncCombatHpDom();await sleep(stepDelay);continue;
     }
     if(evt.type==="attack"){
      const actor=mirrorUiTarget(evt.actor),target=mirrorUiTarget(evt.target);
-     directMotion(actor);await structuredSleep(impactDelay);
+     directMotion(actor);await sleep(impactDelay);
      const shieldAbsorbed=Math.max(0,Math.floor(Number(evt.shieldAbsorbed)||0)),actualDamage=Math.max(0,Math.floor(Number(evt.actualDamage)||0));
      if(target==="player"){p.playerShield=Math.max(0,p.playerShield-shieldAbsorbed);p.playerHp=Math.max(0,p.playerHp-actualDamage);}
      else {p.enemyShield=Math.max(0,p.enemyShield-shieldAbsorbed);p.enemyHp=Math.max(0,p.enemyHp-actualDamage);}
      if(evt.initiative)spawnFx(target,"initiative");
      if(evt.penetration)spawnFx(target,"penetration",null,60);
      if(evt.absorbed)directPulse(target,"吸收");else directPulse(target,evt.crit?`暴擊 -${Math.max(0,Math.floor(Number(evt.damage)||0))}`:`-${Math.max(0,Math.floor(Number(evt.damage)||0))}`);
-     syncCombatHpDom();await structuredSleep(stepDelay);continue;
+     syncCombatHpDom();await sleep(stepDelay);continue;
     }
     if(evt.type==="battleEnd")break;
    }
-   syncCombatHpDom();await structuredSleep(endDelay);return window.getCombatPresentationSnapshot();
+   syncCombatHpDom();await sleep(endDelay);return window.getCombatPresentationSnapshot();
   }finally{
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");

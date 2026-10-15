@@ -18,3 +18,8 @@ assert.equal(clock.snapshot().canCommit,false);console.log('PASS one formal visu
 
 // Standard core ends without a battleEnd row: the presentation zero-HP snapshot owns death.
 p.index=1;p.playerHp=0;time+=10;assert.equal(clock.sample().player.clip,'defeat');p.playerHp=10;
+// First renderer sample may arrive after the actual presentation impact. It must
+// catch up to the owner timestamp instead of restarting the attack at frame zero.
+p.playerHp=10;p.enemyHp=10;p.index=1;p.action={sourceType:'attack',actor:'player',target:'enemy'};p.actionStartedAt=2000;time=2095;
+const delayed=w.CivilizationFormalBOwnerClock.create({now:()=>time,read:()=>p,snapshot:()=>session});delayed.observe({...action(0,p.action),battleId:'next'});
+assert.equal(delayed.sample().player.clip,'return');assert.ok(delayed.sample().weaponAttack.elapsedMs>336);assert.equal(delayed.sample().enemy.clip,'hit');

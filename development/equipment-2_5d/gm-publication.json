@@ -8,12 +8,12 @@
   ],
   "files": {
     "3d-test/equipment-sprites-v1/actor.mjs": {
-      "sha256": "eace5a17042ed03131bdaacb4e585456029857bd1bece940240a19344cdc566d",
-      "bytes": 4157
+      "sha256": "5f1e77c667770581f7dbb15e4d637fb073e092482c56162d32fad4200d0748e6",
+      "bytes": 4183
     },
     "3d-test/equipment-sprites-v1/animation.mjs": {
-      "sha256": "67e6b9eae29003c5537af114dd477c80fc1788165b62ac2de1cddf4c66595a60",
-      "bytes": 2556
+      "sha256": "fa80c040619a8ad384d3d6cdd862e4d54aeabaf9e10c22f673543ae8ae2fc19c",
+      "bytes": 2847
     },
     "3d-test/equipment-sprites-v1/assets.mjs": {
       "sha256": "408211452865b177f762601ada61bdf69aaa3fa1ae10d27c38aa9609d829d129",
@@ -24,8 +24,8 @@
       "bytes": 4709
     },
     "assets/gm-equipment-2_5d/v1/catalog.json": {
-      "sha256": "61390fb17159c885451c2b89f0313ae9a669cf12cd48e1ebf3dcea76367a80ce",
-      "bytes": 96955
+      "sha256": "c30316288aad837ade07fc8468030fa26b690a6921e0a72e43585760507dda8d",
+      "bytes": 96946
     },
     "assets/gm-equipment-2_5d/v1/g005-attack-body.webp": {
       "sha256": "f48450f64854ae07396975e9180aa9f169991214829bc1a3664b5a2a007122ca",

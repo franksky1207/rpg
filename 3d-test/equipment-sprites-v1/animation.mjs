@@ -23,15 +23,18 @@ export function animationController(){
  });
 }
 
-// Four-stage weapon sampling on the existing 700ms owner time, no timers/events.
+// Normalized pose coordinates, never milliseconds to wait. Both owners map their
+// actual impact timestamp to 336 and recovery endpoint to 700 at every speed.
 export function weaponPose(ms,config){
  const t=Math.max(0,Math.min(700,ms))/700;
  const ease=x=>x*x*(3-2*x);
- const wind=config.windup,strike=config.strike;
- let angle,stage;
- if(t<.28){stage='windup';angle=wind*ease(t/.28);}
- else if(t<.48){stage='swing';angle=wind+(strike-wind)*ease((t-.28)/.20);}
- else if(t<.60){stage='impact';angle=strike;}
- else{stage='recover';angle=strike*(1-ease((t-.60)/.40));}
- return Object.freeze({stage,angle,approach:.035*Math.sin(Math.PI*t),slash:Math.max(0,1-Math.abs(t-.51)/.11)});
+ // Existing art points down/back at rest. Set the attack grip towards the enemy
+ // once; only a small wrist adjustment is animated, never a full rotating swing.
+ const base=config.strike-Math.PI*2;
+ let stage,reach,tilt;
+ if(t<.28){stage='windup';reach=-.018*ease(t/.28);tilt=-.08*ease(t/.28);}
+ else if(t<.48){stage='thrust';const q=ease((t-.28)/.20);reach=-.018+.098*q;tilt=-.08+.10*q;}
+ else if(t<.60){stage='impact';reach=.08;tilt=.02;}
+ else{stage='recover';const q=1-ease((t-.60)/.40);reach=.08*q;tilt=.02*q;}
+ return Object.freeze({stage,angle:base+tilt,approach:reach,slash:Math.max(0,1-Math.abs(t-.48)/.10)});
 }

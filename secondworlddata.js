@@ -121,7 +121,7 @@
     "level": 510,
     "name": "裂星王座",
     "equipment": {
-      "weapon": "裂星王權戟",
+      "weapon": "裂星王權劍",
       "helmet": "裂星王冕",
       "armor": "王座統御戰衣",
       "shoes": "王域步甲",
@@ -137,7 +137,7 @@
     "level": 515,
     "name": "黑潮母艦",
     "equipment": {
-      "weapon": "黑潮艦斬槍",
+      "weapon": "黑潮艦斬刃",
       "helmet": "母艦戰鬥環",
       "armor": "黑潮艦體裝甲",
       "shoes": "深潮航履",
@@ -169,7 +169,7 @@
     "level": 525,
     "name": "天穹殲滅體",
     "equipment": {
-      "weapon": "天穹殲星炮刃",
+      "weapon": "天穹殲星刃",
       "helmet": "殲滅感知環",
       "armor": "天穹滅域護殼",
       "shoes": "穹頂脛鎧",
@@ -185,7 +185,7 @@
     "level": 530,
     "name": "銀河殘光主腦",
     "equipment": {
-      "weapon": "殘光智械鐮",
+      "weapon": "殘光智械刃",
       "helmet": "主腦思維環",
       "armor": "殘光神經戰衣",
       "shoes": "銀河折躍足具",
@@ -201,7 +201,7 @@
     "level": 535,
     "name": "星海霸皇",
     "equipment": {
-      "weapon": "星海霸皇戟",
+      "weapon": "星海霸皇劍",
       "helmet": "霸皇星冕",
       "armor": "星海皇權鎧",
       "shoes": "皇域踏星履",
@@ -217,7 +217,7 @@
     "level": 540,
     "name": "遠境戰爭中樞",
     "equipment": {
-      "weapon": "遠境戰爭矛",
+      "weapon": "遠境戰爭刃",
       "helmet": "中樞指揮面甲",
       "armor": "遠境軍勢裝甲",
       "shoes": "戰線推進足鎧",
@@ -233,7 +233,7 @@
     "level": 545,
     "name": "群星墓主",
     "equipment": {
-      "weapon": "葬星墓主鐮",
+      "weapon": "葬星墓主劍",
       "helmet": "群星冥面",
       "armor": "墓域星骸護甲",
       "shoes": "幽航步裝",
@@ -281,7 +281,7 @@
     "level": 560,
     "name": "赤星天堡",
     "equipment": {
-      "weapon": "赤星攻城鎚",
+      "weapon": "赤星攻城重劍",
       "helmet": "天堡防衛面甲",
       "armor": "赤星城塞鎧",
       "shoes": "堡壘重踏甲",
@@ -297,7 +297,7 @@
     "level": 565,
     "name": "暗河獵界者",
     "equipment": {
-      "weapon": "暗河獵界槍",
+      "weapon": "暗河獵界刃",
       "helmet": "獵界追蹤目鏡",
       "armor": "暗河獵行外骨骼",
       "shoes": "獵界疾行足具",
@@ -313,7 +313,7 @@
     "level": 570,
     "name": "碎月戰皇",
     "equipment": {
-      "weapon": "碎月皇戰斧",
+      "weapon": "碎月皇戰刃",
       "helmet": "戰皇月冕",
       "armor": "碎月皇鎧",
       "shoes": "月影戰履",
@@ -329,7 +329,7 @@
     "level": 575,
     "name": "星門鎮壓核心",
     "equipment": {
-      "weapon": "星門鎮界矛",
+      "weapon": "星門鎮界劍",
       "helmet": "星門封鎖頭環",
       "armor": "星門禁制裝甲",
       "shoes": "星門穿界步甲",
@@ -361,7 +361,7 @@
     "level": 585,
     "name": "永夜遠征艦",
     "equipment": {
-      "weapon": "永夜艦戰槍",
+      "weapon": "永夜艦戰刃",
       "helmet": "遠征艦橋面甲",
       "armor": "永夜艦兵裝甲",
       "shoes": "遠征深航脛甲",
@@ -393,7 +393,7 @@
     "level": 595,
     "name": "黑域戰爭主機",
     "equipment": {
-      "weapon": "黑域戰爭鐮",
+      "weapon": "黑域戰爭刃",
       "helmet": "主機同步環",
       "armor": "黑域機戰外殼",
       "shoes": "戰域機動足具",
@@ -409,7 +409,7 @@
     "level": 600,
     "name": "星群滅絕皇座",
     "equipment": {
-      "weapon": "星群滅絕戟",
+      "weapon": "星群滅絕劍",
       "helmet": "滅星皇冠",
       "armor": "星群終滅帝鎧",
       "shoes": "皇座巡星步裝",
@@ -473,7 +473,7 @@
     "level": 620,
     "name": "天河破城艦",
     "equipment": {
-      "weapon": "天河破城炮槍",
+      "weapon": "天河破城刃",
       "helmet": "破城艦橋環",
       "armor": "天河艦體重鎧",
       "shoes": "攻城推進足鎧",
@@ -489,7 +489,7 @@
     "level": 625,
     "name": "黑冠殖民母體",
     "equipment": {
-      "weapon": "黑冠殖域鐮",
+      "weapon": "黑冠殖域刃",
       "helmet": "殖民母冠",
       "armor": "黑冠生殖護甲",
       "shoes": "殖域蔓延足具",
@@ -505,7 +505,7 @@
     "level": 630,
     "name": "裂域霸主",
     "equipment": {
-      "weapon": "裂域霸權戰斧",
+      "weapon": "裂域霸權重劍",
       "helmet": "霸主裂界冠",
       "armor": "裂域王鎧",
       "shoes": "霸域跨星履",
@@ -521,7 +521,7 @@
     "level": 635,
     "name": "蒼星焚滅器",
     "equipment": {
-      "weapon": "蒼星焚滅槍",
+      "weapon": "蒼星焚滅刃",
       "helmet": "焚滅觀測面甲",
       "armor": "蒼星灼能裝甲",
       "shoes": "焚星突進步甲",
@@ -553,7 +553,7 @@
     "level": 645,
     "name": "萬艦統帥",
     "equipment": {
-      "weapon": "萬艦統帥戟",
+      "weapon": "萬艦統帥劍",
       "helmet": "艦群指揮環",
       "armor": "萬艦統御鎧",
       "shoes": "旗艦航戰足具",
@@ -585,7 +585,7 @@
     "level": 655,
     "name": "千星戰王",
     "equipment": {
-      "weapon": "千星戰王長戟",
+      "weapon": "千星戰王長劍",
       "helmet": "戰王星冕",
       "armor": "千星王戰鎧",
       "shoes": "星戰踏域履",
@@ -601,7 +601,7 @@
     "level": 660,
     "name": "蒼穹母皇",
     "equipment": {
-      "weapon": "蒼穹母皇鐮",
+      "weapon": "蒼穹母皇刃",
       "helmet": "母皇天冠",
       "armor": "蒼穹生體戰衣",
       "shoes": "母皇星步",
@@ -617,7 +617,7 @@
     "level": 665,
     "name": "黑日殲星艦",
     "equipment": {
-      "weapon": "黑日殲星炮劍",
+      "weapon": "黑日殲星劍",
       "helmet": "殲星戰術面甲",
       "armor": "黑日艦兵裝甲",
       "shoes": "黑日航戰脛甲",
@@ -649,7 +649,7 @@
     "level": 675,
     "name": "星辰吞噬體",
     "equipment": {
-      "weapon": "星辰吞噬矛",
+      "weapon": "星辰吞噬劍",
       "helmet": "吞噬感應環",
       "armor": "星辰噬能護殼",
       "shoes": "吞星步裝",
@@ -665,7 +665,7 @@
     "level": 680,
     "name": "群星鐵壁",
     "equipment": {
-      "weapon": "群星破壁鎚",
+      "weapon": "群星破壁重劍",
       "helmet": "鐵壁壁冠",
       "armor": "群星堡壘重鎧",
       "shoes": "壁壘鎮星足甲",
@@ -681,7 +681,7 @@
     "level": 685,
     "name": "赤環戰爭智核",
     "equipment": {
-      "weapon": "赤環智戰鐮",
+      "weapon": "赤環智戰刃",
       "helmet": "智核同步冠",
       "armor": "赤環戰略外骨骼",
       "shoes": "智域調度履",
@@ -697,7 +697,7 @@
     "level": 690,
     "name": "萬軍征伐皇",
     "equipment": {
-      "weapon": "萬軍征伐戰斧",
+      "weapon": "萬軍征伐戰刃",
       "helmet": "征伐皇冕",
       "armor": "萬軍皇戰甲",
       "shoes": "征伐遠行步甲",
@@ -713,7 +713,7 @@
     "level": 695,
     "name": "天域滅星機構",
     "equipment": {
-      "weapon": "天域滅星炮槍",
+      "weapon": "天域滅星劍",
       "helmet": "機構控制面甲",
       "armor": "天域殲滅機甲",
       "shoes": "滅星推進足具",
@@ -745,7 +745,7 @@
     "level": 705,
     "name": "超域鎮界者",
     "equipment": {
-      "weapon": "超域鎮界槍",
+      "weapon": "超域鎮界刃",
       "helmet": "鎮界環冠",
       "armor": "超域封疆鎧",
       "shoes": "鎮界跨域步裝",
@@ -777,7 +777,7 @@
     "level": 715,
     "name": "裂空帝艦",
     "equipment": {
-      "weapon": "裂空帝艦矛",
+      "weapon": "裂空帝艦劍",
       "helmet": "帝艦艦橋冠",
       "armor": "裂空艦皇甲",
       "shoes": "帝艦破空履",
@@ -793,7 +793,7 @@
     "level": 720,
     "name": "蒼白吞界獸",
     "equipment": {
-      "weapon": "蒼白吞界牙",
+      "weapon": "蒼白吞界刃",
       "helmet": "吞界獸面甲",
       "armor": "蒼白獸皇護殼",
       "shoes": "吞界踏星足鎧",
@@ -809,7 +809,7 @@
     "level": 725,
     "name": "星海萬機母體",
     "equipment": {
-      "weapon": "萬機解構鐮",
+      "weapon": "萬機解構刃",
       "helmet": "母體機械環",
       "armor": "星海機群外骨骼",
       "shoes": "萬機躍行步甲",
@@ -825,7 +825,7 @@
     "level": 730,
     "name": "天幕戰爭君王",
     "equipment": {
-      "weapon": "天幕君王戟",
+      "weapon": "天幕君王劍",
       "helmet": "戰爭王冕",
       "armor": "天幕王戰鎧",
       "shoes": "君王御域履",
@@ -841,7 +841,7 @@
     "level": 735,
     "name": "赤界文明熔爐",
     "equipment": {
-      "weapon": "赤界熔爐炮刃",
+      "weapon": "赤界熔爐刃",
       "helmet": "文明爐心冠",
       "armor": "赤界熔戰裝甲",
       "shoes": "熔爐熱流足具",
@@ -873,7 +873,7 @@
     "level": 745,
     "name": "萬星殲滅樞紐",
     "equipment": {
-      "weapon": "萬星殲滅槍",
+      "weapon": "萬星殲滅劍",
       "helmet": "樞紐感知面甲",
       "armor": "萬星滅域鎧",
       "shoes": "殲滅突進脛甲",
@@ -905,7 +905,7 @@
     "level": 755,
     "name": "萬域開戰者",
     "equipment": {
-      "weapon": "萬域開戰矛",
+      "weapon": "萬域開戰刃",
       "helmet": "開戰者軍冠",
       "armor": "萬域軍勢鎧",
       "shoes": "戰線先鋒履",
@@ -921,7 +921,7 @@
     "level": 760,
     "name": "星海黑塔",
     "equipment": {
-      "weapon": "黑塔裂星鎚",
+      "weapon": "黑塔裂星重劍",
       "helmet": "星海塔面甲",
       "armor": "黑塔鎮域裝甲",
       "shoes": "黑塔浮航足具",
@@ -937,7 +937,7 @@
     "level": 765,
     "name": "焚界遠征母艦",
     "equipment": {
-      "weapon": "焚界遠征槍",
+      "weapon": "焚界遠征刃",
       "helmet": "遠征母艦環冠",
       "armor": "焚界艦戰鎧",
       "shoes": "遠征焚星脛甲",
@@ -953,7 +953,7 @@
     "level": 770,
     "name": "蒼穹軍勢統領",
     "equipment": {
-      "weapon": "蒼穹統領戟",
+      "weapon": "蒼穹統領劍",
       "helmet": "軍勢指揮環",
       "armor": "蒼穹軍戰甲",
       "shoes": "統領跨星步甲",
@@ -969,7 +969,7 @@
     "level": 775,
     "name": "群星掠奪皇",
     "equipment": {
-      "weapon": "群星掠奪戰斧",
+      "weapon": "群星掠奪刃",
       "helmet": "掠奪皇冕",
       "armor": "群星劫戰鎧",
       "shoes": "掠奪追星履",
@@ -985,7 +985,7 @@
     "level": 780,
     "name": "黑潮文明巢心",
     "equipment": {
-      "weapon": "黑潮巢心鐮",
+      "weapon": "黑潮巢心刃",
       "helmet": "文明巢面",
       "armor": "黑潮孵化護殼",
       "shoes": "巢群蔓延足甲",
@@ -1017,7 +1017,7 @@
     "level": 790,
     "name": "星域滅絕執行官",
     "equipment": {
-      "weapon": "星域執行槍",
+      "weapon": "星域執行劍",
       "helmet": "滅絕官面甲",
       "armor": "星域執行戰衣",
       "shoes": "滅絕追跡履",
@@ -1049,7 +1049,7 @@
     "level": 800,
     "name": "無盡戰線總督",
     "equipment": {
-      "weapon": "無盡戰線長戟",
+      "weapon": "無盡戰線長劍",
       "helmet": "總督統治冕",
       "armor": "無盡軍政戰袍",
       "shoes": "戰線督軍足鎧",
@@ -1081,7 +1081,7 @@
     "level": 810,
     "name": "黑鏈天體",
     "equipment": {
-      "weapon": "黑鏈天體槍",
+      "weapon": "黑鏈天體刃",
       "helmet": "鏈域引力冠",
       "armor": "黑鏈重構護甲",
       "shoes": "鏈星牽引足具",
@@ -1097,7 +1097,7 @@
     "level": 815,
     "name": "星脈繁殖母巢",
     "equipment": {
-      "weapon": "星脈孵化鐮",
+      "weapon": "星脈孵化刃",
       "helmet": "繁殖巢面甲",
       "armor": "星脈母巢護殼",
       "shoes": "巢脈蔓生足甲",
@@ -1113,7 +1113,7 @@
     "level": 820,
     "name": "裂河戰爭巨艦",
     "equipment": {
-      "weapon": "裂河巨艦炮刃",
+      "weapon": "裂河巨艦刃",
       "helmet": "戰艦導航環",
       "armor": "裂河艦體裝甲",
       "shoes": "巨艦穿流脛鎧",
@@ -1129,7 +1129,7 @@
     "level": 825,
     "name": "赤脈文明節點",
     "equipment": {
-      "weapon": "赤脈節點矛",
+      "weapon": "赤脈節點劍",
       "helmet": "文明脈冠",
       "armor": "赤脈節裝甲",
       "shoes": "脈網轉移履",
@@ -1145,7 +1145,7 @@
     "level": 830,
     "name": "星橋毀滅者",
     "equipment": {
-      "weapon": "星橋毀滅戟",
+      "weapon": "星橋毀滅劍",
       "helmet": "星橋觀測面",
       "armor": "星橋斷域鎧",
       "shoes": "星橋跨越步甲",
@@ -1177,7 +1177,7 @@
     "level": 840,
     "name": "萬星侵略主機",
     "equipment": {
-      "weapon": "萬星侵略槍",
+      "weapon": "萬星侵略刃",
       "helmet": "主機同步環",
       "armor": "萬星侵戰外骨骼",
       "shoes": "侵略躍遷足具",
@@ -1193,7 +1193,7 @@
     "level": 845,
     "name": "暗流吞噬皇體",
     "equipment": {
-      "weapon": "暗流吞噬鐮",
+      "weapon": "暗流吞噬刃",
       "helmet": "皇體暗冠",
       "armor": "暗流噬星護殼",
       "shoes": "吞噬流轉足鎧",
@@ -1209,7 +1209,7 @@
     "level": 850,
     "name": "宇宙脈絡霸主",
     "equipment": {
-      "weapon": "脈絡霸主戟",
+      "weapon": "脈絡霸主劍",
       "helmet": "宇宙脈冕",
       "armor": "脈絡霸權鎧",
       "shoes": "宇脈跨域星履",
@@ -1225,7 +1225,7 @@
     "level": 855,
     "name": "巨牆鎮守者",
     "equipment": {
-      "weapon": "巨牆鎮守矛",
+      "weapon": "巨牆鎮守劍",
       "helmet": "鎮守壁面甲",
       "armor": "巨牆壁壘鎧",
       "shoes": "壁線巡防足具",
@@ -1241,7 +1241,7 @@
     "level": 860,
     "name": "萬星壁壘",
     "equipment": {
-      "weapon": "萬星破壘鎚",
+      "weapon": "萬星破壘重劍",
       "helmet": "壁壘星冠",
       "armor": "萬星城防裝甲",
       "shoes": "壁壘重行足甲",
@@ -1257,7 +1257,7 @@
     "level": 865,
     "name": "黑曜天幕戰艦",
     "equipment": {
-      "weapon": "黑曜天幕炮槍",
+      "weapon": "黑曜天幕光刃",
       "helmet": "戰艦曜環",
       "armor": "黑曜艦戰鎧",
       "shoes": "天幕巡航脛甲",
@@ -1289,7 +1289,7 @@
     "level": 875,
     "name": "蒼白文明堡壘",
     "equipment": {
-      "weapon": "蒼白破堡戰斧",
+      "weapon": "蒼白破堡重劍",
       "helmet": "文明堡冠",
       "armor": "蒼白堡壘重鎧",
       "shoes": "堡域鎮守步甲",
@@ -1305,7 +1305,7 @@
     "level": 880,
     "name": "赤環滅域裝置",
     "equipment": {
-      "weapon": "赤環滅域鐮",
+      "weapon": "赤環滅域刃",
       "helmet": "裝置控制面甲",
       "armor": "赤環滅域外殼",
       "shoes": "滅域機動足具",
@@ -1321,7 +1321,7 @@
     "level": 885,
     "name": "群星封鎖司令",
     "equipment": {
-      "weapon": "群星封鎖槍",
+      "weapon": "群星封鎖刃",
       "helmet": "封鎖司令環",
       "armor": "群星禁域戰衣",
       "shoes": "封鎖巡弋履",
@@ -1353,7 +1353,7 @@
     "level": 895,
     "name": "宇宙壁壘破界者",
     "equipment": {
-      "weapon": "宇宙破界戟",
+      "weapon": "宇宙破界劍",
       "helmet": "壁壘破界面",
       "armor": "宇宙破壁鎧",
       "shoes": "破界突進步裝",
@@ -1401,7 +1401,7 @@
     "level": 910,
     "name": "黑星遠征母體",
     "equipment": {
-      "weapon": "黑星遠征鐮",
+      "weapon": "黑星遠征刃",
       "helmet": "母體遠征環",
       "armor": "黑星母戰護殼",
       "shoes": "遠征深空足甲",
@@ -1417,7 +1417,7 @@
     "level": 915,
     "name": "宇宙深井巨獸",
     "equipment": {
-      "weapon": "深井巨獸牙",
+      "weapon": "深井巨獸刃",
       "helmet": "巨獸深淵面甲",
       "armor": "深井獸皇護甲",
       "shoes": "淵域踏星足鎧",
@@ -1433,7 +1433,7 @@
     "level": 920,
     "name": "蒼穹遠征樞紐",
     "equipment": {
-      "weapon": "蒼穹遠征槍",
+      "weapon": "蒼穹遠征劍",
       "helmet": "樞紐天冠",
       "armor": "蒼穹遠征裝甲",
       "shoes": "樞紐長航脛甲",
@@ -1449,7 +1449,7 @@
     "level": 925,
     "name": "無光星海帝艦",
     "equipment": {
-      "weapon": "無光帝艦戟",
+      "weapon": "無光帝艦劍",
       "helmet": "星海帝冕",
       "armor": "無光艦皇鎧",
       "shoes": "帝艦暗航履",
@@ -1481,7 +1481,7 @@
     "level": 935,
     "name": "萬域吞星皇",
     "equipment": {
-      "weapon": "萬域吞星戰斧",
+      "weapon": "萬域吞星重劍",
       "helmet": "吞星皇冕",
       "armor": "萬域皇戰鎧",
       "shoes": "吞星凌空步甲",
@@ -1497,7 +1497,7 @@
     "level": 940,
     "name": "暗界戰爭天體",
     "equipment": {
-      "weapon": "暗界天體槍",
+      "weapon": "暗界天體刃",
       "helmet": "戰爭天環",
       "armor": "暗界天體裝甲",
       "shoes": "天體軌行足具",
@@ -1513,7 +1513,7 @@
     "level": 945,
     "name": "群星深淵統帥",
     "equipment": {
-      "weapon": "深淵統帥戟",
+      "weapon": "深淵統帥劍",
       "helmet": "群星深淵冠",
       "armor": "深淵軍勢戰甲",
       "shoes": "統帥深航履",
@@ -1545,7 +1545,7 @@
     "level": 955,
     "name": "萬星統治者",
     "equipment": {
-      "weapon": "萬星統治戟",
+      "weapon": "萬星統治劍",
       "helmet": "統治星冕",
       "armor": "萬星統御戰袍",
       "shoes": "統治巡域履",
@@ -1561,7 +1561,7 @@
     "level": 960,
     "name": "宇宙征服母艦",
     "equipment": {
-      "weapon": "宇宙征服炮槍",
+      "weapon": "宇宙征服戰刃",
       "helmet": "母艦帝環",
       "armor": "宇宙征戰裝甲",
       "shoes": "征服遠航脛鎧",
@@ -1609,7 +1609,7 @@
     "level": 975,
     "name": "萬域殲滅主機",
     "equipment": {
-      "weapon": "萬域殲滅鐮",
+      "weapon": "萬域殲滅刃",
       "helmet": "主機帝冠",
       "armor": "萬域滅絕外骨骼",
       "shoes": "殲滅巡宇步甲",
@@ -1625,7 +1625,7 @@
     "level": 980,
     "name": "宇宙霸權帝座",
     "equipment": {
-      "weapon": "宇宙霸權戟",
+      "weapon": "宇宙霸權劍",
       "helmet": "帝座王冕",
       "armor": "宇宙帝權鎧",
       "shoes": "帝座天行履",
@@ -1641,7 +1641,7 @@
     "level": 985,
     "name": "星海統合母體",
     "equipment": {
-      "weapon": "星海統合槍",
+      "weapon": "星海統合刃",
       "helmet": "母體統合環",
       "armor": "星海母皇護殼",
       "shoes": "統合越界足鎧",
@@ -1673,7 +1673,7 @@
     "level": 995,
     "name": "宇宙征服者",
     "equipment": {
-      "weapon": "宇宙征服戰斧",
+      "weapon": "宇宙征服重劍",
       "helmet": "征服者帝冕",
       "armor": "宇宙霸戰鎧",
       "shoes": "征服破域步裝",
@@ -1843,6 +1843,8 @@
  window.secondWorldRegionVisible=secondWorldRegionVisible;
  window.secondWorldHighestClearedBossIndex=secondWorldHighestClearedBossIndex;
  window.secondWorldHighestUnlockedBossIndex=secondWorldHighestUnlockedBossIndex;
+ window.SECOND_WORLD_LEGACY_WEAPON_NAMES=Object.freeze({"裂星王權戟":"裂星王權劍","黑潮艦斬槍":"黑潮艦斬刃","天穹殲星炮刃":"天穹殲星刃","殘光智械鐮":"殘光智械刃","星海霸皇戟":"星海霸皇劍","遠境戰爭矛":"遠境戰爭刃","葬星墓主鐮":"葬星墓主劍","赤星攻城鎚":"赤星攻城重劍","暗河獵界槍":"暗河獵界刃","碎月皇戰斧":"碎月皇戰刃","星門鎮界矛":"星門鎮界劍","永夜艦戰槍":"永夜艦戰刃","黑域戰爭鐮":"黑域戰爭刃","星群滅絕戟":"星群滅絕劍","天河破城炮槍":"天河破城刃","黑冠殖域鐮":"黑冠殖域刃","裂域霸權戰斧":"裂域霸權重劍","蒼星焚滅槍":"蒼星焚滅刃","萬艦統帥戟":"萬艦統帥劍","千星戰王長戟":"千星戰王長劍","蒼穹母皇鐮":"蒼穹母皇刃","黑日殲星炮劍":"黑日殲星劍","星辰吞噬矛":"星辰吞噬劍","群星破壁鎚":"群星破壁重劍","赤環智戰鐮":"赤環智戰刃","萬軍征伐戰斧":"萬軍征伐戰刃","天域滅星炮槍":"天域滅星劍","超域鎮界槍":"超域鎮界刃","裂空帝艦矛":"裂空帝艦劍","蒼白吞界牙":"蒼白吞界刃","萬機解構鐮":"萬機解構刃","天幕君王戟":"天幕君王劍","赤界熔爐炮刃":"赤界熔爐刃","萬星殲滅槍":"萬星殲滅劍","萬域開戰矛":"萬域開戰刃","黑塔裂星鎚":"黑塔裂星重劍","焚界遠征槍":"焚界遠征刃","蒼穹統領戟":"蒼穹統領劍","群星掠奪戰斧":"群星掠奪刃","黑潮巢心鐮":"黑潮巢心刃","星域執行槍":"星域執行劍","無盡戰線長戟":"無盡戰線長劍","黑鏈天體槍":"黑鏈天體刃","星脈孵化鐮":"星脈孵化刃","裂河巨艦炮刃":"裂河巨艦刃","赤脈節點矛":"赤脈節點劍","星橋毀滅戟":"星橋毀滅劍","萬星侵略槍":"萬星侵略刃","暗流吞噬鐮":"暗流吞噬刃","脈絡霸主戟":"脈絡霸主劍","巨牆鎮守矛":"巨牆鎮守劍","萬星破壘鎚":"萬星破壘重劍","黑曜天幕炮槍":"黑曜天幕光刃","蒼白破堡戰斧":"蒼白破堡重劍","赤環滅域鐮":"赤環滅域刃","群星封鎖槍":"群星封鎖刃","宇宙破界戟":"宇宙破界劍","黑星遠征鐮":"黑星遠征刃","深井巨獸牙":"深井巨獸刃","蒼穹遠征槍":"蒼穹遠征劍","無光帝艦戟":"無光帝艦劍","萬域吞星戰斧":"萬域吞星重劍","暗界天體槍":"暗界天體刃","深淵統帥戟":"深淵統帥劍","萬星統治戟":"萬星統治劍","宇宙征服炮槍":"宇宙征服戰刃","萬域殲滅鐮":"萬域殲滅刃","宇宙霸權戟":"宇宙霸權劍","星海統合槍":"星海統合刃","宇宙征服戰斧":"宇宙征服重劍"});
+ window.canonicalSecondWorldWeaponName=name=>Object.prototype.hasOwnProperty.call(window.SECOND_WORLD_LEGACY_WEAPON_NAMES,name)?window.SECOND_WORLD_LEGACY_WEAPON_NAMES[name]:name;
  window.secondWorldEquipmentNamesForBoss=secondWorldEquipmentNamesForBoss;
  window.validateSecondWorldData=validateSecondWorldData;
  window.SECOND_WORLD_DATA_INTEGRITY=validateSecondWorldData();

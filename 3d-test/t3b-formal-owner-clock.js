@@ -28,7 +28,7 @@ function create(options={}){
 
   if(p.index===0)return idle();
   const d=p.action||actions.get(p.index-1);if(!d)throw Error("unavailable-authoritative-action-history");
-  if(token!==p.token||index!==p.index){token=p.token;index=p.index;start=now();}
+  if(token!==p.token||index!==p.index){token=p.token;index=p.index;start=Number.isFinite(p.actionStartedAt)?p.actionStartedAt:now();}
   const elapsed=Math.max(0,now()-start),pacing=session.pacing;
   if(!pacing||![1,1.5,2].includes(pacing.combatSpeed)||![pacing.impactDelay,pacing.stepDelay,pacing.endDelay].every(x=>Number.isFinite(x)&&x>=0))throw Error("unavailable-owner-pacing");
   const frame=idle(),actor=roles.has(d.actor)?d.actor:null,target=roles.has(d.target)?d.target:null;

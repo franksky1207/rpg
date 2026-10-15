@@ -1637,7 +1637,7 @@
       "sourceKey": "universe:universe-boss-002",
       "regionOrBoss": "銀河彼端 → 裂星王座",
       "equipmentNames": {
-        "weapon": "裂星王權戟",
+        "weapon": "裂星王權劍",
         "helmet": "裂星王冕",
         "armor": "王座統御戰衣",
         "shoes": "王域步甲",
@@ -1651,7 +1651,7 @@
       "sourceKey": "universe:universe-boss-003",
       "regionOrBoss": "銀河彼端 → 黑潮母艦",
       "equipmentNames": {
-        "weapon": "黑潮艦斬槍",
+        "weapon": "黑潮艦斬刃",
         "helmet": "母艦戰鬥環",
         "armor": "黑潮艦體裝甲",
         "shoes": "深潮航履",
@@ -1679,7 +1679,7 @@
       "sourceKey": "universe:universe-boss-005",
       "regionOrBoss": "銀河彼端 → 天穹殲滅體",
       "equipmentNames": {
-        "weapon": "天穹殲星炮刃",
+        "weapon": "天穹殲星刃",
         "helmet": "殲滅感知環",
         "armor": "天穹滅域護殼",
         "shoes": "穹頂脛鎧",
@@ -1693,7 +1693,7 @@
       "sourceKey": "universe:universe-boss-006",
       "regionOrBoss": "銀河彼端 → 銀河殘光主腦",
       "equipmentNames": {
-        "weapon": "殘光智械鐮",
+        "weapon": "殘光智械刃",
         "helmet": "主腦思維環",
         "armor": "殘光神經戰衣",
         "shoes": "銀河折躍足具",
@@ -1707,7 +1707,7 @@
       "sourceKey": "universe:universe-boss-007",
       "regionOrBoss": "銀河彼端 → 星海霸皇",
       "equipmentNames": {
-        "weapon": "星海霸皇戟",
+        "weapon": "星海霸皇劍",
         "helmet": "霸皇星冕",
         "armor": "星海皇權鎧",
         "shoes": "皇域踏星履",
@@ -1721,7 +1721,7 @@
       "sourceKey": "universe:universe-boss-008",
       "regionOrBoss": "銀河彼端 → 遠境戰爭中樞",
       "equipmentNames": {
-        "weapon": "遠境戰爭矛",
+        "weapon": "遠境戰爭刃",
         "helmet": "中樞指揮面甲",
         "armor": "遠境軍勢裝甲",
         "shoes": "戰線推進足鎧",
@@ -1735,7 +1735,7 @@
       "sourceKey": "universe:universe-boss-009",
       "regionOrBoss": "銀河彼端 → 群星墓主",
       "equipmentNames": {
-        "weapon": "葬星墓主鐮",
+        "weapon": "葬星墓主劍",
         "helmet": "群星冥面",
         "armor": "墓域星骸護甲",
         "shoes": "幽航步裝",
@@ -1777,7 +1777,7 @@
       "sourceKey": "universe:universe-boss-012",
       "regionOrBoss": "本星系群戰爭 → 赤星天堡",
       "equipmentNames": {
-        "weapon": "赤星攻城鎚",
+        "weapon": "赤星攻城重劍",
         "helmet": "天堡防衛面甲",
         "armor": "赤星城塞鎧",
         "shoes": "堡壘重踏甲",
@@ -1791,7 +1791,7 @@
       "sourceKey": "universe:universe-boss-013",
       "regionOrBoss": "本星系群戰爭 → 暗河獵界者",
       "equipmentNames": {
-        "weapon": "暗河獵界槍",
+        "weapon": "暗河獵界刃",
         "helmet": "獵界追蹤目鏡",
         "armor": "暗河獵行外骨骼",
         "shoes": "獵界疾行足具",
@@ -1805,7 +1805,7 @@
       "sourceKey": "universe:universe-boss-014",
       "regionOrBoss": "本星系群戰爭 → 碎月戰皇",
       "equipmentNames": {
-        "weapon": "碎月皇戰斧",
+        "weapon": "碎月皇戰刃",
         "helmet": "戰皇月冕",
         "armor": "碎月皇鎧",
         "shoes": "月影戰履",
@@ -1819,7 +1819,7 @@
       "sourceKey": "universe:universe-boss-015",
       "regionOrBoss": "本星系群戰爭 → 星門鎮壓核心",
       "equipmentNames": {
-        "weapon": "星門鎮界矛",
+        "weapon": "星門鎮界劍",
         "helmet": "星門封鎖頭環",
         "armor": "星門禁制裝甲",
         "shoes": "星門穿界步甲",
@@ -1847,7 +1847,7 @@
       "sourceKey": "universe:universe-boss-017",
       "regionOrBoss": "本星系群戰爭 → 永夜遠征艦",
       "equipmentNames": {
-        "weapon": "永夜艦戰槍",
+        "weapon": "永夜艦戰刃",
         "helmet": "遠征艦橋面甲",
         "armor": "永夜艦兵裝甲",
         "shoes": "遠征深航脛甲",
@@ -1875,7 +1875,7 @@
       "sourceKey": "universe:universe-boss-019",
       "regionOrBoss": "本星系群戰爭 → 黑域戰爭主機",
       "equipmentNames": {
-        "weapon": "黑域戰爭鐮",
+        "weapon": "黑域戰爭刃",
         "helmet": "主機同步環",
         "armor": "黑域機戰外殼",
         "shoes": "戰域機動足具",
@@ -1889,7 +1889,7 @@
       "sourceKey": "universe:universe-boss-020",
       "regionOrBoss": "本星系群戰爭 → 星群滅絕皇座",
       "equipmentNames": {
-        "weapon": "星群滅絕戟",
+        "weapon": "星群滅絕劍",
         "helmet": "滅星皇冠",
         "armor": "星群終滅帝鎧",
         "shoes": "皇座巡星步裝",
@@ -1945,7 +1945,7 @@
       "sourceKey": "universe:universe-boss-024",
       "regionOrBoss": "星群邊疆 → 天河破城艦",
       "equipmentNames": {
-        "weapon": "天河破城炮槍",
+        "weapon": "天河破城刃",
         "helmet": "破城艦橋環",
         "armor": "天河艦體重鎧",
         "shoes": "攻城推進足鎧",
@@ -1959,7 +1959,7 @@
       "sourceKey": "universe:universe-boss-025",
       "regionOrBoss": "星群邊疆 → 黑冠殖民母體",
       "equipmentNames": {
-        "weapon": "黑冠殖域鐮",
+        "weapon": "黑冠殖域刃",
         "helmet": "殖民母冠",
         "armor": "黑冠生殖護甲",
         "shoes": "殖域蔓延足具",
@@ -1973,7 +1973,7 @@
       "sourceKey": "universe:universe-boss-026",
       "regionOrBoss": "星群邊疆 → 裂域霸主",
       "equipmentNames": {
-        "weapon": "裂域霸權戰斧",
+        "weapon": "裂域霸權重劍",
         "helmet": "霸主裂界冠",
         "armor": "裂域王鎧",
         "shoes": "霸域跨星履",
@@ -1987,7 +1987,7 @@
       "sourceKey": "universe:universe-boss-027",
       "regionOrBoss": "星群邊疆 → 蒼星焚滅器",
       "equipmentNames": {
-        "weapon": "蒼星焚滅槍",
+        "weapon": "蒼星焚滅刃",
         "helmet": "焚滅觀測面甲",
         "armor": "蒼星灼能裝甲",
         "shoes": "焚星突進步甲",
@@ -2015,7 +2015,7 @@
       "sourceKey": "universe:universe-boss-029",
       "regionOrBoss": "星群邊疆 → 萬艦統帥",
       "equipmentNames": {
-        "weapon": "萬艦統帥戟",
+        "weapon": "萬艦統帥劍",
         "helmet": "艦群指揮環",
         "armor": "萬艦統御鎧",
         "shoes": "旗艦航戰足具",
@@ -2043,7 +2043,7 @@
       "sourceKey": "universe:universe-boss-031",
       "regionOrBoss": "群星會戰 → 千星戰王",
       "equipmentNames": {
-        "weapon": "千星戰王長戟",
+        "weapon": "千星戰王長劍",
         "helmet": "戰王星冕",
         "armor": "千星王戰鎧",
         "shoes": "星戰踏域履",
@@ -2057,7 +2057,7 @@
       "sourceKey": "universe:universe-boss-032",
       "regionOrBoss": "群星會戰 → 蒼穹母皇",
       "equipmentNames": {
-        "weapon": "蒼穹母皇鐮",
+        "weapon": "蒼穹母皇刃",
         "helmet": "母皇天冠",
         "armor": "蒼穹生體戰衣",
         "shoes": "母皇星步",
@@ -2071,7 +2071,7 @@
       "sourceKey": "universe:universe-boss-033",
       "regionOrBoss": "群星會戰 → 黑日殲星艦",
       "equipmentNames": {
-        "weapon": "黑日殲星炮劍",
+        "weapon": "黑日殲星劍",
         "helmet": "殲星戰術面甲",
         "armor": "黑日艦兵裝甲",
         "shoes": "黑日航戰脛甲",
@@ -2099,7 +2099,7 @@
       "sourceKey": "universe:universe-boss-035",
       "regionOrBoss": "群星會戰 → 星辰吞噬體",
       "equipmentNames": {
-        "weapon": "星辰吞噬矛",
+        "weapon": "星辰吞噬劍",
         "helmet": "吞噬感應環",
         "armor": "星辰噬能護殼",
         "shoes": "吞星步裝",
@@ -2113,7 +2113,7 @@
       "sourceKey": "universe:universe-boss-036",
       "regionOrBoss": "群星會戰 → 群星鐵壁",
       "equipmentNames": {
-        "weapon": "群星破壁鎚",
+        "weapon": "群星破壁重劍",
         "helmet": "鐵壁壁冠",
         "armor": "群星堡壘重鎧",
         "shoes": "壁壘鎮星足甲",
@@ -2127,7 +2127,7 @@
       "sourceKey": "universe:universe-boss-037",
       "regionOrBoss": "群星會戰 → 赤環戰爭智核",
       "equipmentNames": {
-        "weapon": "赤環智戰鐮",
+        "weapon": "赤環智戰刃",
         "helmet": "智核同步冠",
         "armor": "赤環戰略外骨骼",
         "shoes": "智域調度履",
@@ -2141,7 +2141,7 @@
       "sourceKey": "universe:universe-boss-038",
       "regionOrBoss": "群星會戰 → 萬軍征伐皇",
       "equipmentNames": {
-        "weapon": "萬軍征伐戰斧",
+        "weapon": "萬軍征伐戰刃",
         "helmet": "征伐皇冕",
         "armor": "萬軍皇戰甲",
         "shoes": "征伐遠行步甲",
@@ -2155,7 +2155,7 @@
       "sourceKey": "universe:universe-boss-039",
       "regionOrBoss": "群星會戰 → 天域滅星機構",
       "equipmentNames": {
-        "weapon": "天域滅星炮槍",
+        "weapon": "天域滅星劍",
         "helmet": "機構控制面甲",
         "armor": "天域殲滅機甲",
         "shoes": "滅星推進足具",
@@ -2183,7 +2183,7 @@
       "sourceKey": "universe:universe-boss-041",
       "regionOrBoss": "超域邊境 → 超域鎮界者",
       "equipmentNames": {
-        "weapon": "超域鎮界槍",
+        "weapon": "超域鎮界刃",
         "helmet": "鎮界環冠",
         "armor": "超域封疆鎧",
         "shoes": "鎮界跨域步裝",
@@ -2211,7 +2211,7 @@
       "sourceKey": "universe:universe-boss-043",
       "regionOrBoss": "超域邊境 → 裂空帝艦",
       "equipmentNames": {
-        "weapon": "裂空帝艦矛",
+        "weapon": "裂空帝艦劍",
         "helmet": "帝艦艦橋冠",
         "armor": "裂空艦皇甲",
         "shoes": "帝艦破空履",
@@ -2225,7 +2225,7 @@
       "sourceKey": "universe:universe-boss-044",
       "regionOrBoss": "超域邊境 → 蒼白吞界獸",
       "equipmentNames": {
-        "weapon": "蒼白吞界牙",
+        "weapon": "蒼白吞界刃",
         "helmet": "吞界獸面甲",
         "armor": "蒼白獸皇護殼",
         "shoes": "吞界踏星足鎧",
@@ -2239,7 +2239,7 @@
       "sourceKey": "universe:universe-boss-045",
       "regionOrBoss": "超域邊境 → 星海萬機母體",
       "equipmentNames": {
-        "weapon": "萬機解構鐮",
+        "weapon": "萬機解構刃",
         "helmet": "母體機械環",
         "armor": "星海機群外骨骼",
         "shoes": "萬機躍行步甲",
@@ -2253,7 +2253,7 @@
       "sourceKey": "universe:universe-boss-046",
       "regionOrBoss": "超域邊境 → 天幕戰爭君王",
       "equipmentNames": {
-        "weapon": "天幕君王戟",
+        "weapon": "天幕君王劍",
         "helmet": "戰爭王冕",
         "armor": "天幕王戰鎧",
         "shoes": "君王御域履",
@@ -2267,7 +2267,7 @@
       "sourceKey": "universe:universe-boss-047",
       "regionOrBoss": "超域邊境 → 赤界文明熔爐",
       "equipmentNames": {
-        "weapon": "赤界熔爐炮刃",
+        "weapon": "赤界熔爐刃",
         "helmet": "文明爐心冠",
         "armor": "赤界熔戰裝甲",
         "shoes": "熔爐熱流足具",
@@ -2295,7 +2295,7 @@
       "sourceKey": "universe:universe-boss-049",
       "regionOrBoss": "超域邊境 → 萬星殲滅樞紐",
       "equipmentNames": {
-        "weapon": "萬星殲滅槍",
+        "weapon": "萬星殲滅劍",
         "helmet": "樞紐感知面甲",
         "armor": "萬星滅域鎧",
         "shoes": "殲滅突進脛甲",
@@ -2323,7 +2323,7 @@
       "sourceKey": "universe:universe-boss-051",
       "regionOrBoss": "萬域戰線 → 萬域開戰者",
       "equipmentNames": {
-        "weapon": "萬域開戰矛",
+        "weapon": "萬域開戰刃",
         "helmet": "開戰者軍冠",
         "armor": "萬域軍勢鎧",
         "shoes": "戰線先鋒履",
@@ -2337,7 +2337,7 @@
       "sourceKey": "universe:universe-boss-052",
       "regionOrBoss": "萬域戰線 → 星海黑塔",
       "equipmentNames": {
-        "weapon": "黑塔裂星鎚",
+        "weapon": "黑塔裂星重劍",
         "helmet": "星海塔面甲",
         "armor": "黑塔鎮域裝甲",
         "shoes": "黑塔浮航足具",
@@ -2351,7 +2351,7 @@
       "sourceKey": "universe:universe-boss-053",
       "regionOrBoss": "萬域戰線 → 焚界遠征母艦",
       "equipmentNames": {
-        "weapon": "焚界遠征槍",
+        "weapon": "焚界遠征刃",
         "helmet": "遠征母艦環冠",
         "armor": "焚界艦戰鎧",
         "shoes": "遠征焚星脛甲",
@@ -2365,7 +2365,7 @@
       "sourceKey": "universe:universe-boss-054",
       "regionOrBoss": "萬域戰線 → 蒼穹軍勢統領",
       "equipmentNames": {
-        "weapon": "蒼穹統領戟",
+        "weapon": "蒼穹統領劍",
         "helmet": "軍勢指揮環",
         "armor": "蒼穹軍戰甲",
         "shoes": "統領跨星步甲",
@@ -2379,7 +2379,7 @@
       "sourceKey": "universe:universe-boss-055",
       "regionOrBoss": "萬域戰線 → 群星掠奪皇",
       "equipmentNames": {
-        "weapon": "群星掠奪戰斧",
+        "weapon": "群星掠奪刃",
         "helmet": "掠奪皇冕",
         "armor": "群星劫戰鎧",
         "shoes": "掠奪追星履",
@@ -2393,7 +2393,7 @@
       "sourceKey": "universe:universe-boss-056",
       "regionOrBoss": "萬域戰線 → 黑潮文明巢心",
       "equipmentNames": {
-        "weapon": "黑潮巢心鐮",
+        "weapon": "黑潮巢心刃",
         "helmet": "文明巢面",
         "armor": "黑潮孵化護殼",
         "shoes": "巢群蔓延足甲",
@@ -2421,7 +2421,7 @@
       "sourceKey": "universe:universe-boss-058",
       "regionOrBoss": "萬域戰線 → 星域滅絕執行官",
       "equipmentNames": {
-        "weapon": "星域執行槍",
+        "weapon": "星域執行劍",
         "helmet": "滅絕官面甲",
         "armor": "星域執行戰衣",
         "shoes": "滅絕追跡履",
@@ -2449,7 +2449,7 @@
       "sourceKey": "universe:universe-boss-060",
       "regionOrBoss": "萬域戰線 → 無盡戰線總督",
       "equipmentNames": {
-        "weapon": "無盡戰線長戟",
+        "weapon": "無盡戰線長劍",
         "helmet": "總督統治冕",
         "armor": "無盡軍政戰袍",
         "shoes": "戰線督軍足鎧",
@@ -2477,7 +2477,7 @@
       "sourceKey": "universe:universe-boss-062",
       "regionOrBoss": "宇宙纖維帶 → 黑鏈天體",
       "equipmentNames": {
-        "weapon": "黑鏈天體槍",
+        "weapon": "黑鏈天體刃",
         "helmet": "鏈域引力冠",
         "armor": "黑鏈重構護甲",
         "shoes": "鏈星牽引足具",
@@ -2491,7 +2491,7 @@
       "sourceKey": "universe:universe-boss-063",
       "regionOrBoss": "宇宙纖維帶 → 星脈繁殖母巢",
       "equipmentNames": {
-        "weapon": "星脈孵化鐮",
+        "weapon": "星脈孵化刃",
         "helmet": "繁殖巢面甲",
         "armor": "星脈母巢護殼",
         "shoes": "巢脈蔓生足甲",
@@ -2505,7 +2505,7 @@
       "sourceKey": "universe:universe-boss-064",
       "regionOrBoss": "宇宙纖維帶 → 裂河戰爭巨艦",
       "equipmentNames": {
-        "weapon": "裂河巨艦炮刃",
+        "weapon": "裂河巨艦刃",
         "helmet": "戰艦導航環",
         "armor": "裂河艦體裝甲",
         "shoes": "巨艦穿流脛鎧",
@@ -2519,7 +2519,7 @@
       "sourceKey": "universe:universe-boss-065",
       "regionOrBoss": "宇宙纖維帶 → 赤脈文明節點",
       "equipmentNames": {
-        "weapon": "赤脈節點矛",
+        "weapon": "赤脈節點劍",
         "helmet": "文明脈冠",
         "armor": "赤脈節裝甲",
         "shoes": "脈網轉移履",
@@ -2533,7 +2533,7 @@
       "sourceKey": "universe:universe-boss-066",
       "regionOrBoss": "宇宙纖維帶 → 星橋毀滅者",
       "equipmentNames": {
-        "weapon": "星橋毀滅戟",
+        "weapon": "星橋毀滅劍",
         "helmet": "星橋觀測面",
         "armor": "星橋斷域鎧",
         "shoes": "星橋跨越步甲",
@@ -2561,7 +2561,7 @@
       "sourceKey": "universe:universe-boss-068",
       "regionOrBoss": "宇宙纖維帶 → 萬星侵略主機",
       "equipmentNames": {
-        "weapon": "萬星侵略槍",
+        "weapon": "萬星侵略刃",
         "helmet": "主機同步環",
         "armor": "萬星侵戰外骨骼",
         "shoes": "侵略躍遷足具",
@@ -2575,7 +2575,7 @@
       "sourceKey": "universe:universe-boss-069",
       "regionOrBoss": "宇宙纖維帶 → 暗流吞噬皇體",
       "equipmentNames": {
-        "weapon": "暗流吞噬鐮",
+        "weapon": "暗流吞噬刃",
         "helmet": "皇體暗冠",
         "armor": "暗流噬星護殼",
         "shoes": "吞噬流轉足鎧",
@@ -2589,7 +2589,7 @@
       "sourceKey": "universe:universe-boss-070",
       "regionOrBoss": "宇宙纖維帶 → 宇宙脈絡霸主",
       "equipmentNames": {
-        "weapon": "脈絡霸主戟",
+        "weapon": "脈絡霸主劍",
         "helmet": "宇宙脈冕",
         "armor": "脈絡霸權鎧",
         "shoes": "宇脈跨域星履",
@@ -2603,7 +2603,7 @@
       "sourceKey": "universe:universe-boss-071",
       "regionOrBoss": "星海巨牆 → 巨牆鎮守者",
       "equipmentNames": {
-        "weapon": "巨牆鎮守矛",
+        "weapon": "巨牆鎮守劍",
         "helmet": "鎮守壁面甲",
         "armor": "巨牆壁壘鎧",
         "shoes": "壁線巡防足具",
@@ -2617,7 +2617,7 @@
       "sourceKey": "universe:universe-boss-072",
       "regionOrBoss": "星海巨牆 → 萬星壁壘",
       "equipmentNames": {
-        "weapon": "萬星破壘鎚",
+        "weapon": "萬星破壘重劍",
         "helmet": "壁壘星冠",
         "armor": "萬星城防裝甲",
         "shoes": "壁壘重行足甲",
@@ -2631,7 +2631,7 @@
       "sourceKey": "universe:universe-boss-073",
       "regionOrBoss": "星海巨牆 → 黑曜天幕戰艦",
       "equipmentNames": {
-        "weapon": "黑曜天幕炮槍",
+        "weapon": "黑曜天幕光刃",
         "helmet": "戰艦曜環",
         "armor": "黑曜艦戰鎧",
         "shoes": "天幕巡航脛甲",
@@ -2659,7 +2659,7 @@
       "sourceKey": "universe:universe-boss-075",
       "regionOrBoss": "星海巨牆 → 蒼白文明堡壘",
       "equipmentNames": {
-        "weapon": "蒼白破堡戰斧",
+        "weapon": "蒼白破堡重劍",
         "helmet": "文明堡冠",
         "armor": "蒼白堡壘重鎧",
         "shoes": "堡域鎮守步甲",
@@ -2673,7 +2673,7 @@
       "sourceKey": "universe:universe-boss-076",
       "regionOrBoss": "星海巨牆 → 赤環滅域裝置",
       "equipmentNames": {
-        "weapon": "赤環滅域鐮",
+        "weapon": "赤環滅域刃",
         "helmet": "裝置控制面甲",
         "armor": "赤環滅域外殼",
         "shoes": "滅域機動足具",
@@ -2687,7 +2687,7 @@
       "sourceKey": "universe:universe-boss-077",
       "regionOrBoss": "星海巨牆 → 群星封鎖司令",
       "equipmentNames": {
-        "weapon": "群星封鎖槍",
+        "weapon": "群星封鎖刃",
         "helmet": "封鎖司令環",
         "armor": "群星禁域戰衣",
         "shoes": "封鎖巡弋履",
@@ -2715,7 +2715,7 @@
       "sourceKey": "universe:universe-boss-079",
       "regionOrBoss": "星海巨牆 → 宇宙壁壘破界者",
       "equipmentNames": {
-        "weapon": "宇宙破界戟",
+        "weapon": "宇宙破界劍",
         "helmet": "壁壘破界面",
         "armor": "宇宙破壁鎧",
         "shoes": "破界突進步裝",
@@ -2757,7 +2757,7 @@
       "sourceKey": "universe:universe-boss-082",
       "regionOrBoss": "宇宙深域 → 黑星遠征母體",
       "equipmentNames": {
-        "weapon": "黑星遠征鐮",
+        "weapon": "黑星遠征刃",
         "helmet": "母體遠征環",
         "armor": "黑星母戰護殼",
         "shoes": "遠征深空足甲",
@@ -2771,7 +2771,7 @@
       "sourceKey": "universe:universe-boss-083",
       "regionOrBoss": "宇宙深域 → 宇宙深井巨獸",
       "equipmentNames": {
-        "weapon": "深井巨獸牙",
+        "weapon": "深井巨獸刃",
         "helmet": "巨獸深淵面甲",
         "armor": "深井獸皇護甲",
         "shoes": "淵域踏星足鎧",
@@ -2785,7 +2785,7 @@
       "sourceKey": "universe:universe-boss-084",
       "regionOrBoss": "宇宙深域 → 蒼穹遠征樞紐",
       "equipmentNames": {
-        "weapon": "蒼穹遠征槍",
+        "weapon": "蒼穹遠征劍",
         "helmet": "樞紐天冠",
         "armor": "蒼穹遠征裝甲",
         "shoes": "樞紐長航脛甲",
@@ -2799,7 +2799,7 @@
       "sourceKey": "universe:universe-boss-085",
       "regionOrBoss": "宇宙深域 → 無光星海帝艦",
       "equipmentNames": {
-        "weapon": "無光帝艦戟",
+        "weapon": "無光帝艦劍",
         "helmet": "星海帝冕",
         "armor": "無光艦皇鎧",
         "shoes": "帝艦暗航履",
@@ -2827,7 +2827,7 @@
       "sourceKey": "universe:universe-boss-087",
       "regionOrBoss": "宇宙深域 → 萬域吞星皇",
       "equipmentNames": {
-        "weapon": "萬域吞星戰斧",
+        "weapon": "萬域吞星重劍",
         "helmet": "吞星皇冕",
         "armor": "萬域皇戰鎧",
         "shoes": "吞星凌空步甲",
@@ -2841,7 +2841,7 @@
       "sourceKey": "universe:universe-boss-088",
       "regionOrBoss": "宇宙深域 → 暗界戰爭天體",
       "equipmentNames": {
-        "weapon": "暗界天體槍",
+        "weapon": "暗界天體刃",
         "helmet": "戰爭天環",
         "armor": "暗界天體裝甲",
         "shoes": "天體軌行足具",
@@ -2855,7 +2855,7 @@
       "sourceKey": "universe:universe-boss-089",
       "regionOrBoss": "宇宙深域 → 群星深淵統帥",
       "equipmentNames": {
-        "weapon": "深淵統帥戟",
+        "weapon": "深淵統帥劍",
         "helmet": "群星深淵冠",
         "armor": "深淵軍勢戰甲",
         "shoes": "統帥深航履",
@@ -2883,7 +2883,7 @@
       "sourceKey": "universe:universe-boss-091",
       "regionOrBoss": "宇宙統合戰爭 → 萬星統治者",
       "equipmentNames": {
-        "weapon": "萬星統治戟",
+        "weapon": "萬星統治劍",
         "helmet": "統治星冕",
         "armor": "萬星統御戰袍",
         "shoes": "統治巡域履",
@@ -2897,7 +2897,7 @@
       "sourceKey": "universe:universe-boss-092",
       "regionOrBoss": "宇宙統合戰爭 → 宇宙征服母艦",
       "equipmentNames": {
-        "weapon": "宇宙征服炮槍",
+        "weapon": "宇宙征服戰刃",
         "helmet": "母艦帝環",
         "armor": "宇宙征戰裝甲",
         "shoes": "征服遠航脛鎧",
@@ -2939,7 +2939,7 @@
       "sourceKey": "universe:universe-boss-095",
       "regionOrBoss": "宇宙統合戰爭 → 萬域殲滅主機",
       "equipmentNames": {
-        "weapon": "萬域殲滅鐮",
+        "weapon": "萬域殲滅刃",
         "helmet": "主機帝冠",
         "armor": "萬域滅絕外骨骼",
         "shoes": "殲滅巡宇步甲",
@@ -2953,7 +2953,7 @@
       "sourceKey": "universe:universe-boss-096",
       "regionOrBoss": "宇宙統合戰爭 → 宇宙霸權帝座",
       "equipmentNames": {
-        "weapon": "宇宙霸權戟",
+        "weapon": "宇宙霸權劍",
         "helmet": "帝座王冕",
         "armor": "宇宙帝權鎧",
         "shoes": "帝座天行履",
@@ -2967,7 +2967,7 @@
       "sourceKey": "universe:universe-boss-097",
       "regionOrBoss": "宇宙統合戰爭 → 星海統合母體",
       "equipmentNames": {
-        "weapon": "星海統合槍",
+        "weapon": "星海統合刃",
         "helmet": "母體統合環",
         "armor": "星海母皇護殼",
         "shoes": "統合越界足鎧",
@@ -2995,7 +2995,7 @@
       "sourceKey": "universe:universe-boss-099",
       "regionOrBoss": "宇宙統合戰爭 → 宇宙征服者",
       "equipmentNames": {
-        "weapon": "宇宙征服戰斧",
+        "weapon": "宇宙征服重劍",
         "helmet": "征服者帝冕",
         "armor": "宇宙霸戰鎧",
         "shoes": "征服破域步裝",

@@ -417,7 +417,7 @@ const { chromium } = require("playwright"),
       window.__mirrorPresenter =
         window.animateMirrorStructuredCombatPresentation;
       window.animateMirrorStructuredCombatPresentation = (r, o = {}) =>
-        window.__mirrorPresenter(r, { ...o, sleep: () => Promise.resolve() });
+        window.__mirrorPresenter(r, o); // Keep real owner pacing so sprite/HP evidence can be observed.
       view = "dungeon-mirror";
       render();
       window.__mirrorStarted = startMirrorCombatRun();

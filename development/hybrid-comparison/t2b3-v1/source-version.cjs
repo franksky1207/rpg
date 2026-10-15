@@ -3,7 +3,16 @@
 const fs=require('fs'),crypto=require('crypto'),cp=require('child_process'),assert=require('assert/strict');
 const allowed=new Set(['development/hybrid-comparison/index.html','development/hybrid-comparison/comparison.css','development/hybrid-comparison/comparison.mjs','development/hybrid-comparison/playback.mjs']);
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-module.exports=function verifySource(path,oldSHA,history=false,phase5History=false,weaponHistory=false){
+module.exports=function verifySource(path,oldSHA,history=false,phase5History=false,weaponHistory=false,thrustHistory=false){
+ if(!thrustHistory){
+  const ledger=JSON.parse(fs.readFileSync("development/equipment-2_5d/thrust-source-evolution.json")),row=ledger.files[path];
+  assert.equal(ledger.schema,"cw.weapon-thrust-sync.v1");assert.equal(ledger.baselineHEAD,"8972b362534018cabc9e34ad7863a0d8dd87f7a6");
+  assert.deepEqual(Object.keys(ledger.files).sort(),["3d-test/gm-battle-simulation.js", "3d-test/index.html", "3d-test/test-center.js", "combatfx.js", "development/hybrid-comparison/comparison.mjs", "gm3dprototype.js", "index.html"]);
+  if(row){const before=cp.execFileSync("git",["show",ledger.baselineHEAD+":"+path]);assert.equal(sha(before),row.beforeSHA256);const read=fs.readFileSync,current=read(path);
+   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==="utf8"?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,history,phase5History,weaponHistory,true);}finally{fs.readFileSync=read;}
+   assert.equal(sha(current),row.afterSHA256,"Exact authorized blade/thrust synchronization source");return;
+  }
+ }
  const weapon='development/equipment-2_5d/weapon-source-evolution.json';
  if(!weaponHistory&&fs.existsSync(weapon)){
   const ledger=JSON.parse(fs.readFileSync(weapon)),row=ledger.files[path];
@@ -12,7 +21,7 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
    assert.deepEqual(Object.keys(ledger.files).sort(),['index.html','3d-test/index.html','3d-test/test-center.js','gm3dprototype.js','3d-test/gm-battle-simulation.js','development/hybrid-comparison/comparison.mjs','development/hybrid-comparison/index.html'].sort());
    const before=cp.execFileSync('git',['show',ledger.baselineHEAD+':'+path]);assert.equal(sha(before),row.beforeSHA256);
    const read=fs.readFileSync,current=read(path);
-   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==='utf8'?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,history,phase5History,true);}finally{fs.readFileSync=read;}
+   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==='utf8'?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,history,phase5History,true,true);}finally{fs.readFileSync=read;}
    assert.equal(sha(current),row.afterSHA256,'Only authorized GM cache-bust changes / exact weapon integration');return;
   }
  }
@@ -25,7 +34,7 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
    assert.deepEqual(Object.keys(ledger.files).sort(),['3d-test/appearance-snapshot.js','combat-events.js','3d-test/index.html','3d-test/test-center.js','index.html','combatfx.js','scripts/publish-assets.cjs','scripts/hybrid-comparison-fixtures.cjs','development/hybrid-comparison/fixture-input.mjs','development/hybrid-comparison/comparison.mjs','development/hybrid-comparison/index.html','development/hybrid-comparison/playback.mjs','gm3dprototype.js','3d-test/gm-battle-simulation.js'].sort());
    const before=cp.execFileSync('git',['show',ledger.baselineHEAD+':'+path]);assert.equal(sha(before),row.beforeSHA256);
    const read=fs.readFileSync,current=read(path);
-   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==='utf8'?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,history,true,true);}finally{fs.readFileSync=read;}
+   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==='utf8'?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,history,true,true,true);}finally{fs.readFileSync=read;}
    assert.equal(sha(current),row.afterSHA256,'Only authorized GM cache-bust changes / exact phase5 formal integration');return;
   }
  }
@@ -39,7 +48,7 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
    assert.deepEqual(Object.keys(ledger.files).sort(),['3d-test/index.html','3d-test/test-center.js','gm3dprototype.js','index.html','scripts/publish-assets.cjs'].sort());
    const before=cp.execFileSync('git',['show',ledger.baselineHEAD+':'+path]);assert.equal(sha(before),row.beforeSHA256);
    const read=fs.readFileSync,current=read(path);
-   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==='utf8'?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,true,true,true);}finally{fs.readFileSync=read;}
+   try{fs.readFileSync=function(file,...args){return file===path?(args[0]==='utf8'?before.toString():before):read.call(fs,file,...args);};verifySource(path,oldSHA,true,true,true,true);}finally{fs.readFileSync=read;}
    assert.equal(sha(current),row.afterSHA256,'Only authorized GM cache-bust changes / exact phase4 integration');return;
   }
  }

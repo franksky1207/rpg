@@ -29,6 +29,7 @@ jobs:
           python3 scripts/equipment-formal-publication.py --check
           python3 scripts/equipment-formal-fixture-history.py --check
           node tests/equipment-formal/publication.cjs
+          node tests/equipment-weapons/names.cjs
           node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
           node tests/runtime/t3b-formal-owner-clock.cjs
           node tests/runtime/t3b-formal-controller.cjs
@@ -51,11 +52,13 @@ jobs:
             if curl -fsS http://127.0.0.1:4189/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/equipment-weapons/timing.cjs
           node tests/equipment-weapons/browser.cjs
           node tests/equipment-formal/browser.cjs
           node tests/equipment-formal/failures.cjs
           node tests/equipment-formal/review.cjs
           node tests/equipment-formal/higher-dungeons.cjs
+          FORMAL_SPRITE_ACCEPTANCE=1 node tests/runtime/audio-lifecycle-browser.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:

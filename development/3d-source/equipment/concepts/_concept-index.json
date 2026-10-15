@@ -5631,7 +5631,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "裂星王權戟",
+        "weapon": "裂星王權劍",
         "helmet": "裂星王冕",
         "armor": "王座統御戰衣",
         "shoes": "王域步甲",
@@ -5664,7 +5664,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u003",
@@ -5677,7 +5677,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑潮艦斬槍",
+        "weapon": "黑潮艦斬刃",
         "helmet": "母艦戰鬥環",
         "armor": "黑潮艦體裝甲",
         "shoes": "深潮航履",
@@ -5710,7 +5710,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u004",
@@ -5769,7 +5769,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "天穹殲星炮刃",
+        "weapon": "天穹殲星刃",
         "helmet": "殲滅感知環",
         "armor": "天穹滅域護殼",
         "shoes": "穹頂脛鎧",
@@ -5802,7 +5802,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u006",
@@ -5815,7 +5815,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "殘光智械鐮",
+        "weapon": "殘光智械刃",
         "helmet": "主腦思維環",
         "armor": "殘光神經戰衣",
         "shoes": "銀河折躍足具",
@@ -5848,7 +5848,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u007",
@@ -5861,7 +5861,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星海霸皇戟",
+        "weapon": "星海霸皇劍",
         "helmet": "霸皇星冕",
         "armor": "星海皇權鎧",
         "shoes": "皇域踏星履",
@@ -5894,7 +5894,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u008",
@@ -5907,7 +5907,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "遠境戰爭矛",
+        "weapon": "遠境戰爭刃",
         "helmet": "中樞指揮面甲",
         "armor": "遠境軍勢裝甲",
         "shoes": "戰線推進足鎧",
@@ -5940,7 +5940,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u009",
@@ -5953,7 +5953,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "葬星墓主鐮",
+        "weapon": "葬星墓主劍",
         "helmet": "群星冥面",
         "armor": "墓域星骸護甲",
         "shoes": "幽航步裝",
@@ -5986,7 +5986,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u010",
@@ -6091,7 +6091,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "赤星攻城鎚",
+        "weapon": "赤星攻城重劍",
         "helmet": "天堡防衛面甲",
         "armor": "赤星城塞鎧",
         "shoes": "堡壘重踏甲",
@@ -6124,7 +6124,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u013",
@@ -6137,7 +6137,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "暗河獵界槍",
+        "weapon": "暗河獵界刃",
         "helmet": "獵界追蹤目鏡",
         "armor": "暗河獵行外骨骼",
         "shoes": "獵界疾行足具",
@@ -6170,7 +6170,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u014",
@@ -6183,7 +6183,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "碎月皇戰斧",
+        "weapon": "碎月皇戰刃",
         "helmet": "戰皇月冕",
         "armor": "碎月皇鎧",
         "shoes": "月影戰履",
@@ -6216,7 +6216,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u015",
@@ -6229,7 +6229,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星門鎮界矛",
+        "weapon": "星門鎮界劍",
         "helmet": "星門封鎖頭環",
         "armor": "星門禁制裝甲",
         "shoes": "星門穿界步甲",
@@ -6262,7 +6262,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u016",
@@ -6321,7 +6321,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "永夜艦戰槍",
+        "weapon": "永夜艦戰刃",
         "helmet": "遠征艦橋面甲",
         "armor": "永夜艦兵裝甲",
         "shoes": "遠征深航脛甲",
@@ -6354,7 +6354,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u018",
@@ -6413,7 +6413,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑域戰爭鐮",
+        "weapon": "黑域戰爭刃",
         "helmet": "主機同步環",
         "armor": "黑域機戰外殼",
         "shoes": "戰域機動足具",
@@ -6446,7 +6446,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u020",
@@ -6459,7 +6459,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星群滅絕戟",
+        "weapon": "星群滅絕劍",
         "helmet": "滅星皇冠",
         "armor": "星群終滅帝鎧",
         "shoes": "皇座巡星步裝",
@@ -6492,7 +6492,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u021",
@@ -6643,7 +6643,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "天河破城炮槍",
+        "weapon": "天河破城刃",
         "helmet": "破城艦橋環",
         "armor": "天河艦體重鎧",
         "shoes": "攻城推進足鎧",
@@ -6676,7 +6676,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u025",
@@ -6689,7 +6689,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑冠殖域鐮",
+        "weapon": "黑冠殖域刃",
         "helmet": "殖民母冠",
         "armor": "黑冠生殖護甲",
         "shoes": "殖域蔓延足具",
@@ -6722,7 +6722,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u026",
@@ -6735,7 +6735,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "裂域霸權戰斧",
+        "weapon": "裂域霸權重劍",
         "helmet": "霸主裂界冠",
         "armor": "裂域王鎧",
         "shoes": "霸域跨星履",
@@ -6768,7 +6768,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u027",
@@ -6781,7 +6781,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "蒼星焚滅槍",
+        "weapon": "蒼星焚滅刃",
         "helmet": "焚滅觀測面甲",
         "armor": "蒼星灼能裝甲",
         "shoes": "焚星突進步甲",
@@ -6814,7 +6814,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u028",
@@ -6873,7 +6873,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬艦統帥戟",
+        "weapon": "萬艦統帥劍",
         "helmet": "艦群指揮環",
         "armor": "萬艦統御鎧",
         "shoes": "旗艦航戰足具",
@@ -6906,7 +6906,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u030",
@@ -6965,7 +6965,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "千星戰王長戟",
+        "weapon": "千星戰王長劍",
         "helmet": "戰王星冕",
         "armor": "千星王戰鎧",
         "shoes": "星戰踏域履",
@@ -6998,7 +6998,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u032",
@@ -7011,7 +7011,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "蒼穹母皇鐮",
+        "weapon": "蒼穹母皇刃",
         "helmet": "母皇天冠",
         "armor": "蒼穹生體戰衣",
         "shoes": "母皇星步",
@@ -7044,7 +7044,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u033",
@@ -7057,7 +7057,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑日殲星炮劍",
+        "weapon": "黑日殲星劍",
         "helmet": "殲星戰術面甲",
         "armor": "黑日艦兵裝甲",
         "shoes": "黑日航戰脛甲",
@@ -7090,7 +7090,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u034",
@@ -7149,7 +7149,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星辰吞噬矛",
+        "weapon": "星辰吞噬劍",
         "helmet": "吞噬感應環",
         "armor": "星辰噬能護殼",
         "shoes": "吞星步裝",
@@ -7182,7 +7182,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u036",
@@ -7195,7 +7195,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "群星破壁鎚",
+        "weapon": "群星破壁重劍",
         "helmet": "鐵壁壁冠",
         "armor": "群星堡壘重鎧",
         "shoes": "壁壘鎮星足甲",
@@ -7228,7 +7228,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u037",
@@ -7241,7 +7241,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "赤環智戰鐮",
+        "weapon": "赤環智戰刃",
         "helmet": "智核同步冠",
         "armor": "赤環戰略外骨骼",
         "shoes": "智域調度履",
@@ -7274,7 +7274,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u038",
@@ -7287,7 +7287,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬軍征伐戰斧",
+        "weapon": "萬軍征伐戰刃",
         "helmet": "征伐皇冕",
         "armor": "萬軍皇戰甲",
         "shoes": "征伐遠行步甲",
@@ -7320,7 +7320,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u039",
@@ -7333,7 +7333,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "天域滅星炮槍",
+        "weapon": "天域滅星劍",
         "helmet": "機構控制面甲",
         "armor": "天域殲滅機甲",
         "shoes": "滅星推進足具",
@@ -7366,7 +7366,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u040",
@@ -7425,7 +7425,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "超域鎮界槍",
+        "weapon": "超域鎮界刃",
         "helmet": "鎮界環冠",
         "armor": "超域封疆鎧",
         "shoes": "鎮界跨域步裝",
@@ -7458,7 +7458,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u042",
@@ -7517,7 +7517,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "裂空帝艦矛",
+        "weapon": "裂空帝艦劍",
         "helmet": "帝艦艦橋冠",
         "armor": "裂空艦皇甲",
         "shoes": "帝艦破空履",
@@ -7550,7 +7550,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u044",
@@ -7563,7 +7563,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "蒼白吞界牙",
+        "weapon": "蒼白吞界刃",
         "helmet": "吞界獸面甲",
         "armor": "蒼白獸皇護殼",
         "shoes": "吞界踏星足鎧",
@@ -7596,7 +7596,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u045",
@@ -7609,7 +7609,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬機解構鐮",
+        "weapon": "萬機解構刃",
         "helmet": "母體機械環",
         "armor": "星海機群外骨骼",
         "shoes": "萬機躍行步甲",
@@ -7642,7 +7642,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u046",
@@ -7655,7 +7655,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "天幕君王戟",
+        "weapon": "天幕君王劍",
         "helmet": "戰爭王冕",
         "armor": "天幕王戰鎧",
         "shoes": "君王御域履",
@@ -7688,7 +7688,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u047",
@@ -7701,7 +7701,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "赤界熔爐炮刃",
+        "weapon": "赤界熔爐刃",
         "helmet": "文明爐心冠",
         "armor": "赤界熔戰裝甲",
         "shoes": "熔爐熱流足具",
@@ -7734,7 +7734,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u048",
@@ -7793,7 +7793,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬星殲滅槍",
+        "weapon": "萬星殲滅劍",
         "helmet": "樞紐感知面甲",
         "armor": "萬星滅域鎧",
         "shoes": "殲滅突進脛甲",
@@ -7826,7 +7826,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u050",
@@ -7885,7 +7885,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬域開戰矛",
+        "weapon": "萬域開戰刃",
         "helmet": "開戰者軍冠",
         "armor": "萬域軍勢鎧",
         "shoes": "戰線先鋒履",
@@ -7918,7 +7918,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u052",
@@ -7931,7 +7931,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑塔裂星鎚",
+        "weapon": "黑塔裂星重劍",
         "helmet": "星海塔面甲",
         "armor": "黑塔鎮域裝甲",
         "shoes": "黑塔浮航足具",
@@ -7964,7 +7964,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u053",
@@ -7977,7 +7977,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "焚界遠征槍",
+        "weapon": "焚界遠征刃",
         "helmet": "遠征母艦環冠",
         "armor": "焚界艦戰鎧",
         "shoes": "遠征焚星脛甲",
@@ -8010,7 +8010,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u054",
@@ -8023,7 +8023,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "蒼穹統領戟",
+        "weapon": "蒼穹統領劍",
         "helmet": "軍勢指揮環",
         "armor": "蒼穹軍戰甲",
         "shoes": "統領跨星步甲",
@@ -8056,7 +8056,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u055",
@@ -8069,7 +8069,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "群星掠奪戰斧",
+        "weapon": "群星掠奪刃",
         "helmet": "掠奪皇冕",
         "armor": "群星劫戰鎧",
         "shoes": "掠奪追星履",
@@ -8102,7 +8102,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u056",
@@ -8115,7 +8115,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑潮巢心鐮",
+        "weapon": "黑潮巢心刃",
         "helmet": "文明巢面",
         "armor": "黑潮孵化護殼",
         "shoes": "巢群蔓延足甲",
@@ -8148,7 +8148,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u057",
@@ -8207,7 +8207,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星域執行槍",
+        "weapon": "星域執行劍",
         "helmet": "滅絕官面甲",
         "armor": "星域執行戰衣",
         "shoes": "滅絕追跡履",
@@ -8240,7 +8240,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u059",
@@ -8299,7 +8299,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "無盡戰線長戟",
+        "weapon": "無盡戰線長劍",
         "helmet": "總督統治冕",
         "armor": "無盡軍政戰袍",
         "shoes": "戰線督軍足鎧",
@@ -8332,7 +8332,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u061",
@@ -8391,7 +8391,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑鏈天體槍",
+        "weapon": "黑鏈天體刃",
         "helmet": "鏈域引力冠",
         "armor": "黑鏈重構護甲",
         "shoes": "鏈星牽引足具",
@@ -8424,7 +8424,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u063",
@@ -8437,7 +8437,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星脈孵化鐮",
+        "weapon": "星脈孵化刃",
         "helmet": "繁殖巢面甲",
         "armor": "星脈母巢護殼",
         "shoes": "巢脈蔓生足甲",
@@ -8470,7 +8470,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u064",
@@ -8483,7 +8483,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "裂河巨艦炮刃",
+        "weapon": "裂河巨艦刃",
         "helmet": "戰艦導航環",
         "armor": "裂河艦體裝甲",
         "shoes": "巨艦穿流脛鎧",
@@ -8516,7 +8516,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u065",
@@ -8529,7 +8529,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "赤脈節點矛",
+        "weapon": "赤脈節點劍",
         "helmet": "文明脈冠",
         "armor": "赤脈節裝甲",
         "shoes": "脈網轉移履",
@@ -8562,7 +8562,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u066",
@@ -8575,7 +8575,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星橋毀滅戟",
+        "weapon": "星橋毀滅劍",
         "helmet": "星橋觀測面",
         "armor": "星橋斷域鎧",
         "shoes": "星橋跨越步甲",
@@ -8608,7 +8608,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u067",
@@ -8667,7 +8667,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬星侵略槍",
+        "weapon": "萬星侵略刃",
         "helmet": "主機同步環",
         "armor": "萬星侵戰外骨骼",
         "shoes": "侵略躍遷足具",
@@ -8700,7 +8700,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u069",
@@ -8713,7 +8713,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "暗流吞噬鐮",
+        "weapon": "暗流吞噬刃",
         "helmet": "皇體暗冠",
         "armor": "暗流噬星護殼",
         "shoes": "吞噬流轉足鎧",
@@ -8746,7 +8746,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u070",
@@ -8759,7 +8759,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "脈絡霸主戟",
+        "weapon": "脈絡霸主劍",
         "helmet": "宇宙脈冕",
         "armor": "脈絡霸權鎧",
         "shoes": "宇脈跨域星履",
@@ -8792,7 +8792,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u071",
@@ -8805,7 +8805,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "巨牆鎮守矛",
+        "weapon": "巨牆鎮守劍",
         "helmet": "鎮守壁面甲",
         "armor": "巨牆壁壘鎧",
         "shoes": "壁線巡防足具",
@@ -8838,7 +8838,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u072",
@@ -8851,7 +8851,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬星破壘鎚",
+        "weapon": "萬星破壘重劍",
         "helmet": "壁壘星冠",
         "armor": "萬星城防裝甲",
         "shoes": "壁壘重行足甲",
@@ -8884,7 +8884,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u073",
@@ -8897,7 +8897,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑曜天幕炮槍",
+        "weapon": "黑曜天幕光刃",
         "helmet": "戰艦曜環",
         "armor": "黑曜艦戰鎧",
         "shoes": "天幕巡航脛甲",
@@ -8930,7 +8930,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u074",
@@ -8989,7 +8989,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "蒼白破堡戰斧",
+        "weapon": "蒼白破堡重劍",
         "helmet": "文明堡冠",
         "armor": "蒼白堡壘重鎧",
         "shoes": "堡域鎮守步甲",
@@ -9022,7 +9022,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u076",
@@ -9035,7 +9035,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "赤環滅域鐮",
+        "weapon": "赤環滅域刃",
         "helmet": "裝置控制面甲",
         "armor": "赤環滅域外殼",
         "shoes": "滅域機動足具",
@@ -9068,7 +9068,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u077",
@@ -9081,7 +9081,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "群星封鎖槍",
+        "weapon": "群星封鎖刃",
         "helmet": "封鎖司令環",
         "armor": "群星禁域戰衣",
         "shoes": "封鎖巡弋履",
@@ -9114,7 +9114,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u078",
@@ -9173,7 +9173,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "宇宙破界戟",
+        "weapon": "宇宙破界劍",
         "helmet": "壁壘破界面",
         "armor": "宇宙破壁鎧",
         "shoes": "破界突進步裝",
@@ -9206,7 +9206,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u080",
@@ -9311,7 +9311,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "黑星遠征鐮",
+        "weapon": "黑星遠征刃",
         "helmet": "母體遠征環",
         "armor": "黑星母戰護殼",
         "shoes": "遠征深空足甲",
@@ -9344,7 +9344,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u083",
@@ -9357,7 +9357,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "深井巨獸牙",
+        "weapon": "深井巨獸刃",
         "helmet": "巨獸深淵面甲",
         "armor": "深井獸皇護甲",
         "shoes": "淵域踏星足鎧",
@@ -9390,7 +9390,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u084",
@@ -9403,7 +9403,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "蒼穹遠征槍",
+        "weapon": "蒼穹遠征劍",
         "helmet": "樞紐天冠",
         "armor": "蒼穹遠征裝甲",
         "shoes": "樞紐長航脛甲",
@@ -9436,7 +9436,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u085",
@@ -9449,7 +9449,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "無光帝艦戟",
+        "weapon": "無光帝艦劍",
         "helmet": "星海帝冕",
         "armor": "無光艦皇鎧",
         "shoes": "帝艦暗航履",
@@ -9482,7 +9482,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u086",
@@ -9541,7 +9541,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬域吞星戰斧",
+        "weapon": "萬域吞星重劍",
         "helmet": "吞星皇冕",
         "armor": "萬域皇戰鎧",
         "shoes": "吞星凌空步甲",
@@ -9574,7 +9574,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u088",
@@ -9587,7 +9587,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "暗界天體槍",
+        "weapon": "暗界天體刃",
         "helmet": "戰爭天環",
         "armor": "暗界天體裝甲",
         "shoes": "天體軌行足具",
@@ -9620,7 +9620,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u089",
@@ -9633,7 +9633,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "深淵統帥戟",
+        "weapon": "深淵統帥劍",
         "helmet": "群星深淵冠",
         "armor": "深淵軍勢戰甲",
         "shoes": "統帥深航履",
@@ -9666,7 +9666,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u090",
@@ -9725,7 +9725,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬星統治戟",
+        "weapon": "萬星統治劍",
         "helmet": "統治星冕",
         "armor": "萬星統御戰袍",
         "shoes": "統治巡域履",
@@ -9758,7 +9758,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u092",
@@ -9771,7 +9771,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "宇宙征服炮槍",
+        "weapon": "宇宙征服戰刃",
         "helmet": "母艦帝環",
         "armor": "宇宙征戰裝甲",
         "shoes": "征服遠航脛鎧",
@@ -9804,7 +9804,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u093",
@@ -9909,7 +9909,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "萬域殲滅鐮",
+        "weapon": "萬域殲滅刃",
         "helmet": "主機帝冠",
         "armor": "萬域滅絕外骨骼",
         "shoes": "殲滅巡宇步甲",
@@ -9942,7 +9942,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u096",
@@ -9955,7 +9955,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "宇宙霸權戟",
+        "weapon": "宇宙霸權劍",
         "helmet": "帝座王冕",
         "armor": "宇宙帝權鎧",
         "shoes": "帝座天行履",
@@ -9988,7 +9988,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u097",
@@ -10001,7 +10001,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "星海統合槍",
+        "weapon": "星海統合刃",
         "helmet": "母體統合環",
         "armor": "星海母皇護殼",
         "shoes": "統合越界足鎧",
@@ -10034,7 +10034,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u098",
@@ -10093,7 +10093,7 @@
         "equipmentRule": "min(playerLevel, bossLevel), floor 500"
       },
       "equipmentNames": {
-        "weapon": "宇宙征服戰斧",
+        "weapon": "宇宙征服重劍",
         "helmet": "征服者帝冕",
         "armor": "宇宙霸戰鎧",
         "shoes": "征服破域步裝",
@@ -10126,7 +10126,7 @@
       "images": [],
       "approvalEvidence": null,
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "u100",

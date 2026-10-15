@@ -14,7 +14,7 @@ for(const [p,row] of Object.entries(ledger.files)){
   const read=fs.readFileSync,current=read(p,'utf8');
   try{
    fs.readFileSync=function(file,...args){return file===p?current+'\n// unauthorized extra change':read.call(fs,file,...args);};
-   assert.throws(()=>verify(p,oldSHA),/Only authorized GM cache-bust changes/);
+   assert.throws(()=>verify(p,oldSHA),/Only authorized GM cache-bust changes|Exact authorized blade\/thrust synchronization source/);
   }finally{fs.readFileSync=read;}
  }else assert.equal(sha(fs.readFileSync(p)),row.afterSHA256,p+' exact authorized retirement');
 }

@@ -1,3 +1,5 @@
+> **2026-10-15｜刀劍統一與戰鬥同步（現行規則，優先於下方歷史描述）**：正式210套／1,050槽維持永久ID（G001～G100、U001～U100、H01～H10）；銀河100與高維10名稱保留，宇宙70武器改名，明確對照見 `docs/WEAPON_NAME_MIGRATION_2026-10-15.json`。五槽ID、紀元、區域及數值不變；舊宇宙武器於原存檔gear正規化流程僅更新名稱及同名visualKey，保留ID／品質／強化／屬性／背包。G001～G030原60WebP及G024/G030接受證據保留，不重製。後續G031～G100、U001～U100、H01～H10概念與角色全部採刀劍／能量刃外觀；禁止槍、炮、戟、矛、鐮、斧、鎚，抽象高維名稱亦同。適合手機小尺寸2.5D，不追加骨架／大型套件；保留原五槽名稱與ID規則。三套現有角色共用蓄力→前衝突刺→命中→回位模板，GM與正式皆由原Playback／OwnerClock安排，視覺不得等待或改動權威事件／結算。其餘207套沿用模板但素材仍未製作。歷史審查、fixture、來源鏈與舊提交不作全域改名。實作、測試及真機限制以 `docs/WEAPON_THRUST_SYNC_ACCEPTANCE_2026-10-15.md` 為準；Actions須核對本次最終SHA，不引用舊成功紀錄。
+
 > **第2批實作規則（2026-10-15，優先於下方歷史schema2說明）**：已導入schema3／`equipment-2.5d-v3.0`，機器政策為`scripts/equipment-review-policy-v3.json`並鎖定SHA。可編輯SOP文字不再充當新批准的政策指紋；歷史schema2使用逐byte保留的`docs/evidence/equipment-policy/sop-v2-2026-10-15.md`驗證原授權SHA，並保留其原有嚴格結論。新`review-2_5d.json`／`.md`是逐套補充證據，不覆寫舊`art-review.json`。schema1只允許當前main既存G006/G007原批准紀錄；不能新增偽造舊批准繞過雙階段。
 
 - schema3綁policyVersion／policySha256、完整formalIdentity（含epoch、directory與五槽名）、兩圖SHA、ChatGPT歷史初審來源與政策遷移方式、Codex本輪複查、blockers／advisories／explicitlyAcceptedExceptions、來源SHA／日期、Markdown SHA與canonical evidenceFingerprint。初審來源與現版本兩圖須匹配，不捏造新增獨立審查者。
