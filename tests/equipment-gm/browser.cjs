@@ -39,6 +39,8 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
    await frame.locator('[data-pick=suit]').evaluate(e=>{e.value='g005';e.dispatchEvent(new Event('change'));});check(await frame.locator('.gm-suit-preview canvas').count()===0,'hidden free selector cannot change formal suit');
    await page.evaluate(()=>{const win=document.querySelector('#gm3dPrototypeOverlay iframe').contentWindow;win.postMessage=win.__originalSpritePost;});
    check(spriteRequests.length<=9,'cached sprite reuse');
+   const stateDiff=await page.evaluate(t=>{const before=JSON.parse(t);return Object.keys({...before,...state}).filter(k=>JSON.stringify(before[k])!==JSON.stringify(state[k])).map(k=>({key:k,before:before[k],after:state[k]}));},truth);
+   if(stateDiff.length)console.log('GM state diff',viewport.width,JSON.stringify(stateDiff));
    check(await page.evaluate(t=>JSON.stringify(state)===t,truth),'state unchanged');check(await page.evaluate(t=>JSON.stringify(localStorage)===t,storage),'storage unchanged');
    // Test-only real equipment setup, then exercise the real authoritative capture bridge.
    await page.evaluate(async()=>{const c=await(await fetch('assets/gm-equipment-2_5d/v1/catalog.json')).json(),e=c.sets.find(e=>e.id==='g007');state.equipment=Object.fromEntries(Object.entries(e.equipmentNames).map(([slot,name])=>[slot,{name,world:1,q:1,level:1}]));});
