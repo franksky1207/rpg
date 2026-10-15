@@ -25,8 +25,8 @@ def plan(root=ROOT, batch=None):
         expected = [r for r in rows if r["epoch"] == epoch]
         if len(expected) != count:
             raise ValueError(f"{epoch}: expected {count} sets")
-        for start in range(1, count + 1, 10):
-            ids = [f"{prefix}{i:03d}" if epoch != "higher" else f"h{i:02d}" for i in range(start, start + 10)]
+        for start in range(1, count + 1, 5):
+            ids = [f"{prefix}{i:03d}" if epoch != "higher" else f"h{i:02d}" for i in range(start, start + 5)]
             subset = []
             for identity in ids:
                 matches = [r for r in expected if r["id"] == identity]
@@ -54,10 +54,10 @@ def plan(root=ROOT, batch=None):
             missing = sum(len(r["missing"]) for r in subset)
             approved = sum(r["approved"] for r in subset)
             groups.append({
-                "batch": f"{prefix.upper()}{(start-1)//10+1:02d}",
+                "batch": f"{prefix.upper()}{(start-1)//5+1:02d}",
                 "range": f"{ids[0]}..{ids[-1]}", "epoch": epoch,
-                "status": "images-ready-awaiting-review" if not missing and approved < 10 else "approved" if approved == 10 else "not-started" if missing == 20 else "partial-needs-resume",
-                "imagesPresent": 20 - missing, "imagesMissing": missing, "approvedSets": approved,
+                "status": "images-ready-awaiting-review" if not missing and approved < 5 else "approved" if approved == 5 else "not-started" if missing == 10 else "partial-needs-resume",
+                "imagesPresent": 10 - missing, "imagesMissing": missing, "approvedSets": approved,
                 "sets": subset,
             })
     if batch:
@@ -71,7 +71,7 @@ def plan(root=ROOT, batch=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("status", "plan"))
-    parser.add_argument("--batch", help="e.g. G02 (g011..g020), U01, H01")
+    parser.add_argument("--batch", help="e.g. G07 (g031..g035), U01, H01")
     args = parser.parse_args()
     try:
         groups = plan(batch=args.batch)
