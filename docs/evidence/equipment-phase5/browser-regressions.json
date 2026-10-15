@@ -65,5 +65,15 @@
     "exitCode": 0,
     "log": "formal-modes-audio.log",
     "note": "Local system Chromium preload is environment-specific; CI uses Playwright-installed Chromium."
+  },
+  {
+    "command": "W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js",
+    "exitCode": 0,
+    "log": "w3-injected-failure.log"
+  },
+  {
+    "command": "node tests/runtime/thirdworld-background-browser.js",
+    "exitCode": 0,
+    "log": "w3-normal-after-ci.log"
   }
 ]

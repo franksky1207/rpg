@@ -26,6 +26,12 @@ async function finishIntro(page){
  const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true,...(engine==='chromium'?{...(process.env.CHROMIUM_EXECUTABLE?{executablePath:process.env.CHROMIUM_EXECUTABLE}:fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{}),args:['--no-sandbox']}: {})});
  try{for(const viewport of [{width:1280,height:800},{width:390,height:844}]){
  const page=await browser.newPage({viewport});
+ const expectPlayerVisual=async()=>{
+  if(process.env.W3_B_VISUAL_FAILURE==='1'){
+   await page.waitForSelector('.formal-b-visual-fallback');
+   assert.equal(await page.locator('.formal-b-whole-suit').count(),0,'injected visual failure preserves text fallback');
+  }else await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
+ };
  if(process.env.BACKGROUND_BASELINE_DIR)for(const file of ['backgroundprogress.js','combatfx.js','thirdworldrun.js','thirdworldplayerflow.js','thirdworldui.js'])await page.route('**/'+file+'?*',r=>r.fulfill({contentType:'text/javascript',body:fs.readFileSync(process.env.BACKGROUND_BASELINE_DIR+'/'+file)}));const errors=[];page.on('pageerror',e=>errors.push(String(e)));
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
  await page.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));
@@ -44,7 +50,7 @@ async function finishIntro(page){
  await page.evaluate(()=>render());
  await page.waitForFunction(()=>getCombatPresentationSnapshot()?.playerHp>0&&getCombatPresentationSnapshot()?.playerHp<getCombatPresentationSnapshot()?.playerMaxHp);
  assert.equal(await page.evaluate(()=>{const p=getCombatPresentationSnapshot();return document.getElementById('combatPlayerHp').textContent===`${p.playerHp} / ${p.playerMaxHp}`;}),true,'replaced HUD follows partial player damage');
- await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
+ await expectPlayerVisual();
  await page.evaluate(()=>openThirdWorldMinimalMode());
  const initial=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);
  await page.waitForFunction(n=>thirdWorldContinuousRunSnapshot().battles>n,initial);
@@ -64,7 +70,7 @@ async function finishIntro(page){
  }
  assert.notEqual(await page.locator('[data-third-world-minimal-round]').textContent(),minimalBefore);
  await page.evaluate(()=>{closeMinimalMode();openThirdWorldMinimalMode();});
- await page.evaluate(()=>closeMinimalMode());await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');await page.evaluate(()=>openThirdWorldMinimalMode());
+ await page.evaluate(()=>closeMinimalMode());await expectPlayerVisual();await page.evaluate(()=>openThirdWorldMinimalMode());
  const minimal=await page.evaluate(()=>({round:document.querySelector('[data-third-world-minimal-round]').textContent,deaths:document.querySelector('[data-third-world-minimal-deaths]').textContent,cap:document.querySelector('[data-third-world-minimal-cap]').textContent,exp:document.querySelector('[data-third-world-minimal-exp]').textContent,strings:document.querySelector('[data-third-world-minimal-strings]').textContent}));
  await page.evaluate(()=>{gmSetBackgroundBattlePreference(false);backgroundProgressStop('third-world');__environment(true);});
  const disabled=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);await page.waitForTimeout(1500);assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles),disabled,'GM off pauses after current settled battle');
