@@ -127,6 +127,8 @@ def bound_source(root, source):
     return file.read_text(encoding='utf-8')
 
 def verify_v3(root,row,images,record):
+    # Schema 3 is immutable historical dual review; schema 4 uses one Codex stage.
+    # Both retain the original signed blocker policy and SHA-bound evidence.
     label=row['id'];directory=root/row['directory']
     require(record.get('schema') in (3,4) and record.get('policyVersion')==POLICY, f'{label}: unsupported review policy/schema')
     policy=root/POLICY_FILE
