@@ -1,5 +1,7 @@
 # 《文明戰線》210套 2.5D 概念圖視覺差異規劃｜前置整合第2批
-日期：2026-10-15。基準：最新main之`development/3d-source/equipment/concepts/_concept-index.json`、`_concept-identities.json`。此文為**美術提案／生成提示**，不是正式裝備身份來源，不覆寫逐套notes的正式A節、已批准圖片或機器政策。
+日期：2026-10-15。
+> **流程更新**：後續五套十圖均由Codex單一任務製作、單次檢查、入庫與驗證；原雙階段SOP不再是新批次門檻。既有圖與審查證據不變。
+基準：最新main之`development/3d-source/equipment/concepts/_concept-index.json`、`_concept-identities.json`。此文為**美術提案／生成提示**，不是正式裝備身份來源，不覆寫逐套notes的正式A節、已批准圖片或機器政策。
 
 ## 共同準則
 - 210套／1,050槽：G001～G100、U001～U100、H01～H10。每套以正式五槽名稱及regionOrBoss決定視覺，不改名稱／ID／sourceKey／directory。
