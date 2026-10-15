@@ -20,6 +20,46 @@ class Review25DTests(unittest.TestCase):
     def seal(self,record):
         record['evidenceFingerprint']=m.art_review.fingerprint(record)
         return record
+    def test_schema4_codex_single_stage_accepts_real_evidence(self):
+        row,record=self.record('g026')
+        record['schema']=4
+        record['stages']=[record['stages'][1]]
+        self.assertEqual(record['stages'][0]['reviewer'],'Codex')
+        self.assertEqual(self.verify(self.seal(record),'g026')[::2],(True,'pass'))
+        directory=self.root/row['directory']
+        (directory/'review-2_5d.json').write_text(m.dumps(record),encoding='utf-8')
+        result=m.statuses(self.root,row)
+        self.assertEqual(result['artReviewMode'],'codex-single-stage')
+        self.assertTrue(result['conceptApproved'])
+        self.assertFalse(result['formalReleaseAllowed'])
+
+    def test_schema4_rejects_missing_second_or_fabricated_stage(self):
+        _,record=self.record('g026')
+        record['schema']=4
+        with self.assertRaisesRegex(ValueError,'single Codex review stage'):
+            self.verify(self.seal(record),'g026')
+        record['stages']=[record['stages'][0]]
+        with self.assertRaisesRegex(ValueError,'stage reviewer/order'):
+            self.verify(self.seal(record),'g026')
+
+    def test_schema4_rejects_unverified_blocker_and_stale_evidence(self):
+        _,record=self.record('g026')
+        record['schema']=4
+        record['stages']=[record['stages'][1]]
+        check=record['stages'][0]['checks']['imageIntegrity']
+        check['result']='unverified'
+        record['stages'][0]['passed']=False
+        record['blockers']=[{'criterion':'imageIntegrity','observation':check['observation']}]
+        record.update(conceptApproved=False,outcome='blocked')
+        self.assertFalse(self.verify(self.seal(record),'g026')[0])
+        record['blockers']=[]
+        with self.assertRaisesRegex(ValueError,'blockers contradict checks'):
+            self.verify(self.seal(record),'g026')
+        record['blockers']=[{'criterion':'imageIntegrity','observation':check['observation']}]
+        record['imageSha256']={}
+        with self.assertRaisesRegex(ValueError,'image evidence stale'):
+            self.verify(self.seal(record),'g026')
+
     def test_g024_g030_originals_accepted_and_not_released(self):
         for identity in ('g024','g030'):
             row,record=self.record(identity)
