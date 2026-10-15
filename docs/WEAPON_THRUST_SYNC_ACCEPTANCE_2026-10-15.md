@@ -53,3 +53,7 @@
 ## Runtime CI 收尾
 
 最新指紋提交 `a25755ccd8fe05cbfd3d8aef4306191c9867534c` 的 Runtime run `38687415989` 失敗於 `post-reincarnation-cleanup-batch1-integrity.js:40`：斷言仍要求2026-10-05～10-08的完整舊savemigration URL，而正式index已因本次改名相容更新為 `savemigration.js?v=20261015-thrust1`。本次只將此一**確切版本網址**期望值同步為現行值，沒有改為任意版本／正則萬用字元，也未刪除原轉生、normalizer、Schema17、gear carryover、namespace、載入次序與failure斷言。原失敗尾端證據保留在本目錄 `evidence/weapon-thrust-sync/runtime-cache-token-failure.log`。遊戲程式及正式index不需回改舊版本。修正提交須另核對最新HEAD完整Actions；失敗SHA不能視為全綠。
+
+後續測試預跑另發現 `recent-optimization-batch4-closure.js` 同樣鎖死舊 `v4=20261007-migration-diagnostics-batch3`；一併同步為完整、確切的現行savemigration URL，原diagnostics欄位、Schema17、舊存檔matrix等所有斷言保留。這是版本期望更新，正式程式及manifest均無新增變更。
+
+本機後段預跑完成：Runtime失敗點之後列出的62個命令入口全部通過（62/62、0失敗），包含真實點擊回顧、三紀元轉生、Schema17舊存檔matrix、carryover、load pipeline及文件／資產驗證。使用系統Chromium及一次性guest SDK、root HTTP4173；初次本機瀏覽器缺失／部分測試固定4173的設定修正後重跑，結果詳 `runtime-tail-final-summary.json` 與 `runtime-tail-rerun.log`。這些是62個命令入口，不等同62個單一測試案例；最終CI仍須在最新HEAD完整實跑。

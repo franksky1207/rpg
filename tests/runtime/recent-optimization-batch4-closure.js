@@ -31,6 +31,6 @@ for(const key of ["alternateUniverseTitlesBackfilled","alternateUniverseTitlesBa
 
 assert.ok(/const SAVE_SCHEMA_VERSION=17;/.test(migration),"Batch4 closure must not bump Schema17.");
 for(const token of ["const old36=","mirror_title_19","mirror_title_20","const auHonor=","const w3Rerun=","alternateUniverseTitlesBackfilled,8","effectiveEnabled,false"])assert.ok(matrix.includes(token),`Batch4 Schema17 closure case missing: ${token}`);
-assert.ok(index.includes("v4=20261007-migration-diagnostics-batch3"),"Batch3 migration cache-bust must remain active.");
+assert.ok(index.includes('src="savemigration.js?v=20261015-thrust1"'),"Migration diagnostics and legacy blade names must use the exact current cache version.");
 
 console.log("Recent optimization Batch4 closure passed:",JSON.stringify({schema:17,w3AccessOwner:"thirdworlddungeonui",mirrorSettlementOwner:1,auThresholdOwner:1,migrationDiagnostics:1,oldSaveMatrix:"expanded"}));
