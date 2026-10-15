@@ -49,3 +49,7 @@
 ## GitHub與待補
 
 最終SHA的所有已觸發Actions及Pages須推送後核對，未結束不宣稱通過。未完成的真機驗收：實體iPhone／Android、Safari觸控與App系統切換、30分鐘熱／記憶體／GPU、真帳號雲端往返。其他207套角色／獨立武器與180套概念是未來美術工作，本次未生成。回退可revert本次提交；舊名alias設計不要求重置玩家資料。
+
+## Runtime CI 收尾
+
+最新指紋提交 `a25755ccd8fe05cbfd3d8aef4306191c9867534c` 的 Runtime run `38687415989` 失敗於 `post-reincarnation-cleanup-batch1-integrity.js:40`：斷言仍要求2026-10-05～10-08的完整舊savemigration URL，而正式index已因本次改名相容更新為 `savemigration.js?v=20261015-thrust1`。本次只將此一**確切版本網址**期望值同步為現行值，沒有改為任意版本／正則萬用字元，也未刪除原轉生、normalizer、Schema17、gear carryover、namespace、載入次序與failure斷言。原失敗尾端證據保留在本目錄 `evidence/weapon-thrust-sync/runtime-cache-token-failure.log`。遊戲程式及正式index不需回改舊版本。修正提交須另核對最新HEAD完整Actions；失敗SHA不能視為全綠。
