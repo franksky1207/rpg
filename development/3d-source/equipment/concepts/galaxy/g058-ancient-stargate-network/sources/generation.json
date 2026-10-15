@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g058",
+  "baseMain": "89738447f133ce8497731ee5e9cddd63d66328a7",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "銀紫修長月牙肩甲、分叉弧冠全罩盔、直能量劍、環形踝靴及分段星門菱晶環。",
+  "generationMethod": "Two separate actual calls. Overview viewed with view_image before supplying its original PNG as reference for a newly drawn equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-24f528bb-b341-4689-9cf7-f0716fd848a7.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/sources/overview-original.png",
+      "originalSha256": "912ca430a3f11bdc9ac34542d6d5c68e7f67a74d3908e02e9baaf07b3dd42852",
+      "originalBytes": 2289250,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 271970,
+        "sha256": "c0ef5566a4c5d5ae28ae5a9847130864ac7faeea1c7eb3ccebd51ac78d2cb550"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-93ebc58c-c579-4bad-878b-7482e46fba73.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/sources/slots-original.png",
+      "originalSha256": "a611d88a4cac75bd70bec29efe28ab3b7d15163f3b167878fc99024c06f020ea",
+      "originalBytes": 2260986,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 276150,
+        "sha256": "d89a7ee1d8c48c26bef36658116064072af783a872604dad9384085586c26e2a"
+      },
+      "referenceOriginalSha256": "912ca430a3f11bdc9ac34542d6d5c68e7f67a74d3908e02e9baaf07b3dd42852"
+    }
+  ]
+}

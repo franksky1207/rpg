@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g057",
+  "baseMain": "89738447f133ce8497731ee5e9cddd63d66328a7",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "象牙白黃銅方肩商隊甲、琥珀全面罩、直寬劍、高速推進靴及六角三支交易節點。",
+  "generationMethod": "Two separate actual calls. Overview viewed with view_image before supplying its original PNG as reference for a newly drawn equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-9b2c5e6e-057e-4aa8-9415-073c7a277613.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/sources/overview-original.png",
+      "originalSha256": "bf64536d72dc3e5efed2e894a104234031f96cb4869e123ef625166fbb7fb7d2",
+      "originalBytes": 2257677,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 294238,
+        "sha256": "870bc196b18fe097079990099b9982c111b4345aed93b5628e467a87b07d3789"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-15deece0-396f-42b3-9c15-2c3ae0169681.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/sources/slots-original.png",
+      "originalSha256": "c242f141efc28819cbf995dc8b3bcacfaef84c2d447d4cbf377427e36397c94b",
+      "originalBytes": 2154050,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 266538,
+        "sha256": "cfabd7651c3b06ff08c7139d6a7c0d0e47095905e6c8cd1d0b016695fdec52f0"
+      },
+      "referenceOriginalSha256": "bf64536d72dc3e5efed2e894a104234031f96cb4869e123ef625166fbb7fb7d2"
+    }
+  ]
+}

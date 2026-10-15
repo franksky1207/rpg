@@ -3691,19 +3691,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g056-stellar-exile",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 269546,
+          "sha256": "0e0a03e8623e43e579c4557cf6fef0f094afa0fd3542ade0e1d4a59172597a3f"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 308146,
+          "sha256": "e60a59d760a5904474a50ec14504ded501c0311ebf17b638a9e9f7cad19e9a52"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g056-stellar-exile/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g057",
@@ -3742,19 +3757,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 294238,
+          "sha256": "870bc196b18fe097079990099b9982c111b4345aed93b5628e467a87b07d3789"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 266538,
+          "sha256": "cfabd7651c3b06ff08c7139d6a7c0d0e47095905e6c8cd1d0b016695fdec52f0"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g058",
@@ -3793,19 +3823,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 271970,
+          "sha256": "c0ef5566a4c5d5ae28ae5a9847130864ac7faeea1c7eb3ccebd51ac78d2cb550"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 276150,
+          "sha256": "d89a7ee1d8c48c26bef36658116064072af783a872604dad9384085586c26e2a"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g059",
@@ -3844,19 +3889,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 400916,
+          "sha256": "536bc973f269ae9be30b6b26f4b15cc6e62e225c77ba884de65a6ebe855a6aaf"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 376258,
+          "sha256": "2f0c1f94f2a308130af54150d07e5bf0fa0944b79fcbc56d5f9a976b0e1c71d9"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g060",
@@ -3895,19 +3955,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g060-galactic-border-judgment",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 203736,
+          "sha256": "525da10c150a609217e26386d644ee9f7c0ed775cac56993fba8ea0cfdcb67bd"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 187282,
+          "sha256": "9d08ee679f70cc34727cf7d12c90ce34cfbf72f877f1e9956dac640a3ae9541a"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g060-galactic-border-judgment/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g061",

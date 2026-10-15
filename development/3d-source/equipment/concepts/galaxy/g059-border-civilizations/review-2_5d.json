@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g059",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-frontier:map:8",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations",
+    "regionOrBoss": "銀河邊境 → 邊境文明戰場",
+    "equipmentNames": {
+      "weapon": "文明裂星刃",
+      "helmet": "邊境王冠盔",
+      "armor": "文明重戰甲",
+      "shoes": "星域突進靴",
+      "accessory": "邊境統御核"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "536bc973f269ae9be30b6b26f4b15cc6e62e225c77ba884de65a6ebe855a6aaf",
+    "equipment-five-slots.webp": "2f0c1f94f2a308130af54150d07e5bf0fa0944b79fcbc56d5f9a976b0e1c71d9"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "ff9ab0a8c06dc37d07233649436d17efe9c506cd884c8aa1d777cb457affd27a",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations/generation-provenance.md",
+      "sha256": "b4ac8e9c3639a6ffd4e44eacc7575ae47dff81b920cf91c02c1aeeac814c390f"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations/codex-review.md",
+      "sha256": "ff9ab0a8c06dc37d07233649436d17efe9c506cd884c8aa1d777cb457affd27a"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations/sources/generation.json",
+      "sha256": "edc89df266b353cca5cc0d85023a917efe2aaa2fe720247864e522bb8c885a68"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations/codex-review.md",
+        "sha256": "ff9ab0a8c06dc37d07233649436d17efe9c506cd884c8aa1d777cb457affd27a"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "536bc973f269ae9be30b6b26f4b15cc6e62e225c77ba884de65a6ebe855a6aaf",
+        "equipment-five-slots.webp": "2f0c1f94f2a308130af54150d07e5bf0fa0944b79fcbc56d5f9a976b0e1c71d9"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g059 已逐字核對最新main 89738447f133ce8497731ee5e9cddd63d66328a7 的worldmaps-galactic-frontier.js REGION_MAPS[8]、data.js WORLD_REGIONS固定註冊、engine.js makeItem五槽映射、正式索引與開工卡。galaxy:galactic-frontier:map:8；銀河邊境 → 邊境文明戰場；五槽：文明裂星刃／邊境王冠盔／文明重戰甲／星域突進靴／邊境統御核。210套第59位，永久目錄與1,050槽順序未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g059 兩張原始PNG及兩張WebP均經Pillow load完整解碼為1536×1024，bytes、SHA及參考鏈記錄於sources/generation.json。兩次實際獨立生成，三視與五槽構圖不同；未由三視裁切、換色或重排冒充新圖。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g059 已逐張目視原始生成圖及WebP縮圖：暗紅青銅城垛重肩甲、王冠全罩盔、白光寬劍、楔形重靴及橫翼倒三角統御核。三視有正側背完整全遮臉角色，五槽圖五類單品均可辨識並對應正式名稱；鞋子成對，飾品另列。武器是短握柄刀劍或能量刃，未見槍械、長槍或法杖，符合銀河邊境區域科技主題。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g059 已實際目視288×192兩張WebP縮圖，角色約170px高。暗紅青銅城垛重肩甲、王冠全罩盔、白光寬劍、楔形重靴及橫翼倒三角統御核。頭盔、肩胸、背飾、鞋與刀劍主輪廓可辨識，與本批其他套可區分；不依靠小字與微小裝飾，不等同正式角色素材或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g059 本任務實際呼叫OpenAI image_gen.imagegen先生成三視，目視後以本套原PNG作參考另次繪製五槽；原PNG逐位元組保存，工具原路徑、尺寸、bytes、SHA與轉檔參數可查。使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "王冠尖角與白光劍芯寬度在三視與五槽圖略有差異，背核橫翼與鎧甲安裝位置也有微差；紅銅重甲和倒三角核心清楚一致，非阻擋。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g059-border-civilizations/generation-provenance.md",
+      "sha256": "b4ac8e9c3639a6ffd4e44eacc7575ae47dff81b920cf91c02c1aeeac814c390f"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "b57b1c761c9f264ba863d81976169e0b530a1ca4d6baa901446c3399553f2d4d"
+}

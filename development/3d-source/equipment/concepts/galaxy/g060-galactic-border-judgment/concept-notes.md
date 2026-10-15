@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -56,3 +56,12 @@
 ## 2026-10-15 後續刀劍量產規則
 
 武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+
+## G12 已實作概念與角色素材交接（2026-10-15 UTC）
+
+黑銀幾何裁定甲、紅縱縫楔盔、紅邊直劍、雙紅推進靴及雙直立權限板。
+武器為短握柄刀劍，三視握持朝下，後續透明角色採右向3/4鏡位，保留本套頭盔、肩胸、鞋與背飾識別點。兩概念圖與SHA、原PNG及權利來源在sources/generation.json；目視與單階段schema4在codex-review.md及review-2_5d.json。
+
+五槽圖另補劍和頭盔角度，鎧甲背圖僅保留中央接口，右下獨立呈現完整雙板權限；板長和胸甲分片略異，整體黑銀紅輪廓一致，非阻擋。
+
+概念批准由正式驗證器推導；角色／武器素材尚未製作，GM未測，正式發布false。本批不採舊C節工程級骨架、LOD或拆件作概念阻擋條件。

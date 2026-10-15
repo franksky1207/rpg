@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g057",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-frontier:map:6",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub",
+    "regionOrBoss": "銀河邊境 → 銀河商路樞紐",
+    "equipmentNames": {
+      "weapon": "商路護衛刃",
+      "helmet": "交易戰盔",
+      "armor": "商隊防護甲",
+      "shoes": "高速航運靴",
+      "accessory": "商路交易節點"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "870bc196b18fe097079990099b9982c111b4345aed93b5628e467a87b07d3789",
+    "equipment-five-slots.webp": "cfabd7651c3b06ff08c7139d6a7c0d0e47095905e6c8cd1d0b016695fdec52f0"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "a356195599e808078d1a18ffab7ee1cc058b6f9dc6faf05f71e047b21a3731a6",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/generation-provenance.md",
+      "sha256": "23658c91f168bfe96a2ca8162462db4a718444eca5859433b89188fef13668bb"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/codex-review.md",
+      "sha256": "a356195599e808078d1a18ffab7ee1cc058b6f9dc6faf05f71e047b21a3731a6"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/sources/generation.json",
+      "sha256": "316a253d31b0497b11f2e6f9cacc20c1ba975da874d35d342c5075d29f5e07b2"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/codex-review.md",
+        "sha256": "a356195599e808078d1a18ffab7ee1cc058b6f9dc6faf05f71e047b21a3731a6"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "870bc196b18fe097079990099b9982c111b4345aed93b5628e467a87b07d3789",
+        "equipment-five-slots.webp": "cfabd7651c3b06ff08c7139d6a7c0d0e47095905e6c8cd1d0b016695fdec52f0"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g057 已逐字核對最新main 89738447f133ce8497731ee5e9cddd63d66328a7 的worldmaps-galactic-frontier.js REGION_MAPS[6]、data.js WORLD_REGIONS固定註冊、engine.js makeItem五槽映射、正式索引與開工卡。galaxy:galactic-frontier:map:6；銀河邊境 → 銀河商路樞紐；五槽：商路護衛刃／交易戰盔／商隊防護甲／高速航運靴／商路交易節點。210套第57位，永久目錄與1,050槽順序未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g057 兩張原始PNG及兩張WebP均經Pillow load完整解碼為1536×1024，bytes、SHA及參考鏈記錄於sources/generation.json。兩次實際獨立生成，三視與五槽構圖不同；未由三視裁切、換色或重排冒充新圖。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g057 已逐張目視原始生成圖及WebP縮圖：象牙白黃銅方肩商隊甲、琥珀全面罩、直寬劍、高速推進靴及六角三支交易節點。三視有正側背完整全遮臉角色，五槽圖五類單品均可辨識並對應正式名稱；鞋子成對，飾品另列。武器是短握柄刀劍或能量刃，未見槍械、長槍或法杖，符合銀河邊境區域科技主題。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g057 已實際目視288×192兩張WebP縮圖，角色約170px高。象牙白黃銅方肩商隊甲、琥珀全面罩、直寬劍、高速推進靴及六角三支交易節點。頭盔、肩胸、背飾、鞋與刀劍主輪廓可辨識，與本批其他套可區分；不依靠小字與微小裝飾，不等同正式角色素材或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g057 本任務實際呼叫OpenAI image_gen.imagegen先生成三視，目視後以本套原PNG作參考另次繪製五槽；原PNG逐位元組保存，工具原路徑、尺寸、bytes、SHA與轉檔參數可查。使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "五槽圖胸甲背面仍裝有交易節點，右側另列獨立節點正背面；節點線路與肩甲接點略異，六角三支框架和商隊方甲一致，非阻擋。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g057-galactic-trade-hub/generation-provenance.md",
+      "sha256": "23658c91f168bfe96a2ca8162462db4a718444eca5859433b89188fef13668bb"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "fb15d1a0bb57b5531ba726abf846bff085e7a92d5de13f7e37253304ce7e50cb"
+}

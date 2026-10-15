@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g058",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-frontier:map:7",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network",
+    "regionOrBoss": "銀河邊境 → 古代星門網",
+    "equipmentNames": {
+      "weapon": "古門切界刃",
+      "helmet": "星門遺盔",
+      "armor": "空間遺甲",
+      "shoes": "古門穿界靴",
+      "accessory": "遠古星門遺核"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "c0ef5566a4c5d5ae28ae5a9847130864ac7faeea1c7eb3ccebd51ac78d2cb550",
+    "equipment-five-slots.webp": "d89a7ee1d8c48c26bef36658116064072af783a872604dad9384085586c26e2a"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "20c9e10a64d18dfb5c661dc8e8a089472ebc2d93d9ba02533c4e1963c614ff6d",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/generation-provenance.md",
+      "sha256": "8988cc70c718c084ce4c4801f02937bda8f7f001e3eb3d1f3afec9b459dd9695"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/codex-review.md",
+      "sha256": "20c9e10a64d18dfb5c661dc8e8a089472ebc2d93d9ba02533c4e1963c614ff6d"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/sources/generation.json",
+      "sha256": "ecf336084762ebdec95426b098615d9af762dd3b6f611756df825cbe03fe87cc"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/codex-review.md",
+        "sha256": "20c9e10a64d18dfb5c661dc8e8a089472ebc2d93d9ba02533c4e1963c614ff6d"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "c0ef5566a4c5d5ae28ae5a9847130864ac7faeea1c7eb3ccebd51ac78d2cb550",
+        "equipment-five-slots.webp": "d89a7ee1d8c48c26bef36658116064072af783a872604dad9384085586c26e2a"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g058 已逐字核對最新main 89738447f133ce8497731ee5e9cddd63d66328a7 的worldmaps-galactic-frontier.js REGION_MAPS[7]、data.js WORLD_REGIONS固定註冊、engine.js makeItem五槽映射、正式索引與開工卡。galaxy:galactic-frontier:map:7；銀河邊境 → 古代星門網；五槽：古門切界刃／星門遺盔／空間遺甲／古門穿界靴／遠古星門遺核。210套第58位，永久目錄與1,050槽順序未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g058 兩張原始PNG及兩張WebP均經Pillow load完整解碼為1536×1024，bytes、SHA及參考鏈記錄於sources/generation.json。兩次實際獨立生成，三視與五槽構圖不同；未由三視裁切、換色或重排冒充新圖。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g058 已逐張目視原始生成圖及WebP縮圖：銀紫修長月牙肩甲、分叉弧冠全罩盔、直能量劍、環形踝靴及分段星門菱晶環。三視有正側背完整全遮臉角色，五槽圖五類單品均可辨識並對應正式名稱；鞋子成對，飾品另列。武器是短握柄刀劍或能量刃，未見槍械、長槍或法杖，符合銀河邊境區域科技主題。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g058 已實際目視288×192兩張WebP縮圖，角色約170px高。銀紫修長月牙肩甲、分叉弧冠全罩盔、直能量劍、環形踝靴及分段星門菱晶環。頭盔、肩胸、背飾、鞋與刀劍主輪廓可辨識，與本批其他套可區分；不依靠小字與微小裝飾，不等同正式角色素材或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g058 本任務實際呼叫OpenAI image_gen.imagegen先生成三視，目視後以本套原PNG作參考另次繪製五槽；原PNG逐位元組保存，工具原路徑、尺寸、bytes、SHA與轉檔參數可查。使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "五槽圖星門核心新增展示用底座，與三視背部安裝位置不同；分段環、中央菱晶及月牙甲輪廓一致，底座不視為正式角色必備新槽位。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g058-ancient-stargate-network/generation-provenance.md",
+      "sha256": "8988cc70c718c084ce4c4801f02937bda8f7f001e3eb3d1f3afec9b459dd9695"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "f5e3e0f4c3d19c999a9944c16575aae035fe8575649c08a14a9559b919101e54"
+}
