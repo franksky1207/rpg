@@ -83,7 +83,7 @@ def main():
                             "sourceKey": row["sourceKey"], "regionOrBoss": row["regionOrBoss"],
                             "equipmentNames": row["equipmentNames"], "directory": row["directory"],
                             "missing": row["missing"], "preserveExisting": row["present"],
-                            "requiresUserApproval": False, "requiresVerifiedTwoStageArtReview": True}, ensure_ascii=False))
+                            "requiresUserApproval": False, "reviewWorkflow": "codex-single-stage", "setsPerProductionRun": 5}, ensure_ascii=False))
         else:
             print(json.dumps({"batches": [{k: v for k, v in g.items() if k != "sets"} for g in groups],
                 "totalImagesPresent": sum(g["imagesPresent"] for g in groups),
