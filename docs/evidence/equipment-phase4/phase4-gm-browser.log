@@ -10,4 +10,4 @@ raster 844 g005
 raster 844 g007
 raster 844 g018
 scroll restore 844 213 213
-PASS GM published browser: 115 assertions, desktop/portrait/landscape, three real sprites, five actions, formal/free, revoke, reopen
+PASS GM published browser: 121 assertions, desktop/portrait/landscape, three real sprites, five actions, formal/free, revoke, reopen

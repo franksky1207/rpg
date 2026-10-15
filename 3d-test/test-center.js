@@ -357,7 +357,7 @@ async function start(){
  if(wholeSuitView&&['character','battle-battle'].includes(entry().kind)){
   appearancePanel.hidden=true;scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 角色展示：不影響正式戰鬥與角色資料';
   const abort=new AbortController();let view=null;runtime={dispose:()=>{abort.abort();view?.dispose();},resize:()=>view?.resize()};
-  try{const m=await import('./gm-whole-suit.mjs?v=20261015-phase4-sprites2');if(ticket!==serial)return;view=await m.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial)view.dispose();}
+  try{const m=await import('./gm-whole-suit.mjs?v=20261015-phase4-sprites3');if(ticket!==serial)return;view=await m.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial)view.dispose();}
   catch(_){if(ticket===serial)fail('角色展示無法載入，請返回後重試。');}
   return;
  }

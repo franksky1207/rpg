@@ -30,7 +30,14 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
     await frame.locator('[data-action="reset"]').click();
    }
    await frame.locator('[data-pick="suit"]').selectOption('g011');await frame.locator('.gm-suit-status').filter({hasText:'待製作'}).waitFor();check(await frame.locator('.gm-suit-preview canvas').count()===0,'no invented sprite');
+   // Hold valid parent replies to reproduce retry/free -> formal races deterministically.
+   await frame.locator('[data-pick="region"]').selectOption('地球戰爭');await frame.locator('[data-pick="suit"]').selectOption('g007');await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
+   await page.evaluate(()=>{const win=document.querySelector('#gm3dPrototypeOverlay iframe').contentWindow,send=win.postMessage.bind(win);win.__originalSpritePost=win.postMessage;win.postMessage=(message,origin)=>{const delay=message?.type==='civilization3d:sprite-auth-response'?200:message?.type==='civilization3d:sprite-snapshot-response'?600:0;if(delay)setTimeout(()=>send(message,origin),delay);else send(message,origin);};});
+   await frame.getByRole('button',{name:'重新載入／同步'}).click();
    await frame.locator('[data-mode="formal"]').click();await frame.locator('.gm-suit-status').filter({hasText:/回退|待製作/}).waitFor();check(await frame.locator('.gm-suit-preview canvas').count()===0,'formal no stale free suit');
+   await page.waitForTimeout(300);check(await frame.locator('.gm-suit-preview canvas').count()===0,'late free retry cannot overwrite formal mode');
+   await frame.locator('[data-pick=suit]').evaluate(e=>{e.value='g005';e.dispatchEvent(new Event('change'));});check(await frame.locator('.gm-suit-preview canvas').count()===0,'hidden free selector cannot change formal suit');
+   await page.evaluate(()=>{const win=document.querySelector('#gm3dPrototypeOverlay iframe').contentWindow;win.postMessage=win.__originalSpritePost;});
    check(spriteRequests.length<=3,'cached sprite reuse');
    check(await page.evaluate(t=>JSON.stringify(state)===t,truth),'state unchanged');check(await page.evaluate(t=>JSON.stringify(localStorage)===t,storage),'storage unchanged');
    // Test-only real equipment setup, then exercise the real authoritative capture bridge.

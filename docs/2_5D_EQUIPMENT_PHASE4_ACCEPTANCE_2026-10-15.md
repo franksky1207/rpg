@@ -34,7 +34,7 @@
 
 - 原裝備資料庫68項、素材Python17項、原素材Node9項、新GM Runtime11項通過。新測試含正式五槽／錯紀元／混穿／fixture拒絕、獨立GM發布許可、404／SHA／解碼錯誤、快取／中斷／取消／重複／釋放／記憶體上限。
 - 原正式快照15項、共用loader10項、B播放16項、B renderer12項、combat events4項；G007五槽／15LOD、registry、batch28 preflight、批01～27相容稽核、玩家快照、發布回歸、SW cache／prefetch、音訊20項及9正式owner回歸通過。相關實跑輸出在`docs/evidence/equipment-phase4/`。
-- 原GM瀏覽器回歸：八分類／31案例、手機最大化還原通過。新GM發布包瀏覽器115項斷言通過：1365×900、390×844、844×390，三套真圖像素、五動作與死亡淡出、快取、正式／自由及存檔不變、撤權、關閉重進、案例切換、最大化捲動原位還原、404／SHA／解碼失敗安全回退。最終輸出及三張完整面板截圖已收錄證據，測試對象為`.publish-stage3`實際發布包，非development預覽頁。
+- 原GM瀏覽器回歸：八分類／31案例、手機最大化還原通過。新GM發布包瀏覽器121項斷言通過：1365×900、390×844、844×390，三套真圖像素、五動作與死亡淡出、快取、正式／自由及存檔不變、撤權、關閉重進、案例切換、最大化捲動原位還原、404／SHA／解碼失敗安全回退。最終輸出及三張完整面板截圖已收錄證據，測試對象為`.publish-stage3`實際發布包，非development預覽頁。
 - `equipment-concepts.py generate`連跑兩次changedFiles=0；`equipment-gm-publication.py --check`通過。210／1,050身份、60概念圖、G024/G030例外、G006/G007歷史資料未改；G007原GLB與原3D入口完整保留。
 - 本機執行曾發現：舊B發布數量鎖未計入10個GM資源；舊T4／批01～27只認歷史query變更；發布fixture缺新允許清單。已以**固定新範圍、舊main原始SHA及確切新SHA**擴充驗證，保留原歷史鎖；fixture改為帶入真允許清單並要求development引用被拒絕，沒有停用檢查。GLTF回歸首次缺環境套件，使用已安裝gltf-validator後重跑通過。手機scroll測試改為量測實際點擊前位置及等待還原完成，沒有移除位置檢查。
 
@@ -50,3 +50,5 @@
 ## 首次提交Actions後續修正
 
 首次提交`0de05e07f51bbda252141dd0941870b4e37fdfbd`的新增GM整合、Sprite Pipeline、Equipment Concept Database、快取版本及發布稽核Actions均已success。B2 run38665264122與B3 run38665264130在Python `tools/inventory.py`失敗，實際訊息為`Protected non-B1 source changed: gm3dprototype.js`：該入口沒有轉交本批精確歷史來源驗證。已將列於phase4來源鎖的路徑交給同一Node驗證器，原始B2 source-lock完全保留。B2盤點（1,102檔）與B3盤點（135檔）及B3 manifest／常數指紋同步；所有GLB、圖集、原始美術與失敗證據bytes未改。B既有import鏈與GM入口只更新查詢版本，避免舊快取帶入過期manifest。兩個Python --check、原B GLB／來源契約及12項renderer契約已重跑通過。最終Actions仍須對修正後HEAD重新確認。
+
+後續複查補強正式／自由切換競態：自由重新載入須綁定原模式、原套裝與請求世代；隱藏自由選單在正式模式拒絕事件。新增刻意延遲父頁授權200ms／正式快照600ms的三viewport負例，121項最終瀏覽器斷言通過，沒有殘留自由人物；正式角色同套核對及所有原資料仍不變。原B沙盒本機三viewport、五基準戰、五槽LOD、控制、授權iframe及存檔隔離也已完成通過。

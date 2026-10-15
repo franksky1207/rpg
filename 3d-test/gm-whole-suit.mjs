@@ -54,8 +54,8 @@ export async function mount({host,signal,quality='medium'}={}){
  }
  const picks={epoch:$('[data-pick="epoch"]'),region:$('[data-pick="region"]'),suit:$('[data-pick="suit"]')};
  const options=(select,rows)=>{select.replaceChildren(...rows.map(([value,label])=>{const o=document.createElement('option');o.value=value;o.textContent=label;return o;}));};
- function regions(){const rows=catalog.sets.filter(r=>r.epoch===picks.epoch.value);options(picks.region,[...new Set(rows.map(r=>r.regionOrBoss.split(' → ')[0]))].map(s=>[s,s]));suits();}
- function suits(){const rows=catalog.sets.filter(r=>r.epoch===picks.epoch.value&&r.regionOrBoss.split(' → ')[0]===picks.region.value);options(picks.suit,rows.map(r=>[r.id,`${r.id.toUpperCase()} · ${r.equipmentNames.armor}整套${catalog.entries.some(e=>e.id===r.id)?'':'（待製作）'}`]));show(rows[0]);}
+ function regions(){if(mode!=='free'||!authorized)return;const rows=catalog.sets.filter(r=>r.epoch===picks.epoch.value);options(picks.region,[...new Set(rows.map(r=>r.regionOrBoss.split(' → ')[0]))].map(s=>[s,s]));suits();}
+ function suits(){if(mode!=='free'||!authorized)return;const rows=catalog.sets.filter(r=>r.epoch===picks.epoch.value&&r.regionOrBoss.split(' → ')[0]===picks.region.value);options(picks.suit,rows.map(r=>[r.id,`${r.id.toUpperCase()} · ${r.equipmentNames.armor}整套${catalog.entries.some(e=>e.id===r.id)?'':'（待製作）'}`]));show(rows[0]);}
  async function synchronize(){
   clear();name.textContent='';selects.hidden=mode!=='free';
   for(const b of ui.querySelectorAll('[data-mode]'))b.setAttribute('aria-pressed',String(b.dataset.mode===mode));
@@ -67,8 +67,8 @@ export async function mount({host,signal,quality='medium'}={}){
   catch{if(!closed&&ticket===serial){clear();status.textContent='正式角色同步失敗，已回退；請重新同步。';}}
  }
  for(const b of ui.querySelectorAll('[data-mode]'))b.addEventListener('click',()=>{mode=b.dataset.mode;synchronize();},{signal:own.signal});
- const retry=document.createElement('button');retry.type='button';retry.textContent='重新載入／同步';retry.addEventListener('click',()=>{if(mode==='formal')synchronize();else authorize().then(ok=>{if(ok)show(selected);});},{signal:own.signal});actions.append(retry);
- picks.epoch.addEventListener('change',regions,{signal:own.signal});picks.region.addEventListener('change',suits,{signal:own.signal});picks.suit.addEventListener('change',()=>show(catalog.sets.find(r=>r.id===picks.suit.value)),{signal:own.signal});
+ const retry=document.createElement('button');retry.type='button';retry.textContent='重新載入／同步';retry.addEventListener('click',()=>{if(mode==='formal')synchronize();else {const ticket=serial,row=selected;authorize().then(ok=>{if(ok&&!closed&&mode==='free'&&serial===ticket)show(row);});}},{signal:own.signal});actions.append(retry);
+ picks.epoch.addEventListener('change',regions,{signal:own.signal});picks.region.addEventListener('change',suits,{signal:own.signal});picks.suit.addEventListener('change',()=>{if(mode==='free'&&authorized)show(catalog.sets.find(r=>r.id===picks.suit.value));},{signal:own.signal});
  function tick(now){
   if(closed)return;
   if(now-lastAuth>2000)authorize();
