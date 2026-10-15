@@ -49,6 +49,43 @@ class BatchPlannerTests(unittest.TestCase):
     def test_higher_uses_two_five_set_batches(self):
         self.assertEqual(planner.plan(batch="H01")[0]["range"],"h01..h05")
         self.assertEqual(planner.plan(batch="H02")[0]["range"],"h06..h10")
+    def test_all_five_set_ranges_are_contiguous_and_unique(self):
+        groups=planner.plan()
+        self.assertEqual(len(groups),42)
+        ids=[row['id'] for group in groups for row in group['sets']]
+        self.assertEqual(len(ids),210)
+        self.assertEqual(len(set(ids)),210)
+        for group in groups:
+            self.assertEqual(len(group['sets']),5)
+            self.assertEqual(group['range'],f"{group['sets'][0]['id']}..{group['sets'][-1]['id']}")
+            self.assertEqual(group['imagesPresent']+group['imagesMissing'],10)
+
+    def test_partially_completed_batch_is_resumable_without_overwriting(self):
+        import tempfile
+        from unittest.mock import patch
+        source=json.loads((ROOT/planner.BASE/"_concept-index.json").read_text())
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            base=root/planner.BASE
+            base.mkdir(parents=True)
+            for row in source['sets']:
+                directory=root/row['directory']
+                directory.mkdir(parents=True,exist_ok=True)
+                (directory/"concept-notes.md").write_text("fixture",encoding="utf-8")
+                if row['id']=="g031":
+                    image=directory/planner.IMAGES[0]
+                    image.write_bytes(b"existing-image-must-be-preserved")
+                    row['images']=[{"file":planner.IMAGES[0],"sha256":"fixture"}]
+            (base/"_concept-index.json").write_text(json.dumps(source),encoding="utf-8")
+            with patch.object(planner.catalog,"run",return_value=None):
+                group=planner.plan(root=root,batch="G07")[0]
+            self.assertEqual(group['status'],"partial-needs-resume")
+            self.assertEqual(group['imagesPresent'],1)
+            self.assertEqual(group['imagesMissing'],9)
+            self.assertEqual(group['sets'][0]['present'],[planner.IMAGES[0]])
+            self.assertEqual(group['sets'][0]['missing'],[planner.IMAGES[1]])
+            self.assertEqual((root/group['sets'][0]['directory']/planner.IMAGES[0]).read_bytes(),b"existing-image-must-be-preserved")
+
     def test_actual_first_batch_is_not_redrawn(self):
         group=planner.plan(batch="G01")[0]
         self.assertFalse(any(row["missing"] for row in group["sets"]))
