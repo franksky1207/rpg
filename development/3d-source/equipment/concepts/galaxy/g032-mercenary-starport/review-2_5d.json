@@ -1,0 +1,92 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g032",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:frontier:map:1",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport",
+    "regionOrBoss": "星際邊疆 → 星際傭兵港",
+    "equipmentNames": {
+      "weapon": "傭兵脈衝刃",
+      "helmet": "私軍戰盔",
+      "armor": "雇傭重甲",
+      "shoes": "星港突進靴",
+      "accessory": "傭兵識別牌"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "c80c235cc2f4b54dd085db2b1f7fae234c593ff7cb55bbd622befc08c90e2f67",
+    "equipment-five-slots.webp": "0ecb77617b6862e2b0c3b51464fb77909c5ebd828dccdf7e6667c914adc0ab0e"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "307b9b22282e109ddf85e89677f98c9e4c8646791a62111f4a18aebcbefab719",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport/generation-provenance.md",
+      "sha256": "7436f091f0f5ff00813aa06dd03cc647b3e6a92a3eab2aedf1e7a4ed57b31546"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport/codex-review.md",
+      "sha256": "307b9b22282e109ddf85e89677f98c9e4c8646791a62111f4a18aebcbefab719"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport/codex-review.md",
+        "sha256": "307b9b22282e109ddf85e89677f98c9e4c8646791a62111f4a18aebcbefab719"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "c80c235cc2f4b54dd085db2b1f7fae234c593ff7cb55bbd622befc08c90e2f67",
+        "equipment-five-slots.webp": "0ecb77617b6862e2b0c3b51464fb77909c5ebd828dccdf7e6667c914adc0ab0e"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g032 已核對 main da80fc41 的 worldmaps-frontier.js 正式 owner，來源 galaxy:frontier:map:1，區域 星際邊疆 → 星際傭兵港，五槽依序為「傭兵脈衝刃／私軍戰盔／雇傭重甲／星港突進靴／傭兵識別牌」，索引及目錄一致；圖中僅 ID 與數字，正式中文名稱以 owner 為準。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g032 兩張 1536×1024 WebP 均經 Pillow 完整解碼，RIFF、尺寸、bytes 與 SHA 綁定；兩張 SHA 不同，對照原始 PNG 可見三視人物與獨立單品構圖，非裁切或重排冒充。原始輸出雜湊見來源宣告。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g032 實際圖面呈現：鐵黑／橙；左大右小非對稱重肩、厚分層胸甲、橙窄視窗、厚靴、三橙條大型背部識別牌；橙能量單手短厚刃。三視人物完整封閉遮臉，頭胸鞋背與刀劍可見；五槽獨立圖以 1 武器、2 頭盔、3 鎧甲、4 成對鞋、5 飾品對應正式名稱，無槍炮或長柄武器。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g032 已目視完整原圖及縮至 288×192 的三視／五槽圖；人物約 170 像素高，頭盔、肩胸、成對腳部、劍與背飾保持可辨，區域輪廓為鐵黑／橙；左大右小非對稱重肩、厚分層胸甲、橙窄視窗、厚靴、三橙條大型背部識別牌；橙能量單手短厚刃。未以微小刻線作整體辨識前提。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g032 兩張原始 PNG 均來自本任務實際 image_gen.imagegen 輸出，五槽以本套三視原稿作設計參考另次生成；檔名、來源 SHA 與 WebP SHA 已記錄。使用者授權製作，依可用 OpenAI 服務條款使用生成輸出，僅開發概念用途，未使用外部庫圖或宣稱 CC 授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "背面識別牌採放大造型以利小尺寸辨識；三視護板磨耗與手部朝向略異，屬局部視角差異。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport/generation-provenance.md",
+      "sha256": "7436f091f0f5ff00813aa06dd03cc647b3e6a92a3eab2aedf1e7a4ed57b31546"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "7d68387df8f64d1e6e18d6974534194f1fed7ac7cf9c117a2a2f8f51b95f35f0"
+}

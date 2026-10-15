@@ -2041,19 +2041,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g031-frontier-colonies",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 215794,
+          "sha256": "0c30eff78d678550a31beca859c4c7e6b7c2b20cdcbb8d3014820c587be5311b"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 225176,
+          "sha256": "04f78a03313dac8f55b22dedd72c837b64248006acd15f6a6ec27708a9f590aa"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g031-frontier-colonies/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g032",
@@ -2092,19 +2107,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 281054,
+          "sha256": "c80c235cc2f4b54dd085db2b1f7fae234c593ff7cb55bbd622befc08c90e2f67"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 279220,
+          "sha256": "0ecb77617b6862e2b0c3b51464fb77909c5ebd828dccdf7e6667c914adc0ab0e"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g032-mercenary-starport/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g033",
@@ -2143,19 +2173,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g033-expedition-supply",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 209206,
+          "sha256": "162a873342271b1d4a037b96a2b4b87b353d581f450d5618155409b65c52b09f"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 212906,
+          "sha256": "f893f70f922153820c475f9bf313114b5abeaa29f37067c74108a311af0db801"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g033-expedition-supply/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g034",
@@ -2194,19 +2239,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g034-alien-jungle-colony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 225466,
+          "sha256": "db8767dcd41ee65c7100e973f7ea84885108ea8d2f79e47b289dc0217064c633"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 241194,
+          "sha256": "fa9f59840f2431d7d26ebe35d61655776921926a7f20cdc5661d9cfd9db4108c"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g034-alien-jungle-colony/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g035",
@@ -2245,19 +2305,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g035-frontier-pirates",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 311224,
+          "sha256": "eb3582bf6a821edfec6409ed8e39ea2ffa6150069db46997cc781b84da550bd8"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 314332,
+          "sha256": "cea2beb56f76f4140d0a41efd60f94ec22288b19cfb799ffb6d2a4f8b600c1c3"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g035-frontier-pirates/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g036",

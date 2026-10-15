@@ -1,3 +1,5 @@
+> **2026-10-15｜G07五套十圖入庫**：G031～G035各有獨立三視／五槽真WebP、原始PNG及SHA來源、schema4單一Codex審查（blocker=0、微差advisory）；索引35套批准／70圖、175套待製，G036未動。原G001～G030、schema3與G024/G030證據保留。發布隔離及本機檢查見 [G07驗收](docs/2_5D_EQUIPMENT_G07_ACCEPTANCE_2026-10-15.md)；exact-HEAD Actions須推送後核對，不以此段預先宣稱成功。角色／武器素材與Runtime不在本批。
+
 > **2026-10-15｜Codex五套單階段量產配套修正**：`scripts/equipment-art-review.py`及`equipment-concepts.py`支援schema4單一Codex審查，舊schema3保留；批次規劃器42批×5套、下一批G07＝G031～G035。已補schema4成功／錯誤／SHA／阻擋測試、42批完整性及部分續作／防覆蓋測試；`equipment-concepts.yml`改查G07並追蹤現行SOP，修正舊錯誤提示及[統一SOP](docs/2_5D_EQUIPMENT_PRODUCTION_UNIFIED_SOP_2026-10-15.md)新schema4證據契約。CI曾因新增測試期待值與fixture失敗，已據實際job logs修正；以最新HEAD Actions為準。GM整合先前短暫失敗，但其後多個提交已成功，無需改GM Runtime。G001～G030／G024／G030歷史素材及證據未動；尚未生成G031～G035十張圖。
 
 > **2026-10-15｜使用者最新決策：取消概念圖雙階段SOP**：因多次實測不可行，後續所有新概念圖一律**Codex單一任務，每批5套／10張**，由Codex讀正式owner、製作真圖、單次品質檢查、入庫、驗證、提交與自檢；ChatGPT只提供完整Codex批次指令，不再要求ChatGPT初審＋Codex複審或逐套人工核准。現行規範為[2.5D量產統一SOP](docs/2_5D_EQUIPMENT_PRODUCTION_UNIFIED_SOP_2026-10-15.md)；舊[雙階段SOP](docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md)僅供歷史追溯，不作新批次阻擋。**目前程式驗證器尚未修改**，若強制雙階段須在首批Codex指令中修正新批次相容路徑，保留舊30套、G024/G030與SHA來源證據。若Codex無真生圖能力不得假圖或假報成功。

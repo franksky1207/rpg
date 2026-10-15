@@ -39,13 +39,18 @@ class BatchPlannerTests(unittest.TestCase):
             missing+=len(absent)
         self.assertEqual(group["imagesMissing"],missing)
         self.assertEqual(group["imagesPresent"],10-missing)
-    def test_next_unmade_five_set_batch(self):
+    def test_g07_completed_five_set_batch(self):
         group=planner.plan(batch="G07")[0]
         self.assertEqual(group["range"],"g031..g035")
         self.assertEqual(len(group["sets"]),5)
-        self.assertEqual(group["imagesMissing"],10)
-        self.assertEqual(group["imagesPresent"],0)
-        self.assertEqual(group["status"],"not-started")
+        self.assertEqual(group["imagesMissing"],0)
+        self.assertEqual(group["imagesPresent"],10)
+        self.assertEqual(group["approvedSets"],5)
+        self.assertEqual(group["status"],"approved")
+        next_group=planner.plan(batch="G08")[0]
+        self.assertEqual(next_group["range"],"g036..g040")
+        self.assertEqual(next_group["imagesMissing"],10)
+        self.assertEqual(next_group["status"],"not-started")
     def test_higher_uses_two_five_set_batches(self):
         self.assertEqual(planner.plan(batch="H01")[0]["range"],"h01..h05")
         self.assertEqual(planner.plan(batch="H02")[0]["range"],"h06..h10")
@@ -76,6 +81,13 @@ class BatchPlannerTests(unittest.TestCase):
                     image=directory/planner.IMAGES[0]
                     image.write_bytes(b"existing-image-must-be-preserved")
                     row['images']=[{"file":planner.IMAGES[0],"sha256":"fixture"}]
+                    row['conceptApproved']=False
+                    row['conceptStatus']='partial-images'
+                elif row['id'] in ('g032','g033','g034','g035'):
+                    # Isolate the one-existing-image scenario from real batch progress.
+                    row['images']=[]
+                    row['conceptApproved']=False
+                    row['conceptStatus']='not-generated'
                 else:
                     for item in row["images"]:
                         (directory/item["file"]).write_bytes(b"fixture-preserved-image")
