@@ -2,12 +2,12 @@
 
 # 《文明戰線》2.5D 裝備量產｜現行統一 SOP（Codex單流程）
 日期：2026-10-15。
-> **最新決策（覆蓋本文所有舊雙階段敘述）**：使用者多次實測認定ChatGPT初審＋Codex複審不可行。後續新概念圖只使用**Codex單一批次作業**，每次5套／10張；Codex負責正式身份核對、真實圖片產製或取得、單次品質檢查、入庫、驗證、提交與自我檢查。禁止要求ChatGPT先審、Codex再審、人工逐套簽核或多次交接。歷史schema3與SHA證據只讀保存；現行驗證器若仍強制雙階段，需在首批Codex任務中以相容方式移除對**新批次**的阻擋，不得偽造舊stage或降低身份、圖檔、SHA及來源安全檢查。若Codex無法實際產出圖檔，必須如實報告，不能用空白或假圖充數。
+> **最新決策（覆蓋本文所有舊雙階段敘述）**：使用者多次實測認定ChatGPT初審＋Codex複審不可行。後續新概念圖只使用**Codex單一批次作業**，每次5套／10張；Codex負責正式身份核對、真實圖片產製或取得、單次品質檢查、入庫、驗證、提交與自我檢查。禁止要求ChatGPT先審、Codex再審、人工逐套簽核或多次交接。歷史schema3與SHA證據只讀保存；現行驗證器已支援schema4單階段，首批Codex不需再改雙階段門檻，不得偽造舊stage或降低身份、圖檔、SHA及來源安全檢查。若Codex無法實際產出圖檔，必須如實報告，不能用空白或假圖充數。
 適用：G001～G100、U001～U100、H01～H10（210套／1,050槽）。本文件是未來新製概念圖與角色素材的**單一閱讀入口**，不取代已上線Runtime契約、審查原始證據或舊G007相容要求。
 
 ## 1. 優先權與邊界
 1. 正式名稱、五槽、區域、ID、存檔、戰鬥與發布：以最新main的正式owner及實際程式為準；不由概念圖片內小字或本文件猜測。
-2. 新2.5D概念美術／審查：Codex單次審查為現行流程；`scripts/equipment-review-policy-v3.json`與schema3雙階段紀錄僅供歷史相容。現行工具若仍強制新圖雙階段，首批Codex需修正新批次驗證路徑；不得竄改舊policy SHA、舊證據或原圖。
+2. 新2.5D概念美術／審查：Codex單次審查為現行流程；`scripts/equipment-review-policy-v3.json`與schema3雙階段紀錄僅供歷史相容。現行工具已支援schema4；不得竄改舊policy SHA、舊證據或原圖。
 3. 角色／武器製作：依`docs/2_5D_EQUIPMENT_SPRITE_PIPELINE_SPEC_2026-10-15.md`的現行補強段；正式戰鬥與GM依既有owner clock、selection、發布gate。不得因本SOP重寫Runtime。
 4. 不再要求新套裝五GLB、53骨、9掛點、三LOD、五槽獨立換裝模型或工程級零件精度。G007舊3D資產及原相容測試照舊保留。
 5. G024／G030兩圖原SHA及使用者接受的非阻擋例外永久沿用既有可驗證紀錄；不得要求重畫或補背座。G001～G030的60張原概念圖不重製。
@@ -25,7 +25,14 @@ G005／G007／G018已有：概念兩圖→真透明整套角色512×512→共用
 - blocker僅限缺圖／損毀、錯身份／錯套／錯正式名稱、來源授權問題、嚴重缺失主體、主要造型明顯不符或在正式小尺寸完全不可辨識；局部裝飾、膝鞋接縫、背座細節、三視微差是advisory。
 
 ## 4. Codex單一批次製作／入庫（現行）
-由ChatGPT提供一次5套的完整Codex指令。Codex在同一任務內讀main、核對正式owner、產出或取得10張真WebP、單次品質檢查、保留來源／SHA／尺寸／授權證據、寫入正確directory、執行現行有效驗證器及必要相容修正、提交main、檢查exact-HEAD Actions。禁止以兩階段review或逐套人工核准作新批次門檻。若Codex環境不具備真實生圖能力，明確回報限制，不得假造圖片、審查或成功提交。歷史證據保留只讀。
+由ChatGPT提供一次5套的完整Codex指令。Codex在同一任務內讀main、核對正式owner、產出或取得10張真WebP、單次品質檢查、保留來源／SHA／尺寸／授權證據、寫入正確directory、執行現行有效驗證器、提交main、檢查exact-HEAD Actions。禁止以兩階段review或逐套人工核准作新批次門檻。若Codex環境不具備真實生圖能力，明確回報限制，不得假造圖片、審查或成功提交。歷史證據保留只讀。
+
+### 新套裝的schema4證據契約（不是雙階段）
+- 以每套`review-2_5d.json`為審查資料，`schema: 4`、`policyVersion: equipment-2.5d-v3.0`；**`stages`僅一筆，`reviewer: Codex`**。原schema3仍保留兩筆歷史審查，禁止改寫舊紀錄。
+- 保留`formalIdentity`（完整六欄）、兩張真WebP的`imageSha256`、`policySha256`、`reviewedAt`、`evidenceFile`／`evidenceSha256`、`evidenceFingerprint`、`sources`、`provenance`及`blockers/advisories/explicitlyAcceptedExceptions`。每項stage blocker（officialIdentity、imageIntegrity、contentIdentity、characterReadability、provenanceLicense）均須有真實、可由stage source及本地evidence查核的觀察文字；不得假造ChatGPT審查來源。
+- 審查者的單一stage要帶`source`、`reviewedAt`、`imageSha256`、五個`checks`及`passed`。資料SHA與實際位元組不符、缺檔、來源授權不明、嚴重錯套仍必須阻擋。可沿用固定v3政策的雜湊與阻擋條件，但**不能沿用schema3兩階段要求**。
+- 實作真實輸出後執行`python3 scripts/equipment-concepts.py generate`、`validate`、`python3 scripts/equipment-concept-batches.py plan --batch G07`、`python3 -m unittest discover -s tests/equipment-concepts -v`；確認重跑generate無追蹤差異。新批次產圖能力不足時不得寫虛假核准紀錄。
+- 批次代碼共42個：G01～G20、U01～U20、H01～H02，每批5套10圖；下一批G07＝G031～G035。中斷續作只補缺圖，已有真圖／SHA不能無理由覆蓋。
 
 ## 5. 概念圖→角色素材的最小交接資料
 逐套保留正式identity、兩概念圖路徑／SHA、主輪廓與配色、武器刀劍類型／握持方向、頭盔／肩甲／背飾辨識點、透明角色所需的右向3/4鏡位提示；這些可寫進notes或製作計畫，不新增概念圖片張數。
