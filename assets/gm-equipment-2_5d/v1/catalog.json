@@ -44,7 +44,34 @@
       },
       "gmTestStatus": "not-tested",
       "formalReleaseAllowed": false,
-      "gmPreviewAllowed": true
+      "gmPreviewAllowed": true,
+      "weaponAnimation": {
+        "id": "g005",
+        "weaponAnimationStatus": "complete",
+        "template": "one-hand-blade",
+        "body": {
+          "path": "assets/gm-equipment-2_5d/v1/g005-attack-body.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 91816,
+          "sha256": "f48450f64854ae07396975e9180aa9f169991214829bc1a3664b5a2a007122ca"
+        },
+        "weapon": {
+          "path": "assets/gm-equipment-2_5d/v1/g005-weapon.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 6126,
+          "sha256": "8fabb061bd85ed5d4969f88083f3b0bdc6dce367aa9c76c8a0036c8fbbac1367"
+        },
+        "grip": [
+          0.388671875,
+          0.52734375
+        ],
+        "depth": "front-with-grip-occlusion",
+        "handRadius": 0.028,
+        "windup": 2.0,
+        "strike": 4.25
+      }
     },
     {
       "id": "g007",
@@ -88,7 +115,34 @@
       },
       "gmTestStatus": "not-tested",
       "formalReleaseAllowed": false,
-      "gmPreviewAllowed": true
+      "gmPreviewAllowed": true,
+      "weaponAnimation": {
+        "id": "g007",
+        "weaponAnimationStatus": "complete",
+        "template": "one-hand-blade",
+        "body": {
+          "path": "assets/gm-equipment-2_5d/v1/g007-attack-body.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 78132,
+          "sha256": "dd46cef3739c5e9fbe6eb6b0f358de9b55d89358fa8507bb13123d1f294577d5"
+        },
+        "weapon": {
+          "path": "assets/gm-equipment-2_5d/v1/g007-weapon.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 17410,
+          "sha256": "2a1913816cff6c982f5b325e85269a57060952332bb015754a66843913bbb5b5"
+        },
+        "grip": [
+          0.396484375,
+          0.513671875
+        ],
+        "depth": "front-with-grip-occlusion",
+        "handRadius": 0.028,
+        "windup": 2.0,
+        "strike": 4.25
+      }
     },
     {
       "id": "g018",
@@ -132,7 +186,34 @@
       },
       "gmTestStatus": "not-tested",
       "formalReleaseAllowed": false,
-      "gmPreviewAllowed": true
+      "gmPreviewAllowed": true,
+      "weaponAnimation": {
+        "id": "g018",
+        "weaponAnimationStatus": "complete",
+        "template": "one-hand-blade",
+        "body": {
+          "path": "assets/gm-equipment-2_5d/v1/g018-attack-body.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 99630,
+          "sha256": "07621b6025f6531772af07b602e64dff99266c9bdef2621fcb30662f56b10818"
+        },
+        "weapon": {
+          "path": "assets/gm-equipment-2_5d/v1/g018-weapon.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 10634,
+          "sha256": "0373323f931338686ec847a158f397109191f7bac7032d75c5a18b27a3adc877"
+        },
+        "grip": [
+          0.421875,
+          0.517578125
+        ],
+        "depth": "front-with-grip-occlusion",
+        "handRadius": 0.028,
+        "windup": 2.0,
+        "strike": 4.25
+      }
     }
   ],
   "sets": [
@@ -147,7 +228,8 @@
         "armor": "城防插板甲",
         "shoes": "街區突進靴",
         "accessory": "戰場識別牌"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g002",
@@ -160,7 +242,8 @@
         "armor": "防線重甲",
         "shoes": "越野作戰靴",
         "accessory": "前線測距儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g003",
@@ -173,7 +256,8 @@
         "armor": "實驗型護甲",
         "shoes": "封鎖區戰靴",
         "accessory": "軍規解碼器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g004",
@@ -186,7 +270,8 @@
         "armor": "沙地複合甲",
         "shoes": "荒漠疾行靴",
         "accessory": "熱源追獵器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g005",
@@ -199,7 +284,8 @@
         "armor": "生化隔離甲",
         "shoes": "污染區封閉靴",
         "accessory": "異變偵測器"
-      }
+      },
+      "weaponAnimationStatus": "complete"
     },
     {
       "id": "g006",
@@ -212,7 +298,8 @@
         "armor": "冰原保溫甲",
         "shoes": "雪地抓地靴",
         "accessory": "熱源定位器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g007",
@@ -225,7 +312,8 @@
         "armor": "自律護衛甲",
         "shoes": "遺跡浮行靴",
         "accessory": "古文明鑰印"
-      }
+      },
+      "weaponAnimationStatus": "complete"
     },
     {
       "id": "g008",
@@ -238,7 +326,8 @@
         "armor": "熔核耐熱甲",
         "shoes": "熱區推進靴",
         "accessory": "反應爐調節器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g009",
@@ -251,7 +340,8 @@
         "armor": "指揮級複合甲",
         "shoes": "戰略機動靴",
         "accessory": "戰場指揮模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g010",
@@ -264,7 +354,8 @@
         "armor": "征服者重甲",
         "shoes": "最終突擊靴",
         "accessory": "地球主控權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g011",
@@ -277,7 +368,8 @@
         "armor": "月面複合甲",
         "shoes": "真空磁吸靴",
         "accessory": "月面導航晶片"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g012",
@@ -290,7 +382,8 @@
         "armor": "軌道作戰甲",
         "shoes": "艙外推進靴",
         "accessory": "軌道定位模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g013",
@@ -303,7 +396,8 @@
         "armor": "殖民防衛甲",
         "shoes": "赤塵機動靴",
         "accessory": "火星環境模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g014",
@@ -316,7 +410,8 @@
         "armor": "火星重型甲",
         "shoes": "赤原突進靴",
         "accessory": "戰區火控模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g015",
@@ -329,7 +424,8 @@
         "armor": "工業強化甲",
         "shoes": "零重力磁靴",
         "accessory": "礦帶掃描器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g016",
@@ -342,7 +438,8 @@
         "armor": "低溫動力甲",
         "shoes": "冰面推進靴",
         "accessory": "木衛導航核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g017",
@@ -355,7 +452,8 @@
         "armor": "高壓戰鬥甲",
         "shoes": "引力修正靴",
         "accessory": "重力控制模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g018",
@@ -368,7 +466,8 @@
         "armor": "環軌防護甲",
         "shoes": "環帶機動靴",
         "accessory": "土星環定位器"
-      }
+      },
+      "weaponAnimationStatus": "complete"
     },
     {
       "id": "g019",
@@ -381,7 +480,8 @@
         "armor": "深空生存甲",
         "shoes": "遠日推進靴",
         "accessory": "深空航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g020",
@@ -394,7 +494,8 @@
         "armor": "太陽系主戰甲",
         "shoes": "終極躍遷靴",
         "accessory": "太陽系主控核心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g021",
@@ -407,7 +508,8 @@
         "armor": "近星複合甲",
         "shoes": "光帆推進靴",
         "accessory": "比鄰座標器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g022",
@@ -420,7 +522,8 @@
         "armor": "星航防護甲",
         "shoes": "曲率機動靴",
         "accessory": "半人馬導航核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g023",
@@ -433,7 +536,8 @@
         "armor": "遠星防衛甲",
         "shoes": "殖民疾行靴",
         "accessory": "巴納德環境核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g024",
@@ -446,7 +550,8 @@
         "armor": "防線動力甲",
         "shoes": "恆星機動靴",
         "accessory": "沃夫防衛模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g025",
@@ -459,7 +564,8 @@
         "armor": "星際強化甲",
         "shoes": "光譜推進靴",
         "accessory": "天狼定位器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g026",
@@ -472,7 +578,8 @@
         "armor": "天狼環軌甲",
         "shoes": "環域推進靴",
         "accessory": "星環控制模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g027",
@@ -485,7 +592,8 @@
         "armor": "星港重甲",
         "shoes": "港區磁靴",
         "accessory": "星港調度節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g028",
@@ -498,7 +606,8 @@
         "armor": "高能屏蔽甲",
         "shoes": "光譜浮行靴",
         "accessory": "織女觀測儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g029",
@@ -511,7 +620,8 @@
         "armor": "近星遺物甲",
         "shoes": "遺跡躍遷靴",
         "accessory": "古星文明鑰核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g030",
@@ -524,7 +634,8 @@
         "armor": "近星主戰甲",
         "shoes": "封鎖曲率靴",
         "accessory": "星航封鎖中樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g031",
@@ -537,7 +648,8 @@
         "armor": "遠域殖民甲",
         "shoes": "邊境推進靴",
         "accessory": "殖民指揮模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g032",
@@ -550,7 +662,8 @@
         "armor": "雇傭重甲",
         "shoes": "星港突進靴",
         "accessory": "傭兵識別牌"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g033",
@@ -563,7 +676,8 @@
         "armor": "遠征防護甲",
         "shoes": "航線推進靴",
         "accessory": "補給調度模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g034",
@@ -576,7 +690,8 @@
         "armor": "殖民適應甲",
         "shoes": "叢林機動靴",
         "accessory": "異星生態儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g035",
@@ -589,7 +704,8 @@
         "armor": "黑市戰甲",
         "shoes": "漂移推進靴",
         "accessory": "海盜導航核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g036",
@@ -602,7 +718,8 @@
         "armor": "跨種族防護甲",
         "shoes": "外交機動靴",
         "accessory": "文明翻譯模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g037",
@@ -615,7 +732,8 @@
         "armor": "重工強化甲",
         "shoes": "磁軌作業靴",
         "accessory": "工業控制器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g038",
@@ -628,7 +746,8 @@
         "armor": "遠域主戰甲",
         "shoes": "軍閥突襲靴",
         "accessory": "軍閥指揮權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g039",
@@ -641,7 +760,8 @@
         "armor": "長航生存甲",
         "shoes": "遠航推進靴",
         "accessory": "航路導航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g040",
@@ -654,7 +774,8 @@
         "armor": "邊疆霸權甲",
         "shoes": "霸權突進靴",
         "accessory": "邊疆統帥權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g041",
@@ -667,7 +788,8 @@
         "armor": "星區主戰甲",
         "shoes": "獵戶躍遷靴",
         "accessory": "旋臂導航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g042",
@@ -680,7 +802,8 @@
         "armor": "星門防護甲",
         "shoes": "空間穿越靴",
         "accessory": "星門控制節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g043",
@@ -693,7 +816,8 @@
         "armor": "航路複合甲",
         "shoes": "超光速推進靴",
         "accessory": "跨星座標核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g044",
@@ -706,7 +830,8 @@
         "armor": "文明防衛甲",
         "shoes": "星區機動靴",
         "accessory": "文明識別印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g045",
@@ -719,7 +844,8 @@
         "armor": "群星防護甲",
         "shoes": "群域推進靴",
         "accessory": "殖民群調度節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g046",
@@ -732,7 +858,8 @@
         "armor": "聯盟主戰甲",
         "shoes": "聯合作戰靴",
         "accessory": "聯盟戰術模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g047",
@@ -745,7 +872,8 @@
         "armor": "軍規重甲",
         "shoes": "武裝推進靴",
         "accessory": "軍械火控節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g048",
@@ -758,7 +886,8 @@
         "armor": "要塞重裝甲",
         "shoes": "堡區機動靴",
         "accessory": "要塞權限模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g049",
@@ -771,7 +900,8 @@
         "armor": "星區霸權甲",
         "shoes": "霸權越界靴",
         "accessory": "星區霸權權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g050",
@@ -784,7 +914,8 @@
         "armor": "獵戶主戰甲",
         "shoes": "旋臂決勝靴",
         "accessory": "旋臂戰略中樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g051",
@@ -797,7 +928,8 @@
         "armor": "邊境文明甲",
         "shoes": "星海推進靴",
         "accessory": "邊境航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g052",
@@ -810,7 +942,8 @@
         "armor": "遠古文明甲",
         "shoes": "遺跡浮躍靴",
         "accessory": "古文明鑰核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g053",
@@ -823,7 +956,8 @@
         "armor": "廢墟殖民甲",
         "shoes": "流亡航跡靴",
         "accessory": "失落殖民刻印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g054",
@@ -836,7 +970,8 @@
         "armor": "掠奪主戰甲",
         "shoes": "星海漂移靴",
         "accessory": "劫掠航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g055",
@@ -849,7 +984,8 @@
         "armor": "殘骸戰甲",
         "shoes": "殘星推進靴",
         "accessory": "兵器殘骸索引"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g056",
@@ -862,7 +998,8 @@
         "armor": "星海生存甲",
         "shoes": "遠漂躍遷靴",
         "accessory": "流亡航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g057",
@@ -875,7 +1012,8 @@
         "armor": "商隊防護甲",
         "shoes": "高速航運靴",
         "accessory": "商路交易節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g058",
@@ -888,7 +1026,8 @@
         "armor": "空間遺甲",
         "shoes": "古門穿界靴",
         "accessory": "遠古星門遺核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g059",
@@ -901,7 +1040,8 @@
         "armor": "文明重戰甲",
         "shoes": "星域突進靴",
         "accessory": "邊境統御核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g060",
@@ -914,7 +1054,8 @@
         "armor": "邊境裁定甲",
         "shoes": "裁決航行靴",
         "accessory": "邊境裁決權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g061",
@@ -927,7 +1068,8 @@
         "armor": "帝國主戰甲",
         "shoes": "領域躍遷靴",
         "accessory": "帝國權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g062",
@@ -940,7 +1082,8 @@
         "armor": "聯邦防護甲",
         "shoes": "聯邦航躍靴",
         "accessory": "聯邦戰術模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g063",
@@ -953,7 +1096,8 @@
         "armor": "星域軍團甲",
         "shoes": "戰線機動靴",
         "accessory": "軍團指揮節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g064",
@@ -966,7 +1110,8 @@
         "armor": "工業主戰甲",
         "shoes": "磁軌戰靴",
         "accessory": "帝國生產權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g065",
@@ -979,7 +1124,8 @@
         "armor": "首都防衛甲",
         "shoes": "首都機動靴",
         "accessory": "聯邦中樞權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g066",
@@ -992,7 +1138,8 @@
         "armor": "競爭主戰甲",
         "shoes": "區域躍遷靴",
         "accessory": "星域爭霸權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g067",
@@ -1005,7 +1152,8 @@
         "armor": "帝國艦戰甲",
         "shoes": "艦橋機動靴",
         "accessory": "艦隊火控中樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g068",
@@ -1018,7 +1166,8 @@
         "armor": "議會防護甲",
         "shoes": "議政通行靴",
         "accessory": "文明議政權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g069",
@@ -1031,7 +1180,8 @@
         "armor": "主宰王權甲",
         "shoes": "霸域穿梭靴",
         "accessory": "霸域統御中樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g070",
@@ -1044,7 +1194,8 @@
         "armor": "中域主戰甲",
         "shoes": "中域統御靴",
         "accessory": "中域統御權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g071",
@@ -1057,7 +1208,8 @@
         "armor": "核心外圍甲",
         "shoes": "重力穩定靴",
         "accessory": "星密度控制核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g072",
@@ -1070,7 +1222,8 @@
         "armor": "引力防護甲",
         "shoes": "重力偏移靴",
         "accessory": "引力穩定器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g073",
@@ -1083,7 +1236,8 @@
         "armor": "奇點防護甲",
         "shoes": "事件視界靴",
         "accessory": "黑洞採能節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g074",
@@ -1096,7 +1250,8 @@
         "armor": "奇點主戰甲",
         "shoes": "空間折躍靴",
         "accessory": "奇點兵器節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g075",
@@ -1109,7 +1264,8 @@
         "armor": "時空防護甲",
         "shoes": "相位機動靴",
         "accessory": "時空校準器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g076",
@@ -1122,7 +1278,8 @@
         "armor": "核域文明甲",
         "shoes": "核域穿行靴",
         "accessory": "核心文明權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g077",
@@ -1135,7 +1292,8 @@
         "armor": "黑洞防衛甲",
         "shoes": "引力推進靴",
         "accessory": "視界防衛節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g078",
@@ -1148,7 +1306,8 @@
         "armor": "實驗時空甲",
         "shoes": "相位實驗靴",
         "accessory": "奇點研究模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g079",
@@ -1161,7 +1320,8 @@
         "armor": "核心主戰甲",
         "shoes": "核心相位靴",
         "accessory": "核心戰術模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g080",
@@ -1174,7 +1334,8 @@
         "armor": "門域重裝甲",
         "shoes": "時空穿越靴",
         "accessory": "銀河核心門鑰"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g081",
@@ -1187,7 +1348,8 @@
         "armor": "文明核心甲",
         "shoes": "星河跨域靴",
         "accessory": "文明核心權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g082",
@@ -1200,7 +1362,8 @@
         "armor": "恆星防護甲",
         "shoes": "光壓推進靴",
         "accessory": "恆星兵器節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g083",
@@ -1213,7 +1376,8 @@
         "armor": "星河艦戰甲",
         "shoes": "艦橋躍遷靴",
         "accessory": "星河艦隊權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g084",
@@ -1226,7 +1390,8 @@
         "armor": "終結主戰甲",
         "shoes": "毀滅相位靴",
         "accessory": "終結協議權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g085",
@@ -1239,7 +1404,8 @@
         "armor": "星河巨構甲",
         "shoes": "巨構機動靴",
         "accessory": "巨構控制節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g086",
@@ -1252,7 +1418,8 @@
         "armor": "禁衛主戰甲",
         "shoes": "銀河相位靴",
         "accessory": "禁衛權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g087",
@@ -1265,7 +1432,8 @@
         "armor": "星河審判甲",
         "shoes": "裁決追跡靴",
         "accessory": "星河裁決權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g088",
@@ -1278,7 +1446,8 @@
         "armor": "王座統御甲",
         "shoes": "王權相位靴",
         "accessory": "銀河王座權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g089",
@@ -1291,7 +1460,8 @@
         "armor": "星河征服甲",
         "shoes": "霸權征途靴",
         "accessory": "星河霸權權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g090",
@@ -1304,7 +1474,8 @@
         "armor": "核心終戰甲",
         "shoes": "王座決戰靴",
         "accessory": "銀河核心權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g091",
@@ -1317,7 +1488,8 @@
         "armor": "銀河聯軍甲",
         "shoes": "星海聯軍靴",
         "accessory": "銀河聯盟權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g092",
@@ -1330,7 +1502,8 @@
         "armor": "文明聯戰甲",
         "shoes": "聯軍突進靴",
         "accessory": "文明聯軍戰略節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g093",
@@ -1343,7 +1516,8 @@
         "armor": "星海領域甲",
         "shoes": "霸權相位靴",
         "accessory": "星海統御權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g094",
@@ -1356,7 +1530,8 @@
         "armor": "統合防衛甲",
         "shoes": "要塞機動靴",
         "accessory": "銀河要塞權限"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g095",
@@ -1369,7 +1544,8 @@
         "armor": "議會統御甲",
         "shoes": "議會相位靴",
         "accessory": "統合議會中樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g096",
@@ -1382,7 +1558,8 @@
         "armor": "航道主戰甲",
         "shoes": "超域推進靴",
         "accessory": "銀河航道樞紐"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g097",
@@ -1395,7 +1572,8 @@
         "armor": "首都統御甲",
         "shoes": "星海躍遷靴",
         "accessory": "聯盟首都權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g098",
@@ -1408,7 +1586,8 @@
         "armor": "銀河權柄甲",
         "shoes": "主宰相位靴",
         "accessory": "銀河霸權權核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g099",
@@ -1421,7 +1600,8 @@
         "armor": "星海主戰甲",
         "shoes": "星海折躍靴",
         "accessory": "星海戰爭權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "g100",
@@ -1434,7 +1614,8 @@
         "armor": "文明終戰甲",
         "shoes": "銀河躍遷靴",
         "accessory": "銀河主控核心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u001",
@@ -1447,7 +1628,8 @@
         "armor": "彼岸封域鎧",
         "shoes": "界外星履",
         "accessory": "彼岸鑰印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u002",
@@ -1460,7 +1642,8 @@
         "armor": "王座統御戰衣",
         "shoes": "王域步甲",
         "accessory": "裂星權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u003",
@@ -1473,7 +1656,8 @@
         "armor": "黑潮艦體裝甲",
         "shoes": "深潮航履",
         "accessory": "黑潮主控矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u004",
@@ -1486,7 +1670,8 @@
         "armor": "逐日遠征外骨骼",
         "shoes": "追日光履",
         "accessory": "征服者徽記"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u005",
@@ -1499,7 +1684,8 @@
         "armor": "天穹滅域護殼",
         "shoes": "穹頂脛鎧",
         "accessory": "殲滅晶體"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u006",
@@ -1512,7 +1698,8 @@
         "armor": "殘光神經戰衣",
         "shoes": "銀河折躍足具",
         "accessory": "殘光智核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u007",
@@ -1525,7 +1712,8 @@
         "armor": "星海皇權鎧",
         "shoes": "皇域踏星履",
         "accessory": "星海霸印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u008",
@@ -1538,7 +1726,8 @@
         "armor": "遠境軍勢裝甲",
         "shoes": "戰線推進足鎧",
         "accessory": "遠境戰略節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u009",
@@ -1551,7 +1740,8 @@
         "armor": "墓域星骸護甲",
         "shoes": "幽航步裝",
         "accessory": "墓主星碑"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u010",
@@ -1564,7 +1754,8 @@
         "armor": "彼岸統合戰鎧",
         "shoes": "統合越界履",
         "accessory": "彼岸統御樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u011",
@@ -1577,7 +1768,8 @@
         "armor": "蒼環統治戰袍",
         "shoes": "政域巡行履",
         "accessory": "蒼環政令章"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u012",
@@ -1590,7 +1782,8 @@
         "armor": "赤星城塞鎧",
         "shoes": "堡壘重踏甲",
         "accessory": "赤星堡壘核心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u013",
@@ -1603,7 +1796,8 @@
         "armor": "暗河獵行外骨骼",
         "shoes": "獵界疾行足具",
         "accessory": "暗河獵星盤"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u014",
@@ -1616,7 +1810,8 @@
         "armor": "碎月皇鎧",
         "shoes": "月影戰履",
         "accessory": "碎月皇徽"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u015",
@@ -1629,7 +1824,8 @@
         "armor": "星門禁制裝甲",
         "shoes": "星門穿界步甲",
         "accessory": "鎮壓控制器"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u016",
@@ -1642,7 +1838,8 @@
         "armor": "銀冠生體護殼",
         "shoes": "巢群蔓生足鎧",
         "accessory": "銀冠孵化腺核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u017",
@@ -1655,7 +1852,8 @@
         "armor": "永夜艦兵裝甲",
         "shoes": "遠征深航脛甲",
         "accessory": "永夜航路星圖"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u018",
@@ -1668,7 +1866,8 @@
         "armor": "群星裁定戰衣",
         "shoes": "審判追星履",
         "accessory": "裁決天秤"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u019",
@@ -1681,7 +1880,8 @@
         "armor": "黑域機戰外殼",
         "shoes": "戰域機動足具",
         "accessory": "黑域戰術模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u020",
@@ -1694,7 +1894,8 @@
         "armor": "星群終滅帝鎧",
         "shoes": "皇座巡星步裝",
         "accessory": "滅絕王權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u021",
@@ -1707,7 +1908,8 @@
         "armor": "邊疆獸皇護殼",
         "shoes": "荒星獸足鎧",
         "accessory": "吞星心核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u022",
@@ -1720,7 +1922,8 @@
         "armor": "赤界軍勢戰衣",
         "shoes": "遠征將履",
         "accessory": "赤界帥令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u023",
@@ -1733,7 +1936,8 @@
         "armor": "星骸遠航戰甲",
         "shoes": "骸域漂泊履",
         "accessory": "星骸航標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u024",
@@ -1746,7 +1950,8 @@
         "armor": "天河艦體重鎧",
         "shoes": "攻城推進足鎧",
         "accessory": "天河火控儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u025",
@@ -1759,7 +1964,8 @@
         "armor": "黑冠生殖護甲",
         "shoes": "殖域蔓延足具",
         "accessory": "黑冠殖民囊"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u026",
@@ -1772,7 +1978,8 @@
         "armor": "裂域王鎧",
         "shoes": "霸域跨星履",
         "accessory": "裂域霸印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u027",
@@ -1785,7 +1992,8 @@
         "armor": "蒼星灼能裝甲",
         "shoes": "焚星突進步甲",
         "accessory": "蒼星熔能爐"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u028",
@@ -1798,7 +2006,8 @@
         "armor": "遠星智械戰衣",
         "shoes": "文明星行履",
         "accessory": "遠星智識矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u029",
@@ -1811,7 +2020,8 @@
         "armor": "萬艦統御鎧",
         "shoes": "旗艦航戰足具",
         "accessory": "萬艦司令牌"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u030",
@@ -1824,7 +2034,8 @@
         "armor": "星群決戰裝甲",
         "shoes": "終戰跨域履",
         "accessory": "星群終戰樞紐"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u031",
@@ -1837,7 +2048,8 @@
         "armor": "千星王戰鎧",
         "shoes": "星戰踏域履",
         "accessory": "千星王令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u032",
@@ -1850,7 +2062,8 @@
         "armor": "蒼穹生體戰衣",
         "shoes": "母皇星步",
         "accessory": "蒼穹皇卵核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u033",
@@ -1863,7 +2076,8 @@
         "armor": "黑日艦兵裝甲",
         "shoes": "黑日航戰脛甲",
         "accessory": "殲星火控矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u034",
@@ -1876,7 +2090,8 @@
         "armor": "戰域審判鎧",
         "shoes": "裁決追跡履",
         "accessory": "戰域裁印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u035",
@@ -1889,7 +2104,8 @@
         "armor": "星辰噬能護殼",
         "shoes": "吞星步裝",
         "accessory": "星辰噬能晶體"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u036",
@@ -1902,7 +2118,8 @@
         "armor": "群星堡壘重鎧",
         "shoes": "壁壘鎮星足甲",
         "accessory": "群星防禦矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u037",
@@ -1915,7 +2132,8 @@
         "armor": "赤環戰略外骨骼",
         "shoes": "智域調度履",
         "accessory": "赤環戰術智晶"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u038",
@@ -1928,7 +2146,8 @@
         "armor": "萬軍皇戰甲",
         "shoes": "征伐遠行步甲",
         "accessory": "萬軍皇旗"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u039",
@@ -1941,7 +2160,8 @@
         "armor": "天域殲滅機甲",
         "shoes": "滅星推進足具",
         "accessory": "天域殲星節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u040",
@@ -1954,7 +2174,8 @@
         "armor": "群星王權戰袍",
         "shoes": "王庭巡域星履",
         "accessory": "霸權王璽"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u041",
@@ -1967,7 +2188,8 @@
         "armor": "超域封疆鎧",
         "shoes": "鎮界跨域步裝",
         "accessory": "超域界碑"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u042",
@@ -1980,7 +2202,8 @@
         "armor": "黑曜堡壘裝甲",
         "shoes": "星堡磁行足具",
         "accessory": "黑曜堡權章"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u043",
@@ -1993,7 +2216,8 @@
         "armor": "裂空艦皇甲",
         "shoes": "帝艦破空履",
         "accessory": "裂空航戰星圖"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u044",
@@ -2006,7 +2230,8 @@
         "armor": "蒼白獸皇護殼",
         "shoes": "吞界踏星足鎧",
         "accessory": "蒼白獸心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u045",
@@ -2019,7 +2244,8 @@
         "armor": "星海機群外骨骼",
         "shoes": "萬機躍行步甲",
         "accessory": "萬機演算矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u046",
@@ -2032,7 +2258,8 @@
         "armor": "天幕王戰鎧",
         "shoes": "君王御域履",
         "accessory": "天幕王令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u047",
@@ -2045,7 +2272,8 @@
         "armor": "赤界熔戰裝甲",
         "shoes": "熔爐熱流足具",
         "accessory": "文明熔鑄核"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u048",
@@ -2058,7 +2286,8 @@
         "armor": "永夜主宰戰衣",
         "shoes": "域主深航履",
         "accessory": "永夜星圖"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u049",
@@ -2071,7 +2300,8 @@
         "armor": "萬星滅域鎧",
         "shoes": "殲滅突進脛甲",
         "accessory": "萬星連結節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u050",
@@ -2084,7 +2314,8 @@
         "armor": "超域艦王裝甲",
         "shoes": "霸權遠征足鎧",
         "accessory": "超域艦隊權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u051",
@@ -2097,7 +2328,8 @@
         "armor": "萬域軍勢鎧",
         "shoes": "戰線先鋒履",
         "accessory": "萬域開戰令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u052",
@@ -2110,7 +2342,8 @@
         "armor": "黑塔鎮域裝甲",
         "shoes": "黑塔浮航足具",
         "accessory": "黑塔座標儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u053",
@@ -2123,7 +2356,8 @@
         "armor": "焚界艦戰鎧",
         "shoes": "遠征焚星脛甲",
         "accessory": "焚界航路矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u054",
@@ -2136,7 +2370,8 @@
         "armor": "蒼穹軍戰甲",
         "shoes": "統領跨星步甲",
         "accessory": "軍勢統帥章"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u055",
@@ -2149,7 +2384,8 @@
         "armor": "群星劫戰鎧",
         "shoes": "掠奪追星履",
         "accessory": "群星戰利徽"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u056",
@@ -2162,7 +2398,8 @@
         "armor": "黑潮孵化護殼",
         "shoes": "巢群蔓延足甲",
         "accessory": "黑潮巢心珠"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u057",
@@ -2175,7 +2412,8 @@
         "armor": "裂宇構裝重甲",
         "shoes": "巨構跨域足具",
         "accessory": "裂宇構造節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u058",
@@ -2188,7 +2426,8 @@
         "armor": "星域執行戰衣",
         "shoes": "滅絕追跡履",
         "accessory": "星域執行令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u059",
@@ -2201,7 +2440,8 @@
         "armor": "萬域征伐鎧",
         "shoes": "樞機調度步裝",
         "accessory": "萬域征戰星圖"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u060",
@@ -2214,7 +2454,8 @@
         "armor": "無盡軍政戰袍",
         "shoes": "戰線督軍足鎧",
         "accessory": "無盡總督璽"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u061",
@@ -2227,7 +2468,8 @@
         "armor": "星脈守域戰衣",
         "shoes": "脈絡巡航履",
         "accessory": "守望星脈圖"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u062",
@@ -2240,7 +2482,8 @@
         "armor": "黑鏈重構護甲",
         "shoes": "鏈星牽引足具",
         "accessory": "黑鏈軌道盤"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u063",
@@ -2253,7 +2496,8 @@
         "armor": "星脈母巢護殼",
         "shoes": "巢脈蔓生足甲",
         "accessory": "星脈孵化囊"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u064",
@@ -2266,7 +2510,8 @@
         "armor": "裂河艦體裝甲",
         "shoes": "巨艦穿流脛鎧",
         "accessory": "裂河航道儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u065",
@@ -2279,7 +2524,8 @@
         "armor": "赤脈節裝甲",
         "shoes": "脈網轉移履",
         "accessory": "赤脈節點晶"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u066",
@@ -2292,7 +2538,8 @@
         "armor": "星橋斷域鎧",
         "shoes": "星橋跨越步甲",
         "accessory": "毀滅橋樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u067",
@@ -2305,7 +2552,8 @@
         "armor": "蒼穹帝構甲",
         "shoes": "帝君巡宇履",
         "accessory": "巨構帝令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u068",
@@ -2318,7 +2566,8 @@
         "armor": "萬星侵戰外骨骼",
         "shoes": "侵略躍遷足具",
         "accessory": "萬星侵略模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u069",
@@ -2331,7 +2580,8 @@
         "armor": "暗流噬星護殼",
         "shoes": "吞噬流轉足鎧",
         "accessory": "暗流皇晶"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u070",
@@ -2344,7 +2594,8 @@
         "armor": "脈絡霸權鎧",
         "shoes": "宇脈跨域星履",
         "accessory": "脈絡統御環"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u071",
@@ -2357,7 +2608,8 @@
         "armor": "巨牆壁壘鎧",
         "shoes": "壁線巡防足具",
         "accessory": "巨牆守備令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u072",
@@ -2370,7 +2622,8 @@
         "armor": "萬星城防裝甲",
         "shoes": "壁壘重行足甲",
         "accessory": "萬星防衛矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u073",
@@ -2383,7 +2636,8 @@
         "armor": "黑曜艦戰鎧",
         "shoes": "天幕巡航脛甲",
         "accessory": "黑曜艦橋儀"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u074",
@@ -2396,7 +2650,8 @@
         "armor": "星海皇戰甲",
         "shoes": "裂界越域履",
         "accessory": "星海皇璽"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u075",
@@ -2409,7 +2664,8 @@
         "armor": "蒼白堡壘重鎧",
         "shoes": "堡域鎮守步甲",
         "accessory": "蒼白堡壘章"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u076",
@@ -2422,7 +2678,8 @@
         "armor": "赤環滅域外殼",
         "shoes": "滅域機動足具",
         "accessory": "赤環滅域模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u077",
@@ -2435,7 +2692,8 @@
         "armor": "群星禁域戰衣",
         "shoes": "封鎖巡弋履",
         "accessory": "群星封鎖令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u078",
@@ -2448,7 +2706,8 @@
         "armor": "無盡要塞裝甲",
         "shoes": "城塞重踏足鎧",
         "accessory": "無盡城塞權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u079",
@@ -2461,7 +2720,8 @@
         "armor": "宇宙破壁鎧",
         "shoes": "破界突進步裝",
         "accessory": "宇宙破壁節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u080",
@@ -2474,7 +2734,8 @@
         "armor": "巨牆心核戰甲",
         "shoes": "星海壁行履",
         "accessory": "巨牆之心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u081",
@@ -2487,7 +2748,8 @@
         "armor": "深域航戰衣",
         "shoes": "航王遠渡履",
         "accessory": "深域星圖"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u082",
@@ -2500,7 +2762,8 @@
         "armor": "黑星母戰護殼",
         "shoes": "遠征深空足甲",
         "accessory": "黑星母體晶"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u083",
@@ -2513,7 +2776,8 @@
         "armor": "深井獸皇護甲",
         "shoes": "淵域踏星足鎧",
         "accessory": "深井獸心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u084",
@@ -2526,7 +2790,8 @@
         "armor": "蒼穹遠征裝甲",
         "shoes": "樞紐長航脛甲",
         "accessory": "遠征航路節點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u085",
@@ -2539,7 +2804,8 @@
         "armor": "無光艦皇鎧",
         "shoes": "帝艦暗航履",
         "accessory": "無光艦隊星盤"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u086",
@@ -2552,7 +2818,8 @@
         "armor": "深空智戰外骨骼",
         "shoes": "文明探域足具",
         "accessory": "深空智識晶"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u087",
@@ -2565,7 +2832,8 @@
         "armor": "萬域皇戰鎧",
         "shoes": "吞星凌空步甲",
         "accessory": "萬域皇令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u088",
@@ -2578,7 +2846,8 @@
         "armor": "暗界天體裝甲",
         "shoes": "天體軌行足具",
         "accessory": "暗界軌道盤"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u089",
@@ -2591,7 +2860,8 @@
         "armor": "深淵軍勢戰甲",
         "shoes": "統帥深航履",
         "accessory": "深淵帥旗"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u090",
@@ -2604,7 +2874,8 @@
         "armor": "深域王座鎧",
         "shoes": "皇座巡宇步裝",
         "accessory": "深域皇權印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u091",
@@ -2617,7 +2888,8 @@
         "armor": "萬星統御戰袍",
         "shoes": "統治巡域履",
         "accessory": "萬星統治令"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u092",
@@ -2630,7 +2902,8 @@
         "armor": "宇宙征戰裝甲",
         "shoes": "征服遠航脛鎧",
         "accessory": "宇宙艦權矩陣"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u093",
@@ -2643,7 +2916,8 @@
         "armor": "黑冠帝戰鎧",
         "shoes": "帝皇跨宇星履",
         "accessory": "文明帝璽"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u094",
@@ -2656,7 +2930,8 @@
         "armor": "群星巨構裝甲",
         "shoes": "終戰跨域足具",
         "accessory": "群星構造核心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u095",
@@ -2669,7 +2944,8 @@
         "armor": "萬域滅絕外骨骼",
         "shoes": "殲滅巡宇步甲",
         "accessory": "萬域殲滅模組"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u096",
@@ -2682,7 +2958,8 @@
         "armor": "宇宙帝權鎧",
         "shoes": "帝座天行履",
         "accessory": "霸權帝印"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u097",
@@ -2695,7 +2972,8 @@
         "armor": "星海母皇護殼",
         "shoes": "統合越界足鎧",
         "accessory": "星海統合晶"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u098",
@@ -2708,7 +2986,8 @@
         "armor": "億星終戰裝甲",
         "shoes": "戰爭跨宇足具",
         "accessory": "億星戰略樞"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u099",
@@ -2721,7 +3000,8 @@
         "armor": "宇宙霸戰鎧",
         "shoes": "征服破域步裝",
         "accessory": "宇宙征服權柄"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "u100",
@@ -2734,7 +3014,8 @@
         "armor": "文明終焉神鎧",
         "shoes": "終焉超越星履",
         "accessory": "文明終焉之心"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h01",
@@ -2747,7 +3028,8 @@
         "armor": "錯影披層",
         "shoes": "回聲殘步",
         "accessory": "異痕餘響"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h02",
@@ -2760,7 +3042,8 @@
         "armor": "界膜包絡",
         "shoes": "彼端越跡",
         "accessory": "外側界標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h03",
@@ -2773,7 +3056,8 @@
         "armor": "錯位疊幕",
         "shoes": "迴映雙途",
         "accessory": "雙視折點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h04",
@@ -2786,7 +3070,8 @@
         "armor": "內層脈絡",
         "shoes": "穿層透徑",
         "accessory": "裏相鑰式"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h05",
@@ -2799,7 +3084,8 @@
         "armor": "失序外相",
         "shoes": "偏序離軸",
         "accessory": "失衡座標"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h06",
@@ -2812,7 +3098,8 @@
         "armor": "思界織域",
         "shoes": "解限移式",
         "accessory": "覺構母式"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h07",
@@ -2825,7 +3112,8 @@
         "armor": "越律束界",
         "shoes": "越則逾線",
         "accessory": "界律公理"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h08",
@@ -2838,7 +3126,8 @@
         "armor": "投影覆軀",
         "shoes": "映界俯行",
         "accessory": "截面映源"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h09",
@@ -2851,7 +3140,8 @@
         "armor": "眾相並身",
         "shoes": "全映並途",
         "accessory": "同觀匯點"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     },
     {
       "id": "h10",
@@ -2864,7 +3154,8 @@
         "armor": "彼岸真軀",
         "shoes": "超觀無步",
         "accessory": "唯一原式"
-      }
+      },
+      "weaponAnimationStatus": "not-started"
     }
   ]
 }

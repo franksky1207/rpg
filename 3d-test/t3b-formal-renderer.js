@@ -153,7 +153,7 @@ async function prepareSuit(options){
 let spriteRuntime=null,spritePool=null;
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261015-phase5'),import('./equipment-sprites-v1/assets.mjs?v=20261015-phase5')]);
+ spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261015-weapons1'),import('./equipment-sprites-v1/assets.mjs?v=20261015-weapons1')]);
  const [{WholeSuitActor},{createSpritePool}]=await spriteRuntime;
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
@@ -171,7 +171,8 @@ async function createSuit(options,bundle){
  function sample(frame){
   if(closed||signal.aborted||!isCurrent())return false;
   const p=frame.player||frame;activeClip=p.clip;
-  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,rootMotion:false});
+  const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
+  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:false});
   actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*20:0}px)`;
   actor.canvas.dataset.clip=p.clip;return true;
  }

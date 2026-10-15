@@ -5,11 +5,13 @@ export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.cre
  const evict=()=>{for(const [key,e] of [...entries].sort((a,b)=>a[1].used-b[1].used)){if(bytes<=limit)break;if(!e.refs&&e.bitmap){e.bitmap.close();bytes-=e.cost;entries.delete(key);}}};
  const remove=(key,e)=>{if(entries.get(key)!==e)return;e.controller.abort();entries.delete(key);if(e.bitmap){e.bitmap.close();bytes-=e.cost;}};
  return Object.freeze({
-  async acquire(entry,{signal}={}){
+  async acquire(entry,{signal,layer=null}={}){
    if(closed||signal?.aborted)throw Error('sprite-aborted');
    if((usage==='formal'?entry?.formalBattleAllowed!==true:entry?.gmPreviewAllowed!==true)||entry?.status!=='complete'||entry.formalReleaseAllowed!==false||entry.gmTestStatus!=='not-tested'||entry.version!=='1.0.0'||entry.facing!=='right-3/4'||entry.pivot?.join(',')!=='0.5,0.9')throw Error('sprite-unavailable');
-   const a=entry.asset,id=entry.id;
-   if(entry.formalIdentity?.id!==id||!/^(?:g(?:00[1-9]|0[1-9]\d|100)|u(?:00[1-9]|0[1-9]\d|100)|h(?:0[1-9]|10))$/.test(id)||a?.path!==`assets/gm-equipment-2_5d/v1/${id}.webp`||!HASH.test(a.sha256)||!Number.isSafeInteger(a.bytes)||a.bytes<1||a.bytes>800000||a.width!==512||a.height!==512)throw Error('sprite-identity-version');
+   if(layer!==null&&(!['body','weapon'].includes(layer)||entry.weaponAnimation?.weaponAnimationStatus!=='complete'))throw Error('weapon-unavailable');
+   const a=layer?entry.weaponAnimation[layer]:entry.asset,id=entry.id;
+   const expected=layer?`assets/gm-equipment-2_5d/v1/${id}-${layer==='body'?'attack-body':'weapon'}.webp`:`assets/gm-equipment-2_5d/v1/${id}.webp`;
+   if(entry.formalIdentity?.id!==id||!/^(?:g(?:00[1-9]|0[1-9]\d|100)|u(?:00[1-9]|0[1-9]\d|100)|h(?:0[1-9]|10))$/.test(id)||a?.path!==expected||!HASH.test(a.sha256)||!Number.isSafeInteger(a.bytes)||a.bytes<1||a.bytes>800000||a.width!==512||a.height!==512)throw Error('sprite-identity-version');
    const key=id+'|'+entry.version+'|'+a.sha256;let e=entries.get(key);
    if(!e){
     if([...entries.values()].filter(e=>!e.bitmap).length>=maxPending)throw Error('sprite-load-concurrency');

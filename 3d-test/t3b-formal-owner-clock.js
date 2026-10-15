@@ -36,6 +36,7 @@ function create(options={}){
   if(d.sourceType==="attack"||d.sourceType==="dodge"){
    if(!actor||!target)throw Error("unavailable-action-roles");
    frame[actor]=elapsed<impact?{clip:"attack",elapsedMs:Math.min(300,elapsed/impact*300)}:{clip:"return",elapsedMs:Math.min(700,(elapsed-impact)/step*700)};
+   frame.weaponAttack={role:actor,elapsedMs:elapsed<impact?elapsed/impact*336:336+Math.min(1,(elapsed-impact)/step)*364};
    frame[actor].approach=.42*(elapsed<impact?Math.min(1,elapsed/impact):Math.max(0,1-(elapsed-impact)/step));
    if(d.sourceType==="dodge")frame[target]={clip:"dodge",elapsedMs:Math.min(700,elapsed/(impact+step)*700)};
    else if(elapsed>=impact)frame[target]={clip:"hit",elapsedMs:Math.min(700,(elapsed-impact)/step*700)};

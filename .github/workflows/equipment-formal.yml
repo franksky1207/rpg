@@ -24,14 +24,16 @@ jobs:
       - name: Verify narrow release, original owners and failure paths
         run: |
           set -euo pipefail
+          python3 scripts/equipment-weapon-assets.py
           python3 scripts/equipment-gm-publication.py --check
           python3 scripts/equipment-formal-publication.py --check
           python3 scripts/equipment-formal-fixture-history.py --check
           node tests/equipment-formal/publication.cjs
-          node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs
+          node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
           node tests/runtime/t3b-formal-owner-clock.cjs
           node tests/runtime/t3b-formal-controller.cjs
           node scripts/build-publish-dry-run.cjs
+          node scripts/stage-hybrid-preview.cjs
       - name: Install browser
         run: |
           npm install --prefix /tmp/equipment-formal --no-save playwright@1.55.0
@@ -49,6 +51,7 @@ jobs:
             if curl -fsS http://127.0.0.1:4189/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/equipment-weapons/browser.cjs
           node tests/equipment-formal/browser.cjs
           node tests/equipment-formal/failures.cjs
           node tests/equipment-formal/review.cjs
@@ -59,5 +62,7 @@ jobs:
           name: formal-player-battle-evidence
           path: |
             /tmp/formal-*.png
+            /tmp/weapons-*.png
+            /tmp/equipment-weapons-*.json
             /tmp/equipment-formal-*.json
             /tmp/formal-http.log

@@ -1,7 +1,7 @@
 import {loadData,selectInput,copyFrozen} from './fixture-input.mjs?v=20261015-phase5';
 import {Playback,bindRenderer} from './playback.mjs?v=20261015-phase5';
-import {createRenderer,diagnostics as rendererDiagnostics} from './t2b3-v1/renderer.mjs?v=20261015-phase5-lock1';
-import {elapsedClock} from './t2b3-v1/contract.mjs?v=20261012-t2b3-v1';
+import {createRenderer,diagnostics as rendererDiagnostics} from './t2b3-v1/renderer.mjs?v=20261015-weapons1';
+import {elapsedClock} from './t2b3-v1/contract.mjs?v=20261015-weapons1';
 const renderersEnabled=new URL(location.href).searchParams.get('renderer')!=='none';
 let activeRenderer=null,rendererState='idle',rendererFailure=null,rendererBusy=false,bindingTask=null,wantedRenderer=null,boundSession=null;
 const $=id=>document.getElementById(id),selectors=['scheme','case','variant','lod'],buttons=['play','pause','resume','replay','stop'];

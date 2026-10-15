@@ -22,3 +22,16 @@ export function animationController(){
   snapshot(){return {state,closed,generation,canCommit:false,timers:0};}
  });
 }
+
+// Four-stage weapon sampling on the existing 700ms owner time, no timers/events.
+export function weaponPose(ms,config){
+ const t=Math.max(0,Math.min(700,ms))/700;
+ const ease=x=>x*x*(3-2*x);
+ const wind=config.windup,strike=config.strike;
+ let angle,stage;
+ if(t<.28){stage='windup';angle=wind*ease(t/.28);}
+ else if(t<.48){stage='swing';angle=wind+(strike-wind)*ease((t-.28)/.20);}
+ else if(t<.60){stage='impact';angle=strike;}
+ else{stage='recover';angle=strike*(1-ease((t-.60)/.40));}
+ return Object.freeze({stage,angle,approach:.035*Math.sin(Math.PI*t),slash:Math.max(0,1-Math.abs(t-.51)/.11)});
+}

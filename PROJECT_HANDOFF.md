@@ -1,3 +1,13 @@
+## 2026-10-15｜2.5D第5批補強：獨立武器揮動與GM原戰場選角
+
+承接main `d247d7bca45b0ee0334a6c48ca4d8f6247c86744`。G005蝕毒軍刃／G007古代光刃／G018環帶光刃新增真透明武器及補手攻擊底圖，原角色／概念SHA不變。WholeSuitActor共享四階段取樣，正式OwnerClock及GM原Playback驅動；combo/counter提示行仍只提示，後續真attack行才揮動。可選武器非阻塞載入、2.5秒截止、故障回原圖，同次攻擊固定分層；無新傷害／音效／結算／雲端資料。
+
+GM原「戰鬥、動畫與特效→2.5D戰鬥模擬」控制區新增角色來源與三套直接選擇，正式用授權唯讀鎧甲快照，自由不改五槽戰力fixture；原Renderer只增加playerFactory，敵atlas／場景／跳字／HP盾／播放控制保留。速度1／1.5／2用同一Playback虛擬時鐘；原3D裝備測試另留來源選項，八類31例不變。載入工廠等候序列化，避免快速切換同時綁定。
+
+新增 `weapons-v1/registry.json` 的weaponAnimationStatus與來源／複查；產線驗證器 `scripts/equipment-weapon-assets.py`、精確新增六圖白名單、正式release沿用獨立權限，FULL_3D_AVAILABLE／FORMAL_B_RELEASED仍false。新source-evolution鏈從上述main逐SHA串接，不改舊鎖／fixture；原發布後staging照舊，未公開新PNG／review／development目錄。詳[補強驗收及操作](docs/2_5D_EQUIPMENT_PHASE5_WEAPON_GM_ACCEPTANCE_2026-10-15.md)。最終提交／Actions以推送後exact HEAD為準，尚在跑不能稱成功。
+
+第6批接真iPhone／Android／Safari／30分鐘熱與記憶體／真帳號雲端長測及整體封版；其他207套未完成，G024/G030原美術接受結果不變。
+
 > **第5批CI收尾**：首次 `54e897ba` 的正式角色CI與GM整合已成功，Runtime run38672716724在刻意B視覺故障情境被新增角色斷言誤擋；已分別要求正常角色／故障提示且0角色，所有原HP、盾、背景補算與停止斷言保留，兩情境本機重跑通過。正式遊戲程式不需再改，最終HEAD Actions繼續核對。失敗log與修正詳第5批驗收。
 
 > **2026-10-15｜2.5D第5批正式B角色整合**：承接main `fbe46d9004eb38afbac55b8de03f832237ca56df`（17項Actions success）。正式鎧甲快照→永久套ID→三套SHA驗證WebP，沿原B entry／controller／renderer／owner clock呈現；GM正式模式共用鎧甲規則，自由展示隔離。G005生化隔離甲／G007自律護衛甲／G018環軌防護甲獨立playerSpritesEnabled／formalBattleAllowed批准，其他207套回退；FULL_3D_AVAILABLE=false與FORMAL_B_RELEASED=false保留。原五槽數值／強化／公式／音訊／Save Schema17不改。五動作依正式當前動作及呈現HP，無新戰鬥時鐘／音效；補persisted頁面暫存恢復／真離頁釋放、登入訂閱、虛空卡片、極簡／離場釋放、同場replace及headless後明確綁token。正式包手機直／橫及桌機、背景／極簡／HP／盾、故障、熱載入、GM／G007相容與可重現證據見[第5批驗收](docs/2_5D_EQUIPMENT_PHASE5_ACCEPTANCE_2026-10-15.md)。**exact-HEAD Actions須推送後核對，未結束不宣稱成功。** 第6批接整體CI／封版與真機長測；實體手機／真帳號雲端與其他207套美術仍待補。以下第4批「正式未啟用／五槽同套」為歷史狀態，以本段為準。
