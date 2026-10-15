@@ -1,8 +1,8 @@
 "use strict";
 // Shared audit/build policy. Only the generated candidate is filtered.
 const fs=require("node:fs"),path=require("node:path"),cp=require("node:child_process"),vm=require("node:vm"),crypto=require("node:crypto");
-const RESOURCE=/\.(?:html|js|css|json|png|webp|jpe?g|svg|gif|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|basis|avif)$/i;
-const FINGERPRINT=/\.(?:js|css|png|webp|jpe?g|svg|gif|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|basis|avif)$/i;
+const RESOURCE=/\.(?:html|mjs|js|css|json|png|webp|jpe?g|svg|gif|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|basis|avif)$/i;
+const FINGERPRINT=/\.(?:mjs|js|css|png|webp|jpe?g|svg|gif|woff2?|ico|ogg|mp3|wav|glb|gltf|bin|ktx2|basis|avif)$/i;
 const digest=bytes=>crypto.createHash("sha256").update(bytes).digest("hex").slice(0,24);
 const {inspectRegistry}=require('./asset-registry.cjs');
 function audioSelection(root){
@@ -37,13 +37,14 @@ function references(root,files,available=files){
   refs.push({from,path:target,kind});
  };
  for(const file of files){
-  if(!/\.(?:html|css|js)$/.test(file)||file.startsWith("vendor/"))continue;
+  if(!/\.(?:html|css|mjs|js)$/.test(file)||file.startsWith("vendor/"))continue;
   const s=fs.readFileSync(path.join(root,file),"utf8");
   if(file.endsWith(".html"))for(const m of s.matchAll(/\b(?:src|href|data-src)\s*=\s*["']([^"']+)["']/gi))add(file,m[1],"html");
   if(file.endsWith(".css"))for(const m of s.matchAll(/url\(\s*["']?([^)'"]+)["']?\s*\)/gi))add(file,m[1],"css");
-  if(file.endsWith(".js"))for(const m of s.matchAll(/["'`]((?:\.?\.?\/)?[a-zA-Z0-9_/-]+\.[a-zA-Z0-9]+(?:\?[^"'`\s]*)?)["'`]/g)){
+  if(/\.m?js$/.test(file))for(const m of s.matchAll(/["'`]((?:\.?\.?\/)?[a-zA-Z0-9_/-]+\.[a-zA-Z0-9]+(?:\?[^"'`\s]*)?)["'`]/g)){
    // Suffix/string predicates are not resource requests (including retired names).
    if(/\.(?:endsWith|startsWith|includes)\(\s*$/.test(s.slice(Math.max(0,m.index-30),m.index)))continue;
+   if(/new URL\(\s*$/.test(s.slice(Math.max(0,m.index-20),m.index))&&/^,root\)/.test(s.slice(m.index+m[0].length)))continue; // separately SHA-gated B preview closure
    add(file,m[1],"js");
   }
  }
@@ -51,6 +52,7 @@ function references(root,files,available=files){
 }
 function inspect(root){
  const files=cp.execFileSync("git",["ls-files","-z"],{cwd:root,encoding:"utf8"}).split("\0").filter(Boolean).sort();
+ require('./gm-sprite-publication.cjs')(root,files);
  for(const file of files){
   const local=path.join(root,file);
   if(!fs.existsSync(local)||!fs.lstatSync(local).isFile())throw Error("Tracked source missing or not a regular file: "+file);
@@ -75,7 +77,7 @@ function inspect(root){
   scan=references(root,[...keep],files);
   let added=false;
   for(const ref of scan.refs)if(sizes.has(ref.path)&&!keep.has(ref.path)){
-   if(/unregistered-3d-source|unknown-source-format/.test(category(ref.path))||/\.(?:blend[12]?|fbx|exr|psd|tiff?|usd[acz]?|sbsar)$/i.test(ref.path))throw Error('Runtime references forbidden source: '+ref.path);
+   if(ref.path.startsWith("development/")||/unregistered-3d-source|unknown-source-format/.test(category(ref.path))||/\.(?:blend[12]?|fbx|exr|psd|tiff?|usd[acz]?|sbsar)$/i.test(ref.path))throw Error('Runtime references forbidden source: '+ref.path);
    keep.add(ref.path);retained.push(ref);added=true;
   }
   if(!added)break;

@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Deterministic, exact allowlist export; source validation remains mandatory in CI."""
+import copy,hashlib,json,sys
+import equipment_sprite_assets as sprites
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[1]
+BASE=Path('assets/gm-equipment-2_5d/v1'); RUNTIME=Path('3d-test/equipment-sprites-v1')
+SOURCE=Path('development/equipment-2_5d/v1')
+def build():
+    outputs={}
+    registry=json.loads((ROOT/SOURCE/'registry.json').read_text())
+    index=json.loads((ROOT/'development/3d-source/equipment/concepts/_concept-index.json').read_text())
+    rows=index['sets']; entries=[]
+    assert len(rows)==210
+    for original in registry['entries']:
+        assert original['id'] in ('g005','g007','g018') and original['status']=='complete'
+        row=next(r for r in rows if r['id']==original['id'])
+        assert row['assetProductionEligible'] and row['asset2_5dStatus']=='complete'
+        assert original==sprites.verified_entry(ROOT,row,row['assetProductionEligible'])
+        e={k:copy.deepcopy(original[k]) for k in ('id','formalIdentity','version','facing','pivot','status','asset','gmTestStatus','formalReleaseAllowed')}
+        e['formalIdentity'].pop('directory');e['gmPreviewAllowed']=True
+        data=(ROOT/e['asset']['path']).read_bytes();assert hashlib.sha256(data).hexdigest()==e['asset']['sha256']
+        e['asset']['path']=(BASE/(e['id']+'.webp')).as_posix();outputs[e['asset']['path']]=data;entries.append(e)
+    assert sorted(e['id'] for e in entries)==['g005','g007','g018']
+    catalog=[{k:r[k] for k in ('id','epoch','sourceKey','regionOrBoss','equipmentNames')} for r in rows]
+    outputs[(BASE/'catalog.json').as_posix()]=(json.dumps({'schema':'cw.gm.whole-suit.v1','formalBattleEnabled':False,'entries':entries,'sets':catalog},ensure_ascii=False,indent=2)+'\n').encode()
+    for name in ('actor.mjs','animation.mjs','assets.mjs'):
+        code=(ROOT/SOURCE/name).read_text()
+        if name=='animation.mjs':code=code.replace('../../hybrid-comparison/t2b3-v1/contract.mjs','./contract.mjs')
+        if name=='assets.mjs':
+            code=code.replace("if(entry?.status!=='complete'","if(entry?.gmPreviewAllowed!==true||entry?.status!=='complete'")
+            code=code.replace('development/equipment-2_5d/v1/characters/${id}/v1/character.webp','assets/gm-equipment-2_5d/v1/${id}.webp').replace("'../../../'+a.path","'../../'+a.path")
+        outputs[(RUNTIME/name).as_posix()]=code.encode()
+    outputs[(RUNTIME/'contract.mjs').as_posix()]=(ROOT/'development/hybrid-comparison/t2b3-v1/contract.mjs').read_bytes()
+    lock={'schema':'cw.gm.sprite-publication.v1','formalBattleEnabled':False,'ids':['g005','g007','g018'],'files':{p:{'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)} for p,b in sorted(outputs.items())}}
+    outputs['development/equipment-2_5d/gm-publication.json']=(json.dumps(lock,indent=2)+'\n').encode()
+    if '--check' in sys.argv:
+        for p,b in outputs.items():assert (ROOT/p).read_bytes()==b,p+' stale'
+    else:
+        for p,b in outputs.items():(ROOT/p).parent.mkdir(parents=True,exist_ok=True);(ROOT/p).write_bytes(b)
+    print('GM export verified: 3 sprites, 210 identities, 4 reused runtime modules; formal battle disabled')
+if __name__=='__main__':build()

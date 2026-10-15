@@ -17,10 +17,15 @@ try{
  write("audio/assets/custom-selected.ogg");write("audio/assets/not-used.ogg");write("config.json","{}");
  write("style.css",'body { background: url("assets/backgrounds/0.webp") }');write("docs/development.md");
  write('assets/3d/unregistered.glb');write('assets/3d/raw.exr');write('new-source-format.xyz');
+ // Keep real GM publication validation active even in the synthetic publisher fixture.
+ const gmLock='development/equipment-2_5d/gm-publication.json',gm=JSON.parse(fs.readFileSync(gmLock));
+ for(const p of [...Object.keys(gm.files),gmLock])write(p,fs.readFileSync(p));
  cp.execFileSync("git",["-C",root,"add","."]);
+ assert.throws(()=>policy.inspect(root),/forbidden source/,"Development references must not bypass publication isolation");
+ write("index.html",'<script src="core.js?v=1"></script><script data-src="lazy.js?v=1"></script><link href="style.css?v=1">');
  const first=policy.inspect(root);
  assert.equal(first.missing.length,0);assert.ok(first.keep.includes("lazy.js"));
- assert.ok(first.keep.includes("development/needed.js"),"referenced development candidate must be retained");
+ assert.ok(!first.keep.includes("development/needed.js"),"development source stays excluded");
  assert.ok(first.keep.includes("assets/models/part.bin"));assert.ok(first.keep.includes("audio/assets/custom-selected.ogg"),"additional real dependency must be retained");
  assert.ok(!first.keep.includes("audio/assets/not-used.ogg"));assert.ok(!first.keep.includes("docs/development.md"));
  assert.ok(!first.keep.includes('assets/3d/unregistered.glb'));assert.ok(!first.keep.includes('assets/3d/raw.exr'));assert.ok(!first.keep.includes('new-source-format.xyz'));

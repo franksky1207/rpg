@@ -35,7 +35,7 @@ function open(){
   exit.addEventListener("click",close);
   bar.append(title,exit);
   const frame=document.createElement("iframe");
-  frame.src="3d-test/?embedded=1&v=20261009-status-above-stage";
+  frame.src="3d-test/?embedded=1&v=20261015-phase4-sprites1";
   frame.title="文明戰線 3D 測試中心";
   frame.style.cssText="display:block;flex:1;min-height:0;width:100%;border:0;background:#060c18";
   layer.append(bar,frame);
@@ -55,7 +55,17 @@ document.addEventListener("keydown",event=>{
   }
 });
 window.addEventListener("message",event=>{
- if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow||!allowed())return;
+ if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow )return;
+ if(event.data?.type==="civilization3d:sprite-auth"){
+  event.source.postMessage({type:"civilization3d:sprite-auth-response",requestId:event.data.requestId,authorized:allowed()},event.origin);return;
+ }
+ if(!allowed())return;
+ if(event.data?.type==="civilization3d:sprite-snapshot"){
+  const sender=event.source,origin=event.origin,requestId=event.data.requestId;
+  (async()=>{let appearance=null;try{await window.Civilization3DLoader.ensure("appearance");if(allowed())appearance=window.Civilization3DFormalSnapshots?.appearance();}catch(_){}
+   if(overlay&&overlay.querySelector("iframe")?.contentWindow===sender)sender.postMessage({type:"civilization3d:sprite-snapshot-response",requestId,authorized:allowed(),appearance:allowed()?appearance:null},origin);
+  })();return;
+ }
  if(event.data?.type==="civilization3d:close"){close();return;}
  if(event.data?.type==="civilization3d:appearance-request"){
   const sender=event.source,origin=event.origin;

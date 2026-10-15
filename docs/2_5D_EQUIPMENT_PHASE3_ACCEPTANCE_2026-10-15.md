@@ -22,7 +22,7 @@
 
 - 素材Python負例：17項通過，含正式身份／概念版本／SHA／缺損／跨套誤用／假完成／缺複查、GM及發布偷設true、空白／不透明假素材、匯入不覆寫及未審概念不得plan。
 - 共用動畫及loader Node：9項通過，含五動作／死亡終點、重播去重／中斷／取消、共享載入、一個subscriber取消不影響另一個、晚到decode關閉、404／SHA／decode錯誤、記憶體上限與30次載入釋放。
-- 原裝備資料庫：69項通過；原G024/G030接受例外、G006/G007歷史審查完整保留。僅三套asset2_5dStatus改為complete，概念批准仍30／未生成180，GM未測及正式發布false。
+- 原裝備資料庫：68項通過；原G024/G030接受例外、G006/G007歷史審查完整保留。僅三套asset2_5dStatus改為complete，概念批准仍30／未生成180，GM未測及正式發布false。
 - 真Chromium raster：三套×五動作有實際像素變化；128px實際解碼繪製，390×844與1365×900 CSS viewport、切換／取消、20次warm reuse、SHA及404回退、release清零、page errors=0。是headless瀏覽器，非實體手機／GPU長測。
 - 22條既有G007／B／T3～T4／正式Runtime／GM／發布與來源鎖回歸全部exit 0，結果見regressions.json。既有GM/G007真瀏覽器另通過三LOD、五單槽／空槽／遮蔽恢復、頭轉／深蹲／跨步及釋放，證據為g007-gm-browser.json；這不是新素材GM整合通過。
 - 與CI相同Pillow11.3.0隔離驗證三套素材成功；generate重跑零差異。

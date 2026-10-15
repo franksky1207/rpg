@@ -282,7 +282,7 @@ function renderCategories(){
     const name=document.createElement("span");name.className="center-category-name";name.textContent=title;
     const number=document.createElement("span");number.className="center-category-count";number.textContent=String(count);
     btn.append(name,number);
-    btn.onclick=()=>{category=id;renderCategories();renderCases();};
+    btn.onclick=()=>{category=id;if(wholeSuitView){wholeSuitView=false;start();}renderCategories();renderCases();};
     categoryList.append(btn);
   }
 }
@@ -294,7 +294,7 @@ function renderCases(){
    btn.setAttribute("aria-pressed",String(selected===c.id));
    const label=document.createElement("span");label.className="center-case-label";label.textContent=c.title;
    btn.append(label);
-   btn.onclick=()=>{selected=c.id;renderCases();renderInfo();start();};
+   btn.onclick=()=>{wholeSuitView=false;selected=c.id;renderCases();renderInfo();start();};
    caseList.append(btn);
  }
  if(!caseList.children.length){const p=document.createElement("p");p.textContent="這裡還沒有可以觀看的 3D 場景。";caseList.append(p);}
@@ -328,8 +328,9 @@ function renderInfo(){
  for(const [id,show] of [["dungeonArenaRankLabel",arena&&!high],["dungeonArenaPositionLabel",arena&&!high],["dungeonHigherModeLabel",high],["dungeonHigherStageLabel",high],["dungeonBountyTierLabel",c.kind==="dungeon-bounty"],["dungeonMirrorWinsLabel",c.kind==="advanced-mirror"],["dungeonVoidFloorLabel",c.kind==="advanced-void"]])$(id).hidden=!show;
  $("fixtureSelected").closest("label").hidden=c.kind!=="galaxy"&&c.kind!=="universe";
 }
-let battleSimulationView=true;
+let battleSimulationView=true,wholeSuitView=false;
 function safeStop(){
+ document.getElementById("gmWholeSuitPicker")?.remove();
  const picker=document.getElementById("gmBattleViewPicker");picker?.remove();
  const review=document.getElementById("gmAtlasReview");review?.__review?.dispose();review?.remove();
  serial++;
@@ -347,9 +348,24 @@ async function start(){
  syncScenarioPanel();
  const ticket=serial;
  if(disabled){fail("3D 已停用，不影響正式遊戲。");return;}
+ if(entry().kind==='character'){
+  const picker=document.createElement('div');picker.id='gmWholeSuitPicker';picker.className='gm-b-view-picker';
+  for(const [value,label] of [[false,'原 3D 角色'],[true,'2.5D 角色與動畫']]){const b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('aria-pressed',String(wholeSuitView===value));b.onclick=()=>{wholeSuitView=value;start();};picker.append(b);}
+  document.getElementById('centerWorkspace').insertBefore(picker,document.querySelector('#centerWorkspace .stage'));
+ }
+ if(wholeSuitView&&entry().kind==='battle-battle'){const back=document.createElement('button');back.id='gmWholeSuitPicker';back.type='button';back.textContent='返回戰鬥模擬';back.onclick=()=>{wholeSuitView=false;start();};document.getElementById('centerWorkspace').insertBefore(back,document.querySelector('#centerWorkspace .stage'));}
+ if(wholeSuitView&&['character','battle-battle'].includes(entry().kind)){
+  appearancePanel.hidden=true;scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 角色展示：不影響正式戰鬥與角色資料';
+  const abort=new AbortController();let view=null;runtime={dispose:()=>{abort.abort();view?.dispose();},resize:()=>view?.resize()};
+  try{const m=await import('./gm-whole-suit.mjs?v=20261015-phase4-sprites1');if(ticket!==serial)return;view=await m.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial)view.dispose();}
+  catch(_){if(ticket===serial)fail('角色展示無法載入，請返回後重試。');}
+  return;
+ }
+ syncAppearancePanel();
  if(entry().kind==="battle-battle"){
   const picker=document.createElement('div');picker.id='gmBattleViewPicker';picker.className='gm-b-view-picker';
-  for(const [simulation,label] of [[true,'2.5D 戰鬥模擬'],[false,'戰場與生命顯示']]){const button=document.createElement('button');button.type='button';button.textContent=label;button.setAttribute('aria-pressed',String(battleSimulationView===simulation));button.onclick=()=>{battleSimulationView=simulation;start();};picker.append(button);}
+  for(const [simulation,label] of [[true,'2.5D 戰鬥模擬'],[false,'戰場與生命顯示']]){const button=document.createElement('button');button.type='button';button.textContent=label;button.setAttribute('aria-pressed',String(battleSimulationView===simulation));button.onclick=()=>{wholeSuitView=false;battleSimulationView=simulation;start();};picker.append(button);}
+  const spriteButton=document.createElement('button');spriteButton.type='button';spriteButton.textContent='2.5D 角色與動畫';spriteButton.onclick=()=>{wholeSuitView=true;start();};picker.append(spriteButton);
   document.getElementById('centerWorkspace').insertBefore(picker,document.querySelector('#centerWorkspace .stage'));
   if(battleSimulationView){
    scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 沙盒：B 方案，不影響正式角色、戰鬥或音效';

@@ -7,7 +7,7 @@ for(const [p,row] of Object.entries(ledger.files)){
  assert.equal(sha(fs.readFileSync(row.archive)),row.beforeSHA256,p+' archive altered');
  assert.equal(sha(cp.execFileSync('git',['show',ledger.baselineHEAD+':'+p])),row.beforeSHA256,p+' baseline');
  if(row.afterSHA256===null)assert.equal(fs.existsSync(p),false,p+' must remain retired');
- else if(p==='3d-test/test-center.js'||p==='3d-test/index.html'){
+ else if(p==='3d-test/test-center.js'||p==='3d-test/index.html'||p==='index.html'){
   const verify=require('../../development/hybrid-comparison/t2b3-v1/source-version.cjs');
   const oldSHA=sha(cp.execFileSync('git',['show','10ef9222427050eadf42b8f61b4d153da7b049b6:'+p]));
   verify(p,oldSHA); // Original T4 lock + exact one-query Batch28 transform.

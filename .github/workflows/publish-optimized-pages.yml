@@ -98,6 +98,7 @@ jobs:
             sleep 0.3
           done
           RUNTIME_SMOKE_URL=http://127.0.0.1:4181/index.html node tests/runtime/gm-battle-simulation-browser.js
+          RUNTIME_SMOKE_URL=http://127.0.0.1:4181/index.html node tests/equipment-gm/browser.cjs
       - name: Check preview entry and production homepage
         shell: bash
         run: |

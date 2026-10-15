@@ -1,0 +1,26 @@
+{
+  "schema": "cw.phase4.authorized-gm-integration.v1",
+  "baselineHEAD": "b4dc54c0d6a28cc033a20d8a51812c1081f674e2",
+  "files": {
+    "3d-test/index.html": {
+      "beforeSHA256": "1f110854731cf6a18d1a1210e24978e2492cc6394caaae510f225daff773e5e4",
+      "afterSHA256": "78002e1d0c032bf1525d8de093bee7bf0223a8673abf1056a29dde7a33202c37"
+    },
+    "3d-test/test-center.js": {
+      "beforeSHA256": "b4e7c94edae4e4e679249c8cde17c6a423a2807ff9367c0314c8fb80c5d55be5",
+      "afterSHA256": "3487019c99a6a1e29a04edc5f6486e9c4f585e6a8da1ce503117c0f9dd526024"
+    },
+    "gm3dprototype.js": {
+      "beforeSHA256": "6bbb9f1b698369c6e6196ae52436d734e2ffb69d4a983bb1fbdd263c57a50aa6",
+      "afterSHA256": "3962c68eb1241ec22085dcd04cf7f32bc7d59c5574d5dd1faab295febd2be0a3"
+    },
+    "index.html": {
+      "beforeSHA256": "9ac13ab9777340fb1e53039074056280bf6226a09e660ebd0d80c4afb5cd2cfb",
+      "afterSHA256": "e2e80c1c35c1ee481e0c6f254071c7a063f9d881d7f55899cb08b1f265051c6c"
+    },
+    "scripts/publish-assets.cjs": {
+      "beforeSHA256": "46ea2550672ddf48b1364fc9c8caaaed6257d746b46534f8394c82d9fd64f699",
+      "afterSHA256": "a7f3c5ef3e1518feb08a4ad79f13d863fcffdd2805500c2626e0f6340992488e"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "cw.gm.sprite-publication.v1",
+  "formalBattleEnabled": false,
+  "ids": [
+    "g005",
+    "g007",
+    "g018"
+  ],
+  "files": {
+    "3d-test/equipment-sprites-v1/actor.mjs": {
+      "sha256": "bbda7003912f9594ec13aa3548885313f666e4682bafb53626898e254dda7d6d",
+      "bytes": 1944
+    },
+    "3d-test/equipment-sprites-v1/animation.mjs": {
+      "sha256": "e69d8c7147a573d21f6cce4a163cc028d4ccfda2850c621df3269ed677152305",
+      "bytes": 1952
+    },
+    "3d-test/equipment-sprites-v1/assets.mjs": {
+      "sha256": "a0f9743fca0a4c6db770e5fe44e5037346a60990a6410145579bec5beedb9b19",
+      "bytes": 3838
+    },
+    "3d-test/equipment-sprites-v1/contract.mjs": {
+      "sha256": "4a4ff956abd48e16bd113f3a20a8fba7d84df1a6cef2dbd70b96d8002dd65796",
+      "bytes": 4709
+    },
+    "assets/gm-equipment-2_5d/v1/catalog.json": {
+      "sha256": "8b45e0ac5e4a660faeda24841111aa9a2e550c301f7af31f51895f10a73fea70",
+      "bytes": 84738
+    },
+    "assets/gm-equipment-2_5d/v1/g005.webp": {
+      "sha256": "e398cfb81571e18083e898d0ac8b240b0331ce19e22e09aaaf84817b677ef097",
+      "bytes": 86324
+    },
+    "assets/gm-equipment-2_5d/v1/g007.webp": {
+      "sha256": "3313e2657afee4c3c210b9c049af3d4e96d01fae9b66c0cc15f70a0e3056ce4a",
+      "bytes": 81846
+    },
+    "assets/gm-equipment-2_5d/v1/g018.webp": {
+      "sha256": "bb4456ec08fe6d48062801d3295552b370f8cca87ba43ba82b7f6fad84c15e82",
+      "bytes": 104822
+    }
+  }
+}

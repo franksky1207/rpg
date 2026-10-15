@@ -1,0 +1,17 @@
+✔ five templates execute and death holds transparent end (1.81302ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.250327ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (39.240613ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (9.907577ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (2.334325ms)
+✔ abort pending decode discards late result and closes it (33.754173ms)
+✔ one aborted subscriber does not cancel shared live subscriber (2.838814ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (19.329271ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (2.460275ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 205.39017
