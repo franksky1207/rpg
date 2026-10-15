@@ -1,0 +1,22 @@
+[
+  {
+    "command": "node tests/runtime/audio-lifecycle-browser.js",
+    "exitCode": 0,
+    "seconds": 140.07
+  },
+  {
+    "command": "node tests/runtime/thirdworld-background-browser.js",
+    "exitCode": 0,
+    "seconds": 20.5
+  },
+  {
+    "command": "node tests/runtime/cross-era-background-browser.js",
+    "exitCode": 0,
+    "seconds": 12.35
+  },
+  {
+    "command": "node tests/equipment-gm/browser.cjs",
+    "exitCode": 0,
+    "seconds": 85.76
+  }
+]

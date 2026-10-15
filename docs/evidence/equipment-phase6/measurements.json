@@ -1,0 +1,473 @@
+{
+  "realDevice": false,
+  "timing": {
+    "method": "actual structured presentation owner with injected virtual sleep, delayed visual samples; authoritative trace tolerance 0ms; normalized sample tolerance 1e-9",
+    "passed": true,
+    "comparisons": 288,
+    "maxAuthorityDeltaMs": 0
+  },
+  "durationBySpeed": {
+    "1": {
+      "textMs": 1150,
+      "spriteMs": 1150
+    },
+    "1.5": {
+      "textMs": 768,
+      "spriteMs": 768
+    },
+    "2": {
+      "textMs": 575,
+      "spriteMs": 575
+    }
+  },
+  "formal": [
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "legacy3DRequests": [],
+      "runs": [
+        {
+          "id": "g005",
+          "speed": 1,
+          "scenario": "normal",
+          "layout": {
+            "width": 162,
+            "height": 162,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 72
+        },
+        {
+          "id": "g007",
+          "speed": 1.5,
+          "scenario": "normal",
+          "layout": {
+            "width": 162,
+            "height": 162,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 6,
+            "bytes": 6291456,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 6,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 59
+        },
+        {
+          "id": "g018",
+          "speed": 2,
+          "scenario": "normal",
+          "layout": {
+            "width": 162,
+            "height": 162,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 9,
+            "bytes": 9437184,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 9,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 44
+        },
+        {
+          "id": "g007",
+          "speed": 2,
+          "scenario": "death",
+          "layout": {
+            "width": 162,
+            "height": 162,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 9,
+            "bytes": 9437184,
+            "limit": 16777216,
+            "hits": 3,
+            "loads": 9,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 16
+        },
+        {
+          "id": "g005",
+          "speed": 2,
+          "scenario": "dodge",
+          "layout": {
+            "width": 162,
+            "height": 162,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 9,
+            "bytes": 9437184,
+            "limit": 16777216,
+            "hits": 6,
+            "loads": 9,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 44
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "legacy3DRequests": [],
+      "runs": [
+        {
+          "id": "g005",
+          "speed": 1,
+          "scenario": "normal",
+          "layout": {
+            "width": 151.90625,
+            "height": 151.90625,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 74
+        },
+        {
+          "id": "g007",
+          "speed": 1.5,
+          "scenario": "normal",
+          "layout": {
+            "width": 151.90625,
+            "height": 151.90625,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 6,
+            "bytes": 6291456,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 6,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 55
+        },
+        {
+          "id": "g018",
+          "speed": 2,
+          "scenario": "normal",
+          "layout": {
+            "width": 151.90625,
+            "height": 151.90625,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 9,
+            "bytes": 9437184,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 9,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 42
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "legacy3DRequests": [],
+      "runs": [
+        {
+          "id": "g005",
+          "speed": 1,
+          "scenario": "normal",
+          "layout": {
+            "width": 96,
+            "height": 96,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 69
+        },
+        {
+          "id": "g007",
+          "speed": 1.5,
+          "scenario": "normal",
+          "layout": {
+            "width": 96,
+            "height": 96,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 6,
+            "bytes": 6291456,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 6,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 56
+        },
+        {
+          "id": "g018",
+          "speed": 2,
+          "scenario": "normal",
+          "layout": {
+            "width": 96,
+            "height": 96,
+            "hpClear": true,
+            "enemyClear": true
+          },
+          "stats": {
+            "entries": 9,
+            "bytes": 9437184,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 9,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          },
+          "samples": 43
+        }
+      ]
+    }
+  ],
+  "faults": [
+    {
+      "fault": "none",
+      "stats": {
+        "bytes": 0,
+        "refs": 0,
+        "entries": 0
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "unknown",
+      "stats": {
+        "bytes": 0,
+        "refs": 0,
+        "entries": 0
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "404",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "sha",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "decode",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "slow",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "weapon-404",
+      "stats": {
+        "entries": 2,
+        "bytes": 2097152,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "weapon-sha",
+      "stats": {
+        "entries": 2,
+        "bytes": 2097152,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "weapon-decode",
+      "stats": {
+        "entries": 2,
+        "bytes": 2097152,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "weapon-slow",
+      "stats": {
+        "entries": 2,
+        "bytes": 2097152,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 1,
+      "canvas": 0,
+      "audio": 11,
+      "expectedAudio": 11
+    },
+    {
+      "fault": "lifecycle",
+      "stats": {
+        "entries": 3,
+        "bytes": 3145728,
+        "limit": 16777216,
+        "hits": 24,
+        "loads": 6,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "battles": 9,
+      "canvas": 0,
+      "audio": 99,
+      "expectedAudio": 99
+    }
+  ]
+}

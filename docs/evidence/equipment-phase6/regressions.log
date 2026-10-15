@@ -1,0 +1,1317 @@
+
+COMMAND python3 scripts/equipment-concepts.py validate
+{
+  "passed": true,
+  "counts": {
+    "galaxy": 100,
+    "universe": 100,
+    "higher": 10,
+    "total": 210,
+    "equipmentPositions": 1050
+  },
+  "changedFiles": 0,
+  "conceptImages": 60,
+  "setsWithBothImages": 30,
+  "conceptApproved": 30,
+  "setsWithoutImages": 180,
+  "setsWithExistingModels": 1,
+  "officialRepeatedNames": {
+    "主機同步環": [
+      "u019:helmet",
+      "u068:helmet"
+    ]
+  },
+  "warnings": [
+    "g006/equipment-five-slots.webp: 990216 bytes exceeds suggested 800 KB",
+    "g007/equipment-five-slots.webp: 1031198 bytes exceeds suggested 800 KB"
+  ]
+}
+
+COMMAND python3 -m unittest discover -s tests/equipment-concepts -v
+test_acceptance_cannot_move_to_another_set (test_2_5d_review.Review25DTests.test_acceptance_cannot_move_to_another_set) ... ok
+test_acceptance_required_for_original_versions (test_2_5d_review.Review25DTests.test_acceptance_required_for_original_versions) ... ok
+test_actual_missing_and_changed_image_rejected (test_2_5d_review.Review25DTests.test_actual_missing_and_changed_image_rejected) ... ok
+test_changed_exception_authorization_rejected (test_2_5d_review.Review25DTests.test_changed_exception_authorization_rejected) ... ok
+test_decoder_unavailable_cannot_approve_structural_header (test_2_5d_review.Review25DTests.test_decoder_unavailable_cannot_approve_structural_header) ... ok
+test_each_identity_field_is_bound (test_2_5d_review.Review25DTests.test_each_identity_field_is_bound) ... ok
+test_each_real_blocker_remains_blocking (test_2_5d_review.Review25DTests.test_each_real_blocker_remains_blocking) ... ok
+test_editorial_sop_update_does_not_invalidate_history (test_2_5d_review.Review25DTests.test_editorial_sop_update_does_not_invalidate_history) ... ok
+test_exception_cannot_waive_true_blocker (test_2_5d_review.Review25DTests.test_exception_cannot_waive_true_blocker) ... ok
+test_fabricated_observation_rejected_even_resealed (test_2_5d_review.Review25DTests.test_fabricated_observation_rejected_even_resealed) ... ok
+test_fingerprint_tampering_rejected (test_2_5d_review.Review25DTests.test_fingerprint_tampering_rejected) ... ok
+test_g007_supplement_does_not_replace_legacy_or_models (test_2_5d_review.Review25DTests.test_g007_supplement_does_not_replace_legacy_or_models) ... ok
+test_g024_g030_originals_accepted_and_not_released (test_2_5d_review.Review25DTests.test_g024_g030_originals_accepted_and_not_released) ... ok
+test_legacy_archive_sha_not_optional (test_2_5d_review.Review25DTests.test_legacy_archive_sha_not_optional) ... ok
+test_missing_or_unverified_stage_cannot_pass (test_2_5d_review.Review25DTests.test_missing_or_unverified_stage_cannot_pass) ... ok
+test_no_real_stage_evidence_cannot_pass (test_2_5d_review.Review25DTests.test_no_real_stage_evidence_cannot_pass) ... ok
+test_replaced_image_cannot_regenerate_approval (test_2_5d_review.Review25DTests.test_replaced_image_cannot_regenerate_approval) ... ok
+test_source_missing_or_changed_rejected (test_2_5d_review.Review25DTests.test_source_missing_or_changed_rejected) ... ok
+test_unapproved_concepts_cannot_enter_release_manifests (test_2_5d_review.Review25DTests.test_unapproved_concepts_cannot_enter_release_manifests) ... ok
+test_unknown_policy_and_modified_policy_block (test_2_5d_review.Review25DTests.test_unknown_policy_and_modified_policy_block) ... ok
+test_unmade_180_cannot_gain_production_or_milestones (test_2_5d_review.Review25DTests.test_unmade_180_cannot_gain_production_or_milestones) ... ok
+test_current_images_and_stage_images_bound (test_autonomous_review.AutonomousReviewTests.test_current_images_and_stage_images_bound) ... ok
+test_fake_g024_pass_cannot_launder_original_disc (test_autonomous_review.AutonomousReviewTests.test_fake_g024_pass_cannot_launder_original_disc) ... ok
+test_fake_g030_pass_cannot_launder_missing_back_view (test_autonomous_review.AutonomousReviewTests.test_fake_g030_pass_cannot_launder_missing_back_view) ... ok
+test_formal_identity_and_sop_hash_bound (test_autonomous_review.AutonomousReviewTests.test_formal_identity_and_sop_hash_bound) ... ok
+test_four_existing_sets_have_verified_two_stage_passes (test_autonomous_review.AutonomousReviewTests.test_four_existing_sets_have_verified_two_stage_passes) ... ok
+test_incomplete_criteria_rejected (test_autonomous_review.AutonomousReviewTests.test_incomplete_criteria_rejected) ... ok
+test_legacy_approvals_preserved_byte_exact (test_autonomous_review.AutonomousReviewTests.test_legacy_approvals_preserved_byte_exact) ... ok
+test_legacy_failures_preserved_but_v3_allows_production (test_autonomous_review.AutonomousReviewTests.test_legacy_failures_preserved_but_v3_allows_production) ... ok
+test_missing_image_cannot_be_approved (test_autonomous_review.AutonomousReviewTests.test_missing_image_cannot_be_approved) ... ok
+test_missing_stage_rejected (test_autonomous_review.AutonomousReviewTests.test_missing_stage_rejected) ... ok
+test_model_gate_accepts_only_verified_art_and_never_releases (test_autonomous_review.AutonomousReviewTests.test_model_gate_accepts_only_verified_art_and_never_releases) ... ok
+test_model_gate_revalidates_tampered_approval (test_autonomous_review.AutonomousReviewTests.test_model_gate_revalidates_tampered_approval) ... ok
+test_observation_must_appear_in_hashed_evidence (test_autonomous_review.AutonomousReviewTests.test_observation_must_appear_in_hashed_evidence) ... ok
+test_one_flag_does_not_approve_failure (test_autonomous_review.AutonomousReviewTests.test_one_flag_does_not_approve_failure) ... ok
+test_open_defect_cannot_be_passed (test_autonomous_review.AutonomousReviewTests.test_open_defect_cannot_be_passed) ... ok
+test_repair_verifies_pixels_not_declared_zero (test_autonomous_review.AutonomousReviewTests.test_repair_verifies_pixels_not_declared_zero) ... ok
+test_review_order_is_enforced (test_autonomous_review.AutonomousReviewTests.test_review_order_is_enforced) ... ok
+test_stage_cannot_self_pass_unverified_criterion (test_autonomous_review.AutonomousReviewTests.test_stage_cannot_self_pass_unverified_criterion) ... ok
+test_actual_first_batch_is_not_redrawn (test_batch_planner.BatchPlannerTests.test_actual_first_batch_is_not_redrawn) ... ok
+test_all_buckets_and_complete_first_galaxy_batch (test_batch_planner.BatchPlannerTests.test_all_buckets_and_complete_first_galaxy_batch) ... ok
+test_bad_batch_rejected (test_batch_planner.BatchPlannerTests.test_bad_batch_rejected) ... ok
+test_index_missing_file_drift_rejected (test_batch_planner.BatchPlannerTests.test_index_missing_file_drift_rejected) ... ok
+test_next_batch_is_safe_to_resume (test_batch_planner.BatchPlannerTests.test_next_batch_is_safe_to_resume) ... ok
+test_actual_counts_names_statuses (test_database.DatabaseTests.test_actual_counts_names_statuses) ... ok
+test_approval_without_evidence_rejected (test_database.DatabaseTests.test_approval_without_evidence_rejected) ... ok
+test_archived_g007_original_protected (test_database.DatabaseTests.test_archived_g007_original_protected) ... ok
+test_changed_directory_rejected (test_database.DatabaseTests.test_changed_directory_rejected) ... ok
+test_corrupt_webp_rejected (test_database.DatabaseTests.test_corrupt_webp_rejected) ... ok
+test_delegated_approval_exact_authority_required (test_database.DatabaseTests.test_delegated_approval_exact_authority_required) ... ok
+test_duplicate_index_id_rejected (test_database.DatabaseTests.test_duplicate_index_id_rejected) ... ok
+test_extra_directory_rejected (test_database.DatabaseTests.test_extra_directory_rejected) ... ok
+test_formal_missing_slot_rejected (test_database.DatabaseTests.test_formal_missing_slot_rejected) ... ok
+test_g007_tampering_rejected_without_writes (test_database.DatabaseTests.test_g007_tampering_rejected_without_writes) ... ok
+test_identical_concept_images_rejected_without_writes (test_database.DatabaseTests.test_identical_concept_images_rejected_without_writes) ... ok
+test_identity_reordering_rejected_before_writes (test_database.DatabaseTests.test_identity_reordering_rejected_before_writes) ... ok
+test_legacy_note_adoption_preserves_original (test_database.DatabaseTests.test_legacy_note_adoption_preserves_original) ... ok
+test_manual_text_preserved (test_database.DatabaseTests.test_manual_text_preserved) ... ok
+test_master_index_stale_rejected (test_database.DatabaseTests.test_master_index_stale_rejected) ... ok
+test_missing_notes_rejected_and_generated (test_database.DatabaseTests.test_missing_notes_rejected_and_generated) ... ok
+test_missing_slot_rejected (test_database.DatabaseTests.test_missing_slot_rejected) ... ok
+test_new_legacy_approval_cannot_bypass_schema3 (test_database.DatabaseTests.test_new_legacy_approval_cannot_bypass_schema3) ... ok
+test_real_image_dimensions_bytes (test_database.DatabaseTests.test_real_image_dimensions_bytes) ... ok
+test_rerun_byte_identical (test_database.DatabaseTests.test_rerun_byte_identical) ... ok
+test_runtime_concept_reference_rejected (test_database.DatabaseTests.test_runtime_concept_reference_rejected) ... ok
+test_stale_notes_rejected (test_database.DatabaseTests.test_stale_notes_rejected) ... ok
+test_wrong_missing_image_status_rejected (test_database.DatabaseTests.test_wrong_missing_image_status_rejected) ... ok
+test_wrong_name_rejected (test_database.DatabaseTests.test_wrong_name_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 68 tests in 98.450s
+
+OK
+
+COMMAND python3 scripts/equipment-sprites.py validate
+{
+  "schema": "cw.equipment.sprite.validation.v1",
+  "entries": [
+    {
+      "id": "g005",
+      "status": "complete",
+      "gm": "not-tested",
+      "release": false
+    },
+    {
+      "id": "g007",
+      "status": "complete",
+      "gm": "not-tested",
+      "release": false
+    },
+    {
+      "id": "g018",
+      "status": "complete",
+      "gm": "not-tested",
+      "release": false
+    }
+  ],
+  "complete": 3,
+  "publish": false
+}
+
+COMMAND python3 -m unittest discover -s tests/equipment-sprites -v
+test_concept_version_change_refused (test_assets.SpriteTests.test_concept_version_change_refused) ... ok
+test_duplicate_registry_identity_refused (test_assets.SpriteTests.test_duplicate_registry_identity_refused) ... ok
+test_fake_release_or_gm_success_refused (test_assets.SpriteTests.test_fake_release_or_gm_success_refused) ... ok
+test_identity_source_and_names_are_bound (test_assets.SpriteTests.test_identity_source_and_names_are_bound) ... ok
+test_import_missing_prompt_rejected_before_any_write (test_assets.SpriteTests.test_import_missing_prompt_rejected_before_any_write) ... ok
+test_import_never_overwrites_completed_version (test_assets.SpriteTests.test_import_never_overwrites_completed_version) ... ok
+test_missing_and_corrupt_actual_sprite_refused (test_assets.SpriteTests.test_missing_and_corrupt_actual_sprite_refused) ... ok
+test_no_real_visual_review_cannot_complete (test_assets.SpriteTests.test_no_real_visual_review_cannot_complete) ... ok
+test_opaque_background_refused (test_assets.SpriteTests.test_opaque_background_refused) ... ok
+test_other_suit_file_cannot_be_assigned (test_assets.SpriteTests.test_other_suit_file_cannot_be_assigned) ... ok
+test_path_traversal_and_empty_asset_refused (test_assets.SpriteTests.test_path_traversal_and_empty_asset_refused) ... ok
+test_planning_unmade_concept_rejected_and_approved_next_set_stays_unmade (test_assets.SpriteTests.test_planning_unmade_concept_rejected_and_approved_next_set_stays_unmade) ... ok
+test_review_and_source_fingerprints_required (test_assets.SpriteTests.test_review_and_source_fingerprints_required) ... ok
+test_three_formal_trials_and_release_isolation (test_assets.SpriteTests.test_three_formal_trials_and_release_isolation) ... ok
+test_unapproved_concept_refused (test_assets.SpriteTests.test_unapproved_concept_refused) ... ok
+test_unmade_cannot_claim_complete (test_assets.SpriteTests.test_unmade_cannot_claim_complete) ... ok
+test_wrong_sha_and_version_refused (test_assets.SpriteTests.test_wrong_sha_and_version_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.389s
+
+OK
+
+COMMAND python3 scripts/equipment-weapon-assets.py
+PASS three real weapon layers, three repaired bases, provenance/review SHA, grip/alpha, original character bytes unchanged
+
+COMMAND python3 scripts/equipment-gm-publication.py --check
+GM export verified: 3 sprites, 210 identities, 4 reused runtime modules; formal battle disabled
+
+COMMAND python3 scripts/equipment-formal-publication.py --check
+Formal player-only release: G005/G007/G018; legacy 3D disabled
+
+COMMAND python3 scripts/equipment-formal-fixture-history.py --check
+Two exact historical public JS owners retained; immutable fixture bytes unchanged
+
+COMMAND node tests/equipment-weapons/names.cjs
+PASS 210 identities / 1050 slots / 70 aliases / 210 gear-container migrations / 60 original concept images / immutable fixtures
+
+COMMAND node --test tests/equipment-weapons/runtime.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-sprites/runtime.test.mjs
+✔ g005 selects only actual armor across epochs and mixed slots (1.284668ms)
+✔ g007 selects only actual armor across epochs and mixed slots (0.275167ms)
+✔ g018 selects only actual armor across epochs and mixed slots (0.134184ms)
+✔ missing, unknown, wrong world, ambiguous or GM fixture armor refuses (0.214285ms)
+✔ formal pool requires separate permission; SHA, 404 and decode failures release resources (40.894457ms)
+✔ formal appearance freezes at capture, GM lane has no authoritative equipment (5.258534ms)
+✔ persisted pagehide preserves official session and consumer; true departure cancels (1.817997ms)
+✔ five templates execute and death holds transparent end (1.871618ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.398294ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (57.740261ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (3.012327ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (3.309248ms)
+✔ abort pending decode discards late result and closes it (9.494948ms)
+✔ one aborted subscriber does not cancel shared live subscriber (4.259609ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (68.045396ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (1.797625ms)
+✔ formal armor identity ignores the other four slots; unknown armor, fixture and ambiguity refuse (0.609084ms)
+✔ GM publication permission is required independently of complete art (0.23091ms)
+✔ five templates execute and death holds transparent end (2.443896ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.45523ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (38.790939ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (9.135732ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (1.118556ms)
+✔ abort pending decode discards late result and closes it (12.581226ms)
+✔ one aborted subscriber does not cancel shared live subscriber (38.42297ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (51.683066ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (6.121101ms)
+✔ g005 real separated layers acquire, sample four phases, idle original and cleanup (95.662462ms)
+✔ g007 real separated layers acquire, sample four phases, idle original and cleanup (3.11981ms)
+✔ g018 real separated layers acquire, sample four phases, idle original and cleanup (7.291757ms)
+✔ optional weapon 404 falls back to original attack with no leaked partial layer (39.72273ms)
+✔ optional weapon sha falls back to original attack with no leaked partial layer (3.421078ms)
+✔ optional weapon decode falls back to original attack with no leaked partial layer (7.828351ms)
+✔ optional weapon slow falls back to original attack with no leaked partial layer (2501.703759ms)
+✔ unapproved/missing weapons preserve original, layer path and SHA cannot cross suit (1.750996ms)
+✔ thrust has common body motion, bounded wrist rotation and exact impact endpoint (4.536529ms)
+✔ weapon load never blocks primary actor, and readiness cannot switch layers halfway through an attack (2.470326ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3529.381422
+
+COMMAND node tests/runtime/t3b-formal-owner-clock.cjs
+PASS one formal visual clock: owner token/index/pacing, no computed replay, real cue fields, zero-HP death, foreground suppression, GM speed and missing history fail-closed
+
+COMMAND node tests/runtime/t3b-formal-controller.cjs
+PASS formal B controller: formal-only, computed history excluded, dedupe, background, stop, late load, missing assets, 100 lifecycle switches; mocked resource counter, not GPU measurement
+
+COMMAND node scripts/hybrid-comparison-fixtures.cjs --check
+PASS T2-A fixture reproducibility, five owner cases, three official identities, 33 appearances, 18 licensed GLBs; 5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99
+
+COMMAND python3 development/hybrid-comparison/t2b2-v1/tools/inventory.py --check
+PASS B2 inventory and original source locks 1102 91093741 bytes
+
+COMMAND python3 development/hybrid-comparison/t2b3-v1/inventory.py --check
+PASS B3 development-only inventory 135 12240320 bytes; not a GPU measurement
+
+COMMAND node tests/runtime/3d-equipment-contract.cjs
+PASS Batch28C 15 actual LODs, strict five formal identities, opaque helmet, paired boots, 53 joint/bind/weights, wrong-name/bind rejection, no base changes
+
+COMMAND node tests/runtime/3d-batch28-preflight.cjs
+PASS Batch28 preflight: five-slot resolver, missing/empty LOD fallback, stale async disposal, unequip, scene close
+
+COMMAND node tests/equipment-formal/publication.cjs
+PASS exact three-suit formal-only permission, immutable catalog identity, SHA/bytes, missing release and legacy 3D closed
+
+COMMAND node tests/runtime/resource-manifest-integrity.js
+GM and 3D per-file version manifest structural integrity passed 517
+
+COMMAND node tests/runtime/resource-cache-integrity.js
+Persistent resource cache structure PASS; managed asset digests: 517
+
+COMMAND node tests/runtime/resource-cache-behavior.js
+PASS: audio/GLB reuse, no model preload, GLB Range, incremental version cleanup, usage bytes, clear, fallback, save isolation
+
+COMMAND node tests/runtime/resource-cache-prefetch-integrity.js
+PASS cross-era selected media prefetch, direct cache usage, byte-range support and saved data isolation
+
+COMMAND node tests/audio-lifecycle.test.cjs
+PASS combat-looking views never acquire formal ownership
+PASS formal exit restores theme even with stuck presentation marker
+PASS actual main pipeline owns audio independently of result DOM
+PASS galaxy/normal whole-run and stale-exit safety
+PASS galaxy/elite whole-run and stale-exit safety
+PASS galaxy/boss whole-run and stale-exit safety
+PASS universe/boss whole-run and stale-exit safety
+PASS higher/higher-stage whole-run and stale-exit safety
+PASS galaxy/bounty whole-run and stale-exit safety
+PASS universe/bounty whole-run and stale-exit safety
+PASS galaxy/arena whole-run and stale-exit safety
+PASS universe/arena whole-run and stale-exit safety
+PASS higher/arena-fixed whole-run and stale-exit safety
+PASS galaxy/mirror whole-run and stale-exit safety
+PASS universe/void whole-run and stale-exit safety
+PASS galaxy/calamity whole-run and stale-exit safety
+PASS universe/calamity whole-run and stale-exit safety
+PASS higher/alternateBattle whole-run and stale-exit safety
+PASS unlabelled exit and public scene setters cannot acquire/cancel ownership
+PASS reserved/rejected caller token cannot cancel an accepted run
+Audio lifecycle: 20 cases passed
+
+COMMAND node tests/audio-regression.test.cjs
+Audio regression PASS: 9 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.
+
+COMMAND python3 scripts/batch01-27-compatibility-audit.py
+{
+  "schema": "cw.batch01-27.compatibility.v1",
+  "baselineMain": "b2e4f3c69a387f7c86412ed4cd4687f6b13a6552",
+  "approvedFormalRelease": false,
+  "modules": [
+    {
+      "path": "3d-test/appearance-snapshot.js",
+      "sha256": "0f3b693af2730af00f2145053e1a5d229f2c8eba3b2a2cb04e373499220d078d",
+      "consumers": [
+        "3d-test/shared-loader.js",
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/armor-selection.js",
+      "sha256": "ff128a9464610c0015b6ba94ebe87048d1c9309d015e2c9d2c2f2005405e5d51",
+      "consumers": [
+        "3d-test/gm-battle-simulation.js",
+        "3d-test/gm-whole-suit.mjs",
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/atlas-review.js",
+      "sha256": "3e8ea6e72a5bece70347d2ba8895ca4a4242953bd4d3694aacfe60820768802e",
+      "consumers": [
+        "3d-test/index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/character-assets.js",
+      "sha256": "ac7a5a1efb4b24773f22ee68ac984e14150b62bfc27ff9f14807e9ccb9450fe2",
+      "consumers": [
+        "3d-test/prototype-engine.js"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/formal-player-sprites.css",
+      "sha256": "efd8e36ac45110f4d2df4b32ef3569461d7d24c64c62e0fde85c1985dba7dc54",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/formal-player-sprites.js",
+      "sha256": "bce66472f7bb3decdc5b54d27c6ed02e58d20a825c6a91792f822b6f52bede2e",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/formal-snapshots.js",
+      "sha256": "799590094c8aa4ea2f32695f71fc4cad5ea478d0c5aafafb3852aea985234864",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/galaxy-b05.css",
+      "sha256": "42d02f4f7fce926f7240ec107076ec464969648a1dbdc8433489616ada43e27b",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/gm-battle-simulation.js",
+      "sha256": "86eff34e61090c8090e87998dfa81336dc5800bc5bb9223d4b43fad5c64c073c",
+      "consumers": [
+        "3d-test/test-center.js"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/gm-whole-suit.css",
+      "sha256": "14a017aea18ca0422fd3f8664abe87480622c598573851cf225e942b6f0e2b7e",
+      "consumers": [
+        "3d-test/index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/mode-foundation.js",
+      "sha256": "b45573153094a17deef3ff27c38f677cbc5cb9c6cf5b4ac3ba2980f356d0ee60",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/prototype-engine.js",
+      "sha256": "0214b42e355bdd81f857f3a8acb9f4a8121e1a8b15d57dece634fd49223f07ff",
+      "consumers": [
+        "3d-test/shared-loader.js"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/prototype.css",
+      "sha256": "13bf11b5b6135d4c7d8d2b651ad6ed165741031c1048d75437f4f3bad7b9eaf8",
+      "consumers": [
+        "3d-test/index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/runtime.js",
+      "sha256": "9144e26d9cd9167ba3cee0a0ce2dc27bd65198b45d37190140256495b2783db9",
+      "consumers": [
+        "3d-test/shared-loader.js",
+        "scriptgrouploader.js"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/shared-loader.js",
+      "sha256": "ca99e4943a4e6921886c3da214301bbf8d64afc49f6b95d429d8b6daf35ebdf1",
+      "consumers": [
+        "3d-test/index.html",
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3a-hybrid-policy.js",
+      "sha256": "169cb6fd8eeae27dabe65cdfe33292fa3bf21dd0886826814198b29599a7e17e",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-assets.js",
+      "sha256": "6606a61b83ccc8f59eb5753776deb1e00215ba3934d216c6a2c2d6c1d2822994",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-controller.js",
+      "sha256": "d863318fd54649f8396c0900318f1c7c3e41edc8d41fd7c49f7c8c3b3de39aff",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-entry.js",
+      "sha256": "0b2761c0a7e5daa0a3b78152e1ed7d69a084b40a2c80114b36f9bf87287d206f",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-owner-clock.js",
+      "sha256": "878747628717866ac24d4d7f91ffee9b9122c84cf2e49ff82c09c04687bb630e",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-projection.js",
+      "sha256": "366c014746c30ed93d3f97fe819c52dd057bc0e90082748f402f0f9a8dca55e4",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-renderer.js",
+      "sha256": "44f909b4ab63823557ad32985821068e413df7a8cf7a37aad5c8bb5ab54a92be",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/t3b-formal-session.js",
+      "sha256": "ddafd1c9fcaac11c7421deeb97780a56e41e7d4be640be6f0adad3a578c7fd72",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/test-center.css",
+      "sha256": "d06e5f3ccbd75b95ab4d8c0148c48e0693be8c4909b46bd5c41e12817a15fba7",
+      "consumers": [
+        "3d-test/index.html"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/test-center.js",
+      "sha256": "13567120571bfe60fe098e6544ae283775172e06821a5eddfc9ca2583d3a4a51",
+      "consumers": [
+        "3d-test/index.html",
+        "scriptgrouploader.js"
+      ],
+      "classification": "KEEP"
+    },
+    {
+      "path": "3d-test/worldphase-b04.css",
+      "sha256": "b33114a4ff3a5410a7b15c11b405cfa5faad59637edae033c52794133a972841",
+      "consumers": [
+        "index.html"
+      ],
+      "classification": "KEEP"
+    }
+  ],
+  "factoryConsumers": {
+    "createEpochScene": [
+      "3d-test/test-center.js"
+    ],
+    "createGalaxyScene": [
+      "3d-test/test-center.js"
+    ],
+    "createUniverseScene": [
+      "3d-test/test-center.js"
+    ],
+    "createHigherDimensionalScene": [
+      "3d-test/test-center.js"
+    ],
+    "createCharacterScene": [
+      "3d-test/test-center.js"
+    ],
+    "createEquipmentScene": [
+      "3d-test/test-center.js"
+    ],
+    "createForgeScene": [
+      "3d-test/test-center.js"
+    ],
+    "createGrowthScene": [
+      "3d-test/test-center.js"
+    ],
+    "createDungeonScene": [
+      "3d-test/test-center.js"
+    ],
+    "createDungeonAdvancedScene": [
+      "3d-test/test-center.js"
+    ],
+    "createFrontierScene": [
+      "3d-test/test-center.js"
+    ],
+    "createBattlePresentationScene": [
+      "3d-test/test-center.js"
+    ],
+    "createChronicleTransitionScene": [
+      "3d-test/test-center.js"
+    ],
+    "createServiceConsoleScene": [
+      "3d-test/test-center.js"
+    ]
+  },
+  "registeredAssets": [
+    {
+      "path": "vendor/babylonjs/7.54.3/babylonjs.loaders.min.js",
+      "id": "babylon.gltf-loader.v7.54.3",
+      "type": "decoder",
+      "quality": "shared",
+      "bytes": 288275,
+      "sha256": "02a6782cf71693218165ae87b114697a74b9cb081c8123e3fcc310e159598d6c",
+      "license": "Apache-2.0",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/characters/player-v1/player-low.glb",
+      "id": "player.foundation.v1.low",
+      "type": "character",
+      "quality": "low",
+      "bytes": 741596,
+      "sha256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f",
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/characters/player-v1/player-medium.glb",
+      "id": "player.foundation.v1.medium",
+      "type": "character",
+      "quality": "medium",
+      "bytes": 1694776,
+      "sha256": "a88dbfcb0245833ddb7c9c09cc9fa434699c415916641e5a07b2e8ed50318842",
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/characters/player-v1/player-high.glb",
+      "id": "player.foundation.v1.high",
+      "type": "character",
+      "quality": "high",
+      "bytes": 5006948,
+      "sha256": "127a38244aa23c6cf58617f33eb668bb9f5507bc7eda660401ba0642c53c50a5",
+      "license": "CC0-1.0; original anatomy, textile and face atlases",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/weapon-low.glb",
+      "id": "equipment.ancient-ruins.v1.weapon.low",
+      "type": "equipment",
+      "quality": "low",
+      "bytes": 17516,
+      "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/weapon-medium.glb",
+      "id": "equipment.ancient-ruins.v1.weapon.medium",
+      "type": "equipment",
+      "quality": "medium",
+      "bytes": 22640,
+      "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/weapon-high.glb",
+      "id": "equipment.ancient-ruins.v1.weapon.high",
+      "type": "equipment",
+      "quality": "high",
+      "bytes": 24408,
+      "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/helmet-low.glb",
+      "id": "equipment.ancient-ruins.v1.helmet.low",
+      "type": "equipment",
+      "quality": "low",
+      "bytes": 63784,
+      "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/helmet-medium.glb",
+      "id": "equipment.ancient-ruins.v1.helmet.medium",
+      "type": "equipment",
+      "quality": "medium",
+      "bytes": 79124,
+      "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/helmet-high.glb",
+      "id": "equipment.ancient-ruins.v1.helmet.high",
+      "type": "equipment",
+      "quality": "high",
+      "bytes": 86900,
+      "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/armor-low.glb",
+      "id": "equipment.ancient-ruins.v1.armor.low",
+      "type": "equipment",
+      "quality": "low",
+      "bytes": 115544,
+      "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/armor-medium.glb",
+      "id": "equipment.ancient-ruins.v1.armor.medium",
+      "type": "equipment",
+      "quality": "medium",
+      "bytes": 142860,
+      "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/armor-high.glb",
+      "id": "equipment.ancient-ruins.v1.armor.high",
+      "type": "equipment",
+      "quality": "high",
+      "bytes": 166848,
+      "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/shoes-low.glb",
+      "id": "equipment.ancient-ruins.v1.shoes.low",
+      "type": "equipment",
+      "quality": "low",
+      "bytes": 110884,
+      "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/shoes-medium.glb",
+      "id": "equipment.ancient-ruins.v1.shoes.medium",
+      "type": "equipment",
+      "quality": "medium",
+      "bytes": 142620,
+      "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/shoes-high.glb",
+      "id": "equipment.ancient-ruins.v1.shoes.high",
+      "type": "equipment",
+      "quality": "high",
+      "bytes": 161432,
+      "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/accessory-low.glb",
+      "id": "equipment.ancient-ruins.v1.accessory.low",
+      "type": "equipment",
+      "quality": "low",
+      "bytes": 7924,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/accessory-medium.glb",
+      "id": "equipment.ancient-ruins.v1.accessory.medium",
+      "type": "equipment",
+      "quality": "medium",
+      "bytes": 7924,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    },
+    {
+      "path": "assets/3d/equipment/ancient-ruins-v1/accessory-high.glb",
+      "id": "equipment.ancient-ruins.v1.accessory.high",
+      "type": "equipment",
+      "quality": "high",
+      "bytes": 7924,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+      "license": "CC0-1.0; original ancient-civilization wearable designs",
+      "classification": "KEEP"
+    }
+  ],
+  "rigs": [
+    {
+      "path": "assets/3d/characters/player-v1/player-high.glb",
+      "bones": [
+        "root",
+        "pelvis",
+        "spine_01",
+        "spine_02",
+        "chest",
+        "neck",
+        "head",
+        "clavicle.L",
+        "upper_arm.L",
+        "forearm.L",
+        "hand.L",
+        "thumb_01.L",
+        "thumb_02.L",
+        "thumb_03.L",
+        "index_01.L",
+        "index_02.L",
+        "index_03.L",
+        "middle_01.L",
+        "middle_02.L",
+        "middle_03.L",
+        "ring_01.L",
+        "ring_02.L",
+        "ring_03.L",
+        "little_01.L",
+        "little_02.L",
+        "little_03.L",
+        "clavicle.R",
+        "upper_arm.R",
+        "forearm.R",
+        "hand.R",
+        "thumb_01.R",
+        "thumb_02.R",
+        "thumb_03.R",
+        "index_01.R",
+        "index_02.R",
+        "index_03.R",
+        "middle_01.R",
+        "middle_02.R",
+        "middle_03.R",
+        "ring_01.R",
+        "ring_02.R",
+        "ring_03.R",
+        "little_01.R",
+        "little_02.R",
+        "little_03.R",
+        "thigh.L",
+        "shin.L",
+        "foot.L",
+        "toe.L",
+        "thigh.R",
+        "shin.R",
+        "foot.R",
+        "toe.R"
+      ],
+      "mounts": [
+        "socket.helmet",
+        "socket.weapon.L",
+        "socket.weapon.R",
+        "fx.hit.chest",
+        "socket.accessory.back",
+        "socket.armor",
+        "socket.shoes.L",
+        "socket.shoes.R",
+        "fx.root"
+      ],
+      "sha256": "127a38244aa23c6cf58617f33eb668bb9f5507bc7eda660401ba0642c53c50a5"
+    },
+    {
+      "path": "assets/3d/characters/player-v1/player-low.glb",
+      "bones": [
+        "root",
+        "pelvis",
+        "spine_01",
+        "spine_02",
+        "chest",
+        "neck",
+        "head",
+        "clavicle.L",
+        "upper_arm.L",
+        "forearm.L",
+        "hand.L",
+        "thumb_01.L",
+        "thumb_02.L",
+        "thumb_03.L",
+        "index_01.L",
+        "index_02.L",
+        "index_03.L",
+        "middle_01.L",
+        "middle_02.L",
+        "middle_03.L",
+        "ring_01.L",
+        "ring_02.L",
+        "ring_03.L",
+        "little_01.L",
+        "little_02.L",
+        "little_03.L",
+        "clavicle.R",
+        "upper_arm.R",
+        "forearm.R",
+        "hand.R",
+        "thumb_01.R",
+        "thumb_02.R",
+        "thumb_03.R",
+        "index_01.R",
+        "index_02.R",
+        "index_03.R",
+        "middle_01.R",
+        "middle_02.R",
+        "middle_03.R",
+        "ring_01.R",
+        "ring_02.R",
+        "ring_03.R",
+        "little_01.R",
+        "little_02.R",
+        "little_03.R",
+        "thigh.L",
+        "shin.L",
+        "foot.L",
+        "toe.L",
+        "thigh.R",
+        "shin.R",
+        "foot.R",
+        "toe.R"
+      ],
+      "mounts": [
+        "socket.helmet",
+        "socket.weapon.L",
+        "socket.weapon.R",
+        "fx.hit.chest",
+        "socket.accessory.back",
+        "socket.armor",
+        "socket.shoes.L",
+        "socket.shoes.R",
+        "fx.root"
+      ],
+      "sha256": "a15312c23dea13e58fddc4ceebf0ccebfa101ee4d9d2873707ba152ac86ecc9f"
+    },
+    {
+      "path": "assets/3d/characters/player-v1/player-medium.glb",
+      "bones": [
+        "root",
+        "pelvis",
+        "spine_01",
+        "spine_02",
+        "chest",
+        "neck",
+        "head",
+        "clavicle.L",
+        "upper_arm.L",
+        "forearm.L",
+        "hand.L",
+        "thumb_01.L",
+        "thumb_02.L",
+        "thumb_03.L",
+        "index_01.L",
+        "index_02.L",
+        "index_03.L",
+        "middle_01.L",
+        "middle_02.L",
+        "middle_03.L",
+        "ring_01.L",
+        "ring_02.L",
+        "ring_03.L",
+        "little_01.L",
+        "little_02.L",
+        "little_03.L",
+        "clavicle.R",
+        "upper_arm.R",
+        "forearm.R",
+        "hand.R",
+        "thumb_01.R",
+        "thumb_02.R",
+        "thumb_03.R",
+        "index_01.R",
+        "index_02.R",
+        "index_03.R",
+        "middle_01.R",
+        "middle_02.R",
+        "middle_03.R",
+        "ring_01.R",
+        "ring_02.R",
+        "ring_03.R",
+        "little_01.R",
+        "little_02.R",
+        "little_03.R",
+        "thigh.L",
+        "shin.L",
+        "foot.L",
+        "toe.L",
+        "thigh.R",
+        "shin.R",
+        "foot.R",
+        "toe.R"
+      ],
+      "mounts": [
+        "socket.helmet",
+        "socket.weapon.L",
+        "socket.weapon.R",
+        "fx.hit.chest",
+        "socket.accessory.back",
+        "socket.armor",
+        "socket.shoes.L",
+        "socket.shoes.R",
+        "fx.root"
+      ],
+      "sha256": "a88dbfcb0245833ddb7c9c09cc9fa434699c415916641e5a07b2e8ed50318842"
+    }
+  ],
+  "conceptIndexSHA256": "f9a31296fcbb6c121ef80ee37893336074ecaccba7f605452c42368f9da63188",
+  "futureConceptImages": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city/overview-front-side-back.webp",
+      "sha256": "97aef696fce7b1754839f5f469ab9ac051cb1e678d990139ff5c058e96d92184",
+      "bytes": 218994,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g001-fallen-city/equipment-five-slots.webp",
+      "sha256": "b325ec1a0fe01da367cf92883c79b6bcf350da980e55db79d7b686f87d59c139",
+      "bytes": 235752,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/overview-front-side-back.webp",
+      "sha256": "ac69b16d73368dc16bfeb6d8b45a0ac229963ae66a51fe89cba7235a34365510",
+      "bytes": 261866,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g002-suburban-defense/equipment-five-slots.webp",
+      "sha256": "3325ceb1ff3b234778c0e601ce0c5c9d00a968a31b5ce5b457900de86bf61510",
+      "bytes": 274886,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g003-underground-military/overview-front-side-back.webp",
+      "sha256": "035df705ff62e46722740ad02dc5f888f88ad7bf9102a3288b678b31c7828525",
+      "bytes": 221198,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g003-underground-military/equipment-five-slots.webp",
+      "sha256": "b3aeb221c3164b7d914748a4094aa71a3c9a258f47a7a18398a8ae1f9bcfc480",
+      "bytes": 229566,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/overview-front-side-back.webp",
+      "sha256": "914c0660395cb60f13cd013d05a2bffa306a36843928bd20b13abb22167b9295",
+      "bytes": 239094,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g004-desert-warzone/equipment-five-slots.webp",
+      "sha256": "6bee8e939ace7865b8a92abd71dff0e91d71f649e93034c07516b66047ce48eb",
+      "bytes": 315710,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/overview-front-side-back.webp",
+      "sha256": "f3cfb23f7b04d5edd8d1d06aa59a302b9cf0ff15323077e17c68685b7691f055",
+      "bytes": 228040,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g005-contaminated-exclusion/equipment-five-slots.webp",
+      "sha256": "902c80ac9d20bca96397916c34a7080a4a408e19da0f02f4c76e88b07c06e940",
+      "bytes": 269020,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/overview-front-side-back.webp",
+      "sha256": "4d9276295c27cd9ade7a4e064255f5e5a961967ba680b773e16a175bcc7688cd",
+      "bytes": 248964,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g006-polar-front/equipment-five-slots.webp",
+      "sha256": "7c7cf33eea9b08253f3645128de12b5ff1420bd14c94561617df8292d67579e8",
+      "bytes": 990216,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/overview-front-side-back.webp",
+      "sha256": "0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645",
+      "bytes": 224974,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g007-ancient-tech-ruins/equipment-five-slots.webp",
+      "sha256": "ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c",
+      "bytes": 1031198,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/overview-front-side-back.webp",
+      "sha256": "5d3dec09b6a0259b42a7fbb2aee9dfb512f75a6e2984d13a5bf7f8bc3761d975",
+      "bytes": 298646,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g008-volcanic-weapons/equipment-five-slots.webp",
+      "sha256": "1ca2a6449af8240f5cfcc478db46a2af6c1882de5bcda3185dba2f7323a163bc",
+      "bytes": 321186,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g009-global-command/overview-front-side-back.webp",
+      "sha256": "51b4485dbc14e71bc172edbf26000ce3edf8a3d9058aa9249dcb409bdb529948",
+      "bytes": 239930,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g009-global-command/equipment-five-slots.webp",
+      "sha256": "ebf438c5c75dfc2cbad70cda71991281ff727777306e89f93c95becb253605f5",
+      "bytes": 220084,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g010-earth-final-battle/overview-front-side-back.webp",
+      "sha256": "407f2d57cb6b074e4f2d9f550121fc2710fcfde43dad8913b354cccb8929e6f8",
+      "bytes": 295298,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g010-earth-final-battle/equipment-five-slots.webp",
+      "sha256": "c5684aae47af5123f8b19940b6b2915b5aeb4b2cce01aac71a2496f246dc53ce",
+      "bytes": 294518,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g011-lunar-landing/overview-front-side-back.webp",
+      "sha256": "1a5e4e177883cceda4627fdfbfa418c59cbb9b214501e278b8621d470207fac7",
+      "bytes": 282330,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g011-lunar-landing/equipment-five-slots.webp",
+      "sha256": "296bbbb102119d0de525db63f763d93579e170158d2222e588a3b00d299d9788",
+      "bytes": 281700,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g012-lunar-orbital-station/overview-front-side-back.webp",
+      "sha256": "8e4c7b13915f7d56fba3a647d5ff043f95117fc506478d8022441049383fcd47",
+      "bytes": 208768,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g012-lunar-orbital-station/equipment-five-slots.webp",
+      "sha256": "f02e690f1836f93237803e591d40f45910781c55a1b9f6bb7ff4ab77d64cd666",
+      "bytes": 231800,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony/overview-front-side-back.webp",
+      "sha256": "6062b968a6ffc2616dbb23b3da8bb7e74aa1635cf24b1f79cc6b18626d971849",
+      "bytes": 350862,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g013-mars-colony/equipment-five-slots.webp",
+      "sha256": "899a87f369b21037818246e5a7fe94fcd04de3d3c4ab1b0e55c729c0ab80defa",
+      "bytes": 331162,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g014-mars-red-plains/overview-front-side-back.webp",
+      "sha256": "b366a95b47b1bc1ab55c0b4231df1a05d93ab0d4bcd07e04e4a03b784deec3f2",
+      "bytes": 311356,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g014-mars-red-plains/equipment-five-slots.webp",
+      "sha256": "956fb7158385058f3686ae6c15415bf928c0763b910eb784533d633093786078",
+      "bytes": 309736,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g015-asteroid-mining/overview-front-side-back.webp",
+      "sha256": "7db6a6860becdb4dc6d1f8279579691a5eca87a78b620f56211821ea4a18cc94",
+      "bytes": 377854,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g015-asteroid-mining/equipment-five-slots.webp",
+      "sha256": "1d0659d71c414eeab43211f45a037ea56c9b3a5e188dda2dd2616f5f5f98397d",
+      "bytes": 387978,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g016-jovian-moon-war/overview-front-side-back.webp",
+      "sha256": "7239b312b4e3e5ba525d67f779154bf051817cf6832a25c93e7c4d9dcaf60cb6",
+      "bytes": 244882,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g016-jovian-moon-war/equipment-five-slots.webp",
+      "sha256": "b5eb3b7779615ce5f11771f8a4091174def09ba3a6bba021a65d68d5d9cba9a1",
+      "bytes": 293564,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g017-jupiter-orbit/overview-front-side-back.webp",
+      "sha256": "5588161b8b19f02fb84180a566d76c641ef2249531a6e2861c66f0538617a125",
+      "bytes": 330288,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g017-jupiter-orbit/equipment-five-slots.webp",
+      "sha256": "60a670dcf3ea92bba37724a62cc59f48d369d3581bce8ee61bce0be83d973e41",
+      "bytes": 336194,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/overview-front-side-back.webp",
+      "sha256": "69850a7d5105e86f73c7a7d302eb0efea4ef634b9af69dd37b3f5e8cc5db02c3",
+      "bytes": 260864,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g018-saturn-ring-defense/equipment-five-slots.webp",
+      "sha256": "fee3e8d93669609682cb3e839331ede9bb745d3e96b19a7b7c97ef9923269062",
+      "bytes": 273190,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g019-outer-solar-frontier/overview-front-side-back.webp",
+      "sha256": "2877d42e51da3bbb8f18db21a964711dc2fa4eb01d90bd4eb94432aaee588968",
+      "bytes": 229056,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g019-outer-solar-frontier/equipment-five-slots.webp",
+      "sha256": "317aa6e5702152e0e9fe8ac4915d1d3418a86bf9eac11fad90c86ef7a0afae1f",
+      "bytes": 253668,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g020-solar-final-front/overview-front-side-back.webp",
+      "sha256": "be74681baa90b1cd1eaa80bab2777f8bfe1fe0a2f1a234c3182c1b11b0605d9c",
+      "bytes": 329654,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g020-solar-final-front/equipment-five-slots.webp",
+      "sha256": "ad91922ed12174edd81e2071a4682915b14370c269ebdadba50a5191ce0d86e0",
+      "bytes": 312418,
+      "conceptApproved": true,
+      "classification": "FUTURE-28-40"
+    }
+  ],
+  "removedFormalControllers": [
+    "3d-test/formal-home.js",
+    "3d-test/formal-dom.js",
+    "3d-test/preview-expand.css"
+  ],
+  "historicalArchives": {
+    "schema": "cw.t4.authorized-preview-retirement.v1",
+    "baselineHEAD": "7706f880f63c96a9adb42d30d67a6e29601c0f48",
+    "publish": false,
+    "files": {
+      "index.html": {
+        "archive": "development/retired-formal-previews/20261013/index.html",
+        "beforeSHA256": "947295b186793b0fcc23f92937e7bf5d4e23b6a4202183678a2ba3569f7dff43",
+        "afterSHA256": "9ac13ab9777340fb1e53039074056280bf6226a09e660ebd0d80c4afb5cd2cfb",
+        "classification": "KEEP with authorized background/HUD recovery cache versions"
+      },
+      "ui.js": {
+        "archive": "development/retired-formal-previews/20261013/ui.js",
+        "beforeSHA256": "3df98783469168635b38e2bfa40daa0220199bf7b8cd32747f2ddd6a763ea5a8",
+        "afterSHA256": "a3714760cdf6d992905691840830955dbfb4e7ddccfaff45770d858098fc1935"
+      },
+      "worldmapui.js": {
+        "archive": "development/retired-formal-previews/20261013/worldmapui.js",
+        "beforeSHA256": "2fb2d3b0a0c0f50cd9b45eb09eb212941ff8da9f621bf917c585cb1c951370d2",
+        "afterSHA256": "31d584cf83c04f5fcc65db6dc93ea447a1cb65c35bbdcc03cfab7fec71f09a4f"
+      },
+      "storyui.js": {
+        "archive": "development/retired-formal-previews/20261013/storyui.js",
+        "beforeSHA256": "5933647056ec05528a29aa6a8aadf68f8881d49484051ad3128d46b78b667ffa",
+        "afterSHA256": "1ad8eddff03fd3062f3958fb34bff1f94bb3bbd8eed9f09ab9f3a8ff8238027d"
+      },
+      "story.css": {
+        "archive": "development/retired-formal-previews/20261013/story.css",
+        "beforeSHA256": "0eed2258eaeb3c7050eb26ebd280292416abeacf6b369f6fb4d9e17e6852c3a2",
+        "afterSHA256": "08361a69b6f72931418f9f029577235647ec7d2ab9fd1824578dcc9066e009e1"
+      },
+      "alternateuniverseui.js": {
+        "archive": "development/retired-formal-previews/20261013/alternateuniverseui.js",
+        "beforeSHA256": "554134772c0fd2b7aca08ed33ebd6b19d106d1aa3281f369de044b9e8842f32e",
+        "afterSHA256": "6e3d898800c8e1552c41e0797955007b69d0916faaba9c6d4cb22552f6a8ec83"
+      },
+      "3d-test/formal-home.js": {
+        "archive": "development/retired-formal-previews/20261013/3d-test/formal-home.js",
+        "beforeSHA256": "148168d5ba8c41f2cff0eea50ec5ced41dc3fb6885de05cdd5dbd390777feaa2",
+        "afterSHA256": null
+      },
+      "3d-test/formal-dom.js": {
+        "archive": "development/retired-formal-previews/20261013/3d-test/formal-dom.js",
+        "beforeSHA256": "492cab0f835017b3a5d7ee0c2baa07defa1846970d2e528f8d0bcff0bbf64740",
+        "afterSHA256": null
+      },
+      "3d-test/preview-expand.css": {
+        "archive": "development/retired-formal-previews/20261013/3d-test/preview-expand.css",
+        "beforeSHA256": "6289cedc89640d3b786dd1e7e67ab98073948bf746217544f21e64e501f3d4d5",
+        "afterSHA256": null
+      },
+      "3d-test/galaxy-b05.css": {
+        "archive": "development/retired-formal-previews/20261013/3d-test/galaxy-b05.css",
+        "beforeSHA256": "e26a8e93120a471eb8971342300b0b8020fe8e2177dd7a70345a2593ee957cc5",
+        "afterSHA256": "42d02f4f7fce926f7240ec107076ec464969648a1dbdc8433489616ada43e27b"
+      },
+      "3d-test/test-center.js": {
+        "archive": "development/retired-formal-previews/20261013/3d-test/test-center.js",
+        "beforeSHA256": "31dabfce49ca8a769935226073bf6ec3cf56b35e3b8e597b23bee7d363d4cf30",
+        "afterSHA256": "f4ed858bd4106584a38683a15bc882f5682ca635438551e83fc5010e346ae506",
+        "classification": "KEEP-SHARED with authorized single-B GM sandbox integration"
+      },
+      "3d-test/index.html": {
+        "archive": "development/retired-formal-previews/20261013/3d-test/index.html",
+        "beforeSHA256": "26a373f4c66c9c42f5c7b01d0b3808b6da9490cf0d906c7b996c8197bd1153a6",
+        "afterSHA256": "8ad5303c8119f1ff9a7d2a40846243bc860208e261dd9b7145b60b55923405b7",
+        "classification": "KEEP-SHARED with authorized single-B GM sandbox integration"
+      },
+      "combatfx.js": {
+        "archive": "development/retired-formal-previews/20261013/combatfx.source.txt",
+        "beforeSHA256": "c9ba676d410d39a5abb98d36035c861f2cbceb3012ad05293ef0a340755300c2",
+        "afterSHA256": "d20d954a836f6a0f75f957023778fa262816eb54ce1991dac4e6556244137e1f",
+        "classification": "FIX-SHARED authorized same-token HUD reconnection; original presentation source retained"
+      }
+    }
+  },
+  "limitations": [
+    "Lexical reverse references supplement actual browser/contract tests, not replace them.",
+    "Linux Chromium/WebKit and SwiftShader are not physical iPhone GPU or OS App switching."
+  ]
+}

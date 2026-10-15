@@ -28,6 +28,7 @@ jobs:
           python3 scripts/equipment-gm-publication.py --check
           python3 scripts/equipment-formal-publication.py --check
           python3 scripts/equipment-formal-fixture-history.py --check
+          node scripts/equipment-phase6-audit.cjs > /tmp/equipment-phase6-dependencies.json
           node tests/equipment-formal/publication.cjs
           node tests/equipment-weapons/names.cjs
           node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
@@ -69,3 +70,4 @@ jobs:
             /tmp/equipment-weapons-*.json
             /tmp/equipment-formal-*.json
             /tmp/formal-http.log
+            /tmp/equipment-phase6-dependencies.json
