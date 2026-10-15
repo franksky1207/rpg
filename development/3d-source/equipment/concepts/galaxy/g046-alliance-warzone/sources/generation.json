@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g046",
+  "baseMain": "78f1fd2a7666f4d86b35e153bd4e2d32e78eef3f",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "海軍藍／象牙白／青綠；雙眉全罩盔、梯形肩胸、雙矩形戰術背模組與脈衝直劍。",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-a05e7a89-70a7-4128-b4f6-8017db8c3fe9.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/sources/overview-original.png",
+      "originalSha256": "04294eb16d01c3aaaa27033ea0e07c90a26c4c91b712ed9d3c394af2b1f88c7f",
+      "originalBytes": 2152434,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 257724,
+        "sha256": "af6818fd4602fc16fedc970fdea9d8afbe8cdd114af33ff284d12a03f2a81523"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-5164cd14-303c-486c-aacd-a8be5ea21908.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/sources/slots-original.png",
+      "originalSha256": "f83ea4b8af24ee236b6771338b66895f4387c968f574512902c13943dec310fa",
+      "originalBytes": 1873318,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 185768,
+        "sha256": "87c2f0c2264a436d01fdded85111db8ae1274ffd42b120b0c3ff975d1da3081c"
+      },
+      "referenceOriginalSha256": "04294eb16d01c3aaaa27033ea0e07c90a26c4c91b712ed9d3c394af2b1f88c7f"
+    }
+  ]
+}

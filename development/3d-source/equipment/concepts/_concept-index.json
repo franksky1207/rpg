@@ -3031,19 +3031,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 257724,
+          "sha256": "af6818fd4602fc16fedc970fdea9d8afbe8cdd114af33ff284d12a03f2a81523"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 185768,
+          "sha256": "87c2f0c2264a436d01fdded85111db8ae1274ffd42b120b0c3ff975d1da3081c"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g047",
@@ -3082,19 +3097,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g047-sector-arsenal",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 328546,
+          "sha256": "9561f9f9f886b75704316d253bb11b8309595f50f01290c9a13a8c3b916e1c05"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 295772,
+          "sha256": "981b3dfc79d873557c588b34d3a484fea5c5559747c687b38ba2c7a36041c5aa"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g047-sector-arsenal/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g048",
@@ -3133,19 +3163,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g048-orion-fortress",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 358526,
+          "sha256": "cad6ddf03b76d3d4af226cf3dab8ae2b09d86363c5bd699d498230e8d711b5d4"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 240320,
+          "sha256": "64d319ab2f889626e244be038cd9a181aef01c15d9d99645e32f899f65573aa4"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g048-orion-fortress/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g049",
@@ -3184,19 +3229,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g049-sector-hegemony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 259432,
+          "sha256": "bc06b31a554315bc91f7f23eb1f84e6668d8b41ff8af23de837c30a203d45fa8"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 257384,
+          "sha256": "53676e428da72019b8bcf854b27bcdfedd6b653ba983bb12f377e6c920fcde22"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g049-sector-hegemony/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g050",
@@ -3235,19 +3295,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g050-orion-main-battle",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 306498,
+          "sha256": "03328bbf5cfe58cc36a25ec8596b816f8a4b4095e17708b1fbaa1926943d551c"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 283428,
+          "sha256": "6f5a83ea482b9108c2d5f1f403103f0f60efede580456a067650a808a242ed4f"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g050-orion-main-battle/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g051",

@@ -1,0 +1,10 @@
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#gm3dPrototypeOverlay iframe').contentFrame().getByRole('button', { name: '2.5D 角色與動畫', exact: true })[22m
+
+    at /workspace/rpg/tests/equipment-gm/browser.cjs:14:155 {
+  log: [
+    "  - waiting for locator('#gm3dPrototypeOverlay iframe').contentFrame().getByRole('button', { name: '2.5D 角色與動畫', exact: true })"
+  ],
+  name: 'TimeoutError'
+}

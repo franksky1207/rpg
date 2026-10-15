@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "date": "2026-10-16",
+  "baseMain": "78f1fd2a7666f4d86b35e153bd4e2d32e78eef3f",
+  "batch": {
+    "batch": "G10",
+    "approvedSets": 5,
+    "imagesPresent": 10,
+    "imagesMissing": 0
+  },
+  "catalog": {
+    "sets": 210,
+    "slots": 1050,
+    "approved": 50,
+    "images": 100,
+    "unmade": 160
+  },
+  "schema4Records": 5,
+  "reviewStagesPerSet": 1,
+  "blockers": 0,
+  "uniqueOriginalPng": 10,
+  "uniqueWebp": 10,
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "historicalFilesChecked": 307,
+  "historicalShaUnchanged": true,
+  "historicalIndexRowsUnchanged": 45,
+  "unmadeIndexRowsUnchanged": 160,
+  "conceptTests": 88,
+  "spritePythonTests": 17,
+  "nodeTests": 37,
+  "nodeTestFiles": 4,
+  "gmBrowserAssertions": 121,
+  "gmBrowserViewports": [
+    "1365x900",
+    "390x844",
+    "844x390"
+  ],
+  "weaponTimingComparisons": 288,
+  "authorityDeltaMs": 0,
+  "publishHardMissing": [],
+  "g10DevelopmentFilesExcluded": 45,
+  "repeatGenerateChangedFiles": 0,
+  "physicalDeviceTested": false,
+  "audioNativeBrowserCases": 50
+}

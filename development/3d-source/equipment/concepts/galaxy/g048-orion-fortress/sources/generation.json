@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g048",
+  "baseMain": "78f1fd2a7666f4d86b35e153bd4e2d32e78eef3f",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "深綠／石灰／黃銅；圓拱全罩盔、城垛肩甲與長裙甲、矩形權限模組及寬身重劍。",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-e9bcfdd2-68cd-4c62-97ff-be4d13c47a51.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g048-orion-fortress/sources/overview-original.png",
+      "originalSha256": "6a3a785838f62bcae04e20bc5dd57ea4a1d50439a2090ffdf595f0fcce14d270",
+      "originalBytes": 2533923,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 358526,
+        "sha256": "cad6ddf03b76d3d4af226cf3dab8ae2b09d86363c5bd699d498230e8d711b5d4"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-15b72538-3184-4b1e-817e-b56423cedaf9.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g048-orion-fortress/sources/slots-original.png",
+      "originalSha256": "3c3adde73900aa245c41d6a30818477e79d81a21cb34f6dd38e0dcd72e5f179d",
+      "originalBytes": 2090849,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 240320,
+        "sha256": "64d319ab2f889626e244be038cd9a181aef01c15d9d99645e32f899f65573aa4"
+      },
+      "referenceOriginalSha256": "6a3a785838f62bcae04e20bc5dd57ea4a1d50439a2090ffdf595f0fcce14d270"
+    }
+  ]
+}

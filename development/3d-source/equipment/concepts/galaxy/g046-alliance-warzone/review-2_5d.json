@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g046",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:orion:map:5",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone",
+    "regionOrBoss": "獵戶臂戰爭 → 星際聯盟戰區",
+    "equipmentNames": {
+      "weapon": "聯盟脈衝刃",
+      "helmet": "聯軍戰盔",
+      "armor": "聯盟主戰甲",
+      "shoes": "聯合作戰靴",
+      "accessory": "聯盟戰術模組"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "af6818fd4602fc16fedc970fdea9d8afbe8cdd114af33ff284d12a03f2a81523",
+    "equipment-five-slots.webp": "87c2f0c2264a436d01fdded85111db8ae1274ffd42b120b0c3ff975d1da3081c"
+  },
+  "reviewedAt": "2026-10-16",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "8f4e07fd9fc5a15912d7931c26119e596723631ab8ddf10950e45d91c7663f26",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/generation-provenance.md",
+      "sha256": "fa62d9bd117154fe48d2ca893f31aaf568fd8f375ce4710d367514422187ba50"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/codex-review.md",
+      "sha256": "8f4e07fd9fc5a15912d7931c26119e596723631ab8ddf10950e45d91c7663f26"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/sources/generation.json",
+      "sha256": "3ef9260f7a914030c39058fa3e548daf1e2681fe00b4350bf715c6b9aa24644a"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-16",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/codex-review.md",
+        "sha256": "8f4e07fd9fc5a15912d7931c26119e596723631ab8ddf10950e45d91c7663f26"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "af6818fd4602fc16fedc970fdea9d8afbe8cdd114af33ff284d12a03f2a81523",
+        "equipment-five-slots.webp": "87c2f0c2264a436d01fdded85111db8ae1274ffd42b120b0c3ff975d1da3081c"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g046 已逐字核對最新main 78f1fd2a7666f4d86b35e153bd4e2d32e78eef3f 的 worldmaps-orion.js REGION_MAPS[5]、data.js註冊與engine.js五槽映射、索引及開工卡。galaxy:orion:map:5；獵戶臂戰爭 → 星際聯盟戰區；五槽：聯盟脈衝刃／聯軍戰盔／聯盟主戰甲／聯合作戰靴／聯盟戰術模組；210套第46位，永久身份及目錄一致。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g046 兩張原PNG及兩張WebP皆已Pillow load完整解碼1536×1024，bytes及SHA與sources/generation.json一致，兩次實際生成、獨立構圖，沒有以三視附圖裁切冒充五槽。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g046 原圖逐張目視：海軍藍／象牙白／青綠；雙眉全罩盔、梯形肩胸、雙矩形戰術背模組與脈衝直劍。 正側背完整全身、全遮臉；五槽均有可辨識單品。武器為刀劍／能量刃，未見槍械、長槍或法杖。主要區域造型足以區分相鄰套。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g046 已檢視原圖與288×192實際WebP縮圖，海軍藍／象牙白／青綠；雙眉全罩盔、梯形肩胸、雙矩形戰術背模組與脈衝直劍。 頭盔、肩胸、靴、背飾及劍輪廓可讀，未依賴微小字樣；不冒稱實體手機或遊戲內素材測試。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g046 本任務真實OpenAI image_gen.imagegen先三視後參考原稿另次生成五槽，原PNG、參考SHA、工具路徑與編碼資訊保存。使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "三視額外附五槽小圖未拿來裁切；五槽圖另外獨立生成，背模組局部接點比例略異但主要輪廓一致。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g046-alliance-warzone/generation-provenance.md",
+      "sha256": "fa62d9bd117154fe48d2ca893f31aaf568fd8f375ce4710d367514422187ba50"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "88867f09fad1d3ef99dca3f644633dd2210f811795af3df70df25bb29c52aabc"
+}

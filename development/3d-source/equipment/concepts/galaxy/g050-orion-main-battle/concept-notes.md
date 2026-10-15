@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -56,3 +56,10 @@
 ## 2026-10-15 後續刀劍量產規則
 
 武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+
+## G10實作開工與交接（2026-10-16）
+
+紅銀／鈷藍；分叉後掠全罩盔、圓弧肩與V胸甲、雙月旋臂圓盤中樞及藍光直劍。
+三視實際含正側背但背面下方誤標SIDE；五槽甲背未裝中樞、另獨立展示圓盤，符合概念階段需求。
+
+兩張概念原PNG、WebP與來源／schema4審查已保存；素材階段使用右向3/4鏡位，保持短柄劍握向、頭肩背飾主要形狀，透明角色與攻擊素材尚未製作。

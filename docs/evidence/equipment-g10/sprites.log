@@ -1,0 +1,67 @@
+test_concept_version_change_refused (test_assets.SpriteTests.test_concept_version_change_refused) ... ok
+test_duplicate_registry_identity_refused (test_assets.SpriteTests.test_duplicate_registry_identity_refused) ... ok
+test_fake_release_or_gm_success_refused (test_assets.SpriteTests.test_fake_release_or_gm_success_refused) ... ok
+test_identity_source_and_names_are_bound (test_assets.SpriteTests.test_identity_source_and_names_are_bound) ... ok
+test_import_missing_prompt_rejected_before_any_write (test_assets.SpriteTests.test_import_missing_prompt_rejected_before_any_write) ... ok
+test_import_never_overwrites_completed_version (test_assets.SpriteTests.test_import_never_overwrites_completed_version) ... ok
+test_missing_and_corrupt_actual_sprite_refused (test_assets.SpriteTests.test_missing_and_corrupt_actual_sprite_refused) ... ok
+test_no_real_visual_review_cannot_complete (test_assets.SpriteTests.test_no_real_visual_review_cannot_complete) ... ok
+test_opaque_background_refused (test_assets.SpriteTests.test_opaque_background_refused) ... ok
+test_other_suit_file_cannot_be_assigned (test_assets.SpriteTests.test_other_suit_file_cannot_be_assigned) ... ok
+test_path_traversal_and_empty_asset_refused (test_assets.SpriteTests.test_path_traversal_and_empty_asset_refused) ... ok
+test_planning_unmade_concept_rejected_and_approved_next_set_stays_unmade (test_assets.SpriteTests.test_planning_unmade_concept_rejected_and_approved_next_set_stays_unmade) ... ok
+test_review_and_source_fingerprints_required (test_assets.SpriteTests.test_review_and_source_fingerprints_required) ... ok
+test_three_formal_trials_and_release_isolation (test_assets.SpriteTests.test_three_formal_trials_and_release_isolation) ... ok
+test_unapproved_concept_refused (test_assets.SpriteTests.test_unapproved_concept_refused) ... ok
+test_unmade_cannot_claim_complete (test_assets.SpriteTests.test_unmade_cannot_claim_complete) ... ok
+test_wrong_sha_and_version_refused (test_assets.SpriteTests.test_wrong_sha_and_version_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 1.528s
+
+OK
+✔ g005 selects only actual armor across epochs and mixed slots (1.013109ms)
+✔ g007 selects only actual armor across epochs and mixed slots (0.188458ms)
+✔ g018 selects only actual armor across epochs and mixed slots (0.124087ms)
+✔ missing, unknown, wrong world, ambiguous or GM fixture armor refuses (0.223627ms)
+✔ formal pool requires separate permission; SHA, 404 and decode failures release resources (91.192757ms)
+✔ formal appearance freezes at capture, GM lane has no authoritative equipment (7.146733ms)
+✔ persisted pagehide preserves official session and consumer; true departure cancels (41.345976ms)
+✔ five templates execute and death holds transparent end (8.387253ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.424724ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (104.47212ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (49.560629ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (8.700618ms)
+✔ abort pending decode discards late result and closes it (9.47404ms)
+✔ one aborted subscriber does not cancel shared live subscriber (2.681968ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (86.664067ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (12.566863ms)
+✔ formal armor identity ignores the other four slots; unknown armor, fixture and ambiguity refuse (0.808361ms)
+✔ GM publication permission is required independently of complete art (0.509817ms)
+✔ five templates execute and death holds transparent end (2.923971ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.37404ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (109.186115ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (10.375588ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (5.223562ms)
+✔ abort pending decode discards late result and closes it (14.36632ms)
+✔ one aborted subscriber does not cancel shared live subscriber (6.963864ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (94.474373ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (2.433526ms)
+✔ g005 real separated layers acquire, sample four phases, idle original and cleanup (113.801084ms)
+✔ g007 real separated layers acquire, sample four phases, idle original and cleanup (7.12062ms)
+✔ g018 real separated layers acquire, sample four phases, idle original and cleanup (5.112649ms)
+✔ optional weapon 404 falls back to original attack with no leaked partial layer (9.0806ms)
+✔ optional weapon sha falls back to original attack with no leaked partial layer (7.332163ms)
+✔ optional weapon decode falls back to original attack with no leaked partial layer (10.313253ms)
+✔ optional weapon slow falls back to original attack with no leaked partial layer (2501.760806ms)
+✔ unapproved/missing weapons preserve original, layer path and SHA cannot cross suit (3.295926ms)
+✔ thrust has common body motion, bounded wrist rotation and exact impact endpoint (2.431702ms)
+✔ weapon load never blocks primary actor, and readiness cannot switch layers halfway through an attack (3.548226ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4460.181693
