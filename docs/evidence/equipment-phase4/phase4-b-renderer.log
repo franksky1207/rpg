@@ -1,15 +1,15 @@
-✔ B3 has one immutable source input, same projection for A/B/C (70.252868ms)
-✔ exact 22 samples, 700ms, authored 1/30 origin; loader zero frame excluded (0.389377ms)
-✔ clock adapter reads the B1 due/remaining clock and pauses without a new timer (0.383728ms)
-✔ G007 32 independent combinations plus G006 unavailable use correct replacement patches (4.776181ms)
-✔ damage/cues only use exact raw event; marker counter/combo do not invent a hit (1.669183ms)
-✔ dodge moves the true target; return starts at matching attack impact sample (0.772292ms)
-✔ defeat only at known computed HP zero; action-budget stop is not death (1.782034ms)
-✔ all six visual inspections are marked non-authority and same sampler (0.453182ms)
-✔ actual PNG16 depth decoded losslessly, malformed depth rejected (45.010431ms)
-✔ every manifest reference has exact bytes/SHA/publish isolation and retained C limits (64.321528ms)
-✔ all B2 binaries/failure evidence retained; only inventory tool evolves (2825.979272ms)
-✔ original death event animates full 700ms on same owner clock, no fabricated death (1.554581ms)
+✔ B3 has one immutable source input, same projection for A/B/C (381.241693ms)
+✔ exact 22 samples, 700ms, authored 1/30 origin; loader zero frame excluded (0.381033ms)
+✔ clock adapter reads the B1 due/remaining clock and pauses without a new timer (0.399432ms)
+✔ G007 32 independent combinations plus G006 unavailable use correct replacement patches (19.060159ms)
+✔ damage/cues only use exact raw event; marker counter/combo do not invent a hit (1.568571ms)
+✔ dodge moves the true target; return starts at matching attack impact sample (9.476779ms)
+✔ defeat only at known computed HP zero; action-budget stop is not death (1.536243ms)
+✔ all six visual inspections are marked non-authority and same sampler (0.468906ms)
+✔ actual PNG16 depth decoded losslessly, malformed depth rejected (87.798705ms)
+✔ every manifest reference has exact bytes/SHA/publish isolation and retained C limits (113.457605ms)
+✔ all B2 binaries/failure evidence retained; only inventory tool evolves (4209.540199ms)
+✔ original death event animates full 700ms on same owner clock, no fabricated death (1.623825ms)
 ℹ tests 12
 ℹ suites 0
 ℹ pass 12
@@ -17,4 +17,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 3024.163433
+ℹ duration_ms 4842.479513

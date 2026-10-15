@@ -45,3 +45,8 @@
 第5批才把鎧甲正式身份選材接入正式B時鐘／事件、HP／護盾／背景／極簡／倍速與音訊同步。沿用本批共用actor、pool與受控來源；不得直接用GM自由資料或打開正式發布旗標。其餘207套美術仍缺，G024/G030不需修圖。回退可revert本批提交，原戰鬥／3D資產未改。
 
 提交後須另查exact-HEAD Actions及Pages部署；本報告不預先宣稱尚未完成的CI或真機通過。
+
+
+## 首次提交Actions後續修正
+
+首次提交`0de05e07f51bbda252141dd0941870b4e37fdfbd`的新增GM整合、Sprite Pipeline、Equipment Concept Database、快取版本及發布稽核Actions均已success。B2 run38665264122與B3 run38665264130在Python `tools/inventory.py`失敗，實際訊息為`Protected non-B1 source changed: gm3dprototype.js`：該入口沒有轉交本批精確歷史來源驗證。已將列於phase4來源鎖的路徑交給同一Node驗證器，原始B2 source-lock完全保留。B2盤點（1,102檔）與B3盤點（135檔）及B3 manifest／常數指紋同步；所有GLB、圖集、原始美術與失敗證據bytes未改。B既有import鏈與GM入口只更新查詢版本，避免舊快取帶入過期manifest。兩個Python --check、原B GLB／來源契約及12項renderer契約已重跑通過。最終Actions仍須對修正後HEAD重新確認。

@@ -1,4 +1,4 @@
-import {atlasFolder} from './assets.mjs?v=20261012-t2b3-v1';
+import {atlasFolder} from './assets.mjs?v=20261015-phase4-lock1';
 import {CLIPS,GRID} from './contract.mjs?v=20261012-t2b3-v1';
 // Development-only LRU of fully decoded atlas pages. Never retains WebGL resources.
 const DECODED_LIMIT=32*1024*1024, decodedPages=new Map();

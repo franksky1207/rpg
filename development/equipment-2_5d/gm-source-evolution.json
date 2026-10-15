@@ -4,19 +4,19 @@
   "files": {
     "3d-test/index.html": {
       "beforeSHA256": "1f110854731cf6a18d1a1210e24978e2492cc6394caaae510f225daff773e5e4",
-      "afterSHA256": "78002e1d0c032bf1525d8de093bee7bf0223a8673abf1056a29dde7a33202c37"
+      "afterSHA256": "b535540a6dbb375b257590f072e0fed3d480d1a9c5baa527cc1313140e7240ae"
     },
     "3d-test/test-center.js": {
       "beforeSHA256": "b4e7c94edae4e4e679249c8cde17c6a423a2807ff9367c0314c8fb80c5d55be5",
-      "afterSHA256": "3487019c99a6a1e29a04edc5f6486e9c4f585e6a8da1ce503117c0f9dd526024"
+      "afterSHA256": "4b1795d7c66d3eb23a4b97a09da688ffe2f2f17b5ff4a3dfc529d77323e2bc0c"
     },
     "gm3dprototype.js": {
       "beforeSHA256": "6bbb9f1b698369c6e6196ae52436d734e2ffb69d4a983bb1fbdd263c57a50aa6",
-      "afterSHA256": "3962c68eb1241ec22085dcd04cf7f32bc7d59c5574d5dd1faab295febd2be0a3"
+      "afterSHA256": "065d48deb10ed70df202fb85027018b70d7dd0592f222019ef35c856929ed349"
     },
     "index.html": {
       "beforeSHA256": "9ac13ab9777340fb1e53039074056280bf6226a09e660ebd0d80c4afb5cd2cfb",
-      "afterSHA256": "e2e80c1c35c1ee481e0c6f254071c7a063f9d881d7f55899cb08b1f265051c6c"
+      "afterSHA256": "5f65e6a8337370cd4ec01b6446679d30b1d9a3413f6f6c7550d66c03ab90e778"
     },
     "scripts/publish-assets.cjs": {
       "beforeSHA256": "46ea2550672ddf48b1364fc9c8caaaed6257d746b46534f8394c82d9fd64f699",

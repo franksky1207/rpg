@@ -22,6 +22,11 @@ def collect():
    # Exact original/archive/current chains, not a new permissive allowlist.
    subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
    continue
+  phase4=ROOT/'development/equipment-2_5d/gm-source-evolution.json'
+  if phase4.exists() and s in json.loads(phase4.read_text())['files']:
+   # Same exact historical/source chain as Node; original B2 lock remains immutable.
+   subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
+   continue
   current=sha(ROOT/s)
   if current==h:continue
   assert s in allowed,('Protected non-B1 source changed',s)

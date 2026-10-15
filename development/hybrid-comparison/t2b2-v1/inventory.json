@@ -8881,8 +8881,8 @@
     },
     {
       "path": "tools/inventory.py",
-      "bytes": 4562,
-      "sha256": "75ad0d1b433ed722aec6773c3aca1a2277d2f9bcfe304ff6ac23d6def5161d6f",
+      "bytes": 4956,
+      "sha256": "e9d79d8f8e7320ae0599620bfdb6cb37db92e0835c03574dcf66ce154d02a3e3",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -9096,6 +9096,6 @@
       "publish": false
     }
   ],
-  "totalBytes": 91093203,
+  "totalBytes": 91093597,
   "largestFileBytes": 6229173
 }
