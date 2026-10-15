@@ -23,6 +23,8 @@ class G07ArtifactTests(unittest.TestCase):
             self.assertTrue(db.m.art_review.verify(ROOT,row,row['images'],record)[0])
             self.assertTrue(row['conceptApproved'])
             self.assertFalse(row['formalReleaseAllowed'])
+            self.assertEqual(row['asset2_5dStatus'],'not-started')
+            self.assertEqual(row['gm2_5dTestStatus'],'not-tested')
             source=json.loads((directory/'sources/generation.json').read_text())
             self.assertEqual(source['set'],identity)
             self.assertEqual([e['kind'] for e in source['outputs']],['overview','slots'])

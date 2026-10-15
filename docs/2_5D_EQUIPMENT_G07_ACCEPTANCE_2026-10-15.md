@@ -36,3 +36,13 @@
 - 本機 Git 代理及 Node 子程序最初受沙箱限制，使用核准的既有執行環境後 Git fetch 與發布稽核正常；沒有繞過網路政策或更換憑證。
 - 本報告不預先宣稱未完成的 exact-HEAD Actions 成功；推送後須核對該 commit 實際觸發的執行。
 - 概念已完成不等於角色透明層、武器分層、GM或正式戰鬥發布完成；以上均不在本批。使用者可直接在 GitHub 查看十張圖與逐套證據，不需逐套批准。
+
+## 首次推送 CI 根因及修正
+
+首次圖片提交：`e4a317d6056de5899ee266ee39ba1ea905fd7947`。概念資料庫 [38741818896](https://github.com/franksky1207/rpg/actions/runs/38741818896) 已成功；發布稽核亦成功。未改動圖片或審查來修 CI。
+
+- Sprite Pipeline [38741819016](https://github.com/franksky1207/rpg/actions/runs/38741819016)：`test_assets.py:86` 還預期 G031 未批准，故未拋例外。負向案例改用仍未製作的 G036；正向案例新增 G031，確認其概念批准只允許建立 not-started 計畫，asset 仍為 None。17 項角色管線 unittest 重跑通過。
+- Formal Battle [38741819162](https://github.com/franksky1207/rpg/actions/runs/38741819162)：`names.cjs:24` 把目前所有有圖套裝都拿去歷史基準 `8972b362534018cabc9e34ad7863a0d8dd87f7a6` 讀圖，新增十圖當時尚不存在。改由該固定基準索引列出原始30套／60圖，明確斷言數量及 G001～G030 ID，逐張保留目前索引 metadata 與原始 bytes 比較；歷史 fixture、G024/G030 SHA 鎖亦全保留。原210身份／1,050槽／70別名／210遷移／60圖檢查通過，37項角色／GM／正式／武器 runtime單元測試亦通過。新十圖原稿與SHA由G07測試另驗，未把新增素材假稱為歷史圖。
+- GM Integration [38741819126](https://github.com/franksky1207/rpg/actions/runs/38741819126)：原始來源／發布檢查成功，瀏覽器在844px視窗的原 `state unchanged` 斷言失敗（browser.cjs:42）。本批未修改GM／正式狀態或發布資產；保留該失敗紀錄，後續提交重新觸發原測試，不為綠燈放寬狀態斷言。若最終SHA仍失敗須據實列為待補，不將此舊結果冒稱新HEAD成功。
+
+兩項修正僅測試及本報告；另外在G07測試明確檢查素材not-started、GM not-tested及正式發布false。圖檔、來源、審查及政策SHA完全未改。最終commit與Actions狀態以任務最後回報為準。

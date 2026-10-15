@@ -21,6 +21,12 @@ for(const [world,type] of [[1,'weapon'],[3,'weapon'],[2,'helmet']]){const name=O
 assert.equal(w.canonicalSecondWorldWeaponName('自訂名稱'),'自訂名稱');assert.equal(w.canonicalSecondWorldWeaponName('toString'),'toString');
 // Accepted concept bytes, reviews and all immutable fixtures are untouched.
 const cp=require('node:child_process');
-for(const r of index.sets.filter(r=>r.images.length))for(const image of r.images){const p=r.directory+'/'+image.file;assert.ok(fs.readFileSync(p).equals(cp.execFileSync('git',['show',mapping.baseline+':'+p],{maxBuffer:8e6})),p);}
+// The immutable baseline owns the original 60 images. Later concept batches
+// have their own SHA-bound provenance; they did not exist at that commit.
+const baselineIndex=JSON.parse(cp.execFileSync('git',['show',mapping.baseline+':development/3d-source/equipment/concepts/_concept-index.json'],{maxBuffer:8e6}));
+const originals=baselineIndex.sets.filter(r=>r.images.length);
+assert.equal(originals.length,30);assert.equal(originals.flatMap(r=>r.images).length,60);
+assert.deepEqual(originals.map(r=>r.id),Array.from({length:30},(_,i)=>'g'+String(i+1).padStart(3,'0')));
+for(const r of originals){const current=index.sets.find(v=>v.id===r.id);assert.equal(current.directory,r.directory);assert.deepEqual(current.images,r.images);for(const image of r.images){const p=r.directory+'/'+image.file;assert.ok(fs.readFileSync(p).equals(cp.execFileSync('git',['show',mapping.baseline+':'+p],{maxBuffer:8e6})),p);}}
 for(const p of cp.execFileSync('git',['ls-files'],{encoding:'utf8'}).split('\n').filter(p=>p.includes('owner-fixtures.json')||/g0(24|30)-[^/]+\/review/.test(p)))assert.ok(fs.readFileSync(p).equals(cp.execFileSync('git',['show',mapping.baseline+':'+p],{maxBuffer:16e6})),p);
 console.log('PASS 210 identities / 1050 slots / 70 aliases / 210 gear-container migrations / 60 original concept images / immutable fixtures');

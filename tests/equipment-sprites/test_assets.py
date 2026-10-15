@@ -83,9 +83,10 @@ class SpriteTests(unittest.TestCase):
   from unittest.mock import patch
   p=self.pipeline()
   with patch.object(p,'rows',return_value=self.rows):
-   with self.assertRaisesRegex(ValueError,'verified concept'):p.plan(self.root,'g031','Actual distinctive silhouette selection justification')
-   p.plan(self.root,'g026','White ring crown silhouette selected for future production')
-   row=self.row('g026');entry=m.verified_entry(self.root,row,True);self.assertEqual(entry['status'],'not-started');self.assertIsNone(entry['asset'])
+   with self.assertRaisesRegex(ValueError,'verified concept'):p.plan(self.root,'g036','Actual distinctive silhouette selection justification')
+   for identity,reason in [('g026','White ring crown silhouette selected for future production'),('g031','Square colonial shoulders and command box selected for future production')]:
+    p.plan(self.root,identity,reason)
+    row=self.row(identity);entry=m.verified_entry(self.root,row,True);self.assertEqual(entry['status'],'not-started');self.assertIsNone(entry['asset'])
  def test_import_missing_prompt_rejected_before_any_write(self):
   p=self.pipeline();before=(self.root/m.REGISTRY).read_bytes()
   with self.assertRaisesRegex(ValueError,'prompt required'):p.import_image(self.root,'g026',ROOT/self.entry()['source']['path'],'')
