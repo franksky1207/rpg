@@ -13,19 +13,19 @@ spec.loader.exec_module(planner)
 class BatchPlannerTests(unittest.TestCase):
     def test_all_buckets_and_complete_first_galaxy_batch(self):
         groups=planner.plan()
-        self.assertEqual(len(groups),21)
-        self.assertEqual([g["epoch"] for g in groups].count("galaxy"),10)
-        self.assertEqual([g["epoch"] for g in groups].count("universe"),10)
-        self.assertEqual([g["epoch"] for g in groups].count("higher"),1)
+        self.assertEqual(len(groups),42)
+        self.assertEqual([g["epoch"] for g in groups].count("galaxy"),20)
+        self.assertEqual([g["epoch"] for g in groups].count("universe"),20)
+        self.assertEqual([g["epoch"] for g in groups].count("higher"),2)
         self.assertEqual(groups[0]["batch"],"G01")
-        self.assertEqual(groups[0]["imagesPresent"],20)
+        self.assertEqual(groups[0]["imagesPresent"],10)
         self.assertEqual(groups[0]["imagesMissing"],0)
-        self.assertEqual(groups[0]["approvedSets"],10)
+        self.assertEqual(groups[0]["approvedSets"],5)
         self.assertEqual(groups[0]["status"],"approved")
     def test_next_batch_is_safe_to_resume(self):
-        group=planner.plan(batch="g02")[0]
-        self.assertEqual(group["range"],"g011..g020")
-        self.assertEqual(len(group["sets"]),10)
+        group=planner.plan(batch="g03")[0]
+        self.assertEqual(group["range"],"g011..g015")
+        self.assertEqual(len(group["sets"]),5)
         catalog=json.loads((ROOT/planner.BASE/"_concept-index.json").read_text())["sets"]
         missing=0
         for row in group["sets"]:
@@ -38,13 +38,23 @@ class BatchPlannerTests(unittest.TestCase):
             self.assertEqual(row["equipmentNames"],next(r["equipmentNames"] for r in catalog if r["id"]==row["id"]))
             missing+=len(absent)
         self.assertEqual(group["imagesMissing"],missing)
-        self.assertEqual(group["imagesPresent"],20-missing)
+        self.assertEqual(group["imagesPresent"],10-missing)
+    def test_next_unmade_five_set_batch(self):
+        group=planner.plan(batch="G07")[0]
+        self.assertEqual(group["range"],"g031..g035")
+        self.assertEqual(len(group["sets"]),5)
+        self.assertEqual(group["imagesMissing"],10)
+        self.assertEqual(group["imagesPresent"],0)
+        self.assertEqual(group["status"],"not-started")
+    def test_higher_uses_two_five_set_batches(self):
+        self.assertEqual(planner.plan(batch="H01")[0]["range"],"h01..h05")
+        self.assertEqual(planner.plan(batch="H02")[0]["range"],"h06..h10")
     def test_actual_first_batch_is_not_redrawn(self):
         group=planner.plan(batch="G01")[0]
         self.assertFalse(any(row["missing"] for row in group["sets"]))
     def test_bad_batch_rejected(self):
         with self.assertRaisesRegex(ValueError,"Unknown batch"):
-            planner.plan(batch="G11")
+            planner.plan(batch="G21")
     def test_index_missing_file_drift_rejected(self):
         import tempfile
         from unittest.mock import patch
