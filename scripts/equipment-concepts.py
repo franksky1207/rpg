@@ -196,9 +196,9 @@ def statuses(root, row):
         if record.get('schema') == 2:
             approved, evidence, review_outcome = art_review.verify(root,row,images,record)
             review_mode = 'autonomous-two-stage'
-        elif record.get('schema') == 3:
+        elif record.get('schema') in (3,4):
             approved, evidence, review_outcome = art_review.verify(root,row,images,record)
-            review_mode = 'two-stage-2.5d'
+            review_mode = 'codex-single-stage' if record['schema']==4 else 'two-stage-2.5d'
         elif record.get('conceptApproved') is True:
             review_mode = 'legacy-user-approval'
             proof = record.get('evidenceFile','')
@@ -226,8 +226,9 @@ def statuses(root, row):
             approved, evidence = True, (pathlib.Path(row['directory']) / proof).as_posix()
     review_2_5d = directory / 'review-2_5d.json'
     if review_2_5d.exists():
-        approved, evidence, review_outcome = art_review.verify(root,row,images,load(review_2_5d))
-        review_mode = 'two-stage-2.5d'
+        record_2_5d = load(review_2_5d)
+        approved, evidence, review_outcome = art_review.verify(root,row,images,record_2_5d)
+        review_mode = 'codex-single-stage' if record_2_5d.get('schema')==4 else 'two-stage-2.5d'
     registry = load(root / 'assets/3d/asset-registry.json')
     world = {'galaxy':1,'universe':2,'higher':3}[row['epoch']]
     models = []
@@ -252,7 +253,7 @@ def statuses(root, row):
             fail(f'{row["id"]}: model review does not bind current assets/source/delegation')
         model_status='refined-model-art-reviewed'
     if approved:
-        concept_status = (review_outcome if review_mode=='two-stage-2.5d' else
+        concept_status = (review_outcome if review_mode in ('two-stage-2.5d','codex-single-stage') else
                           'auto-art-reviewed' if review_mode=='autonomous-two-stage' else 'approved')
     else:
         concept_status = review_outcome or ('images-present-awaiting-art-review' if len(images)==2
