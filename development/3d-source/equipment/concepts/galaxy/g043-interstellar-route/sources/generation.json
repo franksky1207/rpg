@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g043",
+  "baseMain": "1c00f711feb897772dad671cdfc73b3aafa461ea",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "深青綠／銀／洋紅；流線單脊盔、窄V胸甲、尖翼肩、環架菱形座標核、雙噴口靴、細長裂光劍。",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-5bd73918-a9ec-4524-a960-a1d3a7a7d67b.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g043-interstellar-route/sources/overview-original.png",
+      "originalSha256": "7b81834b3c89d18097ca9bed7f5e18610d38c08c6d03db0686a3813ce574cf57",
+      "originalBytes": 2084820,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 210424,
+        "sha256": "38722b130d5c1bc999cf9af1fce4f54d4d91755c8e866f477cf05ff78088875e"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-2103bab2-d506-4fce-a007-9ad5b5875a32.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g043-interstellar-route/sources/slots-original.png",
+      "originalSha256": "7f9ddc149ec6a7c91016303ba8dbc984bb23d5dc1af0fed3e7e3654458cf50a5",
+      "originalBytes": 2188046,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 247504,
+        "sha256": "c579aa48361a0bd4511ab6454544fa16fba031ff81b93caf300ffc7a85f249f3"
+      },
+      "referenceOriginalSha256": "7b81834b3c89d18097ca9bed7f5e18610d38c08c6d03db0686a3813ce574cf57"
+    }
+  ]
+}

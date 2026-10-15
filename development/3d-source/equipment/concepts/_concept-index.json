@@ -2701,19 +2701,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g041-orion-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 311606,
+          "sha256": "e0a940a34a2d40d17486383521da523b69caabd2f5d2c81159a1434c8b83bdf7"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 205678,
+          "sha256": "8e6e1cca4f61e5388486b072dfe7fd15200a609ab8ffead6e29b8ab34b7b093f"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g041-orion-front/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g042",
@@ -2752,19 +2767,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g042-stargate-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 299076,
+          "sha256": "b90f6be42af04c2b4f5cc34737a040932efcee0ef4856bbe7b2faafff892c98c"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 255240,
+          "sha256": "299d8493e8db940bd30b0addf242c28f0b9923c79f451fc6bdc50a34499da08e"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g042-stargate-defense/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g043",
@@ -2803,19 +2833,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g043-interstellar-route",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 210424,
+          "sha256": "38722b130d5c1bc999cf9af1fce4f54d4d91755c8e866f477cf05ff78088875e"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 247504,
+          "sha256": "c579aa48361a0bd4511ab6454544fa16fba031ff81b93caf300ffc7a85f249f3"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g043-interstellar-route/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g044",
@@ -2854,19 +2899,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g044-civilization-border",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 240552,
+          "sha256": "5048766f05d3655b27fb329a3ae4269909160ac182acf2ab3a53b9ae1d9661c3"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 232438,
+          "sha256": "b8b0bc1a81fced384e8b7842de26f69caf212d91cceb005fd882d4477f2c93ae"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g044-civilization-border/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g045",
@@ -2905,19 +2965,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g045-orion-colonies",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 302758,
+          "sha256": "8281bae0dd74cd7f50a768d373fa05bca311fbdb9a6fc678c8d10c6832e13214"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 301474,
+          "sha256": "716c5044ed3c829d1959f22a6ea8febac11b965733b0b30b96da3ed15da37e5a"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g045-orion-colonies/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g046",

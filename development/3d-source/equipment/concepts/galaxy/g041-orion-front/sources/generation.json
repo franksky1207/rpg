@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g041",
+  "baseMain": "1c00f711feb897772dad671cdfc73b3aafa461ea",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "海軍藍／銀鋼／琥珀；雙翼全罩盔、階梯肩甲、五角胸甲、旋臂導航圓盤、直身能量劍。",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-73227ebf-1e6b-4705-b4fd-9e9eb8484949.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g041-orion-front/sources/overview-original.png",
+      "originalSha256": "ba668ad88cca039efbef4dd29d212f5e70fe77592c40f171231497b5b4296233",
+      "originalBytes": 2304636,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 311606,
+        "sha256": "e0a940a34a2d40d17486383521da523b69caabd2f5d2c81159a1434c8b83bdf7"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-c2b122bc-fb8c-40d5-a2b1-8861f1619289.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g041-orion-front/sources/slots-original.png",
+      "originalSha256": "6cb726cc42409a37e8e841d86638b5c96a70f15bd37d4c92a713916673426b37",
+      "originalBytes": 1994668,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 205678,
+        "sha256": "8e6e1cca4f61e5388486b072dfe7fd15200a609ab8ffead6e29b8ab34b7b093f"
+      },
+      "referenceOriginalSha256": "ba668ad88cca039efbef4dd29d212f5e70fe77592c40f171231497b5b4296233"
+    }
+  ]
+}

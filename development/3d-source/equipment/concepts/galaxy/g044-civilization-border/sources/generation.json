@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g044",
+  "baseMain": "1c00f711feb897772dad671cdfc73b3aafa461ea",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "酒紅／暖金／淡藍；冠形全罩盔、圓疊肩甲、凸面胸甲、六角文明識別印、護手彎刃。",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-87464df4-eda5-4f8f-9abf-f370fa29dd60.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g044-civilization-border/sources/overview-original.png",
+      "originalSha256": "dfc67d7d283b0ac5d99ce75aa124d5ba5fd721c87417520606402aa1eb0d6140",
+      "originalBytes": 2100179,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 240552,
+        "sha256": "5048766f05d3655b27fb329a3ae4269909160ac182acf2ab3a53b9ae1d9661c3"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-da82e3bd-66ba-419b-a285-3b84c9800676.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g044-civilization-border/sources/slots-original.png",
+      "originalSha256": "aaca6d5d1e737beece715b6da66ffaf54b8097565cc0c8293de8e6fb5b40f4ed",
+      "originalBytes": 2023281,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 232438,
+        "sha256": "b8b0bc1a81fced384e8b7842de26f69caf212d91cceb005fd882d4477f2c93ae"
+      },
+      "referenceOriginalSha256": "dfc67d7d283b0ac5d99ce75aa124d5ba5fd721c87417520606402aa1eb0d6140"
+    }
+  ]
+}

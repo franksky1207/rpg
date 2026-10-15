@@ -1,0 +1,22 @@
+PASS actual higher review DOM/token/sprite {
+  mode: 'review',
+  world: 3,
+  diagnostics: {
+    battleId: 'combat-v1-2b28d9d5-3d96-4047-bdff-e5b639b3ba64-2',
+    lastSeq: 23,
+    disposed: false,
+    loading: false,
+    ready: true,
+    ended: false,
+    failed: false,
+    frames: 0,
+    rejected: 0,
+    fallbacks: 0,
+    engines: 0,
+    canvases: 1,
+    rafs: 1,
+    canCommit: false,
+    canEmitCombatEvents: false
+  },
+  suit: 'g007'
+}
