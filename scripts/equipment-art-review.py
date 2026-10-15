@@ -1,4 +1,4 @@
-"""Verified two-stage art evidence. This validates attestations, not visual taste."""
+"""Verify historical two-stage and new Codex-only concept evidence."""
 import hashlib
 import json
 import re
@@ -128,7 +128,7 @@ def bound_source(root, source):
 
 def verify_v3(root,row,images,record):
     label=row['id'];directory=root/row['directory']
-    require(record.get('schema')==3 and record.get('policyVersion')==POLICY, f'{label}: unsupported review policy/schema')
+    require(record.get('schema') in (3,4) and record.get('policyVersion')==POLICY, f'{label}: unsupported review policy/schema')
     policy=root/POLICY_FILE
     require(policy.is_file() and digest(policy.read_bytes())==POLICY_SHA and record.get('policySha256')==POLICY_SHA, f'{label}: review policy changed/missing')
     require(record.get('formalIdentity')=={k:row[k] for k in IDENTITY_FIELDS}, f'{label}: formal identity mismatch')
@@ -142,9 +142,11 @@ def verify_v3(root,row,images,record):
     for name in ('blockers','advisories','explicitlyAcceptedExceptions'):
         require(isinstance(record.get(name),list), f'{label}: {name} required')
     stages=record.get('stages')
-    require(isinstance(stages,list) and len(stages)==2, f'{label}: two review stages required')
+    codex_only=record['schema']==4
+    reviewers=('Codex',) if codex_only else ('ChatGPT','Codex')
+    require(isinstance(stages,list) and len(stages)==len(reviewers), f'{label}: '+('single Codex review stage required' if codex_only else 'two review stages required'))
     failed=set()
-    for stage,reviewer in zip(stages,('ChatGPT','Codex')):
+    for stage,reviewer in zip(stages,reviewers):
         require(stage.get('reviewer')==reviewer and re.fullmatch(r'\d{4}-\d{2}-\d{2}',stage.get('reviewedAt','')), f'{label}: stage reviewer/order/date mismatch')
         require(stage.get('imageSha256')==actual, f'{label}: stage image evidence stale')
         source_body=bound_source(root,stage.get('source'))
@@ -197,5 +199,5 @@ def verify_v3(root,row,images,record):
     return approved,(Path(row['directory'])/proof.name).as_posix(),outcome
 
 def verify(root,row,images,record):
-    if record.get('schema')==3: return verify_v3(root,row,images,record)
+    if record.get('schema') in (3,4): return verify_v3(root,row,images,record)
     return verify_legacy(root,row,images,record)
