@@ -1,3 +1,5 @@
+> **2026-10-16｜G11五套十圖入庫**：G051～G055正式銀河邊境區域，十次獨立真image_gen生成、1536×1024原PNG及WebP、SHA來源與schema4單一Codex審查（blocker=0）；55套批准／110圖、155套未製作，G056未動。新增G001～G050共352歷史檔SHA鎖，保留舊鎖、G024/G030例外及發布隔離。角色素材not-started、GM not-tested、正式發布false；未改戰鬥介面或玩法。詳[G11驗收](docs/2_5D_EQUIPMENT_G11_ACCEPTANCE_2026-10-16.md)；最終SHA Actions依實際結果核對，不預告成功。
+
 > **2026-10-16｜G10五套十圖入庫**：G046～G050十次獨立真生成、1536×1024 WebP與原PNG、來源SHA及schema4單一Codex審查（blocker=0）完成；50套批准／100圖、160套未製作，G051未動。G001～G045共307歷史檔新增SHA鎖，舊鎖與接受例外保留；角色not-started、GM not-tested、正式發布false。查看[G10驗收](docs/2_5D_EQUIPMENT_G10_ACCEPTANCE_2026-10-16.md)；最終SHA Actions依實際結果核對，不預告成功。
 
 > **2026-10-15｜G09五套十圖入庫**：G041～G045獨立三視／五槽真WebP、原始PNG與來源SHA、schema4單一Codex審查（blocker=0）完成；索引45套批准／90圖、165套未製作，G046未動。G001～G040共262個歷史檔與原索引保留並新增SHA回歸鎖。角色素材not-started、GM not-tested、正式發布false；未改正式戰鬥介面或動畫。驗收及查看連結見 [G09驗收](docs/2_5D_EQUIPMENT_G09_ACCEPTANCE_2026-10-15.md)；首次CI歷史索引測試因淺層checkout缺G08基準失敗，已改完整歷史而保留全部斷言；另修GM測試截圖遇DOM替換的定位競態，保留121斷言並三viewport重跑通過；最終提交Actions須依該SHA核對。

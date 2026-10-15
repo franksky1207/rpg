@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -56,3 +56,9 @@
 ## 2026-10-15 後續刀劍量產規則
 
 武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+
+## G11 實際生成與角色交接（2026-10-15 UTC）
+
+青銅／玉綠／青光；三叉階梯冠盔、梯形層肩與幾何紋胸甲、浮躍光底靴、菱形鑰核與古星直刃。
+
+三視與五槽由兩次真image_gen生成；來源見sources/generation.json，單次審查見codex-review.md與review-2_5d.json。未新增透明角色或武器層；未製作GM或正式戰鬥素材。後續角色以本套右向3/4鏡位、右手握刀劍、完整頭盔與背飾輪廓交接，不將概念板裁切作正式角色。

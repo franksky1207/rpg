@@ -146,14 +146,14 @@ class Review25DTests(unittest.TestCase):
     def test_legacy_archive_sha_not_optional(self):
         p=self.root/m.art_review.LEGACY_AUTHORITY;p.write_text('invented historical SOP')
         with self.assertRaisesRegex(ValueError,'authorization changed/missing'):self.run_db()
-    def test_unmade_160_cannot_gain_production_or_milestones(self):
+    def test_unmade_155_cannot_gain_production_or_milestones(self):
         rows=self.run_db()
         unmade=[r for r in rows if not r['images']]
-        self.assertEqual(len(unmade),160)
+        self.assertEqual(len(unmade),155)
         self.assertFalse(any(r['conceptApproved'] or r['assetProductionEligible'] or r['formalReleaseAllowed'] for r in unmade))
         self.assertEqual([r['id'] for r in rows if r['epoch']=='higher'],[f'h{i:02}' for i in range(1,11)])
         for field in ('conceptApproved','assetProductionEligible','asset2_5dStatus','gm2_5dTestStatus','formalReleaseAllowed'):
-            data=m.load(self.index);target=next(r for r in data['sets'] if r['id']=='g051');target[field]=True
+            data=m.load(self.index);target=next(r for r in data['sets'] if r['id']=='g056');target[field]=True
             self.index.write_text(m.dumps(data))
             with self.assertRaisesRegex(ValueError,'Index differs'):self.run_db()
             data['sets']=rows;self.index.write_text(m.dumps(data))

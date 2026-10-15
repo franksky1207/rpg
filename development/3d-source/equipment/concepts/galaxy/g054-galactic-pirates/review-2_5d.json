@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g054",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-frontier:map:3",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates",
+    "regionOrBoss": "銀河邊境 → 銀河海盜領域",
+    "equipmentNames": {
+      "weapon": "星海劫掠刃",
+      "helmet": "海盜王戰盔",
+      "armor": "掠奪主戰甲",
+      "shoes": "星海漂移靴",
+      "accessory": "劫掠航標"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "f84bc4006c108a9e0ce66a8ec1726c05d656b3066203e523600814c864b8dd56",
+    "equipment-five-slots.webp": "bb2de10d6e611922ea26fd5ca5f7b77cd3507ba77446f7b468db0408a0835c5f"
+  },
+  "reviewedAt": "2026-10-15",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "461eeba2eb67fcb3c5884bc16c8c2e613f89480f9d6827dcb4451d6a49863d19",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/generation-provenance.md",
+      "sha256": "387ef8dbb52b6d404b03db6e225c0614b2467e0fb275ee3fd46390f78dd7bfc2"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/codex-review.md",
+      "sha256": "461eeba2eb67fcb3c5884bc16c8c2e613f89480f9d6827dcb4451d6a49863d19"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/sources/generation.json",
+      "sha256": "6d7cca719bb9ce47d1067c51601ef309695771c4d4ffadfa0747546b9d247367"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-15",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/codex-review.md",
+        "sha256": "461eeba2eb67fcb3c5884bc16c8c2e613f89480f9d6827dcb4451d6a49863d19"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "f84bc4006c108a9e0ce66a8ec1726c05d656b3066203e523600814c864b8dd56",
+        "equipment-five-slots.webp": "bb2de10d6e611922ea26fd5ca5f7b77cd3507ba77446f7b468db0408a0835c5f"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g054 已逐字核對最新main 038e07c124645eb7db0d4886b12e6a551c09da17 的 worldmaps-galactic-frontier.js REGION_MAPS[3]、data.js WORLD_REGIONS固定註冊與engine.js makeItem五槽映射、索引及開工卡。galaxy:galactic-frontier:map:3；銀河邊境 → 銀河海盜領域；五槽：星海劫掠刃／海盜王戰盔／掠奪主戰甲／星海漂移靴／劫掠航標。210套第54位（MAPS[53]），永久身份、目錄及順序一致。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g054 兩張原始PNG與兩張WebP均經Pillow load完整解碼為1536×1024，bytes與SHA記錄於sources/generation.json。兩次真實獨立生成、兩種構圖；五槽未由三視裁切、換色或重排。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g054 已逐張目視原始生成圖及實際WebP縮圖：酒紫／炭黑／舊金及黃光；三角展翼全罩盔、非對稱三片重肩與斜胸帶、漂移尾翼靴、三向航標與彎刃護手刀。 三視有完整正側背同套角色，全遮臉；五槽圖五類獨立單品可對應。武器為刀劍／能量刃，未見槍械、長槍或法杖；區域符合銀河邊境的探索、遺跡與殘骸科技。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g054 已實際檢視288×192的兩張WebP縮圖（角色約170px高）。酒紫／炭黑／舊金及黃光；三角展翼全罩盔、非對稱三片重肩與斜胸帶、漂移尾翼靴、三向航標與彎刃護手刀。 頭盔、肩胸、鞋子、背飾與刀劍皆可辨識，與本批其他套輪廓可區分，不依賴小字或微小鉚釘；不是正式遊戲內或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g054 本任務實際呼叫OpenAI image_gen.imagegen先三視，再目視並以本套原PNG參考另次生成五槽。工具原始路徑、原PNG位元組、SHA、尺寸、bytes、參考關係與WebP參數均已保存。使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "五槽圖中文小標有生成字形差異；背甲示意重肩方向與三視不完全一致，彎刃角度不同；三角全罩盔、非對稱重肩、三向航標與彎刀主輪廓仍可對應，記advisory。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/generation-provenance.md",
+      "sha256": "387ef8dbb52b6d404b03db6e225c0614b2467e0fb275ee3fd46390f78dd7bfc2"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "aeee31dc6fa9e1718b23b401baf9eb65ee48beccc7e0769a38a9f85a6c58cc92"
+}

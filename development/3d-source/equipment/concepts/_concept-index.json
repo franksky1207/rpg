@@ -3361,19 +3361,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g051-galactic-border",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 255606,
+          "sha256": "04c4bdcdb5778476dbadc4348e2cbe80dc725d4be7607588f44d7be3b352e7ad"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 261098,
+          "sha256": "9a12782d3592b026101048f53774b3d769ccfc9d0255feff9d148028309865c5"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g051-galactic-border/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g052",
@@ -3412,19 +3427,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g052-ancient-ruins-cluster",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 269486,
+          "sha256": "919031919461c521e989653667d9c6c4ed9541bc68769fde8ea756e92d54e451"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 306612,
+          "sha256": "238f8dbad277eaff56b269de43f8817f3874c51612d52ccd97cba10bc13f8ca6"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g052-ancient-ruins-cluster/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g053",
@@ -3463,19 +3493,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g053-lost-system-colony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 252732,
+          "sha256": "618c70d846004f0150b2288970534ed7c7cafc669d2f383cbb7943543c87b504"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 285402,
+          "sha256": "c1cb6a0ece186aec7cd7e3f024567f8ca4b103041d79aca63cc69491f37ad847"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g053-lost-system-colony/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g054",
@@ -3514,19 +3559,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 301016,
+          "sha256": "f84bc4006c108a9e0ce66a8ec1726c05d656b3066203e523600814c864b8dd56"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 280534,
+          "sha256": "bb2de10d6e611922ea26fd5ca5f7b77cd3507ba77446f7b468db0408a0835c5f"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g055",
@@ -3565,19 +3625,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g055-relic-weapons-graveyard",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 376200,
+          "sha256": "2f4171f6c4cc973d4246f91b2c9b403654f44d0138c342bda7bfe71f0bbbf5e6"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 336702,
+          "sha256": "b999afc7cd81c192f97b1bc820069810982211fff3524662144882b5b33f7751"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g055-relic-weapons-graveyard/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g056",

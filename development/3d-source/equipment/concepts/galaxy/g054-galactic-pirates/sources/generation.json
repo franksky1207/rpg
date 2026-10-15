@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g054",
+  "baseMain": "038e07c124645eb7db0d4886b12e6a551c09da17",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "酒紫／炭黑／舊金及黃光；三角展翼全罩盔、非對稱三片重肩與斜胸帶、漂移尾翼靴、三向航標與彎刃護手刀。",
+  "generationMethod": "Two separate actual calls, overview visually inspected before supplying its original PNG as reference for a newly generated equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-4bac6bab-d9f3-4091-8de4-131fae08dc4e.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/sources/overview-original.png",
+      "originalSha256": "d2447e6cf3ca87bda35c9ad3e869f07656f315622a8ffe3253acdf9b9f89def6",
+      "originalBytes": 2397329,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 301016,
+        "sha256": "f84bc4006c108a9e0ce66a8ec1726c05d656b3066203e523600814c864b8dd56"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-0448393d-4507-4cdf-9aee-89c45cb2dc2f.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g054-galactic-pirates/sources/slots-original.png",
+      "originalSha256": "2f90cb611a7312f3dd036cb9bfa9833a8fce37aff728d7dcddcc89ecb57d5c46",
+      "originalBytes": 2309294,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 280534,
+        "sha256": "bb2de10d6e611922ea26fd5ca5f7b77cd3507ba77446f7b468db0408a0835c5f"
+      },
+      "referenceOriginalSha256": "d2447e6cf3ca87bda35c9ad3e869f07656f315622a8ffe3253acdf9b9f89def6"
+    }
+  ]
+}

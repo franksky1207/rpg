@@ -47,8 +47,8 @@ class BatchPlannerTests(unittest.TestCase):
         self.assertEqual(group["imagesPresent"],10)
         self.assertEqual(group["approvedSets"],5)
         self.assertEqual(group["status"],"approved")
-        next_group=planner.plan(batch="G11")[0]
-        self.assertEqual(next_group["range"],"g051..g055")
+        next_group=planner.plan(batch="G12")[0]
+        self.assertEqual(next_group["range"],"g056..g060")
         self.assertEqual(next_group["imagesMissing"],10)
         self.assertEqual(next_group["status"],"not-started")
     def test_g08_completed_five_set_batch(self):
@@ -72,6 +72,14 @@ class BatchPlannerTests(unittest.TestCase):
         self.assertEqual(group["imagesPresent"],10)
         self.assertEqual(group["approvedSets"],5)
         self.assertEqual(group["status"],"approved")
+    def test_g11_completed_five_set_batch(self):
+        group=planner.plan(batch="G11")[0]
+        self.assertEqual(group["range"],"g051..g055")
+        self.assertEqual(group["imagesMissing"],0)
+        self.assertEqual(group["imagesPresent"],10)
+        self.assertEqual(group["approvedSets"],5)
+        self.assertEqual(group["status"],"approved")
+
     def test_higher_uses_two_five_set_batches(self):
         self.assertEqual(planner.plan(batch="H01")[0]["range"],"h01..h05")
         self.assertEqual(planner.plan(batch="H02")[0]["range"],"h06..h10")
