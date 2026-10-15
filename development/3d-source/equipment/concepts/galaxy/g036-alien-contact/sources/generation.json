@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "set": "g036",
+  "baseMain": "abd2ca22e3d3fb3d450fd1afaf8e8a4ec4accff6",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "象牙白／紫；卵形黑面罩、彎月肩片、尖疊胸甲、環形翻譯器、紫色細能量劍",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-6e07c19c-82aa-46f1-ac92-25de579314ce.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g036-alien-contact/sources/overview-original.png",
+      "originalSha256": "732e7fb37f454f08f700009bf484dac98bf980939bb4827f3e5a8c4b7a16db1d",
+      "originalBytes": 2153804,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 230498,
+        "sha256": "b33b7ddb45fcb4ffb2f0040da9bef456ebc566909e5c7f70ec261e33cd121801"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-198a679f-a639-4e9e-928e-14c8e1d1b9cc.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g036-alien-contact/sources/slots-original.png",
+      "originalSha256": "224add1972c9a8a5c234f37ae5cbcc3534b0497349897f471d19ed516bc1f981",
+      "originalBytes": 2262242,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 286856,
+        "sha256": "1a460c3afccb2543d71d0223a70b8d3898efdbcf028b3a0a003eb025bbf4f829"
+      },
+      "referenceOriginalSha256": "732e7fb37f454f08f700009bf484dac98bf980939bb4827f3e5a8c4b7a16db1d"
+    }
+  ]
+}

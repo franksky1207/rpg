@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "set": "g040",
+  "baseMain": "abd2ca22e3d3fb3d450fd1afaf8e8a4ec4accff6",
+  "generatedAt": "2026-10-15",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "深藍／鈦白／金；T形封閉冠盔、對稱橫翼層肩、倒梯胸甲與長幾何腰片、稜角突進靴、菱形統帥權印、寬直霸主劍",
+  "generationMethod": "Two separate actual image generation calls; viewed original overview supplied to independent five-slot generation. No crop, rearrangement, recoloring or padding used for delivered art.",
+  "encoding": "Pillow RGB WebP quality=92 method=6, original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案以本任務可用 OpenAI image_gen.imagegen 生成；依適用 OpenAI 服務條款使用生成輸出，僅開發概念用途。無外部庫圖、第三方角色參考或 CC／公有領域／獨占授權宣稱。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-41668f65-8037-46c0-8aae-7ad111a99932.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g040-frontier-hegemony/sources/overview-original.png",
+      "originalSha256": "892abba3119726cdf21fc8475431294bae5e82209eccd9b37a8efb8b3f0b4abc",
+      "originalBytes": 2315839,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 296462,
+        "sha256": "0f026f389d1b10d823bce09ac16b0e447f043b6fcab4361c8033a6ed63838edb"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-c33b3336-c1be-40aa-8ba8-fc9c93ae7916.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g040-frontier-hegemony/sources/slots-original.png",
+      "originalSha256": "b970eeb75620288e900f4de2bd7846413d8a31352b94faf17842e5fd9fa72cab",
+      "originalBytes": 2316705,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 316744,
+        "sha256": "554335af31be863f10e093c3730bf908f901ec7af30623e4e5948d8579e10131"
+      },
+      "referenceOriginalSha256": "892abba3119726cdf21fc8475431294bae5e82209eccd9b37a8efb8b3f0b4abc"
+    }
+  ]
+}

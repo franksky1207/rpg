@@ -59,7 +59,7 @@ class DatabaseTests(unittest.TestCase):
             self.assertEqual(row['asset2_5dStatus'],'complete' if row['id'] in ('g005','g007','g018') else 'not-started')
             self.assertEqual(row['gm2_5dTestStatus'],'not-tested')
             self.assertEqual(row['conceptStatus'],'pass-with-advisory' if row['conceptApproved'] else 'not-generated')
-        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{f'g{i:03}' for i in range(1,36)})
+        self.assertEqual({r['id'] for r in rows if r['conceptApproved']},{f'g{i:03}' for i in range(1,41)})
         self.assertEqual(rows[6]['regionOrBoss'],'地球戰爭 → 古代科技遺址')
         self.assertEqual(rows[6]['modelStatus'],'refined-model-art-reviewed')
         self.assertEqual(rows[-1]['level']['fixedLevel'],None)

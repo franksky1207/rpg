@@ -82,12 +82,12 @@ class AutonomousReviewTests(unittest.TestCase):
         self.assertEqual(result['conceptStatus'],'pass-with-advisory')
         self.assertEqual(result['modelStatus'],'not-started')
         self.assertIs(result['formalReleaseAllowed'],False)
-        for identity in ('g036','u001','h01'):
+        for identity in ('g041','u001','h01'):
             with self.assertRaisesRegex(ValueError,'verified art review required'):gate.eligible(self.root,identity)
     def test_model_gate_revalidates_tampered_approval(self):
-        data=m.load(self.index);next(r for r in data['sets'] if r['id']=='g036').update(conceptApproved=True,modelingEligible=True)
+        data=m.load(self.index);next(r for r in data['sets'] if r['id']=='g041').update(conceptApproved=True,modelingEligible=True)
         self.index.write_text(m.dumps(data))
-        with self.assertRaises(ValueError):gate.eligible(self.root,'g036')
+        with self.assertRaises(ValueError):gate.eligible(self.root,'g041')
     def test_legacy_approvals_preserved_byte_exact(self):
         for identity in ('g006','g007'):
             row=self.row(identity);directory=self.root/row['directory']

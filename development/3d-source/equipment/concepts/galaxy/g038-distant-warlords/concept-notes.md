@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -55,4 +55,12 @@
 
 ## 2026-10-15 後續刀劍量產規則
 
-武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。本套已完成兩張概念圖與單階段審查；不代表角色素材、GM或正式發布完成。
+
+## G08 實際概念與素材交接
+
+- 酒紅／舊銅；豎光縫冠盔、非對稱尖肩、三角胸甲與層疊裙甲、細高突襲靴、六角權印、琥珀彎刀。
+- 五槽正式名稱依 A 節；來源、授權、原稿 SHA 見 sources/generation.json。
+- 握持：短柄單手刀劍，後續右向3/4角色鏡位需保持頭肩與背飾輪廓，不以概念板裁切冒充透明角色。
+- Advisory：五槽彎刀的展示曲率與三視握角略異，服裝偏封建軍閥風格；有能量刃及封閉科技面罩，仍符合邊疆軍閥主題。
+- 概念批准由驗證器推導；2.5D角色、獨立武器與攻擊底圖仍 not-started，GM not-tested、正式發布 false。

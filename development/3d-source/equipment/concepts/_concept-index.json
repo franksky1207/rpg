@@ -2371,19 +2371,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g036-alien-contact",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 230498,
+          "sha256": "b33b7ddb45fcb4ffb2f0040da9bef456ebc566909e5c7f70ec261e33cd121801"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 286856,
+          "sha256": "1a460c3afccb2543d71d0223a70b8d3898efdbcf028b3a0a003eb025bbf4f829"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g036-alien-contact/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g037",
@@ -2422,19 +2437,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g037-frontier-industry",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 354408,
+          "sha256": "01955a0a91f3e2d9850bcaf3a91fe9c0483a5094419a81d58b90477c2bbfe065"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 331316,
+          "sha256": "3eb11a318c668028ef27e1e751ed6d7e9a346cdaa027ae9d94781fcfcee177aa"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g037-frontier-industry/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g038",
@@ -2473,19 +2503,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g038-distant-warlords",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 266708,
+          "sha256": "ce36726370bd3d35b2f5f9b579a2131fd2cb3b013c3587c28869853def82ee1b"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 342518,
+          "sha256": "c8a56fc14f1a194ddba4f1de69087b2daecf0afed2842933db1ec69e578cf588"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g038-distant-warlords/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g039",
@@ -2524,19 +2569,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g039-refugee-route",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 218186,
+          "sha256": "045a6d85780a937d4f98440c5d322b7933362b8276baaa657d2ebdce4d81df68"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 245450,
+          "sha256": "5b6e92334f4755b221b4f1403482d94642020b7c6852d1c97a778439e0f57b08"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g039-refugee-route/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g040",
@@ -2575,19 +2635,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g040-frontier-hegemony",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 296462,
+          "sha256": "0f026f389d1b10d823bce09ac16b0e447f043b6fcab4361c8033a6ed63838edb"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 316744,
+          "sha256": "554335af31be863f10e093c3730bf908f901ec7af30623e4e5948d8579e10131"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g040-frontier-hegemony/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-15"
     },
     {
       "id": "g041",

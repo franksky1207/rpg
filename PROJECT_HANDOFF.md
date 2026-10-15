@@ -1,3 +1,5 @@
+> **2026-10-15｜G08五套十圖入庫**：G036～G040獨立三視／五槽真WebP、原始PNG與來源SHA、schema4單一Codex階段（blocker=0）完成；索引40套批准／80圖、170套未製作，G041未動。G001～G035全部217個歷史檔與證據SHA保留並鎖定回歸。角色素材not-started、GM not-tested、正式發布false；未改正式戰鬥介面。驗證及查看連結見 [G08驗收](docs/2_5D_EQUIPMENT_G08_ACCEPTANCE_2026-10-15.md)；最終commit Actions推送後逐項核對，不預告成功。
+
 > **2026-10-15｜G07五套十圖入庫**：G031～G035各有獨立三視／五槽真WebP、原始PNG及SHA來源、schema4單一Codex審查（blocker=0、微差advisory）；索引35套批准／70圖、175套待製，G036未動。原G001～G030、schema3與G024/G030證據保留。發布隔離及本機檢查見 [G07驗收](docs/2_5D_EQUIPMENT_G07_ACCEPTANCE_2026-10-15.md)；exact-HEAD Actions須推送後核對，不以此段預先宣稱成功。角色／武器素材與Runtime不在本批。
 
 > **2026-10-15｜Codex五套單階段量產配套修正**：`scripts/equipment-art-review.py`及`equipment-concepts.py`支援schema4單一Codex審查，舊schema3保留；批次規劃器42批×5套、下一批G07＝G031～G035。已補schema4成功／錯誤／SHA／阻擋測試、42批完整性及部分續作／防覆蓋測試；`equipment-concepts.yml`改查G07並追蹤現行SOP，修正舊錯誤提示及[統一SOP](docs/2_5D_EQUIPMENT_PRODUCTION_UNIFIED_SOP_2026-10-15.md)新schema4證據契約。CI曾因新增測試期待值與fixture失敗，已據實際job logs修正；以最新HEAD Actions為準。GM整合先前短暫失敗，但其後多個提交已成功，無需改GM Runtime。G001～G030／G024／G030歷史素材及證據未動；尚未生成G031～G035十張圖。
