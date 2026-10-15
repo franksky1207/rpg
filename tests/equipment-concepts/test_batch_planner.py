@@ -76,6 +76,9 @@ class BatchPlannerTests(unittest.TestCase):
                     image=directory/planner.IMAGES[0]
                     image.write_bytes(b"existing-image-must-be-preserved")
                     row['images']=[{"file":planner.IMAGES[0],"sha256":"fixture"}]
+                else:
+                    for item in row["images"]:
+                        (directory/item["file"]).write_bytes(b"fixture-preserved-image")
             (base/"_concept-index.json").write_text(json.dumps(source),encoding="utf-8")
             with patch.object(planner.catalog,"run",return_value=None):
                 group=planner.plan(root=root,batch="G07")[0]
