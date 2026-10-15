@@ -20,6 +20,8 @@ try{
  // Keep real GM publication validation active even in the synthetic publisher fixture.
  const gmLock='development/equipment-2_5d/gm-publication.json',gm=JSON.parse(fs.readFileSync(gmLock));
  for(const p of [...Object.keys(gm.files),gmLock])write(p,fs.readFileSync(p));
+ const formalLock='development/equipment-2_5d/formal-publication.json',formal=JSON.parse(fs.readFileSync(formalLock));
+ for(const p of [...Object.keys(formal.files),formalLock,'3d-test/mode-foundation.js','3d-test/t3b-formal-controller.js'])write(p,fs.readFileSync(p));
  cp.execFileSync("git",["-C",root,"add","."]);
  assert.throws(()=>policy.inspect(root),/forbidden source/,"Development references must not bypass publication isolation");
  write("index.html",'<script src="core.js?v=1"></script><script data-src="lazy.js?v=1"></script><link href="style.css?v=1">');

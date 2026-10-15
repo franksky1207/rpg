@@ -1,0 +1,117 @@
+[
+  {
+    "command": "node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-sprites/runtime.test.mjs",
+    "exitCode": 0,
+    "log": "regression-00.log"
+  },
+  {
+    "command": "python3 -m unittest discover -s tests/equipment-sprites",
+    "exitCode": 0,
+    "log": "regression-01.log"
+  },
+  {
+    "command": "python3 -m unittest discover -s tests/equipment-concepts",
+    "exitCode": 0,
+    "log": "regression-02.log"
+  },
+  {
+    "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+    "exitCode": 0,
+    "log": "regression-03.log"
+  },
+  {
+    "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+    "exitCode": 0,
+    "log": "regression-04.log"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-controller.cjs",
+    "exitCode": 0,
+    "log": "regression-05.log"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-owner-clock.cjs",
+    "exitCode": 0,
+    "log": "regression-06.log"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-renderer.cjs",
+    "exitCode": 0,
+    "log": "regression-07.log"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-bridge.cjs",
+    "exitCode": 0,
+    "log": "regression-08.log"
+  },
+  {
+    "command": "node tests/runtime/combat-events-contract.cjs",
+    "exitCode": 0,
+    "log": "regression-09.log"
+  },
+  {
+    "command": "node tests/runtime/combat-events-integration.cjs",
+    "exitCode": 0,
+    "log": "regression-10.log"
+  },
+  {
+    "command": "node tests/runtime/resource-cache-behavior.js",
+    "exitCode": 0,
+    "log": "regression-11.log"
+  },
+  {
+    "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+    "exitCode": 0,
+    "log": "regression-12.log"
+  },
+  {
+    "command": "node tests/audio-lifecycle.test.cjs",
+    "exitCode": 0,
+    "log": "regression-13.log"
+  },
+  {
+    "command": "node tests/audio-regression.test.cjs",
+    "exitCode": 0,
+    "log": "regression-14.log"
+  },
+  {
+    "command": "node tests/runtime/3d-equipment-contract.cjs",
+    "exitCode": 0,
+    "log": "regression-15.log"
+  },
+  {
+    "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+    "exitCode": 0,
+    "log": "regression-16.log"
+  },
+  {
+    "command": "node tests/runtime/3d-batch28-preflight.cjs",
+    "exitCode": 0,
+    "log": "regression-17.log"
+  },
+  {
+    "command": "node tests/equipment-gm/publication.cjs",
+    "exitCode": 0,
+    "log": "regression-18.log"
+  },
+  {
+    "command": "node tests/runtime/publish-build-regression.cjs",
+    "exitCode": 0,
+    "log": "regression-19.log"
+  },
+  {
+    "command": "node tests/runtime/t4-preview-retirement.cjs",
+    "exitCode": 0,
+    "log": "regression-20.log"
+  },
+  {
+    "command": "python3 scripts/equipment-gm-publication.py --check",
+    "exitCode": 0,
+    "log": "regression-21.log"
+  },
+  {
+    "command": "python3 scripts/equipment-formal-publication.py --check",
+    "exitCode": 0,
+    "log": "regression-22.log"
+  }
+]

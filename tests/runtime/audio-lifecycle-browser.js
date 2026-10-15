@@ -120,9 +120,14 @@ const { chromium } = require("playwright"),
     await page.evaluate(() =>
       window.ensureCivilizationScriptGroup("integrity"),
     );
+    if(process.env.FORMAL_SPRITE_ACCEPTANCE==='1')await page.evaluate(()=>{
+      const original=newState,armor=s=>{const item=s.equipment.armor;item.name=CivilizationFormalPlayerSprites.sets.find(r=>r.id==='g007').equipmentNames.armor;item.world=1;return s;};
+      newState=()=>armor(original());armor(state);CivilizationFormalBEntry.boot();window.__formalSpriteEvidence={};
+      window.__formalSpriteTimer=setInterval(()=>{const c=document.querySelector('.formal-b-whole-suit');if(!c)return;const session=CivilizationCombatEvents.snapshot(),key=session.mode+':'+session.world,pixels=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0;for(let i=3;i<pixels.length;i+=4)if(pixels[i]>16)n++;if(n>500)__formalSpriteEvidence[key]={suit:c.dataset.suit,pixels:n,clip:c.dataset.clip};},10);
+    });
     if(process.env.COMBAT_EVENT_ACCEPTANCE==="1")await page.evaluate(()=>{
       const bridge=window.CivilizationCombatEvents;if(bridge?.version!==1)throw Error("T1-C Bridge missing");
-      window.__combatEventEvidence={modes:{},types:{},invalid:0,settlements:[],maxQueue:0};
+      window.__combatEventEvidence={modes:{},types:{},invalid:0,settlements:[],maxQueue:0,queueCapacity:0};
       window.__combatEventDispose=[];
       window.__combatEventDispose.push(bridge.subscribe(event=>{
        const proof=window.__combatEventEvidence;
@@ -130,7 +135,7 @@ const { chromium } = require("playwright"),
        const key=event.mode+":"+event.world+":"+(event.data?.context?.variant||"");proof.modes[key]=(proof.modes[key]||0)+1;
        proof.types[event.type]=(proof.types[event.type]||0)+1;
        if(event.type==="settlement")proof.settlements.push(event.eventId);
-       proof.maxQueue=Math.max(proof.maxQueue,bridge.diagnostics().queued);
+       proof.maxQueue=Math.max(proof.maxQueue,bridge.diagnostics().queued);proof.queueCapacity=Math.max(proof.queueCapacity,bridge.limits.queue*bridge.diagnostics().subscribers);
       }));
       window.__combatEventDispose.push(bridge.subscribe(()=>{throw Error("injected renderer throw");}));
       window.__combatEventDispose.push(bridge.subscribe(()=>Promise.reject(Error("injected renderer rejection"))));
@@ -839,6 +844,11 @@ const { chromium } = require("playwright"),
     // Reload into a newly saved disposable character; first battle uses the genuine entry.
     let combatProofBeforeReload=null;
     if(process.env.COMBAT_EVENT_ACCEPTANCE==="1")combatProofBeforeReload=await page.evaluate(()=>window.__combatEventEvidence);
+    if(process.env.FORMAL_SPRITE_ACCEPTANCE==='1'){
+      const proof=await page.evaluate(()=>{clearInterval(__formalSpriteTimer);return __formalSpriteEvidence;});
+      fs.writeFileSync('/tmp/equipment-formal-modes.json',JSON.stringify(proof,null,2));
+      for(const mode of ['main:1','main:2','review:1','review:2','void:1','void:2','mirror:1','mirror:2','bounty:1','bounty:2','arena:1','arena:2','arena:3','calamity:1','calamity:2','alternate:3'])assert.ok(proof[mode],'actual sprite missing in '+mode);
+    }
     const traceBeforeReload = await page.evaluate(() => window.__audioTrace);
     const reincarnation = await page.evaluate(() => {
       state = newState();
@@ -873,7 +883,7 @@ const { chromium } = require("playwright"),
     );
     if(process.env.COMBAT_EVENT_ACCEPTANCE==="1")await page.evaluate(()=>{
       const bridge=window.CivilizationCombatEvents;if(bridge?.version!==1)throw Error("T1-C Bridge missing");
-      window.__combatEventEvidence={modes:{},types:{},invalid:0,settlements:[],maxQueue:0};
+      window.__combatEventEvidence={modes:{},types:{},invalid:0,settlements:[],maxQueue:0,queueCapacity:0};
       window.__combatEventDispose=[];
       window.__combatEventDispose.push(bridge.subscribe(event=>{
        const proof=window.__combatEventEvidence;
@@ -881,7 +891,7 @@ const { chromium } = require("playwright"),
        const key=event.mode+":"+event.world+":"+(event.data?.context?.variant||"");proof.modes[key]=(proof.modes[key]||0)+1;
        proof.types[event.type]=(proof.types[event.type]||0)+1;
        if(event.type==="settlement")proof.settlements.push(event.eventId);
-       proof.maxQueue=Math.max(proof.maxQueue,bridge.diagnostics().queued);
+       proof.maxQueue=Math.max(proof.maxQueue,bridge.diagnostics().queued);proof.queueCapacity=Math.max(proof.queueCapacity,bridge.limits.queue*bridge.diagnostics().subscribers);
       }));
       window.__combatEventDispose.push(bridge.subscribe(()=>{throw Error("injected renderer throw");}));
       window.__combatEventDispose.push(bridge.subscribe(()=>Promise.reject(Error("injected renderer rejection"))));
@@ -956,7 +966,7 @@ const { chromium } = require("playwright"),
      assert.ok(proof,"Combat proof missing");assert.equal(proof.invalid,0);
      for(const mode of ["main","bounty","arena","mirror","void","calamity","alternate","review"])assert.ok(Object.keys(proof.modes).some(key=>key.startsWith(mode+":")),"Missing actual owner mode "+mode);
      assert.equal(new Set(proof.settlements).size,proof.settlements.length,"Settlement event delivered twice");
-     assert.ok(proof.maxQueue<=32*4);
+     assert.ok(proof.queueCapacity<=32*5,"Only the four test consumers plus one shipped B consumer");assert.ok(proof.maxQueue<=proof.queueCapacity,"Every consumer retains the original 32-event queue bound");
      fs.writeFileSync("combat-events-browser-report.json",JSON.stringify({passed:true,actualAudioCases:results.length,proof},null,2)+"\n");
      console.log("PASS T1-C actual mode observations / hostile consumers / native audio",proof);
     }

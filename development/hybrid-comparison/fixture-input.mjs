@@ -4,6 +4,7 @@ export const CONTROLS_SHA='0a5f25b26f3e9500125fe406a358c53da6d722680c03ac33ffd85
 export const SOURCE_PATHS=Object.freeze(['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json']);
 export const CASE_IDS=Object.freeze(['normal-baseline','elite-baseline','boss-baseline','boss-player-defeat','elite-effects-owner-input']);
 export const REFINEMENT_SHA='dc1b873b07740ba2542bad833e0e165cda387d35baa8eb7d8ac38d436f8e1006';
+export const PHASE5_SOURCES_SHA='f1d12a63e7ce9f9afa16d8695dace1dbbebca485b2406d6f35ea52fc478f1cfd';
 const verified=new WeakSet(),inputs=new WeakSet();
 export const isVerifiedInput=value=>inputs.has(value);
 const requireValue=(ok,message)=>{if(!ok)throw Error(message);};
@@ -29,6 +30,12 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
  requireValue(typeof readSource==='function'&&JSON.stringify(Object.keys(bundle.sources))===JSON.stringify(SOURCE_PATHS),'Missing authority source reader/manifest');
  let currentRegistry=null;
  const sourceTexts=await Promise.all(SOURCE_PATHS.map(async file=>{aborted(signal);const text=await readSource(file,signal);aborted(signal);const digest=await sha(text);
+  if(['combat-events.js','3d-test/appearance-snapshot.js'].includes(file)&&digest!==bundle.sources[file]){
+   const proofText=await readSource('3d-test/fixture-owner-history.json',signal);
+   requireValue(await sha(proofText)===PHASE5_SOURCES_SHA,'Phase5 owner history changed');const proof=JSON.parse(proofText),row=proof.sources[file];
+   requireValue(proof.schema==='cw.phase5.immutable-fixture-owners.v1'&&proof.baselineHEAD==='fbe46d9004eb38afbac55b8de03f832237ca56df'&&row.beforeSHA256===bundle.sources[file]&&row.afterSHA256===digest&&await sha(row.source)===bundle.sources[file],'Source SHA changed: '+file);
+   return [file,row.source];
+  }
   if(file==='assets/3d/asset-registry.json'&&digest!==bundle.sources[file]){
    const proofText=await readSource('development/3d-source/equipment/ancient-ruins-v1/refinement-source-evolution.json',signal);
    requireValue(await sha(proofText)===REFINEMENT_SHA,'Refinement version SHA changed');const proof=JSON.parse(proofText),row=proof.files[file];

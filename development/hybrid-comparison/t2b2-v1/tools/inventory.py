@@ -23,7 +23,8 @@ def collect():
    subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
    continue
   phase4=ROOT/'development/equipment-2_5d/gm-source-evolution.json'
-  if phase4.exists() and s in json.loads(phase4.read_text())['files']:
+  phase5=ROOT/'development/equipment-2_5d/formal-source-evolution.json'
+  if (phase4.exists() and s in json.loads(phase4.read_text())['files']) or (phase5.exists() and s in json.loads(phase5.read_text())['files']):
    # Same exact historical/source chain as Node; original B2 lock remains immutable.
    subprocess.check_call(['node','-e',"require('./development/hybrid-comparison/t2b3-v1/source-version.cjs')(process.argv[1],process.argv[2])",s,h],cwd=ROOT)
    continue

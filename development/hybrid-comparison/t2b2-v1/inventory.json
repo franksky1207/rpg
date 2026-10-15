@@ -8,10 +8,7 @@
   "sourcesUnchanged": false,
   "originalSourceHistoryVerified": true,
   "authorizedB3B1Evolution": [
-    "development/hybrid-comparison/comparison.css",
-    "development/hybrid-comparison/comparison.mjs",
-    "development/hybrid-comparison/index.html",
-    "development/hybrid-comparison/playback.mjs"
+    "development/hybrid-comparison/comparison.css"
   ],
   "userArtApproval": false,
   "files": [
@@ -8881,8 +8878,8 @@
     },
     {
       "path": "tools/inventory.py",
-      "bytes": 4956,
-      "sha256": "e9d79d8f8e7320ae0599620bfdb6cb37db92e0835c03574dcf66ce154d02a3e3",
+      "bytes": 5100,
+      "sha256": "bd4305da2fdfa9b8cea6458be6358fb9bf63f40a7cb8ffb1f598614f96f0bc91",
       "license": "CC0-1.0 original or derivative of existing CC0 reference",
       "status": "prototype-pending-user-approval",
       "publish": false
@@ -9096,6 +9093,6 @@
       "publish": false
     }
   ],
-  "totalBytes": 91093597,
+  "totalBytes": 91093741,
   "largestFileBytes": 6229173
 }

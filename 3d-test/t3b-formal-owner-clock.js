@@ -27,7 +27,7 @@ function create(options={}){
   if(resumed)resumed=false; // A later source index is a new owner action, not a replay.
 
   if(p.index===0)return idle();
-  const d=actions.get(p.index-1);if(!d)throw Error("unavailable-authoritative-action-history");
+  const d=p.action||actions.get(p.index-1);if(!d)throw Error("unavailable-authoritative-action-history");
   if(token!==p.token||index!==p.index){token=p.token;index=p.index;start=now();}
   const elapsed=Math.max(0,now()-start),pacing=session.pacing;
   if(!pacing||![1,1.5,2].includes(pacing.combatSpeed)||![pacing.impactDelay,pacing.stepDelay,pacing.endDelay].every(x=>Number.isFinite(x)&&x>=0))throw Error("unavailable-owner-pacing");
@@ -45,6 +45,9 @@ function create(options={}){
   }
   const cueType=d.sourceType==="drain"?"drain":d.sourceType==="combo"?"combo":d.sourceType==="counter"?"counter":d.sourceType==="attack"&&elapsed>=impact?(d.crit===true||d.revengeCrit===true?"crit":d.source==="counter"?"counter":d.source==="combo"?"combo":"impact"):null;
   if(cueType&&actor)frame.cue={type:cueType,actor,target,ageMs:Math.max(0,elapsed-(d.sourceType==="attack"?impact:0)),damage:Number.isFinite(d.damage)?d.damage:null,actualDamage:Number.isFinite(d.actualDamage)?d.actualDamage:null,healed:Number.isFinite(d.healed)?d.healed:null};
+  // Standard Combat Core has no battleEnd raw row. Zero HP is authoritative only
+  // here, in the presentation owner, including reflected damage and shield exhaustion.
+  for(const role of ["player","enemy"])if(p[role+"Hp"]===0)frame[role]={clip:"defeat",elapsedMs:Math.min(700,elapsed/Math.max(1,pacing.endDelay)*700)};
   return frame;
  }
  return Object.freeze({observe,sample,reset,snapshot:()=>Object.freeze({battleId,token,index,metadata:actions.size,resumed,canCommit:false})});

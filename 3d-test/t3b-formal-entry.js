@@ -2,9 +2,9 @@
 (function(global){
 "use strict";
 if(global.CivilizationFormalBEntry)return;
-let active=null,routeDispose=null;
+let active=null,routeDispose=null,playerSpritesEnabled=true;
 function retireScene(){active?.dispose();active=null;}
-function dispose(){const close=routeDispose;routeDispose=null;close?.();retireScene();}
+function dispose(){const close=routeDispose;routeDispose=null;close?.();retireScene();global.CivilizationFormalBRenderer?.clearSpriteCache?.();}
 function mount(options){
  if(!options?.host||typeof options.resolve!=="function")throw Error("missing-approved-formal-resolver");
  retireScene();
@@ -14,6 +14,7 @@ function mount(options){
  const controller=global.CivilizationFormalBController.create({
   host:options.host,clock,
   resolve:async(frame,signal)=>{
+   if(options.wholeSuit===true){const context=await options.resolve(frame,options.appearance,signal);if(!context)throw Error("unavailable-formal-armor");return context;}
    await global.Civilization3DLoader?.ensure?.("appearance");signal.throwIfAborted();
    const appearance=global.Civilization3DFormalSnapshots?.appearance?.();
    if(!appearance||appearance.source!=="formal"||appearance.world!==frame.world)throw Error("unavailable-formal-appearance");
@@ -22,6 +23,7 @@ function mount(options){
    return context;
   },
   loadRuntime:async(context,signal)=>{
+   if(context.wholeSuit===true)return;
    await global.Civilization3DLoader?.ensure?.("engine");signal.throwIfAborted();
    if(!global.BABYLON?.SceneLoader)throw Error("unavailable-formal-engine");
    if(global.BABYLON.SceneLoader.IsPluginForExtensionAvailable(".glb"))return;
@@ -40,7 +42,7 @@ function mount(options){
    });}finally{URL.revokeObjectURL(url);}
    signal.throwIfAborted();
   },
-  policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
+  policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:options.wholeSuit===true&&!playerSpritesEnabled?"text":"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
   onRetire:()=>{options.host.hidden=true;},
   onReady:()=>{clearNotice();options.host.hidden=false;},
   onFallback:reason=>{
@@ -54,35 +56,54 @@ function mount(options){
  return managed;
 }
 function bindRoutes(options){
- dispose();let id=null,host=null,clockBattleId=null,clock=null;
+ dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null;
  const bridge=global.CivilizationFormalHybridBridge;
- const observer=new MutationObserver(()=>{if(host&&!host.isConnected){retireScene();host=null;id=null;}});
- observer.observe(document.body,{childList:true,subtree:true});
+ const observer=new MutationObserver(()=>{if(host&&!host.isConnected){retireScene();host=null;id=null;if(!document.querySelector("#main .combat-screen"))global.CivilizationFormalBRenderer?.clearSpriteCache?.();}if(!document.querySelector('#main .combat-screen'))global.CivilizationFormalBRenderer?.clearSpriteCache?.();if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();});
+ observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
  const attached=bridge.attach((event,delivery)=>{
   const frame=global.CivilizationFormalBProjection.convert(event);if(!frame)return;
-  if(clockBattleId!==frame.battleId){clock=global.CivilizationFormalBOwnerClock.create();clockBattleId=frame.battleId;}
+  if(clockBattleId!==frame.battleId){clock=global.CivilizationFormalBOwnerClock.create();clockBattleId=frame.battleId;appearance=frame.appearance||null;}
+  if(frame.appearance)appearance=frame.appearance;
+  if(!appearance){const session=global.CivilizationCombatEvents?.snapshot?.('formal');if(session?.battleId===frame.battleId)appearance=session.appearance;}
+
   clock.observe(event); // Metadata only: some formal owners compute before creating combat DOM.
   const screen=document.querySelector("#main .combat-screen");
   if(!screen||document.hidden){retireScene();host?.remove();host=null;id=null;return;}
+  if(options.wholeSuit===true&&!screen.querySelector('[data-player-sprite-toggle]')){
+   const button=document.createElement('button');button.type='button';button.className='btn';button.dataset.playerSpriteToggle='1';
+   const label=()=>button.textContent=playerSpritesEnabled?'切換文字戰鬥':'顯示角色戰鬥';label();
+   button.addEventListener('click',()=>{playerSpritesEnabled=!playerSpritesEnabled;label();active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();});
+   (screen.querySelector('.combat-head')||screen).append(button);
+  }
   if(id!==frame.battleId||!host?.isConnected){
    retireScene();host?.remove();host=document.createElement("div");host.className="formal-b-battle-stage";host.style.cssText="width:100%;height:clamp(200px,42dvh,380px);position:relative;overflow:hidden";host.hidden=true;
-   const anchor=screen.querySelector(".combat-arena");screen.insertBefore(host,anchor?.parentNode===screen?anchor:null);id=frame.battleId;
-   mount({...options,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
+   if(options.wholeSuit===true){
+    const card=screen.querySelector('#combatPlayerCard,#voidPlayerCard');if(!card){host.remove();host=null;return;}
+    host.className='formal-b-suit-stage';host.style.cssText='';card.insertBefore(host,card.querySelector('h2'));
+   }else{const anchor=screen.querySelector(".combat-arena");screen.insertBefore(host,anchor?.parentNode===screen?anchor:null);}id=frame.battleId;
+   mount({...options,appearance,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
   }
   active?.accept(event,delivery);
  });
  if(!attached){observer.disconnect();throw Error("unavailable-formal-route-bridge");}
- global.addEventListener("pagehide",dispose,{once:true});
- routeDispose=()=>{global.removeEventListener("pagehide",dispose);observer.disconnect();bridge.detach();host?.remove();host=null;};
+ const pagehide=event=>{if(event?.persisted===true){active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();}else dispose();};
+ global.addEventListener("pagehide",pagehide);
+ routeDispose=()=>{global.removeEventListener("pagehide",pagehide);observer.disconnect();bridge.detach();host?.remove();host=null;};
  return Object.freeze({dispose,snapshot:()=>active?.snapshot?.()||Object.freeze({ready:false,engines:0,rafs:0})});
 }
 function boot(){
+ // Only three verified player sprites; no enemy/GLB/full-3D release is implied.
+ if(global.CivilizationFormalPlayerSprites?.playerSpritesEnabled===true){
+  return bindRoutes({wholeSuit:true,resolve:async(frame,appearance)=>({wholeSuit:true,appearance})});
+ }
  // Internal integration does not grant user approval of broad formal release.
  if(global.CivilizationFormalBController?.formalReleased!==true)return false;
  const approved=global.CivilizationFormalBApprovedAssets;
  if(approved?.approved!==true||typeof approved.resolve!=="function")return false;
  return bindRoutes(approved);
 }
-global.CivilizationFormalBEntry=Object.freeze({version:1,mount,bindRoutes,dispose,boot,fixtureAllowed:false});
+global.CivilizationFormalBEntry=Object.freeze({version:1,mount,bindRoutes,dispose,boot,diagnostics:()=>active?.snapshot?.()||{ready:false,engines:0,rafs:0,canvases:0},fixtureAllowed:false});
+global.addEventListener("civilization-auth-ready",()=>{if(!routeDispose)boot();});
+global.addEventListener("civilization-auth-signed-out",dispose);
 boot();
 })(window);

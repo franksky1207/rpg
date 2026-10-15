@@ -1,5 +1,5 @@
 /* Offline visual clock. No formal engine, state, storage, audio or rendering. */
-import {copyFrozen,isVerifiedInput} from './fixture-input.mjs?v=20261014-b28-refined1';
+import {copyFrozen,isVerifiedInput} from './fixture-input.mjs?v=20261015-phase5';
 const realm=globalThis.crypto.randomUUID?.()||[...globalThis.crypto.getRandomValues(new Uint32Array(4))].map(n=>n.toString(16)).join('-');
 let instances=0;
 const nativeClock={now:()=>performance.now(),set:(fn,ms)=>setTimeout(fn,ms),clear:id=>clearTimeout(id)};

@@ -1,0 +1,24 @@
+[文明戰線] Second World data integrity warning [ { code: 'GEAR_NAME_DUPLICATE', names: [ '主機同步環' ] } ]
+✔ galaxy last region uses the real last Boss, not 101/501 (6.730541ms)
+✔ galaxy review and progress focus are explicit presentation contexts (1.508627ms)
+✔ universe selected/review focus and defeated Bosses use live owners (1.379573ms)
+✔ higher uses late reincarnation owner overrides (1.693774ms)
+✔ mixed epochs, empty slots and external appearance API remain supported (3.792898ms)
+✔ returned appearance and snapshots never alias formal state or owner output (3.329272ms)
+✔ alternate separates active, next and historical focus (1.219211ms)
+✔ locked/missing/invalid alternate owners cannot fabricate an active challenge (1.138861ms)
+✔ calamity status/HP/review are shared, absent definitions stay unavailable (1.51749ms)
+✔ W3 bounty is unavailable and visible-mode availability stays aligned (2.200155ms)
+✔ missing formal sources are not filled by GM fixtures (1.089527ms)
+✔ battle uses only authoritative finite HP/shield; encounter/results unavailable (1.365772ms)
+✔ real formal catalog retains 100/100/10 sets and all 1050 names (12.188542ms)
+✔ catalog rejects missing identity data rather than guessing names (37.806539ms)
+✔ GM bridge rejects unauthorized, foreign-origin and foreign-window messages (2.679475ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90.202456

@@ -1,0 +1,206 @@
+{
+  "passed": true,
+  "reports": [
+    {
+      "fault": "none",
+      "stats": {
+        "bytes": 0,
+        "refs": 0,
+        "entries": 0
+      },
+      "wins": [
+        true
+      ],
+      "audio": 11,
+      "expectedAudio": 11,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    },
+    {
+      "fault": "unknown",
+      "stats": {
+        "bytes": 0,
+        "refs": 0,
+        "entries": 0
+      },
+      "wins": [
+        true
+      ],
+      "audio": 11,
+      "expectedAudio": 11,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    },
+    {
+      "fault": "404",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "wins": [
+        true
+      ],
+      "audio": 11,
+      "expectedAudio": 11,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    },
+    {
+      "fault": "sha",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "wins": [
+        true
+      ],
+      "audio": 11,
+      "expectedAudio": 11,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    },
+    {
+      "fault": "decode",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "wins": [
+        true
+      ],
+      "audio": 11,
+      "expectedAudio": 11,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    },
+    {
+      "fault": "slow",
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 0,
+        "loads": 1,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "wins": [
+        true
+      ],
+      "audio": 11,
+      "expectedAudio": 11,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    },
+    {
+      "fault": "lifecycle",
+      "stats": {
+        "entries": 1,
+        "bytes": 1048576,
+        "limit": 16777216,
+        "hits": 8,
+        "loads": 2,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "wins": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "audio": 99,
+      "expectedAudio": 99,
+      "canvas": 0,
+      "storageKeys": [
+        "civilization_frontline_local_owner_v1",
+        "frank_text_rpg_offline_checkpoint",
+        "civilization.resource.versions.checked.v1",
+        "civilization_frontline_local_save_meta_v1",
+        "frank_text_rpg_save",
+        "civilization-war-presentation-mode-v1:t1a-snapshot-test"
+      ],
+      "full3D": false,
+      "errors": []
+    }
+  ]
+}

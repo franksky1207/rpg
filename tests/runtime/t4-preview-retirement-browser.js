@@ -42,8 +42,8 @@ async function finishIntro(page){
   for(let i=0;i<100;i++)await page.evaluate(i=>go(i%2?'character':'home'),i);
   assert.equal(await page.evaluate(()=>JSON.stringify(state)),before,'routes wrote formal state');
   assert.ok(!requests.some(url=>/\.glb(?:\?|$)|vendor\/babylonjs|formal-home\.js|formal-dom\.js|preview-expand\.css/.test(url)),'decorative resource initialized');
-  assert.equal(await page.evaluate(()=>CivilizationFormalBEntry.boot()),false,'unapproved broad B release');
-  assert.equal(await page.evaluate(()=>window.CivilizationFormalHybridBridge.diagnostics().subscribed),false,'closed B cannot attach');
+  assert.equal(await page.evaluate(()=>CivilizationFormalBController.formalReleased),false,'unapproved broad B release');
+  assert.equal(await page.evaluate(()=>CivilizationFormalPlayerSprites.playerSpritesEnabled),true,'only verified player sprites released');
   await context.close();
  }
  assert.deepEqual(report.errors,[]);fs.writeFileSync('/tmp/t4-preview-retirement-browser.json',JSON.stringify(report,null,2));console.log('PASS T4 current formal desktop/portrait/landscape routes, 100 switches, zero decorative requests/DOM/canvas/engine and release closed');

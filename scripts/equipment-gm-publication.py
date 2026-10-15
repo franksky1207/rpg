@@ -28,8 +28,12 @@ def build():
         code=(ROOT/SOURCE/name).read_text()
         if name=='animation.mjs':code=code.replace('../../hybrid-comparison/t2b3-v1/contract.mjs','./contract.mjs')
         if name=='assets.mjs':
+            code=code.replace('maxPending=2}={}', "maxPending=2,usage='gm'}={}")
             code=code.replace("if(entry?.status!=='complete'","if(entry?.gmPreviewAllowed!==true||entry?.status!=='complete'")
             code=code.replace('development/equipment-2_5d/v1/characters/${id}/v1/character.webp','assets/gm-equipment-2_5d/v1/${id}.webp').replace("'../../../'+a.path","'../../'+a.path")
+        code=code.replace("if(entry?.gmPreviewAllowed!==true||entry?.status", "if((usage==='formal'?entry?.formalBattleAllowed!==true:entry?.gmPreviewAllowed!==true)||entry?.status")
+        if name=='assets.mjs':
+            code=code.replace("new URL('../../'+a.path,import.meta.url)","new URL('../../'+a.path+(usage==='formal'?'?sha='+a.sha256:''),import.meta.url)").replace("cache:'no-store'","cache:usage==='formal'?'force-cache':'no-store'")
         outputs[(RUNTIME/name).as_posix()]=code.encode()
     outputs[(RUNTIME/'contract.mjs').as_posix()]=(ROOT/'development/hybrid-comparison/t2b3-v1/contract.mjs').read_bytes()
     lock={'schema':'cw.gm.sprite-publication.v1','formalBattleEnabled':False,'ids':['g005','g007','g018'],'files':{p:{'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)} for p,b in sorted(outputs.items())}}

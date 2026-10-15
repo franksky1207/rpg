@@ -1,0 +1,20 @@
+✔ B3 has one immutable source input, same projection for A/B/C (91.799918ms)
+✔ exact 22 samples, 700ms, authored 1/30 origin; loader zero frame excluded (0.338769ms)
+✔ clock adapter reads the B1 due/remaining clock and pauses without a new timer (0.392981ms)
+✔ G007 32 independent combinations plus G006 unavailable use correct replacement patches (5.239736ms)
+✔ damage/cues only use exact raw event; marker counter/combo do not invent a hit (1.808268ms)
+✔ dodge moves the true target; return starts at matching attack impact sample (0.430887ms)
+✔ defeat only at known computed HP zero; action-budget stop is not death (1.917903ms)
+✔ all six visual inspections are marked non-authority and same sampler (0.39242ms)
+✔ actual PNG16 depth decoded losslessly, malformed depth rejected (57.402274ms)
+✔ every manifest reference has exact bytes/SHA/publish isolation and retained C limits (59.033656ms)
+✔ all B2 binaries/failure evidence retained; only inventory tool evolves (2890.634853ms)
+✔ original death event animates full 700ms on same owner clock, no fabricated death (1.792044ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3117.811251

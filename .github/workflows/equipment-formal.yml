@@ -1,0 +1,63 @@
+name: Equipment 2.5D Formal Battle
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  formal-player:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0
+      - name: Verify narrow release, original owners and failure paths
+        run: |
+          set -euo pipefail
+          python3 scripts/equipment-gm-publication.py --check
+          python3 scripts/equipment-formal-publication.py --check
+          python3 scripts/equipment-formal-fixture-history.py --check
+          node tests/equipment-formal/publication.cjs
+          node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs
+          node tests/runtime/t3b-formal-owner-clock.cjs
+          node tests/runtime/t3b-formal-controller.cjs
+          node scripts/build-publish-dry-run.cjs
+      - name: Install browser
+        run: |
+          npm install --prefix /tmp/equipment-formal --no-save playwright@1.55.0
+          /tmp/equipment-formal/node_modules/.bin/playwright install --with-deps chromium
+      - name: Operate real published formal battle UI
+        env:
+          NODE_PATH: /tmp/equipment-formal/node_modules
+          RUNTIME_SMOKE_URL: http://127.0.0.1:4189/index.html
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4189 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/formal-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4189/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/equipment-formal/browser.cjs
+          node tests/equipment-formal/failures.cjs
+          node tests/equipment-formal/review.cjs
+          node tests/equipment-formal/higher-dungeons.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: formal-player-battle-evidence
+          path: |
+            /tmp/formal-*.png
+            /tmp/equipment-formal-*.json
+            /tmp/formal-http.log

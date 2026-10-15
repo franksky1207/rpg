@@ -1,16 +1,10 @@
 // Authorized presentation only. Uses B's visual samples and WholeSuitActor draw(plan).
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs';
-import {createSpritePool} from './equipment-sprites-v1/assets.mjs';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261015-phase5';
+import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261015-phase5';
 import {animationController} from './equipment-sprites-v1/animation.mjs';
 const EPOCH={galaxy:'銀河紀元',universe:'宇宙紀元',higher:'高維紀元'};
-const WORLD={galaxy:1,universe:2,higher:3};
-const SLOTS=['weapon','helmet','armor','shoes','accessory'];
-export function formalSuit(snapshot,sets){
- if(snapshot?.source!=='formal'||snapshot.version!==2)return null;
- // An entire suit must actually be equipped. A mixed loadout never borrows a full suit.
- const found=sets.filter(row=>SLOTS.every(slot=>{const item=snapshot.equipment?.[slot];return item?.present===true&&item.world===WORLD[row.epoch]&&item.name===row.equipmentNames[slot];}));
- return found.length===1?found[0]:null;
-}
+import './armor-selection.js?v=20261015-phase5';
+export const formalSuit=(snapshot,sets)=>globalThis.CivilizationArmorSelection.select(snapshot,sets);
 export async function mount({host,signal,quality='medium'}={}){
  const own=new AbortController(),pool=createSpritePool(),animation=animationController();
  let closed=false,actor=null,loadAbort=null,serial=0,frame=0,started=0,lastClip='idle',lastAction='idle',authorized=false,mode='formal',catalog=null,selected=null,lastAuth=0,authPending=false;
@@ -42,9 +36,9 @@ export async function mount({host,signal,quality='medium'}={}){
  }
  async function show(row){
   if(!authorized||closed){if(!closed)revoke();return;}
-  clear();selected=row;const ticket=serial;name.textContent=row?`${row.id.toUpperCase()}｜${row.equipmentNames.armor}整套 · ${EPOCH[row.epoch]} · ${row.regionOrBoss}`:'正式角色尚未穿齊同一套裝';
+  clear();selected=row;const ticket=serial;name.textContent=row?`${row.id.toUpperCase()}｜${row.equipmentNames.armor}整套 · ${EPOCH[row.epoch]} · ${row.regionOrBoss}`:'正式角色尚無可識別鎧甲';
   const e=catalog?.entries.find(e=>e.id===row?.id);
-  if(!row||!e||e.gmPreviewAllowed!==true){status.textContent=row?'待製作：目前沒有可用角色素材。':'回退：保留目前實穿外觀，請穿齊同一套裝後重新同步。';placeholder.textContent='尚無可展示的角色';return;}
+  if(!row||!e||e.gmPreviewAllowed!==true){status.textContent=row?'待製作：目前沒有可用角色素材。':'回退：保留目前實穿外觀，請核對正式鎧甲後重新同步。';placeholder.textContent='尚無可展示的角色';return;}
   status.textContent='角色載入中…';placeholder.textContent='正在載入';loadAbort=new AbortController();
   try{
    const next=await new WholeSuitActor(pool,e,{tier:quality,signal:loadAbort.signal}).init();

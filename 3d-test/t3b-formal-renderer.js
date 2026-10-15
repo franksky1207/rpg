@@ -5,6 +5,7 @@ if(global.CivilizationFormalBRenderer)return;
 const verified=new WeakMap(),clips=["idle","attack","hit","dodge","return","defeat"];
 const hex=b=>Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,"0")).join("");
 async function prepare(options){
+ if(options.wholeSuit===true)return prepareSuit(options);
  const {registry,catalog,identity,tier,appearance,signal}=options;
  const gate=global.CivilizationFormalBAssets;
  if(!gate||!signal||!identity||!appearance)throw Error("missing-formal-context");
@@ -39,6 +40,7 @@ async function prepare(options){
 async function create(options){
  const {host,signal,isCurrent}=options,bundle=verified.get(options.bundle);
  if(!bundle||bundle.signal!==signal||typeof isCurrent!=="function"||!host)throw Error("unverified-renderer-input");
+ if(bundle.kind==="whole-suit")return createSuit(options,bundle);
  const B=global.BABYLON;if(!B?.SceneLoader)throw Error("webgl-unavailable");
  // Babylon Geometry.RandomId delegates to Tools.RandomId. Runtime IDs must not consume game RNG.
  if(!global.crypto?.getRandomValues||!B.Tools)throw Error("unavailable-isolated-runtime-id-source");
@@ -138,5 +140,42 @@ async function create(options){
   return Object.freeze({sample,resize,dispose,snapshot:()=>Object.freeze({closed,activeClip,engines:closed?0:1,canCommit:false,canEmitCombatEvents:false})});
  }catch(error){dispose();throw error;}
 }
-global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,rendererReleased:false,fixtureAllowed:false});
+async function prepareSuit(options){
+ const release=global.CivilizationFormalPlayerSprites;
+ if(release?.schema!=="cw.formal.player-sprites.v1"||release.playerSpritesEnabled!==true||release.legacy3DEnabled!==false)throw Error("unapproved-formal-sprites");
+ const row=global.CivilizationArmorSelection?.select(options.appearance,release.sets);
+ const entry=release.entries.find(e=>e.id===row?.id);
+ if(!row||!entry||entry.formalBattleAllowed!==true||!['g005','g007','g018'].includes(row.id))throw Error("unavailable-formal-armor");
+ options.signal.throwIfAborted();
+ const token=Object.freeze({kind:"whole-suit",id:row.id});
+ verified.set(token,{kind:"whole-suit",entry,signal:options.signal});return token;
+}
+let spriteRuntime=null,spritePool=null;
+async function createSuit(options,bundle){
+ const {signal,host,isCurrent}=options;
+ spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261015-phase5'),import('./equipment-sprites-v1/assets.mjs?v=20261015-phase5')]);
+ const [{WholeSuitActor},{createSpritePool}]=await spriteRuntime;
+ signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
+ spritePool ||= createSpritePool({usage:'formal'});
+ const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
+ const timer=setTimeout(cancel,5000);let actor;
+ try{actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();}
+ catch(error){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw error;}
+ clearTimeout(timer);
+ let closed=false,activeClip='idle';
+ const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();actor.dispose();};
+ signal.addEventListener('abort',dispose,{once:true});
+ if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
+ actor.canvas.className='formal-b-whole-suit';actor.canvas.dataset.suit=bundle.entry.id;
+ actor.canvas.setAttribute('aria-label',bundle.entry.id.toUpperCase()+' 2.5D戰鬥角色');host.append(actor.canvas);
+ function sample(frame){
+  if(closed||signal.aborted||!isCurrent())return false;
+  const p=frame.player||frame;activeClip=p.clip;
+  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,rootMotion:false});
+  actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*20:0}px)`;
+  actor.canvas.dataset.clip=p.clip;return true;
+ }
+ return Object.freeze({sample,resize(){},dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
+}
+global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,clearSpriteCache:()=>spritePool?.clear(),spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
 })(window);

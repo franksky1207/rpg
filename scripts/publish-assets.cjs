@@ -53,6 +53,7 @@ function references(root,files,available=files){
 function inspect(root){
  const files=cp.execFileSync("git",["ls-files","-z"],{cwd:root,encoding:"utf8"}).split("\0").filter(Boolean).sort();
  require('./gm-sprite-publication.cjs')(root,files);
+ require('./formal-sprite-publication.cjs')(root,files);
  for(const file of files){
   const local=path.join(root,file);
   if(!fs.existsSync(local)||!fs.lstatSync(local).isFile())throw Error("Tracked source missing or not a regular file: "+file);

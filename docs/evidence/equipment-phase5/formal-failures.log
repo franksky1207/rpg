@@ -1,0 +1,7 @@
+PASS actual formal fallback/lifecycle none
+PASS actual formal fallback/lifecycle unknown
+PASS actual formal fallback/lifecycle 404
+PASS actual formal fallback/lifecycle sha
+PASS actual formal fallback/lifecycle decode
+PASS actual formal fallback/lifecycle slow
+PASS actual formal fallback/lifecycle lifecycle

@@ -67,7 +67,7 @@ function monitor(){
  try{dispose=events.subscribe(receive,{lane:"formal"});return true;}
  catch(_){dispose=null;return false;}
 }
-global.addEventListener?.("pagehide",detach);
+global.addEventListener?.("pagehide",event=>{if(event?.persisted!==true)detach();});
 global.addEventListener?.("civilization-auth-signed-out",detach);
 // No eager subscription: keep formal consumer count zero until visual mode attaches.
 global.CivilizationFormalHybridBridge=Object.freeze({version:VERSION,supportedModes:MODES,legalWorlds:legal,

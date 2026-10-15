@@ -16,11 +16,11 @@ test('memory limit enforced and repeated cycles leak no decoded resources',async
 test('maximum two distinct in-flight assets prevents 210-suit preload bursts',async()=>{let finish;const gate=new Promise(resolve=>finish=resolve);const pool=createSpritePool({subtle:webcrypto.subtle,fetcher:async url=>{await gate;return new Response(readFileSync(url));},decode:async()=>({width:512,height:512,close(){}})});const a=pool.acquire(registry.entries[0]),b=pool.acquire(registry.entries[1]);await assert.rejects(pool.acquire(registry.entries[2]),/concurrency/);assert.equal(pool.stats().pending,2);finish();const leases=await Promise.all([a,b]);leases.forEach(l=>l.release());pool.dispose();assert.equal(pool.stats().bytes,0);});
 
 import {formalSuit} from '../../3d-test/gm-whole-suit.mjs';
-test('formal snapshots map every real slot; mixed, wrong epoch, forged fixture and ambiguous identities refuse',()=>{
+test('formal armor identity ignores the other four slots; unknown armor, fixture and ambiguity refuse',()=>{
  const row=registry.sets.find(r=>r.id==='g007'),equipment=Object.fromEntries(Object.entries(row.equipmentNames).map(([slot,name])=>[slot,{present:true,world:1,name}]));
  const snapshot={version:2,source:'formal',equipment};assert.equal(formalSuit(snapshot,registry.sets).id,'g007');
  assert.equal(formalSuit({...snapshot,source:'fixture'},registry.sets),null);
- for(const slot of Object.keys(equipment))for(const patch of [{present:false},{world:2},{name:'錯套'}])assert.equal(formalSuit({...snapshot,equipment:{...equipment,[slot]:{...equipment[slot],...patch}}},registry.sets),null);
+ for(const slot of Object.keys(equipment))for(const patch of [{present:false},{world:2},{name:'錯套'}])assert.equal(formalSuit({...snapshot,equipment:{...equipment,[slot]:{...equipment[slot],...patch}}},registry.sets)?.id??null,slot==='armor'?null:'g007');
  assert.equal(formalSuit(snapshot,[row,row]),null);
 });
 

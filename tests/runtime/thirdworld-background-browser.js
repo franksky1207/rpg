@@ -32,7 +32,7 @@ async function finishIntro(page){
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);await page.evaluate(()=>ensureCivilizationScriptGroup('integrity'));
  await page.evaluate(fault=>{window.__visualFault=fault;},process.env.W3_B_VISUAL_FAILURE==='1');
  await page.evaluate(()=>{
- state=newState();state.level=1000;state.secondWorld.entered=true;state.secondWorld.civilizationLevel=10;state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.story.unlockedStage=2;ensureCivilizationCalamityState();state.marks.entries.ward={acquired:true,level:10,progress:0};view='adventure';setAdventureEraView('higher');
+ state=newState();state.equipment.armor={name:window.CivilizationFormalPlayerSprites.sets.find(r=>r.id==='g007').equipmentNames.armor,world:1,q:1,level:1};state.level=1000;state.secondWorld.entered=true;state.secondWorld.civilizationLevel=10;state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.story.unlockedStage=2;ensureCivilizationCalamityState();state.marks.entries.ward={acquired:true,level:10,progress:0};view='adventure';setAdventureEraView('higher');
  // Disposable numerical input; real W3 core, run, rewards, render and minimal owners.
  if(window.__visualFault)CivilizationFormalBEntry.bindRoutes({resolve:async()=>{throw Error('injected-B-visual-unavailable');}});
  window.playerCombatStats=()=>({hp:50000,atk:20000,def:0,crit:0,dodge:0});window.effectiveCombatSpeed=()=>2;Math.random=()=>.5;
@@ -44,6 +44,7 @@ async function finishIntro(page){
  await page.evaluate(()=>render());
  await page.waitForFunction(()=>getCombatPresentationSnapshot()?.playerHp>0&&getCombatPresentationSnapshot()?.playerHp<getCombatPresentationSnapshot()?.playerMaxHp);
  assert.equal(await page.evaluate(()=>{const p=getCombatPresentationSnapshot();return document.getElementById('combatPlayerHp').textContent===`${p.playerHp} / ${p.playerMaxHp}`;}),true,'replaced HUD follows partial player damage');
+ await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
  await page.evaluate(()=>openThirdWorldMinimalMode());
  const initial=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);
  await page.waitForFunction(n=>thirdWorldContinuousRunSnapshot().battles>n,initial);
@@ -63,6 +64,7 @@ async function finishIntro(page){
  }
  assert.notEqual(await page.locator('[data-third-world-minimal-round]').textContent(),minimalBefore);
  await page.evaluate(()=>{closeMinimalMode();openThirdWorldMinimalMode();});
+ await page.evaluate(()=>closeMinimalMode());await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');await page.evaluate(()=>openThirdWorldMinimalMode());
  const minimal=await page.evaluate(()=>({round:document.querySelector('[data-third-world-minimal-round]').textContent,deaths:document.querySelector('[data-third-world-minimal-deaths]').textContent,cap:document.querySelector('[data-third-world-minimal-cap]').textContent,exp:document.querySelector('[data-third-world-minimal-exp]').textContent,strings:document.querySelector('[data-third-world-minimal-strings]').textContent}));
  await page.evaluate(()=>{gmSetBackgroundBattlePreference(false);backgroundProgressStop('third-world');__environment(true);});
  const disabled=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);await page.waitForTimeout(1500);assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles),disabled,'GM off pauses after current settled battle');

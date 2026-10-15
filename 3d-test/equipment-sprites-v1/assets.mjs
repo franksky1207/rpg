@@ -1,13 +1,13 @@
 // Content-addressed, reference-counted bitmap pool, isolated from SW and official registry.
 const HASH=/^[a-f0-9]{64}$/;
-export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,subtle=globalThis.crypto.subtle,limit=16*1024*1024,maxPending=2}={}){
+export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,subtle=globalThis.crypto.subtle,limit=16*1024*1024,maxPending=2,usage='gm'}={}){
  const entries=new Map();let closed=false,bytes=0,clock=0,hits=0,loads=0;
  const evict=()=>{for(const [key,e] of [...entries].sort((a,b)=>a[1].used-b[1].used)){if(bytes<=limit)break;if(!e.refs&&e.bitmap){e.bitmap.close();bytes-=e.cost;entries.delete(key);}}};
  const remove=(key,e)=>{if(entries.get(key)!==e)return;e.controller.abort();entries.delete(key);if(e.bitmap){e.bitmap.close();bytes-=e.cost;}};
  return Object.freeze({
   async acquire(entry,{signal}={}){
    if(closed||signal?.aborted)throw Error('sprite-aborted');
-   if(entry?.gmPreviewAllowed!==true||entry?.status!=='complete'||entry.formalReleaseAllowed!==false||entry.gmTestStatus!=='not-tested'||entry.version!=='1.0.0'||entry.facing!=='right-3/4'||entry.pivot?.join(',')!=='0.5,0.9')throw Error('sprite-unavailable');
+   if((usage==='formal'?entry?.formalBattleAllowed!==true:entry?.gmPreviewAllowed!==true)||entry?.status!=='complete'||entry.formalReleaseAllowed!==false||entry.gmTestStatus!=='not-tested'||entry.version!=='1.0.0'||entry.facing!=='right-3/4'||entry.pivot?.join(',')!=='0.5,0.9')throw Error('sprite-unavailable');
    const a=entry.asset,id=entry.id;
    if(entry.formalIdentity?.id!==id||!/^(?:g(?:00[1-9]|0[1-9]\d|100)|u(?:00[1-9]|0[1-9]\d|100)|h(?:0[1-9]|10))$/.test(id)||a?.path!==`assets/gm-equipment-2_5d/v1/${id}.webp`||!HASH.test(a.sha256)||!Number.isSafeInteger(a.bytes)||a.bytes<1||a.bytes>800000||a.width!==512||a.height!==512)throw Error('sprite-identity-version');
    const key=id+'|'+entry.version+'|'+a.sha256;let e=entries.get(key);
@@ -15,7 +15,7 @@ export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.cre
     if([...entries.values()].filter(e=>!e.bitmap).length>=maxPending)throw Error('sprite-load-concurrency');
     const controller=new AbortController();e={refs:0,used:++clock,bitmap:null,cost:0,controller,promise:null};entries.set(key,e);loads++;
     e.promise=(async()=>{
-     const response=await fetcher(new URL('../../'+a.path,import.meta.url),{signal:controller.signal,cache:'no-store'});
+     const response=await fetcher(new URL('../../'+a.path+(usage==='formal'?'?sha='+a.sha256:''),import.meta.url),{signal:controller.signal,cache:usage==='formal'?'force-cache':'no-store'});
      if(!response.ok)throw Error('sprite-http:'+response.status);
      const data=await response.arrayBuffer();if(data.byteLength!==a.bytes)throw Error('sprite-bytes');
      const hash=[...new Uint8Array(await subtle.digest('SHA-256',data))].map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==a.sha256)throw Error('sprite-sha');

@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const plain=x=>JSON.parse(JSON.stringify(x)),root='../../development/hybrid-comparison/';
 const bundle=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/owner-fixtures.json')),controls=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/comparison-controls.json'));
 let adapter,Playback,bindRenderer,pack;
-const init=(async()=>{adapter=await import(root+'fixture-input.mjs?v=20261014-b28-refined1');({Playback,bindRenderer}=await import(root+'playback.mjs'));pack=await adapter.validateData(bundle,controls,{readSource:async p=>fs.readFileSync(p,'utf8')});})();
+const init=(async()=>{adapter=await import(root+'fixture-input.mjs?v=20261015-phase5');({Playback,bindRenderer}=await import(root+'playback.mjs'));pack=await adapter.validateData(bundle,controls,{readSource:async p=>fs.readFileSync(p,'utf8')});})();
 function clock(){let now=0,id=0;const jobs=new Map();return{now:()=>now,set(fn,ms){const key=++id;jobs.set(key,{fn,due:now+ms});return key;},clear:id=>jobs.delete(id),advance(ms=0){const target=now+ms;let count=0;while(true){const row=[...jobs].filter(([,j])=>j.due<=target).sort((a,b)=>a[1].due-b[1].due)[0];if(!row)break;if(++count>1000)throw Error('Unbounded timer');now=row[1].due;jobs.delete(row[0]);row[1].fn();}now=target;},count:()=>jobs.size};}
 const flush=async()=>{for(let i=0;i<100;i++)await Promise.resolve();};
 const selection=(caseId='normal-baseline',scheme='A',variantId='g007-subset-31',lod='medium')=>({caseId,scheme,variantId,lod});

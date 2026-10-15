@@ -1,0 +1,6 @@
+/* Part of the existing player card: no enemy, HP, shield or control overlays. */
+.formal-b-suit-stage{height:clamp(110px,18dvh,180px);display:flex;justify-content:center;align-items:center;pointer-events:none;overflow:hidden;flex:none}
+.formal-b-suit-stage[hidden]{display:none}
+.formal-b-whole-suit{height:100%;width:auto;max-width:100%;object-fit:contain;pointer-events:none}
+.combatant.player:has(.formal-b-whole-suit){animation:none!important}
+@media(max-height:500px){.formal-b-suit-stage{height:96px}}

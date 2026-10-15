@@ -13,7 +13,7 @@ async function intro(page){await page.locator('#civilizationStoryModal.open').wa
  page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>{if(/\.glb|babylon\.js/.test(r.url()))modelRequests.push(r.url());});
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await intro(page);
  const report=await page.evaluate(async()=>{
-  const bridge=CivilizationCombatEvents,realStats=window.playerCombatStats,initial=JSON.stringify(state),seen=[],subscriptions=[];
+  const bridge=CivilizationCombatEvents,baselineSubscribers=CivilizationCombatEvents.diagnostics().subscribers,realStats=window.playerCombatStats,initial=JSON.stringify(state),seen=[],subscriptions=[];
   // Deliberately isolated numerical input fixture; official mode/core/settlement owners run unchanged.
   window.playerCombatStats=()=>({hp:1000,atk:100000,def:0,crit:0,dodge:0});
   const seedState=JSON.stringify(newState());
@@ -64,9 +64,9 @@ async function intro(page){await page.locator('#civilizationStoryModal.open').wa
   }
   const bounded=bridge.diagnostics().queued<=bridge.limits.queue;subscriptions.splice(0).forEach(dispose=>dispose());
   window.playerCombatStats=realStats;state=JSON.parse(initial);resetThirdWorldArenaRuntime();
-  return {comparisons,specialComparisons,seen,alternateIdentityFixtures:depths,uniqueBattles:ids.size,bounded,subscribersAfterDispose:bridge.diagnostics().subscribers};
+  return {baselineSubscribers,comparisons,specialComparisons,seen,alternateIdentityFixtures:depths,uniqueBattles:ids.size,bounded,subscribersAfterDispose:bridge.diagnostics().subscribers};
  });
- assert.equal(report.alternateIdentityFixtures,1000);assert.equal(report.uniqueBattles,1000);assert.equal(report.bounded,true);assert.equal(report.subscribersAfterDispose,0);
+ assert.equal(report.alternateIdentityFixtures,1000);assert.equal(report.uniqueBattles,1000);assert.equal(report.bounded,true);assert.equal(report.subscribersAfterDispose,report.baselineSubscribers);
  for(const mode of ['fixed','varied'])for(const stage of ['0','1','2'])assert.ok(report.seen.some(e=>e.type==='battle-start'&&e.variant===mode&&e.location===stage),'Missing W3 arena '+mode+' stage '+stage);
  assert.deepEqual(errors,[]);assert.deepEqual(modelRequests,[],'Bridge/consumer must not request 3D assets');reports.push({viewport,...report});console.log('PASS actual W3 fixed/varied three-stage State parity and 200x5 AU identity fixtures',viewport);
  await context.close();

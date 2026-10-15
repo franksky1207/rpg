@@ -28,7 +28,7 @@ async function finishIntro(page){
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));await page.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);await page.evaluate(()=>ensureCivilizationScriptGroup('integrity'));const integrity=await page.evaluate(()=>runContinuousRunCrossEraIntegrity());assert.equal(integrity.passed,true,JSON.stringify(integrity.errors));
  await page.evaluate(mode=>{
-  state=newState();state.level=mode==='galaxy'?50:600;state.reincarnation.count=1;state.hp=100000;
+  state=newState();state.equipment.armor={name:window.CivilizationFormalPlayerSprites.sets.find(r=>r.id==='g007').equipmentNames.armor,world:1,q:1,level:1};state.level=mode==='galaxy'?50:600;state.reincarnation.count=1;state.hp=100000;
   if(mode!=='galaxy'){state.secondWorld.entered=true;state.secondWorld.bossDefeated=Array(100).fill(false);state.secondWorld.civilizationLevel=10;}
   window.playerCombatStats=()=>({hp:100000,atk:100000,def:10000,crit:0,dodge:0});window.effectiveCombatSpeed=()=>2;Math.random=()=>.99;gmSetBackgroundBattlePreference(true);
   view='adventure';setAdventureEraView(mode==='galaxy'?'galaxy':'universe');render();
@@ -39,6 +39,7 @@ async function finishIntro(page){
  },mode);
  const counter=mode==='galaxy'?()=>window.activeMainBattleContext?.completed||0:mode==='universe'?()=>window.activeSecondWorldMainlineContext?.completed||0:()=>getVoidMirageRunSnapshot()?.cleared||0;
  await page.waitForFunction(()=>getCombatPresentationSnapshot()?.active!==false&&document.querySelector('.combat-screen'),null,{timeout:15000});
+ await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
  await page.evaluate(mode=>{if(mode==='galaxy')openMinimalMode('main');if(mode==='universe')openSecondWorldMainlineMinimalMode();if(mode==='void')openVoidMirageMinimalMode();},mode);
  assert.equal(await page.evaluate(()=>isMinimalModeOpen()),true);
  const selector=mode==='galaxy'?'[data-main-minimal-mode-round]':mode==='universe'?'[data-second-world-minimal-round]':'[data-void-minimal-mode-cleared]';

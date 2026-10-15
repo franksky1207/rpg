@@ -37,7 +37,7 @@ ledger=json.loads((ROOT/'development/retired-formal-previews/20261013/source-evo
 for p,row in ledger['files'].items():
  assert digest(row['archive'])==row['beforeSHA256']
  if row['afterSHA256'] is not None:
-  if p in ('3d-test/test-center.js','3d-test/index.html','index.html'):
+  if p in ('3d-test/test-center.js','3d-test/index.html','index.html','combatfx.js'):
    # Reuse T4/B3's exact historical transformation; never update the original lock.
    subprocess.run(['node','-e',
     "const cp=require('node:child_process'),crypto=require('node:crypto');"

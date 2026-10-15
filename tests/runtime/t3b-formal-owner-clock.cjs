@@ -15,3 +15,6 @@ resumable.observe(action(0,{sourceType:'attack',actor:'player',target:'enemy'}))
 clock.observe({...action(0,{sourceType:'attack',actor:'player',target:'enemy'}),battleId:'next'});session.battleId='next';p.index=1;time=1000;session.pacing.combatSpeed=2;session.pacing.impactDelay=90;session.pacing.stepDelay=60;assert.equal(clock.sample().player.elapsedMs,0);time+=45;assert.equal(clock.sample().player.elapsedMs,150,'Uses actual GM 2x owner pacing, no recalculated damage');
 clock.observe({...action(1,{sourceType:'attack',actor:'enemy',target:'player'}),battleId:'next',lane:'gm-fixture'});p.index=2;assert.throws(()=>clock.sample(),/unavailable-authoritative/);
 assert.equal(clock.snapshot().canCommit,false);console.log('PASS one formal visual clock: owner token/index/pacing, no computed replay, real cue fields, zero-HP death, foreground suppression, GM speed and missing history fail-closed');
+
+// Standard core ends without a battleEnd row: the presentation zero-HP snapshot owns death.
+p.index=1;p.playerHp=0;time+=10;assert.equal(clock.sample().player.clip,'defeat');p.playerHp=10;

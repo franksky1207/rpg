@@ -45,6 +45,7 @@ for directory in ('assets/gm-equipment-2_5d/v1', '3d-test/equipment-sprites-v1')
         if file.is_file():
             paths.add(file.relative_to(root).as_posix())
 paths.add('3d-test/gm-whole-suit.mjs')
+paths.add('3d-test/fixture-owner-history.json')
 # index.html stays network-fresh and is not a cache-first resource.
 
 files = {}

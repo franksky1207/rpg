@@ -31,7 +31,7 @@ function convert(e){
    hpAfterAction:null
  }:null;
  const projection={schema:VERSION,nonAuthoritative:true,battleId:e.battleId,seq:e.seq,
-  mode:e.mode,world:e.world,type:e.type,phase:e.phase==="presentation"?"presentation":"computed",sourceIndex:Number.isSafeInteger(e.sourceIndex)?e.sourceIndex:null,checkpoint:e.checkpoint===true,
+  appearance:raw.appearance||raw.snapshot?.appearance||null,mode:e.mode,world:e.world,type:e.type,phase:e.phase==="presentation"?"presentation":"computed",sourceIndex:Number.isSafeInteger(e.sourceIndex)?e.sourceIndex:null,checkpoint:e.checkpoint===true,
   actorNames:{player:typeof actors.player?.name==="string"?actors.player.name:null,enemy:typeof actors.enemy?.name==="string"?actors.enemy.name:null},
   enemyIdentity:{id:typeof actors.enemy?.id==="string"?actors.enemy.id:null,kind:typeof actors.enemy?.kind==="string"?actors.enemy.kind:null,location:typeof actors.enemy?.location==="string"?actors.enemy.location:null},
   authoritativeState:state||checkpoint,perActionHpAvailable:false,sourceEvent,

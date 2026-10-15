@@ -1,0 +1,21 @@
+PASS combat-looking views never acquire formal ownership
+PASS formal exit restores theme even with stuck presentation marker
+PASS actual main pipeline owns audio independently of result DOM
+PASS galaxy/normal whole-run and stale-exit safety
+PASS galaxy/elite whole-run and stale-exit safety
+PASS galaxy/boss whole-run and stale-exit safety
+PASS universe/boss whole-run and stale-exit safety
+PASS higher/higher-stage whole-run and stale-exit safety
+PASS galaxy/bounty whole-run and stale-exit safety
+PASS universe/bounty whole-run and stale-exit safety
+PASS galaxy/arena whole-run and stale-exit safety
+PASS universe/arena whole-run and stale-exit safety
+PASS higher/arena-fixed whole-run and stale-exit safety
+PASS galaxy/mirror whole-run and stale-exit safety
+PASS universe/void whole-run and stale-exit safety
+PASS galaxy/calamity whole-run and stale-exit safety
+PASS universe/calamity whole-run and stale-exit safety
+PASS higher/alternateBattle whole-run and stale-exit safety
+PASS unlabelled exit and public scene setters cannot acquire/cancel ownership
+PASS reserved/rejected caller token cannot cancel an accepted run
+Audio lifecycle: 20 cases passed

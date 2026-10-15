@@ -9,7 +9,8 @@ const SLOTS=['weapon','helmet','armor','shoes','accessory'];
 const SOURCES=['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json'];
 const history='development/3d-source/equipment/ancient-ruins-v1/history/';
 const historical=p=>p==='assets/3d/asset-registry.json'&&fs.existsSync(path.join(ROOT,history+'original-asset-registry.source.txt'))?history+'original-asset-registry.source.txt':p.startsWith('assets/3d/equipment/ancient-ruins-v1/')&&fs.existsSync(path.join(ROOT,history+path.basename(p)))?history+path.basename(p):p;
-const read=p=>fs.readFileSync(path.join(ROOT,historical(p)),'utf8'),plain=x=>JSON.parse(JSON.stringify(x)),sha=x=>crypto.createHash('sha256').update(typeof x==='string'||Buffer.isBuffer(x)?x:JSON.stringify(x)).digest('hex');
+const ownerHistory=JSON.parse(fs.readFileSync(path.join(ROOT,'3d-test/fixture-owner-history.json'),'utf8'));
+const read=p=>ownerHistory.sources[p]?.source??fs.readFileSync(path.join(ROOT,historical(p)),'utf8'),plain=x=>JSON.parse(JSON.stringify(x)),sha=x=>crypto.createHash('sha256').update(typeof x==='string'||Buffer.isBuffer(x)?x:JSON.stringify(x)).digest('hex');
 function frozen(x){if(x&&typeof x==='object'){Object.values(x).forEach(frozen);Object.freeze(x);}return x;}
 function rng(seed){let n=seed>>>0;return()=>((n=(Math.imul(n,1664525)+1013904223)>>>0)/4294967296);}
 function boot(){

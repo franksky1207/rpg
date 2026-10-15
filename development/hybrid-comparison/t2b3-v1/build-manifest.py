@@ -3,6 +3,11 @@ ROOT=pathlib.Path(__file__).resolve().parents[3];OUT=ROOT/'development/hybrid-co
 def sha(b):return hashlib.sha256(b).hexdigest()
 paths=['development/hybrid-comparison/index.html','development/hybrid-comparison/comparison.css','development/hybrid-comparison/comparison.mjs','development/hybrid-comparison/playback.mjs']
 evolution={'schema':'cw.t2b3.authorized-b1-evolution','baselineHEAD':baseline,'authorization':'user explicitly authorized complete B3 integration into existing B1 page; HTML/CSS/UI and source actor-defeated 700ms visual step evolve; original ownership/cancellation/fixture/formal sources retained','files':{p:{'beforeSHA256':sha(subprocess.check_output(['git','show',baseline+':'+p],cwd=ROOT)),'afterSHA256':sha((ROOT/p).read_bytes())} for p in paths}}
+# Phase5 chains from this exact historical B3 release; do not rewrite that lock.
+phase5=ROOT/'development/equipment-2_5d/formal-source-evolution.json'
+if phase5.exists():
+ for p,row in json.loads(phase5.read_text())['files'].items():
+  if p in evolution['files']:evolution['files'][p]['afterSHA256']=row['beforeSHA256']
 (OUT/'source-evolution.json').write_text(json.dumps(evolution,ensure_ascii=False,indent=2)+'\n')
 subprocess.run(['python3',str(ART/'tools/inventory.py'),'--write'],cwd=ROOT,check=True)
 registry=json.loads((ROOT/'assets/3d/asset-registry.json').read_text());inv=json.loads((ART/'inventory.json').read_text());files={}

@@ -1,0 +1,82 @@
+{
+  "main:1": {
+    "suit": "g007",
+    "pixels": 5322,
+    "clip": "idle"
+  },
+  "main:2": {
+    "suit": "g007",
+    "pixels": 5363,
+    "clip": "idle"
+  },
+  "bounty:1": {
+    "suit": "g007",
+    "pixels": 5363,
+    "clip": "idle"
+  },
+  "arena:1": {
+    "suit": "g007",
+    "pixels": 5363,
+    "clip": "idle"
+  },
+  "mirror:1": {
+    "suit": "g007",
+    "pixels": 3190,
+    "clip": "defeat"
+  },
+  "void:1": {
+    "suit": "g007",
+    "pixels": 5362,
+    "clip": "idle"
+  },
+  "calamity:1": {
+    "suit": "g007",
+    "pixels": 5362,
+    "clip": "idle"
+  },
+  "calamity:2": {
+    "suit": "g007",
+    "pixels": 5361,
+    "clip": "idle"
+  },
+  "arena:3": {
+    "suit": "g007",
+    "pixels": 5367,
+    "clip": "idle"
+  },
+  "alternate:3": {
+    "suit": "g007",
+    "pixels": 5360,
+    "clip": "idle"
+  },
+  "review:1": {
+    "suit": "g007",
+    "pixels": 5361,
+    "clip": "idle"
+  },
+  "review:2": {
+    "suit": "g007",
+    "pixels": 5364,
+    "clip": "idle"
+  },
+  "bounty:2": {
+    "suit": "g007",
+    "pixels": 5364,
+    "clip": "idle"
+  },
+  "arena:2": {
+    "suit": "g007",
+    "pixels": 5364,
+    "clip": "idle"
+  },
+  "mirror:2": {
+    "suit": "g007",
+    "pixels": 3328,
+    "clip": "defeat"
+  },
+  "void:2": {
+    "suit": "g007",
+    "pixels": 5342,
+    "clip": "idle"
+  }
+}
