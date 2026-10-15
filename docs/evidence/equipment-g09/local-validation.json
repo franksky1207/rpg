@@ -43,5 +43,7 @@
   "formalFailures": "passed",
   "higherReviewAndDungeons": "passed",
   "weaponTimingComparisons": 288,
-  "authorityDeltaMs": 0
+  "authorityDeltaMs": 0,
+  "gmScreenshotFixAssertions": 121,
+  "gmScreenshotRetries": "At most three captures for detached DOM only; assertions never retried"
 }

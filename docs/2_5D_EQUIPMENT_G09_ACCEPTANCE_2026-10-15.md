@@ -48,3 +48,7 @@
 - [Equipment Concept Database 38754428155](https://github.com/franksky1207/rpg/actions/runs/38754428155) 的83項中82項通過，新G09歷史索引測試因checkout預設fetch-depth=1而無法git show固定G08基準。將此workflow checkout明確設為fetch-depth=0，與既有GM／Formal歷史驗證做法一致。保留原測試與全部205筆歷史／未製作索引逐筆比較，不改SHA鎖、不跳過檢查。補跑G09三項測試及validate／generate通過，最終SHA須再查完整CI。
 - [GM Integration 38754428166](https://github.com/franksky1207/rpg/actions/runs/38754428166/attempts/1) 先前來源驗證及前段互動通過，截圖前scrollIntoViewIfNeeded於browser.cjs:51遇DOM元素已脫離。本機121斷言通過，對同SHA重跑原CI；不刪斷言或修改Runtime。
 - 原失敗log保存在[證據目錄](evidence/equipment-g09/)。修正只影響CI歷史取得方式及本報告，不修改十張圖片、原PNG、來源、schema4證據或政策。
+
+### GM截圖定位修正
+
+`488b5c0bca23ed8fc99a09786d87138ef24c1f11` 的 [GM 38755278397](https://github.com/franksky1207/rpg/actions/runs/38755278397) 在三viewport角色與還原檢查後，仍於同一截圖前顯式scrollIntoViewIfNeeded遇DOM替換。移除冗餘的獨立scroll動作，改由原Locator.screenshot內建捲動與穩定性處理；只有截圖時的DOM脫離錯誤允許最多三次重新定位，每次仍等待已完成狀態，其他錯誤立即失敗；截圖目標／路徑、121項斷言、正式／自由隔離、狀態不變、GM撤銷與SHA／缺檔檢查全保留。沒有重試整套測試以掩蓋失敗，也未修改正式UI或Runtime。原失敗log保留；已重新執行最終版本完整GM三viewport，121項斷言全部通過，log已保存；最終SHA另核對CI。

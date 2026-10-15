@@ -48,7 +48,15 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
    await page.evaluate(()=>closeGm3DPrototype());check(await page.locator('#gm3dPrototypeOverlay').count()===0,'closed');
    await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});await frame.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();await frame.getByRole('button',{name:'2.5D 角色與動畫',exact:true}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
    check(await frame.locator('#caseList .center-case').count()===31,'31 retained');check(errors.length===0,JSON.stringify(errors));
-   await frame.locator('.gm-suit-preview').scrollIntoViewIfNeeded();await frame.locator('.gm-suit').screenshot({path:`/tmp/gm-panel-${viewport.width}.png`});
+   // Only screenshot capture may re-resolve after the async auth refresh replaces the panel.
+   // Assertion failures and every other screenshot error still fail immediately.
+   for(let captureAttempt=0;;captureAttempt++){
+    try{await frame.locator('.gm-suit').screenshot({path:`/tmp/gm-panel-${viewport.width}.png`});break;}
+    catch(error){
+     if(captureAttempt>=2||!/Element is not attached|Element is not connected|element was detached/i.test(error.message))throw error;
+     await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
+    }
+   }
    await frame.locator('#caseList').getByRole('button',{name:'五槽裝備陳列',exact:true}).click();check(await frame.locator('.gm-suit').count()===0,'case switch removes sprite state');await frame.locator('#caseList').getByRole('button',{name:'角色全身展示',exact:true}).click();await frame.getByRole('button',{name:'2.5D 角色與動畫',exact:true}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();check(await frame.locator('[data-mode=free]').getAttribute('aria-pressed')==='false','reenter resets formal mode');
    if(viewport.width===1365){
     for(const fault of ['404','sha','decode']){
