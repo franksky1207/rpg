@@ -1,0 +1,384 @@
+{
+  "batches": [
+    {
+      "batch": "G01",
+      "range": "g001..g005",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G02",
+      "range": "g006..g010",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G03",
+      "range": "g011..g015",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G04",
+      "range": "g016..g020",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G05",
+      "range": "g021..g025",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G06",
+      "range": "g026..g030",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G07",
+      "range": "g031..g035",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G08",
+      "range": "g036..g040",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G09",
+      "range": "g041..g045",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G10",
+      "range": "g046..g050",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G11",
+      "range": "g051..g055",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G12",
+      "range": "g056..g060",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G13",
+      "range": "g061..g065",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G14",
+      "range": "g066..g070",
+      "epoch": "galaxy",
+      "status": "approved",
+      "imagesPresent": 10,
+      "imagesMissing": 0,
+      "approvedSets": 5
+    },
+    {
+      "batch": "G15",
+      "range": "g071..g075",
+      "epoch": "galaxy",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "G16",
+      "range": "g076..g080",
+      "epoch": "galaxy",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "G17",
+      "range": "g081..g085",
+      "epoch": "galaxy",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "G18",
+      "range": "g086..g090",
+      "epoch": "galaxy",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "G19",
+      "range": "g091..g095",
+      "epoch": "galaxy",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "G20",
+      "range": "g096..g100",
+      "epoch": "galaxy",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U01",
+      "range": "u001..u005",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U02",
+      "range": "u006..u010",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U03",
+      "range": "u011..u015",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U04",
+      "range": "u016..u020",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U05",
+      "range": "u021..u025",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U06",
+      "range": "u026..u030",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U07",
+      "range": "u031..u035",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U08",
+      "range": "u036..u040",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U09",
+      "range": "u041..u045",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U10",
+      "range": "u046..u050",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U11",
+      "range": "u051..u055",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U12",
+      "range": "u056..u060",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U13",
+      "range": "u061..u065",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U14",
+      "range": "u066..u070",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U15",
+      "range": "u071..u075",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U16",
+      "range": "u076..u080",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U17",
+      "range": "u081..u085",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U18",
+      "range": "u086..u090",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U19",
+      "range": "u091..u095",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "U20",
+      "range": "u096..u100",
+      "epoch": "universe",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "H01",
+      "range": "h01..h05",
+      "epoch": "higher",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    },
+    {
+      "batch": "H02",
+      "range": "h06..h10",
+      "epoch": "higher",
+      "status": "not-started",
+      "imagesPresent": 0,
+      "imagesMissing": 10,
+      "approvedSets": 0
+    }
+  ],
+  "totalImagesPresent": 140,
+  "totalImagesMissing": 280
+}

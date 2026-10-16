@@ -4351,19 +4351,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g066-sector-rivalry",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 281566,
+          "sha256": "f6f4b89cfb30ed26bc59352da2ecd8c90a2ade75c7b266f24ee97022deb33f3a"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 287304,
+          "sha256": "a61b5a15e8d27123527155ab989c2ae85b1a866530ffb290018c950c43bd4d17"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g066-sector-rivalry/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g067",
@@ -4402,19 +4417,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g067-imperial-fleet",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 285604,
+          "sha256": "be953a858b33bbee7f07919987fa319acb156dfafc109ac083d8f931162c5962"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 290366,
+          "sha256": "4045aae5b1a2addc08cee770cc5741ef0c87ded4b1336eb10fe961eed93fdace"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g067-imperial-fleet/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g068",
@@ -4453,19 +4483,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g068-civilization-council",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 227922,
+          "sha256": "76db4bd75af46042ce1b2e2cf7fd5209cd2fa5030eeeff8d8dd8dfc3c0bafb4d"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 283930,
+          "sha256": "7b0b8f6111350d1b7ee9a314c29f2038e19046c5b7f0835e9c57574d1a2b7e63"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g068-civilization-council/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g069",
@@ -4504,19 +4549,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g069-hegemonic-core",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 314336,
+          "sha256": "964714cabb20422bfe2284da7e4ef10025ceeb9e2ad1b3fb3f768535fab51905"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 284990,
+          "sha256": "2667adcdd2de4a3ade12266361ed43b2f21c91bc99a41798e347e11d74f115ba"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g069-hegemonic-core/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g070",
@@ -4555,19 +4615,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g070-middle-domain-core",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 239530,
+          "sha256": "562eed313a90f909a86da966cb477de6d21c2bd69238b6525b021a9b4aa505ae"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 258420,
+          "sha256": "f89cde8872ea91ce81392df6612ac9e3905e06a52bc835c267b5dabc18e40707"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g070-middle-domain-core/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g071",

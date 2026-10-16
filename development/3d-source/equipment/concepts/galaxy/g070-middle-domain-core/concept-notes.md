@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -55,4 +55,10 @@
 
 ## 2026-10-15 後續刀劍量產規則
 
-武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。本批概念已生成與審查，角色／武器素材仍未製作。
+
+## G14 概念製作與最小交接｜2026-10-16
+
+炭黑／暗紅／銀統帥封閉盔、中央冠脊與短橫角、階梯胸甲及高領、長雙尾腰甲、紅能量直劍、銀尖紅踝靴與三訊號板指揮背架。
+
+正式身份依A節；來源與審查見sources/generation.json、generation-provenance.md、codex-review.md與review-2_5d.json。右向3/4透明角色需另次真實生成，以本套頭肩及背飾輪廓為依據，短握柄刀劍沿共用突刺方向持握；不以概念板裁切當正式角色。現行2.5D SOP優先於C節舊3D工程提示，不要求新增骨架、LOD或五獨立GLB。角色素材not-started、GM not-tested、formalReleaseAllowed=false。
