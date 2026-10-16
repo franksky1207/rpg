@@ -1,0 +1,2 @@
+node tests/audio-regression.test.cjs
+Audio regression PASS: 9 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.

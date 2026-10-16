@@ -1,0 +1,2 @@
+node tests/runtime/vip-unbounded-integrity.js
+VIP unlimited integrity passed

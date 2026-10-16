@@ -1,0 +1,2 @@
+node tests/runtime/calamity-terminal-dynamic-opt-batch2.js
+CALAMITY TERMINAL DYNAMIC BATCH2 PASSED [{"era":1,"fast":false,"reason":"mark-maxed","saveCount":1,"fullStateSnapshots":0},{"era":1,"fast":true,"reason":"mark-maxed","saveCount":1,"fullStateSnapshots":0},{"era":2,"fast":false,"reason":"civilization-complete","saveCount":1,"fullStateSnapshots":1},{"era":2,"fast":true,"reason":"civilization-complete","saveCount":1,"fullStateSnapshots":0}]

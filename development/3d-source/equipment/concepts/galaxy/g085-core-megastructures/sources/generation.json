@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g085",
+  "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "巨構控制的樑架工程：礦物青綠／鈦灰／橙紅光；方盒盔、斜切額與窄面罩；左右不對稱I樑肩、桁架胸和寬髖、柱狀腿甲；寬直切界劍與短偏置握柄；重型履帶紋平底靴；背部偏置H形橫樑控制節點和單側三階機械肋。不同於G080對稱門框與本批三角／放射背飾。",
+  "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+  "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW landscape 1536x1024 professional 2.5D sci-fi RPG equipment turnaround G085 core megastructure belt. Exactly THREE full body views SAME character FRONT SIDE BACK heads boots fully inside canvas. Grey backdrop crisp painterly mobile game concept design. MINERAL TEAL and TITANIUM GREY, ORANGE RED light. Box control helmet chamfered brow opaque dark full face, no skin eyes. ASYMMETRIC I-BEAM shoulders one larger reinforced beam, exposed structural truss breastplate, wide hips and pillar-like leg armor. Broad straight cutter SWORD short offset conventional hilt pointed blade end, held down beside body, no tool axe. Heavy flat tread-soled industrial boots. Back accessory OFFSET H-BEAM CONTROL NODE with three stepped mechanical ribs on ONE SIDE, visibly mounted in rear view. Megastructure engineer war armor broad industrial silhouette, not symmetrical doorway. Same equipment palette shapes all views. Official 巨構切界刃 / 巨構控制盔 / 星河巨構甲 / 巨構機動靴 / 巨構控制節點. Minimal English view labels only. No guns cannons spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-c7165220-bf7b-4a95-95bc-108dad459d7f.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/sources/overview-original.png",
+      "originalSha256": "3201c04594472ab2077ea5e82f69b729ec164ca6e415e786ebb98f6dfe2cfc30",
+      "originalBytes": 2411211,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 309450,
+        "sha256": "7c5867c297d5c28d335682d561778e39b0c03da101d5f943644f626b852f1eb3"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Using supplied G085 teal titanium industrial megastructure warrior as reference create NEW independently drawn landscape 1536x1024 equipment-only concept sheet not crops. Five clearly separated complete large groups: WEAPON full pointed broad straight cutter SWORD with short offset conventional grip and small rectangular guard orange inset; HELMET complete chamfered box helmet teal panels full opaque black mask and thin orange stripe; ARMOR headless bootless asymmetric I-beam shoulders structural X-truss chest broad hips long waist plate pillar-like leg plates, front and rear; BOOTS standalone actual PAIR huge industrial ankle shoes with flat deep tread soles and broad toes, no knee armor; BACK ACCESSORY detached OFFSET H-beam control node with long vertical spine and THREE short stepped horizontal ribs on ONE side, same as reference rear and side, include mounting bracket view. Mineral teal titanium grey restrained orange-red lights, plain grey background, crisp painterly sci-fi 2.5D mobile RPG art, no wearer. Objects all wholly inside image. Minimal English labels only. Official 巨構切界刃 / 巨構控制盔 / 星河巨構甲 / 巨構機動靴 / 巨構控制節點. No guns cannons spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-90ce62a4-3b87-4f0f-8ce1-38d103f61e43.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/sources/slots-original.png",
+      "originalSha256": "7bdbf0f840da33054feac02db58ff6c0d7d95ed86fd44ff86269b5b3275deaf4",
+      "originalBytes": 2479467,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 380806,
+        "sha256": "15db9c4c6087c8d25c17dc86aa9986c186939407d40c56f9d0d00de8f93e4182"
+      },
+      "referenceOriginalSha256": "3201c04594472ab2077ea5e82f69b729ec164ca6e415e786ebb98f6dfe2cfc30"
+    }
+  ]
+}

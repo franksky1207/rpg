@@ -1,0 +1,9 @@
+node tests/runtime/save-load-pipeline-integrity.js
+Clock rollback probe {
+  pending: null,
+  until: 1792160577821,
+  max: 1792160577821,
+  future: 1792160577821,
+  goldUnchanged: true
+}
+Save load pipeline integrity passed: {"realisticSchema16":{"backupExact":true,"gameplayPreserved":true,"sourceVersion":16,"targetVersion":17},"reload":{"sourceVersion":17,"targetVersion":17,"backupPreserved":true},"failClosed":{"reason":"pre-schema17-backup-failed","originalPreserved":true}}

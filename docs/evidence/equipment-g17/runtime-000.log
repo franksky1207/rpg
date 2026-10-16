@@ -1,0 +1,2 @@
+node tests/runtime/js-integrity.js
+JavaScript structural integrity passed: {"files":423,"localScripts":273,"normalScripts":273,"delayedScripts":98,"saveHook":"savehookcore","schema":17,"cleanupBatch":7,"runtimeApi":1,"migrationRegression":"ci-only","reincarnationPermanentGearSaveGuard":"evidence-gated-fallback-only","gmAuthorization":"account-local-runtime","gmLazyRetry":true,"gmFormalPolicy":1,"lazyLoading":"story-auto-gm-browser-authorized-or-modal-integrity-explicit"}

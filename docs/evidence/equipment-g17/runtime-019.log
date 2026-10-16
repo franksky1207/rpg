@@ -1,0 +1,2 @@
+node tests/runtime/gm-runtime-auth-preferences-integrity.js
+GM runtime auth preference sync integrity passed

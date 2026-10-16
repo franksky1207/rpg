@@ -1,0 +1,10 @@
+# g084 生成來源與使用依據
+
+基準main 553aa5583f5cea8e93260ae4fada1ed79d1b07c0；日期2026-10-16。
+
+使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。
+
+兩次實際image_gen.imagegen，先三視後參考本套原PNG獨立繪製五槽；原稿逐位元組保存，沒有裁切換色冒充。完整prompt、工具原路徑、尺寸bytes SHA及參考鏈見sources/generation.json。
+
+- overview PNG `527b2318977abf693bc054265035e4a0f4f4911bb3c9ff378c0e656de7753e54`；WebP `2738f0c1f832e45fa481ca4703dd81b908eb3a7e5d35abc014b18c9060fdab90`。
+- slots PNG `1bb9b8ee4b28a90864b7bba506264254a9ab2951e87ac6e77f634ac0212b856c`；WebP `394673a6319463f188adf8c100ced4697f0244a04bc434c4f2a7598d6217fbec`。

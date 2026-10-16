@@ -1,0 +1,2 @@
+node tests/runtime/3d-asset-registry-integrity.cjs
+PASS Batch 27 registry: real GLB skin weights, PBR/animation/sockets, LOD closure, missing/hash/source/preload rejection

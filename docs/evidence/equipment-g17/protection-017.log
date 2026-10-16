@@ -1,0 +1,2 @@
+node tests/runtime/publish-build-regression.cjs
+PASS publish policy: lazy/JS/CSS closure, reference retention, exclusions, missing sources and fresh fingerprints

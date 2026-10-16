@@ -5341,19 +5341,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g081-core-civilization-war",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 339590,
+          "sha256": "e1adae698faab83ee248f6a21fd873c79ff626755a1699215c8024b04198dfb9"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 293568,
+          "sha256": "7c80c1b6ea9281653387a0887e9582127c951b8ca2eb9f954a55d7ef34e428f6"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g081-core-civilization-war/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g082",
@@ -5392,19 +5407,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 330876,
+          "sha256": "6fa6783d1e538dcf1beb34cd1002ac4b7eb172cb479501f9c2bb899a2cac249c"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 379766,
+          "sha256": "3d85e61b1c8df51b5f0d34498945f335fbe7ff9741cf133ea2209471ee54b8b9"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g083",
@@ -5443,19 +5473,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 340304,
+          "sha256": "155b452ecaebe5ffd3c02f2f84a7de117d2dec11b608c6ffc7ccc78a7bf884fd"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 345946,
+          "sha256": "de877f8a7a4ccdbbcc7f15fca78f34119ea9eac2169ebf118cbea8cb30d1425e"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g084",
@@ -5494,19 +5539,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g084-civilization-end",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 295364,
+          "sha256": "2738f0c1f832e45fa481ca4703dd81b908eb3a7e5d35abc014b18c9060fdab90"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 268956,
+          "sha256": "394673a6319463f188adf8c100ced4697f0244a04bc434c4f2a7598d6217fbec"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g084-civilization-end/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g085",
@@ -5545,19 +5605,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 309450,
+          "sha256": "7c5867c297d5c28d335682d561778e39b0c03da101d5f943644f626b852f1eb3"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 380806,
+          "sha256": "15db9c4c6087c8d25c17dc86aa9986c186939407d40c56f9d0d00de8f93e4182"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g086",

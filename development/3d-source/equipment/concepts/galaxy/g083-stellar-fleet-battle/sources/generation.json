@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g083",
+  "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "艦隊統帥的艦橋稜線：午夜靛／珍珠灰／淡紫光；橫向艦橋額檐盔、全遮面；後掠薄肩翼、艦艏V胸、分叉短甲尾及窄脛；修長艦刃短柄軍刀；階梯磁吸鞋底；背部雙斜桅V形權印與中央菱章。區別G079方背包與G080直門。",
+  "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+  "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW landscape 1536x1024 polished 2.5D sci-fi RPG turnaround G083 fleet battlefield. THREE large full body views SAME character FRONT SIDE BACK, complete head boots inside canvas, grey background, crisp painterly mobile game art. MIDNIGHT INDIGO and PEARL GREY with pale VIOLET light. Fleet command helmet with horizontal bridge-like brow, opaque full mask no skin eyes. Swept-back thin shoulder fins, ship-prow V chest, short split armored coat tails, narrow greaves. Slender naval SWORD saber with short grip and enclosed guard held down beside body. Stepped magnetic sole deck boots. Back accessory TWO DIAGONAL MASTS forming V-shaped fleet seal with central diamond plaque, clearly visible in rear, not a rectangular backpack or doorway. Tall lean naval commander silhouette consistent equipment all views. Official slots 星河艦刃 / 艦隊統帥盔 / 星河艦戰甲 / 艦橋躍遷靴 / 星河艦隊權印. Minimal English labels only. No guns cannons spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-4160272d-17d8-4101-b290-8bed07915881.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/sources/overview-original.png",
+      "originalSha256": "bc57f076156128badc48c6cac9a7384cba3cdd7a5995ad63194611642ac5cb69",
+      "originalBytes": 2560989,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 340304,
+        "sha256": "155b452ecaebe5ffd3c02f2f84a7de117d2dec11b608c6ffc7ccc78a7bf884fd"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW independently drawn equipment-only sheet based on supplied G083 fleet commander, landscape 1536x1024. Five well-separated complete groups on neutral grey background, polished painterly sci-fi 2.5D mobile RPG design. WEAPON entire slim pointed violet naval SWORD short grip and angular enclosed guard; HELMET full opaque silver indigo mask with horizontal bridge brow and swept crest; ARMOR headless bootless indigo pearl V ship-prow breastplate, thin swept shoulders, split long armored coat-tails and narrow greaves; BOOTS standalone PAIR actual ankle deck shoes with stepped magnetic soles, separate from knee armor; BACK ACCESSORY detached V-shaped twin diagonal masts and center violet diamond fleet seal with rear mount view, same as reference back. Preserve reference structures and colors no pasted crops, no wearer, clear shoes versus shins, all items inside canvas. Minimal English labels only. Official 星河艦刃 / 艦隊統帥盔 / 星河艦戰甲 / 艦橋躍遷靴 / 星河艦隊權印. No guns cannons spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-34dbabc8-d6a9-42a8-b74f-fe986126847e.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/sources/slots-original.png",
+      "originalSha256": "00fa76240442a5b6ae334c22d9f61c36968697b38730963ff8f3ea11bca03871",
+      "originalBytes": 2441215,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 345946,
+        "sha256": "de877f8a7a4ccdbbcc7f15fca78f34119ea9eac2169ebf118cbea8cb30d1425e"
+      },
+      "referenceOriginalSha256": "bc57f076156128badc48c6cac9a7384cba3cdd7a5995ad63194611642ac5cb69"
+    }
+  ]
+}

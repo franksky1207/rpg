@@ -1,0 +1,2 @@
+node tests/runtime/t3a-hybrid-policy.cjs
+PASS T3-A read-only policy / legacy preference / quality / fail-closed / formal release isolation

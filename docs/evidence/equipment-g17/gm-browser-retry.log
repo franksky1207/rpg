@@ -1,0 +1,13 @@
+raster 1365 g005
+raster 1365 g007
+raster 1365 g018
+AssertionError [ERR_ASSERTION]: actual animation raster defeat
+    at check (/workspace/rpg/tests/equipment-gm/browser.cjs:7:39)
+    at /workspace/rpg/tests/equipment-gm/browser.cjs:33:210 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

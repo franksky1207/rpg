@@ -1,0 +1,2 @@
+node tests/runtime/gm-mainline-hp-lock-integrity.js
+GM mainline HP lock integrity passed

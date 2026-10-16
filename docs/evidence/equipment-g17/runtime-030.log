@@ -1,0 +1,2 @@
+node tests/runtime/resource-cache-integrity.js
+Persistent resource cache structure PASS; managed asset digests: 517

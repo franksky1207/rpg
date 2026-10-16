@@ -1,0 +1,902 @@
+[
+  {
+    "command": "python scripts/equipment-sprites.py validate",
+    "exitCode": 0,
+    "seconds": 5.25,
+    "log": "docs/evidence/equipment-g17/protection-000.log",
+    "group": "protection"
+  },
+  {
+    "command": "python -m unittest discover -s tests/equipment-sprites -v",
+    "exitCode": 0,
+    "seconds": 0.32,
+    "log": "docs/evidence/equipment-g17/protection-001.log",
+    "group": "protection"
+  },
+  {
+    "command": "python scripts/equipment-weapon-assets.py",
+    "exitCode": 0,
+    "seconds": 0.12,
+    "log": "docs/evidence/equipment-g17/protection-002.log",
+    "group": "protection"
+  },
+  {
+    "command": "python scripts/equipment-gm-publication.py --check",
+    "exitCode": 0,
+    "seconds": 0.17,
+    "log": "docs/evidence/equipment-g17/protection-003.log",
+    "group": "protection"
+  },
+  {
+    "command": "python scripts/equipment-formal-publication.py --check",
+    "exitCode": 0,
+    "seconds": 0.03,
+    "log": "docs/evidence/equipment-g17/protection-004.log",
+    "group": "protection"
+  },
+  {
+    "command": "python scripts/equipment-formal-fixture-history.py --check",
+    "exitCode": 0,
+    "seconds": 0.03,
+    "log": "docs/evidence/equipment-g17/protection-005.log",
+    "group": "protection"
+  },
+  {
+    "command": "node scripts/equipment-phase6-audit.cjs",
+    "exitCode": 0,
+    "seconds": 1.61,
+    "log": "docs/evidence/equipment-g17/protection-006.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/equipment-formal/publication.cjs",
+    "exitCode": 0,
+    "seconds": 0.5,
+    "log": "docs/evidence/equipment-g17/protection-007.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/equipment-gm/publication.cjs",
+    "exitCode": 0,
+    "seconds": 1.41,
+    "log": "docs/evidence/equipment-g17/protection-008.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/equipment-weapons/names.cjs",
+    "exitCode": 0,
+    "seconds": 1.15,
+    "log": "docs/evidence/equipment-g17/protection-009.log",
+    "group": "protection"
+  },
+  {
+    "command": "node --test tests/equipment-sprites/runtime.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs",
+    "exitCode": 0,
+    "seconds": 5.47,
+    "log": "docs/evidence/equipment-g17/protection-010.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/t4-preview-retirement.cjs",
+    "exitCode": 0,
+    "seconds": 1.76,
+    "log": "docs/evidence/equipment-g17/protection-011.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-owner-clock.cjs",
+    "exitCode": 0,
+    "seconds": 0.6,
+    "log": "docs/evidence/equipment-g17/protection-012.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-controller.cjs",
+    "exitCode": 0,
+    "seconds": 0.54,
+    "log": "docs/evidence/equipment-g17/protection-013.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/3d-equipment-contract.cjs",
+    "exitCode": 0,
+    "seconds": 0.55,
+    "log": "docs/evidence/equipment-g17/protection-014.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/js-integrity.js",
+    "exitCode": 0,
+    "seconds": 360.0,
+    "log": "docs/evidence/equipment-g17/protection-015.log",
+    "group": "protection",
+    "initialExitCode": 124,
+    "finalEvidence": "docs/evidence/equipment-g17/js-integrity-retry.log"
+  },
+  {
+    "command": "python scripts/generate-resource-manifest.py --check",
+    "exitCode": 0,
+    "seconds": 0.45,
+    "log": "docs/evidence/equipment-g17/protection-016.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/publish-build-regression.cjs",
+    "exitCode": 0,
+    "seconds": 1.06,
+    "log": "docs/evidence/equipment-g17/protection-017.log",
+    "group": "protection"
+  },
+  {
+    "command": "node scripts/build-publish-dry-run.cjs",
+    "exitCode": 0,
+    "seconds": 2.09,
+    "log": "docs/evidence/equipment-g17/protection-018.log",
+    "group": "protection"
+  },
+  {
+    "command": "node scripts/stage-hybrid-preview.cjs",
+    "exitCode": 0,
+    "seconds": 1.95,
+    "log": "docs/evidence/equipment-g17/protection-019.log",
+    "group": "protection"
+  },
+  {
+    "command": "node tests/runtime/js-integrity.js",
+    "exitCode": 0,
+    "seconds": 348.6,
+    "log": "docs/evidence/equipment-g17/runtime-000.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-b18-coverage-guard.js",
+    "exitCode": 0,
+    "seconds": 3.35,
+    "log": "docs/evidence/equipment-g17/runtime-001.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+    "exitCode": 0,
+    "seconds": 1.19,
+    "log": "docs/evidence/equipment-g17/runtime-002.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/combat-events-contract.cjs",
+    "exitCode": 0,
+    "seconds": 2.01,
+    "log": "docs/evidence/equipment-g17/runtime-003.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/combat-events-integration.cjs",
+    "exitCode": 0,
+    "seconds": 9.0,
+    "log": "docs/evidence/equipment-g17/runtime-004.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+    "exitCode": 0,
+    "seconds": 1.1,
+    "log": "docs/evidence/equipment-g17/runtime-005.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3a-hybrid-policy.cjs",
+    "exitCode": 0,
+    "seconds": 0.95,
+    "log": "docs/evidence/equipment-g17/runtime-006.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-bridge.cjs",
+    "exitCode": 0,
+    "seconds": 0.85,
+    "log": "docs/evidence/equipment-g17/runtime-007.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-projection.cjs",
+    "exitCode": 0,
+    "seconds": 0.91,
+    "log": "docs/evidence/equipment-g17/runtime-008.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-session.cjs",
+    "exitCode": 0,
+    "seconds": 1.04,
+    "log": "docs/evidence/equipment-g17/runtime-009.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-assets.cjs",
+    "exitCode": 0,
+    "seconds": 0.9,
+    "log": "docs/evidence/equipment-g17/runtime-010.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-renderer.cjs",
+    "exitCode": 0,
+    "seconds": 0.75,
+    "log": "docs/evidence/equipment-g17/runtime-011.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-controller.cjs",
+    "exitCode": 0,
+    "seconds": 0.7,
+    "log": "docs/evidence/equipment-g17/runtime-012.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t4-preview-retirement.cjs",
+    "exitCode": 0,
+    "seconds": 2.51,
+    "log": "docs/evidence/equipment-g17/runtime-013.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/t3b-formal-owner-clock.cjs",
+    "exitCode": 0,
+    "seconds": 1.15,
+    "log": "docs/evidence/equipment-g17/runtime-014.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/resource-manifest-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.04,
+    "log": "docs/evidence/equipment-g17/runtime-015.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/save-global-writers.js",
+    "exitCode": 0,
+    "seconds": 1.01,
+    "log": "docs/evidence/equipment-g17/runtime-016.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/newstate-save-owner-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.61,
+    "log": "docs/evidence/equipment-g17/runtime-017.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-runtime-early-restore-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.18,
+    "log": "docs/evidence/equipment-g17/runtime-018.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-runtime-auth-preferences-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.21,
+    "log": "docs/evidence/equipment-g17/runtime-019.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-data-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.8,
+    "log": "docs/evidence/equipment-g17/runtime-020.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-attempt-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.8,
+    "log": "docs/evidence/equipment-g17/runtime-021.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-combat-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.7,
+    "log": "docs/evidence/equipment-g17/runtime-022.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-failure-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.99,
+    "log": "docs/evidence/equipment-g17/runtime-023.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-progression-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.55,
+    "log": "docs/evidence/equipment-g17/runtime-024.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-ui-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.44,
+    "log": "docs/evidence/equipment-g17/runtime-025.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-batch4-3-regression.js",
+    "exitCode": 0,
+    "seconds": 0.5,
+    "log": "docs/evidence/equipment-g17/runtime-026.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-old-save-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.6,
+    "log": "docs/evidence/equipment-g17/runtime-027.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-equipment-contract.cjs",
+    "exitCode": 0,
+    "seconds": 0.71,
+    "log": "docs/evidence/equipment-g17/runtime-028.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-batch28-preflight.cjs",
+    "exitCode": 0,
+    "seconds": 0.69,
+    "log": "docs/evidence/equipment-g17/runtime-029.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/resource-cache-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.4,
+    "log": "docs/evidence/equipment-g17/runtime-030.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/resource-cache-behavior.js",
+    "exitCode": 0,
+    "seconds": 0.86,
+    "log": "docs/evidence/equipment-g17/runtime-031.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.64,
+    "log": "docs/evidence/equipment-g17/runtime-032.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/audio-lifecycle.test.cjs",
+    "exitCode": 0,
+    "seconds": 0.91,
+    "log": "docs/evidence/equipment-g17/runtime-033.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/audio-regression.test.cjs",
+    "exitCode": 0,
+    "seconds": 0.7,
+    "log": "docs/evidence/equipment-g17/runtime-034.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+    "exitCode": 0,
+    "seconds": 4.3,
+    "log": "docs/evidence/equipment-g17/runtime-035.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/3d-glb-validation.cjs",
+    "exitCode": 0,
+    "seconds": 1.4,
+    "log": "docs/evidence/equipment-g17/runtime-036.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/code-cleanup-batch7-lazy-loading.js",
+    "exitCode": 0,
+    "seconds": 30.64,
+    "log": "docs/evidence/equipment-g17/runtime-037.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/code-cleanup-batch8-legacy-boundary.js",
+    "exitCode": 0,
+    "seconds": 0.86,
+    "log": "docs/evidence/equipment-g17/runtime-038.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.09,
+    "log": "docs/evidence/equipment-g17/runtime-039.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-baseline-integrity.js",
+    "exitCode": 0,
+    "seconds": 9.1,
+    "log": "docs/evidence/equipment-g17/runtime-040.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-owner-batch1-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.7,
+    "log": "docs/evidence/equipment-g17/runtime-041.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-ui-batch2-integrity.js",
+    "exitCode": 0,
+    "seconds": 5.45,
+    "log": "docs/evidence/equipment-g17/runtime-042.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-combat-batch3-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.1,
+    "log": "docs/evidence/equipment-g17/runtime-043.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-continuous-batch4-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.65,
+    "log": "docs/evidence/equipment-g17/runtime-044.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js",
+    "exitCode": 0,
+    "seconds": 8.59,
+    "log": "docs/evidence/equipment-g17/runtime-045.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-final-batch6-integrity.js",
+    "exitCode": 0,
+    "seconds": 5.66,
+    "log": "docs/evidence/equipment-g17/runtime-046.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-optimization-1-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.99,
+    "log": "docs/evidence/equipment-g17/runtime-047.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-optimization-2-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.5,
+    "log": "docs/evidence/equipment-g17/runtime-048.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-optimization-3-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.44,
+    "log": "docs/evidence/equipment-g17/runtime-049.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/first-world-target-context-optimization-4-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.26,
+    "log": "docs/evidence/equipment-g17/runtime-050.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-rerun-entry-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.56,
+    "log": "docs/evidence/equipment-g17/runtime-051.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-rerun-world1-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.75,
+    "log": "docs/evidence/equipment-g17/runtime-052.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-rerun-world2-integrity.js",
+    "exitCode": 0,
+    "seconds": 3.94,
+    "log": "docs/evidence/equipment-g17/runtime-053.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-rerun-world3-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.05,
+    "log": "docs/evidence/equipment-g17/runtime-054.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+    "exitCode": 0,
+    "seconds": 3.74,
+    "log": "docs/evidence/equipment-g17/runtime-055.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-rerun-batch5-closure.js",
+    "exitCode": 0,
+    "seconds": 4.61,
+    "log": "docs/evidence/equipment-g17/runtime-056.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-rerun-batch5-e2e-regression.js",
+    "exitCode": 0,
+    "seconds": 4.29,
+    "log": "docs/evidence/equipment-g17/runtime-057.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-overlevel-batch6-1-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.49,
+    "log": "docs/evidence/equipment-g17/runtime-058.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/offline-sample-provenance-opt4-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.31,
+    "log": "docs/evidence/equipment-g17/runtime-059.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/player-batch-upgrades-batch6-2-integrity.js",
+    "exitCode": 0,
+    "seconds": 5.0,
+    "log": "docs/evidence/equipment-g17/runtime-060.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.8,
+    "log": "docs/evidence/equipment-g17/runtime-061.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-batch6-closure.js",
+    "exitCode": 0,
+    "seconds": 5.79,
+    "log": "docs/evidence/equipment-g17/runtime-062.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-save-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.21,
+    "log": "docs/evidence/equipment-g17/runtime-063.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/save-level-migration-regression.js",
+    "exitCode": 0,
+    "seconds": 6.14,
+    "log": "docs/evidence/equipment-g17/runtime-064.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/save-schema17-compatibility-matrix.js",
+    "exitCode": 0,
+    "seconds": 7.06,
+    "log": "docs/evidence/equipment-g17/runtime-065.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/story/reincarnation-three-era-batch4-closure.js",
+    "exitCode": 0,
+    "seconds": 1.68,
+    "log": "docs/evidence/equipment-g17/runtime-066.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/recent-optimization-batch4-closure.js",
+    "exitCode": 0,
+    "seconds": 0.91,
+    "log": "docs/evidence/equipment-g17/runtime-067.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.09,
+    "log": "docs/evidence/equipment-g17/runtime-068.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+    "exitCode": 0,
+    "seconds": 1.15,
+    "log": "docs/evidence/equipment-g17/runtime-069.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/calamity-shared-ui-policy-opt-batch3.js",
+    "exitCode": 0,
+    "seconds": 1.16,
+    "log": "docs/evidence/equipment-g17/runtime-070.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-normalization-opt-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.05,
+    "log": "docs/evidence/equipment-g17/runtime-071.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/breakthrough-core-integrity.js",
+    "exitCode": 0,
+    "seconds": 5.75,
+    "log": "docs/evidence/equipment-g17/runtime-072.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/breakthrough-final-damage-integrity.js",
+    "exitCode": 0,
+    "seconds": 5.81,
+    "log": "docs/evidence/equipment-g17/runtime-073.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-breakthrough-management-batch7-1-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.55,
+    "log": "docs/evidence/equipment-g17/runtime-074.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-character-breakthrough-batch7-2-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.45,
+    "log": "docs/evidence/equipment-g17/runtime-075.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-alternate-universe-management-batch7-3-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.49,
+    "log": "docs/evidence/equipment-g17/runtime-076.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-alternate-universe-benchmark-batch7-4-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.91,
+    "log": "docs/evidence/equipment-g17/runtime-077.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/alternate-universe-title-batch4-closure.js",
+    "exitCode": 0,
+    "seconds": 8.24,
+    "log": "docs/evidence/equipment-g17/runtime-078.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.85,
+    "log": "docs/evidence/equipment-g17/runtime-079.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-batch7-closure.js",
+    "exitCode": 0,
+    "seconds": 15.5,
+    "log": "docs/evidence/equipment-g17/runtime-080.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/batch7-post-optimization-1-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.65,
+    "log": "docs/evidence/equipment-g17/runtime-081.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/batch7-post-optimization-3-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.44,
+    "log": "docs/evidence/equipment-g17/runtime-082.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/batch7-post-optimization-4-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.2,
+    "log": "docs/evidence/equipment-g17/runtime-083.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-reset-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.05,
+    "log": "docs/evidence/equipment-g17/runtime-084.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-permanent-gear-carryover-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.44,
+    "log": "docs/evidence/equipment-g17/runtime-085.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js",
+    "exitCode": 0,
+    "seconds": 7.21,
+    "log": "docs/evidence/equipment-g17/runtime-086.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/equipment-world-semantics-batch2-integrity.js",
+    "exitCode": 0,
+    "seconds": 7.2,
+    "log": "docs/evidence/equipment-g17/runtime-087.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-transaction-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.5,
+    "log": "docs/evidence/equipment-g17/runtime-088.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-ui-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.95,
+    "log": "docs/evidence/equipment-g17/runtime-089.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-opt-batch2-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.99,
+    "log": "docs/evidence/equipment-g17/runtime-090.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-opt-batch3-integrity.js",
+    "exitCode": 0,
+    "seconds": 4.76,
+    "log": "docs/evidence/equipment-g17/runtime-091.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/reincarnation-opt-batch4-integrity.js",
+    "exitCode": 0,
+    "seconds": 5.21,
+    "log": "docs/evidence/equipment-g17/runtime-092.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/special-fast-catchup-integrity.js",
+    "exitCode": 0,
+    "seconds": 6.0,
+    "log": "docs/evidence/equipment-g17/runtime-093.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/save-load-pipeline-integrity.js",
+    "exitCode": 0,
+    "seconds": 9.19,
+    "log": "docs/evidence/equipment-g17/runtime-094.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/vip-unbounded-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.81,
+    "log": "docs/evidence/equipment-g17/runtime-095.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/gm-mainline-hp-lock-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.69,
+    "log": "docs/evidence/equipment-g17/runtime-096.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/asset-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.76,
+    "log": "docs/evidence/equipment-g17/runtime-097.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/runtime/docs-integrity.js",
+    "exitCode": 0,
+    "seconds": 1.05,
+    "log": "docs/evidence/equipment-g17/runtime-098.log",
+    "group": "runtime"
+  },
+  {
+    "command": "node tests/equipment-sprites/browser.cjs",
+    "exitCode": 0,
+    "seconds": 7.31,
+    "log": "docs/evidence/equipment-g17/browser-000.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/equipment-gm/browser.cjs",
+    "exitCode": 0,
+    "seconds": 59.81,
+    "log": "docs/evidence/equipment-g17/browser-001.log",
+    "group": "browser",
+    "initialExitCode": 1,
+    "finalEvidence": "docs/evidence/equipment-g17/gm-browser-verify.log"
+  },
+  {
+    "command": "node tests/equipment-weapons/timing.cjs",
+    "exitCode": 0,
+    "seconds": 8.09,
+    "log": "docs/evidence/equipment-g17/browser-002.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/equipment-weapons/browser.cjs",
+    "exitCode": 0,
+    "seconds": 278.51,
+    "log": "docs/evidence/equipment-g17/browser-003.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/equipment-formal/browser.cjs",
+    "exitCode": 0,
+    "seconds": 39.29,
+    "log": "docs/evidence/equipment-g17/browser-004.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/equipment-formal/failures.cjs",
+    "exitCode": 0,
+    "seconds": 103.25,
+    "log": "docs/evidence/equipment-g17/browser-005.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/equipment-formal/review.cjs",
+    "exitCode": 0,
+    "seconds": 8.05,
+    "log": "docs/evidence/equipment-g17/browser-006.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/equipment-formal/higher-dungeons.cjs",
+    "exitCode": 0,
+    "seconds": 27.19,
+    "log": "docs/evidence/equipment-g17/browser-007.log",
+    "group": "browser"
+  },
+  {
+    "command": "node tests/runtime/audio-lifecycle-browser.js",
+    "exitCode": 0,
+    "seconds": 155.86,
+    "log": "docs/evidence/equipment-g17/browser-008.log",
+    "group": "browser"
+  }
+]

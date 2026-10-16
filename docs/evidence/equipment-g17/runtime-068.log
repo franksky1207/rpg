@@ -1,0 +1,2 @@
+node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
+Calamity shared terminal Fast Catch-up integrity passed: {"sharedOwner":1,"w1":true,"w2":true,"terminalDecision":"battle-start"}

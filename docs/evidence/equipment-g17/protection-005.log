@@ -1,0 +1,2 @@
+python scripts/equipment-formal-fixture-history.py --check
+Two exact historical public JS owners retained; immutable fixture bytes unchanged

@@ -22,6 +22,17 @@ class BatchPlannerTests(unittest.TestCase):
         self.assertEqual(groups[0]["imagesMissing"],0)
         self.assertEqual(groups[0]["approvedSets"],5)
         self.assertEqual(groups[0]["status"],"approved")
+    def test_g17_complete_and_g18_unmade(self):
+        completed=planner.plan(batch="G17")[0]
+        self.assertEqual(completed["range"],"g081..g085")
+        self.assertEqual(completed["status"],"approved")
+        self.assertEqual(completed["imagesPresent"],10)
+        self.assertEqual(completed["approvedSets"],5)
+        unmade=planner.plan(batch="G18")[0]
+        self.assertEqual(unmade["range"],"g086..g090")
+        self.assertEqual(unmade["imagesMissing"],10)
+        self.assertEqual(unmade["approvedSets"],0)
+        self.assertEqual(unmade["status"],"not-started")
     def test_next_batch_is_safe_to_resume(self):
         group=planner.plan(batch="g03")[0]
         self.assertEqual(group["range"],"g011..g015")
@@ -47,8 +58,8 @@ class BatchPlannerTests(unittest.TestCase):
         self.assertEqual(group["imagesPresent"],10)
         self.assertEqual(group["approvedSets"],5)
         self.assertEqual(group["status"],"approved")
-        next_group=planner.plan(batch="G17")[0]
-        self.assertEqual(next_group["range"],"g081..g085")
+        next_group=planner.plan(batch="G18")[0]
+        self.assertEqual(next_group["range"],"g086..g090")
         self.assertEqual(next_group["imagesMissing"],10)
         self.assertEqual(next_group["status"],"not-started")
     def test_g08_completed_five_set_batch(self):

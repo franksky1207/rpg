@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g082",
+  "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "恆星陣列的散熱防護：白陶瓷／銅橙／琥珀光；低圓日核盔與橫窄黑面；六邊蜂巢肩、厚橢圓胸甲、外張散熱腿片；單刃微彎灼刃、短握柄；寬鞋頭推進靴與雙踝噴口；背部六片短矩形散熱板繞緊湊日核節點呈放射排列。非G077堡壘、非G078研究艙。",
+  "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+  "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW landscape 1536x1024 polished sci-fi RPG 2.5D equipment turnaround G082 stellar weapons array. THREE large full body views of SAME character FRONT SIDE BACK, heads and feet fully inside, plain neutral gray background, crisp stylized painterly game art readable at mobile scale. WHITE CERAMIC and BURNT COPPER ORANGE, AMBER light. Low rounded solar helmet with opaque narrow black visor, fully covered face no skin. Hexagonal honeycomb shoulder shells, thick oval breastplate, flared heat-sink thigh panels. Gently curved single-edged glowing SWORD with short conventional grip held down beside body. Wide-toed propulsion boots with double ankle thrusters and clear thick soles. Back accessory: SIX SHORT RECTANGULAR RADIATOR PANELS radiating from compact solar node, mechanical no feathers, actual mounted backpack visible in rear. Heat-protected heavy solar array silhouette, same geometry palette equipment all views. Official slots 恆星灼刃 / 日核戰盔 / 恆星防護甲 / 光壓推進靴 / 恆星兵器節點. Minimal English view labels only. No guns cannons spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-8f9b7d3c-1406-4377-98ba-64ba2b8db22e.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/sources/overview-original.png",
+      "originalSha256": "766265039d6a6f6beb61d8400923b889fb5394f486467c4fe3584514e8389744",
+      "originalBytes": 2372036,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 330876,
+        "sha256": "6fa6783d1e538dcf1beb34cd1002ac4b7eb172cb479501f9c2bb899a2cac249c"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Using supplied G082 white ceramic copper amber solar soldier as reference, draw NEW independently generated landscape 1536x1024 equipment ONLY concept sheet, never crop or paste turnaround. Five large clearly separated groups all complete within canvas: WEAPON full curved pointed single-edge solar SWORD with short handgrip and circular guard; HELMET rounded white shell opaque black visor copper ear pods; ARMOR headless bootless white oval chest with round amber core, honeycomb shoulders, flared heat thigh panels and shins ending above ankles; BOOTS independent actual PAIR white wide toes copper ankle thrusters thick glowing-edged soles, not just leg armor; BACK ACCESSORY detached compact sun node with SIX short rectangular black copper radiator fins and mount view, same radial array as rear reference. Grey backdrop crisp painterly 2.5D RPG art readable on mobile, minimal English labels, no wearer, no guns cannons spears staffs axes hammers scythes. Identity 恆星灼刃 / 日核戰盔 / 恆星防護甲 / 光壓推進靴 / 恆星兵器節點.",
+      "originalToolOutput": "/workspace/generated_images/exec-203c75e8-a6c8-4a56-ab0a-600e5f1155b1.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/sources/slots-original.png",
+      "originalSha256": "47c6f8bcdaa7fbded8d2ce8a9544a97cbc96471c82c6095f854d1600b32b0e9a",
+      "originalBytes": 2438021,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 379766,
+        "sha256": "3d85e61b1c8df51b5f0d34498945f335fbe7ff9741cf133ea2209471ee54b8b9"
+      },
+      "referenceOriginalSha256": "766265039d6a6f6beb61d8400923b889fb5394f486467c4fe3584514e8389744"
+    }
+  ]
+}

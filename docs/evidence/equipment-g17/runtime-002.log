@@ -1,0 +1,25 @@
+node tests/runtime/3d-formal-snapshots-contract.cjs
+[文明戰線] Second World data integrity warning [ { code: 'GEAR_NAME_DUPLICATE', names: [ '主機同步環' ] } ]
+✔ galaxy last region uses the real last Boss, not 101/501 (22.501306ms)
+✔ galaxy review and progress focus are explicit presentation contexts (1.550123ms)
+✔ universe selected/review focus and defeated Bosses use live owners (8.682179ms)
+✔ higher uses late reincarnation owner overrides (1.576742ms)
+✔ mixed epochs, empty slots and external appearance API remain supported (4.923036ms)
+✔ returned appearance and snapshots never alias formal state or owner output (6.970885ms)
+✔ alternate separates active, next and historical focus (1.676252ms)
+✔ locked/missing/invalid alternate owners cannot fabricate an active challenge (6.158628ms)
+✔ calamity status/HP/review are shared, absent definitions stay unavailable (1.298435ms)
+✔ W3 bounty is unavailable and visible-mode availability stays aligned (3.655608ms)
+✔ missing formal sources are not filled by GM fixtures (1.070464ms)
+✔ battle uses only authoritative finite HP/shield; encounter/results unavailable (1.257094ms)
+✔ real formal catalog retains 100/100/10 sets and all 1050 names (12.633751ms)
+✔ catalog rejects missing identity data rather than guessing names (1.492066ms)
+✔ GM bridge rejects unauthorized, foreign-origin and foreign-window messages (3.796749ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 257.979554

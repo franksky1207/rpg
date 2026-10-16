@@ -1,0 +1,2 @@
+node tests/runtime/gm-runtime-early-restore-integrity.js
+GM runtime first-render authorization integrity passed

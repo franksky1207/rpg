@@ -1,0 +1,2 @@
+node tests/runtime/alternate-universe-combat-integrity.js
+Alternate Universe combat adapter integrity passed.

@@ -1,0 +1,2 @@
+node tests/runtime/resource-manifest-integrity.js
+GM and 3D per-file version manifest structural integrity passed 517

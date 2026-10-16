@@ -1,0 +1,257 @@
+[
+  {
+    "schema": 1,
+    "set": "g081",
+    "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+    "generatedAt": "2026-10-16",
+    "generator": "OpenAI image_gen.imagegen available in this Codex task",
+    "designBrief": "文明戰區的精密中樞統御：鈷藍／鉑銀／薄青光；截平五齒短冠與整塊不透明面；外翻梯形肩、倒梯胸與中央方形核心、分節長腿；中寬雙刃直劍、短握柄與方護手；低踝厚鞋底跨域靴；背部三塊錯層懸浮菱板組成權限棱章。避免G076扇肩長裙及G080門框。",
+    "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+    "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+    "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create a NEW landscape 1536x1024 polished 2.5D RPG equipment concept turnaround G081 core civilization war. Exactly THREE large full body views SAME character FRONT SIDE BACK, all head and feet inside canvas, neutral light grey background, crisp stylized painterly sci-fi game art readable on small mobile combat screens. COBALT BLUE and PLATINUM SILVER, restrained CYAN light. Compact five-tooth flat crown helmet fully opaque faceplate, no face skin eyes. Flared trapezoid shoulders, inverted trapezoid chest with square central core, short waist plates and long segmented legs. Straight medium-wide double-edged sword with short grip and square guard held down beside body. Low ankle broad cross-domain boots with thick soles. Back accessory is THREE staggered floating DIAMOND PLATES forming a compact authority crest, visibly attached behind back in rear view, no halo or doorway. Precision civilization command silhouette. Consistent shapes colors and sword in all views. Official equipment 星河戰刃 / 核心冠盔 / 文明核心甲 / 星河跨域靴 / 文明核心權限. Only minimal English view labels. No guns cannons spears staffs axes hammers scythes. No cropped feet.",
+        "originalToolOutput": "/workspace/generated_images/exec-6278edc4-42a2-469e-9744-c17ff23645df.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g081-core-civilization-war/sources/overview-original.png",
+        "originalSha256": "64a6e047ae027f4343336b47760f5c2fa12096863c37e650198c29d6d5541bf8",
+        "originalBytes": 2482987,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 339590,
+          "sha256": "e1adae698faab83ee248f6a21fd873c79ff626755a1699215c8024b04198dfb9"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Using supplied G081 cobalt platinum crown armored character as reference generate a NEW independently drawn 1536x1024 landscape equipment-only sheet, no crops from turnaround. Five separated large groups: WEAPON entire pointed straight double-edge cyan sword with short grip square guard; HELMET five-tooth crown full opaque angular mask; ARMOR headless bootless assembly flared trapezoid shoulders square core chest long split blue waist tabard and segmented legs; BOOTS distinct standalone PAIR low ankle shoes with thick black soles and platinum blue toes, not knee plates; BACK ACCESSORY detached THREE staggered cyan diamond plates in silver frame authority crest with mounting view. Match supplied reference structures and palette, crisp stylized painterly sci-fi 2.5D game concept readable at mobile size, grey background. All objects complete inside image, no wearer, avoid clutter, only English labels. No guns spears axes staffs scythes hammers. Equipment identity 星河戰刃 / 核心冠盔 / 文明核心甲 / 星河跨域靴 / 文明核心權限.",
+        "originalToolOutput": "/workspace/generated_images/exec-bec3eb99-8cfe-4d5d-9ab1-79da34f5fc8d.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g081-core-civilization-war/sources/slots-original.png",
+        "originalSha256": "dbfde832a9a335c11632f64ffd7b6d3f1e07616f83f676c62d48860e3c6a35dc",
+        "originalBytes": 2230631,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 293568,
+          "sha256": "7c80c1b6ea9281653387a0887e9582127c951b8ca2eb9f954a55d7ef34e428f6"
+        },
+        "referenceOriginalSha256": "64a6e047ae027f4343336b47760f5c2fa12096863c37e650198c29d6d5541bf8"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "set": "g082",
+    "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+    "generatedAt": "2026-10-16",
+    "generator": "OpenAI image_gen.imagegen available in this Codex task",
+    "designBrief": "恆星陣列的散熱防護：白陶瓷／銅橙／琥珀光；低圓日核盔與橫窄黑面；六邊蜂巢肩、厚橢圓胸甲、外張散熱腿片；單刃微彎灼刃、短握柄；寬鞋頭推進靴與雙踝噴口；背部六片短矩形散熱板繞緊湊日核節點呈放射排列。非G077堡壘、非G078研究艙。",
+    "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+    "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+    "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW landscape 1536x1024 polished sci-fi RPG 2.5D equipment turnaround G082 stellar weapons array. THREE large full body views of SAME character FRONT SIDE BACK, heads and feet fully inside, plain neutral gray background, crisp stylized painterly game art readable at mobile scale. WHITE CERAMIC and BURNT COPPER ORANGE, AMBER light. Low rounded solar helmet with opaque narrow black visor, fully covered face no skin. Hexagonal honeycomb shoulder shells, thick oval breastplate, flared heat-sink thigh panels. Gently curved single-edged glowing SWORD with short conventional grip held down beside body. Wide-toed propulsion boots with double ankle thrusters and clear thick soles. Back accessory: SIX SHORT RECTANGULAR RADIATOR PANELS radiating from compact solar node, mechanical no feathers, actual mounted backpack visible in rear. Heat-protected heavy solar array silhouette, same geometry palette equipment all views. Official slots 恆星灼刃 / 日核戰盔 / 恆星防護甲 / 光壓推進靴 / 恆星兵器節點. Minimal English view labels only. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-8f9b7d3c-1406-4377-98ba-64ba2b8db22e.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/sources/overview-original.png",
+        "originalSha256": "766265039d6a6f6beb61d8400923b889fb5394f486467c4fe3584514e8389744",
+        "originalBytes": 2372036,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 330876,
+          "sha256": "6fa6783d1e538dcf1beb34cd1002ac4b7eb172cb479501f9c2bb899a2cac249c"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Using supplied G082 white ceramic copper amber solar soldier as reference, draw NEW independently generated landscape 1536x1024 equipment ONLY concept sheet, never crop or paste turnaround. Five large clearly separated groups all complete within canvas: WEAPON full curved pointed single-edge solar SWORD with short handgrip and circular guard; HELMET rounded white shell opaque black visor copper ear pods; ARMOR headless bootless white oval chest with round amber core, honeycomb shoulders, flared heat thigh panels and shins ending above ankles; BOOTS independent actual PAIR white wide toes copper ankle thrusters thick glowing-edged soles, not just leg armor; BACK ACCESSORY detached compact sun node with SIX short rectangular black copper radiator fins and mount view, same radial array as rear reference. Grey backdrop crisp painterly 2.5D RPG art readable on mobile, minimal English labels, no wearer, no guns cannons spears staffs axes hammers scythes. Identity 恆星灼刃 / 日核戰盔 / 恆星防護甲 / 光壓推進靴 / 恆星兵器節點.",
+        "originalToolOutput": "/workspace/generated_images/exec-203c75e8-a6c8-4a56-ab0a-600e5f1155b1.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/sources/slots-original.png",
+        "originalSha256": "47c6f8bcdaa7fbded8d2ce8a9544a97cbc96471c82c6095f854d1600b32b0e9a",
+        "originalBytes": 2438021,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 379766,
+          "sha256": "3d85e61b1c8df51b5f0d34498945f335fbe7ff9741cf133ea2209471ee54b8b9"
+        },
+        "referenceOriginalSha256": "766265039d6a6f6beb61d8400923b889fb5394f486467c4fe3584514e8389744"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "set": "g083",
+    "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+    "generatedAt": "2026-10-16",
+    "generator": "OpenAI image_gen.imagegen available in this Codex task",
+    "designBrief": "艦隊統帥的艦橋稜線：午夜靛／珍珠灰／淡紫光；橫向艦橋額檐盔、全遮面；後掠薄肩翼、艦艏V胸、分叉短甲尾及窄脛；修長艦刃短柄軍刀；階梯磁吸鞋底；背部雙斜桅V形權印與中央菱章。區別G079方背包與G080直門。",
+    "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+    "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+    "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW landscape 1536x1024 polished 2.5D sci-fi RPG turnaround G083 fleet battlefield. THREE large full body views SAME character FRONT SIDE BACK, complete head boots inside canvas, grey background, crisp painterly mobile game art. MIDNIGHT INDIGO and PEARL GREY with pale VIOLET light. Fleet command helmet with horizontal bridge-like brow, opaque full mask no skin eyes. Swept-back thin shoulder fins, ship-prow V chest, short split armored coat tails, narrow greaves. Slender naval SWORD saber with short grip and enclosed guard held down beside body. Stepped magnetic sole deck boots. Back accessory TWO DIAGONAL MASTS forming V-shaped fleet seal with central diamond plaque, clearly visible in rear, not a rectangular backpack or doorway. Tall lean naval commander silhouette consistent equipment all views. Official slots 星河艦刃 / 艦隊統帥盔 / 星河艦戰甲 / 艦橋躍遷靴 / 星河艦隊權印. Minimal English labels only. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-4160272d-17d8-4101-b290-8bed07915881.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/sources/overview-original.png",
+        "originalSha256": "bc57f076156128badc48c6cac9a7384cba3cdd7a5995ad63194611642ac5cb69",
+        "originalBytes": 2560989,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 340304,
+          "sha256": "155b452ecaebe5ffd3c02f2f84a7de117d2dec11b608c6ffc7ccc78a7bf884fd"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW independently drawn equipment-only sheet based on supplied G083 fleet commander, landscape 1536x1024. Five well-separated complete groups on neutral grey background, polished painterly sci-fi 2.5D mobile RPG design. WEAPON entire slim pointed violet naval SWORD short grip and angular enclosed guard; HELMET full opaque silver indigo mask with horizontal bridge brow and swept crest; ARMOR headless bootless indigo pearl V ship-prow breastplate, thin swept shoulders, split long armored coat-tails and narrow greaves; BOOTS standalone PAIR actual ankle deck shoes with stepped magnetic soles, separate from knee armor; BACK ACCESSORY detached V-shaped twin diagonal masts and center violet diamond fleet seal with rear mount view, same as reference back. Preserve reference structures and colors no pasted crops, no wearer, clear shoes versus shins, all items inside canvas. Minimal English labels only. Official 星河艦刃 / 艦隊統帥盔 / 星河艦戰甲 / 艦橋躍遷靴 / 星河艦隊權印. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-34dbabc8-d6a9-42a8-b74f-fe986126847e.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/sources/slots-original.png",
+        "originalSha256": "00fa76240442a5b6ae334c22d9f61c36968697b38730963ff8f3ea11bca03871",
+        "originalBytes": 2441215,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 345946,
+          "sha256": "de877f8a7a4ccdbbcc7f15fca78f34119ea9eac2169ebf118cbea8cb30d1425e"
+        },
+        "referenceOriginalSha256": "bc57f076156128badc48c6cac9a7384cba3cdd7a5995ad63194611642ac5cb69"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "set": "g084",
+    "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+    "generatedAt": "2026-10-16",
+    "generator": "OpenAI image_gen.imagegen available in this Codex task",
+    "designBrief": "終結協議的沉重執行機：消光黑／骨白／紅光；無角楔形閉面盔、單直紅縫；向下三角重肩、封閉梯形厚胸、重疊鋸階腿甲；截切尖厚刃執行劍、短雙手握柄；方頭厚底相位靴；背部斷開的倒三角協議框與三條垂直紅鎖條。不使用骷髏或G079楔胸。",
+    "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+    "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+    "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW landscape 1536x1024 professional stylized sci-fi RPG 2.5D equipment turnaround G084 civilization end protocol. Exactly THREE full body views SAME character FRONT SIDE BACK all head boots inside frame, clear grey background, crisp painterly game design readable at mobile size. MATTE BLACK and BONE WHITE, restrained RED light. Hornless downward wedge fully opaque helmet with one vertical red slit, no face or skin. Downward triangular heavy shoulders, closed slab trapezoid breastplate, overlapping stair-step heavy leg plates. Thick execution SWORD with clipped pointed tip and short two-hand grip held downward beside body, unmistakable sword not axe. Square-toed massive phase boots layered soles. Back accessory BROKEN INVERTED TRIANGLE frame with THREE vertical red protocol lock bars, actual backpack mount visible in rear. Heavy sealed execution machine silhouette no skulls, uniform palette and gear all views. Official 滅界執行刃 / 滅文明戰盔 / 終結主戰甲 / 毀滅相位靴 / 終結協議權限. English view labels only. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-8907eb49-a943-4bab-b918-daad99d09558.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g084-civilization-end/sources/overview-original.png",
+        "originalSha256": "527b2318977abf693bc054265035e4a0f4f4911bb3c9ff378c0e656de7753e54",
+        "originalBytes": 2470301,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 295364,
+          "sha256": "2738f0c1f832e45fa481ca4703dd81b908eb3a7e5d35abc014b18c9060fdab90"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Using supplied G084 black bone-white red execution armor as reference draw NEW independently generated landscape 1536x1024 equipment-only sheet. Five complete separated groups no wearer no copied crops: WEAPON full massive straight execution SWORD clipped pointed tip short two-hand grip, red inset and conventional guard; HELMET full hornless downward wedge bone mask black sides one vertical red slit; ARMOR headless bootless slab chest triangular shoulders overlapping stair-step legs long black waist tabard, show front rear; BOOTS actual detached PAIR square-toed black bone-white phase shoes distinct layered soles ankle openings, no knee armor; BACK ACCESSORY detached broad INVERTED TRIANGLE protocol frame with THREE vertical red lock bars, matching reference rear and visible mounting bracket. Grey background crisp painterly sci-fi 2.5D RPG mobile readable concept. All objects wholly inside canvas. Minimal English labels only. Official 滅界執行刃 / 滅文明戰盔 / 終結主戰甲 / 毀滅相位靴 / 終結協議權限. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-33d4f246-2219-471a-a33c-f96680740e3e.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g084-civilization-end/sources/slots-original.png",
+        "originalSha256": "1bb9b8ee4b28a90864b7bba506264254a9ab2951e87ac6e77f634ac0212b856c",
+        "originalBytes": 2295354,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 268956,
+          "sha256": "394673a6319463f188adf8c100ced4697f0244a04bc434c4f2a7598d6217fbec"
+        },
+        "referenceOriginalSha256": "527b2318977abf693bc054265035e4a0f4f4911bb3c9ff378c0e656de7753e54"
+      }
+    ]
+  },
+  {
+    "schema": 1,
+    "set": "g085",
+    "baseMain": "553aa5583f5cea8e93260ae4fada1ed79d1b07c0",
+    "generatedAt": "2026-10-16",
+    "generator": "OpenAI image_gen.imagegen available in this Codex task",
+    "designBrief": "巨構控制的樑架工程：礦物青綠／鈦灰／橙紅光；方盒盔、斜切額與窄面罩；左右不對稱I樑肩、桁架胸和寬髖、柱狀腿甲；寬直切界劍與短偏置握柄；重型履帶紋平底靴；背部偏置H形橫樑控制節點和單側三階機械肋。不同於G080對稱門框與本批三角／放射背飾。",
+    "generationMethod": "Two actual separate calls. Overview inspected, then its original PNG used as reference for independently drawn equipment sheet. No crop/recolor/copy/composite.",
+    "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+    "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW landscape 1536x1024 professional 2.5D sci-fi RPG equipment turnaround G085 core megastructure belt. Exactly THREE full body views SAME character FRONT SIDE BACK heads boots fully inside canvas. Grey backdrop crisp painterly mobile game concept design. MINERAL TEAL and TITANIUM GREY, ORANGE RED light. Box control helmet chamfered brow opaque dark full face, no skin eyes. ASYMMETRIC I-BEAM shoulders one larger reinforced beam, exposed structural truss breastplate, wide hips and pillar-like leg armor. Broad straight cutter SWORD short offset conventional hilt pointed blade end, held down beside body, no tool axe. Heavy flat tread-soled industrial boots. Back accessory OFFSET H-BEAM CONTROL NODE with three stepped mechanical ribs on ONE SIDE, visibly mounted in rear view. Megastructure engineer war armor broad industrial silhouette, not symmetrical doorway. Same equipment palette shapes all views. Official 巨構切界刃 / 巨構控制盔 / 星河巨構甲 / 巨構機動靴 / 巨構控制節點. Minimal English view labels only. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-c7165220-bf7b-4a95-95bc-108dad459d7f.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/sources/overview-original.png",
+        "originalSha256": "3201c04594472ab2077ea5e82f69b729ec164ca6e415e786ebb98f6dfe2cfc30",
+        "originalBytes": 2411211,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 309450,
+          "sha256": "7c5867c297d5c28d335682d561778e39b0c03da101d5f943644f626b852f1eb3"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Using supplied G085 teal titanium industrial megastructure warrior as reference create NEW independently drawn landscape 1536x1024 equipment-only concept sheet not crops. Five clearly separated complete large groups: WEAPON full pointed broad straight cutter SWORD with short offset conventional grip and small rectangular guard orange inset; HELMET complete chamfered box helmet teal panels full opaque black mask and thin orange stripe; ARMOR headless bootless asymmetric I-beam shoulders structural X-truss chest broad hips long waist plate pillar-like leg plates, front and rear; BOOTS standalone actual PAIR huge industrial ankle shoes with flat deep tread soles and broad toes, no knee armor; BACK ACCESSORY detached OFFSET H-beam control node with long vertical spine and THREE short stepped horizontal ribs on ONE side, same as reference rear and side, include mounting bracket view. Mineral teal titanium grey restrained orange-red lights, plain grey background, crisp painterly sci-fi 2.5D mobile RPG art, no wearer. Objects all wholly inside image. Minimal English labels only. Official 巨構切界刃 / 巨構控制盔 / 星河巨構甲 / 巨構機動靴 / 巨構控制節點. No guns cannons spears staffs axes hammers scythes.",
+        "originalToolOutput": "/workspace/generated_images/exec-90ce62a4-3b87-4f0f-8ce1-38d103f61e43.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/sources/slots-original.png",
+        "originalSha256": "7bdbf0f840da33054feac02db58ff6c0d7d95ed86fd44ff86269b5b3275deaf4",
+        "originalBytes": 2479467,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 380806,
+          "sha256": "15db9c4c6087c8d25c17dc86aa9986c186939407d40c56f9d0d00de8f93e4182"
+        },
+        "referenceOriginalSha256": "3201c04594472ab2077ea5e82f69b729ec164ca6e415e786ebb98f6dfe2cfc30"
+      }
+    ]
+  }
+]
