@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g073",
+  "baseMain": "56d95987e9115cf74a4967492bae4e38606b8f87",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "炭黑／銀／少量紫琥珀光，橢圓遮面與水平視界環、肋狀採能胸甲、寬矮銀圈靴、黑色紫緣直刃、分瓣銀環黑洞採能盤。",
+  "generationMethod": "Two separate actual calls. Overview inspected with view_image before supplying its original PNG as reference for a newly drawn equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-44c759aa-4e1e-4849-8221-7f7153e4c786.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g073-black-hole-energy/sources/overview-original.png",
+      "originalSha256": "390f9917b997d043f793c8a98ef2c973caddf7bb4c44d75e0b1f103917715d1d",
+      "originalBytes": 2215237,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 245344,
+        "sha256": "8156646e29016cee52384443d705d6db5bd1d486621a61c1873ef98ff18b8d07"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-5942622a-12fc-4dff-bf70-3e0e90bbe635.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g073-black-hole-energy/sources/slots-original.png",
+      "originalSha256": "9e7405c064f1a695f1dcf0f300b8ec48de66fe20e2123bc9f4564ba30c776a34",
+      "originalBytes": 2282960,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 291994,
+        "sha256": "c0a2278375aa6998dbb9dea908ec032d50357e0e9505e681202f6edc35ab0ab3"
+      },
+      "referenceOriginalSha256": "390f9917b997d043f793c8a98ef2c973caddf7bb4c44d75e0b1f103917715d1d"
+    }
+  ]
+}

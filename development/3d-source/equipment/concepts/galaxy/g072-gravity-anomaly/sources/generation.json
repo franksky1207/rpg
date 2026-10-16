@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g072",
+  "baseMain": "56d95987e9115cf74a4967492bae4e38606b8f87",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "赭黃／象牙白／石墨／薄荷光，楔形封閉盔、月牙浮肩、窄胸分節甲、斜底尖靴、刀背開孔厚刃、雙斜環引力穩定器。",
+  "generationMethod": "Two separate actual calls. Overview inspected with view_image before supplying its original PNG as reference for a newly drawn equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-d5bb6d35-e41d-464d-8024-3739cf1dadd0.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g072-gravity-anomaly/sources/overview-original.png",
+      "originalSha256": "8b7d5562ec794979276da539eac8cc3368d6445d33788fece7b8a4cd494a152c",
+      "originalBytes": 2132113,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 223308,
+        "sha256": "df8661425c485db3d553423ad88cca86356ea5f7c0b0fa68a87842f77cb2c7b7"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-4065d836-6d25-4e27-a74f-e6ccd5fcd078.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g072-gravity-anomaly/sources/slots-original.png",
+      "originalSha256": "e15046b08d8b607d3609db57350476ccbd593ea3b5a93363b2d314e6375d5047",
+      "originalBytes": 2278924,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 276380,
+        "sha256": "48fe3a539e646c2bc116956507febb3018a2dfa9b7c842d06658bbf6e2b39754"
+      },
+      "referenceOriginalSha256": "8b7d5562ec794979276da539eac8cc3368d6445d33788fece7b8a4cd494a152c"
+    }
+  ]
+}

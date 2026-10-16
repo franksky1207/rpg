@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g075",
+  "baseMain": "56d95987e9115cf74a4967492bae4e38606b8f87",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "象牙白／淡青瓷／酒紅，雙後掠時間翼封閉盔、斜疊輕胸甲與長分岔側甲、纖細踝環翹尖靴、細長微彎時空刀、菱形框沙漏校準器。",
+  "generationMethod": "Two separate actual calls. Overview inspected with view_image before supplying its original PNG as reference for a newly drawn equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-0d4829ad-e651-4e1c-82d4-67fbbdaa4ecc.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g075-spacetime-disturbance/sources/overview-original.png",
+      "originalSha256": "f090b1f39b37911bfa82129270a360ca0e9c26c63ad235b8835be4be025b1180",
+      "originalBytes": 2159875,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 239018,
+        "sha256": "509fb126b0732c988d2296db1272ac9d19f65d256827ed55d00c159bc342b638"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-7758fcdd-ede8-4028-9ed6-aeb5fc8459e6.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g075-spacetime-disturbance/sources/slots-original.png",
+      "originalSha256": "d915f876b10c7861e3c9d8aacc5d9cd3043f02d448ef3ac07421472b3518bf2b",
+      "originalBytes": 2063013,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 247698,
+        "sha256": "3e05de2baad947ac4610d8f61af1c36b669c7a83b0334d5ce0b5c1a72c9dfcf6"
+      },
+      "referenceOriginalSha256": "f090b1f39b37911bfa82129270a360ca0e9c26c63ad235b8835be4be025b1180"
+    }
+  ]
+}

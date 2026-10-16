@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -55,4 +55,12 @@
 
 ## 2026-10-15 後續刀劍量產規則
 
-武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此段為產圖前規則；目前概念圖與審查狀態依上方A節及本次證據，角色素材尚未製作。
+
+## G15 單階段概念入庫與角色交接
+
+銅／鋼灰／橙，方形橫視窗封閉盔、壓床厚肩與活塞胸甲、分層短腰甲、厚重折躍靴、疊脊震裂刃、四斜翼方形兵器節點。
+
+三視側面略帶四分之三角度，五槽板含重複靴視角與武器局部放大，主五件完整；工廠裝甲的細微接縫與光線差異屬局部展示。
+
+武器均短握柄刀劍，保留右向3/4透明角色的主要盔／肩胸／背飾辨識點。未製作角色、武器分層或動畫；後續另經素材產線。真實來源見sources/generation.json；本套唯一Codex單階段審查見codex-review.md及review-2_5d.json。正式名稱與身份依A節，不由圖片小字推定。

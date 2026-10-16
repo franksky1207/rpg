@@ -1,3 +1,5 @@
+> **2026-10-16｜G15五套十圖入庫**：G071～G075正式銀河核心外圍，十次獨立真image_gen、1536×1024原PNG及WebP、來源SHA與schema4單一Codex審查（blocker=0）；75套批准／150圖、135套未製作，G076未動。新增G001～G070共532歷史檔SHA鎖，保留舊鎖、G024/G030例外及發布隔離。角色素材not-started、GM not-tested、正式發布false；未改戰鬥介面或玩法。詳[G15驗收](docs/2_5D_EQUIPMENT_G15_ACCEPTANCE_2026-10-16.md)；最終SHA Actions依實際結果核對，不預告成功。
+
 > **2026-10-16｜G14五套十圖入庫**：G066～G070正式銀河中域，十次獨立真image_gen、1536×1024原PNG及WebP、來源SHA與schema4單一Codex審查（blocker=0）；70套批准／140圖、140套未製作，G071未動。新增G001～G065共487歷史檔SHA鎖，保留舊鎖、G024/G030例外及發布隔離。角色素材not-started、GM not-tested、正式發布false；未改戰鬥介面或玩法。詳[G14驗收](docs/2_5D_EQUIPMENT_G14_ACCEPTANCE_2026-10-16.md)；最終SHA Actions依實際結果核對，不預告成功。
 
 > **2026-10-16｜G13五套十圖入庫**：G061～G065正式銀河中域，十次獨立真image_gen、1536×1024原PNG及WebP、來源SHA與schema4單一Codex審查（blocker=0）；65套批准／130圖、145套未製作，G066未動。新增G001～G060共442歷史檔SHA鎖，保留舊鎖、G024/G030例外及發布隔離。角色素材not-started、GM not-tested、正式發布false；未改戰鬥介面或玩法。詳[G13驗收](docs/2_5D_EQUIPMENT_G13_ACCEPTANCE_2026-10-16.md)；最終SHA Actions依實際結果核對，不預告成功。

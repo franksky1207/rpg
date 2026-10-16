@@ -4681,19 +4681,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g071-dense-star-sector",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 375492,
+          "sha256": "8c9b03c6f3c3b00a83e7b4b963d1d3bbe1ef7019ec5ea93a34679ac000cee196"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 411188,
+          "sha256": "45e35a6851a7de091f7fd9e8c53e4b7c4c55b2202250b42a8865082a9b92906d"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g071-dense-star-sector/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g072",
@@ -4732,19 +4747,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g072-gravity-anomaly",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 223308,
+          "sha256": "df8661425c485db3d553423ad88cca86356ea5f7c0b0fa68a87842f77cb2c7b7"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 276380,
+          "sha256": "48fe3a539e646c2bc116956507febb3018a2dfa9b7c842d06658bbf6e2b39754"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g072-gravity-anomaly/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g073",
@@ -4783,19 +4813,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g073-black-hole-energy",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 245344,
+          "sha256": "8156646e29016cee52384443d705d6db5bd1d486621a61c1873ef98ff18b8d07"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 291994,
+          "sha256": "c0a2278375aa6998dbb9dea908ec032d50357e0e9505e681202f6edc35ab0ab3"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g073-black-hole-energy/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g074",
@@ -4834,19 +4879,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g074-singularity-weapons",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 299580,
+          "sha256": "b14ce05d2511f8725dbf659cb1653cee869137639838b426cfafb9033f5981f4"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 306014,
+          "sha256": "c72103c9df7fd383f4f48ee95e96ee81cce6f195c2143f958f675885f1061edb"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g074-singularity-weapons/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g075",
@@ -4885,19 +4945,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g075-spacetime-disturbance",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 239018,
+          "sha256": "509fb126b0732c988d2296db1272ac9d19f65d256827ed55d00c159bc342b638"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 247698,
+          "sha256": "3e05de2baad947ac4610d8f61af1c36b669c7a83b0334d5ce0b5c1a72c9dfcf6"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g075-spacetime-disturbance/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g076",

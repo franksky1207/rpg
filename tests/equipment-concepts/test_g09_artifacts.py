@@ -16,14 +16,14 @@ class G09ArtifactTests(unittest.TestCase):
         for path,expected in lock['files'].items():
             self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),expected,path)
 
-    def test_historical_index_and_unmade_g071_unchanged(self):
+    def test_historical_index_and_unmade_g076_unchanged(self):
         import subprocess
         base=json.loads(subprocess.check_output(['git','show','1c00f711feb897772dad671cdfc73b3aafa461ea:'+str(db.m.BASE/'_concept-index.json')]))['sets']
         current=json.loads((ROOT/db.m.BASE/'_concept-index.json').read_text())['sets']
         self.assertEqual(current[:40],base[:40])
-        self.assertEqual(current[70:],base[70:])
-        unmade=current[70]
-        self.assertEqual(unmade['id'],'g071')
+        self.assertEqual(current[75:],base[75:])
+        unmade=current[75]
+        self.assertEqual(unmade['id'],'g076')
         self.assertEqual(unmade['images'],[])
         self.assertFalse(unmade['conceptApproved'])
 
