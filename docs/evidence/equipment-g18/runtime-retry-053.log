@@ -1,0 +1,8 @@
+Clock rollback probe {
+  pending: null,
+  until: 1792169501021,
+  max: 1792169501021,
+  future: 1792169501021,
+  goldUnchanged: true
+}
+Save load pipeline integrity passed: {"realisticSchema16":{"backupExact":true,"gameplayPreserved":true,"sourceVersion":16,"targetVersion":17},"reload":{"sourceVersion":17,"targetVersion":17,"backupPreserved":true},"failClosed":{"reason":"pre-schema17-backup-failed","originalPreserved":true}}

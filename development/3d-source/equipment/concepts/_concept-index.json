@@ -5671,19 +5671,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 293042,
+          "sha256": "451a8939267e00bc3c6aa037cb504f453df8d50da6a51344aa186a0034b2a030"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 210860,
+          "sha256": "515b5cbe082cb77ac821d077c82f660bf1d27ea0693c6d8eba3f1e62a8a6c736"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g087",
@@ -5722,19 +5737,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 228146,
+          "sha256": "f2e0ac99d28bd046e80ceeb3326922a0e6934a265794e7ac20d5533dd46c7a12"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 184092,
+          "sha256": "c26408ded1f6be11ba3ad3cb3a17f3e11a51c8d9b205653adf55ee51248ca761"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g088",
@@ -5773,19 +5803,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 293718,
+          "sha256": "c6f8dc0bf3ccca1a2bc07ce2395e0c9475d4366dab2deade696f9e20213a6210"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 230732,
+          "sha256": "146dd5c7f002b7e76780b6975f35d151a0508300c389613ef19d54b6ad0b033e"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g089",
@@ -5824,19 +5869,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 350266,
+          "sha256": "2748f2b68b2adcd5fdd21dbffb83adf207729a567c2c86fe5abfac72a252d685"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 305430,
+          "sha256": "0a4dcec32ae9bb30838a71c607a2bb5e67715c4053c31f92fda739b6e58ddd35"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g090",
@@ -5875,19 +5935,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 287022,
+          "sha256": "d1738b07ee5a2ea4faacbc1b2fdb6413ef83fc9642d86d584745cdaaebf0be1d"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 186512,
+          "sha256": "925856eb78ed0a446473ff33f4e46ec481fedc43cf39aa456966e4b290bf9577"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g091",

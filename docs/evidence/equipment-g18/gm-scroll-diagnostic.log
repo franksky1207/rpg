@@ -1,0 +1,11 @@
+raster 1365 g005
+raster 1365 g007
+raster 1365 g018
+scroll restore 1365 291 291
+PROOF {
+  before: { y: 291, h: 1122, inner: 831 },
+  after: { y: 291, h: 1122, inner: 831 },
+  max: false
+}
+AFTER 1s { y: 291, h: 1122, inner: 831 }
+PASS GM published browser: 43 assertions, desktop/portrait/landscape, three real sprites, five actions, formal/free, revoke, reopen

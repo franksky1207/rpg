@@ -1,0 +1,56 @@
+node:child_process:981
+    throw err;
+    ^
+
+<ref *1> Error: spawnSync git EPERM
+    at Object.spawnSync (node:internal/child_process:1160:20)
+    at spawnSync (node:child_process:928:24)
+    at Object.execFileSync (node:child_process:971:15)
+    at Object.<anonymous> (/workspace/rpg/tests/runtime/t4-preview-retirement.cjs:8:22)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5) {
+  errno: -1,
+  code: 'EPERM',
+  syscall: 'spawnSync git',
+  path: 'git',
+  spawnargs: [ 'show', '7706f880f63c96a9adb42d30d67a6e29601c0f48:index.html' ],
+  error: [Circular *1],
+  status: 0,
+  signal: null,
+  output: [
+    null,
+    Buffer(45712) [Uint8Array] [
+       60,  33, 100, 111,  99, 116, 121, 112, 101,  32, 104, 116,
+      109, 108,  62,  10,  60,  33,  45,  45,  32,  99, 111, 100,
+      101,  45,  99, 108, 101,  97, 110, 117, 112,  45,  98,  97,
+      116,  99, 104,  55,  45, 101, 120,  97,  99, 116,  45, 104,
+      101,  97, 100,  45, 118,  97, 108, 105, 100,  97, 116, 105,
+      111, 110,  32,  45,  45,  62,  10,  60, 104, 116, 109, 108,
+       32, 108,  97, 110, 103,  61,  34, 122, 104,  45,  72,  97,
+      110, 116,  34,  62,  60, 104, 101,  97, 100,  62,  60, 109,
+      101, 116,  97,  32,
+      ... 45612 more items
+    ],
+    Buffer(0) [Uint8Array] []
+  ],
+  pid: 10405,
+  stdout: Buffer(45712) [Uint8Array] [
+     60,  33, 100, 111,  99, 116, 121, 112, 101,  32, 104, 116,
+    109, 108,  62,  10,  60,  33,  45,  45,  32,  99, 111, 100,
+    101,  45,  99, 108, 101,  97, 110, 117, 112,  45,  98,  97,
+    116,  99, 104,  55,  45, 101, 120,  97,  99, 116,  45, 104,
+    101,  97, 100,  45, 118,  97, 108, 105, 100,  97, 116, 105,
+    111, 110,  32,  45,  45,  62,  10,  60, 104, 116, 109, 108,
+     32, 108,  97, 110, 103,  61,  34, 122, 104,  45,  72,  97,
+    110, 116,  34,  62,  60, 104, 101,  97, 100,  62,  60, 109,
+    101, 116,  97,  32,
+    ... 45612 more items
+  ],
+  stderr: Buffer(0) [Uint8Array] []
+}
+
+Node.js v24.19.0

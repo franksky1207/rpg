@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g086",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:core-war:map:5",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard",
+    "regionOrBoss": "銀河核心戰爭 → 銀河禁衛領域",
+    "equipmentNames": {
+      "weapon": "禁衛鎮界刃",
+      "helmet": "銀河禁衛冠",
+      "armor": "禁衛主戰甲",
+      "shoes": "銀河相位靴",
+      "accessory": "禁衛權印"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "451a8939267e00bc3c6aa037cb504f453df8d50da6a51344aa186a0034b2a030",
+    "equipment-five-slots.webp": "515b5cbe082cb77ac821d077c82f660bf1d27ea0693c6d8eba3f1e62a8a6c736"
+  },
+  "reviewedAt": "2026-10-16",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "9dd3c5b28434d8f177798b42640e56ba46ce203cd52c922e6ddd9fd09aa0b498",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/generation-provenance.md",
+      "sha256": "c83d57455dca14983975abc240d2e964939cf85adbc9eef412c1f89d0448ab18"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/codex-review.md",
+      "sha256": "9dd3c5b28434d8f177798b42640e56ba46ce203cd52c922e6ddd9fd09aa0b498"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/sources/generation.json",
+      "sha256": "abaed2770eb95b858e318f668df54eaa1a3735bc96c4bac396548688f914ba34"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/codex-review.md",
+        "sha256": "9dd3c5b28434d8f177798b42640e56ba46ce203cd52c922e6ddd9fd09aa0b498"
+      },
+      "reviewedAt": "2026-10-16",
+      "imageSha256": {
+        "overview-front-side-back.webp": "451a8939267e00bc3c6aa037cb504f453df8d50da6a51344aa186a0034b2a030",
+        "equipment-five-slots.webp": "515b5cbe082cb77ac821d077c82f660bf1d27ea0693c6d8eba3f1e62a8a6c736"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g086 核對最新main a81f2f3d5a95dbbcfa7cd33c7d59be5c290eb54d的worldmaps-core-war.js REGION_MAPS[5]、data.js固定註冊MAPS[85]、engine.js makeItem五槽順序、正式索引與逐套notes。galaxy:core-war:map:5；銀河核心戰爭 → 銀河禁衛領域；正式五槽：禁衛鎮界刃／銀河禁衛冠／禁衛主戰甲／銀河相位靴／禁衛權印。完整六欄永久身份與來源映射未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g086 本任務兩次實際獨立image_gen.imagegen生成，兩原PNG逐位元組保存、兩WebP經Pillow RGB quality=92 method=6轉檔。四檔皆1536×1024完整load解碼，尺寸、bytes與SHA逐檔計算。非舊圖換色、裁切重排或複製前批。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g086 已逐張目視兩張生成原圖與正式WebP：瓶綠鉑金三齒馬蹄冠、封閉黑面、圓盾雙肩與盾徽胸、階梯短腰甲、青邊寬直劍、寬削角鞋頭厚底雙鞋及U架圓背印。三視頭鞋完整、頭盔遮住五官，主要裝備材質與配色一致，背面能看見背飾。五槽武器、頭盔、鎧甲、獨立雙鞋與背部裝置完整，鞋頭鞋底可辨；與G081～G085及本批其他套裝存在輪廓差異。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g086 已實際目視本套兩張288×192 WebP縮圖：瓶綠鉑金三齒馬蹄冠、封閉黑面、圓盾雙肩與盾徽胸、階梯短腰甲、青邊寬直劍、寬削角鞋頭厚底雙鞋及U架圓背印。小圖仍能辨識角色頭肩胸腿、刀劍、鞋及背飾；五槽雙鞋與鎧甲腿部可分辨。本項為概念圖可讀性，不冒稱透明角色素材、GM、實體手機或正式戰鬥驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g086 本次真實OpenAI image_gen.imagegen兩次呼叫；先生成並目視三視，再以本套原PNG作唯一參考獨立繪製五槽。使用者已授權本專案於本任務生成，依適用服務條款使用輸出，僅開發概念。無外部庫圖或第三方角色參考，不宣稱CC、公有領域或獨占權利。完整prompt、工具路徑、原PNG及WebP SHA、參考SHA鏈見sources/generation.json；全部只存development。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/generation-provenance.md",
+      "sha256": "c83d57455dca14983975abc240d2e964939cf85adbc9eef412c1f89d0448ab18"
+    }
+  },
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "五槽護手與冠齒接點有小幅視角差異，三視側面稍偏四分之三；圓肩、盾徽、雙鞋及U架圓背印主要身份一致，不影響小尺寸2.5D概念使用。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "65b93a93bd0e953cda7f3269de28298107da32427c8da9725af810b9246bf806"
+}

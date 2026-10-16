@@ -1,0 +1,227 @@
+[
+  {
+    "id": "g086",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create a new independent 1536x1024 landscape equipment concept art turnaround sheet for original sci-fi mobile 2.5D RPG Civilization Front, set G086 Galactic Royal Guard domain (銀河禁衛領域). Three evenly spaced full-body views of the SAME armored character: front, exact side, rear, neutral light gray studio background, clean polished digital concept painting. Complete helmet and shoe soles visible with generous margins, opaque closed helmet hides all face. Distinct royal guard design: deep bottle green armor, warm platinum edging, small cyan energy seams. Helmet has a broad curved horseshoe crown ridge with three flat upright rectangular tabs, opaque black faceplate. Rounded overlapping circular shield-like shoulders; broad barrel chest with vertical central shield crest; short stepped hip armor, robust segmented legs. Weapon 禁衛鎮界刃 is a short-handled broad straight double edged sword with stepped rectangular guard and cyan cutting edges; no firearms, poles, axes or hammers. 銀河相位靴 are clearly shaped paired boots with broad chamfered toes, raised heel blocks and split layered soles. 禁衛權印 back accessory is a compact detachable round seal medallion in a thick squared U cradle, mounted visibly behind shoulders, no cape. Front and side show sword held clear of body, rear shows complete back seal. This is precision advanced civilization royal guard military equipment with readable large shapes; no scenery, no text, no extra figures, no separate equipment panel. Five slots: sword, helmet, body armor, boots, distinct back seal. All three views match same materials and structures.",
+        "originalToolOutput": "/workspace/generated_images/exec-c686e4fe-b24b-4663-b32b-f4040c1d286b.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/sources/overview-original.png",
+        "originalSha256": "44eb6f38751c9060c2d70587dd948a95b7280d692bc4f6fc9677c0e5a46c24ca",
+        "originalBytes": 2461568,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 293042,
+          "sha256": "451a8939267e00bc3c6aa037cb504f453df8d50da6a51344aa186a0034b2a030"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Generate a NEW independent 1536x1024 landscape equipment display concept painting using attached G086 turnaround only as design reference. Original sci-fi RPG royal guard green/platinum/cyan suit. Neutral light gray studio background. Exactly five clearly separated equipment groups with generous spacing: (1) broad straight double edged cyan sword with stepped guard and short grip; (2) closed black-face helmet with horseshoe crown and three flat rectangular tabs; (3) main green royal guard armor including round shield pauldrons, barrel shield-crest chest, arms, short layered skirt and articulated leg armor on invisible mannequin, NO helmet and NO feet attached, NO back medallion attached; (4) a PAIR of complete independent green/platinum boots with chamfered toes, heels, layered split soles, both fully visible; (5) detached back accessory: round authority seal medallion held by thick squared U cradle, as seen on rear reference. Maintain the exact major contours, colors and details of reference, clear large readable shapes suited to small mobile game, no face, no people, no extra accessories, no text, no gun, no polearm. This is a separately rendered five-slot still life, not crop or rearrangement of reference.",
+        "originalToolOutput": "/workspace/generated_images/exec-248c310f-74d6-40ba-b737-315d37dac6f5.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/sources/slots-original.png",
+        "originalSha256": "3e5b4de67528d36b51e431e2215f5e9f3d88572e78c3ec28078c798c04c9f6f5",
+        "originalBytes": 2118525,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 210860,
+          "sha256": "515b5cbe082cb77ac821d077c82f660bf1d27ea0693c6d8eba3f1e62a8a6c736"
+        },
+        "referenceOriginalSha256": "44eb6f38751c9060c2d70587dd948a95b7280d692bc4f6fc9677c0e5a46c24ca"
+      }
+    ],
+    "observation": "瓶綠鉑金三齒馬蹄冠、封閉黑面、圓盾雙肩與盾徽胸、階梯短腰甲、青邊寬直劍、寬削角鞋頭厚底雙鞋及U架圓背印",
+    "advisory": "五槽護手與冠齒接點有小幅視角差異，三視側面稍偏四分之三；圓肩、盾徽、雙鞋及U架圓背印主要身份一致，不影響小尺寸2.5D概念使用。"
+  },
+  {
+    "id": "g087",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "New independent landscape 1536x1024 original sci-fi RPG G087 Stellar Judgment domain (星河裁決區) armored full body turnaround, front, exact side and rear of the SAME suit equally spaced, neutral gray background, polished 2.5D game concept painting, all helmet tops and boot soles within frame. Distinct high civilization adjudicator: ivory ceramic broad rectangular mantle shoulders with three descending horizontal tiers; black understructure, brushed brass fittings, restrained amber light. Helmet is tall narrow rectangular judicial mitre, two vertical brass rails, absolutely opaque flat black face without human features. Stern long angular cuirass with centered amber vertical slit, flared bifurcated knee-length rigid tabard panels; lean articulated shins. 星河裁決刃 weapon is a short-handled single broad straight execution SWORD with clipped angular tip and parallel amber edge channels, clear small crossguard, no pole handle. 裁決追跡靴: narrow pointed toes, visible black segmented rubber soles and brass ankle rings. 星河裁決權柄 is a detachable back accessory shaped like a compact balance-frame: central rectangular authority block, short horizontal crossbar above, two equal hanging rectangular seal plates, clearly mechanical backpack emblem, NO handheld staff. Rear clearly shows back emblem. Keep designs identical across views, show sword away from body. No text, no scenery, no firearms or polearms, no axe, no extra panels. White stepped mantle and split tabard must look entirely different from green round-shouldered royal guard.",
+        "originalToolOutput": "/workspace/generated_images/exec-e989c65b-c3de-4675-bb0c-9c6697981402.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/sources/overview-original.png",
+        "originalSha256": "841ea8423e800ac89eead8a6dbc506083a46071054c96673ec87f35ac79b86c7",
+        "originalBytes": 2130530,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 228146,
+          "sha256": "f2e0ac99d28bd046e80ceeb3326922a0e6934a265794e7ac20d5533dd46c7a12"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Render a NEW independent 1536x1024 landscape five-slot equipment still life for G087 using attached turnaround as exact major design reference. Gray studio background, separated generous groups: broad straight amber-channel short-handled execution SWORD with clipped angular tip, tall white narrow mitre helmet with brass vertical rails and opaque black face, ivory three-tier stepped shoulder mantle body armor with long split rigid tabard and arms/legs on invisible mannequin (no helmet, no feet, no back emblem attached), a PAIR of independent pointed ivory boots with brass ankle rings and visible black segmented soles, and detached brass back authority balance-frame with central amber vertical rectangular block and horizontal crossbar with two dangling rectangular seal plates. All five groups fully in frame, match reference colors and silhouette, clear small-scale 2.5D shapes, no text, no human face, no firearm, no polearm. Separately generated design sheet, not crops of reference.",
+        "originalToolOutput": "/workspace/generated_images/exec-156c0f4f-0dc4-4462-8caf-56dac147a08f.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/sources/slots-original.png",
+        "originalSha256": "56e687cde32b4b01bfa4fded58dd929a7711de5aee4b5abfae35c19709c4ec17",
+        "originalBytes": 1941282,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 184092,
+          "sha256": "c26408ded1f6be11ba3ad3cb3a17f3e11a51c8d9b205653adf55ee51248ca761"
+        },
+        "referenceOriginalSha256": "841ea8423e800ac89eead8a6dbc506083a46071054c96673ec87f35ac79b86c7"
+      }
+    ],
+    "observation": "象牙白黃銅長方雙軌盔、封黑面、三階橫肩、直琥珀胸核與分叉長甲尾、截角寬直劍、尖鞋頭黑分節底雙靴及橫梁雙懸牌背印",
+    "advisory": "三視劍呈浮置展示，五槽盔頂、肩片邊及鞋踝有局部細節差異；五槽鎧甲腿被長甲尾部分遮住，仍有獨立尖頭鞋底與雙懸背牌可辨，非工程拆件精度要求。"
+  },
+  {
+    "id": "g088",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create independent 1536x1024 landscape original sci-fi RPG G088 Galactic Core Throne region full-body armor turnaround with three same-height front / exact side / rear views, generous margins all helmet and boots visible, neutral gray studio. Same suit consistently across all three views. Royal high civilization throne command design, rich amethyst purple enamel, matte pale gold framework, violet-white tiny energy seams, black joints. Helmet is a fully sealed wide fan crown with seven blunt radial ribs and opaque angular gold faceplate, no face or skin. Broad horizontal throne-armrest pauldrons with rectangular raised ends, domed faceted breastplate with central diamond violet core; layered scalloped hip tassets, strongly tapered articulated leg armor. 王權星刃 is an elegant short-handled long straight double-edged sword, gold diamond crossguard, purple core and pale energy cutting edges, never a staff. 王權相位靴 are low broad angular shoes with thick floating segmented gold soles, clear toes and heels. 銀河王座權印 back accessory: tall detachable throne-shaped arched frame with three nested rounded arches and suspended diamond central seal, clear rear view, no cape. Clean large shapes readable in mobile 2.5D; no text, no scenery, no gun or polearm, no axe. Different silhouette from green round guard, white tiered judge, blue five tooth commander, V navy or asymmetric megastructure.",
+        "originalToolOutput": "/workspace/generated_images/exec-02feb246-59be-446d-a831-9ddc4634c6c5.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/sources/overview-original.png",
+        "originalSha256": "4cbdea1dbb91359d3066486feafcda4295ddbbeb6137e883dedaf398b7d59eeb",
+        "originalBytes": 2400263,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 293718,
+          "sha256": "c6f8dc0bf3ccca1a2bc07ce2395e0c9475d4366dab2deade696f9e20213a6210"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Generate NEW independent 1536x1024 five-slot sci-fi equipment concept still life, use attached G088 purple/gold throne armored turnaround for exact major design. Gray background, five separated groups complete within frame: elegant straight double-edged violet energy sword with short grip and diamond crossguard; sealed gold-faced amethyst fan crown helmet with seven blunt radial ribs; torso armor with broad throne armrest shoulders, diamond chest core, scalloped tassets and arms/legs on invisible mannequin (no helmet, no feet, no back arches attached); PAIR of low broad angular purple and gold boots with clear toes, heels and thick layered violet-lit gold soles; standalone back authority seal of three nested tall rounded gold arch frames with suspended purple diamond, clearly detached. Match reference shape, color, materials. Large clean readable shapes for mobile 2.5D, no text, no face, no gun or long staff. Do not crop or rearrange reference, separately render all equipment.",
+        "originalToolOutput": "/workspace/generated_images/exec-d09793bd-62d5-4557-a1cd-c0fb325e69b9.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/sources/slots-original.png",
+        "originalSha256": "daa7626525a0aaaa76a8671b3324870447ad47abd34da4530614395998d8f845",
+        "originalBytes": 2176949,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 230732,
+          "sha256": "146dd5c7f002b7e76780b6975f35d151a0508300c389613ef19d54b6ad0b033e"
+        },
+        "referenceOriginalSha256": "4cbdea1dbb91359d3066486feafcda4295ddbbeb6137e883dedaf398b7d59eeb"
+      }
+    ],
+    "observation": "紫金扇冠封金面、王座扶手寬肩、菱核胸與重疊扇腰片、紫白長直雙刃、寬削角金底雙鞋及三重拱形懸菱背印",
+    "advisory": "生成腰甲與拱框較設計卡長，三視與五槽的冠齒數、護手和拱框接點略有差異；紫金扇冠、王座寬肩、菱核、雙鞋與三重拱形主輪廓一致。"
+  },
+  {
+    "id": "g089",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "New independent 1536x1024 landscape sci-fi original RPG G089 Stellar Hegemony Final Front full-body turnaround: same character front, true side, rear on gray studio background. Fully visible helmet tops and boots, three views consistently same equipment. Aggressive advanced conquest heavy armor, burnt crimson enamel, dark iron, small warm white energy cuts. Helmet low wedge-shaped with swept-back twin side blades, black completely opaque face, no crown. Asymmetric armor: massive LEFT shoulder square siege-bastion block with stepped horizontal plates, smaller RIGHT wedge shoulder; compact angular chest with diagonal raised chevron ridge, short broad overlapping waist armor, thick mechanical piston thighs and squared shins. 霸權斷界刃 short-handled broad slightly curved single-edge SWORD with jagged stepped spine (not saw teeth), bright white cutting edge, chunky rectangular guard; recognizable blade no firearm/polearm/axe. 霸權征途靴 heavy squared toe boots with thick black cleated track-like soles and exposed reinforced heels. 星河霸權權柄 detachable back authority device: three short rigid slab-banner fins arranged horizontally from a rectangular central red command block, stepped edges, no cloth and no mast. Rear shows fins clearly. Strong military conquest identity, no scenery, no text, large clean 2.5D readable silhouette. Keep LEFT shoulder mass on anatomical left across all views. Entirely different from G088 purple gold fan crown and arches, G087 long white judge tabard, green round G086 guard.",
+        "originalToolOutput": "/workspace/generated_images/exec-ffca4fe1-068c-4ac8-8191-5bd59ff300f9.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/sources/overview-original.png",
+        "originalSha256": "c7ce24ade999a24981b113c911c66f32512adbdf800c9563e4e63d13b92e07ce",
+        "originalBytes": 2565636,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 350266,
+          "sha256": "2748f2b68b2adcd5fdd21dbffb83adf207729a567c2c86fe5abfac72a252d685"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW independent 1536x1024 landscape five-slot equipment still-life concept for G089 from attached red black conquest armor turnaround. Gray background. Five separated full groups: broad curved short-handle single-edge sword with angular stepped spine and white cutting edge, small thick guard; sealed red wedge helmet with swept twin side blade fins and opaque black face; red dark-iron main armor with anatomical LEFT very large stepped rectangular bastion shoulder (viewer right), smaller right wedge shoulder, chevron breastplate, short layered hip tassets, piston arms and legs on invisible mannequin, no helmet or feet or back accessory; PAIR of detached heavy squared red boots with iron toe caps, black thick cleated track-like soles and heels; detached command back device matching rear view, central vertical red rectangular block with three short broad rigid red slab-banner fins protruding on its right side and hinge array. Maintain major shapes and weathered crimson iron materials from reference, large mobile 2.5D readable silhouette, no text, no guns or polearms or axes, no extra items, generous spacing no crop. Truly new render, no crops or rearrangement.",
+        "originalToolOutput": "/workspace/generated_images/exec-88624ec1-a795-40d8-8ff3-9c4716ec2051.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/sources/slots-original.png",
+        "originalSha256": "0abd2f334d9ad1d9943e5de03afff78d29afc0dcbd025d4fa55b3f3fd8f7fc1a",
+        "originalBytes": 2365952,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 305430,
+          "sha256": "0a4dcec32ae9bb30838a71c607a2bb5e67715c4053c31f92fda739b6e58ddd35"
+        },
+        "referenceOriginalSha256": "c7ce24ade999a24981b113c911c66f32512adbdf800c9563e4e63d13b92e07ce"
+      }
+    ],
+    "observation": "紅黑後掠側刃盔、全黑面、左側方階大肩與小右肩、斜脊胸與活塞厚腿、微彎寬單刃階梯刀背、方頭履齒厚底雙靴及側出三片硬旗背裝置",
+    "advisory": "側面略偏四分之三，硬旗板在實際生成集中於背部一側；五槽沿用此實際結構。刀背階梯、肩片數及手部微差列建議，不影響非對稱紅重甲與獨立鞋背飾辨識。"
+  },
+  {
+    "id": "g090",
+    "outputs": [
+      {
+        "kind": "overview",
+        "tool": "image_gen.imagegen",
+        "prompt": "Create NEW independent landscape 1536x1024 full-body sci-fi armor turnaround for original RPG G090 Galactic Core King Battle region. Three spaced front/true side/rear views of identical suit; all helmet, sword tip, boots fully visible with margins, neutral gray studio, precise polished concept painting for mobile 2.5D. Ultimate advanced core-control battle armor in satin obsidian, brushed silver, saturated red small energy apertures. Unique compact brutalist design: helmet low smooth hexagonal monolith with flat top and central narrow opaque red visor, no crown, horns, exposed face. Tall stacked collar rises behind head. Symmetric thick trapezoid shoulders with vertical silver fluted ribs; heavy hexagonal breastplate framing a red triangular core, short octagonal waist plates, very thick jointed thigh blocks and broad tapered shins. 核心王戰刃 is a short-handled straight thick double edged sword with a central red energy channel and broad square guard, no staff, firearm, axe or hammer. 王座決戰靴 massive broad hexagonal toe shoes with heavy segmented silver soles and heel stabilizer blocks. 銀河核心權柄 is a clearly detached-form back accessory worn centrally: a compact hexagonal red core inside TWO concentric rigid segmented hexagonal silver control rings, no wings/cape/banners, clearly visible in rear. Identical geometry and palette all views, blade held clear of body, no text/scenery/extra figures. Strong blocky restrained outline different from red asymmetric conqueror, purple fan king, white judge, green round guard.",
+        "originalToolOutput": "/workspace/generated_images/exec-fe6a69dc-5eba-4f56-a77b-efb56859ee12.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/sources/overview-original.png",
+        "originalSha256": "49e895c2b490a6250b699f4b307d4be6508a1c716cd5b21b9bed34c69f933663",
+        "originalBytes": 2411182,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 287022,
+          "sha256": "d1738b07ee5a2ea4faacbc1b2fdb6413ef83fc9642d86d584745cdaaebf0be1d"
+        },
+        "referenceOriginalSha256": null
+      },
+      {
+        "kind": "slots",
+        "tool": "image_gen.imagegen",
+        "prompt": "Generate a NEW independent 1536x1024 landscape sci-fi five-slot equipment concept still life for G090 from attached obsidian/silver/red core battle turnaround, match actual reference geometry. Neutral gray background, five separated groups fully visible with generous margins: short-handle thick straight double-edged sword, wide silver square guard, central red energy groove; sealed compact flat-topped polygonal monolith helmet with opaque vertical red slit face; thick black main armor with silver ribbed trapezoid shoulders, stacked tall collar, red diamond/triangular chest core, short waist plates, thick thighs and articulated shins on invisible mannequin (no helmet, feet, back ring); PAIR of independent massive black/silver polygonal toe boots, reinforced silver segmented soles and stabilizer heels; standalone back control accessory with central red polygonal core inside TWO concentric segmented silver polygonal rings and short connecting brackets. Large clear readable forms for small mobile 2.5D, no text, no human face, no firearm, no polearm, no axe, no extra gear. Match reference rather than adding new decorations, separately render equipment, do not crop or rearrange reference.",
+        "originalToolOutput": "/workspace/generated_images/exec-2a59433f-460f-42d1-9279-2c78aacc79ee.png",
+        "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/sources/slots-original.png",
+        "originalSha256": "371a1fb73ad40e877c2377754b4e44384cd517641e5173f6cffa417647699eda",
+        "originalBytes": 2087251,
+        "originalWidth": 1536,
+        "originalHeight": 1024,
+        "output": {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 186512,
+          "sha256": "925856eb78ed0a446473ff33f4e46ec481fedc43cf39aa456966e4b290bf9577"
+        },
+        "referenceOriginalSha256": "49e895c2b490a6250b699f4b307d4be6508a1c716cd5b21b9bed34c69f933663"
+      }
+    ],
+    "observation": "黑銀平頂柱盔與封閉紅縱視域、高疊領直肋厚肩、紅三角菱核胸與厚腿、紅槽厚直雙刃、大多邊銀底雙靴及雙層多邊紅核背環",
+    "advisory": "實際頭盔視域為縱條、背環呈八邊主輪廓而非設計卡六邊；五槽沿用實際生成結構。五槽腿甲與高靴分界及環框接點略有差異，鞋頭鞋底及雙環仍清楚可辨。"
+  }
+]

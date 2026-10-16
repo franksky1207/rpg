@@ -86,7 +86,7 @@ jobs:
       - name: Check resumable batches and index drift
         run: |
           python3 scripts/equipment-concept-batches.py status
-          python3 scripts/equipment-concept-batches.py plan --batch G17
+          python3 scripts/equipment-concept-batches.py plan --batch G18
       - name: Require repeatable generation without tracked changes
         run: |
           python3 scripts/equipment-concepts.py generate

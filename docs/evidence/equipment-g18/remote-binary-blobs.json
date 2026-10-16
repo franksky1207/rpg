@@ -1,0 +1,86 @@
+{
+  "verifiedAgainstLocalGitBlob": true,
+  "count": 20,
+  "files": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/sources/overview-original.png",
+      "sha": "a52a77d30fa292ddf9d6ef20ef8964e8874f90ba"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/overview-front-side-back.webp",
+      "sha": "6fabd35787e6624ebc5a03d05bd55b45b7b67676"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/sources/slots-original.png",
+      "sha": "122cc01e402be1794c1bd5669ed82c78a1df05fd"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g086-galactic-royal-guard/equipment-five-slots.webp",
+      "sha": "faf65d2824cccdd18a65e7599693318475504b44"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/sources/overview-original.png",
+      "sha": "39fd50a1bf2da5b3c7c79576d614d629bbb56ffc"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/overview-front-side-back.webp",
+      "sha": "ab97dee9d026d8a57e4035e592037a3fafa1f7ab"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/sources/slots-original.png",
+      "sha": "0cce75fbf473faba9cd4656b0d79b18bd71a1ec6"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/equipment-five-slots.webp",
+      "sha": "a5101000842951b1a626817fab1edd6ef6058879"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/sources/overview-original.png",
+      "sha": "609ae33663fb2998af19c6843360a9055e9794fd"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/overview-front-side-back.webp",
+      "sha": "bdd34eaed7682eabbf4beab0f56505debe8304b6"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/sources/slots-original.png",
+      "sha": "7683127d4c1f541380778e4d43b1a88278e87521"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g088-galactic-core-throne/equipment-five-slots.webp",
+      "sha": "535ebca62013ec4d37820422651bf29041bc92cd"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/sources/overview-original.png",
+      "sha": "1b23d6c53eb833a5e3ccef37fef772472e1883f8"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/overview-front-side-back.webp",
+      "sha": "4bf45d060edf15713f2ecdf29d00be86d250c533"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/sources/slots-original.png",
+      "sha": "cf946ca30f1da94f2ebd0a446aac4fb389a35408"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g089-stellar-final-front/equipment-five-slots.webp",
+      "sha": "67ac835852c962c5f6640c4a01439b649adc05e8"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/sources/overview-original.png",
+      "sha": "e4a5ab1a36535a69a962469b82f5aad9078efe52"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/overview-front-side-back.webp",
+      "sha": "5e46f63e2ab0cbbb12ee9c95ad6f700e8a73901f"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/sources/slots-original.png",
+      "sha": "e3905464f9a7a36a9229220785e34ce2dfebdaf4"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g090-core-king-battle/equipment-five-slots.webp",
+      "sha": "9f18886a9686a42986547acebcc4d47ad50f2e1b"
+    }
+  ]
+}

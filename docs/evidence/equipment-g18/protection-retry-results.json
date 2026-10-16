@@ -1,0 +1,50 @@
+[
+  {
+    "command": "node scripts/equipment-phase6-audit.cjs",
+    "exitCode": 1,
+    "seconds": 0.64,
+    "log": "docs/evidence/equipment-g18/protection-retry-000.log"
+  },
+  {
+    "command": "node tests/equipment-formal/publication.cjs",
+    "exitCode": 0,
+    "seconds": 0.17,
+    "log": "docs/evidence/equipment-g18/protection-retry-001.log"
+  },
+  {
+    "command": "node tests/equipment-gm/publication.cjs",
+    "exitCode": 1,
+    "seconds": 0.24,
+    "log": "docs/evidence/equipment-g18/protection-retry-002.log"
+  },
+  {
+    "command": "node tests/equipment-weapons/names.cjs",
+    "exitCode": 0,
+    "seconds": 1.1,
+    "log": "docs/evidence/equipment-g18/protection-retry-003.log"
+  },
+  {
+    "command": "node tests/runtime/t4-preview-retirement.cjs",
+    "exitCode": 1,
+    "seconds": 0.7,
+    "log": "docs/evidence/equipment-g18/protection-retry-004.log"
+  },
+  {
+    "command": "node tests/runtime/publish-build-regression.cjs",
+    "exitCode": 0,
+    "seconds": 0.27,
+    "log": "docs/evidence/equipment-g18/protection-retry-005.log"
+  },
+  {
+    "command": "node scripts/build-publish-dry-run.cjs",
+    "exitCode": 1,
+    "seconds": 0.17,
+    "log": "docs/evidence/equipment-g18/protection-retry-006.log"
+  },
+  {
+    "command": "node scripts/stage-hybrid-preview.cjs",
+    "exitCode": 1,
+    "seconds": 0.22,
+    "log": "docs/evidence/equipment-g18/protection-retry-007.log"
+  }
+]

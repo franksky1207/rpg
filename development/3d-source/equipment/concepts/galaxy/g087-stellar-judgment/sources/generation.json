@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g087",
+  "baseMain": "a81f2f3d5a95dbbcfa7cd33c7d59be5c290eb54d",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "星河裁決區的裁決秩序：象牙白／黃銅／琥珀光；高窄長方裁決盔與黑面、三階橫層肩甲、直條光胸與分叉長硬甲尾、細脛；截角寬直裁決劍、短柄護手；尖頭分節黑底靴與金踝環；背部橫梁中央直塊及雙懸矩形裁決牌。以階梯長甲及雙懸牌區別G084倒三角終結鎖條。",
+  "generationMethod": "Two actual separate calls: overview inspected, then its original PNG used as reference for a newly rendered five-slot sheet; no crop/recolor/copy/composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 PNG retained byte-for-byte.",
+  "rightsBasis": "使用者授權本專案於本次Codex工作使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖或第三方角色參考，不宣稱公有領域、CC或獨占權利。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "New independent landscape 1536x1024 original sci-fi RPG G087 Stellar Judgment domain (星河裁決區) armored full body turnaround, front, exact side and rear of the SAME suit equally spaced, neutral gray background, polished 2.5D game concept painting, all helmet tops and boot soles within frame. Distinct high civilization adjudicator: ivory ceramic broad rectangular mantle shoulders with three descending horizontal tiers; black understructure, brushed brass fittings, restrained amber light. Helmet is tall narrow rectangular judicial mitre, two vertical brass rails, absolutely opaque flat black face without human features. Stern long angular cuirass with centered amber vertical slit, flared bifurcated knee-length rigid tabard panels; lean articulated shins. 星河裁決刃 weapon is a short-handled single broad straight execution SWORD with clipped angular tip and parallel amber edge channels, clear small crossguard, no pole handle. 裁決追跡靴: narrow pointed toes, visible black segmented rubber soles and brass ankle rings. 星河裁決權柄 is a detachable back accessory shaped like a compact balance-frame: central rectangular authority block, short horizontal crossbar above, two equal hanging rectangular seal plates, clearly mechanical backpack emblem, NO handheld staff. Rear clearly shows back emblem. Keep designs identical across views, show sword away from body. No text, no scenery, no firearms or polearms, no axe, no extra panels. White stepped mantle and split tabard must look entirely different from green round-shouldered royal guard.",
+      "originalToolOutput": "/workspace/generated_images/exec-e989c65b-c3de-4675-bb0c-9c6697981402.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/sources/overview-original.png",
+      "originalSha256": "841ea8423e800ac89eead8a6dbc506083a46071054c96673ec87f35ac79b86c7",
+      "originalBytes": 2130530,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 228146,
+        "sha256": "f2e0ac99d28bd046e80ceeb3326922a0e6934a265794e7ac20d5533dd46c7a12"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Render a NEW independent 1536x1024 landscape five-slot equipment still life for G087 using attached turnaround as exact major design reference. Gray studio background, separated generous groups: broad straight amber-channel short-handled execution SWORD with clipped angular tip, tall white narrow mitre helmet with brass vertical rails and opaque black face, ivory three-tier stepped shoulder mantle body armor with long split rigid tabard and arms/legs on invisible mannequin (no helmet, no feet, no back emblem attached), a PAIR of independent pointed ivory boots with brass ankle rings and visible black segmented soles, and detached brass back authority balance-frame with central amber vertical rectangular block and horizontal crossbar with two dangling rectangular seal plates. All five groups fully in frame, match reference colors and silhouette, clear small-scale 2.5D shapes, no text, no human face, no firearm, no polearm. Separately generated design sheet, not crops of reference.",
+      "originalToolOutput": "/workspace/generated_images/exec-156c0f4f-0dc4-4462-8caf-56dac147a08f.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g087-stellar-judgment/sources/slots-original.png",
+      "originalSha256": "56e687cde32b4b01bfa4fded58dd929a7711de5aee4b5abfae35c19709c4ec17",
+      "originalBytes": 1941282,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 184092,
+        "sha256": "c26408ded1f6be11ba3ad3cb3a17f3e11a51c8d9b205653adf55ee51248ca761"
+      },
+      "referenceOriginalSha256": "841ea8423e800ac89eead8a6dbc506083a46071054c96673ec87f35ac79b86c7"
+    }
+  ]
+}

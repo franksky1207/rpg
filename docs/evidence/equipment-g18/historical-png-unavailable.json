@@ -1,0 +1,15 @@
+{
+  "paths": [
+    "development/3d-source/equipment/concepts/galaxy/g081-core-civilization-war/sources/overview-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g081-core-civilization-war/sources/slots-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/sources/overview-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g082-stellar-weapons-array/sources/slots-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/sources/overview-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g083-stellar-fleet-battle/sources/slots-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g084-civilization-end/sources/overview-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g084-civilization-end/sources/slots-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/sources/overview-original.png",
+    "development/3d-source/equipment/concepts/galaxy/g085-core-megastructures/sources/slots-original.png"
+  ],
+  "sha256Source": "Existing SHA-bound G17 sources/generation.json; local PNG bytes unavailable, remote final CI must check actual bytes."
+}

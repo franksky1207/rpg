@@ -1,0 +1,13 @@
+{
+  "baseMain": "a81f2f3d5a95dbbcfa7cd33c7d59be5c290eb54d",
+  "baseTree": "890dffd31da3e02bdfeb2defe5b36554e423bc76",
+  "verifiedTree": "3da70c5bfe21d55803b9e9951d875e2b24550214",
+  "allOldFilesRetained": true,
+  "unchangedFilesOutsideAuthorizedScope": true,
+  "allSubmittedBlobHashesMatchLocal": true,
+  "historicalG001G085Files": 667,
+  "historicalBlobShasUnchanged": true,
+  "submittedFiles": 283,
+  "noUnexpectedNewFiles": true,
+  "receiptScope": "Verified complete artifact candidate before adding this receipt and README link; these evidence additions do not alter historical or image subtrees."
+}

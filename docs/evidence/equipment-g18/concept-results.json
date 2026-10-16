@@ -1,0 +1,44 @@
+[
+  {
+    "command": "python3 scripts/equipment-concepts.py validate",
+    "exitCode": 0,
+    "seconds": 31.54,
+    "log": "docs/evidence/equipment-g18/concept-000.log"
+  },
+  {
+    "command": "python3 scripts/equipment-asset-production-gate.py --set G024",
+    "exitCode": 0,
+    "seconds": 29.8,
+    "log": "docs/evidence/equipment-g18/concept-001.log"
+  },
+  {
+    "command": "python3 scripts/equipment-asset-production-gate.py --set G030",
+    "exitCode": 0,
+    "seconds": 22.29,
+    "log": "docs/evidence/equipment-g18/concept-002.log"
+  },
+  {
+    "command": "python3 scripts/equipment-concept-batches.py status",
+    "exitCode": 0,
+    "seconds": 23.51,
+    "log": "docs/evidence/equipment-g18/concept-003.log"
+  },
+  {
+    "command": "python3 scripts/equipment-concept-batches.py plan --batch G18",
+    "exitCode": 0,
+    "seconds": 37.55,
+    "log": "docs/evidence/equipment-g18/concept-004.log"
+  },
+  {
+    "command": "python3 scripts/equipment-concept-batches.py plan --batch G19",
+    "exitCode": 0,
+    "seconds": 27.55,
+    "log": "docs/evidence/equipment-g18/concept-005.log"
+  },
+  {
+    "command": "python3 scripts/equipment-concepts.py generate",
+    "exitCode": 0,
+    "seconds": 23.69,
+    "log": "docs/evidence/equipment-g18/concept-006.log"
+  }
+]
