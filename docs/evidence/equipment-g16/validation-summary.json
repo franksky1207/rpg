@@ -1,0 +1,8 @@
+{
+  "conceptUnittests": 118,
+  "protectionCommands": 20,
+  "runtimeWorkflowCommands": 99,
+  "browserCommands": 9,
+  "allPassed": true,
+  "physicalDeviceTest": false
+}

@@ -5011,19 +5011,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g076-core-civilization-border",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 258818,
+          "sha256": "2642ce4391d22e0ab45d43d55617762b02af131ec32217f2dea71d2a42d1f65a"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 253630,
+          "sha256": "fc92735f52aac78ce7643913ae6cc7c84e900dd8a1fc1cb94bead846b64e784f"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g076-core-civilization-border/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g077",
@@ -5062,19 +5077,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 326578,
+          "sha256": "8fa6e5e99cca43d8fc839d9910931b358eb69df650580f2d6365ede5793ca060"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 323588,
+          "sha256": "c5c71ace95f7f55e63bb5c495e4b756c8efd08ce0287fae69db0df9cd286c0dd"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g078",
@@ -5113,19 +5143,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 217958,
+          "sha256": "bbc47f5ab14baf6da5397ff5c959434c87d08622c7ceed5facbc7e01eee0a22f"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 267464,
+          "sha256": "965b707c05b890add0fdda499a72327dbc4192bbe55dfc12b099e5094ec9a280"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g079",
@@ -5164,19 +5209,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g079-core-war-outpost",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 320956,
+          "sha256": "bf06d3ddddfffa9b92ee83d80583748597b58936542b02ebeb77f184780b185b"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 307642,
+          "sha256": "92fbf9c1171c3b9845adaaa12cd157b7a5cbf568b3afd0e7d19c09537b3becb4"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g079-core-war-outpost/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g080",
@@ -5215,19 +5275,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 324358,
+          "sha256": "36e15cee9a1feb30bd919710da1a48cbeef760c4cff686ad3c8d8d8e005109ee"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 309060,
+          "sha256": "c599d444a4eef2c91b375de315b58d40abec9da241952a3176955eee505b7f52"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g081",

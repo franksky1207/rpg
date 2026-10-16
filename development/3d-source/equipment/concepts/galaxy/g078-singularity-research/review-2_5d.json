@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g078",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:core-outer:map:7",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research",
+    "regionOrBoss": "銀河核心外圍 → 奇點研究區",
+    "equipmentNames": {
+      "weapon": "奇點解析刃",
+      "helmet": "研究密封盔",
+      "armor": "實驗時空甲",
+      "shoes": "相位實驗靴",
+      "accessory": "奇點研究模組"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "bbc47f5ab14baf6da5397ff5c959434c87d08622c7ceed5facbc7e01eee0a22f",
+    "equipment-five-slots.webp": "965b707c05b890add0fdda499a72327dbc4192bbe55dfc12b099e5094ec9a280"
+  },
+  "reviewedAt": "2026-10-16",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "4c7983c379074b5d1afc9dcc635c7ad658c65faa0698dee173be9e67b05a977f",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/generation-provenance.md",
+      "sha256": "c55d8ad372fac542ee5b63fa6cb9fb21e5fa08856bc7ad896ea489e9928aa382"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/codex-review.md",
+      "sha256": "4c7983c379074b5d1afc9dcc635c7ad658c65faa0698dee173be9e67b05a977f"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/sources/generation.json",
+      "sha256": "2cb9cb2f856a4e9e35c6cb41e170c1f4678f7872793257482fb14860c1947b1d"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-16",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/codex-review.md",
+        "sha256": "4c7983c379074b5d1afc9dcc635c7ad658c65faa0698dee173be9e67b05a977f"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "bbc47f5ab14baf6da5397ff5c959434c87d08622c7ceed5facbc7e01eee0a22f",
+        "equipment-five-slots.webp": "965b707c05b890add0fdda499a72327dbc4192bbe55dfc12b099e5094ec9a280"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g078 核對main c59fdd72c210c298131c5527b06ea5938a28a2dd 的worldmaps-core-outer.js REGION_MAPS[7]、data.js MAPS[77]固定註冊、engine.js makeItem五槽順序、正式索引及notes。galaxy:core-outer:map:7；銀河核心外圍 → 奇點研究區；五槽：奇點解析刃／研究密封盔／實驗時空甲／相位實驗靴／奇點研究模組。完整六欄身份、永久ID與目錄保持正式映射。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g078 兩PNG與兩WebP均實際Pillow load完整解碼，全部1536×1024，bytes與SHA逐檔計算。兩次獨立生成，原稿逐位元組保留；WebP只以RGB quality=92 method=6轉檔。來源及參考原稿SHA見sources/generation.json，非裁切或換色重排。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g078 已逐張目視兩張實際生成圖：鼠尾草綠白紫光的長黑面罩密封盔、窄圓肩與圓角胸甲、細分節腿、透明解析直劍、懸浮分離鞋底及豎直研究艙三軌環。 正側背角色頭腳完整且全遮臉，五槽板具完整刀劍、頭盔、鎧甲、可辨腳掌鞋底的成對鞋子與獨立背飾。背面可見實際背飾結構，主要配色與輪廓相符，無非刀劍武器。與G071～G075及本批他套在頭肩胸腿、武器與背飾均有結構差異。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g078 已逐張目視實際WebP產生的288×192縮圖：鼠尾草綠白紫光的長黑面罩密封盔、窄圓肩與圓角胸甲、細分節腿、透明解析直劍、懸浮分離鞋底及豎直研究艙三軌環。 在接近小尺寸戰鬥顯示的板上角色仍辨識頭盔、肩胸腿、刀劍與背飾輪廓；五槽可區分鞋與腿甲。此為概念板縮圖檢視，非正式透明角色、GM或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g078 本任務實際呼叫OpenAI image_gen.imagegen兩次，參考本套原PNG新繪五槽；原稿、工具路徑、prompt與參考SHA可查。使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。 原PNG與WebP保存在development，未授權正式發布。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "三視板附五槽小圖及文字；另次獨立五槽板的兩個鎧甲視角偏正面，下緣淡出，研究艙背面由三視與獨立背飾補足。透明刃縮小後較淡，紫色刃線仍可辨識。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/generation-provenance.md",
+      "sha256": "c55d8ad372fac542ee5b63fa6cb9fb21e5fa08856bc7ad896ea489e9928aa382"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "dca6ccb37e54861a0f8261f8c12b2ea34824925650097aebaf56dce94e52368e"
+}

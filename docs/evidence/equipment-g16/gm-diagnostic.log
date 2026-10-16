@@ -1,0 +1,34 @@
+CONSOLE [文明戰線] Third-world progress integrity error [Object]
+CONSOLE [強化存檔相容檢查失敗] [Object, Object, Object, Object, Object]
+CONSOLE [文明戰線] Third-world player UI integrity error [SUPPRESSION_THREE_DECIMAL_PRESENTATION]
+CONSOLE [文明戰線] Third-world offline settlement integrity error [Object]
+CONSOLE [文明戰線] World 3 offline sample adapter integrity error [Object]
+CONSOLE [文明戰線] 競技場雙紀元回歸檢查失敗 [Object]
+CONSOLE [文明戰線] Third-world player flow integrity error [GM_BACKGROUND_THIRD_WORLD_GATE_MISSING]
+CONSOLE [文明戰線] Level migration regression audit failed {version: 1, passed: false, errors: Array(1), cases: Array(0), checkedAt: 1792130487707}
+CONSOLE [Mirror Dungeon Integrity] [Object, Object]
+CONSOLE [強化整合完整性檢查失敗] [Object, Object, Object, Object, Object, Object, Object]
+CONSOLE Main minimal mode integrity check failed {version: 4, ok: false, issues: Array(1), sharedApiVersion: 1, backgroundPolicy: follow-gm-background-setting}
+CONSOLE [Third World Dungeon Integrity] [Object, Object]
+CONSOLE [文明戰線] Calamity state integrity error [Object, Object]
+CONSOLE [文明戰線] Combat mark integrity error [Object]
+CONSOLE [文明戰線] Third-world deterministic combat integrity error [Object, Object]
+CONSOLE [文明戰線] Third-world combat finalization integrity error [Object, Object]
+CONSOLE [文明戰線] Combat mark FX integrity error [Object]
+CONSOLE [文明戰線] Combat speed integrity error [Object]
+CONSOLE [文明戰線] Second World Calamity GM integrity error [Object]
+CONSOLE [文明戰線] Second World Calamity full integrity error [Object, Object, Object]
+CONSOLE [文明戰線] Third-world subsystem integrity error [Object, Object, Object, Object]
+CONSOLE [Mirror Dungeon Final Integrity] [Object, Object, Object, Object]
+locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#gm3dPrototypeOverlay iframe').contentFrame().locator('#caseList').getByRole('button', { name: '角色全身展示', exact: true })[22m
+[2m    - locator resolved to <button type="button" class="center-case" aria-pressed="false">…</button>[22m
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+
+    at /workspace/g16-gm-diag.cjs:3:435 {
+  name: 'TimeoutError'
+}

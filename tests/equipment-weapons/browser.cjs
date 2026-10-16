@@ -7,6 +7,9 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  const page=await browser.newPage({viewport}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
  await page.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));await page.goto(base+'?production=1');await page.waitForFunction(()=>CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
+ // Keep the exact storage assertion independent of the unrelated wall-clock
+ // checkpoint heartbeat. Timers and performance.now still advance normally.
+ await page.clock.setFixedTime(new Date(await page.evaluate(()=>JSON.parse(localStorage.getItem('frank_text_rpg_offline_checkpoint')).ts)));
  await page.evaluate(async()=>{await ensureCivilizationScriptGroup('gm');state.gm=true;state.equipment.armor=null;openGm3DPrototype();});
  const frame=await page.waitForSelector('#gm3dPrototypeOverlay iframe').then(e=>e.contentFrame());await frame.waitForFunction(()=>Civilization3DTestCenter?.version===5);
  assert.equal(await frame.locator('#caseList .center-case').count(),31);assert.equal(await frame.evaluate(()=>Civilization3DTestCenter.categoryIds.length),8);

@@ -1,0 +1,109 @@
+PASS audio: actual galaxy ordinary
+PASS audio: actual galaxy elite
+PASS audio: actual galaxy Boss
+PASS audio: actual galaxy ordinary
+PASS audio: actual galaxy Boss
+PASS audio: actual galaxy continuous two rounds/manual stop
+PASS audio: actual universe Boss single
+PASS audio: actual higher run/start/battle/manual stop
+PASS audio: actual galaxy bounty single
+PASS audio: actual galaxy arena single
+PASS audio: actual galaxy mirror 15 rounds/settlement
+PASS audio: actual galaxy void/manual exit
+PASS audio: actual galaxy calamity/single
+{
+  scene: {
+    era: 'universe',
+    scene: 'combat-settled',
+    music: 'era-universe-theme',
+    ambient: null,
+    tier: null,
+    combatLocked: false,
+    activeRunId: null,
+    pendingExit: false,
+    lifecycle: 'IDLE'
+  },
+  stats: {
+    sfxVoices: 0,
+    music: true,
+    formalMusicVoices: 1,
+    preview: false,
+    combatVoices: 0,
+    unlocked: true,
+    prohibited: false,
+    listener: { x: 0, y: 0, z: 0 }
+  },
+  trace: [
+    {
+      event: 'playing',
+      id: '',
+      src: 'http://127.0.0.1:4189/audio/assets/common-sfx/normal-attack/sfx-002.ogg'
+    },
+    {
+      event: 'playing',
+      id: '',
+      src: 'http://127.0.0.1:4189/audio/assets/common-sfx/heavy-hit/sfx-029.ogg'
+    },
+    {
+      event: 'playing',
+      id: 'era-galaxy-theme',
+      src: 'http://127.0.0.1:4189/audio/assets/era-themes/galaxy-theme-loop.ogg'
+    },
+    {
+      event: 'play',
+      id: 'era-universe-theme',
+      src: 'http://127.0.0.1:4189/audio/assets/era-themes/universe-theme-loop.ogg'
+    },
+    {
+      event: 'play',
+      id: 'battle-high-preview',
+      src: 'http://127.0.0.1:4189/audio/assets/battle-themes/high-battle-loop.ogg'
+    },
+    {
+      event: 'playing',
+      id: 'battle-high-preview',
+      src: 'http://127.0.0.1:4189/audio/assets/battle-themes/high-battle-loop.ogg'
+    },
+    {
+      event: 'play',
+      id: '',
+      src: 'http://127.0.0.1:4189/audio/assets/common-sfx/normal-attack/sfx-003.ogg'
+    },
+    {
+      event: 'play',
+      id: '',
+      src: 'http://127.0.0.1:4189/audio/assets/common-sfx/heavy-hit/sfx-005.ogg'
+    },
+    {
+      event: 'play',
+      id: 'era-universe-theme',
+      src: 'http://127.0.0.1:4189/audio/assets/era-themes/universe-theme-loop.ogg'
+    },
+    {
+      event: 'playing',
+      id: '',
+      src: 'http://127.0.0.1:4189/audio/assets/common-sfx/normal-attack/sfx-003.ogg'
+    },
+    {
+      event: 'playing',
+      id: '',
+      src: 'http://127.0.0.1:4189/audio/assets/common-sfx/heavy-hit/sfx-005.ogg'
+    },
+    {
+      event: 'playing',
+      id: 'era-universe-theme',
+      src: 'http://127.0.0.1:4189/audio/assets/era-themes/universe-theme-loop.ogg'
+    }
+  ],
+  text: '\n' +
+    '   宇宙紀元・文明災厄文明階段已完成\n' +
+    '   此災厄之文明進度已達 100%。\n' +
+    '   \n' +
+    '   完成場次1文明進度100%災厄目前 HP1,000,000 / 1,000,000文明等級Lv.1\n' +
+    '   文明災厄不提供 EXP、暗物質、暗能量、裝備或其他一般獎勵。\n' +
+    '   單場重打返回文明災厄\n' +
+    '  '
+}
+page.waitForFunction: Timeout 15000ms exceeded.
+    at playing (/workspace/rpg/tests/runtime/audio-lifecycle-browser.js:64:8)
+    at /workspace/rpg/tests/runtime/audio-lifecycle-browser.js:471:11

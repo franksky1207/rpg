@@ -1,0 +1,6 @@
+[
+  {
+    "command": "node tests/runtime/reincarnation-batch7-closure.js",
+    "exitCode": 0
+  }
+]

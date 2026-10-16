@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g079",
+  "baseMain": "c59fdd72c210c298131c5527b06ea5938a28a2dd",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "鐵灰／軍紅／冰藍光；平頂斜面全封盔；低寬水平肩、楔形厚胸、分叉短腰甲、厚實前脛；前端星裂缺口寬劍；寬頭履帶紋相位靴；背部兩片低矮摺疊戰術天線與方形核心。前哨戰鬥實用、低重心。",
+  "generationMethod": "Two actual separate calls; overview inspected before its original PNG was supplied for independently drawn equipment-only sheet. No crop, recolor, old image copy or composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+  "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Generate a professional 2.5D mobile RPG armor concept turnaround, G079 core war outpost, galaxy core perimeter. Landscape 1536x1024. THREE large full body views FRONT SIDE BACK of SAME suit, no head or shoe cropping. Plain light gray background, no scenery, crisp stylized painterly hard-surface game concept illustration. IRON GRAY armor and MILITARY RED paneling with small ICE BLUE energy accents, dark joints. FLAT-TOP chamfered helmet with completely opaque sloped face armor, no eyes skin or face. LOW WIDE horizontal shoulder armor, WEDGE thick breastplate, short bifurcated waist armor, heavy faceted thigh and front shin plates. Broad square toe phase combat boots with industrial tread soles. A broad SWORD with a small star-split notch near the pointed blade tip, conventional short grip, ice blue cutting edge, held down naturally. Rear backpack is a compact SQUARE tactical core with TWO LOW FOLDED antenna panels, antennas broad and short NOT tall wings. Distinct functional low center of gravity forward military sentinel. Consistent gear colors and proportions across views, show actual rear backpack structure. Official slots 核心裂星刃 / 前哨禁衛盔 / 核心主戰甲 / 核心相位靴 / 核心戰術模組. No guns cannons spears axes scythes hammers. Minimal English labels only. No detached equipment diagram. Full helmets fully conceal facial features.",
+      "originalToolOutput": "/workspace/generated_images/exec-ea81a8b2-fd9b-42af-b187-83e292529337.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g079-core-war-outpost/sources/overview-original.png",
+      "originalSha256": "51298f94b27450be53819d63f71f0bfe6903b07b5d81e4e7e83db4d60d3043c8",
+      "originalBytes": 2439155,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 320956,
+        "sha256": "bf06d3ddddfffa9b92ee83d80583748597b58936542b02ebeb77f184780b185b"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Use supplied G079 iron gray military red outpost suit as exact design reference and draw a NEW independent equipment-only 1536x1024 landscape concept sheet. Not a crop collage or turnaround. Five large clearly separated groups on pale gray background, crisp painterly hard-surface 2.5D RPG illustration: WEAPON whole broad pointed ice-blue-edged sword with star-shaped split cutout near tip, short one-hand grip; HELMET flat-top chamfered iron gray shell, opaque red sloping face shield with blue side accents, no human face; ARMOR headless bootless hollow main suit, low wide angular shoulders, wedge gray breastplate with single cyan vertical core, red panels, bifurcated waist plates, heavy thighs/shins ending before ankle shoes, front and smaller rear view; BOOTS actual PAIR broad square-toed armored footwear with visible heavy tread soles and red ankle guards, no leg or knee armor mistaken for feet; BACK ACCESSORY detached compact rectangular iron/red tactical backpack with two short folded antenna panels and blue center, mount view. Match source silhouettes and colors consistently. Minimal English labels, all complete objects inside canvas. Official 核心裂星刃 / 前哨禁衛盔 / 核心主戰甲 / 核心相位靴 / 核心戰術模組. No guns, poles, axes, hammers, scythes, no wearer character. Clearly show independent boots and accessory.",
+      "originalToolOutput": "/workspace/generated_images/exec-18fb5c93-c6fc-414c-91bb-5ce6ea48de0b.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g079-core-war-outpost/sources/slots-original.png",
+      "originalSha256": "9e44f0d326a91e8a6d02e11fb8bf56107bb4f02aebc0b31deb9afaa7395ee6d1",
+      "originalBytes": 2289684,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 307642,
+        "sha256": "92fbf9c1171c3b9845adaaa12cd157b7a5cbf568b3afd0e7d19c09537b3becb4"
+      },
+      "referenceOriginalSha256": "51298f94b27450be53819d63f71f0bfe6903b07b5d81e4e7e83db4d60d3043c8"
+    }
+  ]
+}

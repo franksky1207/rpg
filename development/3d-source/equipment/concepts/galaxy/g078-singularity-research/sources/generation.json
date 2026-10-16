@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g078",
+  "baseMain": "c59fdd72c210c298131c5527b06ea5938a28a2dd",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "淺鼠尾草綠／陶瓷白／紫光；前凸圓柱密封研究盔，黑色整片面罩；窄肩圓角實驗胸甲、懸浮腰片、纖細分節腿；透明分層直刃解析劍；小型分離相位鞋底；背部豎直試驗艙與三個非對稱軌道小環。研究裝備的輕型封閉輪廓。",
+  "generationMethod": "Two actual separate calls; overview inspected before its original PNG was supplied for independently drawn equipment-only sheet. No crop, recolor, old image copy or composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+  "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create a landscape 1536x1024 2.5D RPG equipment turnaround sheet G078 singularity RESEARCH zone, galactic core perimeter advanced spatial science. THREE large complete full-body views FRONT, true SIDE, BACK, exactly same suit, head and feet uncropped. Pale neutral studio background, polished painterly hard surface game art, clear forms for small mobile battle sprite. LIGHT SAGE GREEN and ceramic WHITE, tiny VIOLET lights, black flexible joints. Distinct enclosed protruding cylindrical research helmet with continuous opaque black face shield, zero skin, no human features. Narrow rounded shoulders, light rounded rectangular sealed experimental breastplate, floating separated waist panels, slender segmented thigh and shin armor. Fine straight analytical ENERGY SWORD with translucent layered blade and short one-hand hilt (solid readable sword silhouette), held down alongside body. Small phase experiment ankle boots with separated floating sole plates visibly below foot. On BACK: vertical sealed experiment capsule backpack with THREE small asymmetric orbital rings attached to its sides, readable distinct accessory, no huge halo. Official five slots 奇點解析刃 / 研究密封盔 / 實驗時空甲 / 相位實驗靴 / 奇點研究模組. Match all features and colors across views, full opaque helmet. No guns, spears, staffs, axes, hammers, scythes. No other characters, no terrain, no mini diagrams. Minimal English view labels. Slim technical researcher silhouette markedly different from bulky military armor.",
+      "originalToolOutput": "/workspace/generated_images/exec-bb23cfb7-7bf9-4a2a-a02b-4c39ec01c632.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/sources/overview-original.png",
+      "originalSha256": "767d5f029197472742206d32d508a19196fadf2ad80a6f78eb94a5a1562ee39e",
+      "originalBytes": 2102093,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 217958,
+        "sha256": "bbc47f5ab14baf6da5397ff5c959434c87d08622c7ceed5facbc7e01eee0a22f"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Based exactly on supplied G078 sage white research suit, draw a NEW independent landscape 1536x1024 EQUIPMENT ONLY reference concept sheet. No pasted crops or full character. Clean light gray background, polished painterly crisp 2.5D RPG art. Five separate large groups: 1 WEAPON: full slender straight translucent violet analysis sword, short black white hilt with circular violet core. 2 HELMET: protruding cylindrical sealed helmet, sage white shell and fully opaque elongated black faceplate. 3 ARMOR: headless bootless light experimental armor, rounded white breastplate, narrow rounded sage shoulders, floating waist panels, segmented thighs and shins; front plus smaller rear view. 4 BOOTS: one complete PAIR actual ankle boots, white/sage with soles and small violet phase plates floating underfoot, do not substitute shins for shoes. 5 BACK ACCESSORY: distinct detached vertical white experiment capsule with three violet asymmetric small orbital rings and back mounting interface. Match actual reference equipment, main forms and color hierarchy. Clear separation of backpack from body and boots from legs. Minimal English labels only. Official slots 奇點解析刃 / 研究密封盔 / 實驗時空甲 / 相位實驗靴 / 奇點研究模組. No visible human face, guns, spears, staffs, axes, hammers or scythes. All items fully within canvas. Make five-slot board clearly a different composition from turnaround reference.",
+      "originalToolOutput": "/workspace/generated_images/exec-a593e03c-e892-41ef-9a51-6da25e62947b.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g078-singularity-research/sources/slots-original.png",
+      "originalSha256": "a38ac03fc83da348a67aeaaa33957a4d13f2d92e1ab919321b88d9d892b7d783",
+      "originalBytes": 2147101,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 267464,
+        "sha256": "965b707c05b890add0fdda499a72327dbc4192bbe55dfc12b099e5094ec9a280"
+      },
+      "referenceOriginalSha256": "767d5f029197472742206d32d508a19196fadf2ad80a6f78eb94a5a1562ee39e"
+    }
+  ]
+}

@@ -48,6 +48,13 @@ const { chromium } = require("playwright"),
             event: "playing",
             id: this.dataset.trackId || "",
             src: this.currentSrc,
+            snapshot: this.dataset.trackId ? {
+              track: CivilizationAudio.currentMusicId(),
+              formal: CivilizationAudio.runtimeStats().formalMusicVoices,
+              voices: [...window.__audioElements].filter(a=>a.dataset.trackId&&!a.paused).map(a=>a.dataset.trackId),
+              paused: this.paused,
+              readyState: this.readyState,
+            } : null,
           });
         });
       }
@@ -58,6 +65,16 @@ const { chromium } = require("playwright"),
   function record(result) {
     results.push(result);
     console.log("PASS audio:", result.case);
+  }
+  async function playingSince(id,start) {
+    const proof=await page.waitForFunction(({id,start})=>window.__audioTrace.slice(start).find(e=>e.event==='playing'&&e.id===id&&e.snapshot),{id,start},{timeout:15000});
+    const snapshot=(await proof.jsonValue()).snapshot;
+    await proof.dispose();
+    assert.equal(snapshot.track,id);
+    assert.equal(snapshot.formal,1);
+    assert.deepEqual(snapshot.voices,[id]);
+    assert.equal(snapshot.paused,false);
+    assert.ok(snapshot.readyState>=2);
   }
   async function playing(id) {
     await page
@@ -444,13 +461,14 @@ const { chromium } = require("playwright"),
     );
     await playing("era-galaxy-theme");
     record({ case: "actual galaxy void/manual exit", passed: true });
+    const galaxyCalamityTraceStart = await page.evaluate(() => window.__audioTrace.length);
     await page.evaluate(() => {
       const def = window.getCivilizationCalamityDefinitions()[0];
       state.bossKilled[def.mapIndex] = true;
       state.level = def.unlockLevel;
       window.startCivilizationCalamityUI(def.id, "single");
     });
-    await playing("battle-high-preview");
+    await playingSince("battle-high-preview",galaxyCalamityTraceStart);
     await page.waitForFunction(
       () => CivilizationAudioScenes.current()?.combatLocked === false,
       null,
@@ -458,6 +476,7 @@ const { chromium } = require("playwright"),
     );
     await playing("era-galaxy-theme");
     record({ case: "actual galaxy calamity/single", passed: true });
+    const universeCalamityTraceStart = await page.evaluate(() => window.__audioTrace.length);
     await page.evaluate(() => {
       state = newState();
       state.level = 600;
@@ -468,7 +487,9 @@ const { chromium } = require("playwright"),
       view = "calamity";
       window.startSecondWorldCalamityUI(d.id, "single");
     });
-    await playing("battle-high-preview");
+    // A one-hit calamity can settle before the next browser IPC call. Bind the
+    // native playing event and its exact voice snapshot to this invocation.
+    await playingSince("battle-high-preview",universeCalamityTraceStart);
     await page.waitForFunction(
       () => CivilizationAudioScenes.current()?.combatLocked === false,
       null,

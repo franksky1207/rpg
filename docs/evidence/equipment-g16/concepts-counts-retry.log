@@ -1,0 +1,6 @@
+test_actual_counts_names_statuses (test_database.DatabaseTests.test_actual_counts_names_statuses) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 116.915s
+
+OK

@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g077",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:core-outer:map:6",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense",
+    "regionOrBoss": "銀河核心外圍 → 黑洞防衛圈",
+    "equipmentNames": {
+      "weapon": "黑洞戰刃",
+      "helmet": "視界禁衛盔",
+      "armor": "黑洞防衛甲",
+      "shoes": "引力推進靴",
+      "accessory": "視界防衛節點"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "8fa6e5e99cca43d8fc839d9910931b358eb69df650580f2d6365ede5793ca060",
+    "equipment-five-slots.webp": "c5c71ace95f7f55e63bb5c495e4b756c8efd08ce0287fae69db0df9cd286c0dd"
+  },
+  "reviewedAt": "2026-10-16",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "a5a532e511425292ae1d1d77ce2cb5a4bd79caec445d433ef3b8e5df06b4b424",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense/generation-provenance.md",
+      "sha256": "aa5a8f4614c1c486d9d6fbbcaa2fec3746613daffa904c8b3ff1583695db5591"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense/codex-review.md",
+      "sha256": "a5a532e511425292ae1d1d77ce2cb5a4bd79caec445d433ef3b8e5df06b4b424"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense/sources/generation.json",
+      "sha256": "d85d7aa371046bf30c80f176fb7d0ef317a42a598f17f25fac21f534550f5b04"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-16",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense/codex-review.md",
+        "sha256": "a5a532e511425292ae1d1d77ce2cb5a4bd79caec445d433ef3b8e5df06b4b424"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "8fa6e5e99cca43d8fc839d9910931b358eb69df650580f2d6365ede5793ca060",
+        "equipment-five-slots.webp": "c5c71ace95f7f55e63bb5c495e4b756c8efd08ce0287fae69db0df9cd286c0dd"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g077 核對main c59fdd72c210c298131c5527b06ea5938a28a2dd 的worldmaps-core-outer.js REGION_MAPS[6]、data.js MAPS[76]固定註冊、engine.js makeItem五槽順序、正式索引及notes。galaxy:core-outer:map:6；銀河核心外圍 → 黑洞防衛圈；五槽：黑洞戰刃／視界禁衛盔／黑洞防衛甲／引力推進靴／視界防衛節點。完整六欄身份、永久ID與目錄保持正式映射。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g077 兩PNG與兩WebP均實際Pillow load完整解碼，全部1536×1024，bytes與SHA逐檔計算。兩次獨立生成，原稿逐位元組保留；WebP只以RGB quality=92 method=6轉檔。來源及參考原稿SHA見sources/generation.json，非裁切或換色重排。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g077 已逐張目視兩張實際生成圖：深藍鈦銀橙光的橫視窗盔、半圓堡壘肩、厚胸重腿甲、寬單刃戰刀、外側圓形推進器短靴及開口馬蹄三節點背環。 正側背角色頭腳完整且全遮臉，五槽板具完整刀劍、頭盔、鎧甲、可辨腳掌鞋底的成對鞋子與獨立背飾。背面可見實際背飾結構，主要配色與輪廓相符，無非刀劍武器。與G071～G075及本批他套在頭肩胸腿、武器與背飾均有結構差異。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g077 已逐張目視實際WebP產生的288×192縮圖：深藍鈦銀橙光的橫視窗盔、半圓堡壘肩、厚胸重腿甲、寬單刃戰刀、外側圓形推進器短靴及開口馬蹄三節點背環。 在接近小尺寸戰鬥顯示的板上角色仍辨識頭盔、肩胸腿、刀劍與背飾輪廓；五槽可區分鞋與腿甲。此為概念板縮圖檢視，非正式透明角色、GM或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g077 本任務實際呼叫OpenAI image_gen.imagegen兩次，參考本套原PNG新繪五槽；原稿、工具路徑、prompt與參考SHA可查。使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。 原PNG與WebP保存在development，未授權正式發布。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "五槽板另附刀背、盔後及背環斜視，鎧甲附圖仍帶鞋部外形；獨立成對短靴清楚可辨。視角造成環寬及局部接縫差異，未造成錯套或缺槽。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g077-black-hole-defense/generation-provenance.md",
+      "sha256": "aa5a8f4614c1c486d9d6fbbcaa2fec3746613daffa904c8b3ff1583695db5591"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "52674f80f4287ee17ac2b94631c203a3064e24bea52aa0db7494f85b6f1d8610"
+}

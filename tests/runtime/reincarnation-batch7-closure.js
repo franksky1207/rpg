@@ -1,14 +1,20 @@
 const {chromium}=require("playwright");
 const assert=require("assert");
+const {sdk}=require("../equipment-formal/helpers.cjs");
 
 (async()=>{
  const browser=await chromium.launch({headless:true});
  const page=await browser.newPage();
+ await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
+ await page.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));
  const pageErrors=[];
  page.on("pageerror",error=>pageErrors.push(String(error?.stack||error?.message||error)));
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
-  await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
+  // Load the tested GM owner explicitly; automatic development diagnostics also
+  // mutate the GM context revision and can invalidate the 100-run fixture.
+  await page.goto(url+(url.includes('?')?'&':'?')+'production=1',{waitUntil:"domcontentloaded",timeout:60000});
+  await page.evaluate(()=>ensureCivilizationScriptGroup('gm'));
   await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION===2&&window.GM_POWER_BENCHMARK_MODE_STATE_VERSION===2&&typeof window.applyReincarnationResetState==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function",{timeout:30000});
   // Do not replace the global formal state while startup/restore is still running.
   // This remains a strict byte-equivalence test; awaiting readiness does not waive it.
@@ -142,7 +148,10 @@ const assert=require("assert");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
 
   const page2=await browser.newPage();
-  await page2.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
+  await page2.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
+  await page2.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));
+  await page2.goto(url+(url.includes('?')?'&':'?')+'production=1',{waitUntil:"domcontentloaded",timeout:60000});
+  await page2.evaluate(()=>ensureCivilizationScriptGroup('gm'));
   await page2.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2,{timeout:30000});
   const freshDepth=await page2.evaluate(()=>window.gmAlternateUniverseBenchmarkSession().depth);
   assert.equal(freshDepth,1,"Reload/new page must reset AU boss selection to boss 1.");

@@ -1,5 +1,6 @@
 'use strict';
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
+const {sdk,finishIntro}=require('../equipment-formal/helpers.cjs');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined,headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--no-sandbox']});let checks=0;
@@ -7,7 +8,13 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
  try{
   for(const viewport of [{width:1365,height:900},{width:390,height:844},{width:844,height:390}].filter(v=>!process.env.GM_TEST_WIDTH||v.width===Number(process.env.GM_TEST_WIDTH))){
    const page=await browser.newPage({viewport}),errors=[],spriteRequests=[];page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>{if(/gm-equipment-2_5d.*webp/.test(r.url()))spriteRequests.push(r.url());});
-   await page.goto(base,{waitUntil:'load'});await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready'&&typeof openGm3DPrototype==='function',null,{timeout:60000});
+   await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
+   await page.addInitScript(()=>localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text'));
+   await page.goto(base+(base.includes('?')?'&':'?')+'production=1',{waitUntil:'domcontentloaded',timeout:60000});
+   await page.evaluate(()=>ensureCivilizationScriptGroup('gm'));
+   await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready'&&typeof openGm3DPrototype==='function',null,{timeout:60000});
+   await finishIntro(page);
+   await page.evaluate(()=>{const ts=JSON.parse(localStorage.getItem('frank_text_rpg_offline_checkpoint')).ts;Date.now=()=>ts;});
    check(spriteRequests.length===0,'no sprite load on game startup');
    check(await page.evaluate(()=>{state.gm=false;return openGm3DPrototype()===false;}),'non GM denied');
    await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');

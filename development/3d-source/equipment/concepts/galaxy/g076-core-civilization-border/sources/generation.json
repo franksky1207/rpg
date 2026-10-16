@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "set": "g076",
+  "baseMain": "c59fdd72c210c298131c5527b06ea5938a28a2dd",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "紫黑／舊金／青白光；三叉短冠全封面盔；高領扇狀肩、菱形分層胸、短腰裙與修長脛甲；直身中寬斷光劍；分趾感平底穿行靴；背掛六角權印浮雕，兩側短弧。文明邊界的秩序與授權印記。",
+  "generationMethod": "Two actual separate calls; overview inspected before its original PNG was supplied for independently drawn equipment-only sheet. No crop, recolor, old image copy or composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 retained without resize.",
+  "rightsBasis": "使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create a polished 2.5D mobile RPG equipment character concept sheet, landscape 1536x1024. G076 core civilization border, far-future high density galactic core perimeter. THREE large full-body views of EXACTLY SAME armored character: FRONT, true SIDE, BACK, evenly spaced, all heads and boots fully within canvas. Plain warm light gray studio background, crisp painterly hard-surface game concept art, readable simple bold silhouettes, no scenery, no small diagrams, minimal English view labels. All facial features completely hidden by opaque mask. Design: deep purple black armor, old gold trims, cyan white tiny energy accents. Short THREE-PRONG crown helmet with enclosed opaque facemask; high collar, fan-shaped shoulders, diamond layered breastplate, short armored waist skirt, long streamlined shin plates. Flat split-panel traversal boots. Back accessory: distinct large HEXAGONAL imperial civilization SEAL with embossed center and two short side arcs, mounted on upper back clearly shown in BACK view. Weapon: medium-width straight one-hand energy SWORD, short grip, cyan cutting edge, solid central dark blade, sword shown held downward at character side in front and side view. Five official slots: 核域斷光刃, 文明冠盔, 核域文明甲, 核域穿行靴, 核心文明權印. All three views must match equipment and colors. No visible human face, no gun, spear, staff, axe, hammer, scythe. No circular halo crown. Prioritize readable silhouette at small battle size.",
+      "originalToolOutput": "/workspace/generated_images/exec-30bd3f0d-ab74-43ab-8082-cfaef06faa39.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g076-core-civilization-border/sources/overview-original.png",
+      "originalSha256": "033208261de0e5fbf87d473e542cef21175b0472c1ceb6b5bdbf9f5e2e64558e",
+      "originalBytes": 2238723,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 258818,
+        "sha256": "2642ce4391d22e0ab45d43d55617762b02af131ec32217f2dea71d2a42d1f65a"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Using the referenced G076 purple gold crown armored character as the exact design reference, generate a NEW independently drawn 1536x1024 landscape EQUIPMENT ONLY concept sheet. This is not a rearranged crop of reference. Light gray studio background, polished crisp painterly 2.5D game art. Five clearly separated large groups, all within frame with generous margins: 1 WEAPON: complete straight cyan-edge sword with short hilt, purple core, gold guard. 2 HELMET: complete three-prong crown opaque facemask helmet, purple gold cyan, no skin. 3 ARMOR: headless bootless hollow armor ensemble with fan-shaped shoulders, diamond breastplate, waist skirt and thigh/shin plates, present front and small rear view, ends before ankle footwear. 4 BOOTS: one distinct PAIR low flat split toe purple gold boots with ankle shell, recognizable actual feet with soles, NOT knee or shin armor. 5 BACK ACCESSORY: detached hexagonal gold purple civilization seal with cyan center and two short side arcs, front and edge mount view. Match reference design exactly in main silhouettes and colors. Do not show a full wearing character or human anatomy. All five slots visually distinct. Small simple English labels permitted, no invented Chinese labels. Official identity: 核域斷光刃 / 文明冠盔 / 核域文明甲 / 核域穿行靴 / 核心文明權印. Only sword weapon, no gun spear axe hammer scythe. Clear boots and clearly detached back seal essential.",
+      "originalToolOutput": "/workspace/generated_images/exec-514fe6ec-c2a1-4e08-a32d-9fb61fdc64ed.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g076-core-civilization-border/sources/slots-original.png",
+      "originalSha256": "82e0048ac1d5bc57d6e2908a76220a6cbbd14b3f807024e9709f5888bef11fa6",
+      "originalBytes": 2190177,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 253630,
+        "sha256": "fc92735f52aac78ce7643913ae6cc7c84e900dd8a1fc1cb94bead846b64e784f"
+      },
+      "referenceOriginalSha256": "033208261de0e5fbf87d473e542cef21175b0472c1ceb6b5bdbf9f5e2e64558e"
+    }
+  ]
+}

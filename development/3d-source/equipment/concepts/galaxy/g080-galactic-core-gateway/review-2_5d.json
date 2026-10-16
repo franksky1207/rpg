@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g080",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:core-outer:map:9",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway",
+    "regionOrBoss": "銀河核心外圍 → 銀河核心門戶",
+    "equipmentNames": {
+      "weapon": "核心門斷界刃",
+      "helmet": "銀河門衛盔",
+      "armor": "門域重裝甲",
+      "shoes": "時空穿越靴",
+      "accessory": "銀河核心門鑰"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "36e15cee9a1feb30bd919710da1a48cbeef760c4cff686ad3c8d8d8e005109ee",
+    "equipment-five-slots.webp": "c599d444a4eef2c91b375de315b58d40abec9da241952a3176955eee505b7f52"
+  },
+  "reviewedAt": "2026-10-16",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "4cf3093fef075d9d4ed8962f4c72cec6376207b5ad325f2c0aea9f048bb5232d",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway/generation-provenance.md",
+      "sha256": "1d5547b8c08c98d59315ce0be6c5480ee0a1dd018adc8a3b130d1fdab67fc53c"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway/codex-review.md",
+      "sha256": "4cf3093fef075d9d4ed8962f4c72cec6376207b5ad325f2c0aea9f048bb5232d"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway/sources/generation.json",
+      "sha256": "f561e2a53bd191b6d2c22d01621a059eb9889e788273eabe8ddda8092af36143"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "reviewedAt": "2026-10-16",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway/codex-review.md",
+        "sha256": "4cf3093fef075d9d4ed8962f4c72cec6376207b5ad325f2c0aea9f048bb5232d"
+      },
+      "imageSha256": {
+        "overview-front-side-back.webp": "36e15cee9a1feb30bd919710da1a48cbeef760c4cff686ad3c8d8d8e005109ee",
+        "equipment-five-slots.webp": "c599d444a4eef2c91b375de315b58d40abec9da241952a3176955eee505b7f52"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g080 核對main c59fdd72c210c298131c5527b06ea5938a28a2dd 的worldmaps-core-outer.js REGION_MAPS[9]、data.js MAPS[79]固定註冊、engine.js makeItem五槽順序、正式索引及notes。galaxy:core-outer:map:9；銀河核心外圍 → 銀河核心門戶；五槽：核心門斷界刃／銀河門衛盔／門域重裝甲／時空穿越靴／銀河核心門鑰。完整六欄身份、永久ID與目錄保持正式映射。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g080 兩PNG與兩WebP均實際Pillow load完整解碼，全部1536×1024，bytes與SHA逐檔計算。兩次獨立生成，原稿逐位元組保留；WebP只以RGB quality=92 method=6轉檔。來源及參考原稿SHA見sources/generation.json，非裁切或換色重排。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g080 已逐張目視兩張實際生成圖：象牙深青綠金光的高拱門全封盔、雙柱肩與門框胸甲、階梯腰片長方脛甲、鑰齒劍背直劍、矩形踝框厚底靴及直立門鑰菱心背飾。 正側背角色頭腳完整且全遮臉，五槽板具完整刀劍、頭盔、鎧甲、可辨腳掌鞋底的成對鞋子與獨立背飾。背面可見實際背飾結構，主要配色與輪廓相符，無非刀劍武器。與G071～G075及本批他套在頭肩胸腿、武器與背飾均有結構差異。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g080 已逐張目視實際WebP產生的288×192縮圖：象牙深青綠金光的高拱門全封盔、雙柱肩與門框胸甲、階梯腰片長方脛甲、鑰齒劍背直劍、矩形踝框厚底靴及直立門鑰菱心背飾。 在接近小尺寸戰鬥顯示的板上角色仍辨識頭盔、肩胸腿、刀劍與背飾輪廓；五槽可區分鞋與腿甲。此為概念板縮圖檢視，非正式透明角色、GM或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g080 本任務實際呼叫OpenAI image_gen.imagegen兩次，參考本套原PNG新繪五槽；原稿、工具路徑、prompt與參考SHA可查。使用者授權本專案在本次Codex任務以可用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無外部庫圖、第三方角色參考；不宣稱CC、公有領域或獨占授權。 原PNG與WebP保存在development，未授權正式發布。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "五槽板的背甲小視角偏斜，背飾正視含兩側柱形外框，三視背面可核對主要門框與菱心。局部金邊、柱頂及接縫存在微差，未影響五槽區分。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g080-galactic-core-gateway/generation-provenance.md",
+      "sha256": "1d5547b8c08c98d59315ce0be6c5480ee0a1dd018adc8a3b130d1fdab67fc53c"
+    }
+  },
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "3f018c2974afbb317960fb16e5dca6eb389c7f324b31215c5b741681bafb533b"
+}
