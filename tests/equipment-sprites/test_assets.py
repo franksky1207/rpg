@@ -83,7 +83,7 @@ class SpriteTests(unittest.TestCase):
   from unittest.mock import patch
   p=self.pipeline()
   with patch.object(p,'rows',return_value=self.rows):
-   with self.assertRaisesRegex(ValueError,'verified concept'):p.plan(self.root,'g061','Actual distinctive silhouette selection justification')
+   with self.assertRaisesRegex(ValueError,'verified concept'):p.plan(self.root,'g066','Actual distinctive silhouette selection justification')
    for identity,reason in [('g026','White ring crown silhouette selected for future production'),('g031','Square colonial shoulders and command box selected for future production'),('g036','Alien crescent shoulders and translation ring selected for future production'),('g041','Orion twin fins and spiral navigation beacon selected for future production')]:
     p.plan(self.root,identity,reason)
     row=self.row(identity);entry=m.verified_entry(self.root,row,True);self.assertEqual(entry['status'],'not-started');self.assertIsNone(entry['asset'])

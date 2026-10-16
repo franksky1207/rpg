@@ -1,0 +1,9 @@
+test_catalog_totals_and_development_isolation (test_g13_artifacts.G13ArtifactTests.test_catalog_totals_and_development_isolation) ... ok
+test_five_sets_ten_independent_outputs_and_originals (test_g13_artifacts.G13ArtifactTests.test_five_sets_ten_independent_outputs_and_originals) ... ok
+test_g001_g060_all_historical_bytes_unchanged (test_g13_artifacts.G13ArtifactTests.test_g001_g060_all_historical_bytes_unchanged) ... ok
+test_historical_index_and_unmade_g066_unchanged (test_g13_artifacts.G13ArtifactTests.test_historical_index_and_unmade_g066_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.856s
+
+OK

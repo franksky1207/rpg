@@ -4021,19 +4021,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g061-imperial-outer-ring",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 296330,
+          "sha256": "1fb8060c94db68cdace65c7dc34ef349aeea71d39037566d6c7071192144a202"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 235694,
+          "sha256": "da6db2db850e8f296c1e6f90b474771d52a3aaa86602f7e356800a2bf248c7a5"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g061-imperial-outer-ring/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g062",
@@ -4072,19 +4087,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g062-federation-domain",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 225414,
+          "sha256": "3ad25a0cae5b33b3159d6ea6294bcaf55cba549f149edb0b78114f441778a250"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 228570,
+          "sha256": "7e9b740db9ca8ab8f050eabeb61be726bc94ad712a0f0564f57ccec864e8d037"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g062-federation-domain/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g063",
@@ -4123,19 +4153,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g063-sector-legion-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 303482,
+          "sha256": "8ed56ec9308f66cc7006182be55a56a47b4f3fd12d4ad2f417e91d164798811a"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 286626,
+          "sha256": "89a1d55fe481f7d3da00135b3fbde8bf8567c696cd4b815e532ad25d78959a9d"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g063-sector-legion-front/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g064",
@@ -4174,19 +4219,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g064-imperial-industrial-world",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 305772,
+          "sha256": "70575c5bcb771f9bdc911d71978079f50ae46648fba4a452a70c91e6e334a180"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 292590,
+          "sha256": "59975e5867f0a11f299bfec21c28271b5a36606d31726b1514cb673b65316865"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g064-imperial-industrial-world/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g065",
@@ -4225,19 +4285,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g065-federation-capital",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 240204,
+          "sha256": "1d8f066db7a49d01628736506dc34c4fe953aa4e5e61d2426dd387cfb582deb9"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 248634,
+          "sha256": "15ccd2ac8f6c350e8e096a28f7204fc6cde9221c64de40276b4185cfca64ba8a"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g065-federation-capital/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g066",

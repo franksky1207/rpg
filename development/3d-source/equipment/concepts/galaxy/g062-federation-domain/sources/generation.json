@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "set": "g062",
+  "baseMain": "4d072565adcf1d2e309fab8ef5d8e0df452982e4",
+  "generatedAt": "2026-10-16",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "白藍平整聯邦護片、低圓全罩盔與黑色橫視窗、窄直藍刃、踝部推進靴與雙短天線矩形戰術模組。",
+  "generationMethod": "Two separate actual calls. Overview inspected with view_image before supplying its original PNG as reference for a newly drawn equipment-only sheet. No crop, recolor, copying old art, padding or compositing.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024, no resize or composite.",
+  "rightsBasis": "使用者授權本專案透過本任務可用 OpenAI image_gen.imagegen 生成，依適用服務條款使用輸出，僅開發概念；無外部庫圖或第三方角色參考，未宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-581e9171-4be9-4b6b-bc0c-21a56db5f78e.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g062-federation-domain/sources/overview-original.png",
+      "originalSha256": "09165f938e7a86d9e41061e0d7ad34243de54da85dbd9a9540cbe8b2c676e543",
+      "originalBytes": 2045652,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 225414,
+        "sha256": "3ad25a0cae5b33b3159d6ea6294bcaf55cba549f149edb0b78114f441778a250"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "originalToolOutput": "/workspace/generated_images/exec-f3f258a5-f265-4684-a4f4-df2448532b14.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g062-federation-domain/sources/slots-original.png",
+      "originalSha256": "885a871426927c1827acd90b7bc72ed7d018ca83d9d3ca6e145c98e332a1193c",
+      "originalBytes": 1950239,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 228570,
+        "sha256": "7e9b740db9ca8ab8f050eabeb61be726bc94ad712a0f0564f57ccec864e8d037"
+      },
+      "referenceOriginalSha256": "09165f938e7a86d9e41061e0d7ad34243de54da85dbd9a9540cbe8b2c676e543"
+    }
+  ]
+}
