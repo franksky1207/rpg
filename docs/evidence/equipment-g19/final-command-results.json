@@ -1,0 +1,211 @@
+[
+  {
+    "category": "concept",
+    "command": "python3 scripts/equipment-concepts.py generate",
+    "exitCode": 0,
+    "seconds": 4.13,
+    "log": "docs/evidence/equipment-g19/final-000.log"
+  },
+  {
+    "category": "concept",
+    "command": "python3 scripts/equipment-concepts.py validate",
+    "exitCode": 0,
+    "seconds": 4.12,
+    "log": "docs/evidence/equipment-g19/final-001.log"
+  },
+  {
+    "category": "concept",
+    "command": "python3 scripts/equipment-concept-batches.py plan --batch G19",
+    "exitCode": 0,
+    "seconds": 4.3,
+    "log": "docs/evidence/equipment-g19/final-002.log"
+  },
+  {
+    "category": "concept",
+    "command": "python3 scripts/equipment-concept-batches.py plan --batch G20",
+    "exitCode": 0,
+    "seconds": 4.13,
+    "log": "docs/evidence/equipment-g19/final-003.log"
+  },
+  {
+    "category": "concept",
+    "command": "python3 scripts/equipment-asset-production-gate.py --set G024",
+    "exitCode": 0,
+    "seconds": 4.23,
+    "log": "docs/evidence/equipment-g19/final-004.log"
+  },
+  {
+    "category": "concept",
+    "command": "python3 scripts/equipment-asset-production-gate.py --set G030",
+    "exitCode": 0,
+    "seconds": 4.18,
+    "log": "docs/evidence/equipment-g19/final-005.log"
+  },
+  {
+    "category": "concept",
+    "command": "git diff --exit-code -- development/3d-source/equipment/concepts docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md",
+    "exitCode": 0,
+    "seconds": 0.01,
+    "log": "docs/evidence/equipment-g19/final-006.log"
+  },
+  {
+    "category": "protection",
+    "command": "python scripts/equipment-sprites.py validate",
+    "exitCode": 0,
+    "seconds": 4.18,
+    "log": "docs/evidence/equipment-g19/final-007.log"
+  },
+  {
+    "category": "protection",
+    "command": "python -m unittest discover -s tests/equipment-sprites -v",
+    "exitCode": 0,
+    "log": "docs/evidence/equipment-g19/final-sprite-negative-retry.log"
+  },
+  {
+    "category": "protection",
+    "command": "python scripts/equipment-weapon-assets.py",
+    "exitCode": 0,
+    "seconds": 0.12,
+    "log": "docs/evidence/equipment-g19/final-009.log"
+  },
+  {
+    "category": "protection",
+    "command": "python scripts/equipment-gm-publication.py --check",
+    "exitCode": 0,
+    "seconds": 0.12,
+    "log": "docs/evidence/equipment-g19/final-010.log"
+  },
+  {
+    "category": "protection",
+    "command": "python scripts/equipment-formal-publication.py --check",
+    "exitCode": 0,
+    "seconds": 0.03,
+    "log": "docs/evidence/equipment-g19/final-011.log"
+  },
+  {
+    "category": "protection",
+    "command": "python scripts/equipment-formal-fixture-history.py --check",
+    "exitCode": 0,
+    "seconds": 0.04,
+    "log": "docs/evidence/equipment-g19/final-012.log"
+  },
+  {
+    "category": "protection",
+    "command": "node scripts/equipment-phase6-audit.cjs",
+    "exitCode": 0,
+    "seconds": 0.62,
+    "log": "docs/evidence/equipment-g19/final-013.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/equipment-formal/publication.cjs",
+    "exitCode": 0,
+    "seconds": 0.04,
+    "log": "docs/evidence/equipment-g19/final-014.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/equipment-gm/publication.cjs",
+    "exitCode": 0,
+    "seconds": 0.52,
+    "log": "docs/evidence/equipment-g19/final-015.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/equipment-weapons/names.cjs",
+    "exitCode": 0,
+    "seconds": 0.32,
+    "log": "docs/evidence/equipment-g19/final-016.log"
+  },
+  {
+    "category": "protection",
+    "command": "node --test tests/equipment-sprites/runtime.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs",
+    "exitCode": 0,
+    "seconds": 2.87,
+    "log": "docs/evidence/equipment-g19/final-017.log"
+  },
+  {
+    "category": "runtime",
+    "command": "node tests/runtime/t4-preview-retirement.cjs",
+    "exitCode": 0,
+    "seconds": 0.57,
+    "log": "docs/evidence/equipment-g19/final-028.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/runtime/t3b-formal-owner-clock.cjs",
+    "exitCode": 0,
+    "seconds": 0.03,
+    "log": "docs/evidence/equipment-g19/final-019.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/runtime/t3b-formal-controller.cjs",
+    "exitCode": 0,
+    "seconds": 0.04,
+    "log": "docs/evidence/equipment-g19/final-020.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/runtime/3d-equipment-contract.cjs",
+    "exitCode": 0,
+    "seconds": 0.07,
+    "log": "docs/evidence/equipment-g19/final-021.log"
+  },
+  {
+    "category": "protection",
+    "command": "python scripts/generate-resource-manifest.py --check",
+    "exitCode": 0,
+    "seconds": 0.12,
+    "log": "docs/evidence/equipment-g19/final-022.log"
+  },
+  {
+    "category": "protection",
+    "command": "node tests/runtime/publish-build-regression.cjs",
+    "exitCode": 0,
+    "seconds": 0.12,
+    "log": "docs/evidence/equipment-g19/final-023.log"
+  },
+  {
+    "category": "protection",
+    "command": "node scripts/build-publish-dry-run.cjs",
+    "exitCode": 0,
+    "seconds": 0.68,
+    "log": "docs/evidence/equipment-g19/final-024.log"
+  },
+  {
+    "category": "protection",
+    "command": "node scripts/stage-hybrid-preview.cjs",
+    "exitCode": 0,
+    "seconds": 0.27,
+    "log": "docs/evidence/equipment-g19/final-025.log"
+  },
+  {
+    "category": "protection",
+    "command": "node scripts/publish-asset-audit.cjs --json",
+    "exitCode": 0,
+    "seconds": 0.42,
+    "log": "docs/evidence/equipment-g19/final-026.log"
+  },
+  {
+    "category": "runtime",
+    "command": "node tests/runtime/3d-b18-coverage-guard.js",
+    "exitCode": 0,
+    "seconds": 0.62,
+    "log": "docs/evidence/equipment-g19/final-027.log"
+  },
+  {
+    "category": "runtime",
+    "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+    "exitCode": 0,
+    "seconds": 1.37,
+    "log": "docs/evidence/equipment-g19/final-029.log"
+  },
+  {
+    "category": "runtime",
+    "command": "node tests/runtime/docs-integrity.js",
+    "exitCode": 0,
+    "seconds": 0.03,
+    "log": "docs/evidence/equipment-g19/final-030.log"
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "set": "g093",
+  "baseMain": "1dc5a1a58f31784588e35f7a955a1ea307ebd572",
+  "generatedAt": "2026-10-17",
+  "dateTimezone": "Asia/Taipei",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "紫金雙尖冠全罩盔、上揚月肩、菱核胸甲、長分叉腰片、紫光直劍、金尖頭抬跟雙鞋與菱形放射背架",
+  "generationMethod": "Two actual separate calls. Overview inspected first, then its original PNG referenced in a separate independently drawn equipment sheet. No crop, recolor, mirror, copied legacy image or composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 PNG retained byte-for-byte.",
+  "rightsBasis": "使用者明確授權本專案於本次Codex任務使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無第三方庫圖或角色參考，不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW original 1536x1024 landscape painterly 2.5D sci-fi RPG concept turnaround G093 stellar dominion. Exactly THREE large FULL BODY views SAME armored person FRONT SIDE BACK, neutral grey background, head boots blade tips entirely inside canvas. Regal midnight PURPLE armor with warm GOLD trim, subtle violet energy. Helmet two tall tapered vertical crown prongs with low central brow and entirely opaque featureless golden-dark faceplate, no face. Distinct shoulders are two upward sweeping crescent pauldrons, slim waist and overlapping long tapered purple hip panels above articulated long legs. Chest large inverted diamond gold frame violet core. Back accessory SIX straight gold tapered spokes in an elongated DIAMOND arrangement framing one violet diamond command core, visible clearly from back, not circular halo, not three hexagons or Y router. Weapon long narrow pointed double-edge sword violet energized center with short grip and curved crescent guard. Pair angular purple low ankle boots with gold toe caps and dark soles. Crisp large masses small mobile readability, same features in all views, no copying other armor. Official identity 星海霸權刃 / 霸權主冠盔 / 星海領域甲 / 霸權相位靴 / 星海統御權柄. Only English FRONT SIDE BACK labels. No guns spears staffs axes hammers scythes, no cropped feet.",
+      "originalToolOutput": "/workspace/generated_images/exec-d6ca4f91-009c-4a4e-950c-ae6acdad4498.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/sources/overview-original.png",
+      "originalSha256": "8c5824a03a52163ab57da997059aa98e76d809d16377866e13e8eb13b4d046d3",
+      "originalBytes": 2244808,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 269988,
+        "sha256": "9f3057df53b7b8ecd61d1eb3a15e37c0fc55eab14b45b271e05373fe064ed69a"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Using supplied G093 purple gold dominion armor as sole reference, create NEW independently drawn 1536x1024 landscape equipment-only sheet. FIVE clear separated large groups: WEAPON full narrow pointed double-edge violet energy sword short grip crescent guard; HELMET two tall tapered crown prongs complete opaque gold dark mask; ARMOR headless bootless assembly upward crescent shoulders diamond chest violet core slim waist long split purple hip panels and articulated legs; BOOTS distinct standalone PAIR purple gold ankle footwear pointed gold toes raised heels black soles, no knee armor; BACK ACCESSORY detached elongated diamond-shaped six-spoke command frame with violet diamond core and small mounting view. Match reference major silhouette palette material, clean grey background crisp painterly 2.5D sci-fi game concept readable mobile, no wearer, complete objects inside canvas. Independently redraw objects no reference crops. English labels only. Official identity 星海霸權刃 / 霸權主冠盔 / 星海領域甲 / 霸權相位靴 / 星海統御權柄. No guns spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-4e7a546e-6583-452e-ae5c-7a4cf1173ce3.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/sources/slots-original.png",
+      "originalSha256": "23d09c71072ad62e303a2885a4c7e32ae0963dcdf66e09a731d3178f08d7533e",
+      "originalBytes": 2241343,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 303162,
+        "sha256": "ef532961e00fe87dba7c180a4b70f2ee3265378b20496513168893af94ded7f8"
+      },
+      "referenceOriginalSha256": "8c5824a03a52163ab57da997059aa98e76d809d16377866e13e8eb13b4d046d3"
+    }
+  ]
+}

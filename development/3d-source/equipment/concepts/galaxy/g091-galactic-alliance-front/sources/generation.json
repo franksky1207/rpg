@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "set": "g091",
+  "baseMain": "1dc5a1a58f31784588e35f7a955a1ea307ebd572",
+  "generatedAt": "2026-10-17",
+  "dateTimezone": "Asia/Taipei",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "海軍藍象牙白、雙側翼全罩盔、寬六角肩及V層胸、短分叉腰甲、青邊直劍、白色低踝厚底雙鞋與三連六角背印",
+  "generationMethod": "Two actual separate calls. Overview inspected first, then its original PNG referenced in a separate independently drawn equipment sheet. No crop, recolor, mirror, copied legacy image or composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 PNG retained byte-for-byte.",
+  "rightsBasis": "使用者明確授權本專案於本次Codex任務使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無第三方庫圖或角色參考，不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW original landscape 1536x1024 polished 2.5D sci-fi RPG concept turnaround G091, Galactic alliance front. Exactly THREE large full-body views same armored person FRONT SIDE BACK on neutral light grey background, all head sword tips and boots inside canvas. Distinct alliance frontier silhouette: navy blue and warm ivory ceramic armor, restrained turquoise lights, compact helmet with TWO swept side fins and fully opaque black visor, no face or eyes. Wide shallow hexagonal shoulder plates, V-shaped layered breastplate, short split waist plates, slim athletic articulated legs. Back-mounted large interlocking THREE HEXAGON alliance seal device clearly visible in rear view, no banners no circular halo. Single straight pointed double-edged turquoise-edged sword, short grip and angular hexagonal guard, held down at side. Pair of broad white ankle boots with navy toes and thick dark soles. Crisp painterly game concept, readable on small mobile screens, restrained details, clear silhouette. Same design palette and shapes across views. Official identity 聯盟星河刃 / 文明聯軍盔 / 銀河聯軍甲 / 星海聯軍靴 / 銀河聯盟權印. Only minimal English view labels. No guns spears axes hammers scythes staffs, no exposed face, no cropped feet.",
+      "originalToolOutput": "/workspace/generated_images/exec-7b7c9d70-16cb-48f8-9d5d-cc65dc2873a1.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g091-galactic-alliance-front/sources/overview-original.png",
+      "originalSha256": "2e7b3625fb31d8389865c043618f800067ebeae32fc4a4a97af1194211e59c01",
+      "originalBytes": 2194939,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 255838,
+        "sha256": "56977a3a3399006bed78af623210228930c066ceab375e121fe3b34449943810"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Using the supplied G091 navy ivory alliance armor turnaround as sole reference, create a NEW independently drawn landscape 1536x1024 EQUIPMENT ONLY concept sheet. FIVE separated large clearly labeled groups: WEAPON entire pointed straight double-edged cyan sword with short grip and hexagonal guard; HELMET twin swept side-fins ivory/navy full opaque black visor; ARMOR headless bootless V-layered breastplate plus broad shallow hex shoulders, short split waist plates, slim articulated armored legs; BOOTS separate standalone PAIR broad white ankle shoes navy toes thick black soles (not knee armor); BACK ACCESSORY detached THREE interlocking HEXAGON turquoise alliance seal panels on compact mounting frame with small oblique mounting view. Match reference main colors and forms. Crisp painterly 2.5D sci-fi game art, neutral grey background, clean spacing readable at mobile size, complete items inside canvas. No wearer. No copied crop, independently redraw objects. Only English labels. Official identity 聯盟星河刃 / 文明聯軍盔 / 銀河聯軍甲 / 星海聯軍靴 / 銀河聯盟權印. No guns spears axes staffs hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-fbef5ccc-3d36-43f2-9ec9-91ebb28d4c3b.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g091-galactic-alliance-front/sources/slots-original.png",
+      "originalSha256": "f5924a2f5a734a4a5f2bd8dad4aa1ff018c926f89e073b5a85580e5beb2bdb23",
+      "originalBytes": 2200101,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 289348,
+        "sha256": "c6b702866d649c2d180ecebe5bb4c06c2faeb9e1f6603395440c39e4b201caa5"
+      },
+      "referenceOriginalSha256": "2e7b3625fb31d8389865c043618f800067ebeae32fc4a4a97af1194211e59c01"
+    }
+  ]
+}

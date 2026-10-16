@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g093",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-unification:map:2",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion",
+    "regionOrBoss": "銀河統合戰爭 → 星海統御疆域",
+    "equipmentNames": {
+      "weapon": "星海霸權刃",
+      "helmet": "霸權主冠盔",
+      "armor": "星海領域甲",
+      "shoes": "霸權相位靴",
+      "accessory": "星海統御權柄"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "9f3057df53b7b8ecd61d1eb3a15e37c0fc55eab14b45b271e05373fe064ed69a",
+    "equipment-five-slots.webp": "ef532961e00fe87dba7c180a4b70f2ee3265378b20496513168893af94ded7f8"
+  },
+  "reviewedAt": "2026-10-17",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "5d0f27a1125e503aa3d0ab9df41b18ce4d5e9108f9628181ac720ce96dbd6125",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/generation-provenance.md",
+      "sha256": "81ac4bae4e4f2dd6248fd8c9f0a6d25e9bb4a9c7a66923d09c1bb3328bd0bd9d"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/codex-review.md",
+      "sha256": "5d0f27a1125e503aa3d0ab9df41b18ce4d5e9108f9628181ac720ce96dbd6125"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/sources/generation.json",
+      "sha256": "1da8662bbcb6a20b561986fc667cf3701560b386d55d4619c8df3988de7dbdba"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/codex-review.md",
+        "sha256": "5d0f27a1125e503aa3d0ab9df41b18ce4d5e9108f9628181ac720ce96dbd6125"
+      },
+      "reviewedAt": "2026-10-17",
+      "imageSha256": {
+        "overview-front-side-back.webp": "9f3057df53b7b8ecd61d1eb3a15e37c0fc55eab14b45b271e05373fe064ed69a",
+        "equipment-five-slots.webp": "ef532961e00fe87dba7c180a4b70f2ee3265378b20496513168893af94ded7f8"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g093 核對最新main 1dc5a1a58f31784588e35f7a955a1ea307ebd572的worldmaps-galactic-unification.js REGION_MAPS[2]、data.js固定MAPS[92]、engine.js makeItem五槽順序與正式索引及notes。galaxy:galactic-unification:map:2；銀河統合戰爭 → 星海統御疆域；正式五槽：星海霸權刃／霸權主冠盔／星海領域甲／霸權相位靴／星海統御權柄。六欄身份與1050槽結構未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g093 本任務兩次獨立真image_gen.imagegen輸出；兩原PNG逐位元組保存、兩WebP僅RGB quality=92 method=6轉檔，四檔皆1536×1024完整解碼。逐檔bytes及SHA重算，非裁切、拼貼、舊圖換色或鏡射。完整證據在sources/generation.json。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g093 已逐張目視兩張實際生成圖：紫金雙尖冠全罩盔、上揚月肩、菱核胸甲、長分叉腰片、紫光直劍、金尖頭抬跟雙鞋與菱形放射背架。三視頭鞋完整、全罩遮臉、武器只有刀劍；五槽各自主體、獨立成對鞋子及背飾完整。與相鄰G086～G090及本批另四套以頭肩、胸腰、武器、背飾輪廓區分，非僅換色。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g093 已目視兩張正式WebP的288×192縮圖：紫金雙尖冠全罩盔、上揚月肩、菱核胸甲、長分叉腰片、紫光直劍、金尖頭抬跟雙鞋與菱形放射背架。角色頭肩胸腿、刀劍主輪廓及鞋底、背飾仍可辨；此為概念可讀性，非透明角色、GM、正式戰鬥或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g093 使用者明確授權本專案於本次Codex任務使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無第三方庫圖或角色參考，不宣稱CC、公有領域或獨占授權。 先目視三視原圖再以本套原PNG參考獨立繪製五槽；完整prompt、工具路徑、PNG／WebP SHA與唯一參考SHA在sources/generation.json。圖檔只存development，來源及權利依據可查。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/generation-provenance.md",
+      "sha256": "81ac4bae4e4f2dd6248fd8c9f0a6d25e9bb4a9c7a66923d09c1bb3328bd0bd9d"
+    }
+  },
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "背架尖端數及月肩曲率在視角間略異，五槽鎧甲腿端帶尖形收口；獨立鞋子仍成對完整，不要求工程級拆件精度。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "a1af390443e5aef4edaeb91faf3df4a0adab6009b0f928cfaf303625ac25ee14"
+}

@@ -20,7 +20,7 @@
 - `data.js:13` — `WORLD_REGIONS / registerRegionMaps`
 - `engine.js:132` — `makeItem / MAPS[mapIdx].gear`
 
-狀態：notes 已建立；概念圖 `not-generated`；概念審查通過 `false`；審查模式 `unreviewed`；2.5D素材製作資格 `false`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
+狀態：notes 已建立；概念圖 `pass-with-advisory`；概念審查通過 `true`；審查模式 `codex-single-stage`；2.5D素材製作資格 `true`；2.5D素材 `not-started`；GM `not-tested`；正式發布允許 `false`；模型 `not-started`。
 
 <!-- formal-equipment:end -->
 
@@ -55,4 +55,13 @@
 
 ## 2026-10-15 後續刀劍量產規則
 
-武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。此套尚未生成，不代表素材或審查完成。
+武器須為刀或劍（含能量刃）；禁止槍、炮、戟、矛、鐮、斧、鎚及長柄武器。高維抽象名稱仍採刀劍外觀；以正式A節五槽名稱／永久ID為準，適合小尺寸2.5D共用前衝突刺，不追加骨架。概念已於G19完成；不代表角色素材、GM或正式發布完成。
+
+## G19｜2026-10-17 實際設計與交接（現行2.5D規則）
+
+- 設計：橄欖銅方堡全罩盔、對稱堡齒重肩、層疊方胸與短重腰甲、白刃厚短劍、方頭厚底雙鞋與三燈權限背板。此為本任務實際生成設計，不改A節正式身份。
+- 與G086～G090及本批另四套比較：以頭盔／肩胸／背飾輪廓分化，不僅換色。
+- 刀劍短握柄，後續透明角色用右向3/4固定鏡位，保持頭鞋完整、背飾避讓手臂及武器；不能裁概念圖冒充透明角色。
+- advisory：劍尖削角與肩部堡齒在各視圖有微差，側視稍偏3/4；刀劍、方堡甲及三燈背板主體一致。
+- 兩次獨立真生成，原PNG、WebP與SHA在sources/generation.json；schema4單一Codex證據在review-2_5d.json及codex-review.md，blocker=0。
+- 本節現行2.5D規則優先於上方歷史五獨立GLB／骨架／LOD敘述；概念不要求工程拆件精度。角色not-started、GM not-tested、formalReleaseAllowed=false。

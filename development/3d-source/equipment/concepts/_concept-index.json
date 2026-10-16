@@ -6001,19 +6001,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g091-galactic-alliance-front",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 255838,
+          "sha256": "56977a3a3399006bed78af623210228930c066ceab375e121fe3b34449943810"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 289348,
+          "sha256": "c6b702866d649c2d180ecebe5bb4c06c2faeb9e1f6603395440c39e4b201caa5"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g091-galactic-alliance-front/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g092",
@@ -6052,19 +6067,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g092-allied-civilizations",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 264182,
+          "sha256": "fec4fdf28af52a18d1c35121a9beca187a5394400f562ebab005310410eb2c23"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 285200,
+          "sha256": "14249f4c8803fd2b08d35132ebc77cf3a26b46ff52b21761e149ce356886beb0"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g092-allied-civilizations/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g093",
@@ -6103,19 +6133,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 269988,
+          "sha256": "9f3057df53b7b8ecd61d1eb3a15e37c0fc55eab14b45b271e05373fe064ed69a"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 303162,
+          "sha256": "ef532961e00fe87dba7c180a4b70f2ee3265378b20496513168893af94ded7f8"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g094",
@@ -6154,19 +6199,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 310066,
+          "sha256": "4647dd09aa7f64de39abe76cac4cd6344435fe2e0373612da35a830f4e8390b9"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 266728,
+          "sha256": "2c4761d6f0a84bcc131da36127edba6ad819027180f1dd625dea2d347eece0a5"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g095",
@@ -6205,19 +6265,34 @@
       ],
       "directory": "development/3d-source/equipment/concepts/galaxy/g095-unification-council",
       "notesStatus": "generated-formal-manual-art-separated",
-      "conceptStatus": "not-generated",
-      "conceptApproved": false,
-      "artReviewMode": "unreviewed",
-      "modelingEligible": false,
-      "assetProductionEligible": false,
+      "conceptStatus": "pass-with-advisory",
+      "conceptApproved": true,
+      "artReviewMode": "codex-single-stage",
+      "modelingEligible": true,
+      "assetProductionEligible": true,
       "asset2_5dStatus": "not-started",
       "gm2_5dTestStatus": "not-tested",
       "formalReleaseAllowed": false,
       "modelStatus": "not-started",
-      "images": [],
-      "approvalEvidence": null,
+      "images": [
+        {
+          "file": "overview-front-side-back.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 277350,
+          "sha256": "9912092cdcc935021be63531ef9ce1c6b1bf3e3f28699b8141eeaeda39229252"
+        },
+        {
+          "file": "equipment-five-slots.webp",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 345218,
+          "sha256": "13252fed44564408ad437c88681e90040064bba85fbee31b5925cc3be0a08707"
+        }
+      ],
+      "approvalEvidence": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/codex-review.md",
       "modelEvidence": [],
-      "lastUpdated": "2026-10-14"
+      "lastUpdated": "2026-10-16"
     },
     {
       "id": "g096",

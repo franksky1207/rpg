@@ -1,0 +1,45 @@
+✔ g005 selects only actual armor across epochs and mixed slots (0.704841ms)
+✔ g007 selects only actual armor across epochs and mixed slots (0.13429ms)
+✔ g018 selects only actual armor across epochs and mixed slots (0.102332ms)
+✔ missing, unknown, wrong world, ambiguous or GM fixture armor refuses (0.195031ms)
+✔ formal pool requires separate permission; SHA, 404 and decode failures release resources (15.989573ms)
+✔ formal appearance freezes at capture, GM lane has no authoritative equipment (1.963158ms)
+✔ persisted pagehide preserves official session and consumer; true departure cancels (1.086571ms)
+✔ five templates execute and death holds transparent end (1.292798ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.168742ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (19.940605ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (2.824001ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (1.137316ms)
+✔ abort pending decode discards late result and closes it (7.383119ms)
+✔ one aborted subscriber does not cancel shared live subscriber (1.210095ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (12.438227ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (1.440208ms)
+✔ formal armor identity ignores the other four slots; unknown armor, fixture and ambiguity refuse (0.837589ms)
+✔ GM publication permission is required independently of complete art (0.190614ms)
+✔ five templates execute and death holds transparent end (1.365476ms)
+✔ interrupt replay dedup cancel disposal no owned timers (0.185457ms)
+✔ concurrent loads share verified bitmap, release and clear close exactly once (23.815222ms)
+✔ 404 wrong SHA decode failure and missing asset safely reject (3.602772ms)
+✔ cross-set reuse and declared SHA metadata mismatch refuse (1.127662ms)
+✔ abort pending decode discards late result and closes it (7.293856ms)
+✔ one aborted subscriber does not cancel shared live subscriber (0.996676ms)
+✔ memory limit enforced and repeated cycles leak no decoded resources (9.620246ms)
+✔ maximum two distinct in-flight assets prevents 210-suit preload bursts (1.360139ms)
+✔ g005 real separated layers acquire, sample four phases, idle original and cleanup (17.155561ms)
+✔ g007 real separated layers acquire, sample four phases, idle original and cleanup (1.686594ms)
+✔ g018 real separated layers acquire, sample four phases, idle original and cleanup (1.537472ms)
+✔ optional weapon 404 falls back to original attack with no leaked partial layer (2.618033ms)
+✔ optional weapon sha falls back to original attack with no leaked partial layer (1.26045ms)
+✔ optional weapon decode falls back to original attack with no leaked partial layer (1.748457ms)
+✔ optional weapon slow falls back to original attack with no leaked partial layer (2500.99254ms)
+✔ unapproved/missing weapons preserve original, layer path and SHA cannot cross suit (3.401203ms)
+✔ thrust has common body motion, bounded wrist rotation and exact impact endpoint (0.86484ms)
+✔ weapon load never blocks primary actor, and readiness cannot switch layers halfway through an attack (4.876003ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2838.83994

@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g095",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-unification:map:4",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g095-unification-council",
+    "regionOrBoss": "銀河統合戰爭 → 銀河統合議政區",
+    "equipmentNames": {
+      "weapon": "議會星河刃",
+      "helmet": "統合議政冠",
+      "armor": "議會統御甲",
+      "shoes": "議會相位靴",
+      "accessory": "統合議會中樞"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "9912092cdcc935021be63531ef9ce1c6b1bf3e3f28699b8141eeaeda39229252",
+    "equipment-five-slots.webp": "13252fed44564408ad437c88681e90040064bba85fbee31b5925cc3be0a08707"
+  },
+  "reviewedAt": "2026-10-17",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "91e18d2d677af843f90ab9546c46339808f79fcb12153dfd4833d1fabffbbbc7",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/generation-provenance.md",
+      "sha256": "b3b38d3bb980292c3ecf13fdc9fea3ca6f71bc74942cc651bfe4d598829ea0c5"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/codex-review.md",
+      "sha256": "91e18d2d677af843f90ab9546c46339808f79fcb12153dfd4833d1fabffbbbc7"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/sources/generation.json",
+      "sha256": "e7061fde30d8d33db873abd000f59772876f17331a4bbf59671c39e80a909cf1"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/codex-review.md",
+        "sha256": "91e18d2d677af843f90ab9546c46339808f79fcb12153dfd4833d1fabffbbbc7"
+      },
+      "reviewedAt": "2026-10-17",
+      "imageSha256": {
+        "overview-front-side-back.webp": "9912092cdcc935021be63531ef9ce1c6b1bf3e3f28699b8141eeaeda39229252",
+        "equipment-five-slots.webp": "13252fed44564408ad437c88681e90040064bba85fbee31b5925cc3be0a08707"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g095 核對最新main 1dc5a1a58f31784588e35f7a955a1ea307ebd572的worldmaps-galactic-unification.js REGION_MAPS[4]、data.js固定MAPS[94]、engine.js makeItem五槽順序與正式索引及notes。galaxy:galactic-unification:map:4；銀河統合戰爭 → 銀河統合議政區；正式五槽：議會星河刃／統合議政冠／議會統御甲／議會相位靴／統合議會中樞。六欄身份與1050槽結構未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g095 本任務兩次獨立真image_gen.imagegen輸出；兩原PNG逐位元組保存、兩WebP僅RGB quality=92 method=6轉檔，四檔皆1536×1024完整解碼。逐檔bytes及SHA重算，非裁切、拼貼、舊圖換色或鏡射。完整證據在sources/generation.json。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g095 已逐張目視兩張實際生成圖：珍珠白酒紅拱冠全罩盔、高領窄肩、紅菱三層胸甲、長分叉披片、紅光細直劍、酒紅鞋頭高跟雙鞋與七牌扇形議會中樞。三視頭鞋完整、全罩遮臉、武器只有刀劍；五槽各自主體、獨立成對鞋子及背飾完整。與相鄰G086～G090及本批另四套以頭肩、胸腰、武器、背飾輪廓區分，非僅換色。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g095 已目視兩張正式WebP的288×192縮圖：珍珠白酒紅拱冠全罩盔、高領窄肩、紅菱三層胸甲、長分叉披片、紅光細直劍、酒紅鞋頭高跟雙鞋與七牌扇形議會中樞。角色頭肩胸腿、刀劍主輪廓及鞋底、背飾仍可辨；此為概念可讀性，非透明角色、GM、正式戰鬥或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g095 使用者明確授權本專案於本次Codex任務使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無第三方庫圖或角色參考，不宣稱CC、公有領域或獨占授權。 先目視三視原圖再以本套原PNG參考獨立繪製五槽；完整prompt、工具路徑、PNG／WebP SHA與唯一參考SHA在sources/generation.json。圖檔只存development，來源及權利依據可查。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/generation-provenance.md",
+      "sha256": "b3b38d3bb980292c3ecf13fdc9fea3ca6f71bc74942cc651bfe4d598829ea0c5"
+    }
+  },
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "冠頂短齒及背牌小紋飾在不同視角略異，長披片局部遮住腿甲；鞋子、拱冠與背扇主輪廓可辨。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "d4998327a0fdcbe484668b8ab70010395081d4d1a6ad9c90ec5d111670665906"
+}

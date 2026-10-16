@@ -16,14 +16,14 @@ class G10ArtifactTests(unittest.TestCase):
         for path,expected in lock['files'].items():
             self.assertEqual(hashlib.sha256((ROOT/path).read_bytes()).hexdigest(),expected,path)
 
-    def test_historical_index_and_unmade_g091_unchanged(self):
+    def test_historical_index_and_unmade_g096_unchanged(self):
         import subprocess
         base=json.loads(subprocess.check_output(['git','show','78f1fd2a7666f4d86b35e153bd4e2d32e78eef3f:'+str(db.m.BASE/'_concept-index.json')]))['sets']
         current=json.loads((ROOT/db.m.BASE/'_concept-index.json').read_text())['sets']
         self.assertEqual(current[:45],base[:45])
-        self.assertEqual(current[90:],base[90:])
-        unmade=current[90]
-        self.assertEqual(unmade['id'],'g091')
+        self.assertEqual(current[95:],base[95:])
+        unmade=current[95]
+        self.assertEqual(unmade['id'],'g096')
         self.assertEqual(unmade['images'],[])
         self.assertFalse(unmade['conceptApproved'])
 
@@ -31,9 +31,9 @@ class G10ArtifactTests(unittest.TestCase):
         rows=json.loads((ROOT/db.m.BASE/'_concept-index.json').read_text())['sets']
         self.assertEqual(len(rows),210)
         self.assertEqual(sum(len(r['equipmentNames']) for r in rows),1050)
-        self.assertEqual(sum(r['conceptApproved'] for r in rows),90)
-        self.assertEqual(sum(len(r['images']) for r in rows),180)
-        self.assertEqual(sum(not r['images'] for r in rows),120)
+        self.assertEqual(sum(r['conceptApproved'] for r in rows),95)
+        self.assertEqual(sum(len(r['images']) for r in rows),190)
+        self.assertEqual(sum(not r['images'] for r in rows),115)
         for row in rows[45:50]:
             self.assertFalse((ROOT/'.publish-stage3'/row['directory']).exists())
 

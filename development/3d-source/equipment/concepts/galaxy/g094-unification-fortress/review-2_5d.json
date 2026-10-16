@@ -1,0 +1,96 @@
+{
+  "schema": 4,
+  "policyVersion": "equipment-2.5d-v3.0",
+  "policySha256": "61f2d5f50718931672f22bfad29101dd234dde5c6ca2725b7dfd2bcd11fea6bb",
+  "formalIdentity": {
+    "id": "g094",
+    "epoch": "galaxy",
+    "sourceKey": "galaxy:galactic-unification:map:3",
+    "directory": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress",
+    "regionOrBoss": "銀河統合戰爭 → 銀河統合要塞",
+    "equipmentNames": {
+      "weapon": "統合斷星刃",
+      "helmet": "銀河要塞盔",
+      "armor": "統合防衛甲",
+      "shoes": "要塞機動靴",
+      "accessory": "銀河要塞權限"
+    }
+  },
+  "imageSha256": {
+    "overview-front-side-back.webp": "4647dd09aa7f64de39abe76cac4cd6344435fe2e0373612da35a830f4e8390b9",
+    "equipment-five-slots.webp": "2c4761d6f0a84bcc131da36127edba6ad819027180f1dd625dea2d347eece0a5"
+  },
+  "reviewedAt": "2026-10-17",
+  "evidenceFile": "codex-review.md",
+  "evidenceSha256": "13465ff1b612c4fa2d65fb9d6accb43833d674e7c289fbe3444aeef53388008d",
+  "sources": [
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/generation-provenance.md",
+      "sha256": "28de34a33e43459a3f859eda200091e800e400fb0d8c510bbf677a30162cccac"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/codex-review.md",
+      "sha256": "13465ff1b612c4fa2d65fb9d6accb43833d674e7c289fbe3444aeef53388008d"
+    },
+    {
+      "path": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/sources/generation.json",
+      "sha256": "e16da4667420de40a716a626df5c914026b00eaa9f5539ee535fccfb05ca22df"
+    }
+  ],
+  "stages": [
+    {
+      "reviewer": "Codex",
+      "source": {
+        "path": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/codex-review.md",
+        "sha256": "13465ff1b612c4fa2d65fb9d6accb43833d674e7c289fbe3444aeef53388008d"
+      },
+      "reviewedAt": "2026-10-17",
+      "imageSha256": {
+        "overview-front-side-back.webp": "4647dd09aa7f64de39abe76cac4cd6344435fe2e0373612da35a830f4e8390b9",
+        "equipment-five-slots.webp": "2c4761d6f0a84bcc131da36127edba6ad819027180f1dd625dea2d347eece0a5"
+      },
+      "checks": {
+        "officialIdentity": {
+          "result": "pass",
+          "observation": "g094 核對最新main 1dc5a1a58f31784588e35f7a955a1ea307ebd572的worldmaps-galactic-unification.js REGION_MAPS[3]、data.js固定MAPS[93]、engine.js makeItem五槽順序與正式索引及notes。galaxy:galactic-unification:map:3；銀河統合戰爭 → 銀河統合要塞；正式五槽：統合斷星刃／銀河要塞盔／統合防衛甲／要塞機動靴／銀河要塞權限。六欄身份與1050槽結構未改。"
+        },
+        "imageIntegrity": {
+          "result": "pass",
+          "observation": "g094 本任務兩次獨立真image_gen.imagegen輸出；兩原PNG逐位元組保存、兩WebP僅RGB quality=92 method=6轉檔，四檔皆1536×1024完整解碼。逐檔bytes及SHA重算，非裁切、拼貼、舊圖換色或鏡射。完整證據在sources/generation.json。"
+        },
+        "contentIdentity": {
+          "result": "pass",
+          "observation": "g094 已逐張目視兩張實際生成圖：橄欖銅方堡全罩盔、對稱堡齒重肩、層疊方胸與短重腰甲、白刃厚短劍、方頭厚底雙鞋與三燈權限背板。三視頭鞋完整、全罩遮臉、武器只有刀劍；五槽各自主體、獨立成對鞋子及背飾完整。與相鄰G086～G090及本批另四套以頭肩、胸腰、武器、背飾輪廓區分，非僅換色。"
+        },
+        "characterReadability": {
+          "result": "pass",
+          "observation": "g094 已目視兩張正式WebP的288×192縮圖：橄欖銅方堡全罩盔、對稱堡齒重肩、層疊方胸與短重腰甲、白刃厚短劍、方頭厚底雙鞋與三燈權限背板。角色頭肩胸腿、刀劍主輪廓及鞋底、背飾仍可辨；此為概念可讀性，非透明角色、GM、正式戰鬥或實體手機驗收。"
+        },
+        "provenanceLicense": {
+          "result": "pass",
+          "observation": "g094 使用者明確授權本專案於本次Codex任務使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無第三方庫圖或角色參考，不宣稱CC、公有領域或獨占授權。 先目視三視原圖再以本套原PNG參考獨立繪製五槽；完整prompt、工具路徑、PNG／WebP SHA與唯一參考SHA在sources/generation.json。圖檔只存development，來源及權利依據可查。"
+        }
+      },
+      "passed": true
+    }
+  ],
+  "provenance": {
+    "basis": "project-generated",
+    "use": "development-concept-only",
+    "source": {
+      "path": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/generation-provenance.md",
+      "sha256": "28de34a33e43459a3f859eda200091e800e400fb0d8c510bbf677a30162cccac"
+    }
+  },
+  "blockers": [],
+  "advisories": [
+    {
+      "code": "localViewConsistency",
+      "observation": "劍尖削角與肩部堡齒在各視圖有微差，側視稍偏3/4；刀劍、方堡甲及三燈背板主體一致。"
+    }
+  ],
+  "explicitlyAcceptedExceptions": [],
+  "conceptApproved": true,
+  "outcome": "pass-with-advisory",
+  "evidenceFingerprint": "ec97d0e75ca481e72e8dcfbe3c88bc6a69ea85e491af2985e04eff4cd6f48e33"
+}

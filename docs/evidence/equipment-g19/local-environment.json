@@ -1,0 +1,12 @@
+{
+  "baseMain": "1dc5a1a58f31784588e35f7a955a1ea307ebd572",
+  "chromium": "/usr/bin/chromium",
+  "nodeModules": "/workspace/.rpg-tools/node_modules",
+  "preloader": "/workspace/.rpg-tools/system-chromium.cjs",
+  "sourceUrl": "http://127.0.0.1:4173/index.html",
+  "serverDirectory": ".publish-stage3",
+  "physicalDeviceTest": false,
+  "initialFetchError": "fatal: unable to access 'https://github.com/franksky1207/rpg.git/': Failed to connect to proxy port 8080 after 0 ms: Could not connect to server",
+  "fetchRecovery": "exec_command with additional network enabled; inherited proxy and TLS preserved; git fetch origin main then git switch main and merge --ff-only origin/main succeeded",
+  "browserRecovery": "Existing preloader selects system Chromium. RPG_OFFLINE_SDK=1 replays existing local SDK only for tests. Existing test URL env points at published stage. No test assertion or runtime source changed."
+}

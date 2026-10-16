@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "set": "g092",
+  "baseMain": "1dc5a1a58f31784588e35f7a955a1ea307ebd572",
+  "generatedAt": "2026-10-17",
+  "dateTimezone": "Asia/Taipei",
+  "generator": "OpenAI image_gen.imagegen available in this Codex task",
+  "designBrief": "橙黑鈦銀、單脊全罩盔、單側大型分層方肩、橫燈胸甲、短腰護板、削尖寬單刃、橙跟深底雙鞋與Y形三端戰略節點",
+  "generationMethod": "Two actual separate calls. Overview inspected first, then its original PNG referenced in a separate independently drawn equipment sheet. No crop, recolor, mirror, copied legacy image or composite.",
+  "encoding": "Pillow RGB WebP quality=92 method=6; original 1536x1024 PNG retained byte-for-byte.",
+  "rightsBasis": "使用者明確授權本專案於本次Codex任務使用OpenAI image_gen.imagegen生成；依適用服務條款使用輸出，僅開發概念。無第三方庫圖或角色參考，不宣稱CC、公有領域或獨占授權。",
+  "outputs": [
+    {
+      "kind": "overview",
+      "tool": "image_gen.imagegen",
+      "prompt": "Create NEW landscape 1536x1024 polished painterly 2.5D sci-fi RPG concept turnaround G092 allied civilizations command. Exactly THREE full-body views SAME person FRONT SIDE BACK, neutral grey studio background, entire head and boots and sword inside canvas. Distinct silhouette far from navy ivory twin-fin hexagonal G091: burnt ORANGE and GRAPHITE with brushed titanium details and AMBER lights. Low helmet with ONE broad swept central crest, opaque featureless dark faceplate no visible face. Asymmetric shoulders: one large layered rectangular command pauldron, other low compact shoulder, broad rectangular chest with central horizontal amber slot, short sturdy legs and compact split hip guards no long skirt. Back accessory a Y-SHAPED strategic router with THREE large angular node pods at tips, clear in back view. Weapon medium length broad single-edge saber with clipped pointed tip, short black handle and flat crossguard, readable blade no gun. Separate pair of wedge-toed graphite ankle boots with orange heel armor and deep traction soles. Clean large armor masses readable on small mobile screens. Same forms and palette in all three views. Official identity 文明聯軍刃 / 聯軍統帥盔 / 文明聯戰甲 / 聯軍突進靴 / 文明聯軍戰略節點. Minimal English FRONT SIDE BACK labels only; no other text. No guns spears staffs axes hammers scythes, no exposed face.",
+      "originalToolOutput": "/workspace/generated_images/exec-077acc6f-a9bf-463d-bd90-781c11e6bbf6.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g092-allied-civilizations/sources/overview-original.png",
+      "originalSha256": "f8277d78d12cc2cb2644b0b2db9a7dfc01a249e9cdaf69b4e7b663f78ffbed7e",
+      "originalBytes": 2298209,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "overview-front-side-back.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 264182,
+        "sha256": "fec4fdf28af52a18d1c35121a9beca187a5394400f562ebab005310410eb2c23"
+      },
+      "referenceOriginalSha256": null
+    },
+    {
+      "kind": "slots",
+      "tool": "image_gen.imagegen",
+      "prompt": "Using supplied G092 orange graphite asymmetric command armor as reference, create NEW independently drawn 1536x1024 landscape equipment-only concept sheet, no cropping from reference. Five separated large groups: WEAPON whole broad single-edge pointed clipped saber short grip flat guard amber blade channel; HELMET single wide swept crest opaque dark face mask orange silver; ARMOR headless bootless rectangular chest horizontal amber core one huge layered rectangular shoulder other small shoulder and split short hip armor plus segmented legs; BOOTS separate standalone PAIR low ankle graphite shoes orange heel plates wedge toes deep black soles, not knee armor; BACK ACCESSORY detached Y-shaped strategic router with three angular amber pod nodes and mounting frame. Match supplied reference structures, orange graphite titanium amber palette. Neutral grey background, crisp painterly 2.5D sci-fi game concept readable small, complete objects inside frame, no wearer, clear spacing, English labels only. Official identity 文明聯軍刃 / 聯軍統帥盔 / 文明聯戰甲 / 聯軍突進靴 / 文明聯軍戰略節點. No guns cannons spears staffs axes hammers scythes.",
+      "originalToolOutput": "/workspace/generated_images/exec-13c468b6-dc07-4b00-bd86-d4b3f800dcee.png",
+      "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g092-allied-civilizations/sources/slots-original.png",
+      "originalSha256": "2ca26412e5a4b210d5f5be55c11f376aa9d8da7e6210fee6811d21581c7379f8",
+      "originalBytes": 2250401,
+      "originalWidth": 1536,
+      "originalHeight": 1024,
+      "output": {
+        "file": "equipment-five-slots.webp",
+        "width": 1536,
+        "height": 1024,
+        "bytes": 285200,
+        "sha256": "14249f4c8803fd2b08d35132ebc77cf3a26b46ff52b21761e149ce356886beb0"
+      },
+      "referenceOriginalSha256": "f8277d78d12cc2cb2644b0b2db9a7dfc01a249e9cdaf69b4e7b663f78ffbed7e"
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "baseMain": "1dc5a1a58f31784588e35f7a955a1ea307ebd572",
+  "date": "2026-10-17",
+  "timezone": "Asia/Taipei",
+  "sets": [
+    {
+      "id": "g091",
+      "description": "海軍藍象牙白、雙側翼全罩盔、寬六角肩及V層胸、短分叉腰甲、青邊直劍、白色低踝厚底雙鞋與三連六角背印",
+      "advisory": "側視稍偏3/4，五槽甲腿末端及鞋筒接縫略有差異；六角背印與刀劍、雙鞋主要形狀一致。",
+      "outputs": [
+        {
+          "kind": "overview",
+          "tool": "image_gen.imagegen",
+          "prompt": "Create NEW original landscape 1536x1024 polished 2.5D sci-fi RPG concept turnaround G091, Galactic alliance front. Exactly THREE large full-body views same armored person FRONT SIDE BACK on neutral light grey background, all head sword tips and boots inside canvas. Distinct alliance frontier silhouette: navy blue and warm ivory ceramic armor, restrained turquoise lights, compact helmet with TWO swept side fins and fully opaque black visor, no face or eyes. Wide shallow hexagonal shoulder plates, V-shaped layered breastplate, short split waist plates, slim athletic articulated legs. Back-mounted large interlocking THREE HEXAGON alliance seal device clearly visible in rear view, no banners no circular halo. Single straight pointed double-edged turquoise-edged sword, short grip and angular hexagonal guard, held down at side. Pair of broad white ankle boots with navy toes and thick dark soles. Crisp painterly game concept, readable on small mobile screens, restrained details, clear silhouette. Same design palette and shapes across views. Official identity 聯盟星河刃 / 文明聯軍盔 / 銀河聯軍甲 / 星海聯軍靴 / 銀河聯盟權印. Only minimal English view labels. No guns spears axes hammers scythes staffs, no exposed face, no cropped feet.",
+          "originalToolOutput": "/workspace/generated_images/exec-7b7c9d70-16cb-48f8-9d5d-cc65dc2873a1.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g091-galactic-alliance-front/sources/overview-original.png",
+          "originalSha256": "2e7b3625fb31d8389865c043618f800067ebeae32fc4a4a97af1194211e59c01",
+          "originalBytes": 2194939,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "overview-front-side-back.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 255838,
+            "sha256": "56977a3a3399006bed78af623210228930c066ceab375e121fe3b34449943810"
+          },
+          "referenceOriginalSha256": null
+        },
+        {
+          "kind": "slots",
+          "tool": "image_gen.imagegen",
+          "prompt": "Using the supplied G091 navy ivory alliance armor turnaround as sole reference, create a NEW independently drawn landscape 1536x1024 EQUIPMENT ONLY concept sheet. FIVE separated large clearly labeled groups: WEAPON entire pointed straight double-edged cyan sword with short grip and hexagonal guard; HELMET twin swept side-fins ivory/navy full opaque black visor; ARMOR headless bootless V-layered breastplate plus broad shallow hex shoulders, short split waist plates, slim articulated armored legs; BOOTS separate standalone PAIR broad white ankle shoes navy toes thick black soles (not knee armor); BACK ACCESSORY detached THREE interlocking HEXAGON turquoise alliance seal panels on compact mounting frame with small oblique mounting view. Match reference main colors and forms. Crisp painterly 2.5D sci-fi game art, neutral grey background, clean spacing readable at mobile size, complete items inside canvas. No wearer. No copied crop, independently redraw objects. Only English labels. Official identity 聯盟星河刃 / 文明聯軍盔 / 銀河聯軍甲 / 星海聯軍靴 / 銀河聯盟權印. No guns spears axes staffs hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-fbef5ccc-3d36-43f2-9ec9-91ebb28d4c3b.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g091-galactic-alliance-front/sources/slots-original.png",
+          "originalSha256": "f5924a2f5a734a4a5f2bd8dad4aa1ff018c926f89e073b5a85580e5beb2bdb23",
+          "originalBytes": 2200101,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "equipment-five-slots.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 289348,
+            "sha256": "c6b702866d649c2d180ecebe5bb4c06c2faeb9e1f6603395440c39e4b201caa5"
+          },
+          "referenceOriginalSha256": "2e7b3625fb31d8389865c043618f800067ebeae32fc4a4a97af1194211e59c01"
+        }
+      ]
+    },
+    {
+      "id": "g092",
+      "description": "橙黑鈦銀、單脊全罩盔、單側大型分層方肩、橫燈胸甲、短腰護板、削尖寬單刃、橙跟深底雙鞋與Y形三端戰略節點",
+      "advisory": "五槽鎧甲腿端和鞋筒分界略不一致，背飾與鞋子標籤共用右側欄；兩個獨立主體均完整且可辨識。",
+      "outputs": [
+        {
+          "kind": "overview",
+          "tool": "image_gen.imagegen",
+          "prompt": "Create NEW landscape 1536x1024 polished painterly 2.5D sci-fi RPG concept turnaround G092 allied civilizations command. Exactly THREE full-body views SAME person FRONT SIDE BACK, neutral grey studio background, entire head and boots and sword inside canvas. Distinct silhouette far from navy ivory twin-fin hexagonal G091: burnt ORANGE and GRAPHITE with brushed titanium details and AMBER lights. Low helmet with ONE broad swept central crest, opaque featureless dark faceplate no visible face. Asymmetric shoulders: one large layered rectangular command pauldron, other low compact shoulder, broad rectangular chest with central horizontal amber slot, short sturdy legs and compact split hip guards no long skirt. Back accessory a Y-SHAPED strategic router with THREE large angular node pods at tips, clear in back view. Weapon medium length broad single-edge saber with clipped pointed tip, short black handle and flat crossguard, readable blade no gun. Separate pair of wedge-toed graphite ankle boots with orange heel armor and deep traction soles. Clean large armor masses readable on small mobile screens. Same forms and palette in all three views. Official identity 文明聯軍刃 / 聯軍統帥盔 / 文明聯戰甲 / 聯軍突進靴 / 文明聯軍戰略節點. Minimal English FRONT SIDE BACK labels only; no other text. No guns spears staffs axes hammers scythes, no exposed face.",
+          "originalToolOutput": "/workspace/generated_images/exec-077acc6f-a9bf-463d-bd90-781c11e6bbf6.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g092-allied-civilizations/sources/overview-original.png",
+          "originalSha256": "f8277d78d12cc2cb2644b0b2db9a7dfc01a249e9cdaf69b4e7b663f78ffbed7e",
+          "originalBytes": 2298209,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "overview-front-side-back.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 264182,
+            "sha256": "fec4fdf28af52a18d1c35121a9beca187a5394400f562ebab005310410eb2c23"
+          },
+          "referenceOriginalSha256": null
+        },
+        {
+          "kind": "slots",
+          "tool": "image_gen.imagegen",
+          "prompt": "Using supplied G092 orange graphite asymmetric command armor as reference, create NEW independently drawn 1536x1024 landscape equipment-only concept sheet, no cropping from reference. Five separated large groups: WEAPON whole broad single-edge pointed clipped saber short grip flat guard amber blade channel; HELMET single wide swept crest opaque dark face mask orange silver; ARMOR headless bootless rectangular chest horizontal amber core one huge layered rectangular shoulder other small shoulder and split short hip armor plus segmented legs; BOOTS separate standalone PAIR low ankle graphite shoes orange heel plates wedge toes deep black soles, not knee armor; BACK ACCESSORY detached Y-shaped strategic router with three angular amber pod nodes and mounting frame. Match supplied reference structures, orange graphite titanium amber palette. Neutral grey background, crisp painterly 2.5D sci-fi game concept readable small, complete objects inside frame, no wearer, clear spacing, English labels only. Official identity 文明聯軍刃 / 聯軍統帥盔 / 文明聯戰甲 / 聯軍突進靴 / 文明聯軍戰略節點. No guns cannons spears staffs axes hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-13c468b6-dc07-4b00-bd86-d4b3f800dcee.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g092-allied-civilizations/sources/slots-original.png",
+          "originalSha256": "2ca26412e5a4b210d5f5be55c11f376aa9d8da7e6210fee6811d21581c7379f8",
+          "originalBytes": 2250401,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "equipment-five-slots.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 285200,
+            "sha256": "14249f4c8803fd2b08d35132ebc77cf3a26b46ff52b21761e149ce356886beb0"
+          },
+          "referenceOriginalSha256": "f8277d78d12cc2cb2644b0b2db9a7dfc01a249e9cdaf69b4e7b663f78ffbed7e"
+        }
+      ]
+    },
+    {
+      "id": "g093",
+      "description": "紫金雙尖冠全罩盔、上揚月肩、菱核胸甲、長分叉腰片、紫光直劍、金尖頭抬跟雙鞋與菱形放射背架",
+      "advisory": "背架尖端數及月肩曲率在視角間略異，五槽鎧甲腿端帶尖形收口；獨立鞋子仍成對完整，不要求工程級拆件精度。",
+      "outputs": [
+        {
+          "kind": "overview",
+          "tool": "image_gen.imagegen",
+          "prompt": "Create NEW original 1536x1024 landscape painterly 2.5D sci-fi RPG concept turnaround G093 stellar dominion. Exactly THREE large FULL BODY views SAME armored person FRONT SIDE BACK, neutral grey background, head boots blade tips entirely inside canvas. Regal midnight PURPLE armor with warm GOLD trim, subtle violet energy. Helmet two tall tapered vertical crown prongs with low central brow and entirely opaque featureless golden-dark faceplate, no face. Distinct shoulders are two upward sweeping crescent pauldrons, slim waist and overlapping long tapered purple hip panels above articulated long legs. Chest large inverted diamond gold frame violet core. Back accessory SIX straight gold tapered spokes in an elongated DIAMOND arrangement framing one violet diamond command core, visible clearly from back, not circular halo, not three hexagons or Y router. Weapon long narrow pointed double-edge sword violet energized center with short grip and curved crescent guard. Pair angular purple low ankle boots with gold toe caps and dark soles. Crisp large masses small mobile readability, same features in all views, no copying other armor. Official identity 星海霸權刃 / 霸權主冠盔 / 星海領域甲 / 霸權相位靴 / 星海統御權柄. Only English FRONT SIDE BACK labels. No guns spears staffs axes hammers scythes, no cropped feet.",
+          "originalToolOutput": "/workspace/generated_images/exec-d6ca4f91-009c-4a4e-950c-ae6acdad4498.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/sources/overview-original.png",
+          "originalSha256": "8c5824a03a52163ab57da997059aa98e76d809d16377866e13e8eb13b4d046d3",
+          "originalBytes": 2244808,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "overview-front-side-back.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 269988,
+            "sha256": "9f3057df53b7b8ecd61d1eb3a15e37c0fc55eab14b45b271e05373fe064ed69a"
+          },
+          "referenceOriginalSha256": null
+        },
+        {
+          "kind": "slots",
+          "tool": "image_gen.imagegen",
+          "prompt": "Using supplied G093 purple gold dominion armor as sole reference, create NEW independently drawn 1536x1024 landscape equipment-only sheet. FIVE clear separated large groups: WEAPON full narrow pointed double-edge violet energy sword short grip crescent guard; HELMET two tall tapered crown prongs complete opaque gold dark mask; ARMOR headless bootless assembly upward crescent shoulders diamond chest violet core slim waist long split purple hip panels and articulated legs; BOOTS distinct standalone PAIR purple gold ankle footwear pointed gold toes raised heels black soles, no knee armor; BACK ACCESSORY detached elongated diamond-shaped six-spoke command frame with violet diamond core and small mounting view. Match reference major silhouette palette material, clean grey background crisp painterly 2.5D sci-fi game concept readable mobile, no wearer, complete objects inside canvas. Independently redraw objects no reference crops. English labels only. Official identity 星海霸權刃 / 霸權主冠盔 / 星海領域甲 / 霸權相位靴 / 星海統御權柄. No guns spears staffs axes hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-4e7a546e-6583-452e-ae5c-7a4cf1173ce3.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g093-stellar-dominion/sources/slots-original.png",
+          "originalSha256": "23d09c71072ad62e303a2885a4c7e32ae0963dcdf66e09a731d3178f08d7533e",
+          "originalBytes": 2241343,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "equipment-five-slots.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 303162,
+            "sha256": "ef532961e00fe87dba7c180a4b70f2ee3265378b20496513168893af94ded7f8"
+          },
+          "referenceOriginalSha256": "8c5824a03a52163ab57da997059aa98e76d809d16377866e13e8eb13b4d046d3"
+        }
+      ]
+    },
+    {
+      "id": "g094",
+      "description": "橄欖銅方堡全罩盔、對稱堡齒重肩、層疊方胸與短重腰甲、白刃厚短劍、方頭厚底雙鞋與三燈權限背板",
+      "advisory": "劍尖削角與肩部堡齒在各視圖有微差，側視稍偏3/4；刀劍、方堡甲及三燈背板主體一致。",
+      "outputs": [
+        {
+          "kind": "overview",
+          "tool": "image_gen.imagegen",
+          "prompt": "Create NEW original 1536x1024 landscape painterly 2.5D sci-fi RPG concept turnaround G094 galactic unification fortress. Exactly THREE large FULL BODY views SAME armored person FRONT SIDE BACK, grey studio background, head feet and sword entirely inside canvas. Heavy compact bunker silhouette: OLIVE ceramic and dark BRONZE armor with small icy white lights, no orange navy or purple scheme. Helmet flat low rectangular fortress roof with two short raised corner blocks, full opaque black armored faceplate no face. Massive symmetric squared block shoulders with stepped battlement-like upper edges; thick rectangular chest with horizontal layered shielding; stout legs heavy low hanging square hip guards. Back accessory tall compact rectangular fortress ACCESS PANEL with three vertical white status bars, thick bronze box frame and visible small back mounting, not gun battery, no barrels. Weapon broad thick straight pointed cleaver-like single-edge SWORD with short grip, simple chunky rectangular guard, white cutting edge; absolutely no axe. BOOTS pair very broad blocky olive ankle boots bronze toe bumper black deep soles. Large clear shapes readable on mobile. Same design across views. Official identity 統合斷星刃 / 銀河要塞盔 / 統合防衛甲 / 要塞機動靴 / 銀河要塞權限. English FRONT SIDE BACK labels only. No guns cannons spears staffs axes hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-10cd6f14-59c2-46dd-88cb-60bb4c82a674.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/sources/overview-original.png",
+          "originalSha256": "fcca94b9ef92b3698ca10bc4a35d3ad87991788d31a4b835bdd8237e6743f18f",
+          "originalBytes": 2389409,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "overview-front-side-back.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 310066,
+            "sha256": "4647dd09aa7f64de39abe76cac4cd6344435fe2e0373612da35a830f4e8390b9"
+          },
+          "referenceOriginalSha256": null
+        },
+        {
+          "kind": "slots",
+          "tool": "image_gen.imagegen",
+          "prompt": "Using supplied G094 olive bronze fortress heavy armor as sole reference create NEW independently drawn 1536x1024 landscape equipment-only concept sheet. Exactly FIVE separate large groups WEAPON full broad thick single-edge pointed sword short handle chunky rectangular guard white cutting edge; HELMET low flat rectangular roof corner blocks full opaque black faceplate; ARMOR headless bootless assembly massive squared battlement shoulders thick layered rectangular chest box hip guards stout segmented legs; BOOTS clearly separate standalone PAIR broad olive ankle boots bronze toe bumpers thick black traction soles no knee armor; BACK ACCESSORY detached tall compact rectangular access panel bronze thick box frame THREE vertical white status bars rear mounting visible, absolutely no barrels no gun. Match reference major colors forms and details, clean grey background, crisp painterly 2.5D sci-fi game art readable mobile, all parts entire inside canvas, no wearer. Independently draw not crop reference. English labels only. Official identity 統合斷星刃 / 銀河要塞盔 / 統合防衛甲 / 要塞機動靴 / 銀河要塞權限. No guns spears axes staffs hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-95f727dc-3ce3-4fc5-b6b9-d2ef3c7127b4.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g094-unification-fortress/sources/slots-original.png",
+          "originalSha256": "876e477982ba60c32fcade51c14bed3f6d66de26db75e6c4c10ed171824ab91c",
+          "originalBytes": 2195227,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "equipment-five-slots.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 266728,
+            "sha256": "2c4761d6f0a84bcc131da36127edba6ad819027180f1dd625dea2d347eece0a5"
+          },
+          "referenceOriginalSha256": "fcca94b9ef92b3698ca10bc4a35d3ad87991788d31a4b835bdd8237e6743f18f"
+        }
+      ]
+    },
+    {
+      "id": "g095",
+      "description": "珍珠白酒紅拱冠全罩盔、高領窄肩、紅菱三層胸甲、長分叉披片、紅光細直劍、酒紅鞋頭高跟雙鞋與七牌扇形議會中樞",
+      "advisory": "冠頂短齒及背牌小紋飾在不同視角略異，長披片局部遮住腿甲；鞋子、拱冠與背扇主輪廓可辨。",
+      "outputs": [
+        {
+          "kind": "overview",
+          "tool": "image_gen.imagegen",
+          "prompt": "Create NEW original 1536x1024 landscape painterly 2.5D sci-fi RPG concept turnaround G095 galactic unification council. Exactly THREE large FULL BODY views SAME armored person FRONT SIDE BACK, light grey background, complete heads feet sword tips inside canvas. Slender ceremonial council silhouette: PEARL WHITE and deep BURGUNDY armor, satin rose-gold edges, small warm RED lights. Helmet a smooth closed opaque black face mask under one broad inverted-U arch crown with three short finial teeth; absolutely no exposed face. Tall raised collar, swept narrow shoulders, breastplate with vertical red lozenge and three tiered chevron plates, long burgundy split tabard with white border and slim articulated legs. Back accessory a half-FAN of SEVEN rectangular council voting tablets attached to a central red disk and mounting bracket, visible rear; no weapons, no hexagons, no Y router, no fortress box. Weapon elegant slim pointed straight double-edged red energy sword short grip simple arched guard, held down at side. Pair of slender pearl ankle boots burgundy toe and rose-gold heel trim dark distinct soles. Large readable 2.5D shapes, consistent forms palette across views. Official identity 議會星河刃 / 統合議政冠 / 議會統御甲 / 議會相位靴 / 統合議會中樞. English FRONT SIDE BACK labels only. No guns spears axes staffs hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-1f1344ac-61a3-47ec-b38b-ca0da25708bd.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/sources/overview-original.png",
+          "originalSha256": "ac8f422327c3b4e200230a42065573397d2d391b7d01cb751ebe9e61aea654d3",
+          "originalBytes": 2259328,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "overview-front-side-back.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 277350,
+            "sha256": "9912092cdcc935021be63531ef9ce1c6b1bf3e3f28699b8141eeaeda39229252"
+          },
+          "referenceOriginalSha256": null
+        },
+        {
+          "kind": "slots",
+          "tool": "image_gen.imagegen",
+          "prompt": "Using supplied G095 pearl white burgundy council armor as sole reference create NEW independently drawn 1536x1024 landscape equipment-only concept sheet. FIVE separated large groups WEAPON complete elegant slim pointed red double-edged energy sword short grip arched guard; HELMET broad inverted-U arch crown with three short finials over smooth fully opaque black faceplate; ARMOR headless bootless high collar narrow swept shoulders chevron chest vertical red lozenge long split burgundy white-border tabard and slim leg armor; BOOTS distinct standalone PAIR slender white ankle shoes burgundy toe and rose-gold heel trim raised heels dark soles, not knee armor; BACK ACCESSORY detached half-FAN of SEVEN rectangular white red voting tablets connected to round red central disk with back mounting bracket and small oblique view. Match reference structures colors, crisp painterly 2.5D sci-fi game concept small mobile readable, neutral grey background, complete parts inside frame, no wearer, no reference crop. Only English labels. Official identity 議會星河刃 / 統合議政冠 / 議會統御甲 / 議會相位靴 / 統合議會中樞. No guns spears axes staffs hammers scythes.",
+          "originalToolOutput": "/workspace/generated_images/exec-fbfbacf9-8b96-4078-ab5c-d061498f65aa.png",
+          "archivedOriginal": "development/3d-source/equipment/concepts/galaxy/g095-unification-council/sources/slots-original.png",
+          "originalSha256": "2cbb798e1e4b4d8191bf6e7fa04496ddf12d27581cc6526299f702b4ee7a0294",
+          "originalBytes": 2330361,
+          "originalWidth": 1536,
+          "originalHeight": 1024,
+          "output": {
+            "file": "equipment-five-slots.webp",
+            "width": 1536,
+            "height": 1024,
+            "bytes": 345218,
+            "sha256": "13252fed44564408ad437c88681e90040064bba85fbee31b5925cc3be0a08707"
+          },
+          "referenceOriginalSha256": "ac8f422327c3b4e200230a42065573397d2d391b7d01cb751ebe9e61aea654d3"
+        }
+      ]
+    }
+  ]
+}
