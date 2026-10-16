@@ -10,3 +10,6 @@
 - GM初輪 browser-001.log 捲動位置 291→102，原斷言失敗。把取樣移至真click事件仍曾失敗，見gm-browser-final.log；不能宣稱單靠該調整已解決。gm-browser-retry.log 另遇敗北像素取樣時序失敗。測試改以requestAnimationFrame等待相同精確像素條件，再保留原始像素斷言；不刪五動作、三套角色、三viewport或任何State／storage／權限斷言。完整診斷與最終重跑另見各log。
 - 自動審核曾拒絕縮短版診斷命令，認為可能削弱GM驗證；該命令未執行。替代方案只將完整測試複製到work並增加尺寸／捲動診斷，保留全部驗證範圍。未要求額外使用者批准，也未修改正式GM程式。
 - 概念完整unittest首輪118項：117項通過，test_actual_counts_names_statuses仍預期range(1,81)，對真實新增五套報錯。改為精確range(1,86)（G001～G085），保留其餘正式名稱／狀態斷言後單項重跑；另有G17四項原稿／歷史／來源測試及一項完成／未完成批次規劃測試。
+
+
+提交後CI補查：首個提交cd31fd98868bdead9425c51b0fafd193f0900d11之正式戰鬥Action run38914347022在higher-dungeons.cjs因角色已結算移除、第二次IPC讀dataset得到null而失敗；先前正式三viewport、全部故障回退與回顧已通過。保留完整github-formal-initial-failure.log與actions-first-commit.json。測試改同一瀏覽器取樣綁定實際可見G007角色、combat mode/world及diagnostics，保留原W3不變、錯誤空陣列與結算斷言；沒有延長戰鬥或改正式程式。兩種副本本機重跑通過，見higher-dungeons-ci-fix.log；最後再核對修正後main SHA之Actions。

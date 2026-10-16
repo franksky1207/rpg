@@ -21,3 +21,6 @@
 累計85／210套、170／420張，剩125套250張；下一批G18＝G086～G090未製圖。asset2_5dStatus=not-started、gm2_5dTestStatus=not-tested、formalReleaseAllowed=false。正式第28批仍進行，第29～40批未因此開始；未改正式遊戲玩法、Runtime、GM、音訊、存檔與發布開關。
 
 本機最終驗證已收斂：概念123項覆蓋（118項全套首輪的一項舊範圍期待值修正後單項通過，另新增5項通過）、保護命令20項、Runtime99項命令、九項真Chromium檢查皆最終通過，GM保留121斷言；初輪失敗未隱藏。詳[證據README](evidence/equipment-g17/README.md)與逐命令結果為準。最終main SHA及Actions須於提交後按實際結果查核，不沿用舊SHA。實體iPhone／Android／Safari與熱／記憶體長測未做，本批不製作角色素材或動畫。
+
+
+提交後CI補查：首個提交cd31fd98868bdead9425c51b0fafd193f0900d11之正式戰鬥Action run38914347022在higher-dungeons.cjs因角色已結算移除、第二次IPC讀dataset得到null而失敗；先前正式三viewport、全部故障回退與回顧已通過。保留完整github-formal-initial-failure.log與actions-first-commit.json。測試改同一瀏覽器取樣綁定實際可見G007角色、combat mode/world及diagnostics，保留原W3不變、錯誤空陣列與結算斷言；沒有延長戰鬥或改正式程式。兩種副本本機重跑通過，見higher-dungeons-ci-fix.log；最後再核對修正後main SHA之Actions。

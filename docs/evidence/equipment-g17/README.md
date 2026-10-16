@@ -18,3 +18,6 @@
 本機環境見local-environment.json；既有system-chromium preloader及真SDK本地副本只用於測試，未入庫、未更換代理或TLS；測試帳號fixture不是正式雲端真帳號驗收。iPhone／Android／Safari、熱／記憶體長測未做。
 
 概念批准不代表角色或發布：asset2_5dStatus=not-started、gm2_5dTestStatus=not-tested、formalReleaseAllowed=false。正式第28批仍進行，第29～40批未開始；G18未製圖。最終main Actions須查提交後該SHA的實際結果。
+
+
+提交後CI補查：首個提交cd31fd98868bdead9425c51b0fafd193f0900d11之正式戰鬥Action run38914347022在higher-dungeons.cjs因角色已結算移除、第二次IPC讀dataset得到null而失敗；先前正式三viewport、全部故障回退與回顧已通過。保留完整github-formal-initial-failure.log與actions-first-commit.json。測試改同一瀏覽器取樣綁定實際可見G007角色、combat mode/world及diagnostics，保留原W3不變、錯誤空陣列與結算斷言；沒有延長戰鬥或改正式程式。兩種副本本機重跑通過，見higher-dungeons-ci-fix.log；最後再核對修正後main SHA之Actions。
