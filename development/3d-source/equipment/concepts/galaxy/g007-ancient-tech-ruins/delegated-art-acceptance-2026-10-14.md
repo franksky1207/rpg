@@ -1,5 +1,0 @@
-# g007 概念局部修正版代理美術審查
-
-使用者授權 ChatGPT 代理美術審查；已實際看候選完整頁及局部對照，修正合格，非使用者親自逐圖觀看。授權來源：docs/BATCH28_DELEGATED_ART_REVIEW_AND_CONSOLIDATED_EXECUTION_2026-10-14.md。
-
-原SHA `2959fd08a50d7968ec228a4c8115f65988d018a4c57d045d876eec5c107d0ac0`；新SHA `ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c`。原圖保留於history/2026-10-14，候選與正式圖逐byte一致。只修指定局部，其他38圖不動。G006為柔性保溫內襯與鞋槽獨立硬殼；G007為空背座與飾品唯一鑰印。原三視圖與本次拆件之主輪廓一致，工程接縫以五槽notes為準。此代理概念批准不解除正式B發布限制、不代表模型／真機技術通過。
