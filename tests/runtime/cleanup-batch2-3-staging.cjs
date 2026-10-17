@@ -20,7 +20,7 @@ assert.ok(plan.excluded.some(row=>row.path==="3d-test/atlas-review.js"),"Retired
 const ledger=JSON.parse(fs.readFileSync(path.join(root,pre+"t2b3-v1/manifest.json"),"utf8"));
 const staged=Object.keys(ledger.files).filter(p=>fs.existsSync(path.join(stage,p)));
 assert.equal(staged.length,174,"Only the audited 174 GM B files may be staged");
-assert.equal(Object.keys(ledger.files).length-staged.length,374,"Expected 374 retired A/C-only files");
+assert.equal(Object.keys(ledger.files).length,174,"Retired A/C-only entries must be removed from the source ledger");
 const stagedSet=new Set(staged);
 for(const name of staged)assert.ok(ledger.files[name],"Staged asset outside audited ledger: "+name);
 for(const name of Object.keys(ledger.files))if(!stagedSet.has(name))assert.ok(!fs.existsSync(path.join(stage,name)),"Unrequested retired art staged: "+name);
