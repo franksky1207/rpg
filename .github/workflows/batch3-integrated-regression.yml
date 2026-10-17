@@ -31,6 +31,7 @@ jobs:
           path: |
             batch3-integrated-evidence.json
             batch3-before-after-frame-trace.json
+            batch3-alternate-ui-controller-trace.json
             batch1-animation-frame-trace.json
             batch1-fixed12-evidence.json
             batch2-final13-evidence.json
