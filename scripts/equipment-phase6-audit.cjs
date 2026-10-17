@@ -30,7 +30,11 @@ const glbs=registry.assets.filter(a=>a.path.includes('equipment/ancient-ruins-v1
 assert.equal(glbs.length,15,'G007 five slots x three LOD retained');
 for(const a of glbs){assert.equal(sha(a.path),a.sha256);assert.equal(plan.sizes.get(a.path),a.bytes);assert.ok(plan.keep.includes(a.path));assert.ok(a.license?.trim());assert.equal(a.preload,false);}
 const factories=[...read('3d-test/prototype-engine.js').matchAll(/function (create\w+Scene)\(/g)].map(m=>({name:m[1],consumers:plan.keep.filter(p=>p!=='3d-test/prototype-engine.js'&&/\.(?:m?js|html)$/.test(p)&&read(p).includes(m[1]))}));
-assert.ok(factories.every(f=>f.consumers.length),'Investigate orphan factory instead of silently publishing');
+const retiredFactories=['createEpochScene','createGalaxyScene','createUniverseScene','createHigherDimensionalScene','createCharacterScene','createEquipmentScene','createForgeScene','createGrowthScene','createDungeonScene','createDungeonAdvancedScene','createFrontierScene','createBattlePresentationScene','createChronicleTransitionScene','createServiceConsoleScene'];
+assert.deepEqual(factories.map(f=>f.name),retiredFactories,'Unexpected factory inventory after GM retirement');
+assert.ok(factories.every(f=>f.consumers.length===0),'Legacy symbolic scenes must have no published active consumer');
+// Source remains tracked in this decoupling batch; deletion is reserved for batch 3.
+
 assert.equal(plan.missing.length,0);
 const report={schema:'cw.equipment.phase6.dependencies.v1',baselineMain:'987767dc3d443d6b1f1dc1b359cf2a086100456c',modules,factories,g007:glbs.map(a=>({path:a.path,sha256:a.sha256,bytes:a.bytes,license:a.license})),preservedSourceTools:sources,retired,removedThisBatch:[],release:{selectedFiles:plan.keep.length,selectedBytes:plan.keep.reduce((n,p)=>n+plan.sizes.get(p),0),backgrounds:plan.backgrounds.length,music:plan.audio.music.length,sfx:plan.audio.sfx.length,missing:plan.missing},limitations:['Lexical consumers prove a reason to retain, not actual runtime execution or absence of dynamic consumers.','Controlled B3 preview is staged separately after official release audit; it is not an unrestricted development directory publication.','Browser request assertions and original GM/G007 tests are required alongside this audit.']};
 console.log(JSON.stringify(report,null,2));
