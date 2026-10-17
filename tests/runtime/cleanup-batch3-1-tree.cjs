@@ -10,7 +10,11 @@ const gone=before.filter(x=>x.path.startsWith(prefix)),old=new Set(before.map(x=
 assert.equal(gone.length,874,"Original inventory folder size changed");
 assert.equal(gone.reduce((s,x)=>s+x.size,0),352471565,"Original inventory byte count changed");
 for(const x of gone)assert.ok(!now.has(x.path),"Concept file still tracked: "+x.path);
-assert.deepEqual(before.filter(x=>!x.path.startsWith(prefix)&&!now.has(x.path)).map(x=>x.path),[],"Unexpected source deletion");
+const removedOutside=before.filter(x=>!x.path.startsWith(prefix)&&!now.has(x.path)).map(x=>x.path);
+const authorizedScripts=new Set(["scripts/equipment-art-review.py","scripts/equipment-asset-production-gate.py","scripts/equipment-concept-batches.py","scripts/equipment-concepts.py","scripts/equipment-modeling-gate.py","scripts/equipment-review-policy-v3.json"]);
+for(const path of removedOutside)assert.ok(path.startsWith("tests/equipment-concepts/")||authorizedScripts.has(path),"Unexpected source deletion: "+path);
+if(removedOutside.length)assert.equal(removedOutside.length,35,"Batch 3-2 must remove exact art-only script and fixture list");
+assert.equal(removedOutside.filter(path=>path.startsWith("tests/equipment-concepts/")).length,removedOutside.length?29:0,"Retired art-only fixture count");
 for(const p of ["development/3d-source/equipment/concepts/_concept-index.json","development/3d-source/equipment/concepts/_concept-identities.json"])
  assert.ok(!fs.existsSync(p),"Deleted catalogue still present: "+p);
 for(const p of ["assets/gm-equipment-2_5d/v1/catalog.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp",
