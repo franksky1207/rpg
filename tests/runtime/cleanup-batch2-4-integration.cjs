@@ -23,7 +23,11 @@ for(const p of formalProtected){
   const oldFx="combatfx.js?v=20261015-thrust1";
   const newFx="combatfx.js?v=20261017-batch3-fx-lifecycle1";
   assert.ok(original.includes(oldFx)&&current.includes(newFx),"Expected approved Batch 3 combatfx cache version");
-  assert.equal(current.replace(newToken,oldToken).replace(newFx,oldFx),original,"Unexpected formal HTML change beyond approved Batch 2/3 cache tokens");
+  const oldDungeon="dungeonui.js?v=20260923-universe-exp-fix1";
+  const newDungeon="dungeonui.js?v=20261018-batch4-mobile-stage-anchor1";
+  const newSheet='<link rel="stylesheet" href="battle-mobile-viewport.css?v=20261018-batch4-mobile1">';
+  assert.ok(original.includes(oldDungeon)&&current.includes(newDungeon)&&current.includes(newSheet),"Expected approved Batch 4 cache token and mobile stylesheet");
+  assert.equal(current.replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,""),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
   continue;
  }
  assert.equal(sha(actual(p)),sha(historic(base,p)),"Formal runtime unexpectedly modified: "+p);
