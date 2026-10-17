@@ -1,7 +1,7 @@
 name: Batch 2-4 Integration and Regression
 on:
   push:
-    branches: [cleanup-batch2-4-integration-20261017, batch3-1-old-concept-prune, batch3-2-retire-concept-tools, batch3-3-retire-art-evidence, batch3-4-retire-docs, batch4-2-art-unlink, batch4-3-runtime-dependency-cleanup, batch4-4-final-zero-residual-regression]
+    branches: [main, cleanup-batch2-4-integration-20261017, batch3-1-old-concept-prune, batch3-2-retire-concept-tools, batch3-3-retire-art-evidence, batch3-4-retire-docs, batch4-2-art-unlink, batch4-3-runtime-dependency-cleanup, batch4-4-final-zero-residual-regression]
   workflow_dispatch:
 permissions:
   contents: read
