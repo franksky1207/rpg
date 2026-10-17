@@ -31,10 +31,16 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      for(const id of cases){
       await page.locator('[data-b="case"]').selectOption(id);
       assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
-      await page.locator('[data-b="play"]').click();
-      await page.locator('[data-b="pause"]').click();
-      await page.locator('[data-b="resume"]').click();
-      await page.locator('[data-b="stop"]').click();
+      const play=page.locator('[data-b="play"]');
+      if(await play.isEnabled()){
+       await play.click();
+       await page.locator('[data-b="pause"]').click();
+       await page.locator('[data-b="resume"]').click();
+       await page.locator('[data-b="stop"]').click();
+      }else{
+       assert.match(await page.locator('[data-b="status"]').innerText(),/授權|角色|素材|回退|無法/,'unauthorized sandbox explains disabled controls');
+       assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0,'unauthorized preview must not expose protected actor');
+      }
      }
      assert.equal(await page.locator('[data-b="case"] option').count(),5);
      reports.push({viewport,scenarios:cases,mode:mode.published?'published':'dev',controls:true,resourceDisposal:true});
