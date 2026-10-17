@@ -110,7 +110,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,actionStartedAt:p.actionStartedAt??null,action:window.CivilizationCombatEvents?.projectAction?.(p.events[p.index-1])||null,index:p.index,eventCount:p.events.length,lockPlayerFullHp:p.lockPlayerFullHp===true};
  };
  window.clearCombatPresentation=function(reason="clear"){
-  if(!presentation)return null;
+  if(!presentation){clearPendingFx();return null;}
   const cleared={token:presentation.token,reason};
   window.CivilizationCombatEvents?.endPresentation?.(presentation.token,reason);
   presentation.active=false;
