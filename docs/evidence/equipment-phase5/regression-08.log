@@ -1,2 +1,0 @@
-PASS T3-B release firewall: demo renderer/fixture are not formal runtime
-PASS T3-B formal-only bridge, unsupported realms, dedupe, hostile consumer isolation, teardown

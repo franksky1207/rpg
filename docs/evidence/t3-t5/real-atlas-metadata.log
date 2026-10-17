@@ -1,9 +1,0 @@
-PASS real metadata/SHA normal low
-PASS real metadata/SHA normal medium
-PASS real metadata/SHA normal high
-PASS real metadata/SHA elite low
-PASS real metadata/SHA elite medium
-PASS real metadata/SHA elite high
-PASS real metadata/SHA boss low
-PASS real metadata/SHA boss medium
-PASS real metadata/SHA boss high
