@@ -28,6 +28,9 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
    const approved23=cp.execFileSync('git',['show','cf30ae8fe7ff84363a657b0b569cde445e7320da:'+path]);
    assert.equal(sha(fs.readFileSync(path)),sha(approved23),'GM two-category source must match approved Batch 2-3');
 
+  }else if(path==='3d-test/index.html'){
+   const approvedMarkup=cp.execFileSync('git',['show','02e1e4ca3bd26ae102007357846ddf260ef7b3b7:'+path]);
+   assert.equal(sha(fs.readFileSync(path)),sha(approvedMarkup),'GM 2.5D-only markup must match approved Batch 2-3');
   }else assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
   return;
  }
