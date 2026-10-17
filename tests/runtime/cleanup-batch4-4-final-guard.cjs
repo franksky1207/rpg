@@ -16,8 +16,19 @@ assert.match(text,/不製作210套角色/);
 assert.doesNotMatch(text,/G20＝G096|210套兩張概念圖全量產/);
 const changed=run("diff","--name-only",base,"HEAD").split("\n").filter(Boolean);
 const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlineprogress|ui|engine|balance|audio|gm3dprototype)\.js$/,/^index\.html$/,/^assets\/gm-equipment-2_5d\//,/^assets\/3d\//,/^3d-test\//,/^development\/equipment-2_5d\//];
-const unexpected=changed.filter(p=>protectedRoots.some(re=>re.test(p)));
-assert.deepEqual(unexpected,[],"Batch4-4 changed live runtime or assets");
+const unexpected=changed.filter(p=>p!=="index.html"&&protectedRoots.some(re=>re.test(p)));
+assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
+if(changed.includes("index.html")){
+ // A later, independently approved runtime update is allowed to bump ONLY
+ // its own script cache token. All other markup and script references
+ // must remain byte-identical to the historical cleanup baseline.
+ const original=run("show",base+":index.html");
+ const current=fs.readFileSync("index.html","utf8").trim();
+ const oldScript="backgroundprogress.js?v=20261013-background-hud-recovery1";
+ const newScript="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
+ assert.ok(original.includes(oldScript)&&current.includes(newScript),"Expected approved Batch 2 cache version");
+ assert.equal(current.replace(newScript,oldScript),original,"Historical index HTML changed beyond approved Batch 2 cache key");
+}
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
 const check=JSON.parse(fs.readFileSync("development/hybrid-comparison/t2b3-v1/manifest.json","utf8"));
