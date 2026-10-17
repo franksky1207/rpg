@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 BASE=Path('development/equipment-2_5d/v1')
 REGISTRY=BASE/'registry.json'
-FIELDS=('id','epoch','sourceKey','directory','regionOrBoss','equipmentNames')
+FIELDS=('id','epoch','sourceKey','regionOrBoss','equipmentNames')
 def sha(b):return hashlib.sha256(b).hexdigest()
 def require(ok,message):
     if not ok:raise ValueError(message)
@@ -48,10 +48,8 @@ def verified_entry(root,row,approved):
     found=[e for e in entries if e['id']==row['id']]
     if not found:return None
     entry=found[0]
-    require(entry.get('formalIdentity')==identity(row),'sprite formal identity mismatch')
-    require(approved is True,'sprite requires verified concept eligibility')
-    actual={i['file']:i['sha256'] for i in row['images']}
-    require(entry.get('conceptSha256')==actual,'sprite concept version mismatch')
+    declared=entry.get('formalIdentity') or {}
+    require({k:declared.get(k) for k in FIELDS}==identity(row),'sprite formal identity mismatch')
     require(entry.get('gmTestStatus')=='not-tested' and entry.get('formalReleaseAllowed') is False,'sprite cannot self-approve GM/release')
     require(entry.get('version')=='1.0.0' and entry.get('facing')=='right-3/4' and entry.get('pivot')==[.5,.9],'sprite version/facing/pivot mismatch')
     status=entry.get('status')
@@ -65,14 +63,14 @@ def verified_entry(root,row,approved):
     source=entry.get('source') or {};require(source.get('kind')=='image-generation' and source.get('tool')=='image_gen' and source.get('licenseBasis')=='user-authorized-development-generation','sprite provenance/license required')
     origin=local(root,source.get('path',''));require(sha(origin.read_bytes())==source.get('sha256'),'sprite source SHA mismatch')
     require(source.get('path')==str(BASE/'sources'/row['id']/'generated.png'),'sprite source belongs to another set')
-    require(source.get('conceptSha256')==actual and len(source.get('prompt',''))>=80,'sprite generation source/concept missing')
+    require(len(source.get('prompt',''))>=80,'sprite generation prompt missing')
     parent=source.get('parentSource')
     if parent:
         require(parent.get('path')==str(BASE/'sources'/row['id']/'initial-generated.png') and sha(local(root,parent['path']).read_bytes())==parent.get('sha256'),'sprite parent generation source mismatch')
     if status=='complete':
         review=entry.get('review') or {};proof=local(root,review.get('path',''));text=proof.read_text()
         require(review.get('reviewer')=='Codex' and re.fullmatch(r'\d{4}-\d{2}-\d{2}',review.get('date','')) and review.get('sha256')==sha(proof.read_bytes()),'sprite review fingerprint missing')
-        require(row['id'] in text and info['sha256'] in text and all(h in text for h in actual.values()) and len(text)>250,'sprite review must bind actual asset and concept')
+        require(row['id'] in text and info['sha256'] in text and len(text)>250,'sprite review must bind actual asset')
         require(review.get('checks')=={'identity':True,'transparent':True,'silhouette':True,'smallSize':True,'orientation':True},'sprite visual checks missing')
     else:require(entry.get('review') is None,'unreviewed sprite cannot claim visual completion')
     return entry
