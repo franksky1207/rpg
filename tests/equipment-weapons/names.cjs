@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const w={};w.window=w;vm.createContext(w);vm.runInContext(fs.readFileSync('secondworlddata.js','utf8'),w);vm.runInContext(fs.readFileSync('savemigration.js','utf8'),w);
-const cp=require('node:child_process');const index={sets:JSON.parse(cp.execFileSync('python3',['scripts/formal-equipment-identities.py'],{encoding:'utf8'})).rows},mapping=JSON.parse(fs.readFileSync('docs/WEAPON_NAME_MIGRATION_2026-10-15.json'));
+const cp=require('node:child_process');const index={sets:JSON.parse(cp.execFileSync('python3',['scripts/formal-equipment-identities.py','--rows'],{encoding:'utf8'})).rows},mapping=JSON.parse(fs.readFileSync('docs/WEAPON_NAME_MIGRATION_2026-10-15.json'));
 assert.equal(index.sets.length,210);assert.equal(index.sets.flatMap(r=>Object.values(r.equipmentNames)).length,1050);assert.equal(new Set(index.sets.map(r=>r.id)).size,210);assert.equal(new Set(index.sets.map(r=>r.equipmentNames.weapon)).size,210);
 assert.deepEqual(index.sets.filter(r=>r.epoch==='higher').map(r=>r.id),Array.from({length:10},(_,i)=>'h'+String(i+1).padStart(2,'0')));
 for(const r of index.sets){assert.doesNotMatch(r.equipmentNames.weapon,/[槍炮戟矛鐮斧鎚錘]/);if(r.epoch!=='higher')assert.match(r.equipmentNames.weapon,/[刀劍刃鋒]/);if(mapping.ids[r.id])assert.equal(r.equipmentNames.weapon,mapping.ids[r.id]);}
