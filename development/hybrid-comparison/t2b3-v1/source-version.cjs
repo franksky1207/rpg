@@ -25,7 +25,7 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
    // The approved Batch 2-2 source remains pinned in Git history above.
    // Pin the Batch 2-3 replacement to its exact accepted source commit;
    // neither the formal player nor the other GM modules are unlocked.
-   const approved23=cp.execFileSync('git',['show','cf30ae8fe7ff84363a657b0b569cde445e7320da:'+path]);
+   const approved23=cp.execFileSync('git',['show','6406893b41ebd16b1351716e94fb316529f861c7:' +path]);
    assert.equal(sha(fs.readFileSync(path)),sha(approved23),'GM two-category source must match approved Batch 2-3');
 
   }else if(path==='3d-test/index.html'){
