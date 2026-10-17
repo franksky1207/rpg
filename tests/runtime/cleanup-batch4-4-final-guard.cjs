@@ -19,15 +19,18 @@ const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlinepr
 const unexpected=changed.filter(p=>p!=="index.html"&&protectedRoots.some(re=>re.test(p)));
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
- // A later, independently approved runtime update is allowed to bump ONLY
- // its own script cache token. All other markup and script references
- // must remain byte-identical to the historical cleanup baseline.
+ // Permit only independently approved Batch 2 and Batch 3 script cache tokens.
+ // Normalize both back to the historical values, then require exact HTML equality;
+ // do not disable or loosen the broader retired-asset guard.
  const original=run("show",base+":index.html");
  const current=fs.readFileSync("index.html","utf8").trim();
  const oldScript="backgroundprogress.js?v=20261013-background-hud-recovery1";
  const newScript="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
  assert.ok(original.includes(oldScript)&&current.includes(newScript),"Expected approved Batch 2 cache version");
- assert.equal(current.replace(newScript,oldScript),original,"Historical index HTML changed beyond approved Batch 2 cache key");
+ const oldFx="combatfx.js?v=20261015-thrust1";
+ const newFx="combatfx.js?v=20261017-batch3-fx-lifecycle1";
+ assert.ok(original.includes(oldFx)&&current.includes(newFx),"Expected approved Batch 3 combat FX cache version");
+ assert.equal(current.replace(newScript,oldScript).replace(newFx,oldFx),original,"Historical index HTML changed beyond approved Batch 2/3 cache keys");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
