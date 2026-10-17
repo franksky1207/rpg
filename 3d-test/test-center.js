@@ -10,6 +10,7 @@ const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");
 const quality=$("quality"),toggle=$("toggle"),categoryList=$("categoryList"),caseList=$("caseList"),search=$("caseSearch"),maximizeButton=$("maximizePreview");
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
+if(embedded){const back=$("backToGame");if(back){back.hidden=true;back.style.display="none";}}
 let category="character",selected="C-08-CHARACTER",runtime=null,serial=0,disabled=false,maximized=false,maximumScroll=null;
 const entry=()=>cases.find(c=>c.id===selected)||cases[0];
 function release(){
