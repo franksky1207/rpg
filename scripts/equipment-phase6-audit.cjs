@@ -9,7 +9,8 @@ const modules=plan.keep.filter(p=>p.startsWith('3d-test/')&&/\.(?:m?js|css)$/.te
 // The old atlas-review user entry was removed from GM in batch 2-2.
 // It is still tracked and published until batch 2-3 confirms all dependencies.
 // Never silently accept any other unclassified runtime module.
-const pending23=['3d-test/atlas-review.js'];
+const pending23=[];
+assert.ok(!plan.keep.includes('3d-test/atlas-review.js'),'Retired atlas inspector unexpectedly published');
 const unclassified=modules.filter(r=>r.consumers.length===0).map(r=>r.path).sort();
 assert.deepEqual(unclassified,pending23.filter(p=>plan.keep.includes(p)).sort(),
   'Unexpected unclassified published modules; investigate before removing sources');
