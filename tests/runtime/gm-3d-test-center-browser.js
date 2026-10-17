@@ -22,7 +22,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
    if(bad==='LOD／圖集品質')continue; // battle has its own technical quality selector, handled in 2-3
    assert.ok(!(await page.locator('body').innerText()).includes(bad),'retired GM scene exposed '+bad);
   }
-  await page.locator('#caseList').getByRole('button',{name:'角色與五種動作'}).click();
+  await page.locator('#caseList').getByRole('button',{name:'角色動作預覽'}).click();
   await page.locator('.gm-suit-status').filter({hasText:/需要 GM 授權|正在確認 GM 權限/}).waitFor({timeout:20000});
   assert.equal(await page.locator('.gm-suit-preview canvas').count(),0,'direct iframe must not receive protected sprites');
   assert.equal(await page.locator('#fixturePanel').isVisible(),false);
@@ -32,7 +32,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
   }
   await page.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();
   assert.equal(await page.locator('#caseList .center-case').count(),1);
-  assert.equal(await page.locator('#caseTitle').innerText(),'2.5D 戰鬥模擬');
+  assert.equal(await page.locator('#caseTitle').innerText(),'戰鬥動畫模擬');
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getCurrent()),'C-15-BATTLE');
   await page.waitForFunction(()=>document.querySelector('.gm-b-simulation')||!document.querySelector('#fallback').hidden,null,{timeout:30000});
   const battleDiagnostics=await page.evaluate(()=>({fallback:document.getElementById('fallbackReason')?.textContent,status:document.getElementById('status')?.textContent,hasBattle:!!document.querySelector('.gm-b-simulation')}));
