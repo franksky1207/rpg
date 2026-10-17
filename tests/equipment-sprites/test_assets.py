@@ -53,10 +53,11 @@ class SpriteTests(unittest.TestCase):
   self.change('g007',lambda e:e.update(status='complete',asset=None,review=None))
   with self.assertRaises((ValueError,AttributeError)):self.check()
  def test_old_art_review_no_longer_a_gate(self):
-  e=self.entry();proof=self.root/e['review']['path'];proof.unlink()
+  self.assertNotIn('review',self.entry())
   self.assertEqual(self.check()['id'],'g007')
  def test_old_source_png_no_longer_a_gate(self):
-  e=self.entry();source=self.root/e['source']['path'];source.unlink()
+  self.assertNotIn('path',self.entry()['source'])
+  self.assertNotIn('conceptSha256',self.entry())
   self.assertEqual(self.check()['id'],'g007')
  def test_license_metadata_still_required(self):
   self.change('g007',lambda e:e['source'].update(licenseBasis='unknown'))
