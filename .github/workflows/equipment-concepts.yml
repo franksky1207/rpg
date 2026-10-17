@@ -1,26 +1,8 @@
-name: Equipment Concept Database
+name: Formal Equipment Identity Contract (legacy artwork workflow retired)
 on:
   push:
     branches: [main]
     paths:
-      - 'development/3d-source/equipment/concepts/**'
-      - 'scripts/equipment-concepts.py'
-      - 'scripts/equipment_sprite_assets.py'
-      - 'scripts/equipment-sprites.py'
-      - 'development/equipment-2_5d/**'
-      - 'scripts/equipment-concept-batches.py'
-      - 'scripts/equipment-art-review.py'
-      - 'scripts/equipment-modeling-gate.py'
-      - 'scripts/equipment-asset-production-gate.py'
-      - 'scripts/equipment-review-policy-v3.json'
-      - 'docs/evidence/equipment-policy/**'
-      - 'docs/evidence/equipment-phase2/**'
-      - 'docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md'
-      - 'docs/2_5D_EQUIPMENT_PRODUCTION_UNIFIED_SOP_2026-10-15.md'
-      - 'docs/2_5D_EQUIPMENT_210_SET_VISUAL_DIRECTION_2026-10-15.md'
-      - '.github/workflows/equipment-concepts.yml'
-      - 'tests/equipment-concepts/**'
-      - 'docs/3D_EQUIPMENT_210_SET_*'
       - 'data.js'
       - 'engine.js'
       - 'worldmaps-*.js'
@@ -28,27 +10,10 @@ on:
       - 'secondworldrewards.js'
       - 'thirdworlddata.js'
       - 'thirdworldloot.js'
-      - 'assets/3d/asset-registry.json'
+      - 'scripts/formal-equipment-identities.py'
+      - '.github/workflows/equipment-concepts.yml'
   pull_request:
     paths:
-      - 'development/3d-source/equipment/concepts/**'
-      - 'scripts/equipment-concepts.py'
-      - 'scripts/equipment_sprite_assets.py'
-      - 'scripts/equipment-sprites.py'
-      - 'development/equipment-2_5d/**'
-      - 'scripts/equipment-concept-batches.py'
-      - 'scripts/equipment-art-review.py'
-      - 'scripts/equipment-modeling-gate.py'
-      - 'scripts/equipment-asset-production-gate.py'
-      - 'scripts/equipment-review-policy-v3.json'
-      - 'docs/evidence/equipment-policy/**'
-      - 'docs/evidence/equipment-phase2/**'
-      - 'docs/BATCH28_EQUIPMENT_CONCEPT_TWO_STAGE_SOP_2026-10-15.md'
-      - 'docs/2_5D_EQUIPMENT_PRODUCTION_UNIFIED_SOP_2026-10-15.md'
-      - 'docs/2_5D_EQUIPMENT_210_SET_VISUAL_DIRECTION_2026-10-15.md'
-      - '.github/workflows/equipment-concepts.yml'
-      - 'tests/equipment-concepts/**'
-      - 'docs/3D_EQUIPMENT_210_SET_*'
       - 'data.js'
       - 'engine.js'
       - 'worldmaps-*.js'
@@ -56,7 +21,8 @@ on:
       - 'secondworldrewards.js'
       - 'thirdworlddata.js'
       - 'thirdworldloot.js'
-      - 'assets/3d/asset-registry.json'
+      - 'scripts/formal-equipment-identities.py'
+      - '.github/workflows/equipment-concepts.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -65,29 +31,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # G09 compares immutable historical catalog entries.
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install image decoder for concept integrity and legacy repair evidence
-        run: python3 -m pip install Pillow==11.3.0
-      - name: Validate formal identities, notes, images and statuses
-        run: python3 scripts/equipment-concepts.py validate
-      - name: Validate accepted originals and 2.5D production eligibility
-        run: |
-          python3 scripts/equipment-asset-production-gate.py --set G024
-          python3 scripts/equipment-asset-production-gate.py --set G030
-      - name: Test preservation and failure detection in isolated copies
-        run: python3 -m unittest discover -s tests/equipment-concepts -v
-      - name: Check resumable batches and index drift
-        run: |
-          python3 scripts/equipment-concept-batches.py status
-          python3 scripts/equipment-concept-batches.py plan --batch G19
-      - name: Require repeatable generation without tracked changes
-        run: |
-          python3 scripts/equipment-concepts.py generate
-          git diff --exit-code -- development/3d-source/equipment/concepts docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md
+      - name: Verify 210 authoritative identities and 1050 exact five-slot names
+        run: python3 scripts/formal-equipment-identities.py
+      - name: Check formal owner integrity
+        run: node scripts/runtime-integrity.js
