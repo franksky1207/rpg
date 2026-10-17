@@ -14,14 +14,14 @@ const entries=[
  ["formal renderer","tests/runtime/t3b-formal-renderer.cjs"],
  ["asset loading policy","tests/runtime/loading-resource-policy-integrity.js"],
  ["resource manifest","tests/runtime/resource-manifest-integrity.js"],
- ["cache contract","tests/runtime/html-cache-version-guard.js"],
+ ["cache extraction self-test","tests/runtime/html-cache-version-guard.js",["--self-test"]],
  ["historical batch 1 12-point regression","scripts/batch1-fixed12-evidence.cjs"],
  ["historical batch 2 13-point regression","scripts/batch2-final13-evidence.cjs"]
 ];
 const rows=[];
-for(const [scope,file] of entries){
+for(const [scope,file,args=[]] of entries){
  const start=performance.now();
- const run=fs.existsSync(file)?cp.spawnSync(process.execPath,[file],{encoding:"utf8",timeout:240000,maxBuffer:8*1024*1024,env:{...process.env,RUNTIME_SMOKE_URL:"http://127.0.0.1:4173/index.html"}}):null;
+ const run=fs.existsSync(file)?cp.spawnSync(process.execPath,[file,...args],{encoding:"utf8",timeout:240000,maxBuffer:8*1024*1024,env:{...process.env,RUNTIME_SMOKE_URL:"http://127.0.0.1:4173/index.html"}}):null;
  const row={scope,file,status:!run?"missing":run.error?"error":run.status===0?"pass":"fail",ms:Math.round(performance.now()-start),exitCode:run?.status??null,tail:((run?.stdout||"")+"\n"+(run?.stderr||"")).slice(-5500)};
  rows.push(row);console.log("BATCH3",scope,row.status,row.ms);
  if(row.status!=="pass")console.error("BATCH3_FAIL",scope,row.tail);
