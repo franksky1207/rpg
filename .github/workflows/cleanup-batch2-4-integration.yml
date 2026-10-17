@@ -37,8 +37,6 @@ jobs:
           node tests/runtime/alternate-universe-old-save-integrity.js
           node tests/runtime/alternate-universe-combat-integrity.js
           node tests/runtime/alternate-universe-progression-integrity.js
-          node tests/runtime/breakthrough-core-integrity.js
-          node tests/runtime/reincarnation-permanent-gear-carryover-integrity.js
           node tests/runtime/resource-cache-integrity.js
           node tests/runtime/resource-cache-behavior.js
           node tests/runtime/resource-cache-prefetch-integrity.js
@@ -77,6 +75,8 @@ jobs:
           node tests/runtime/combat-events-owner-browser.js
           node tests/runtime/browser-smoke.js
           node tests/runtime/3d-formal-snapshots-browser.js
+          node tests/runtime/breakthrough-core-integrity.js
+          node tests/runtime/reincarnation-permanent-gear-carryover-integrity.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
