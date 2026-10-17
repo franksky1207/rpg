@@ -21,7 +21,17 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
   assert.ok(cp.execFileSync('git',['show','c1a8d4948ef4c0441b1051482cb0db63d4a3401b:'+path]).length>0,
     'Retain immediately preceding accepted GM source');
   const approved=cp.execFileSync('git',['show','41128d97b9ac5f0803334a43c0a1488f882874c6:'+path]);
-  assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
+  if(path==='3d-test/test-center.js'){
+   // Batch 2-3 only removes code after an unconditional return, leaving the two
+   // reachable GM 2.5D viewers unchanged. Verify the exact textual transform
+   // against Git's accepted Batch 2-2 source rather than weakening source locks.
+   const before=approved.toString('utf8');
+   const start=before.indexOf(' fail("沒有可用的視覺測試項目。");return;');
+   const end=before.indexOf('\\nfunction updateFixture(){',start);
+   assert.ok(start>=0&&end>start,'Approved source dead-code boundaries preserved');
+   const expected=before.slice(0,start)+' fail("沒有可用的視覺測試項目。");\\n}'+before.slice(end);
+   assert.equal(sha(fs.readFileSync(path)),sha(Buffer.from(expected)),'Only approved dead 3D GM path removal allowed');
+  }else assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
   return;
  }
 
