@@ -6,6 +6,7 @@ on:
       - 'development/equipment-2_5d/**'
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment*'
+      - 'scripts/formal-equipment-identities.py'
       - 'tests/equipment-sprites/**'
       - '.github/workflows/equipment-sprites.yml'
   pull_request:
@@ -30,6 +31,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 -m pip install Pillow==11.3.0
+      - name: Verify authoritative 210 equipment identities independently of concept art
+        run: python3 scripts/formal-equipment-identities.py
       - name: Verify real sprites and production states
         run: |
           python3 scripts/equipment-concepts.py validate
