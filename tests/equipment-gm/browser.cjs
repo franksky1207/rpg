@@ -82,7 +82,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
    await page.screenshot({path:`/tmp/gm-phase4-${viewport.width}.png`,fullPage:true});await page.close();
   }
   // Direct URL cannot obtain published sprites by pretending to be embedded.
-  const denied=await browser.newPage();await denied.goto(new URL('3d-test/?embedded=1',base).href);await denied.locator('#caseList').getByRole('button',{name:'角色與動作',exact:true}).click();await denied.locator('.gm-suit-status').filter({hasText:'需要 GM 授權'}).waitFor();check(await denied.locator('.gm-suit-preview canvas').count()===0,'direct page denied');await denied.close();
+  const denied=await browser.newPage();await denied.goto(new URL('3d-test/?embedded=1',base).href);await denied.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();await denied.locator('.gm-suit-status').filter({hasText:'需要 GM 授權'}).waitFor();check(await denied.locator('.gm-suit-preview canvas').count()===0,'direct page denied');await denied.close();
   console.log('PASS GM published browser:',checks,'assertions, desktop/portrait/landscape, three real sprites, five actions, formal/free, revoke, reopen');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
