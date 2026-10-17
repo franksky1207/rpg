@@ -1,0 +1,35 @@
+name: Batch 3 Integrated Animation Regression
+on:
+  push:
+    branches: [feat/combat-animation-batch3-20261017]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  integrated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute consolidated combat, audio, renderer, and resource regressions
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/batch3-http.log 2>&1 &
+          trap 'kill $(jobs -pr) 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .2; done
+          node scripts/batch3-integrated-evidence.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch3-integrated-evidence
+          path: |
+            batch3-integrated-evidence.json
+            batch1-animation-frame-trace.json
+            batch1-fixed12-evidence.json
+            batch2-final13-evidence.json
+          if-no-files-found: warn
