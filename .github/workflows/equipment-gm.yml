@@ -49,6 +49,7 @@ jobs:
             sleep 0.25
           done
           node tests/equipment-gm/browser.cjs
+          node tests/runtime/gm-3d-test-center-browser.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
