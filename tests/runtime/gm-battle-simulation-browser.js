@@ -38,7 +38,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
        await page.locator('[data-b="resume"]').click();
        await page.locator('[data-b="stop"]').click();
       }else{
-       assert.match(await page.locator('[data-b="status"]').innerText(),/授權|角色|素材|回退|無法/,'unauthorized sandbox explains disabled controls');
+       await page.waitForFunction(()=>{const t=document.querySelector('[data-b="status"]')?.textContent||'';return /授權|角色|素材|回退|無法/.test(t);},null,{timeout:12000});
        assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0,'unauthorized preview must not expose protected actor');
       }
      }
