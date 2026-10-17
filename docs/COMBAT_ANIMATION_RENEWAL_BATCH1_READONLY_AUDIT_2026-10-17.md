@@ -71,3 +71,24 @@
 - **已完成：** 主路徑靜態盤點、異宇宙核心與獨立結算契約確認、背景／離線重要 owner 與節流機制定位、3 套舊素材 31 個具名檔案 Git tree 盤點、現有 Actions 基線。
 - **尚未完成：** 全模式逐函式完整架構圖、完整跨模態回歸矩陣、定量效能基線、所有舊素材 runtime/發布引用掃描、真機／桌機壓測、Actions 全綠。
 - 因此**新版第 1 批不可宣稱完全封箱，也不可無條件啟動第 2 批**；報告後續必須根據實證補齊。
+
+## 八、續查：T2-A／T2-B1 失敗根因（2026-10-17）
+- 已閱讀 run 39037324944（job 117409679868）及 run 39037324940（job 117409679886）的實際日誌。**兩者都在第一個 `node scripts/hybrid-comparison-fixtures.cjs --check` 中止**，不是兩個獨立的 runtime 故障。
+- 具體檢查為 `assert.equal(read(FILE), output, 'Regenerate development fixture only with --write')`；重新計算的 `assets/3d/asset-registry.json` SHA 為 `816d4579005a4ef32617f4c3edb5647e5a3c65a63def318386d560963f58c085`，受控 Fixture 仍為 `726f628167c408ea73b845f4fd803e37670f83f4c607cb6cd1a0e49f2dc29577`。後續大量 resolved 欄位亦不一致，因此**不應只手動替換 SHA**。
+- `scripts/hybrid-comparison-fixtures.cjs` 能以 `--write` 重建全部資料；但該腳本會執行隔離 VM、GLB 二進位資源驗證及產生完整資料，故需在完整儲存庫環境重建、檢查差異及執行兩條全流程，不可刪掉 `--check` 或把失敗忽略。
+- 這兩條 workflow 都仍是 main push（有 paths 條件）／workflow_dispatch 的現存自動化，含隔離 fixture、出版排除及瀏覽器回歸，**在證明可退役或被取代之前，不直接停用**。
+- 本輪 GitHub connector 提供讀寫文字與 Actions 日誌，但當前執行環境無法連線下載完整 repo／GLB 以重跑 producer；因此**目前已確診，尚未完成安全修復及重新驗收**。
+- 修復操作界線：先在完整 checkout 執行 `node scripts/hybrid-comparison-fixtures.cjs --write`，檢視 JSON 變更是否只源自已批准的現役 registry / fallback 與來源快照；再執行 `--check`、T2-A/T2-B1 後續契約、發佈排除與 browser 測試；全部成功後才提交 fixture 與重新核對新 SHA。若曾移除的二進位來源使重建不可行，則先完成正式/GM引用稽核再移植仍必要契約，不能盲目恢復舊素材。
+## 九、第 1 批擴充稽核矩陣（需動態證據）
+| 模式 | 需稽核正式 owner / 路徑 | 必須保持的差異 | 缺少的量測 |
+|---|---|---|---|
+| 銀河主線／連戰 | combatcore、battlepipeline、combatpacing | 主線時鐘、連戰停止、收益 | 每場事件/DOM/完整生命週期 |
+| 宇宙主線 | secondworldcombat、secondworldmainline | Boss、升級與正式結算 | 同上、倍速／切紀元 |
+| 高維主線 | thirdworldcombat、thirdworldprogress | 高維 HP、盾、進度 | 同上、極簡切換 |
+| 懸賞／競技場 | dungeoncore、dungeonarena、thirdworldarena | 每日次數、獎勵、場次 | 模式進出／重複更新 |
+| 鏡像／虛空 | mirrordungeonrun、dungeonvoid | 鏡像敵人／虛空累積與退出 | 重播、跨頁切換 |
+| 災厄／回顧 | calamitycore、secondworldcalamityrun、相應 UI | 災厄階段、回顧唯讀語意 | 結束事件／重入 |
+| 異宇宙 | alternateuniversecombat、共用 world core 與呈現 | attemptId/depth/專屬結算 | **iPhone FPS、CPU/GPU、layout、熱／持續播放** |
+| GM／極簡／背景／離線 | gmbackground、backgroundprogress、offlineprogress、offlinestatecore、offlinefarmtarget | GM gate、不同獎勵 owner、Schema 17 | 長時間與中斷恢復、雙重結算、記憶體 |
+
+所有列出的 owner 屬**程式路徑索引／待驗證工作表**，不是已確認完成的全模式動態追蹤。尚無裝置端 trace，不提供虛構的 FPS／CPU／記憶體數字。本批只處理戰鬥直接依賴；其他全遊戲大檢查留到六批完成後另案。
