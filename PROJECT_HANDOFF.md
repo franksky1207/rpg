@@ -43,9 +43,11 @@
 - `reincarnation`、突破與異宇宙的正式行為只能依 `main` runtime 與回歸測試判定。
 - 第5批完成條件：所有必要 GitHub Actions 全綠、完整 Git tree 零殘留與保留例外核對、最終 CI SHA 及報告寫入後才封箱。第6批不得提前開始。
 
-## 新版戰鬥動畫與背景優化總規劃（2026-10-17，尚未施工）
+## 新版戰鬥動畫／背景更新施工狀態（2026-10-17）
 
-- 正式規劃入口：`docs/COMBAT_ANIMATION_AND_BACKGROUND_RENEWAL_MASTER_PLAN_2026-10-17.md`。重新由**新版第1批**起算；舊美術清理第5批已另有封箱紀錄，不將新版誤稱舊第6批。
-- 新版依序規劃：① 全戰鬥及背景／離線唯讀稽核；② 戰鬥契約與背景優化；③ iPhone 異宇宙及共用戰鬥動畫效能；④ 戰鬥動畫命名、手機 UI 與 GM 動畫測試中心；⑤ 三紀元角色及場景完善（美術另核准）；⑥ 跨模式整合驗收。批次可在施工前討論調整。
-- 強制 SOP：**每批一次完整施工 → 修改後自我檢查 → 最新提交 SHA 的必要 GitHub Actions 驗收 → 封箱報告**；一次指令內盡量連續完成，不預設拆小批反覆索取「繼續」，CI 未完成不得冒稱成功。
-- 本次僅新增規劃、交接資訊；**未授權啟動新版第1批，也未修改正式 Runtime／玩法／存檔**。
+- 正式總規劃：`docs/COMBAT_ANIMATION_AND_BACKGROUND_RENEWAL_MASTER_PLAN_2026-10-17.md`。
+- 新版第1批：固定12項稽核與動態性能量測已封箱；第2批：背景戰鬥 lifecycle、13 類整合回歸已封箱；保留先前封箱證據。
+- **新版第3批（固定16項）**：PR #25 整合 `combatfx.js` 延遲浮字計時清理、舊戰鬥 async finalizer token guard、HP observer 去重／限縮監聽；新增 100-event／100場替換／50次出入壓力、異宇宙真 UI controller（注入相同合成事件）trace、舊 main vs 新版 Chromium CDP trace、音效／Renderer／資源／原第1與第2批回歸。
+- 第3批完整施工驗收檔：`docs/COMBAT_ANIMATION_RENEWAL_BATCH3_16_ITEM_ACCEPTANCE_2026-10-17.md`。參見 GitHub PR #25；正式合併 main 後才完成同 SHA 發布封箱。**不得宣稱已通過 iPhone 真機溫控測試**。
+- 下一批按新版第4批（動畫命名、手機 UI、GM 動畫測試），再第5批（三紀元造型的技術契約，不量產美術），第6批（跨模式整合／封箱）。真機 iPhone 異宇宙發熱驗證依總計畫在六批全部完成後執行。
+- 強制施工 SOP：每批完整施工 → 逐項自檢 → 最新 SHA Actions 驗收 → 一次封箱報告，不拆小批、不以舊 SHA 全綠冒充新 SHA、不改正式玩家數值／結算／存檔。
