@@ -1,7 +1,0 @@
-{
-  "policyVersion": "equipment-2.5d-v3.0",
-  "blockers": ["officialIdentity", "imageIntegrity", "contentIdentity", "characterReadability", "provenanceLicense"],
-  "advisories": ["kneeBootBoundary", "backMountDetail", "localViewConsistency", "smallSlotDetails", "subpixelDecoration"],
-  "conceptReviewDoesNotCompleteAssets": true,
-  "formalReleaseAllowed": false
-}
