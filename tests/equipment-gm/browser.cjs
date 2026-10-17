@@ -56,7 +56,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
    await frame.locator('#maximizePreview').scrollIntoViewIfNeeded();await frame.locator('#maximizePreview').evaluate(button=>button.addEventListener('click',()=>{window.__maximizeScrollBefore=scrollY;},{capture:true,once:true}));await frame.locator('#maximizePreview').click();const beforeScroll=await frame.locator('body').evaluate(()=>window.__maximizeScrollBefore);check(await frame.locator('body').evaluate(e=>e.classList.contains('gm-3d-maximized')),'maximize');await frame.locator('#maximizePreview').click();await page.waitForTimeout(250);const afterScroll=await frame.locator('body').evaluate(()=>scrollY);console.log('scroll restore',viewport.width,beforeScroll,afterScroll);check(Math.abs(afterScroll-beforeScroll)<5,'restore scroll');
    await page.evaluate(()=>{state.gm=false;});await frame.locator('.gm-suit-status').filter({hasText:'需要 GM 授權'}).waitFor({timeout:10000});check(await frame.locator('.gm-suit-preview canvas').count()===0,'revocation clears sprite');
    await page.evaluate(()=>closeGm3DPrototype());check(await page.locator('#gm3dPrototypeOverlay').count()===0,'closed');
-   await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});await frame.locator('#categoryList').getByRole('button',{name:'戰場與對戰'}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
+   await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});await frame.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
    check(await frame.locator('#categoryList .center-category').count()===2,'exactly two visual tabs');check(await frame.locator('#caseList .center-case').count()===1,'one active scene per tab');check(errors.length===0,JSON.stringify(errors));
    // Only screenshot capture may re-resolve after the async auth refresh replaces the panel.
    // Assertion failures and every other screenshot error still fail immediately.
@@ -67,14 +67,14 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
      await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
     }
    }
-   await frame.locator('#caseList').getByRole('button',{name:'戰場與對戰',exact:true}).click();check(await frame.locator('.gm-suit').count()===0,'case switch removes sprite state');await frame.locator('#caseList').getByRole('button',{name:'角色與動作',exact:true}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();check(await frame.locator('[data-mode=free]').getAttribute('aria-pressed')==='false','reenter resets formal mode');
+   await frame.locator('#categoryList').getByRole('button',{name:'戰場與對戰'}).click();check(await frame.locator('.gm-suit').count()===0,'case switch removes sprite state');await frame.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();check(await frame.locator('[data-mode=free]').getAttribute('aria-pressed')==='false','reenter resets formal mode');
    if(viewport.width===1365){
     for(const fault of ['404','sha','decode']){
      await page.evaluate(()=>{closeGm3DPrototype();openGm3DPrototype();});
      await page.route('**/gm-equipment-2_5d/v1/g005.webp',async route=>{if(fault==='404')return route.fulfill({status:404});const r=await route.fetch(),raw=await r.body();if(fault==='sha'){raw[20]^=255;return route.fulfill({response:r,body:raw});}return route.fulfill({response:r,body:raw});});
      if(fault==='decode')await page.addInitScript(()=>{window.createImageBitmap=async()=>{throw Error('injected decoder failure');};});
      if(fault==='decode')await page.evaluate(()=>{closeGm3DPrototype();openGm3DPrototype();});
-     await frame.locator('#caseList').getByRole('button',{name:'角色與動作',exact:true}).click();await frame.locator('.gm-suit-status').filter({hasText:fault==='decode'?'載入失敗':'已完成'}).waitFor();
+     await frame.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();await frame.locator('.gm-suit-status').filter({hasText:fault==='decode'?'載入失敗':'已完成'}).waitFor();
      await frame.locator('[data-mode=free]').click();await frame.locator('[data-pick=suit]').selectOption('g005');await frame.locator('.gm-suit-status').filter({hasText:'載入失敗'}).waitFor();check(await frame.locator('.gm-suit-preview canvas').count()===0,'safe '+fault+' fallback');
      await page.unroute('**/gm-equipment-2_5d/v1/g005.webp');
     }
