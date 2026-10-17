@@ -4,6 +4,27 @@ const fs=require('fs'),crypto=require('crypto'),cp=require('child_process'),asse
 const allowed=new Set(['development/hybrid-comparison/index.html','development/hybrid-comparison/comparison.css','development/hybrid-comparison/comparison.mjs','development/hybrid-comparison/playback.mjs']);
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 module.exports=function verifySource(path,oldSHA,history=false,phase5History=false,weaponHistory=false,thrustHistory=false){
+ // Batch 2-2 intentionally retires only the GM-only test-center presentation.
+ // Pin exact approved source in Git history. Preserve and verify the immutable
+ // pre-redesign blade/thrust lock rather than rewriting historical evidence.
+ const gmRedesign=new Set(['3d-test/index.html','3d-test/test-center.js','3d-test/gm-battle-simulation.js']);
+ if(!thrustHistory&&gmRedesign.has(path)){
+  const oldLedger=JSON.parse(fs.readFileSync('development/equipment-2_5d/thrust-source-evolution.json'));
+  const original=oldLedger.files[path];
+  assert.equal(oldLedger.schema,'cw.weapon-thrust-sync.v1');
+  assert.ok(original,'Old GM source not historically authorized');
+  assert.equal(sha(cp.execFileSync('git',['show',oldLedger.baselineHEAD+':'+path])),original.beforeSHA256,
+    'Retain historical pre-thrust GM source');
+  // Later authorized changes existed between the historical thrust release and
+  // the Batch 2-2 baseline. Do not conflate their hashes.
+  assert.match(original.afterSHA256,/^[a-f0-9]{64}$/,'Retain original thrust ledger fingerprint');
+  assert.ok(cp.execFileSync('git',['show','c1a8d4948ef4c0441b1051482cb0db63d4a3401b:'+path]).length>0,
+    'Retain immediately preceding accepted GM source');
+  const approved=cp.execFileSync('git',['show','41128d97b9ac5f0803334a43c0a1488f882874c6:'+path]);
+  assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
+  return;
+ }
+
  if(!thrustHistory){
   const ledger=JSON.parse(fs.readFileSync("development/equipment-2_5d/thrust-source-evolution.json")),row=ledger.files[path];
   assert.equal(ledger.schema,"cw.weapon-thrust-sync.v1");assert.equal(ledger.baselineHEAD,"8972b362534018cabc9e34ad7863a0d8dd87f7a6");

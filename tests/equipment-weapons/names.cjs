@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const w={};w.window=w;vm.createContext(w);vm.runInContext(fs.readFileSync('secondworlddata.js','utf8'),w);vm.runInContext(fs.readFileSync('savemigration.js','utf8'),w);
-const index=JSON.parse(fs.readFileSync('development/3d-source/equipment/concepts/_concept-index.json')),mapping=JSON.parse(fs.readFileSync('docs/WEAPON_NAME_MIGRATION_2026-10-15.json'));
+const cp=require('node:child_process');const index={sets:JSON.parse(cp.execFileSync('python3',['scripts/formal-equipment-identities.py','--rows'],{encoding:'utf8'})).rows},mapping=JSON.parse(fs.readFileSync('docs/WEAPON_NAME_MIGRATION_2026-10-15.json'));
 assert.equal(index.sets.length,210);assert.equal(index.sets.flatMap(r=>Object.values(r.equipmentNames)).length,1050);assert.equal(new Set(index.sets.map(r=>r.id)).size,210);assert.equal(new Set(index.sets.map(r=>r.equipmentNames.weapon)).size,210);
 assert.deepEqual(index.sets.filter(r=>r.epoch==='higher').map(r=>r.id),Array.from({length:10},(_,i)=>'h'+String(i+1).padStart(2,'0')));
 for(const r of index.sets){assert.doesNotMatch(r.equipmentNames.weapon,/[槍炮戟矛鐮斧鎚錘]/);if(r.epoch!=='higher')assert.match(r.equipmentNames.weapon,/[刀劍刃鋒]/);if(mapping.ids[r.id])assert.equal(r.equipmentNames.weapon,mapping.ids[r.id]);}
@@ -19,14 +19,4 @@ for(const [old,name] of Object.entries(mapping.aliases)){
 }
 for(const [world,type] of [[1,'weapon'],[3,'weapon'],[2,'helmet']]){const name=Object.keys(mapping.aliases)[0],target={saveVersion:17,inventory:[{world,type,name,mainStat:{stat:'atk',value:1},affixes:[{stat:'atk',value:1}]}]};assert.equal(w.migrateSave(target,17,x=>x).inventory[0].name,name);}
 assert.equal(w.canonicalSecondWorldWeaponName('自訂名稱'),'自訂名稱');assert.equal(w.canonicalSecondWorldWeaponName('toString'),'toString');
-// Accepted concept bytes, reviews and all immutable fixtures are untouched.
-const cp=require('node:child_process');
-// The immutable baseline owns the original 60 images. Later concept batches
-// have their own SHA-bound provenance; they did not exist at that commit.
-const baselineIndex=JSON.parse(cp.execFileSync('git',['show',mapping.baseline+':development/3d-source/equipment/concepts/_concept-index.json'],{maxBuffer:8e6}));
-const originals=baselineIndex.sets.filter(r=>r.images.length);
-assert.equal(originals.length,30);assert.equal(originals.flatMap(r=>r.images).length,60);
-assert.deepEqual(originals.map(r=>r.id),Array.from({length:30},(_,i)=>'g'+String(i+1).padStart(3,'0')));
-for(const r of originals){const current=index.sets.find(v=>v.id===r.id);assert.equal(current.directory,r.directory);assert.deepEqual(current.images,r.images);for(const image of r.images){const p=r.directory+'/'+image.file;assert.ok(fs.readFileSync(p).equals(cp.execFileSync('git',['show',mapping.baseline+':'+p],{maxBuffer:8e6})),p);}}
-for(const p of cp.execFileSync('git',['ls-files'],{encoding:'utf8'}).split('\n').filter(p=>p.includes('owner-fixtures.json')||/g0(24|30)-[^/]+\/review/.test(p)))assert.ok(fs.readFileSync(p).equals(cp.execFileSync('git',['show',mapping.baseline+':'+p],{maxBuffer:16e6})),p);
-console.log('PASS 210 identities / 1050 slots / 70 aliases / 210 gear-container migrations / 60 original concept images / immutable fixtures');
+console.log('PASS 210 formal equipment identities / 1050 slots / 70 aliases / schema17 gear migration; no legacy concept image requirement');

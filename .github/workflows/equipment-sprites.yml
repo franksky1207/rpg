@@ -4,8 +4,8 @@ on:
     branches: [main]
     paths:
       - 'development/equipment-2_5d/**'
-      - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment*'
+      - 'scripts/formal-equipment-identities.py'
       - 'tests/equipment-sprites/**'
       - '.github/workflows/equipment-sprites.yml'
   pull_request:
@@ -30,9 +30,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: python3 -m pip install Pillow==11.3.0
+      - name: Verify authoritative 210 equipment identities independently of concept art
+        run: python3 scripts/formal-equipment-identities.py
       - name: Verify real sprites and production states
         run: |
-          python3 scripts/equipment-concepts.py validate
           python3 scripts/equipment-sprites.py validate
           python3 -m unittest discover -s tests/equipment-sprites -v
           node --test tests/equipment-sprites/runtime.test.mjs
@@ -48,8 +49,8 @@ jobs:
       - name: Verify development stays outside publication and generator is repeatable
         run: |
           node scripts/publish-asset-audit.cjs --json > /tmp/sprite-publish-audit.json
-          python3 scripts/equipment-concepts.py generate
-          git diff --exit-code -- development/3d-source/equipment/concepts docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md
+          python3 scripts/equipment-gm-publication.py --check
+          git diff --exit-code -- assets/gm-equipment-2_5d 3d-test/equipment-sprites-v1 development/equipment-2_5d/gm-publication.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
