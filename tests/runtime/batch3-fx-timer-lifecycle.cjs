@@ -26,12 +26,25 @@ const assert=require("node:assert/strict");
    window.clearCombatPresentation("orphan-without-owner");
    await sleep(130);
    const orphan=document.querySelectorAll(".combat-fx-pop").length;
-   return {stale,active,remaining:document.querySelectorAll(".combat-fx-pop").length,orphan};
+   window.prepareCombatPresentation(combat);
+   let releaseOld;
+   const oldTask=window.animateStructuredCombatPresentation(combat,{
+    sleep:()=>new Promise(resolve=>{releaseOld=resolve;}),
+    clearAfter:true
+   });
+   window.prepareCombatPresentation(combat);
+   const replacement=window.getCombatPresentationSnapshot()?.token;
+   releaseOld();
+   await oldTask;
+   const replacementSurvived=window.isCombatPresentationActive()&&window.getCombatPresentationSnapshot()?.token===replacement;
+   window.clearCombatPresentation("final-cleanup");
+   return {stale,active,remaining:document.querySelectorAll(".combat-fx-pop").length,orphan,replacementSurvived};
   });
   assert.equal(result.stale,0,"cancelled battle must not show delayed stale FX");
   assert.deepEqual(result.active,["NEW"],"active battle retains intended FX");
   assert.equal(result.remaining,0,"cleared battle must release FX nodes");
   assert.equal(result.orphan,0,"unowned delayed FX must not revive after cleanup");
+  assert.equal(result.replacementSurvived,true,"stale playback cannot clear replacement battle");
   console.log("BATCH3_FX_TIMER_LIFECYCLE_PASS",JSON.stringify(result));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e.stack||String(e));process.exitCode=1;});
