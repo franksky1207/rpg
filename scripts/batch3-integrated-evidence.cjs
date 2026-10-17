@@ -3,6 +3,7 @@ const fs=require("node:fs"),cp=require("node:child_process"),{performance}=requi
 const entries=[
  ["fx timer and ownership","tests/runtime/batch3-fx-timer-lifecycle.cjs"],
  ["100-event and 100-battle stress","tests/runtime/batch3-presenter-pressure.cjs"],
+ ["alternate UI controller matched-input frame trace","tests/runtime/batch3-alternate-controller-trace.cjs"],
  ["shared animation trace","tests/runtime/batch1-animation-frame-trace.cjs"],
  ["alternate universe presentation contract","tests/runtime/alternate-universe-batch4-3-regression.js"],
  ["alternate universe full combat contract","tests/runtime/alternate-universe-combat-integrity.js"],
