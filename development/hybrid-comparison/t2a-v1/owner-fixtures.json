@@ -16,7 +16,7 @@
     "combat-events.js": "587437946de2825287ab168d6490db8e493d21d074f86e22b2e06aa897c727ed",
     "3d-test/appearance-snapshot.js": "3fc24ad4f2ddbc29d65f16f296bd0c8469a38bb9fb2ac77651bf23b826a2bccc",
     "3d-test/formal-snapshots.js": "799590094c8aa4ea2f32695f71fc4cad5ea478d0c5aafafb3852aea985234864",
-    "assets/3d/asset-registry.json": "726f628167c408ea73b845f4fd803e37670f83f4c607cb6cd1a0e49f2dc29577",
+    "assets/3d/asset-registry.json": "816d4579005a4ef32617f4c3edb5647e5a3c65a63def318386d560963f58c085",
     "development/3d-source/equipment/ancient-ruins-v1/rig-contract.json": "8428e8e2c5524bf62b41959966674e5c68b7996c6556d92f4496691df9e92419"
   },
   "numericPlayerSource": "explicit isolated numerical input; not inferred from G007 appearance or claimed as saved player stats",
@@ -552,7 +552,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -626,7 +626,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -700,7 +700,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -866,7 +866,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -940,7 +940,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -1014,7 +1014,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -1152,7 +1152,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -1168,7 +1168,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -1228,7 +1228,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -1244,7 +1244,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -1304,7 +1304,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -1320,7 +1320,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -1486,7 +1486,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -1560,7 +1560,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -1634,7 +1634,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -1758,7 +1758,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -1788,7 +1788,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -1834,7 +1834,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -1864,7 +1864,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -1910,7 +1910,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -1940,7 +1940,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -2078,7 +2078,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -2094,7 +2094,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -2154,7 +2154,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -2170,7 +2170,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -2230,7 +2230,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -2246,7 +2246,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -2370,7 +2370,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -2386,7 +2386,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -2402,7 +2402,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -2448,7 +2448,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -2464,7 +2464,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -2480,7 +2480,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -2526,7 +2526,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -2542,7 +2542,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -2558,7 +2558,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -2724,7 +2724,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -2798,7 +2798,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -2872,7 +2872,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -2982,7 +2982,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -3026,7 +3026,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -3058,7 +3058,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -3102,7 +3102,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -3134,7 +3134,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -3178,7 +3178,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -3302,7 +3302,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -3332,7 +3332,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -3378,7 +3378,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -3408,7 +3408,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -3454,7 +3454,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -3484,7 +3484,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -3594,7 +3594,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -3610,7 +3610,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -3640,7 +3640,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -3672,7 +3672,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -3688,7 +3688,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -3718,7 +3718,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -3750,7 +3750,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -3766,7 +3766,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -3796,7 +3796,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -3934,7 +3934,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -3950,7 +3950,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -4010,7 +4010,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -4026,7 +4026,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -4086,7 +4086,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -4102,7 +4102,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -4212,7 +4212,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -4242,7 +4242,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -4258,7 +4258,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -4290,7 +4290,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -4320,7 +4320,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -4336,7 +4336,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -4368,7 +4368,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -4398,7 +4398,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -4414,7 +4414,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -4538,7 +4538,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -4554,7 +4554,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -4570,7 +4570,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -4616,7 +4616,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -4632,7 +4632,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -4648,7 +4648,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -4694,7 +4694,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -4710,7 +4710,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -4726,7 +4726,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -4836,7 +4836,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -4852,7 +4852,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -4868,7 +4868,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -4884,7 +4884,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -4916,7 +4916,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -4932,7 +4932,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -4948,7 +4948,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -4964,7 +4964,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -4996,7 +4996,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -5012,7 +5012,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -5028,7 +5028,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -5044,7 +5044,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -5210,7 +5210,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -5284,7 +5284,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -5358,7 +5358,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -5454,7 +5454,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -5512,7 +5512,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -5530,7 +5530,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -5588,7 +5588,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -5606,7 +5606,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -5664,7 +5664,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -5774,7 +5774,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -5818,7 +5818,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -5850,7 +5850,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -5894,7 +5894,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -5926,7 +5926,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -5970,7 +5970,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -6066,7 +6066,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -6082,7 +6082,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -6126,7 +6126,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -6144,7 +6144,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -6160,7 +6160,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -6204,7 +6204,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -6222,7 +6222,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -6238,7 +6238,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -6282,7 +6282,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -6406,7 +6406,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -6436,7 +6436,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -6482,7 +6482,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -6512,7 +6512,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -6558,7 +6558,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -6588,7 +6588,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -6684,7 +6684,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -6714,7 +6714,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -6744,7 +6744,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -6762,7 +6762,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -6792,7 +6792,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -6822,7 +6822,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -6840,7 +6840,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -6870,7 +6870,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -6900,7 +6900,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -7010,7 +7010,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -7026,7 +7026,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -7056,7 +7056,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -7088,7 +7088,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -7104,7 +7104,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -7134,7 +7134,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -7166,7 +7166,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -7182,7 +7182,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -7212,7 +7212,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -7308,7 +7308,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -7324,7 +7324,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -7340,7 +7340,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -7370,7 +7370,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -7388,7 +7388,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -7404,7 +7404,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -7420,7 +7420,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -7450,7 +7450,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -7468,7 +7468,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -7484,7 +7484,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -7500,7 +7500,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -7530,7 +7530,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -7668,7 +7668,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -7684,7 +7684,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -7744,7 +7744,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -7760,7 +7760,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -7820,7 +7820,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -7836,7 +7836,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -7932,7 +7932,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -7976,7 +7976,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -7992,7 +7992,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8010,7 +8010,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -8054,7 +8054,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -8070,7 +8070,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8088,7 +8088,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -8132,7 +8132,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -8148,7 +8148,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -8258,7 +8258,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -8288,7 +8288,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -8304,7 +8304,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8336,7 +8336,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -8366,7 +8366,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -8382,7 +8382,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8414,7 +8414,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -8444,7 +8444,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -8460,7 +8460,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -8556,7 +8556,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -8572,7 +8572,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -8602,7 +8602,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -8618,7 +8618,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8636,7 +8636,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -8652,7 +8652,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -8682,7 +8682,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -8698,7 +8698,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8716,7 +8716,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -8732,7 +8732,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -8762,7 +8762,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -8778,7 +8778,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -8902,7 +8902,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -8918,7 +8918,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -8934,7 +8934,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -8980,7 +8980,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -8996,7 +8996,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -9012,7 +9012,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9058,7 +9058,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -9074,7 +9074,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -9090,7 +9090,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -9186,7 +9186,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -9216,7 +9216,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -9232,7 +9232,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -9248,7 +9248,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9266,7 +9266,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -9296,7 +9296,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -9312,7 +9312,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -9328,7 +9328,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9346,7 +9346,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -9376,7 +9376,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -9392,7 +9392,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -9408,7 +9408,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -9518,7 +9518,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -9534,7 +9534,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -9550,7 +9550,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -9566,7 +9566,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9598,7 +9598,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -9614,7 +9614,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -9630,7 +9630,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -9646,7 +9646,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9678,7 +9678,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -9694,7 +9694,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -9710,7 +9710,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -9726,7 +9726,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -9822,7 +9822,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -9838,7 +9838,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
+            "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
             "mount": "skinned"
           },
           {
@@ -9854,7 +9854,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -9870,7 +9870,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -9886,7 +9886,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9904,7 +9904,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -9920,7 +9920,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
+            "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
             "mount": "skinned"
           },
           {
@@ -9936,7 +9936,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -9952,7 +9952,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -9968,7 +9968,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ],
@@ -9986,7 +9986,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -10002,7 +10002,7 @@
             "assetId": "equipment.ancient-ruins.v1.helmet.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
+            "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
             "mount": "skinned"
           },
           {
@@ -10018,7 +10018,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -10034,7 +10034,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -10050,7 +10050,7 @@
             "assetId": "equipment.ancient-ruins.v1.accessory.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
+            "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
             "mount": "rigid"
           }
         ]
@@ -10146,7 +10146,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
+            "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
             "mount": "rigid"
           },
           {
@@ -10176,7 +10176,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
+            "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
             "mount": "skinned"
           },
           {
@@ -10192,7 +10192,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.low",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
+            "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
             "mount": "skinned"
           },
           {
@@ -10224,7 +10224,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
+            "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
             "mount": "rigid"
           },
           {
@@ -10254,7 +10254,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
+            "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
             "mount": "skinned"
           },
           {
@@ -10270,7 +10270,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.medium",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
+            "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
             "mount": "skinned"
           },
           {
@@ -10302,7 +10302,7 @@
             "assetId": "equipment.ancient-ruins.v1.weapon.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
+            "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
             "mount": "rigid"
           },
           {
@@ -10332,7 +10332,7 @@
             "assetId": "equipment.ancient-ruins.v1.armor.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
+            "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
             "mount": "skinned"
           },
           {
@@ -10348,7 +10348,7 @@
             "assetId": "equipment.ancient-ruins.v1.shoes.high",
             "fallback": "procedural-geometry",
             "source": "read-only-appearance",
-            "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
+            "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
             "mount": "skinned"
           },
           {
@@ -10460,8 +10460,8 @@
     {
       "id": "equipment.ancient-ruins.v1.weapon.low",
       "path": "assets/3d/equipment/ancient-ruins-v1/weapon-low.glb",
-      "sha256": "9ff0c76f35d9a878cb521f9480c6268d6fb41925c8b58d633b2245d4d6d2ddbe",
-      "bytes": 14908,
+      "sha256": "0e6d20bf3ba00138ec2b4290c0c52eae152e2ece43123f12b9480b0af420baa4",
+      "bytes": 17516,
       "type": "equipment",
       "slot": "weapon",
       "quality": "low",
@@ -10474,13 +10474,13 @@
       "joints": 0,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.weapon.medium",
       "path": "assets/3d/equipment/ancient-ruins-v1/weapon-medium.glb",
-      "sha256": "6242e30ccf53631432ff9585747d667e1ba468ca1f8e9c5d59fef521e2fbad8b",
-      "bytes": 18700,
+      "sha256": "b0b8a201ff6513b6cda4f0f0b8352cb7f25f9efd5c028e577ee5d99e8ff89883",
+      "bytes": 22640,
       "type": "equipment",
       "slot": "weapon",
       "quality": "medium",
@@ -10493,13 +10493,13 @@
       "joints": 0,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.weapon.high",
       "path": "assets/3d/equipment/ancient-ruins-v1/weapon-high.glb",
-      "sha256": "21510acb03113e3ed0d0c5c4858b7b72f2fe063dd20a7d76da0d22ec8505ec3a",
-      "bytes": 20504,
+      "sha256": "d5a3a45eea845c660480a0c7d467d480981b26de42524edda818003c072a7e6a",
+      "bytes": 24408,
       "type": "equipment",
       "slot": "weapon",
       "quality": "high",
@@ -10512,13 +10512,13 @@
       "joints": 0,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.helmet.low",
       "path": "assets/3d/equipment/ancient-ruins-v1/helmet-low.glb",
-      "sha256": "ee0d3960a99d1edc902c8f5abc0351cf78d3119f771e592dbed01183cc5f29fd",
-      "bytes": 61060,
+      "sha256": "ebf51631201c447ff37192464b2208d46a0dc052bf1fca86b59fba476fcedd56",
+      "bytes": 63784,
       "type": "equipment",
       "slot": "helmet",
       "quality": "low",
@@ -10531,13 +10531,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.helmet.medium",
       "path": "assets/3d/equipment/ancient-ruins-v1/helmet-medium.glb",
-      "sha256": "363c5afb378ea1f24668d38d7635472ba9a74adf8c568f6205e9b28a11ce4097",
-      "bytes": 75540,
+      "sha256": "39893ec41cda2ac50cf1befdfcb342e4ba7e9a1e624a1995e035b4b23a778fde",
+      "bytes": 79124,
       "type": "equipment",
       "slot": "helmet",
       "quality": "medium",
@@ -10550,13 +10550,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.helmet.high",
       "path": "assets/3d/equipment/ancient-ruins-v1/helmet-high.glb",
-      "sha256": "eb28273a8c59931a54ab76e9f252d262085d260d1b6c6e6d4460049ea1702810",
-      "bytes": 82280,
+      "sha256": "7c6c7fd2ad1be99820e664b5872b123959ecba155dcc6b34008d83edd90b2e59",
+      "bytes": 86900,
       "type": "equipment",
       "slot": "helmet",
       "quality": "high",
@@ -10569,13 +10569,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.armor.low",
       "path": "assets/3d/equipment/ancient-ruins-v1/armor-low.glb",
-      "sha256": "0bcce1098a8d946d19147ca70f1b32b9c907708f9513bfc675402f9b708a071b",
-      "bytes": 104348,
+      "sha256": "0737230ebd421803b6bab51972e95d45a9ab913937c02a59e803547fcbeb19c0",
+      "bytes": 115544,
       "type": "equipment",
       "slot": "armor",
       "quality": "low",
@@ -10588,13 +10588,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.armor.medium",
       "path": "assets/3d/equipment/ancient-ruins-v1/armor-medium.glb",
-      "sha256": "8f64534af9ff4dc9d18cc584bdfc8b38e23dbe0f644a6ceafc5f1772f6765e18",
-      "bytes": 128620,
+      "sha256": "ce32e817bf22dbe754c4b374ca1450365c319f3457cc19a914ffdc50cce21be2",
+      "bytes": 142860,
       "type": "equipment",
       "slot": "armor",
       "quality": "medium",
@@ -10607,13 +10607,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.armor.high",
       "path": "assets/3d/equipment/ancient-ruins-v1/armor-high.glb",
-      "sha256": "1bfb7c89ef22962bbd0767301b8be2616797ae583f6fec406c721b3e1862a53d",
-      "bytes": 147012,
+      "sha256": "07ec1f7ff108ecde07f083f676647f03c403dabb4f0a77acabec1fe2433cadec",
+      "bytes": 166848,
       "type": "equipment",
       "slot": "armor",
       "quality": "high",
@@ -10626,13 +10626,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.shoes.low",
       "path": "assets/3d/equipment/ancient-ruins-v1/shoes-low.glb",
-      "sha256": "e72db2c7af8564c663af3bb6de072583738e23ad2223f639d61958591edf2d87",
-      "bytes": 94728,
+      "sha256": "15d4c3fccb2498c68042fe29d90d5aef361cee29ed796a7ec650bb8417ac47d5",
+      "bytes": 110884,
       "type": "equipment",
       "slot": "shoes",
       "quality": "low",
@@ -10645,13 +10645,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.shoes.medium",
       "path": "assets/3d/equipment/ancient-ruins-v1/shoes-medium.glb",
-      "sha256": "47097470119edccb46371941214b64dcbe022d15cef3cb5674de92773f0983c4",
-      "bytes": 118412,
+      "sha256": "bea8d0b75728675f756b3104338d1b413ea6c7a77e5f959a46da6860f9a0d99c",
+      "bytes": 142620,
       "type": "equipment",
       "slot": "shoes",
       "quality": "medium",
@@ -10664,13 +10664,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.shoes.high",
       "path": "assets/3d/equipment/ancient-ruins-v1/shoes-high.glb",
-      "sha256": "70a5726f8c0ce581f1f8446ba958f94b572fc37acc35e41dc5ce47c9e45b3c4c",
-      "bytes": 133348,
+      "sha256": "13f6aab9df0bcfc188f148d6f160cfaed99bb1a13c5994f222517c6ac1a3f1bb",
+      "bytes": 161432,
       "type": "equipment",
       "slot": "shoes",
       "quality": "high",
@@ -10683,13 +10683,13 @@
       "joints": 53,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.accessory.low",
       "path": "assets/3d/equipment/ancient-ruins-v1/accessory-low.glb",
-      "sha256": "1a40baf20508f66fea28b6c66de02088015038d1ea92f99b8f6bf6268a9a162b",
-      "bytes": 8040,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+      "bytes": 7924,
       "type": "equipment",
       "slot": "accessory",
       "quality": "low",
@@ -10702,13 +10702,13 @@
       "joints": 0,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.accessory.medium",
       "path": "assets/3d/equipment/ancient-ruins-v1/accessory-medium.glb",
-      "sha256": "c250dccc81ff2416672cd206335b18a918752b8c62ca322f3994176dd5a89dc4",
-      "bytes": 9912,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+      "bytes": 7924,
       "type": "equipment",
       "slot": "accessory",
       "quality": "medium",
@@ -10721,13 +10721,13 @@
       "joints": 0,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     },
     {
       "id": "equipment.ancient-ruins.v1.accessory.high",
       "path": "assets/3d/equipment/ancient-ruins-v1/accessory-high.glb",
-      "sha256": "a1e4d157e178de88ff7eda3b7a08e5b8515065c0010c8b7202dc6c41da65987d",
-      "bytes": 11448,
+      "sha256": "ef58168e494232ca88472ed25a3aeb41a61b2faa657abf6ef2a59b34a7209c8b",
+      "bytes": 7924,
       "type": "equipment",
       "slot": "accessory",
       "quality": "high",
@@ -10740,7 +10740,7 @@
       "joints": 0,
       "sockets": [],
       "animations": [],
-      "artStatus": "first-set-awaiting-user-visual-acceptance"
+      "artStatus": "refined-model-art-reviewed-by-user-delegated-chatgpt"
     }
   ],
   "cases": [
@@ -14510,5 +14510,5 @@
       "sha256": "44b60424faa2f6a0eb312ce856dde7b7d20dedba621c01d5f1537c4ce3582c4f"
     }
   ],
-  "sha256": "5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99"
+  "sha256": "7b551e35c24ac6e9ec676d9d9534f6bd30ebcde026ac945826d979e9a15b1820"
 }
