@@ -11,7 +11,7 @@ const host=$('prototypeHost'),status=$('status'),fallback=$('fallback'),reason=$
 const workspace=$('centerWorkspace'),buttons=$('categoryList'),casesHolder=$('caseList');
 const toggle=$('toggle'),quality=$('quality'),maximizeButton=$('maximizePreview');
 const embedded=new URLSearchParams(location.search).get('embedded')==='1';
-let selected=cases[0],current=null,generation=0,disabled=false,maximized=false,maximumScroll=null;
+let selected=cases[0],current=null,generation=0,retryCount=0,disabled=false,maximized=false,maximumScroll=null;
 const state=()=>({category:selected.cat,caseId:selected.id,maximized,disabled});
 function categoryButtons(){
  buttons.replaceChildren();casesHolder.replaceChildren();
@@ -67,13 +67,13 @@ async function open(){
  current={dispose:()=>{abort.abort();view?.dispose();},resize:()=>view?.resize(),setQuality:value=>view?.setQuality?.(value)};
  try{
   const module=selected.cat==='character'
-   ?await import('./gm-whole-suit.mjs?v=20261015-thrust1')
-   :await import('./gm-battle-simulation.js?v=20261015-thrust1');
+   ?await import('./gm-whole-suit.mjs?v=20261015-thrust1&retry='+retryCount)
+   :await import('./gm-battle-simulation.js?v=20261015-thrust1&retry='+retryCount);
   if(ticket!==generation||abort.signal.aborted)return;
   view=await module.mount({host,signal:abort.signal,quality:quality.value});
   if(ticket!==generation||abort.signal.aborted)view?.dispose();
  }catch(error){
-  if(ticket===generation&&!abort.signal.aborted)failure('2.5D 預覽載入失敗：'+String(error?.message||error));
+  if(ticket===generation&&!abort.signal.aborted){retryCount++;failure('2.5D 預覽載入失敗：'+String(error?.message||error));}
  }
 }
 function select(id){
