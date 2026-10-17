@@ -25,7 +25,7 @@ const root='development/hybrid-comparison/t2b2-v1',sha=b=>crypto.createHash('sha
   glbCount++;
  }
  assert.equal(total,inventory.totalBytes,'Current source byte ledger');
- assert.equal(glbCount,6,'Three player and three enemy retained candidate GLBs');
+ assert.equal(glbCount,3,'Three retained B player LOD GLBs; B enemy sprites use approved atlases');
  const pub=require('../../scripts/publish-assets.cjs').inspect(process.cwd());
  assert.equal(pub.missing.length,0);
  assert.ok(!pub.keep.some(p=>p.startsWith('development/')),'Never publish development-only B2');
