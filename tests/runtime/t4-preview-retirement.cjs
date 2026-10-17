@@ -14,7 +14,7 @@ for(const [p,row] of Object.entries(ledger.files)){
   const read=fs.readFileSync,current=read(p,'utf8');
   try{
    fs.readFileSync=function(file,...args){return file===p?current+'\n// unauthorized extra change':read.call(fs,file,...args);};
-   assert.throws(()=>verify(p,oldSHA),/Only authorized GM cache-bust changes|Exact authorized blade\/thrust synchronization source|GM visual center exact batch 2-2 approved source|Only approved dead 3D GM path removal allowed/);
+   assert.throws(()=>verify(p,oldSHA),/Only authorized GM cache-bust changes|Exact authorized blade\/thrust synchronization source|GM visual center exact batch 2-2 approved source|GM two-category source must match approved Batch 2-3|GM 2.5D-only markup must match approved Batch 2-3/);
   }finally{fs.readFileSync=read;}
  }else assert.equal(sha(fs.readFileSync(p)),row.afterSHA256,p+' exact authorized retirement');
 }
