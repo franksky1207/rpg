@@ -25,6 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ -f tests/runtime/cleanup-batch3-1-tree.cjs ]; then node tests/runtime/cleanup-batch3-1-tree.cjs; fi
+          node tests/runtime/cleanup-batch4-3-current-inventory.cjs
           node tests/runtime/cleanup-batch2-4-integration.cjs
           python3 scripts/formal-equipment-identities.py
           node tests/runtime/js-integrity.js
