@@ -198,18 +198,30 @@
  window.backgroundProgressSleep=async function(ms,kind=null){
   let remaining=Math.max(0,Number(ms)||0);
   if(!activeFor(kind))return nativeSleep(remaining);
+  // Serialize unexpected overlapping waits instead of orphaning the first
+  // Promise by replacing flow.sleeper. Never transfer a queued wait to a
+  // different run when the original flow is stopped or replaced.
+  if(flow.sleeper){
+   const owner=flow,prior=flow.sleeper;
+   await prior.done;
+   if(flow!==owner)return;
+   return window.backgroundProgressSleep(remaining,kind);
+  }
   if(flow.hiddenAt==null&&!isBackground()&&flow.credit>0&&remaining>0){
    const used=Math.min(flow.credit,remaining);flow.credit-=used;remaining-=used;
   }
   if(remaining<=0)return nativeSleep(0);
   if(isBackground()){
    flow.hiddenAt=now();
-   return new Promise(resolve=>{flow.sleeper={remaining,dueAt:0,timer:null,resolve};});
+   const done=new Promise(resolve=>{flow.sleeper={remaining,dueAt:0,timer:null,resolve};});
+   flow.sleeper.done=done;return done;
   }
-  return new Promise(resolve=>{
+  const done=new Promise(resolve=>{
    flow.sleeper={remaining,dueAt:now()+remaining,timer:null,resolve};
    scheduleSleeper();
   });
+  if(flow?.sleeper)flow.sleeper.done=done;
+  return done;
  };
  window.backgroundProgressSnapshot=function(){
   if(!flow)return null;
