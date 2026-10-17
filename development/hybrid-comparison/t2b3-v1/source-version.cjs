@@ -22,15 +22,12 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
     'Retain immediately preceding accepted GM source');
   const approved=cp.execFileSync('git',['show','41128d97b9ac5f0803334a43c0a1488f882874c6:'+path]);
   if(path==='3d-test/test-center.js'){
-   // Batch 2-3 only removes code after an unconditional return, leaving the two
-   // reachable GM 2.5D viewers unchanged. Verify the exact textual transform
-   // against Git's accepted Batch 2-2 source rather than weakening source locks.
-   const before=approved.toString('utf8');
-   const start=before.indexOf(' fail("沒有可用的視覺測試項目。");return;');
-   const end=before.indexOf('\nfunction updateFixture(){',start);
-   assert.ok(start>=0&&end>start,'Approved source dead-code boundaries preserved');
-   const expected=before.slice(0,start)+' fail("沒有可用的視覺測試項目。");\n}'+before.slice(end);
-   assert.equal(sha(fs.readFileSync(path)),sha(Buffer.from(expected)),'Only approved dead 3D GM path removal allowed');
+   // The approved Batch 2-2 source remains pinned in Git history above.
+   // Pin the Batch 2-3 replacement to its exact accepted source commit;
+   // neither the formal player nor the other GM modules are unlocked.
+   const approved23=cp.execFileSync('git',['show','cf30ae8fe7ff84363a657b0b569cde445e7320da:'+path]);
+   assert.equal(sha(fs.readFileSync(path)),sha(approved23),'GM two-category source must match approved Batch 2-3');
+
   }else assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
   return;
  }
