@@ -130,4 +130,4 @@ def validate_formal(root=ROOT):
 
 if __name__=='__main__':
     rows=validate_formal()
-    print(json.dumps({'schema':'cw.formal-equipment-identity.v1','sets':len(rows),'slots':1050,'ids':[r['id'] for r in rows]},ensure_ascii=False))
+    print(json.dumps({'schema':'cw.formal-equipment-identity.v1','sets':len(rows),'slots':1050,'ids':[r['id'] for r in rows],'rows':[{k:r[k] for k in ('id','epoch','sourceKey','regionOrBoss','equipmentNames')} for r in rows]},ensure_ascii=False))
