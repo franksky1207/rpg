@@ -1,4 +1,0 @@
-COLOR QC normal true
-COLOR QC elite true
-COLOR QC boss true
-PASS 54 actual r2 same-frame native renders, source camera/light/AgX correction, pixels await difference analysis

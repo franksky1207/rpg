@@ -1,5 +1,0 @@
-page.waitForFunction: Timeout 90000ms exceeded.
-    at ready (/workspace/rpg/tests/runtime/gm-battle-simulation-browser.js:12:28)
-    at /workspace/rpg/tests/runtime/gm-battle-simulation-browser.js:13:8 {
-  name: 'TimeoutError'
-}
