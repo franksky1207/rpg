@@ -1,7 +1,5 @@
 name: Batch 2 Final 13 Integration
 on:
-  push:
-    branches: [audit/batch2-final13-20261017]
   workflow_dispatch:
 permissions:
   contents: read
