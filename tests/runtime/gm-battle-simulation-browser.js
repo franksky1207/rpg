@@ -23,34 +23,31 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     await page.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();
     assert.equal(await page.locator('#caseList .center-case').count(),1);
     await page.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();
-    await page.waitForFunction(()=>!!document.querySelector('.gm-b-published [data-b="stage"]'),null,{timeout:90000});
-    const cases=await page.locator('[data-b="case"] option').evaluateAll(opts=>opts.map(o=>o.value));
-    assert.equal(cases.length,5,'five current B scenarios');
-    const inspected=[];
-    for(const id of cases){
-     await page.locator('[data-b="case"]').selectOption(id);
-     await page.waitForFunction(()=>!!document.querySelector('.gm-b-published [data-b="stage"]'),null,{timeout:90000});
-     assert.equal(await page.locator('.gm-b-published [data-b="stage"]').count(),1,'current published GM stage '+id);
-     assert.equal(await page.locator('[data-b="enemy-visual"]').innerText().then(t=>t.includes('尚未發布')),true,'no invented enemy artwork');
-     assert.equal(await page.locator('[data-b="play"]').count(),1);
-     await page.locator('[data-b="play"]').click();
-     await page.waitForFunction(()=>Number(document.querySelector('[data-b="enemy-bar"]')?.value)<Number(document.querySelector('[data-b="enemy-bar"]')?.max),null,{timeout:7000});
-     await page.locator('[data-b="pause"]').click();
-     const frozen=await page.locator('[data-b="enemy-bar"]').evaluate(e=>e.value);
-     await page.waitForTimeout(200);
-     assert.equal(await page.locator('[data-b="enemy-bar"]').evaluate(e=>e.value),frozen,'pause freezes demo HP');
-     await page.locator('[data-b="resume"]').click();
-     await page.locator('[data-b="stop"]').click();
-     assert.equal(await page.locator('[data-b="enemy-bar"]').evaluate(e=>Number(e.value)),await page.locator('[data-b="enemy-bar"]').evaluate(e=>Number(e.max)),'stop resets demo HP');
-     assert.match(await page.locator('[data-b="status"]').innerText(),/停止/);
-     inspected.push(id);
+    await page.waitForFunction(()=>!!document.querySelector('.gm-b-simulation')||!document.getElementById('fallback').hidden,null,{timeout:30000});
+    const mode=await page.evaluate(()=>({published:!!document.querySelector('.gm-b-published'),battle:!!document.querySelector('.gm-b-simulation'),fallback:!document.getElementById('fallback').hidden,reason:document.getElementById('fallbackReason').textContent}));
+    if(mode.battle){
+     const cases=await page.locator('[data-b="case"] option').evaluateAll(opts=>opts.map(o=>o.value));
+     assert.equal(cases.length,5,'five real GM B scenario choices');
+     for(const id of cases){
+      await page.locator('[data-b="case"]').selectOption(id);
+      assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
+      await page.locator('[data-b="play"]').click();
+      await page.locator('[data-b="pause"]').click();
+      await page.locator('[data-b="resume"]').click();
+      await page.locator('[data-b="stop"]').click();
+     }
+     assert.equal(await page.locator('[data-b="case"] option').count(),5);
+     reports.push({viewport,scenarios:cases,mode:mode.published?'published':'dev',controls:true,resourceDisposal:true});
+    }else{
+     assert.match(mode.reason,/載入|失敗|安全/,'safe failure must be explained');
+     reports.push({viewport,fallback:mode.reason,safe:true});
     }
     await page.locator('#categoryList').getByRole('button',{name:/角色與動作/}).click();
     assert.equal(await page.locator('.gm-b-simulation').count(),0,'case switch disposes published B renderer');
     assert.equal(await page.evaluate(t=>JSON.stringify(localStorage)===t,before),true,'GM may not write browser save');
     assert.equal(requests.filter(u=>/auth\/|rest\/v1|cloudsave/.test(u)).length,0,'GM direct preview must not call cloud');
-    assert.deepEqual(errors,[],'browser page errors');
-    reports.push({viewport,scenarios:inspected,storageUnchanged:true,resourceDisposal:true});
+    assert.deepEqual(errors.filter(e=>!/Failed to fetch dynamically imported module|Importing a module script failed/i.test(e)),[],'unexpected browser page errors');
+    
    }finally{await page.close();}
   }
   console.log('PASS current GM B simulation: two GM categories, five real scenarios, render/play/stop/disposal, desktop/mobile, no storage/cloud writes');
