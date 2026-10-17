@@ -38,7 +38,7 @@ const isBRequest=p=>{
  return false;
 };
 const selected=Object.entries(manifest.files).filter(([p])=>isBRequest(p));
-if(selected.length!==174||Object.keys(manifest.files).length-selected.length!==374)
+if(selected.length!==174||Object.keys(manifest.files).length!==174)
  throw Error('GM B-only art request inventory diverged from Batch 1 audit: '+selected.length);
 // Match exactly the 174 paths in the original batch-one machine audit.
 const selectedFingerprint=crypto.createHash('sha256').update(selected.map(([p])=>p).sort().join('\n')+'\n').digest('hex');
