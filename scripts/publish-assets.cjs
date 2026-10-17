@@ -62,6 +62,7 @@ function inspect(root){
  for(const file of selected)if(!sizes.has(file))throw Error("Missing official audio: "+file);
  const registered=inspectRegistry(root,new Set(files)),registeredPaths=new Set(registered.paths);
  const category=p=>{
+  if(p==='3d-test/atlas-review.js')return 'retired-gm-art-review';
   if(p.startsWith("."))return "development";
   if(/^(?:\.github|docs|tests|scripts|development)\//.test(p))return "development";
   if(p.startsWith("assets/backgrounds-source/"))return "source";
