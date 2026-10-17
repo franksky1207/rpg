@@ -1,7 +1,7 @@
 name: Batch 2-4 Integration and Regression
 on:
   push:
-    branches: [cleanup-batch2-4-integration-20261017]
+    branches: [cleanup-batch2-4-integration-20261017, batch3-1-old-concept-prune]
   workflow_dispatch:
 permissions:
   contents: read
@@ -24,6 +24,7 @@ jobs:
       - name: Formal source and dependency integration
         run: |
           set -euo pipefail
+          if [ -f tests/runtime/cleanup-batch3-1-tree.cjs ]; then node tests/runtime/cleanup-batch3-1-tree.cjs; fi
           node tests/runtime/cleanup-batch2-4-integration.cjs
           python3 scripts/formal-equipment-identities.py
           node tests/runtime/js-integrity.js
