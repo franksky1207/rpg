@@ -8,7 +8,7 @@ import './armor-selection.js?v=20261015-phase5';
 
 export async function mount({host,signal,quality='medium'}={}){
  const own=new AbortController(),pool=createSpritePool();
- const pending=new Map();let closed=false,actor=null,frame=0,selected=null,catalog=null,authorized=false;
+ const pending=new Map();let closed=false,actor=null,frame=0,selected=null,catalog=null,authorized=false,guard=null;
  let playing=false,paused=false,step=0,elapsed=0,lastTime=0,speed=1,mode='formal',scene='normal-baseline';
  const cases=[['normal-baseline','普通怪'],['elite-baseline','菁英怪'],['boss-baseline','Boss'],['boss-player-defeat','Boss 擊敗玩家'],['elite-effects-owner-input','菁英效果']];
  const clips=['idle','attack','hit','dodge','attack','defeat'];
