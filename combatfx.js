@@ -399,7 +399,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
-   if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
+   if(options.clearAfter===true&&presentation?.token===p.token)window.clearCombatPresentation(options.clearReason||"structured-end");
   }
  };
  window.COMBAT_STRUCTURED_PRESENTATION_VERSION=3;
@@ -495,7 +495,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
-   if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
+   if(options.clearAfter===true&&presentation?.token===p.token)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
   }
  };
  window.MIRROR_STRUCTURED_PRESENTATION_VERSION=1;
