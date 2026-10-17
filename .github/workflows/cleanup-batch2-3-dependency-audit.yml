@@ -1,0 +1,25 @@
+name: Cleanup Batch 2-3 Dependency Audit
+on:
+  push:
+    branches: [cleanup-batch2-3-runtime-dependencies-20261017]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dependency-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Confirm active GM runtime and legacy manifest dependencies
+        run: node scripts/cleanup-batch2-3-dependency-audit.cjs
+      - name: Protect formal equipment identities
+        run: python3 scripts/formal-equipment-identities.py
+      - name: Syntax-check relevant GM runtime
+        run: |
+          node --check 3d-test/test-center.js
+          node --check 3d-test/gm-battle-simulation.js
+          node --check 3d-test/gm-battle-published.mjs
