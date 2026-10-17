@@ -6,7 +6,14 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,p))).digest('hex');
 const formal=new Set(plan.references.filter(r=>r.from==='index.html').map(r=>r.path));
 const modules=plan.keep.filter(p=>p.startsWith('3d-test/')&&/\.(?:m?js|css)$/.test(p)).map(p=>({path:p,sha256:sha(p),bytes:plan.sizes.get(p),classification:formal.has(p)?'formal-entry-or-shared':p.includes('equipment-sprites-v1/')?'shared-2.5d-lazy':'gm-or-legacy-lazy',consumers:[...new Set(plan.references.filter(r=>r.path===p).map(r=>r.from))].sort()}));
-assert.ok(modules.every(r=>r.consumers.length),'Unclassified published module: investigate; do not delete automatically');
+// The old atlas-review user entry was removed from GM in batch 2-2.
+// It is still tracked and published until batch 2-3 confirms all dependencies.
+// Never silently accept any other unclassified runtime module.
+const pending23=['3d-test/atlas-review.js'];
+const unclassified=modules.filter(r=>r.consumers.length===0).map(r=>r.path).sort();
+assert.deepEqual(unclassified,pending23.filter(p=>plan.keep.includes(p)).sort(),
+  'Unexpected unclassified published modules; investigate before removing sources');
+
 const entry=read('3d-test/t3b-formal-entry.js');
 assert.ok(entry.includes('if(context.wholeSuit===true)return;'));
 assert.ok(entry.indexOf('if(context.wholeSuit===true)return;')<entry.indexOf('ensure?.("engine")'));
