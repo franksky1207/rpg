@@ -121,18 +121,16 @@ export async function mount({host,signal,quality='medium'}={}){
   frame=requestAnimationFrame(tick);
  }
  function dispose(){
-  if(closed)return;closed=true;cancelAnimationFrame(frame);++epoch;for(const a of requests)a.abort();
+  if(closed)return;closed=true;clearInterval(guard);cancelAnimationFrame(frame);++epoch;for(const a of requests)a.abort();
   for(const item of pending.values()){clearTimeout(item.timer);item.reject(Error('disposed'));}pending.clear();
   for(const f of handlers)f();own.abort();stopActor();pool.dispose();host.replaceChildren();
  }
  signal?.addEventListener('abort',dispose,{once:true});
  if(signal?.aborted){dispose();return {dispose};}
  // Heartbeat is an authorization check only; it never drives the battle animation.
- const guard=setInterval(async()=>{if(closed||document.hidden||!authorized)return;try{const response=await request('civilization3d:sprite-auth');if(!response.authorized){authorized=false;stopActor();reset();setStatus('GM 授權已失效，預覽停止。');}}catch{if(!closed){authorized=false;stopActor();reset();}}},2500);
- const originalDispose=dispose;
- const disposeAll=()=>{clearInterval(guard);originalDispose();};
+ guard=setInterval(async()=>{if(closed||document.hidden||!authorized)return;try{const response=await request('civilization3d:sprite-auth');if(!response.authorized){authorized=false;stopActor();reset();setStatus('GM 授權已失效，預覽停止。');}}catch{if(!closed){authorized=false;stopActor();reset();}}},2500);
  refreshHP();frame=requestAnimationFrame(tick);
  await synchronize();
- return {dispose:disposeAll,resize(){},setQuality(value){quality=value;if(authorized)synchronize();},
+ return {dispose,resize(){},setQuality(value){quality=value;if(authorized)synchronize();},
   diagnostics:()=>({mode:'published-GM-visual',authorized,playing,paused,step,noRewards:true,noSave:true,enemyAtlasAvailable:false})};
 }
