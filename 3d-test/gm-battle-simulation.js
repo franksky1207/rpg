@@ -35,14 +35,14 @@ export async function mount({host,signal,quality='medium'}){
   import(new URL('t2b3-v1/renderer.mjs?v=20261015-thrust1',root)),import(new URL('t2b3-v1/contract.mjs?v=20261015-thrust1',root))]);
  signal.throwIfAborted();
  host.innerHTML=`<div class="gm-b-simulation"><div class="gm-b-controls">
- <label>角色來源<select data-b="source"><option value="formal">正式角色</option><option value="free">自由測試</option><option value="legacy">原3D裝備測試</option></select></label><label data-b="suit-label" hidden>套裝選擇<select data-b="suit"><option value="g005">G005 · 生化隔離甲</option><option value="g007">G007 · 自律護衛甲</option><option value="g018">G018 · 環軌防護甲</option></select></label><button type="button" data-b="sync">重新同步角色</button><span data-b="appearance" role="status"></span>
+ <label>角色來源<select data-b="source"><option value="formal">正式角色</option><option value="free">自由測試</option></select></label><label data-b="suit-label" hidden>套裝選擇<select data-b="suit"><option value="g005">G005 · 生化隔離甲</option><option value="g007">G007 · 自律護衛甲</option><option value="g018">G018 · 環軌防護甲</option></select></label><button type="button" data-b="sync">重新同步角色</button><span data-b="appearance" role="status"></span>
  <label>速度<select data-b="speed"><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label><label>基準戰<select data-b="case"><option value="normal-baseline">普通怪基準戰</option><option value="elite-baseline">菁英怪基準戰</option><option value="boss-baseline">Boss 基準戰</option><option value="boss-player-defeat">Boss 擊敗玩家</option><option value="elite-effects-owner-input">菁英特殊效果測試</option></select></label>
- <label>五槽裝備<select data-b="equipment"></select></label><label>LOD／圖集品質<select data-b="lod"><option value="low">省電</option><option value="medium">平衡</option><option value="high">高畫質</option></select></label>
+ <label>五槽裝備<select data-b="equipment"></select></label><label>預覽品質<select data-b="lod"><option value="low">省電</option><option value="medium">平衡</option><option value="high">高畫質</option></select></label>
  <label>動作<select data-b="clip"><option value="source">跟隨戰鬥</option>${['idle','attack','hit','dodge','return','defeat'].map(x=>`<option value="${x}">${({idle:'待機',attack:'攻擊',hit:'受擊',dodge:'閃避',return:'回位',defeat:'倒地'})[x]}</option>`).join('')}</select></label><label>畫格<input data-b="time" type="range" min="0" max="700" step="33.333" value="0" disabled></label>
  <div class="gm-b-buttons">${[['play','播放'],['pause','暫停'],['resume','繼續'],['replay','重播'],['stop','停止']].map(([x,n])=>`<button type="button" data-b="${x}">${n}</button>`).join('')}</div></div>
  <p class="gm-b-status" data-b="status" role="status">正在驗證沙盒素材…</p><div class="gm-b-arena" data-b="stage"></div>
  <div class="gm-b-hud">${['player','enemy'].map(x=>`<div><b data-b="${x}-name">${x==='player'?'測試玩家':'測試敵人'}</b><span data-b="${x}-hp"></span><progress data-b="${x}-bar" max="1" value="1"></progress><small data-b="${x}-shield"></small></div>`).join('')}</div>
- <p data-b="effect"></p><details><summary>裝備來源與效果檢視</summary><ul data-b="slots"></ul><p>GM 沙盒素材；固定 3/4 視角、即時 3D 玩家／敵人預渲染圖集。逐擊 HP 未收錄；過程血量依已記錄傷害推算，僅供 GM 視覺測試。結束值採正式樣本快照，不代表逐擊正式結算。</p></details></div>`;
+ <p data-b="effect"></p><details><summary>裝備來源與效果檢視</summary><ul data-b="slots"></ul><p>GM 沙盒；使用目前已有的戰鬥素材。逐擊 HP 未收錄，過程血量由記錄傷害推算，僅供視覺檢查；結束值採樣本快照，不代表正式戰鬥結算。</p></details></div>`;
  const $=name=>host.querySelector(`[data-b="${name}"]`),cleanups=[];
  const spritePool=createSpritePool(),pending=new Map();let catalog=null,spriteEntry=null,appearanceSerial=0,authorized=false;
  let closed=false,pack=null,renderer=null,binding=null,bound=null,failed=false,lastFrame=null;
@@ -71,7 +71,7 @@ export async function mount({host,signal,quality='medium'}){
   const load=new AbortController(),cancel=()=>load.abort();signal.addEventListener('abort',cancel,{once:true});if(signal.aborted)cancel();
   const timer=setTimeout(cancel,5000);
   try{return await new WholeSuitActor(spritePool,entry,{tier,signal:load.signal}).init();}
-  catch(error){if(signal.aborted)throw error;$('appearance').textContent='角色載入失敗，回退原3D玩家';return null;}
+  catch(error){if(signal.aborted)throw error;$('appearance').textContent='角色載入失敗，改用既有戰鬥外觀';return null;}
   finally{clearTimeout(timer);signal.removeEventListener('abort',cancel);}
  }
  async function ready(){
@@ -107,9 +107,9 @@ export async function mount({host,signal,quality='medium'}){
    if(mode==='formal'){const response=await request('civilization3d:sprite-snapshot');if(closed||ticket!==appearanceSerial)return;if(!response.authorized)throw Error('authorization');selected=globalThis.CivilizationArmorSelection.select(response.appearance,catalog.sets)?.id;}
    if(closed||ticket!==appearanceSerial||$('source').value!==mode)return;
    spriteEntry=catalog.entries.find(e=>e.id===selected&&e.gmPreviewAllowed===true)||null;
-   $('appearance').textContent=spriteEntry?`${spriteEntry.id.toUpperCase()} · ${spriteEntry.formalIdentity.equipmentNames.armor}（${mode==='formal'?'唯讀快照':'自由測試'}）`:'無對應角色素材，回退原3D玩家';
+   $('appearance').textContent=spriteEntry?`${spriteEntry.id.toUpperCase()} · ${spriteEntry.formalIdentity.equipmentNames.armor}（${mode==='formal'?'唯讀快照':'自由測試'}）`:'無對應角色素材，改用既有戰鬥外觀';
    if(pack){choose();$('stage').replaceChildren();}
-  }catch{if(!closed&&ticket===appearanceSerial){spriteEntry=null;authorized=false;$('appearance').textContent='無可用正式角色或GM授權，回退原3D玩家';if(pack){choose();$('stage').replaceChildren();}}}
+  }catch{if(!closed&&ticket===appearanceSerial){spriteEntry=null;authorized=false;$('appearance').textContent='無可用正式角色或GM授權，改用既有戰鬥外觀';if(pack){choose();$('stage').replaceChildren();}}}
  }
  listen($('source'),'change',appearance);listen($('suit'),'change',()=>{if($('source').value==='free')appearance();});listen($('sync'),'click',appearance);
  // Authorization heartbeat only; never advances animation, playback or combat.
