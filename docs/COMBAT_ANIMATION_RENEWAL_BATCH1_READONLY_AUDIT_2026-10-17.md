@@ -32,7 +32,7 @@
 在 `development/equipment-2_5d/v1/characters/<id>/v1/` 各有 `character.webp`、`review.md`。
 在 `development/equipment-2_5d/v1/sources/`，G005 有 `generated.png` 與 `initial-generated.png`；G007/G018 各有 `generated.png`。
 在 `development/equipment-2_5d/weapons-v1/<id>/` 各有 `attack-body.webp`、`weapon.webp`、`separation-source.png`、`review.md`。
-三套以上列出的**檔案總數為 30 件**（不含資料夾及可能在其他命名下的關聯檔）。
+三套以上列出的**檔案總數為 31 件**（不含資料夾及可能在其他命名下的關聯檔）。
 現階段已確認 GM 模擬選單有直接名稱引用，但**沒有逐一完成資產 runtime 載入與發布依賴交叉檢查**，所以沒有提出刪檔清單，不動任何檔案。
 
 ## 四、效能量測基線：已知與缺口
@@ -68,6 +68,6 @@
 這些失敗／進行中是既有基準 SHA 的事實，不是本批新增的 Runtime 缺陷證據，也不應冒稱全綠。此報告提交會形成**新 SHA**；報告 SHA 不等於上述已驗收的程式 SHA。
 
 ## 七、結論與未完成事項
-- **已完成：** 主路徑靜態盤點、異宇宙核心與獨立結算契約確認、背景／離線重要 owner 與節流機制定位、3 套舊素材 30 個具名檔案 Git tree 盤點、現有 Actions 基線。
+- **已完成：** 主路徑靜態盤點、異宇宙核心與獨立結算契約確認、背景／離線重要 owner 與節流機制定位、3 套舊素材 31 個具名檔案 Git tree 盤點、現有 Actions 基線。
 - **尚未完成：** 全模式逐函式完整架構圖、完整跨模態回歸矩陣、定量效能基線、所有舊素材 runtime/發布引用掃描、真機／桌機壓測、Actions 全綠。
 - 因此**新版第 1 批不可宣稱完全封箱，也不可無條件啟動第 2 批**；報告後續必須根據實證補齊。
