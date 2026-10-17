@@ -1,10 +1,5 @@
 name: Batch 1 Animation Frame Trace
 on:
-  push:
-    branches: [audit/batch1-animation-frame-trace-20261017]
-    paths:
-      - 'tests/runtime/batch1-animation-frame-trace.cjs'
-      - '.github/workflows/batch1-animation-frame-trace.yml'
   workflow_dispatch:
 permissions:
   contents: read
