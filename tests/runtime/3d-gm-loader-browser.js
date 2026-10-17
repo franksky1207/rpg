@@ -1,50 +1,39 @@
-"use strict";
+'use strict';
+// The old 31-scene Babylon loader is retired from GM. Verify real 2.5D module
+// retries, independent rendering and bounded disposal instead.
 const {chromium}=require('playwright'),assert=require('node:assert/strict');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader']});
  try{
- for(const viewport of [{width:1280,height:800},{width:390,height:844}]){
- const page=await browser.newPage({viewport}),errors=[],requests={},sourceReads={};let failOnce=true;
- page.on('pageerror',e=>errors.push(String(e)));
- page.on('request',r=>{const path=new URL(r.url()).pathname;if(/(?:babylon|prototype-engine|runtime|appearance-snapshot)\.js$/.test(path)){const counts=r.resourceType()==='script'?requests:sourceReads;counts[path]=(counts[path]||0)+1;}});
- await page.route('**/prototype-engine.js*',r=>{if(failOnce){failOnce=false;return r.fulfill({status:503,body:'injected module failure'});}return r.continue();});
- const fixtureResponse=await page.request.get(new URL('development/hybrid-comparison/t2a-v1/owner-fixtures.json',base).href);
- const fixtureAvailable=fixtureResponse.ok();
- await page.goto(new URL('3d-test/',base).href,{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>document.getElementById('fallbackReason').textContent.includes('模組載入失敗'),null,{timeout:60000});
- await page.locator('#restart').click();
- await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'),null,{timeout:60000});
- assert.equal(await page.locator('#caseList .center-case').count(),31);
- assert.equal(await page.evaluate(()=>Civilization3DTestCenter.categoryIds.length),8);
- const titles=await page.locator('#caseList .center-case-label').allTextContents();
- for(const title of titles){
-  await page.locator('#caseList').getByRole('button',{name:title,exact:true}).click();
-  if(title==="2.5D 戰鬥模擬"){
-   // Existing immutable Fixture verifies the appearance source as text. This
-   // fetch does not execute a module; separately keep both owners bounded.
-   if(fixtureAvailable)await page.waitForFunction(()=>document.querySelector('[data-b="stage"]')?.dataset.renderReady==='true',null,{timeout:90000});
-   else await page.waitForFunction(()=>document.querySelector('[data-b="status"]')?.textContent.includes('素材驗證失敗')||document.getElementById('fallbackReason')?.textContent.startsWith('2.5D 模擬無法載入'),null,{timeout:15000});
-   await page.locator("#gmBattleViewPicker").getByRole("button",{name:"戰場與生命顯示",exact:true}).click();
+  for(const viewport of [{width:1280,height:800},{width:390,height:844}]){
+   const page=await browser.newPage({viewport}),errors=[],requests=[];
+   page.on('pageerror',e=>errors.push(String(e)));
+   page.on('request',r=>requests.push(new URL(r.url()).pathname));
+   let failed=false;
+   await page.route('**/gm-whole-suit.mjs*',route=>{
+    if(!failed){failed=true;return route.fulfill({status:503,body:'transient GM sprite-module failure'});}
+    return route.continue();
+   });
+   await page.goto(new URL('3d-test/',base).href,{waitUntil:'domcontentloaded'});
+   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===6);
+   await page.waitForFunction(()=>!document.getElementById('fallback').hidden,null,{timeout:30000});
+   assert.match(await page.locator('#fallbackReason').innerText(),/載入失敗/);
+   assert.equal(await page.locator('#categoryList .center-category').count(),2);
+   await page.locator('#restart').click();
+   await page.waitForSelector('.gm-suit-status',{timeout:30000});
+   assert.equal(await page.locator('#fallback').isVisible(),false);
+   await page.locator('#categoryList').getByRole('button',{name:'戰場與對戰'}).click();
+   await page.waitForSelector('.gm-b-simulation',{timeout:30000});
+   assert.equal(await page.locator('.gm-suit').count(),0,'character controller disposed');
+   await page.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();
+   await page.waitForSelector('.gm-suit-status',{timeout:30000});
+   assert.equal(await page.locator('.gm-b-simulation').count(),0,'battle controller disposed');
+   assert.equal(requests.some(p=>/prototype-engine\.js|shared-loader\.js|alternateuniversedata\.js/.test(p)),false,
+    'obsolete 3D scene loader is not a GM viewing prerequisite');
+   assert.deepEqual(errors.filter(e=>!/transient GM sprite-module failure|Failed to fetch dynamically imported module/i.test(e)),[]);
+   await page.close();
   }
-  await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'),null,{timeout:60000});
-  assert.equal(await page.evaluate(()=>BABYLON.EngineStore.Instances.length),1,'Scene engine leak: '+title);
- }
- await page.evaluate(()=>{window.__completePrototype=Civilization3DPrototype;Civilization3DPrototype={...Civilization3DPrototype,createServiceConsoleScene:undefined,createChronicleTransitionScene:undefined,createBattlePresentationScene:undefined};});
- await page.locator('#caseList').getByRole('button',{name:'銀河紀元星圖',exact:true}).click();
- await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'));
- await page.locator('#caseList').getByRole('button',{name:'設定中心',exact:true}).click();
- await page.waitForFunction(()=>document.getElementById('fallbackReason').textContent.includes('此預覽場景'));
- await page.locator('#caseList').getByRole('button',{name:'角色全身展示',exact:true}).click();
- await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'),null,{timeout:60000});
- assert.equal(Object.entries(requests).filter(([path])=>path.endsWith('prototype-engine.js'))[0][1],2,'Retry must reload only failed scenes module');
- for(const [path,count] of Object.entries(requests))if(!path.endsWith('prototype-engine.js'))assert.equal(count,1,'Duplicate executable module: '+path);
- assert.deepEqual(sourceReads,fixtureAvailable?{'/3d-test/appearance-snapshot.js':1}:{},'One immutable Fixture source-text verification; no repeated engine/module source downloads');
- await page.evaluate(()=>{Civilization3DPrototype=__completePrototype;dispatchEvent(new Event('pagehide'));});
- assert.equal(await page.evaluate(()=>BABYLON.EngineStore.Instances.length),0);
- assert.deepEqual(errors,[]);
- console.log('PASS GM loader retry, 8 categories / 31 real scenes, decoration isolation and release',viewport,{modules:requests,sourceReads});
- await page.close();
- }
+  console.log('PASS two 2.5D GM modules, transient JS-load retry, no legacy 3D scene loader, mobile disposal');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
