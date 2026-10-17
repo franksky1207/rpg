@@ -1,2 +1,0 @@
-node tests/runtime/alternate-universe-failure-integrity.js
-Alternate Universe failure lifecycle integrity passed.

@@ -1,2 +1,0 @@
-node tests/equipment-formal/publication.cjs
-PASS exact three-suit formal-only permission, immutable catalog identity, SHA/bytes, missing release and legacy 3D closed

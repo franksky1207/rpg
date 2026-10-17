@@ -1,4 +1,0 @@
-PASS 487 historical file SHA, first 65 and last 140 index entries, all 210 formal identities / 1050 slots, G071 unmade, all G14 source/evidence/images outside Pages staging
-Audit top-level keys: schema, policy, files, totalBytes, includedBytes, candidateExcludedBytes, includedCount, excludedCount, officialAudio, retainedSourceReferences, hardMissing, reviewNeeded, excluded, notes
-PASS publish hardMissing=[]
-PASS all 45 G14 development files explicitly present in audit excluded list

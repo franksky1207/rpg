@@ -1,2 +1,0 @@
-node tests/runtime/t3b-formal-controller.cjs
-PASS formal B controller: formal-only, computed history excluded, dedupe, background, stop, late load, missing assets, 100 lifecycle switches; mocked resource counter, not GPU measurement

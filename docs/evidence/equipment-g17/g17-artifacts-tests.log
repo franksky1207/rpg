@@ -1,9 +1,0 @@
-test_catalog_totals_and_development_isolation (test_g17_artifacts.G17ArtifactTests.test_catalog_totals_and_development_isolation) ... ok
-test_five_sets_ten_independent_outputs_and_originals (test_g17_artifacts.G17ArtifactTests.test_five_sets_ten_independent_outputs_and_originals) ... ok
-test_g001_g080_all_historical_bytes_unchanged (test_g17_artifacts.G17ArtifactTests.test_g001_g080_all_historical_bytes_unchanged) ... ok
-test_historical_index_and_unmade_g086_unchanged (test_g17_artifacts.G17ArtifactTests.test_historical_index_and_unmade_g086_unchanged) ... ok
-
-----------------------------------------------------------------------
-Ran 4 tests in 3.960s
-
-OK

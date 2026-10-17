@@ -1,6 +1,0 @@
-[
-  {
-    "command": "node tests/equipment-gm/browser.cjs",
-    "exitCode": 0
-  }
-]

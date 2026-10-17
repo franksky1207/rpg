@@ -1,2 +1,0 @@
-node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js
-Post-reincarnation cleanup Batch1-8 integrity passed.

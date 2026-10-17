@@ -1,2 +1,0 @@
-node tests/runtime/code-cleanup-batch7-lazy-loading.js
-Code cleanup Batch7 lazy-loading + Batch3 runtime GM authorization/retry integrity passed.
