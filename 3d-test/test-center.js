@@ -251,7 +251,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 function renderCategories(){
   categoryList.replaceChildren();
   const counts=Object.fromEntries(categories.map(([id])=>[id,cases.filter(c=>c.cat===id).length]));
-  for(const [id,title] of categories{
+  for(const [id,title] of categories){
     const btn=document.createElement("button");btn.type="button";btn.className="center-category"+(category===id?" active":"");
     btn.setAttribute("aria-pressed",String(category===id));
     const count=counts[id];
