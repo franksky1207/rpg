@@ -30,3 +30,4 @@ jobs:
           node tests/runtime/combat-events-integration.cjs
           node tests/runtime/alternate-universe-combat-integrity.js
           node tests/runtime/resource-manifest-integrity.js
+          node scripts/batch1-fixed12-evidence.cjs
