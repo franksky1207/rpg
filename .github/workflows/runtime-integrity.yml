@@ -64,7 +64,7 @@ jobs:
         run: |
           set -o pipefail
           node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
-          node tests/runtime/3d-b18-coverage-guard.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/cleanup-batch4-4-final-guard.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-formal-snapshots-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-integration.cjs 2>&1 | tee -a runtime-integrity-report.txt
