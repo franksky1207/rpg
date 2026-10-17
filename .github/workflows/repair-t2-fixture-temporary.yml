@@ -1,0 +1,45 @@
+name: Repair T2 comparison fixture (temporary)
+on:
+  push:
+    branches: [fix/hybrid-t2-fixture-sync-20261017]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  regenerate-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Rebuild fixture from the actual isolated owners
+        run: |
+          node scripts/hybrid-comparison-fixtures.cjs --write
+          node scripts/hybrid-comparison-fixtures.cjs --check
+          node tests/runtime/hybrid-comparison-contract.cjs
+          node tests/runtime/hybrid-comparison-playback-contract.cjs
+          node tests/runtime/3d-formal-snapshots-contract.cjs
+          node tests/runtime/3d-shared-loader-contract.cjs
+          node tests/runtime/combat-events-contract.cjs
+          node tests/runtime/combat-events-integration.cjs
+          node tests/runtime/3d-equipment-contract.cjs
+          node tests/runtime/js-integrity.js
+          node tests/runtime/resource-manifest-integrity.js
+          node scripts/build-publish-dry-run.cjs
+          node tests/runtime/publish-build-regression.cjs
+          test ! -e .publish-stage3/development/hybrid-comparison/index.html
+          test ! -e .publish-stage3/development/hybrid-comparison/t2a-v1/owner-fixtures.json
+      - name: Commit only regenerated isolated fixture
+        shell: bash
+        run: |
+          git status --short
+          git add development/hybrid-comparison/t2a-v1/owner-fixtures.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "test: sync isolated T2 owner fixture with retained asset registry"
+            git push origin HEAD:fix/hybrid-t2-fixture-sync-20261017
+          fi
