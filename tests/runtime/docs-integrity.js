@@ -24,7 +24,7 @@ assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Sche
 const handoffHasThirdWorldPhaseMapping=handoff.includes("3 = 高維紀元")||handoff.includes("1／2／3 對應銀河／宇宙／高維")||handoff.includes("1/2/3 對應銀河/宇宙/高維");
 assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
-assert(handoff.includes("Batch7：GM／測試工具正式收尾")&&handoff.includes("7-1～7-5全部完成")&&handoff.includes("第一紀元完整 Target Context 重構"),"Handoff 必須同步 Batch7 與 W1 Target Context 已完成現況。");
+assert(handoff.includes("PR #14")&&handoff.includes("已")&&handoff.includes("第5批")&&handoff.includes("第6批不得提前開始"),"Handoff 必須如實標示 2.5D 清理整合與第5批驗收狀態，不沿用歷史 Batch7 記述。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
 assert(pending.includes("main` 的實際程式碼是唯一真實來源"),"Pending 必須保留 main 唯一真實來源原則。");
