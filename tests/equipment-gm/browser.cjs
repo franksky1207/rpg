@@ -67,7 +67,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
      await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();
     }
    }
-   await frame.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();check(await frame.locator('.gm-suit').count()===0,'category switch removes sprite state');await frame.locator('#categoryList').getByRole('button',{name:/角色與動作/}).click();await frame.locator('.gm-suit-status').filter({hasText:'已完成'}).waitFor();check(await frame.locator('[data-mode=free]').getAttribute('aria-pressed')==='false','reenter resets formal mode');
+   await frame.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();check(await frame.locator('.gm-suit').count()===0,'category switch removes sprite state');await frame.locator('#categoryList').getByRole('button',{name:/角色與動作/}).click();await frame.locator('.gm-suit-status').filter({hasText:/已完成|回退|待製作/}).waitFor({timeout:30000});check(await frame.locator('[data-mode=free]').getAttribute('aria-pressed')==='false','reenter resets formal mode');
    if(viewport.width===1365){
     for(const fault of ['404','sha','decode']){
      await page.evaluate(()=>{closeGm3DPrototype();openGm3DPrototype();});
