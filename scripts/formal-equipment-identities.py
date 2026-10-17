@@ -1,29 +1,14 @@
 #!/usr/bin/env python3
-"""Read-only formal equipment identity extraction from authoritative game data.\nNo concept art, review ledger, or production eligibility dependencies.\n"""
-import importlib.util
+"""Read-only verification of 210 formal equipment identities and 1050 names.
+All identities are taken from authoritative game owners, not retired concept art.
+"""
 import argparse
-import datetime
-import hashlib
 import json
 import pathlib
-import re
-import struct
 import subprocess
-import sys
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-BASE = pathlib.Path('development/3d-source/equipment/concepts')
-MASTER = pathlib.Path('docs/3D_EQUIPMENT_210_SET_MASTER_INDEX.md')
-SLOTS = ('weapon', 'helmet', 'armor', 'shoes', 'accessory')
-LABELS = ('武器', '頭盔', '鎧甲', '鞋子', '飾品')
-EPOCH_LABELS = {'galaxy':'銀河紀元','universe':'宇宙紀元','higher':'高維紀元'}
-IMAGES = ('overview-front-side-back.webp', 'equipment-five-slots.webp')
-START, END = '<!-- formal-equipment:start -->', '<!-- formal-equipment:end -->'
-
-G007_HASHES = {
-    IMAGES[0]: '0f9ad6179ac17fbd94f46897c433ce9003f19cb4290bc46c49ddbfd21ff67645',
-    IMAGES[1]: 'ac1beed76e607a70e3d83b46deaf0bb9866e9d481ba77f3d2ff9b1ad34a7f38c',
-}
+ROOT=pathlib.Path(__file__).resolve().parents[1]
+SLOTS=('weapon','helmet','armor','shoes','accessory')
 # Execute only formal owners in an isolated VM, with no filesystem/network/process
 # bindings. Galaxy registration uses the real registerRegionMaps implementation.
 EXTRACT = r'''
@@ -52,15 +37,6 @@ console.log(JSON.stringify({regions:c.regions,maps:c.maps,universe:w.SECOND_WORL
 
 def fail(message):
     raise ValueError(message)
-
-def sha(data):
-    return hashlib.sha256(data).hexdigest()
-
-def load(path):
-    return json.loads(path.read_text(encoding='utf-8'))
-
-def dumps(data):
-    return json.dumps(data, ensure_ascii=False, indent=2) + '\n'
 
 def location(root, file, needle, symbol):
     text = (root / file).read_text(encoding='utf-8')
@@ -129,5 +105,12 @@ def validate_formal(root=ROOT):
     return rows
 
 if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--rows',action='store_true',help='include all 210 exact formal names')
+    args=parser.parse_args()
     rows=validate_formal()
-    print(json.dumps({'schema':'cw.formal-equipment-identity.v1','sets':len(rows),'slots':1050,'ids':[r['id'] for r in rows],'rows':[{k:r[k] for k in ('id','epoch','sourceKey','regionOrBoss','equipmentNames')} for r in rows]},ensure_ascii=False))
+    report={'schema':'cw.formal-equipment-identity.v1','sets':len(rows),
+            'slots':1050,'ids':[r['id'] for r in rows]}
+    if args.rows:
+        report['rows']=[{k:r[k] for k in ('id','epoch','sourceKey','regionOrBoss','equipmentNames')} for r in rows]
+    print(json.dumps(report,ensure_ascii=False))
