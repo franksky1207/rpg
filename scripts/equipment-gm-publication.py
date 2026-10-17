@@ -26,7 +26,7 @@ def build():
         for layer in ('body','weapon'):
             raw=(ROOT/w[layer]['path']).read_bytes();assert hashlib.sha256(raw).hexdigest()==w[layer]['sha256'] and len(raw)==w[layer]['bytes']
             w[layer]['path']=(BASE/(e['id']+'-'+('attack-body' if layer=='body' else 'weapon')+'.webp')).as_posix();outputs[w[layer]['path']]=raw
-        w.pop('source');w.pop('review');e['weaponAnimation']=w
+        w.pop('source',None);w.pop('review',None);e['weaponAnimation']=w
         data=(ROOT/e['asset']['path']).read_bytes();assert hashlib.sha256(data).hexdigest()==e['asset']['sha256']
         e['asset']['path']=(BASE/(e['id']+'.webp')).as_posix();outputs[e['asset']['path']]=data;entries.append(e)
     assert sorted(e['id'] for e in entries)==['g005','g007','g018']
