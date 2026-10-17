@@ -1,0 +1,32 @@
+name: Batch 2 Final 13 Integration
+on:
+  push:
+    branches: [audit/batch2-final13-20261017]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute 13 fixed coverage categories
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/batch2-final13-http.log 2>&1 &
+          trap 'kill $(jobs -pr) 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .2; done
+          node scripts/batch2-final13-evidence.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch2-final13-evidence
+          path: batch2-final13-evidence.json
+          if-no-files-found: warn
