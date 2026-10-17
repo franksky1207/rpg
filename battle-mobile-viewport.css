@@ -1,0 +1,43 @@
+/* Batch 4: mobile combat presentation only. No changes to combat owner or controls. */
+@media(max-width:820px){
+ .dungeon-bounty-combat,.arena-combat,.void-combat{
+  max-width:100%;min-width:0;box-sizing:border-box;
+  scroll-margin-top:calc(env(safe-area-inset-top,0px) + 14px);
+ }
+ .dungeon-bounty-combat .combat-arena,
+ .arena-combat .combat-arena,
+ .void-combat .combat-arena{
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  overflow:visible;
+ }
+ .dungeon-bounty-combat .combatant,
+ .arena-combat .combatant,
+ .void-combat .combatant{
+  min-width:0;max-width:100%;box-sizing:border-box;
+ }
+ .dungeon-bounty-combat .combatant h2,
+ .arena-combat .combatant h2,
+ .void-combat .combatant h2,
+ .dungeon-bounty-combat .status-label,
+ .arena-combat .status-label,
+ .void-combat .status-label{
+  overflow-wrap:anywhere;min-width:0;
+ }
+ .dungeon-bounty-combat .combat-damage,
+ .arena-combat .combat-damage,
+ .void-combat .combat-damage{
+  max-width:90%;pointer-events:none;
+  left:50%;transform-origin:center;
+ }
+ .dungeon-bounty-combat .combat-head,
+ .arena-combat .combat-head,
+ .void-combat .combat-head{overflow-wrap:anywhere;}
+ .void-shell,.void-panel,.arena-shell,.dungeon-page-shell{
+  min-width:0;max-width:100%;box-sizing:border-box;
+ }
+ .void-top-exit,.arena-actions{padding-bottom:max(4px,env(safe-area-inset-bottom,0px));}
+}
+@media(max-width:390px){
+ .dungeon-bounty-combat .combatant h2,.arena-combat .combatant h2,.void-combat .combatant h2{font-size:clamp(13px,3.7vw,18px);}
+ .dungeon-bounty-combat .status-label,.arena-combat .status-label,.void-combat .status-label{font-size:clamp(11px,3.2vw,15px);}
+}
