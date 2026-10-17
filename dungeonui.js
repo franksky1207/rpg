@@ -74,7 +74,53 @@
   const shell=main.querySelector(view==="dungeon-bounty"?".dungeon-bounty-shell":".arena-shell")||main.firstElementChild;if(!shell)return;
   const wrap=document.createElement("div");wrap.className="back-home";wrap.dataset.dungeonPrepReturn="1";wrap.innerHTML=`<button class="btn back-btn" onclick="go('dungeon')">← 返回副本列表</button>`;shell.insertBefore(wrap,shell.firstChild);
  }
- function finishDungeonRender(){const main=document.getElementById("main");normalizeDungeonReturnLabels(main);ensurePrepReturn(main);runPostRenderHooks();}
+ // Presentation-only viewport coordinator. Never changes combat timing, mode, or save data.
+ let battleViewportLastView="",battleViewportLastKey="",battleViewportGestureAt=0,battleViewportQueued=0;
+ const recordBattleViewportGesture=()=>{battleViewportGestureAt=Date.now();};
+ if(typeof document!=="undefined"){
+  document.addEventListener("touchstart",recordBattleViewportGesture,{passive:true});
+  document.addEventListener("wheel",recordBattleViewportGesture,{passive:true});
+  document.addEventListener("pointerdown",recordBattleViewportGesture,{passive:true});
+ }
+ function positionActiveDungeonCombat(main){
+  if(typeof window==="undefined"||typeof document==="undefined")return;
+  if(!["dungeon-bounty","dungeon-arena","dungeon-void-mirage"].includes(view)){
+   battleViewportLastView="";battleViewportLastKey="";return;
+  }
+  const area=main?.querySelector(".combat-screen");
+  if(!area){battleViewportLastView="";battleViewportLastKey="";return;}
+  const isVoid=view==="dungeon-void-mirage";
+  const title=area.querySelector(".combat-head")?.textContent?.trim()||"";
+  // Void can change tens of thousands of floors: anchor only on first entry.
+  const key=isVoid?"void":view+":"+title;
+  if(key===battleViewportLastKey&&battleViewportLastView===view)return;
+  const firstView=battleViewportLastView!==view;
+  battleViewportLastView=view;battleViewportLastKey=key;
+  if(window.matchMedia?.("(min-width: 821px)")?.matches)return;
+  if(document.body?.classList.contains("main-minimal-mode-open"))return;
+  if(typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true)return;
+  if(typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive(isVoid?"void":view==="dungeon-arena"?"arena":"bounty")&&document.visibilityState==="hidden")return;
+  const tick=++battleViewportQueued;
+  const arrange=()=>{
+   if(tick!==battleViewportQueued||area!==document.querySelector("#main .combat-screen"))return;
+   if(document.visibilityState==="hidden"||Date.now()-battleViewportGestureAt<1800)return;
+   // Higher-dimensional arena places three lineup cards before the live duel.
+   // Anchor the real active arena, not the surrounding status / lineup wrapper.
+   const targetStage=area.querySelector(".combat-arena")||area;
+   const rect=targetStage.getBoundingClientRect();
+   const visibleH=window.visualViewport?.height||window.innerHeight||0;
+   if(!visibleH)return;
+   const header=Math.min(95,Math.max(0,visibleH*.095));
+   // Scroll only if the combat stage starts below the useful viewport.
+   if(!firstView&&rect.top>=header&&rect.top<visibleH*.38)return;
+   if(rect.top>=header&&rect.top<visibleH*.3)return;
+   if(rect.top< -25&&rect.bottom>visibleH*.6)return; // user is already within combat
+   const target=window.scrollY+rect.top-header;
+   if(Math.abs(target-window.scrollY)>16)window.scrollTo({top:Math.max(0,target),behavior:"instant"});
+  };
+  if(typeof window.requestAnimationFrame==="function")window.requestAnimationFrame(arrange);else arrange();
+ }
+ function finishDungeonRender(){const main=document.getElementById("main");normalizeDungeonReturnLabels(main);ensurePrepReturn(main);runPostRenderHooks();positionActiveDungeonCombat(main);}
 
  window.dungeonStatusHtml=function(id="dungeon-status"){
   const resource=universePhase()?{label:"暗物質",amount:Math.max(0,Math.floor(Number(state?.secondWorld?.darkMatter)||0))}:{label:"金幣",amount:Math.max(0,Math.floor(Number(state.gold)||0))};

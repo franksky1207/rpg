@@ -1,10 +1,10 @@
-/* GM 2.5D visual center. Presentation only: no official combat, storage or cloud owner. */
+/* GM battle animation test center. Presentation only: no official combat, storage or cloud owner. */
 (function(){
 "use strict";
 const categories=[["character","角色與動作"],["combat","戰場與對戰"]];
 const cases=[
- {id:"C-08-CHARACTER",cat:"character",title:"角色與五種動作",kind:"character",detail:"查看現有 2.5D 角色的待機、攻擊、受擊、閃避、死亡與重播。現有素材並非未來三紀元角色。"},
- {id:"C-15-BATTLE",cat:"combat",title:"2.5D 戰鬥模擬",kind:"battle-battle",detail:"檢視已發布戰場、可用角色、敵方情境、血量與播放控制，不發放收益。"}
+ {id:"C-08-CHARACTER",cat:"character",title:"角色動作預覽",kind:"character",detail:"查看現有角色動畫的待機、攻擊、受擊、閃避、死亡與重播。現有素材並非未來三紀元角色。"},
+ {id:"C-15-BATTLE",cat:"combat",title:"戰鬥動畫模擬",kind:"battle-battle",detail:"檢視已發布戰場、可用角色、敵方情境、血量與播放控制，不發放收益。"}
 ];
 const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");

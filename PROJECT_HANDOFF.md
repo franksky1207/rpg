@@ -49,5 +49,6 @@
 - 新版第1批：固定12項稽核與動態性能量測已封箱；第2批：背景戰鬥 lifecycle、13 類整合回歸已封箱；保留先前封箱證據。
 - **新版第3批（固定16項）**：PR #25 整合 `combatfx.js` 延遲浮字計時清理、舊戰鬥 async finalizer token guard、HP observer 去重／限縮監聽；新增 100-event／100場替換／50次出入壓力、異宇宙真 UI controller（注入相同合成事件）trace、舊 main vs 新版 Chromium CDP trace、音效／Renderer／資源／原第1與第2批回歸。
 - 第3批完整施工驗收檔：`docs/COMBAT_ANIMATION_RENEWAL_BATCH3_16_ITEM_ACCEPTANCE_2026-10-17.md`。參見 GitHub PR #25；正式合併 main 後才完成同 SHA 發布封箱。**不得宣稱已通過 iPhone 真機溫控測試**。
-- 下一批按新版第4批（動畫命名、手機 UI、GM 動畫測試），再第5批（三紀元造型的技術契約，不量產美術），第6批（跨模式整合／封箱）。真機 iPhone 異宇宙發熱驗證依總計畫在六批全部完成後執行。
+- **新版第4批（19項）施工與驗收**：正式開關用語「開啟／關閉戰鬥動畫」、正常文字／極簡回退靜音（真載入錯誤仍可診斷）、三紀元懸賞及競技場手機主戰鬥區視窗定位、高維三連戰前置陣容卡跳過、虛空一次進場／不逐層搶視窗、iPhone 版面與 GM 動畫測試中心。驗收報告 `docs/COMBAT_ANIMATION_RENEWAL_BATCH4_19_ITEM_ACCEPTANCE_2026-10-18.md`。封箱以合併 main 後同 SHA 的正式 Battle／GM／Runtime／Pages 成功為準。
+- 第5批才做三紀元造型技術契約（不量產美術），第6批全模式最終整合。iPhone 真機發熱驗證仍留六批完成後。
 - 強制施工 SOP：每批完整施工 → 逐項自檢 → 最新 SHA Actions 驗收 → 一次封箱報告，不拆小批、不以舊 SHA 全綠冒充新 SHA、不改正式玩家數值／結算／存檔。

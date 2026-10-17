@@ -18,7 +18,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
    check(spriteRequests.length===0,'no sprite load on game startup');
    check(await page.evaluate(()=>{state.gm=false;return openGm3DPrototype()===false;}),'non GM denied');
    await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');
-   await frame.locator('#caseList').getByRole('button',{name:'角色與五種動作',exact:true}).click();
+   await frame.locator('#caseList').getByRole('button',{name:'角色動作預覽',exact:true}).click();
    await frame.locator('.gm-suit-status').filter({hasText:/回退|待製作/}).waitFor();
    const truth=await page.evaluate(()=>JSON.stringify(state)),storage=await page.evaluate(()=>JSON.stringify(localStorage));
    await frame.locator('[data-mode="free"]').click();await frame.locator('[data-pick="suit"] option[value="g005"]').waitFor({state:'attached'});
@@ -74,7 +74,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
      await page.route('**/gm-equipment-2_5d/v1/g005.webp',async route=>{if(fault==='404')return route.fulfill({status:404});const r=await route.fetch(),raw=await r.body();if(fault==='sha'){raw[20]^=255;return route.fulfill({response:r,body:raw});}return route.fulfill({response:r,body:raw});});
      if(fault==='decode')await page.addInitScript(()=>{window.createImageBitmap=async()=>{throw Error('injected decoder failure');};});
      if(fault==='decode')await page.evaluate(()=>{closeGm3DPrototype();openGm3DPrototype();});
-     await frame.locator('#caseList').getByRole('button',{name:'角色與五種動作',exact:true}).click();await frame.locator('.gm-suit-status').filter({hasText:fault==='decode'?'載入失敗':'已完成'}).waitFor();
+     await frame.locator('#caseList').getByRole('button',{name:'角色動作預覽',exact:true}).click();await frame.locator('.gm-suit-status').filter({hasText:fault==='decode'?'載入失敗':'已完成'}).waitFor();
      await frame.locator('[data-mode=free]').click();await frame.locator('[data-pick=suit]').selectOption('g005');await frame.locator('.gm-suit-status').filter({hasText:'載入失敗'}).waitFor();check(await frame.locator('.gm-suit-preview canvas').count()===0,'safe '+fault+' fallback');
      await page.unroute('**/gm-equipment-2_5d/v1/g005.webp');
     }
@@ -82,7 +82,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4188/index.html';
    await page.screenshot({path:`/tmp/gm-phase4-${viewport.width}.png`,fullPage:true});await page.close();
   }
   // Direct URL cannot obtain published sprites by pretending to be embedded.
-  const denied=await browser.newPage();await denied.goto(new URL('3d-test/?embedded=1',base).href);await denied.locator('#caseList').getByRole('button',{name:'角色與五種動作',exact:true}).click();await denied.locator('.gm-suit-status').filter({hasText:'需要 GM 授權'}).waitFor();check(await denied.locator('.gm-suit-preview canvas').count()===0,'direct page denied');await denied.close();
+  const denied=await browser.newPage();await denied.goto(new URL('3d-test/?embedded=1',base).href);await denied.locator('#caseList').getByRole('button',{name:'角色動作預覽',exact:true}).click();await denied.locator('.gm-suit-status').filter({hasText:'需要 GM 授權'}).waitFor();check(await denied.locator('.gm-suit-preview canvas').count()===0,'direct page denied');await denied.close();
   console.log('PASS GM published browser:',checks,'assertions, desktop/portrait/landscape, three real sprites, five actions, formal/free, revoke, reopen');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

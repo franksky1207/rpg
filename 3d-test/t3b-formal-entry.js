@@ -46,9 +46,13 @@ function mount(options){
   onRetire:()=>{options.host.hidden=true;},
   onReady:()=>{clearNotice();options.host.hidden=false;},
   onFallback:reason=>{
-   options.host.hidden=true;clearNotice();notice=document.createElement("p");notice.className="formal-b-visual-fallback";notice.dataset.status="unavailable";notice.setAttribute("role","status");
-   notice.textContent=reason==="text-or-minimal-policy"?"戰鬥視覺已關閉，保留文字戰鬥。":"戰鬥視覺暫不可用，已保留文字戰鬥。";
-   options.host.after(notice);options.onFallback?.(reason);
+   options.host.hidden=true;clearNotice();
+   // Expected text / minimal policies are normal UI choices, not failures.
+   if(reason!=="text-or-minimal-policy"){
+    notice=document.createElement("p");notice.className="formal-b-visual-fallback";notice.dataset.status="unavailable";notice.setAttribute("role","status");
+    notice.textContent="戰鬥動畫暫不可用，已安全保留文字戰鬥。";options.host.after(notice);
+   }
+   options.onFallback?.(reason);
   }
  });
  const managed=Object.freeze({...controller,dispose:()=>{clearNotice();controller.dispose();}});
@@ -71,7 +75,7 @@ function bindRoutes(options){
   if(!screen||document.hidden){retireScene();host?.remove();host=null;id=null;return;}
   if(options.wholeSuit===true&&!screen.querySelector('[data-player-sprite-toggle]')){
    const button=document.createElement('button');button.type='button';button.className='btn';button.dataset.playerSpriteToggle='1';
-   const label=()=>button.textContent=playerSpritesEnabled?'切換文字戰鬥':'顯示角色戰鬥';label();
+   const label=()=>button.textContent=playerSpritesEnabled?'關閉戰鬥動畫':'開啟戰鬥動畫';label();
    button.addEventListener('click',()=>{playerSpritesEnabled=!playerSpritesEnabled;label();active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();});
    (screen.querySelector('.combat-head')||screen).append(button);
   }
