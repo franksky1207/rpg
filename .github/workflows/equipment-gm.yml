@@ -24,7 +24,7 @@ jobs:
       - name: Verify original sources and deterministic GM publication
         run: |
           set -euo pipefail
-          python3 scripts/equipment-concepts.py validate
+          python3 scripts/formal-equipment-identities.py
           python3 scripts/equipment-sprites.py validate
           python3 scripts/equipment-gm-publication.py --check
           node --test tests/equipment-gm/runtime.test.mjs
