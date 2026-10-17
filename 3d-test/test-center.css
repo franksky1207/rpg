@@ -192,3 +192,26 @@ html{scroll-behavior:auto!important}
 .gm-b-hud progress{width:100%;accent-color:#b95050}
 .center-workspace.center-maximized>.gm-b-view-picker{display:none}
 @media(max-width:600px){.gm-b-controls label{flex:1 1 42%;}.gm-b-buttons{width:100%}.gm-b-simulation{padding-left:8px;padding-right:8px}}
+
+/* Batch 2-2: two real visual tabs, without obsolete 3D scene selectors. */
+.center-layout{display:flex;flex-direction:column;gap:12px}
+.center-sidebar{display:flex;flex-direction:row;align-items:center;max-height:none;overflow:visible;padding:9px 12px}
+.center-categories{display:flex;flex-direction:row;gap:10px;width:100%}
+.center-categories::before,.center-cases,.center-sidebar>label,.center-sidebar>input{display:none!important}
+.center-category{flex:1 1 0;justify-content:center;text-align:center;font-size:14px;min-height:48px}
+.center-category-count{display:none}
+.center-workspace{width:100%;min-width:0}
+.center-description{margin-bottom:10px}
+.center-workspace .prototype-host{height:clamp(380px,60vh,740px)}
+.center-workspace .stage{min-height:380px}
+.center-workspace .center-status{position:static!important}
+.center-workspace .center-status[hidden]{display:none!important}
+.center-fixtures{display:none!important}
+@media(max-width:770px){
+ .center-layout{display:flex;gap:10px}
+ .center-sidebar{height:auto;max-height:none;overflow:visible;padding:8px}
+ .center-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .center-category{min-width:0;font-size:13px}
+ .center-workspace .prototype-host{height:clamp(350px,56dvh,650px)}
+}
+@media(max-width:480px){.center-workspace .prototype-host{height:max(360px,55dvh)}}
