@@ -92,3 +92,36 @@
 | GM／極簡／背景／離線 | gmbackground、backgroundprogress、offlineprogress、offlinestatecore、offlinefarmtarget | GM gate、不同獎勵 owner、Schema 17 | 長時間與中斷恢復、雙重結算、記憶體 |
 
 所有列出的 owner 屬**程式路徑索引／待驗證工作表**，不是已確認完成的全模式動態追蹤。尚無裝置端 trace，不提供虛構的 FPS／CPU／記憶體數字。本批只處理戰鬥直接依賴；其他全遊戲大檢查留到六批完成後另案。
+
+## 十、續查：全模式實際程式路徑（以 main d5a65469908ce806c4966684f0abfb919038101c 為基準）
+本節重新讀取各 owner 的原始碼，將「確定的呼叫點」與「待測的行為」分開。所有描述皆為靜態程式證據，非 iPhone 性能實測。
+
+| 類別 | 已確認程式路徑／結算保護 | 第 2～3 批的具體驗收 |
+|---|---|---|
+| 銀河主線、連戰 | `battlepipeline.js` `runBattles`，`combatcore.js`，`combatpacing.js`；Fast Catch-up 可抑制逐場呈現，依政策更新／存檔 | 同 seed/輸入下 HP、事件、獎勵、時計時序不變，連戰中止和返回只結算一次 |
+| 宇宙主線、回顧 | `secondworldcombat.js` `runWorldCombatCore` + `visualContext.mode=main/review`；`secondworldmainline.js` 處理動畫與正式進度；回顧 `settlementReady=false` | 正式與回顧嚴格隔離，Boss／掉落／倍速符合現役 owner |
+| 高維主線 | `thirdworldcombat.js` `runCombatCore` + `visualContext.world=3`，`thirdworldprogress.js` `settleThirdWorldCombatResult` 以 WeakSet 拒絕重複 settlement basis、檢查 Boss 永久 HP | 極簡／動畫／背景切換不得破壞永久 HP、盾、獎勵或重複結算 |
+| 異宇宙 | `alternateuniverseui.js` 的 `presentCombat` 呼叫 `animateStructuredCombatPresentation`；`alternateuniversecombat.js` 的 `runAlternateUniverseCombat` 呼叫 `runWorldCombatCore`，專用 `settleAlternateUniverseCombat` 核對 attemptId／depth | 同一場動畫重播、退出、回復前景不會建立第二個 settlement；量測呈現排程 |
+| 懸賞 | `dungeoncore.js` `runWorldCombatCore`，`visualContext.mode=bounty` | 計次與獎勵不可因動畫省略而重算 |
+| 競技場 | `dungeonarena.js`、`thirdworldarena.js` 等專用 owner | 不改正式對戰規則、每日次數及進度 |
+| 虛空 | `dungeonvoid.js` `runCombatCore`，`visualContext.mode=void` | 永續流程與退出清理不可改計算 |
+| 鏡像 | `mirrorcombatcore.js`、`mirrordungeonrun.js` | 鏡像輸入與獎勵 owner 分開比對 |
+| 銀河／宇宙災厄 | `calamityrun.js`、`secondworldcalamityrun.js` 都使用 `createContinuousRunInfrastructure({flowKind:'calamity'})`；宇宙災厄 `runCombatCore` | 不得雙開 flow，同一災厄達終止條件後只完成一次 |
+| 特殊怪 | `specialcore.js` `runCombatCore` + `visualContext.mode=special` | 進入與返回主線時無重複監聽 |
+| 背景、Fast Catch-up | `backgroundprogress.js` 的 flow owner、UI 間隔 5/10/25/50、checkpoint 50/100/200、present every 100、pagehide/visibility/focus；主線由 `combatpacing.js` sleep 轉接 | 累積時間不重複消耗，清理舊 flow，事件切換不中斷正式時計 |
+| 離線收益 | `offlineprogress.js` 的 `offlineSettlementBusy`、rollback 與 heartbeat；`offlinefarmtarget.js` 寫入多種生命週期 checkpoint；`offlinestatecore.js` 保護樣本來源 | 離線 reward 與背景 reward 不雙領，時間回撥與結算錯誤保持回退 |
+| 呈現與 GM | `combatfx.js` structured playback、`offsetWidth` 動畫重啟、MutationObserver；`3d-test/gm-battle-simulation.js` 保留 G005／G007／G018 選單 | 計數動畫／observer/浮字/計時器、回場清理與 GM sandbox 不干涉正式遊戲 |
+
+### 異宇宙效能候選路徑
+`alternateuniverseui.js` 啟動 audio run、先執行 `runAlternateUniverseCombat({logs:true,preparePresentation:true})`，再經 `presentCombat` 使用結構化動畫，最後由獨立 settlement owner 落帳。這與共用核心並不矛盾，但呈現前後的準備與清理可能不同。 
+`combatfx.js` 的 `restartFxClass`／`directPulse` 會讀取 `offsetWidth` 強制重新觸發 CSS animation，同檔還有 animationstart/animationend listeners 和 HP observer。此為**靜態效能風險**，尚無證據顯示哪個函式在手機上最耗 CPU；第 3 批必須量測每事件觸發頻率、每 frame layout/paint、記憶體及 GPU。
+### 必須使用的無侵入量測矩陣
+1. 桌機 Chromium：同等事件長度的主線／宇宙／高維／異宇宙，記錄 1x 與 GM 1.5x／2x、動畫開關、極簡有無的 frame duration p50/p95/p99、long task、DOM node 數、performance memory 可取得值、Observer callback 次數及資源釋放。
+2. 背景：切出／回來、blur/focus、pagehide/pageshow、快速反覆操作、延遲返回、Fast Catch-up 可重現的場次；每場唯一 ID 對照正式 settlement ledger、樣本與時鐘。
+3. iPhone Safari：相同帳號與相同敵人，固定畫面亮度、電源模式、環境及測試時間，對照動畫啟用／關閉下 FPS 趨勢、熱度描述與重複進出後效能。GitHub CI **無法代理真機的溫度與熱節流**。
+4. 結果分成「靜態程式證據」「自動化模擬」「桌機瀏覽器實測」「iPhone 真機實測」，嚴禁以其中一類冒充另一類。
+
+### 第 1 批驗收範圍判斷
+- 這次已補實際 owner 與主要呼叫點；現階段仍欠缺所有模式的執行級 trace、全套跨模式動態效能數據及 iPhone 真機測試。
+- 第 1 批**維持未封箱**，不把未取得的效能數值寫成已完成。允許在後續正式效能施工前先追加可重現的非侵入性量測工具，但不得任意改傷害、HP、戰鬥時鐘、獎勵、Schema 或換裝資料。
+- T2 fixture 修復分別透過 PR #15、#16 合併；最新 main d5a6546 的完整 Actions 必須按實際完成狀態重新核對，不能沿用前一個 SHA 全綠的推論。
