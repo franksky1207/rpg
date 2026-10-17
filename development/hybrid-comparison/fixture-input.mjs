@@ -1,5 +1,5 @@
 /* T2-B1 offline input only. Read JSON/source text; never execute formal owners. */
-export const FIXTURE_SHA='5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99';
+export const FIXTURE_SHA='7b551e35c24ac6e9ec676d9d9534f6bd30ebcde026ac945826d979e9a15b1820';
 export const CONTROLS_SHA='0a5f25b26f3e9500125fe406a358c53da6d722680c03ac33ffd85dc9d4dd6e27';
 export const SOURCE_PATHS=Object.freeze(['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json']);
 export const CASE_IDS=Object.freeze(['normal-baseline','elite-baseline','boss-baseline','boss-player-defeat','elite-effects-owner-input']);
