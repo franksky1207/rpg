@@ -16,7 +16,10 @@ assert.match(text,/不製作210套角色/);
 assert.doesNotMatch(text,/G20＝G096|210套兩張概念圖全量產/);
 const changed=run("diff","--name-only",base,"HEAD").split("\n").filter(Boolean);
 const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlineprogress|ui|engine|balance|audio|gm3dprototype)\.js$/,/^index\.html$/,/^assets\/gm-equipment-2_5d\//,/^assets\/3d\//,/^3d-test\//,/^development\/equipment-2_5d\//];
-const unexpected=changed.filter(p=>p!=="index.html"&&protectedRoots.some(re=>re.test(p)));
+// Batch 4 explicitly authorizes only these GM presentation entrypoints.
+const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js"]);
+const unexpected=changed.filter(p=>p!=="index.html"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
+for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
  // Permit only independently approved Batch 2 and Batch 3 script cache tokens.
