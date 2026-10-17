@@ -2,7 +2,7 @@
 'use strict';
 // Batch 2-3: read-only inventory of the legacy preview's current runtime closure.
 // This gate deliberately never removes assets or changes formal runtime behavior.
-const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const exists=p=>fs.existsSync(path.join(root,p));
@@ -39,6 +39,9 @@ for(const p of [...paths,...vendor]){
  const entry=(manifest.files||{})[p]||(manifest.vendor||{})[p];
  assert.ok(Number.isSafeInteger(entry.bytes)&&entry.bytes>=0,'Invalid bytes: '+p);
  assert.match(entry.sha256,/^[a-f0-9]{64}$/,'Invalid digest: '+p);
+ const bytes=fs.readFileSync(path.join(root,p));
+ assert.equal(bytes.length,entry.bytes,'Manifest size drift: '+p);
+ assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),entry.sha256,'Manifest SHA drift: '+p);
 }
 const result={
  batch:'2-3',status:'active-dependencies-not-retired',
