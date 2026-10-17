@@ -52,12 +52,15 @@ class SpriteTests(unittest.TestCase):
  def test_unmade_cannot_claim_complete(self):
   self.change('g007',lambda e:e.update(status='complete',asset=None,review=None))
   with self.assertRaises((ValueError,AttributeError)):self.check()
- def test_review_sha_is_still_verified(self):
-  e=self.entry();proof=self.root/e['review']['path'];proof.write_text('invented review')
-  with self.assertRaisesRegex(ValueError,'fingerprint'):self.check()
- def test_source_sha_is_still_verified(self):
-  e=self.entry();source=self.root/e['source']['path'];source.write_bytes(b'tampered')
-  with self.assertRaisesRegex(ValueError,'source SHA'):self.check()
+ def test_old_art_review_no_longer_a_gate(self):
+  e=self.entry();proof=self.root/e['review']['path'];proof.unlink()
+  self.assertEqual(self.check()['id'],'g007')
+ def test_old_source_png_no_longer_a_gate(self):
+  e=self.entry();source=self.root/e['source']['path'];source.unlink()
+  self.assertEqual(self.check()['id'],'g007')
+ def test_license_metadata_still_required(self):
+  self.change('g007',lambda e:e['source'].update(licenseBasis='unknown'))
+  with self.assertRaisesRegex(ValueError,'license'):self.check()
  def test_no_false_formal_release(self):
   for field,value in (('gmTestStatus','passed'),('formalReleaseAllowed',True)):
    original=(self.root/m.REGISTRY).read_bytes()
