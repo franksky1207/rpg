@@ -1,0 +1,26 @@
+name: Batch 1 Animation Frame Trace
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Measure actual isolated presenter frame and layout traces
+        run: node tests/runtime/batch1-animation-frame-trace.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch1-animation-frame-trace
+          path: batch1-animation-frame-trace.json
+          if-no-files-found: warn
