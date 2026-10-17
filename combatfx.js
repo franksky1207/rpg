@@ -551,7 +551,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   hpSyncQueued=true;
   queueMicrotask(()=>{hpSyncQueued=false;syncCombatHpDom();});
  });
- hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
+ hpObserver.observe(document.getElementById("main")||document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
  window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
  window.COMBAT_FULL_HP_LOCK_PRESENTATION_VERSION=1;
