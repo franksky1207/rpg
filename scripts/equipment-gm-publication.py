@@ -64,6 +64,9 @@ def build():
                 # rewriting a live byte-locked catalog solely for serialization.
                 assert json.loads(actual)==json.loads(b),p+' content stale'
             else:
+                if actual!=b and p=='development/equipment-2_5d/gm-publication.json':
+                    prior=json.loads(actual); expected=json.loads(b)
+                    print('GM publication lock differences:',{key:(prior.get('files',{}).get(key),value) for key,value in expected.get('files',{}).items() if prior.get('files',{}).get(key)!=value},file=sys.stderr)
                 assert actual==b,p+' stale'
     else:
         for p,b in outputs.items():(ROOT/p).parent.mkdir(parents=True,exist_ok=True);(ROOT/p).write_bytes(b)
