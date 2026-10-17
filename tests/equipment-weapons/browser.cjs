@@ -11,10 +11,10 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  // checkpoint heartbeat. Timers and performance.now still advance normally.
  await page.clock.setFixedTime(new Date(await page.evaluate(()=>JSON.parse(localStorage.getItem('frank_text_rpg_offline_checkpoint')).ts)));
  await page.evaluate(async()=>{await ensureCivilizationScriptGroup('gm');state.gm=true;state.equipment.armor=null;openGm3DPrototype();});
- const frame=await page.waitForSelector('#gm3dPrototypeOverlay iframe').then(e=>e.contentFrame());await frame.waitForFunction(()=>Civilization3DTestCenter?.version===5);
- assert.equal(await frame.locator('#caseList .center-case').count(),31);assert.equal(await frame.evaluate(()=>Civilization3DTestCenter.categoryIds.length),8);
+ const frame=await page.waitForSelector('#gm3dPrototypeOverlay iframe').then(e=>e.contentFrame());await frame.waitForFunction(()=>Civilization3DTestCenter?.version===6);
+ assert.equal(await frame.locator('#categoryList .center-category').count(),2);assert.equal(await frame.evaluate(()=>Civilization3DTestCenter.categoryIds.length),2);
  let truth,storage;
- await frame.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();
+ await frame.locator('#categoryList').getByRole('button',{name:'戰場與對戰'}).click();
  const diag=()=>frame.evaluate(()=>document.getElementById('prototypeHost').__gmBattleSimulation.diagnostics());
  const ready=()=>frame.waitForFunction(()=>{const d=document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics();return d?.current?.frames>0&&!d.rendererLoading&&!d.failed&&!document.querySelector('[data-b=play]').disabled;},null,{timeout:90000});
  console.log('GM mounted',viewport.width);await frame.locator('[data-b=appearance]').filter({hasText:'回退'}).waitFor({timeout:15000}).catch(async e=>{console.log('mount failure',await frame.locator('body').innerText(),errors);throw e;});console.log('initial fallback',viewport.width);await ready();
