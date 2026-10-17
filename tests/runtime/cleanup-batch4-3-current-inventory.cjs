@@ -15,4 +15,5 @@ assert.equal(total,inventory.totalBytes,"Inventory byte total");
 assert.equal(inventory.largestFileBytes,Math.max(...inventory.files.map(row=>row.bytes)),"Largest retained file");
 const walk=dir=>fs.existsSync(dir)?fs.readdirSync(dir,{withFileTypes:true}).flatMap(d=>d.isDirectory()?walk(path.join(dir,d.name)):[path.join(dir,d.name)]):[];
 for(const p of walk(path.join(root,"development")))assert.ok(!p.endsWith(".blend"),"Retired Blender still tracked: "+p);
+for(const p of ["development/hybrid-comparison/t2b3-v1/inventory.json","development/hybrid-comparison/t2b3-v1/inventory.py"])assert.equal(fs.existsSync(path.join(root,p)),false,"Duplicate retired B3 authoring inventory must stay absent: "+p);
 console.log("PASS batch 4-3 current-only assets: 174 manifest; 165 SHA/size verified B2 files; no development Blender");
