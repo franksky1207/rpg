@@ -31,6 +31,8 @@ jobs:
           node tests/equipment-gm/publication.cjs
           node tests/runtime/t4-preview-retirement.cjs
           node scripts/build-publish-dry-run.cjs
+          # CI-only sandbox assets: NOT added to official Pages release.
+          node scripts/stage-hybrid-preview.cjs
       - name: Install browser
         run: |
           npm install --prefix /tmp/equipment-gm-test --no-save playwright@1.55.0
