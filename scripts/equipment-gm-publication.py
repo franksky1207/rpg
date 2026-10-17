@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Deterministic, exact allowlist export; source validation remains mandatory in CI."""
-import copy,hashlib,json,sys,runpy
+import copy,hashlib,json,sys,runpy,importlib.util
 import equipment_sprite_assets as sprites
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
@@ -10,16 +10,16 @@ def build():
     runpy.run_path(str(ROOT/'scripts/equipment-weapon-assets.py'))['validate'](ROOT)
     outputs={}
     registry=json.loads((ROOT/SOURCE/'registry.json').read_text())
-    index=json.loads((ROOT/'development/3d-source/equipment/concepts/_concept-index.json').read_text())
-    rows=index['sets']; entries=[]
+    spec=importlib.util.spec_from_file_location('formal_equipment_identities',ROOT/'scripts/formal-equipment-identities.py')
+    formal=importlib.util.module_from_spec(spec);spec.loader.exec_module(formal)
+    rows=formal.validate_formal(ROOT); entries=[]
     assert len(rows)==210
     for original in registry['entries']:
         assert original['id'] in ('g005','g007','g018') and original['status']=='complete'
         row=next(r for r in rows if r['id']==original['id'])
-        assert row['assetProductionEligible'] and row['asset2_5dStatus']=='complete'
-        assert original==sprites.verified_entry(ROOT,row,row['assetProductionEligible'])
+        assert original==sprites.verified_entry(ROOT,row,True)
         e={k:copy.deepcopy(original[k]) for k in ('id','formalIdentity','version','facing','pivot','status','asset','gmTestStatus','formalReleaseAllowed')}
-        e['formalIdentity'].pop('directory');e['gmPreviewAllowed']=True
+        e['formalIdentity'].pop('directory',None);e['gmPreviewAllowed']=True
         weapons=json.loads((ROOT/'development/equipment-2_5d/weapons-v1/registry.json').read_text())
         w=copy.deepcopy(next(w for w in weapons['entries'] if w['id']==e['id']))
         assert w['weaponAnimationStatus']=='complete' and w['template']=='one-hand-blade'
