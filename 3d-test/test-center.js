@@ -2,47 +2,23 @@
 (function(){
 "use strict";
 /* Internal IDs retained for automated checks; user menu contains visual scenes only. */
+// Only published, operable 2.5D previews belong in the GM menu.
+// Legacy 3D symbolic scenes are deliberately unreachable; dependent internals
+// are removed only with the separate 2-3 runtime dependency audit.
 const categories=[
-["home","主畫面與紀元場景"],["map","冒險與宇宙地圖"],["character","玩家、裝備與養成"],
-["combat","戰鬥、動畫與特效"],["dungeon","副本與競技場"],["frontier","文明災厄與異宇宙"],["chronicle","文明紀錄與轉生"],["service","設定與管理"]];
+ ["character","角色與動作"],["combat","戰場與對戰"]
+];
 const cases=[
-{id:"B-03-HOME",cat:"home",title:"三紀元主畫面",kind:"epoch",detail:"觀察銀河、宇宙與高維紀元的立體場景。"},
-{id:"C-05-GALAXY-MAP",cat:"map",title:"銀河紀元星圖",kind:"galaxy",detail:"觀察銀河十大區域與怪物象徵，可調整區域進度與聚焦位置。"},
-{id:"C-06-UNIVERSE-MAP",cat:"map",title:"宇宙紀元星圖",kind:"universe",detail:"觀察宇宙十大區域與一百名 Boss 的立體分布。"},
-{id:"C-07-HIGHER",cat:"map",title:"高維紀元戰線",kind:"higher",detail:"觀察十名高維存在與持續生命狀態的立體象徵。"},
-{id:"C-08-CHARACTER",cat:"character",title:"角色全身展示",kind:"character",detail:"查看正式人物與已製作的裝備；正式與自由資料相互隔離。"},
-{id:"C-09-EQUIPMENT",cat:"character",title:"五槽裝備陳列",kind:"equipment",detail:"查看五個穿戴槽；古代科技遺址已採用正式模型，其他裝備保留替代外觀。"},
-{id:"C-10-FORGE",cat:"character",title:"強化鍛造台",kind:"forge",detail:"五個裝備欄位的強化進度立體展示，實際強化仍由正式系統處理。"},
-{id:"C-11-SPECIALIZATION",cat:"character",title:"八種專精星環",kind:"specialization",detail:"八種專精的立體能量節點；僅展示進度。"},
-{id:"C-11-MARKS",cat:"character",title:"十印記星環",kind:"marks",detail:"十種印記的立體封印節點；不影響正式效果。"},
-{id:"C-11-CIVILIZATION",cat:"character",title:"文明等級核心",kind:"civilization",detail:"文明等級的十階立體光環。"},
-{id:"C-11-CORE",cat:"character",title:"界弦核心",kind:"core",detail:"高維核心的十階立體能量結構。"},
-{id:"C-12-DUNGEON",cat:"dungeon",title:"副本作戰中心",kind:"dungeon-hub",detail:"副本總覽的立體作戰中心與入口。"},
-{id:"C-12-BOUNTY",cat:"dungeon",title:"懸賞戰準備區",kind:"dungeon-bounty",detail:"銀河與宇宙的懸賞任務立體部署台。"},
-{id:"C-12-ARENA",cat:"dungeon",title:"競技場",kind:"dungeon-arena",detail:"銀河／宇宙競技場與高維定相、異相競技場；依紀元切換。"},
-{id:"C-13-MIRROR",cat:"dungeon",title:"鏡像戰紀錄",kind:"advanced-mirror",detail:"觀察鏡像戰的紀錄與立體映照。"},
-{id:"C-13-VOID",cat:"dungeon",title:"虛空幻境樓層",kind:"advanced-void",detail:"立體展示虛空幻境的樓層攀升。"},
-{id:"C-14-GALAXY-CALAMITY",cat:"frontier",title:"銀河文明災厄封印",kind:"frontier-galaxy",detail:"銀河十道災厄封印的立體排列。"},
-{id:"C-14-UNIVERSE-CALAMITY",cat:"frontier",title:"宇宙文明災厄封印",kind:"frontier-universe",detail:"宇宙十大文明災厄封印的立體排列。"},
-{id:"C-14-ALTERNATE",cat:"frontier",title:"異宇宙前線",kind:"frontier-alternate",detail:"異宇宙層域進度的立體前線。"},
-{id:"C-15-BATTLE",cat:"combat",title:"2.5D 戰鬥模擬",kind:"battle-battle",detail:"B 方案沙盒模擬；亦保留原戰場生命顯示與正式唯讀快照。"},
-{id:"C-15-SHIELD",cat:"combat",title:"護盾防護演出",kind:"battle-shield",detail:"立體防護盾與生命顯示的視覺效果。"},
-{id:"C-15-ENCOUNTER",cat:"combat",title:"特殊遭遇演出",kind:"battle-encounter",detail:"特殊敵人的立體警示演出。"},
-{id:"C-15-SETTLEMENT",cat:"combat",title:"結算與戰利品",kind:"battle-settlement",detail:"戰鬥結束後的立體戰利品視覺。"},
-{id:"C-16-CHRONICLE",cat:"chronicle",title:"文明戰線紀錄",kind:"chronicle-record",detail:"展示三紀元歷史紀錄的立體視覺，不變更回顧進度。"},
-{id:"C-16-STORY",cat:"chronicle",title:"文明劇情閱讀",kind:"chronicle-story",detail:"劇情文字與立體歷史書頁的視覺組合，劇情播放仍由正式介面處理。"},
-{id:"C-16-REINCARNATION",cat:"chronicle",title:"文明轉生",kind:"chronicle-reincarnation",detail:"文明輪迴立體象徵，正式轉生條件、確認及不可逆交易不受影響。"},
-{id:"C-17-SETTINGS",cat:"service",title:"設定中心",kind:"service-settings",detail:"設定介面的立體控制台；原設定項目仍由正式頁面操作。"},
-{id:"C-17-GUIDE",cat:"service",title:"遊戲說明",kind:"service-guide",detail:"說明頁面的立體視覺；玩法文字與規則仍以正式內容為準。"},
-{id:"C-17-ACCOUNT",cat:"service",title:"帳號中心",kind:"service-account",detail:"帳號立體視覺展示；不執行登入登出。"},
-{id:"C-17-CLOUD",cat:"service",title:"雲端存檔中心",kind:"service-cloud",detail:"雲端存檔立體視覺；不執行資料上傳或下載。"},
-{id:"C-17-GM",cat:"service",title:"GM 管理中心",kind:"service-gm",detail:"管理中心的立體視覺，不執行管理或資料修改。"} 
+ {id:"C-08-CHARACTER",cat:"character",title:"角色與五種動作",kind:"character",
+  detail:"查看目前可用的 2.5D 角色、待機／攻擊／受擊／閃避／死亡與重播；G005、G007、G018 是既有測試素材，並非未來三紀元角色。"},
+ {id:"C-15-BATTLE",cat:"combat",title:"2.5D 戰鬥模擬",kind:"battle-battle",
+  detail:"查看已實作的戰場、角色、敵人、護盾及血量提示；可測普通怪、菁英怪、Boss 與播放控制，不發放收益。"}
 ];
 const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");
 const quality=$("quality"),toggle=$("toggle"),caseList=$("caseList"),categoryList=$("categoryList"),search=$("caseSearch");
 
-let runtime=null,serial=0,disabled=false,selected="B-03-HOME",category="ALL";
+let runtime=null,serial=0,disabled=false,selected="C-08-CHARACTER",category="character";
 let snapshot={world:1,selectedMap:0,regionProgress:1};
 
 const scenarioKinds=new Set(["galaxy","universe","higher","frontier-galaxy","frontier-universe","frontier-alternate","dungeon-hub","dungeon-bounty","dungeon-arena","advanced-mirror","advanced-void","battle-battle","battle-shield","battle-encounter","battle-settlement"]);
@@ -275,21 +251,21 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 function renderCategories(){
   categoryList.replaceChildren();
   const counts=Object.fromEntries(categories.map(([id])=>[id,cases.filter(c=>c.cat===id).length]));
-  for(const [id,title] of [["ALL","全部場景"],...categories]){
+  for(const [id,title] of categories{
     const btn=document.createElement("button");btn.type="button";btn.className="center-category"+(category===id?" active":"");
     btn.setAttribute("aria-pressed",String(category===id));
-    const count=id==="ALL"?cases.length:counts[id];
+    const count=counts[id];
     const name=document.createElement("span");name.className="center-category-name";name.textContent=title;
     const number=document.createElement("span");number.className="center-category-count";number.textContent=String(count);
     btn.append(name,number);
-    btn.onclick=()=>{category=id;if(wholeSuitView){wholeSuitView=false;start();}renderCategories();renderCases();};
+    btn.onclick=()=>{category=id;selected=cases.find(c=>c.cat===category).id;renderCategories();renderCases();renderInfo();start();};
     categoryList.append(btn);
   }
 }
 function renderCases(){
  caseList.replaceChildren();
  const q=search.value.trim().toLowerCase();
- for(const c of cases.filter(c=>(category==="ALL"||c.cat===category)&&[c.title,c.detail,categories.find(([id])=>id===c.cat)?.[1]].join(" ").toLowerCase().includes(q))){
+ for(const c of cases.filter(c=>c.cat===category&&[c.title,c.detail,categories.find(([id])=>id===c.cat)?.[1]].join(" ").toLowerCase().includes(q))){
    const btn=document.createElement("button");btn.type="button";btn.className="center-case"+(selected===c.id?" active":"");
    btn.setAttribute("aria-pressed",String(selected===c.id));
    const label=document.createElement("span");label.className="center-case-label";label.textContent=c.title;
@@ -297,7 +273,7 @@ function renderCases(){
    btn.onclick=()=>{wholeSuitView=false;selected=c.id;renderCases();renderInfo();start();};
    caseList.append(btn);
  }
- if(!caseList.children.length){const p=document.createElement("p");p.textContent="這裡還沒有可以觀看的 3D 場景。";caseList.append(p);}
+ if(!caseList.children.length){const p=document.createElement("p");p.textContent="沒有符合搜尋條件的測試項目。";caseList.append(p);}
 }
 function renderInfo(){
  const c=entry();
@@ -341,40 +317,36 @@ function safeStop(){
 function fail(reason){
  status.hidden=false;
  fallback.hidden=false;host.hidden=true;fallbackReason.textContent=String(reason);
- status.textContent="3D 安全模式：可重新啟動，或返回 GM";
+ status.textContent="預覽安全模式：可重新啟動或返回 GM";
 }
 async function start(){
  safeStop();
  syncScenarioPanel();
  const ticket=serial;
- if(disabled){fail("3D 已停用，不影響正式遊戲。");return;}
- if(entry().kind==='character'){
-  const picker=document.createElement('div');picker.id='gmWholeSuitPicker';picker.className='gm-b-view-picker';
-  for(const [value,label] of [[false,'原 3D 角色'],[true,'2.5D 角色與動畫']]){const b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('aria-pressed',String(wholeSuitView===value));b.onclick=()=>{wholeSuitView=value;start();};picker.append(b);}
-  document.getElementById('centerWorkspace').insertBefore(picker,document.querySelector('#centerWorkspace .stage'));
- }
- if(wholeSuitView&&entry().kind==='battle-battle'){const back=document.createElement('button');back.id='gmWholeSuitPicker';back.type='button';back.textContent='返回戰鬥模擬';back.onclick=()=>{wholeSuitView=false;start();};document.getElementById('centerWorkspace').insertBefore(back,document.querySelector('#centerWorkspace .stage'));}
- if(wholeSuitView&&['character','battle-battle'].includes(entry().kind)){
-  appearancePanel.hidden=true;scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 角色展示：不影響正式戰鬥與角色資料';
-  const abort=new AbortController();let view=null;runtime={dispose:()=>{abort.abort();view?.dispose();},resize:()=>view?.resize()};
-  try{const m=await import('./gm-whole-suit.mjs?v=20261015-thrust1');if(ticket!==serial)return;view=await m.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial)view.dispose();}
-  catch(_){if(ticket===serial)fail('角色展示無法載入，請返回後重試。');}
+ if(disabled){fail("預覽已停用，不影響正式遊戲。");return;}
+ // Both user-visible choices mount actual 2.5D systems, never symbolic 3D scenes.
+ appearancePanel.hidden=true;scenarioPanel.hidden=true;
+ fallback.hidden=true;host.hidden=false;status.hidden=false;
+ const abort=new AbortController();let view=null;
+ runtime={dispose:()=>{abort.abort();view?.dispose();},resize:()=>view?.resize?.(),
+   setQuality:value=>view?.setQuality?.(value)};
+ if(entry().kind==="character"){
+  status.textContent="GM 角色預覽：僅限現有測試素材；不修改正式裝備或存檔。";
+  try{const m=await import('./gm-whole-suit.mjs?v=20261015-thrust1');
+   if(ticket!==serial)return;view=await m.mount({host,signal:abort.signal,quality:quality.value});
+   if(ticket!==serial)view.dispose();}
+  catch(_){if(ticket===serial)fail("角色預覽無法載入，請重新啟動。");}
   return;
  }
- syncAppearancePanel();
  if(entry().kind==="battle-battle"){
-  const picker=document.createElement('div');picker.id='gmBattleViewPicker';picker.className='gm-b-view-picker';
-  for(const [simulation,label] of [[true,'2.5D 戰鬥模擬'],[false,'戰場與生命顯示']]){const button=document.createElement('button');button.type='button';button.textContent=label;button.setAttribute('aria-pressed',String(battleSimulationView===simulation));button.onclick=()=>{wholeSuitView=false;battleSimulationView=simulation;start();};picker.append(button);}
-  const spriteButton=document.createElement('button');spriteButton.type='button';spriteButton.textContent='2.5D 角色與動畫';spriteButton.onclick=()=>{wholeSuitView=true;start();};picker.append(spriteButton);
-  document.getElementById('centerWorkspace').insertBefore(picker,document.querySelector('#centerWorkspace .stage'));
-  if(battleSimulationView){
-   scenarioPanel.hidden=true;fallback.hidden=true;host.hidden=false;status.hidden=false;status.textContent='GM 沙盒：B 方案，不影響正式角色、戰鬥或音效';
-   const abort=new AbortController();let simulation=null;runtime={dispose:()=>{abort.abort();simulation?.dispose();},setQuality:value=>simulation?.setQuality(value)};
-   try{const module=await import('./gm-battle-simulation.js?v=20261015-thrust1');if(ticket!==serial)return;simulation=await module.mount({host,signal:abort.signal,quality:quality.value});if(ticket!==serial){simulation.dispose();return;}}
-   catch(error){if(ticket===serial)fail('2.5D 模擬無法載入：'+error.message);}
-   return;
-  }
+  status.textContent="GM 2.5D 沙盒：不影響正式戰鬥或音效。";
+  try{const m=await import('./gm-battle-simulation.js?v=20261015-thrust1');
+   if(ticket!==serial)return;view=await m.mount({host,signal:abort.signal,quality:quality.value});
+   if(ticket!==serial)view.dispose();}
+  catch(error){if(ticket===serial)fail("2.5D 戰鬥模擬無法載入："+error.message);}
+  return;
  }
+ fail("沒有可用的視覺測試項目。");return;
  if(!["engine","scenes","runtime","appearance"].every(kind=>window.Civilization3DLoader.ready(kind))){
   try{await window.Civilization3DLoader.load();}catch(error){if(ticket===serial)fail(error.message);return;}
  }
@@ -492,19 +464,18 @@ $("alternateUniverseNext").onclick=()=>jumpAlternate(1,0);
 $("alternateDepthPrev").onclick=()=>jumpAlternate(0,-1);
 $("alternateDepthNext").onclick=()=>jumpAlternate(0,1);
 search.oninput=renderCases;
-toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用 3D":"停用 3D";start();};
-$("restart").onclick=()=>{disabled=false;toggle.textContent="停用 3D";start();};
+toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用預覽":"停用預覽";start();};
+$("restart").onclick=()=>{disabled=false;toggle.textContent="停用預覽";start();};
 quality.onchange=()=>start();
 window.addEventListener("pagehide",()=>{setMaximized(false);safeStop();});
 window.addEventListener("keydown",event=>{
  if(event.key==="Escape"&&maximized){event.preventDefault();event.stopImmediatePropagation();setMaximized(false);return;}
  if(embedded&&event.key==="Escape"){event.preventDefault();try{window.parent?.postMessage({type:"civilization3d:close"},location.origin);}catch(_){}}
 });
-window.Civilization3DTestCenter=Object.freeze({version:5,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
+window.Civilization3DTestCenter=Object.freeze({version:6,caseIds:cases.map(c=>c.id),categoryIds:categories.map(c=>c[0]),getCurrent:()=>selected,getFixture:()=>({...snapshot,equipmentCatalogCounts:equipmentCatalog?{galaxy:equipmentCatalog[1]?.reduce((n,g)=>n+g.entries.length,0),universe:equipmentCatalog[2]?.reduce((n,g)=>n+g.entries.length,0),higher:equipmentCatalog[3]?.[0]?.entries?.length}:null,selectedEquipmentNames:activeEquipmentSet()?.names||null,appearanceMode,formalAppearanceReady:!!formalAppearance,scenarioMode,formalReady:!!formalScenario,alternateScenarioState,calamitySimulation:sceneCalamityStates(calWorld()),dungeonVisual:{...dungeonVisual},alternateSegment:alternateSelection.segment,alternateUniverse:alternateSelection.universe,alternateDepth:alternateSelection.depth}),isMaximized:()=>maximized});
 renderCategories();renderCases();renderInfo();
 (async()=>{
  try{
-  await window.Civilization3DLoader.load();
   start();
   if(embedded)requestAppearance();
  }catch(error){fail(error.message);}
