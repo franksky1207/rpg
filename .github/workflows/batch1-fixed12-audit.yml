@@ -1,0 +1,31 @@
+name: Batch 1 Fixed 12 Audit Gate
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  twelve-area-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium regression runner
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute fixed twelve-area audit
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch1-fixed12-http.log 2>&1 &
+          trap 'kill $(jobs -pr) 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .2; done
+          node scripts/batch1-fixed12-evidence.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch1-fixed12-evidence
+          path: batch1-fixed12-evidence.json
+          if-no-files-found: warn
