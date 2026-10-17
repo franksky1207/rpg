@@ -5,10 +5,10 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  const browser=await chromium.launch({headless:true,...(fs.existsSync('/usr/bin/chromium')?{executablePath:'/usr/bin/chromium'}:{}),args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});const reports=[];
  try{for(const viewport of [{width:1280,height:800},{width:390,height:844},{width:844,height:390}].filter(v=>!process.env.GM_B_WIDTH||v.width===Number(process.env.GM_B_WIDTH))){
  const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[],requests=[];page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>requests.push(r.url()));
- await page.goto(new URL('3d-test/',base).href,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>Civilization3DTestCenter?.version===5);
- assert.equal(await page.locator('#caseList .center-case').count(),31);assert.equal(await page.evaluate(()=>Civilization3DTestCenter.categoryIds.length),8);
+ await page.goto(new URL('3d-test/',base).href,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>Civilization3DTestCenter?.version===6);
+ assert.equal(await page.locator('#categoryList .center-category').count(),2);assert.equal(await page.evaluate(()=>Civilization3DTestCenter.categoryIds.length),2);
  const stored=await page.evaluate(()=>JSON.stringify(localStorage));
- await page.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();
+ await page.locator('#categoryList').getByRole('button',{name:'戰場與對戰'}).click();
  const ready=async()=>page.waitForFunction(()=>document.querySelector('[data-b="stage"]')?.dataset.renderReady==='true'&&!document.querySelector('[data-b="play"]').disabled,null,{timeout:90000});
  await ready();const diag=()=>page.evaluate(()=>{const d=document.getElementById('prototypeHost').__gmBattleSimulation.diagnostics();return {scheme:d.scheme,failed:d.failed,rendererLoading:d.rendererLoading,playback:d.playback,resources:d.renderer,current:d.current,mode:d.frame?.mode,caseId:d.frame?.selection?.caseId};});
  assert.equal((await diag()).current.actorKinds.player,'NativeActor');assert.equal((await diag()).current.actorKinds.enemy,'AtlasActor');
@@ -51,8 +51,9 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  const scroll=await page.evaluate(()=>({x:scrollX,y:scrollY}));await page.locator('#maximizePreview').click();assert.equal(await page.evaluate(()=>Civilization3DTestCenter.isMaximized()),true);
  const bounds=await page.evaluate(()=>({overflow:document.querySelector('.gm-b-simulation').scrollWidth-document.querySelector('.gm-b-simulation').clientWidth,buttons:[...document.querySelectorAll('.gm-b-buttons button')].map(b=>{const r=b.getBoundingClientRect();return [r.left,r.right];})}));assert.ok(bounds.overflow<=2);assert.ok(bounds.buttons.every(([l,r])=>l>=0&&r<=viewport.width+1));
  await page.locator('#maximizePreview').click();await page.waitForFunction(({x,y})=>Math.abs(scrollX-x)<1&&Math.abs(scrollY-y)<1,scroll,{timeout:5000});const restored=await page.evaluate(()=>({x:scrollX,y:scrollY}));assert.deepEqual(restored,scroll);
- await page.locator('#gmBattleViewPicker').getByRole('button',{name:'戰場與生命顯示',exact:true}).click();await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'));assert.equal(await page.evaluate(()=>BABYLON.EngineStore.Instances.length),1);
- await page.locator('#caseList').getByRole('button',{name:'三紀元主畫面',exact:true}).click();await page.waitForFunction(()=>document.querySelector('#prototypeHost [data-state="active"]'));assert.equal(await page.locator('.gm-b-simulation').count(),0);
+ await page.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();
+ await page.waitForSelector('.gm-suit-status',{timeout:30000});
+ assert.equal(await page.locator('.gm-b-simulation').count(),0,'old B sandbox disposed on tab switch');
  assert.equal(await page.evaluate(()=>JSON.stringify(localStorage)),stored);assert.ok(!requests.some(u=>/auth\/|rest\/v1|cloudsave/.test(u)));assert.equal(requests.filter(u=>new URL(u).pathname==='/vendor/babylonjs/7.54.3/babylon.js').length,1,'GM reuses one local engine download');assert.deepEqual(errors,[]);
  reports.push({viewport,cases,appearances,bounds,restored,engineReuse:true,saveUnchanged:true});console.log('PASS actual GM B five cases, slots/LOD, controls, mobile maximum/return',viewport);await context.close();
 
@@ -67,9 +68,9 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  for(let i=0;i<100;i++){const actions=parent.locator('#civilizationStoryModal #storyActions');const end=actions.getByRole('button',{name:'結束',exact:true});if(await end.count()){await end.click();await parent.locator('#civilizationStarterGearModal').getByRole('button',{name:'領取裝備',exact:true}).click();await parent.locator('#gameIntroModal').getByRole('button',{name:'踏上征途',exact:true}).click();break;}await actions.getByRole('button',{name:'下一頁',exact:true}).click();}
  const identity=()=>parent.evaluate(()=>JSON.stringify({level:state.level,hp:state.hp,exp:state.exp,gold:state.gold,inventory:state.inventory,equipment:state.equipment,specializations:state.specializations,thirdWorld:state.thirdWorld,secondWorld:state.secondWorld,reincarnation:state.reincarnation}));
  const truth=await identity();await parent.evaluate(()=>{window.__gmBSaves=0;const owner=save;window.save=function(...args){__gmBSaves++;return owner.apply(this,args);};});
- assert.equal(await parent.evaluate(()=>openGm3DPrototype()),true);await parent.waitForFunction(()=>document.querySelector('#gm3dPrototypeOverlay iframe')?.contentWindow?.Civilization3DTestCenter?.version===5);
+ assert.equal(await parent.evaluate(()=>openGm3DPrototype()),true);await parent.waitForFunction(()=>document.querySelector('#gm3dPrototypeOverlay iframe')?.contentWindow?.Civilization3DTestCenter?.version===6);
  const frame=parent.frames().find(f=>f.url().includes('/3d-test/'));frame.on('pageerror',e=>errors.push(String(e)));
- await frame.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();await frame.waitForFunction(()=>document.querySelector('[data-b="stage"]')?.dataset.renderReady==='true',null,{timeout:90000});
+ await frame.locator('#categoryList').getByRole('button',{name:'戰場與對戰'}).click();await frame.waitForFunction(()=>document.querySelector('[data-b="stage"]')?.dataset.renderReady==='true',null,{timeout:90000});
  await frame.locator('#maximizePreview').click();
  await frame.waitForFunction(()=>document.getElementById('prototypeHost').__gmBattleSimulation.diagnostics().current?.frames>0,null,{timeout:15000});
  await frame.locator('[data-b="play"]').click();
