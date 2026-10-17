@@ -1,1 +1,0 @@
-Save load pipeline integrity passed: {"realisticSchema16":{"backupExact":true,"gameplayPreserved":true,"sourceVersion":16,"targetVersion":17},"reload":{"sourceVersion":17,"targetVersion":17,"backupPreserved":true},"failClosed":{"reason":"pre-schema17-backup-failed","originalPreserved":true}}
