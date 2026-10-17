@@ -1,7 +1,5 @@
 name: Batch 1 Fixed 12 Audit Gate
 on:
-  push:
-    branches: [audit/batch1-fixed12-closure-20261017]
   workflow_dispatch:
 permissions:
   contents: read
