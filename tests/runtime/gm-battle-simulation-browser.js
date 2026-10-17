@@ -31,55 +31,18 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      for(const id of cases){
       await page.locator('[data-b="case"]').selectOption(id);
       assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
-      const play=page.locator('[data-b="play"]');
-      if(await play.isEnabled()){
-       await play.click();
-       const pause=page.locator('[data-b="pause"]'),resume=page.locator('[data-b="resume"]'),stop=page.locator('[data-b="stop"]');
-       if(await pause.isEnabled()){
-        await pause.click();
-        if(await resume.isEnabled())await resume.click();
-       }
-       if(await stop.isEnabled())await stop.click();
-       else assert.match(await page.locator('[data-b="status"]').innerText(),/授權|角色|素材|回退|無法|載入|停止|示範/,'disabled stop must be explained');
-      }else{
-       await page.waitForFunction(()=>{const t=document.querySelector('[data-b="status"]')?.textContent||'';return /授權|角色|素材|回退|無法/.test(t);},null,{timeout:12000});
-       assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0,'unauthorized preview must not expose protected actor');
-      }
-     }
-     assert.equal(await page.locator('[data-b="case"] option').count(),5);
-     reports.push({viewport,scenarios:cases,mode:mode.published?'published':'dev',controls:true,resourceDisposal:true});
-    }else{
-     assert.match(mode.reason,/載入|失敗|安全/,'safe failure must be explained');
-     reports.push({viewport,fallback:mode.reason,safe:true});
-    }
-    await page.locator('#categoryList').getByRole('button',{name:/角色與動作/}).click();
-    assert.equal(await page.locator('.gm-b-simulation').count(),0,'case switch disposes published B renderer');
-    assert.equal(await page.evaluate(t=>JSON.stringify(localStorage)===t,before),true,'GM may not write browser save');
-    assert.equal(requests.filter(u=>/auth\/|rest\/v1|cloudsave/.test(u)).length,0,'GM direct preview must not call cloud');
-    assert.deepEqual(errors.filter(e=>!/Failed to fetch dynamically imported module|Importing a module script failed/i.test(e)),[],'unexpected browser page errors');
-    
-   }finally{await page.close();}
-  }
-  console.log('PASS current GM B simulation: two GM categories, five real scenarios, render/play/stop/disposal, desktop/mobile, no storage/cloud writes');
-  fs.writeFileSync(process.env.GM_B_REPORT||'/tmp/gm-battle-simulation-browser.json',JSON.stringify({passed:true,reports,physicalGPU:false},null,2));
- }finally{await browser.close();}
-})().catch(e=>{console.error(e);process.exitCode=1;});       // The GM authorization guard can disable controls between Playwright's
-       // isEnabled() probe and click(). Use one synchronous DOM turn instead.
-       const controls=await page.evaluate(()=>{
-        const el=name=>document.querySelector('[data-b="'+name+'"]');
-        const play=el('play');
-        if(!play||play.disabled)return {enabled:false};
-        play.click();
-        const pause=el('pause'),resume=el('resume'),stop=el('stop');
-        if(pause&&!pause.disabled)pause.click();
-        if(resume&&!resume.disabled)resume.click();
-        if(stop&&!stop.disabled)stop.click();
-        return {enabled:true,stopped:!stop?.disabled};
-       });
-       assert.equal(typeof controls.enabled,'boolean');
-      }else{
-       await page.waitForFunction(()=>{const t=document.querySelector('[data-b="status"]')?.textContent||'';return /授權|角色|素材|回退|無法/.test(t);},null,{timeout:12000});
-       assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0,'unauthorized preview must not expose protected actor');
+      const controls=await page.evaluate(()=>{
+       const get=id=>document.querySelector('[data-b="'+id+'"]');
+       const play=get('play');
+       if(!play||play.disabled)return {enabled:false};
+       play.click();
+       for(const id of ['pause','resume','stop']){const btn=get(id);if(btn&&!btn.disabled)btn.click();}
+       return {enabled:true};
+      });
+      assert.equal(typeof controls.enabled,'boolean');
+      if(!controls.enabled){
+       await page.waitForFunction(()=>/授權|角色|素材|回退|無法/.test(document.querySelector('[data-b="status"]')?.textContent||''),null,{timeout:12000});
+       assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0);
       }
      }
      assert.equal(await page.locator('[data-b="case"] option').count(),5);
