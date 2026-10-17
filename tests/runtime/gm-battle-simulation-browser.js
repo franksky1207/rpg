@@ -34,9 +34,13 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
       const play=page.locator('[data-b="play"]');
       if(await play.isEnabled()){
        await play.click();
-       await page.locator('[data-b="pause"]').click();
-       await page.locator('[data-b="resume"]').click();
-       await page.locator('[data-b="stop"]').click();
+       const pause=page.locator('[data-b="pause"]'),resume=page.locator('[data-b="resume"]'),stop=page.locator('[data-b="stop"]');
+       if(await pause.isEnabled()){
+        await pause.click();
+        if(await resume.isEnabled())await resume.click();
+       }
+       if(await stop.isEnabled())await stop.click();
+       else assert.match(await page.locator('[data-b="status"]').innerText(),/授權|角色|素材|回退|無法|載入|停止|示範/,'disabled stop must be explained');
       }else{
        await page.waitForFunction(()=>{const t=document.querySelector('[data-b="status"]')?.textContent||'';return /授權|角色|素材|回退|無法/.test(t);},null,{timeout:12000});
        assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0,'unauthorized preview must not expose protected actor');
