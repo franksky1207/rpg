@@ -74,7 +74,9 @@ jobs:
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
           node tests/runtime/browser-smoke.js
-          node tests/runtime/3d-formal-snapshots-browser.js
+          # Retired T1-A GM v5 scene harness requires a deleted legacy 3D menu.
+          # Preserve shared formal snapshot contract; exercise current GM v6 above.
+          node tests/runtime/3d-formal-snapshots-contract.cjs
           node tests/runtime/breakthrough-core-integrity.js
           node tests/runtime/reincarnation-permanent-gear-carryover-integrity.js
       - uses: actions/upload-artifact@v4
