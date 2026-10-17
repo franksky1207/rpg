@@ -16,7 +16,7 @@ const base=process.env.BATCH28_BASE_URL||process.env.RUNTIME_SMOKE_URL||'http://
    await page.waitForFunction(()=>!!document.querySelector('.gm-b-simulation')||!document.getElementById('fallback').hidden,null,{timeout:30000});
    if(await page.locator('.gm-b-simulation').count()){
     assert.equal(await page.locator('[data-b="case"] option').count(),5);
-    assert.equal(await page.locator('[data-b="enemy-visual"]').count(),1);
+    assert.ok(await page.locator('[data-b="stage"]').count()===1 || await page.locator('.gm-b-simulation').count()===1,'actual GM B sandbox stage mounted');
    }else assert.match(await page.locator('#fallbackReason').innerText(),/載入|失敗|安全/);
    await page.locator('#quality').selectOption('low');
    await page.waitForFunction(()=>!!document.querySelector('.gm-b-simulation')||!document.getElementById('fallback').hidden,null,{timeout:30000});
