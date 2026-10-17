@@ -27,9 +27,9 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
    // against Git's accepted Batch 2-2 source rather than weakening source locks.
    const before=approved.toString('utf8');
    const start=before.indexOf(' fail("沒有可用的視覺測試項目。");return;');
-   const end=before.indexOf('\\nfunction updateFixture(){',start);
+   const end=before.indexOf('\nfunction updateFixture(){',start);
    assert.ok(start>=0&&end>start,'Approved source dead-code boundaries preserved');
-   const expected=before.slice(0,start)+' fail("沒有可用的視覺測試項目。");\\n}'+before.slice(end);
+   const expected=before.slice(0,start)+' fail("沒有可用的視覺測試項目。");\n}'+before.slice(end);
    assert.equal(sha(fs.readFileSync(path)),sha(Buffer.from(expected)),'Only approved dead 3D GM path removal allowed');
   }else assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
   return;
