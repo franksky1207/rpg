@@ -7,7 +7,19 @@ for(const [p,row] of Object.entries(ledger.files)){
  assert.equal(sha(fs.readFileSync(row.archive)),row.beforeSHA256,p+' archive altered');
  assert.equal(sha(cp.execFileSync('git',['show',ledger.baselineHEAD+':'+p])),row.beforeSHA256,p+' baseline');
  if(row.afterSHA256===null)assert.equal(fs.existsSync(p),false,p+' must remain retired');
- else if(p==='3d-test/test-center.js'||p==='3d-test/index.html'||p==='index.html'||p==='combatfx.js'){
+ else if(p==='3d-test/test-center.js'||p==='3d-test/index.html'){
+  // Batch 2-2 deliberately retires all 31 symbolic GM scenes. Protect the new
+  // two-tab navigation and no formal-game mutation instead of old image-era bytes.
+  const text=fs.readFileSync(p,'utf8');
+  if(p.endsWith('/test-center.js')){
+   assert.ok(text.includes("['character','角色與動作']")&&text.includes("['combat','戰場與對戰']"),'exactly two visual categories');
+   assert.match(text,/version:6,caseIds/);
+   assert.doesNotMatch(text,/原 3D 角色|三紀元主畫面|五槽裝備陳列/);
+  }else{
+   assert.match(text,/GM 視覺測試中心/);
+   assert.doesNotMatch(text,/快速搜尋場景|停用 3D/);
+  }
+ }else if(p==='index.html'||p==='combatfx.js'){
   const verify=require('../../development/hybrid-comparison/t2b3-v1/source-version.cjs');
   const oldSHA=sha(cp.execFileSync('git',['show','10ef9222427050eadf42b8f61b4d153da7b049b6:'+p]));
   verify(p,oldSHA); // Original T4 lock + exact one-query Batch28 transform.

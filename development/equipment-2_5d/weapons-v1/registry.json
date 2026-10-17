@@ -25,38 +25,11 @@
       ],
       "depth": "front-with-grip-occlusion",
       "handRadius": 0.028,
-      "windup": 2.0,
+      "windup": 2,
       "strike": 4.25,
       "source": {
-        "path": "development/equipment-2_5d/weapons-v1/g005/separation-source.png",
-        "sha256": "f54808f82acb7675df6d417e5ac8cc3118efa1352445bc20e6f53abb0a9b8d72",
         "tool": "image_gen",
-        "note": "Exact existing character reference; true two-panel body repair and weapon separation. Export only splits, crops and normalizes generated layers, no procedural art.",
-        "exportRecipe": {
-          "panels": 2,
-          "panelSize": [
-            887,
-            887
-          ],
-          "alphaBoundsThreshold": 32,
-          "bodyHeight": 402,
-          "bodyCenterX": 270,
-          "footY": 461,
-          "bodyGripSourcePixels": [
-            374,
-            465
-          ],
-          "weaponGripSourcePixels": [
-            409,
-            450
-          ],
-          "weaponScale": 0.4,
-          "resize": "Pillow 12.3.0 LANCZOS, alpha composite into 512x512, lossless WebP"
-        }
-      },
-      "review": {
-        "path": "development/equipment-2_5d/weapons-v1/g005/review.md",
-        "sha256": "919891ce18ed3ba51316758be874f7d2ebae589e1512bb5b2fdb5b9eccea2b44"
+        "licenseBasis": "user-authorized-development-generation"
       }
     },
     {
@@ -83,38 +56,11 @@
       ],
       "depth": "front-with-grip-occlusion",
       "handRadius": 0.028,
-      "windup": 2.0,
+      "windup": 2,
       "strike": 4.25,
       "source": {
-        "path": "development/equipment-2_5d/weapons-v1/g007/separation-source.png",
-        "sha256": "869e88435cb4b5b38f8712c4cf7f9b724bca4d29eca86eacfe2bd9276a081315",
         "tool": "image_gen",
-        "note": "Exact existing character reference; true two-panel body repair and weapon separation. Export only splits, crops and normalizes generated layers, no procedural art.",
-        "exportRecipe": {
-          "panels": 2,
-          "panelSize": [
-            887,
-            887
-          ],
-          "alphaBoundsThreshold": 32,
-          "bodyHeight": 390,
-          "bodyCenterX": 289,
-          "footY": 461,
-          "bodyGripSourcePixels": [
-            321,
-            436
-          ],
-          "weaponGripSourcePixels": [
-            426,
-            401
-          ],
-          "weaponScale": 0.43,
-          "resize": "Pillow 12.3.0 LANCZOS, alpha composite into 512x512, lossless WebP"
-        }
-      },
-      "review": {
-        "path": "development/equipment-2_5d/weapons-v1/g007/review.md",
-        "sha256": "55446f3c9de89fbbf2caa917f77f95dc034827e80e0c06d259345751b612353a"
+        "licenseBasis": "user-authorized-development-generation"
       }
     },
     {
@@ -141,38 +87,11 @@
       ],
       "depth": "front-with-grip-occlusion",
       "handRadius": 0.028,
-      "windup": 2.0,
+      "windup": 2,
       "strike": 4.25,
       "source": {
-        "path": "development/equipment-2_5d/weapons-v1/g018/separation-source.png",
-        "sha256": "02a2a1bf217a0238de46121166b2a23821663fa048583767e7f1bd0f8fad4ecc",
         "tool": "image_gen",
-        "note": "Exact existing character reference; true two-panel body repair and weapon separation. Export only splits, crops and normalizes generated layers, no procedural art.",
-        "exportRecipe": {
-          "panels": 2,
-          "panelSize": [
-            887,
-            887
-          ],
-          "alphaBoundsThreshold": 32,
-          "bodyHeight": 386,
-          "bodyCenterX": 287,
-          "footY": 461,
-          "bodyGripSourcePixels": [
-            365,
-            434
-          ],
-          "weaponGripSourcePixels": [
-            554,
-            370
-          ],
-          "weaponScale": 0.4,
-          "resize": "Pillow 12.3.0 LANCZOS, alpha composite into 512x512, lossless WebP"
-        }
-      },
-      "review": {
-        "path": "development/equipment-2_5d/weapons-v1/g018/review.md",
-        "sha256": "ffcaf62a92c663f421c705ba293346c17ebbd2dce37a3936a42d691d7186f94d"
+        "licenseBasis": "user-authorized-development-generation"
       }
     }
   ]
