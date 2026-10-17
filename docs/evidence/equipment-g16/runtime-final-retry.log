@@ -1,3 +1,0 @@
-
-$ node tests/runtime/reincarnation-batch7-closure.js
-Batch7 final closure passed: {"versions":{"auBenchmark":2,"auIntegration":2,"modeState":2},"life1":{"permanent":10},"life2":{"count":2,"permanent":15,"auDepth":100},"benchmark":{"completed":100,"formalStateStable":true,"sandboxSaveCalls":0},"summary":{"zero":true,"one":true,"invalidated":true,"live":true},"freshDepth":1}

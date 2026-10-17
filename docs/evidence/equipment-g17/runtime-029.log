@@ -1,2 +1,0 @@
-node tests/runtime/3d-batch28-preflight.cjs
-PASS Batch28 preflight: five-slot resolver, missing/empty LOD fallback, stale async disposal, unequip, scene close

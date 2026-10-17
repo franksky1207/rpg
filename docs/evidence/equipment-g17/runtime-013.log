@@ -1,2 +1,0 @@
-node tests/runtime/t4-preview-retirement.cjs
-PASS T4 exact retirement/history/source protection, no formal decoration references, shared GM/B preserved, publish isolated

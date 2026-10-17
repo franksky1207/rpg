@@ -1,8 +1,0 @@
-startup 1365
-intro 1365
-run 1365 g005 1
-page.evaluate: TypeError: Cannot read properties of null (reading 'getBoundingClientRect')
-    at eval (eval at evaluate (:291:30), <anonymous>:1:60)
-    at UtilityScript.evaluate (<anonymous>:293:16)
-    at UtilityScript.<anonymous> (<anonymous>:1:44)
-    at /workspace/rpg/tests/equipment-formal/browser.cjs:27:26

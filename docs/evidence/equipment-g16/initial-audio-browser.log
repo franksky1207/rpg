@@ -1,5 +1,0 @@
-page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4173/index.html
-Call log:
-[2m  - navigating to "http://127.0.0.1:4173/index.html", waiting until "domcontentloaded"[22m
-
-    at /workspace/rpg/tests/runtime/audio-lifecycle-browser.js:102:16

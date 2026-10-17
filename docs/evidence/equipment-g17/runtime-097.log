@@ -1,6 +1,0 @@
-node tests/runtime/asset-integrity.js
-Asset Integrity OK
-source files: 32 / 76.36 MB
-runtime WebP: 32 / 4.32 MB
-runtime/source ratio: 5.7%
-CSS formal background references: 35

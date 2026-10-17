@@ -1,2 +1,0 @@
-node tests/equipment-sprites/browser.cjs
-PASS 3 real sprites x 5 visible animation templates, 128px raster, switching/cancel, warm cache, SHA/404 fallback and release

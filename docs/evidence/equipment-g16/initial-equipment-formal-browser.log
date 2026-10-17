@@ -1,7 +1,0 @@
-page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4173/index.html?production=1
-Call log:
-[2m  - navigating to "http://127.0.0.1:4173/index.html?production=1", waiting until "load"[22m
-
-    at /workspace/rpg/tests/equipment-formal/browser.cjs:11:13 {
-  name: 'Error'
-}

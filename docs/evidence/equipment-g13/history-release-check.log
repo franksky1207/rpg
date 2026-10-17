@@ -1,6 +1,0 @@
-PASS 442 historical files SHA-256 unchanged; first 60 and last 145 index entries byte-equivalent in JSON.
-PASS all 210 formal identities / 1050 names and mappings unchanged.
-PASS G066 unmade; no G066+ files changed.
-PASS all G13 development sources, images and evidence absent from Pages staging.
-PASS 10 PNG + 10 WebP fully decoded 1536x1024; all 20 hashes unique and distinct from every G001-G060 PNG/WebP.
-PASS all 45 G13 files explicitly excluded in tracked-file publish audit; hardMissing=[].
