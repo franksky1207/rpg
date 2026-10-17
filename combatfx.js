@@ -541,10 +541,15 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   if(el instanceof Element&&el.classList.contains("combat-damage")&&event.animationName==="damagePop")el.classList.remove("dodge-text");
  },true);
 
+ const hpObservedIds=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar","combatEnemyHp","voidEnemyHp","combatEnemyBar","voidEnemyBar"]);
+ let hpSyncQueued=false;
  const hpObserver=new MutationObserver(mutations=>{
-  if(syncingHp||!presentation?.active||!combatScreen())return;
-  const ids=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar","combatEnemyHp","voidEnemyHp","combatEnemyBar","voidEnemyBar"]);
-  if(mutations.some(m=>ids.has(m.target?.id)||m.target?.id==="main"&&combatScreen()?.dataset.combatPresentationToken===String(presentation.token)))queueMicrotask(syncCombatHpDom);
+  if(syncingHp||!presentation?.active)return;
+  const screen=combatScreen();if(!screen)return;
+  if(!mutations.some(m=>hpObservedIds.has(m.target?.id)||(m.target?.id==="main"&&screen.dataset.combatPresentationToken===String(presentation.token))))return;
+  if(hpSyncQueued)return;
+  hpSyncQueued=true;
+  queueMicrotask(()=>{hpSyncQueued=false;syncCombatHpDom();});
  });
  hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
