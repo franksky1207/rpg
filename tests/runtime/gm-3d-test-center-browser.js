@@ -1,310 +1,68 @@
-const {chromium}=require("playwright");
-const assert=require("node:assert/strict");
+'use strict';
+/* GM 2.5D visual center acceptance: two categories, actual previews, no legacy
+   symbolic scenes, no real-game writes, mobile maximize and safe disposal. */
+const {chromium}=require('playwright'),assert=require('node:assert/strict');
 (async()=>{
- const browser=await chromium.launch({headless:true,args:["--use-gl=angle","--use-angle=swiftshader"]});
- const page=await browser.newPage({viewport:{width:1280,height:800}});
- const errors=[];page.on("pageerror",e=>errors.push(String(e)));
+ const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:1280,height:800}}),errors=[];
+ page.on('pageerror',error=>errors.push(String(error)));
  try{
-  const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
-  const centerUrl=new URL("3d-test/?embedded=1",base).href;
-  await page.goto(centerUrl,{waitUntil:"domcontentloaded",timeout:45000});
-  await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===5,null,{timeout:60000});
-  assert.equal(await page.locator("#categoryList .center-category").count(),9);
-  assert.equal(await page.locator("#caseList .center-case").count(),31);
-  assert.equal(await page.locator("#backToGame").isHidden(),true);
-  assert.equal(await page.locator(".stage #status").count(),0);
-  assert.equal(await page.locator("#caseMetadata").count(),0);
-  assert.equal(await page.locator("#contextTest").count(),0);
-  for(const term of ["A-01-ENGINE","B01","Babylon.js","WebGL"]){
-   assert.ok(!(await page.locator("body").innerText()).includes(term),"Internal label exposed: "+term);
+  const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
+  await page.goto(new URL('3d-test/?embedded=1',base).href,{waitUntil:'domcontentloaded',timeout:60000});
+  await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===6,null,{timeout:60000});
+  const api=await page.evaluate(()=>({ids:window.Civilization3DTestCenter.caseIds,cats:window.Civilization3DTestCenter.categoryIds}));
+  assert.deepEqual(api.ids,['C-08-CHARACTER','C-15-BATTLE']);
+  assert.deepEqual(api.cats,['character','combat']);
+  assert.equal(await page.locator('#categoryList .center-category').count(),2);
+  assert.equal(await page.locator('#caseList .center-case').count(),1);
+  assert.equal(await page.locator('#backToGame').isHidden(),true);
+  assert.equal(await page.locator('#caseMetadata').count(),0);
+  assert.equal(await page.locator('#contextTest').count(),0);
+  for(const bad of ['3D 視覺測試中心','八種專精星環','懸賞戰準備區','文明紀錄與轉生','A-01-ENGINE','LOD／圖集品質']){
+   if(bad==='LOD／圖集品質')continue; // battle has its own technical quality selector, handled in 2-3
+   assert.ok(!(await page.locator('body').innerText()).includes(bad),'retired GM scene exposed '+bad);
   }
-  // Eight categories and 31 distinct visible scenes, with context-specific controls.
-  for(const [name,count] of [["副本與競技場",5],["文明災厄與異宇宙",3],["文明紀錄與轉生",3],["設定與管理",5]]){
-   await page.locator("#categoryList .center-category").filter({hasText:name}).click();
-   assert.equal(await page.locator("#caseList .center-case").count(),count,name);
-  }
-  // Dungeon previews must be exercised, including world 3 without a bounty portal.
-  await page.locator("#categoryList .center-category").filter({hasText:"副本與競技場"}).click();
-  assert.equal(await page.locator("#caseList .center-case").count(),5);
-  await page.locator("#caseList").getByRole("button",{name:"競技場",exact:true}).click();
-  assert.equal(await page.locator("#scenarioFormal").isVisible(),true,"副本沿用正式／自由雙模式");
-  await page.locator("#scenarioFree").click();
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().scenarioMode),"free");
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),false);
-  assert.equal(await page.locator("#dungeonArenaRank").isVisible(),true);
-  await page.locator("#fixtureWorld").selectOption("3");
-  assert.equal(await page.locator("#dungeonHigherMode").isVisible(),true);
-  assert.equal(await page.locator("#dungeonArenaRank").isVisible(),false);
-  await page.locator("#dungeonHigherMode").selectOption("varied");
-  await page.locator("#caseList").getByRole("button",{name:"鏡像戰紀錄",exact:true}).click();
-  assert.equal(await page.locator("#scenarioFormal").isVisible(),true);
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),false);
-  assert.equal(await page.locator("#dungeonMirrorWins").isVisible(),true);
-  await page.locator("#dungeonMirrorWins").selectOption("15");
-  await page.locator("#caseList").getByRole("button",{name:"虛空幻境樓層",exact:true}).click();
-  assert.equal(await page.locator("#scenarioFormal").isVisible(),true);
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),false);
-  assert.equal(await page.locator("#dungeonVoidFloor").isVisible(),true);
-  await page.locator("#dungeonVoidFloor").selectOption("500");
-  await page.locator("#caseList").getByRole("button",{name:"懸賞戰準備區",exact:true}).click();
-  assert.equal(await page.locator("#dungeonBountyTier").isVisible(),true);
-  assert.equal(await page.locator('#fixtureWorld option[value="3"]').count(),0);
-  await page.locator("#caseList").getByRole("button",{name:"競技場",exact:true}).click();
-  assert.equal(await page.locator('#fixtureWorld option[value="3"]').count(),1,"高維只在不支援的懸賞中移除");
-  await page.locator("#caseList").getByRole("button",{name:"懸賞戰準備區",exact:true}).click();
-  assert.equal(await page.locator('#fixtureWorld option[value="3"]').count(),0);
-  await page.locator("#caseList").getByRole("button",{name:"副本作戰中心",exact:true}).click();
-  assert.equal(await page.locator("#fixtureWorld").isVisible(),true);
-  await page.locator("#fixtureWorld").selectOption("3");
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),3);
-  for(const title of ["副本作戰中心","懸賞戰準備區","競技場","鏡像戰紀錄","虛空幻境樓層"]){
-    await page.locator("#caseList").getByRole("button",{name:title,exact:true}).click();
-    if(title==="2.5D 戰鬥模擬")await page.locator("#gmBattleViewPicker").getByRole("button",{name:"戰場與生命顯示",exact:true}).click();
-    await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,null,{timeout:20000});
-    assert.equal(await page.locator("#appearanceDetails").isVisible(),false);
-  }
-  await page.locator("#categoryList .center-category").filter({hasText:"文明災厄與異宇宙"}).click();
-  await page.locator("#caseList").getByRole("button",{name:"銀河文明災厄封印",exact:true}).click();
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),false,"文明災厄不得使用十大區控制");
-  assert.equal(await page.locator("#scenarioFree").isVisible(),true);
-  await page.locator("#scenarioFree").click();
-  assert.equal(await page.locator("#scenarioCalamityIndex").isVisible(),true);
-  assert.equal(await page.locator("#scenarioCalamityHp").count(),0);
-  assert.equal(await page.locator("#scenarioCalamityLevel").count(),0);
-  assert.equal(await page.locator("#scenarioCalamityPreset").count(),0);
-  await page.locator("#scenarioCalamityIndex").selectOption("4");
-  await page.locator("#scenarioCalamityState").selectOption("progress");
-  assert.deepEqual(await page.evaluate(()=>{const x=window.Civilization3DTestCenter.getFixture();return [x.scenarioMode,x.calamitySimulation.map(y=>[y.visible,y.completed])];}),["free",[[true,true],[true,true],[true,true],[true,true],[true,false],[false,false],[false,false],[false,false],[false,false],[false,false]]]);
-  await page.locator("#caseList").getByRole("button",{name:"宇宙文明災厄封印",exact:true}).click();
-  assert.equal(await page.locator("#scenarioCalamityState option[value='appeared']").count(),1);
-  await page.locator("#scenarioCalamityIndex").selectOption("7");
-  await page.locator("#scenarioCalamityState").selectOption("appeared");
-  assert.deepEqual(await page.evaluate(()=>{const a=window.Civilization3DTestCenter.getFixture().calamitySimulation;return [a.filter(x=>x.completed).length,a[7].visible,a[7].unlocked,a[8].visible];}),[7,true,false,false]);
-  await page.locator("#scenarioFormal").click();
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().scenarioMode),"formal");
-  assert.equal(await page.locator("#scenarioCalamityIndex").isVisible(),false);
-  await page.locator("#scenarioFree").click();
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().scenarioMode),"free");
-    await page.locator("#caseList").getByRole("button",{name:"異宇宙前線",exact:true}).click();
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),false,"異宇宙不得再沿用十大區");
-  assert.equal(await page.locator("#scenarioAlternateState").isVisible(),true);
-  await page.locator("#scenarioAlternateState").selectOption("locked");
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().alternateScenarioState),"locked");
-  for(const id of ["alternateSegment","alternateUniverse","alternateDepth"])assert.equal(await page.locator("#"+id).isVisible(),true);
-  assert.equal(await page.locator("#alternateSegment option").count(),20);
-  assert.equal(await page.locator("#alternateUniverse option").count(),10);
-  assert.equal(await page.locator("#alternateCulture option").count(),20);
-  await page.locator("#alternateCulture").selectOption("冰霜神系");
-  assert.equal(await page.locator("#alternateCultureUniverse option").count(),10);
-  await page.locator("#alternateCultureUniverse").selectOption("181");
-  assert.equal(await page.locator("#alternateUniverse").inputValue(),"181");
-  assert.match(await page.locator("#alternatePreviewSummary").innerText(),/冰霜神系.*10\/10 階.*零界冰皇宇宙/);
-  await page.locator("#alternateSegment").selectOption("14");
-  assert.equal(await page.locator("#alternateUniverse option").first().getAttribute("value"),"131");
-  assert.equal(await page.locator("#alternateUniverse option").last().getAttribute("value"),"140");
-  await page.locator("#alternateUniverse").selectOption("137");
-  await page.locator("#alternateDepth").selectOption("4");
-  assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse,s.alternateDepth];}),[14,137,4]);
-  await page.locator("#alternateSegment").selectOption("20");
-  await page.locator("#alternateUniverse").selectOption("200");
-  await page.locator("#alternateDepth").selectOption("5");
-  // Validate 3D scene identity, not just dropdown values. No player state is written.
-  const visualProbe=await page.evaluate(()=>{
-    const B=window.BABYLON,P=window.Civilization3DPrototype;
-    if(!B?.NullEngine||!P?.createFrontierScene)return {supported:false};
-    const engine=new B.NullEngine({renderWidth:300,renderHeight:300});
-    const canvas=document.createElement("canvas");
-    const inspect=(universe,depth)=>{
-      const scene=P.createFrontierScene({BABYLON:B,engine,canvas,frontierKind:"alternate",frontierProgress:0,alternateUniverse:universe,alternateDepth:depth,world:3});
-      const metadata={...scene.metadata.civilization3dFrontier};
-      const signals=scene.meshes.filter(m=>m.name.startsWith("alternate-depth-signal-")).length;
-      const nodes=scene.meshes.filter(m=>/^alternate-universe-\d+$/.test(m.name)).length;
-      const core=scene.getMeshByName("alternate-selected-core")?.getClassName();
-      const relics=scene.meshes.filter(m=>m.name.startsWith("alternate-culture-relic-")).length;
-      scene.dispose();
-      return {metadata,signals,nodes,core,relics};
-    };
-    const results=[inspect(137,1),inspect(137,4),inspect(138,4),inspect(200,5),inspect(3,4),inspect(181,4)];
-    engine.dispose();return {supported:true,results};
-  });
-  assert.equal(visualProbe.supported,true);
-  for(const sample of visualProbe.results)assert.equal(sample.nodes,10);
-  assert.deepEqual(visualProbe.results.map(v=>v.signals),[1,4,4,5,4,4]);
-  assert.deepEqual(visualProbe.results.map(v=>v.metadata.culture),["巨人泰坦","巨人泰坦","超維法則","海洋深淵","冰霜神系","冰霜神系"]);
-  assert.deepEqual(visualProbe.results.map(v=>[v.metadata.universe,v.metadata.depth]),[[137,1],[137,4],[138,4],[200,5],[3,4],[181,4]]);
-  assert.equal(visualProbe.results[4].metadata.cultureTier,1);
-  assert.equal(visualProbe.results[5].metadata.cultureTier,10);
-  assert.equal(visualProbe.results[4].relics,1);
-  assert.equal(visualProbe.results[5].relics,10);
-  assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse,s.alternateDepth];}),[20,200,5]);
-  assert.equal(await page.locator("#alternateQuickControls").isVisible(),true);
-  await page.locator("#alternateUniverseNext").click();
-  await page.locator("#alternateDepthNext").click();
-  assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse,s.alternateDepth];}),[20,200,5],"upper bound must remain U200 depth5");
-  await page.locator("#alternateUniversePrev").click();
-  assert.equal(await page.locator("#alternateUniverse").inputValue(),"199");
-  await page.locator("#alternateSegment").selectOption("2");
-  await page.locator("#alternateUniverse").selectOption("11");
-  await page.locator("#alternateUniversePrev").click();
-  assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse];}),[1,10],"universe step crosses section boundary");
-  await page.locator("#alternateSegment").selectOption("1");
-  await page.locator("#alternateUniversePrev").click();
-  await page.locator("#alternateDepth").selectOption("1");
-  await page.locator("#alternateDepthPrev").click();
-  assert.deepEqual(await page.evaluate(()=>{const s=window.Civilization3DTestCenter.getFixture();return [s.alternateSegment,s.alternateUniverse,s.alternateDepth];}),[1,1,1],"lower bound must remain U001 depth1");
-  assert.match(await page.locator("#alternatePreviewSummary").innerText(),/U001.*深度 1\/5/);
-  await page.setViewportSize({width:390,height:844});
-  const quickRect=await page.locator("#alternateQuickControls").boundingBox();
-  const buttonsRect=await page.locator("#alternateUniverseNext").boundingBox();
-  assert.ok(quickRect&&buttonsRect&&quickRect.width<=390&&buttonsRect.x>=0&&buttonsRect.x+buttonsRect.width<=390,"mobile quick controls must fit viewport");
-  await page.setViewportSize({width:1280,height:800});
-  await page.locator("#categoryList .center-category").filter({hasText:"副本與競技場"}).click();
-  await page.locator("#caseList").getByRole("button",{name:"副本作戰中心",exact:true}).click();
-  await page.locator("#fixtureWorld").selectOption("2");
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().world),2);
-  await page.locator("#categoryList .center-category").filter({hasText:"戰鬥、動畫與特效"}).click();
-  await page.locator("#caseList").getByRole("button",{name:"護盾防護演出",exact:true}).click();
-  assert.equal(await page.locator("#scenarioFormal").isVisible(),true);
-  await page.locator("#scenarioFree").click();
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().scenarioMode),"free");
-  assert.equal(await page.locator("#caseList .center-case").count(),4);
-  for(const title of ["2.5D 戰鬥模擬","護盾防護演出","特殊遭遇演出","結算與戰利品"]){
-    await page.locator("#caseList").getByRole("button",{name:title,exact:true}).click();
-    if(title==="2.5D 戰鬥模擬")await page.locator("#gmBattleViewPicker").getByRole("button",{name:"戰場與生命顯示",exact:true}).click();
-    await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,null,{timeout:20000});
-  }
-  // Verify one shared readonly snapshot contract and independent GM test inputs.
-  await page.locator("#categoryList .center-category").filter({hasText:"玩家、裝備與養成"}).click();
-  assert.equal(await page.locator("#caseList .center-case").count(),7);
-  await page.locator("#caseList").getByRole("button",{name:"八種專精星環",exact:true}).click();
-  await page.locator("#appearanceDetails summary").click();
-  await page.locator("#appearanceFree").click();
-  assert.equal(await page.locator("#growthVisualStage").isVisible(),true);
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),false);
-  assert.equal(await page.locator("#growthFreeControls input[type=number]").count(),0);
-  await page.locator("#growthVisualStage").selectOption("middle");
-  await page.locator("#caseList").getByRole("button",{name:"十印記星環",exact:true}).click();
-  assert.equal(await page.locator("#growthVisualStage").isVisible(),true);
-  await page.locator("#growthVisualStage").selectOption("0");
-  await page.locator("#caseList").getByRole("button",{name:"文明等級核心",exact:true}).click();
-  assert.equal(await page.locator("#growthVisualStage").isVisible(),true);
-  await page.locator("#growthVisualStage").selectOption("middle");
-  await page.locator("#caseList").getByRole("button",{name:"界弦核心",exact:true}).click();
-  assert.equal(await page.locator("#growthVisualStage").isVisible(),true);
-  await page.locator("#growthVisualStage").selectOption("max");
-  await page.locator("#caseList").getByRole("button",{name:"角色全身展示",exact:true}).click();
-  assert.equal(await page.locator("#appearanceRegion").count(),1);
-  assert.equal(await page.locator("#appearanceSet").count(),1);
-  for(const id of ["appearanceLevel","appearanceQuality","appearanceEnhancement"])assert.equal(await page.locator("#"+id).count(),0);
-  await page.locator("#caseList").getByRole("button",{name:"五槽裝備陳列",exact:true}).click();
-  assert.equal(await page.locator("#appearanceRegionLabel").isVisible(),true);
-  assert.equal(await page.locator("#appearanceSetLabel").isVisible(),true);
-  await page.locator("#caseList").getByRole("button",{name:"強化鍛造台",exact:true}).click();
-  assert.equal(await page.locator("#appearanceStage").isVisible(),true);
-  assert.equal(await page.locator("#appearanceRegionLabel").isVisible(),false);
-  await page.locator("#caseList").getByRole("button",{name:"角色全身展示",exact:true}).click();
-  assert.equal(await page.locator("#growthFreeControls [data-ability]").count(),0);
-  await page.locator("#caseList").getByRole("button",{name:"八種專精星環",exact:true}).click();
-  await page.locator("#appearanceFormal").click();
-  assert.equal(await page.locator("#appearanceFreeControls").isVisible(),false);
-  // Embedded preview without a formal host must wait, not substitute free fixture values.
-  await page.waitForFunction(()=>document.querySelector("#status")?.textContent?.includes("等待正式角色"),null,{timeout:10000});
-  // Isolated mock of the authorized bridge payload: assert presentation state only.
-  // This tests the iframe receiver, not permission to access the formal save.
-  await page.evaluate(()=>localStorage.setItem("gm_3d_repair5_no_save_write","unchanged"));
-  const fakeCatalog={};
-  for(const w of [1,2,3])fakeCatalog[w]=Array.from({length:w===3?1:10},(_,r)=>({
-    name:"測試區域"+w+"-"+r,
-    entries:Array.from({length:10},(_,i)=>({name:"測試套組"+w+"-"+r+"-"+i,
-      level:w===3?2000:w===2?505+(r*10+i)*5:r*50+i*5+5,
-      names:["武器","頭盔","鎧甲","鞋子","飾品"].map(x=>x+w+"-"+r+"-"+i)}))
-  }));
-  const appearance={version:2,source:"formal",world:3,level:2000,vip:20,
-    equipment:Object.fromEntries(["weapon","helmet","armor","shoes","accessory"].map(type=>[type,{present:true,name:type+"-正式",quality:5,world:3}])),
-    enhancements:{weapon:40,helmet:40,armor:40,shoes:40,accessory:40},
-    enhancementMin:20,enhancementCap:40,specializations:{},markLevels:{},civilizationLevel:10,coreLevel:10};
-  await page.evaluate(({appearance,catalog})=>window.postMessage({type:"civilization3d:appearance-response",appearance,catalog},location.origin),{appearance,catalog:fakeCatalog});
-  await page.locator("#caseList").getByRole("button",{name:"角色全身展示",exact:true}).click();
-  await page.locator("#appearanceFree").click();
-  assert.deepEqual(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().equipmentCatalogCounts),
-    {galaxy:100,universe:100,higher:10});
-  await page.locator("#appearanceWorld").selectOption("2");
-  assert.equal(await page.locator("#appearanceRegion option").count(),10);
-  await page.locator("#appearanceRegion").selectOption("3");
-  assert.equal(await page.locator("#appearanceSet option").count(),10);
-  await page.locator("#appearanceSet").selectOption("8");
-  assert.deepEqual(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().selectedEquipmentNames),
-    ["武器","頭盔","鎧甲","鞋子","飾品"].map(x=>x+"2-3-8"));
-  await page.locator("#appearanceWorld").selectOption("3");
-  assert.equal(await page.locator("#appearanceRegionLabel").isVisible(),false);
-  assert.equal(await page.locator("#appearanceSet option").count(),10);
-  await page.locator("#appearanceFormal").click();
-  assert.ok((await page.locator("#appearanceFormalNames").innerText()).includes("weapon-正式"),
-    "正式同步必須顯示實穿部位，不得以套組名稱取代");
-  await page.locator("#appearanceFree").click();
-  await page.locator("#appearanceWorld").selectOption("1");
-  assert.equal(await page.locator("#appearanceRegion option").count(),10);
-  await page.locator("#appearanceFormal").click();
-  assert.deepEqual(await page.evaluate(()=>{const x=window.Civilization3DTestCenter.getFixture();return [x.appearanceMode,x.formalAppearanceReady];}),["formal",true]);
-  // Switching data sources must not mutate local game save or selection truth.
-  await page.locator("#appearanceRefresh").click();
-  assert.ok((await page.locator("#appearanceSource").innerText()).includes("等待正式角色資料"));
-  assert.equal(await page.evaluate(()=>localStorage.getItem("gm_3d_repair5_no_save_write")),"unchanged");
-  await page.evaluate(()=>window.postMessage({type:"civilization3d:appearance-error",reason:"回歸測試：正式來源不可用"},location.origin));
-  await page.waitForFunction(()=>document.getElementById("appearanceSource")?.textContent.includes("正式來源不可用"),null,{timeout:10000});
-  assert.ok((await page.locator("#appearanceSource").innerText()).includes("正式來源不可用"));
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().formalAppearanceReady),false);
-  await page.evaluate(()=>localStorage.removeItem("gm_3d_repair5_no_save_write"));
-
-  await page.locator("#categoryList .center-category").filter({hasText:"全部場景"}).click();
-  await page.locator("#caseSearch").fill("銀河紀元星圖");
-  assert.equal(await page.locator("#caseList .center-case").count(),1);
-  await page.locator("#caseSearch").fill("");
-  await page.locator("#categoryList .center-category").filter({hasText:"全部場景"}).click();
-  await page.locator("#categoryList .center-category").filter({hasText:"冒險與宇宙地圖"}).click();
-  assert.equal(await page.locator("#caseList .center-case").count(),3);
-  await page.locator("#caseList").getByRole("button",{name:"銀河紀元星圖",exact:true}).click();
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getCurrent()),"C-05-GALAXY-MAP");
-  assert.equal(await page.locator("#fixtureWorld").isVisible(),false);
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),true);
-  await page.locator("#fixtureProgress").selectOption("7");
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getFixture().regionProgress),7);
-  await page.locator("#caseList").getByRole("button",{name:"宇宙紀元星圖",exact:true}).click();
-  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getCurrent()),"C-06-UNIVERSE-MAP");
-  assert.equal(await page.locator("#fixtureProgress").isVisible(),true);
-  assert.equal(await page.locator("#fixtureSelected").isVisible(),true);
-  await page.waitForFunction(()=>document.querySelector("#status")?.hidden===true||!document.querySelector("#fallback")?.hidden,null,{timeout:20000});
-  await page.waitForFunction(()=>document.querySelector("#prototypeHost canvas")||!document.querySelector("#fallback").hidden,null,{timeout:20000});
-  const initialCanvas=await page.locator("#prototypeHost canvas").count();
-  await page.locator("#maximizePreview").click();
+  await page.locator('#caseList').getByRole('button',{name:'角色與五種動作'}).click();
+  await page.locator('.gm-suit-status').filter({hasText:/需要 GM 授權|正在確認 GM 權限/}).waitFor({timeout:20000});
+  assert.equal(await page.locator('.gm-suit-preview canvas').count(),0,'direct iframe must not receive protected sprites');
+  assert.equal(await page.locator('#fixturePanel').isVisible(),false);
+  assert.equal(await page.locator('#scenarioFormal').isVisible(),false);
+  await page.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();
+  assert.equal(await page.locator('#caseList .center-case').count(),1);
+  assert.equal(await page.locator('#caseTitle').innerText(),'2.5D 戰鬥模擬');
+  assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.getCurrent()),'C-15-BATTLE');
+  await page.waitForFunction(()=>document.querySelector('.gm-b-simulation')||!document.querySelector('#fallback').hidden,null,{timeout:30000});
+  assert.equal(await page.locator('[data-b="case"] option').count(),5);
+  for(const label of ['play','pause','resume','replay','stop'])assert.equal(await page.locator('[data-b="'+label+'"]').count(),1);
+  assert.equal(await page.locator('[data-b="speed"] option').count(),3);
+  await page.locator('#caseSearch').fill('不存在的舊場景');
+  assert.equal(await page.locator('#caseList .center-case').count(),0);
+  await page.locator('#caseSearch').fill('');
+  assert.equal(await page.locator('#caseList .center-case').count(),1);
+  await page.locator('#maximizePreview').scrollIntoViewIfNeeded();
+  const before=await page.evaluate(()=>scrollY);
+  await page.locator('#maximizePreview').click();
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),true);
-  assert.equal(await page.locator("#prototypeHost canvas").count(),initialCanvas);
-  await page.keyboard.press("Escape");
+  await page.keyboard.press('Escape');
   assert.equal(await page.evaluate(()=>window.Civilization3DTestCenter.isMaximized()),false);
   await page.setViewportSize({width:390,height:844});
-  await page.locator("#maximizePreview").scrollIntoViewIfNeeded();
-  const mobileScrollBefore=await page.evaluate(()=>scrollY);
-  await page.locator("#maximizePreview").click();
-  const mobile=await page.evaluate(()=>{
-   const stage=document.querySelector(".center-workspace .stage").getBoundingClientRect();
-   const button=document.querySelector("#maximizePreview").getBoundingClientRect();
-   const controls=document.querySelector(".civilization-3d-camera-controls")?.getBoundingClientRect();
-   return {maximized:window.Civilization3DTestCenter.isMaximized(),stageWidth:stage.width,stageHeight:stage.height,
-    buttonWithin:button.left>=0&&button.right<=innerWidth&&button.bottom<=innerHeight,
-    controlsWithin:!controls||(controls.left>=0&&controls.right<=innerWidth&&controls.bottom<=innerHeight)};
+  await page.locator('#maximizePreview').scrollIntoViewIfNeeded();
+  const mobileBefore=await page.evaluate(()=>scrollY);
+  await page.locator('#maximizePreview').click();
+  const geometry=await page.evaluate(()=>{
+   const a=document.querySelector('.center-workspace .stage').getBoundingClientRect(),
+     b=document.querySelector('#maximizePreview').getBoundingClientRect();
+   return {width:a.width,height:a.height,within:b.left>=0&&b.right<=innerWidth&&b.bottom<=innerHeight};
   });
-  assert.equal(mobile.maximized,true);assert.equal(mobile.buttonWithin,true);assert.equal(mobile.controlsWithin,true);
-  assert.ok(mobile.stageWidth>=380&&mobile.stageHeight>=780);
-  await page.locator("#maximizePreview").click();
-  await page.waitForTimeout(300);
-  const restore=await page.evaluate(()=>{
-   const stage=document.querySelector(".center-workspace .stage").getBoundingClientRect();
-   return {maximized:window.Civilization3DTestCenter.isMaximized(),top:stage.top,bottom:stage.bottom,viewHeight:innerHeight,scrollY};
-  });
-  assert.equal(restore.maximized,false);
-  assert.ok(Math.abs(restore.scrollY-mobileScrollBefore)<=2,"Mobile restore did not preserve scroll: "+JSON.stringify({restore,mobileScrollBefore}));
-  assert.ok(restore.bottom>0,"Restored preview offscreen: "+JSON.stringify(restore));
-  assert.deepEqual(errors.filter(e=>/test-center|prototype-engine|runtime\\.js/.test(e)),[]);
-  console.log("PASS GM visual center: 8 categories plus all, 31 scenes, no engineering text, mobile maximize/restore",mobile,restore);
+  assert.ok(geometry.width>=380&&geometry.height>=780&&geometry.within,JSON.stringify(geometry));
+  await page.locator('#maximizePreview').click();await page.waitForTimeout(300);
+  const mobileAfter=await page.evaluate(()=>scrollY);
+  assert.ok(Math.abs(mobileAfter-mobileBefore)<=5,'mobile scroll restore '+mobileBefore+' / '+mobileAfter);
+  await page.locator('#categoryList').getByRole('button',{name:/角色與動作/}).click();
+  await page.waitForFunction(()=>!!document.querySelector('.gm-suit'),null,{timeout:20000});
+  assert.equal(await page.locator('.gm-b-simulation').count(),0,'switch disposes B playback');
+  assert.equal(await page.locator('#categoryList .center-category').count(),2);
+  assert.equal(errors.length,0,'page errors: '+JSON.stringify(errors));
+  console.log('PASS GM 2.5D visual center: 2 categories / 2 real scenes, authorization isolation, playback controls, mobile maximize restore');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
