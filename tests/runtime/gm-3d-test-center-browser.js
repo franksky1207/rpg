@@ -21,7 +21,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
    }
    await page.locator('#categoryList').getByRole('button',{name:'角色與動作'}).click();
    await page.waitForSelector('.gm-suit-status',{timeout:30000});
-   assert.equal(await page.locator('.gm-suit-actions button').count(),7);
+   for(const action of ['idle','attack','hit','dodge','defeat','replay','reset'])assert.equal(await page.locator('.gm-suit-actions [data-action="'+action+'"]').count(),1);
    assert.equal(await page.locator('#gmWholeSuitPicker').count(),0);
    assert.equal(await page.locator('#gmBattleViewPicker').count(),0);
    assert.equal(await page.locator('.gm-suit-preview canvas').count(),0,'unauthorized standalone cannot show protected sprite');
