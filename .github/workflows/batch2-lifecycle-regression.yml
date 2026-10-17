@@ -1,0 +1,31 @@
+name: Batch 2 Lifecycle Regression
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser regression dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Check syntax and lifecycle
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch2-server.log 2>&1 &
+          trap 'kill $(jobs -pr) 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep 0.2; done
+          node --check backgroundprogress.js
+          node tests/runtime/batch2-background-sleeper-lifecycle.cjs
+          node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
+          node tests/runtime/special-fast-catchup-integrity.js
+          node tests/runtime/combat-events-integration.cjs
+          node tests/runtime/alternate-universe-combat-integrity.js
+          node tests/runtime/resource-manifest-integrity.js
+          node scripts/batch1-fixed12-evidence.cjs
