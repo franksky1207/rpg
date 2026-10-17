@@ -20,7 +20,11 @@ const scenarios=[
  ["offline-samples","tests/runtime/offline-sample-provenance-opt4-integrity.js"],
  ["review","tests/runtime/galaxy-review-combat-browser.js"],
  ["combat-events","tests/runtime/combat-events-owner-browser.js"],
- ["void-related-contract","tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js"]
+ ["void-related-contract","tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js"],
+ ["higher-dungeons-bounty-arena-void","tests/equipment-formal/higher-dungeons.cjs"],
+ ["special-fast-catchup","tests/runtime/special-fast-catchup-integrity.js"],
+ ["reincarnation-dungeon-access","tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js"],
+ ["alternate-full-regression","tests/runtime/alternate-universe-batch4-3-regression.js"]
 ];
 const data={schema:"cw.batch1.dynamic-ci-baseline.v1",sha,startedAt:new Date().toISOString(),method:"fresh Node subprocess executes existing isolated regression; elapsedMs is end-to-end test duration, not animation frame time",platform:{node:process.version,os:process.platform,arch:process.arch},samples:[]};
 for(const [name,path] of scenarios){
