@@ -31,7 +31,15 @@ def build():
         e['asset']['path']=(BASE/(e['id']+'.webp')).as_posix();outputs[e['asset']['path']]=data;entries.append(e)
     assert sorted(e['id'] for e in entries)==['g005','g007','g018']
     catalog=[{**{k:r[k] for k in ('id','epoch','sourceKey','regionOrBoss','equipmentNames')},'weaponAnimationStatus':'complete' if r['id'] in ('g005','g007','g018') else 'not-started'} for r in rows]
-    outputs[(BASE/'catalog.json').as_posix()]=(json.dumps({'schema':'cw.gm.whole-suit.v1','formalBattleEnabled':False,'entries':entries,'sets':catalog},ensure_ascii=False,indent=2)+'\n').encode()
+    catalog_path=(BASE/'catalog.json').as_posix()
+    catalog_bytes=(json.dumps({'schema':'cw.gm.whole-suit.v1','formalBattleEnabled':False,'entries':entries,'sets':catalog},ensure_ascii=False,indent=2)+'\n').encode()
+    # Keep the already published catalog's exact locked bytes when the authoritative
+    # 210 formal names and three delivered sprite metadata records are equivalent.
+    # This preserves release SHA and avoids a format-only publication cascade.
+    published=ROOT/catalog_path
+    if published.is_file() and json.loads(published.read_bytes())==json.loads(catalog_bytes):
+        catalog_bytes=published.read_bytes()
+    outputs[catalog_path]=catalog_bytes
     for name in ('actor.mjs','animation.mjs','assets.mjs'):
         code=(ROOT/SOURCE/name).read_text()
         if name=='animation.mjs':code=code.replace('../../hybrid-comparison/t2b3-v1/contract.mjs','./contract.mjs')
