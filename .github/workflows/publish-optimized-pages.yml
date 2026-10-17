@@ -101,7 +101,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -s .publish-stage3/development/hybrid-comparison/index.html
+          test -s .publish-stage3/3d-test/index.html
+          test -s .publish-stage3/3d-test/test-center.js
           test -s .publish-stage3/development/hybrid-comparison/t2b3-v1/manifest.json
           test -s .publish-stage3/index.html
           test ! -e .publish-stage3/development/hybrid-comparison/t2b2-v1/player/animation-source.blend
