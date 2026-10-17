@@ -17,7 +17,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
     oldPreview:!!document.querySelector('#civilization3dCharacterToggle'),
     oldFormalHost:!!document.querySelector('#civilization3dFormalHost'),
     retiredToggle:typeof window.civilization3dToggleCharacter,
-    inventoryPresent:typeof window.state==='object'&&!!window.state.equipment
+    inventoryPresent:typeof state==='object'&&!!state.equipment
    }));
    assert.equal(result.oldPreview,false,'retired formal full-3D equipment button must stay absent');
    assert.equal(result.oldFormalHost,false,'retired formal 3D preview host must stay absent');
