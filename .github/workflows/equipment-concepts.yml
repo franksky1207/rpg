@@ -40,4 +40,4 @@ jobs:
       - name: Verify 210 authoritative identities and 1050 exact five-slot names
         run: python3 scripts/formal-equipment-identities.py
       - name: Check formal owner integrity
-        run: node scripts/runtime-integrity.js
+        run: node tests/runtime/js-integrity.js
