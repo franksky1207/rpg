@@ -15,6 +15,7 @@ def validate(root=ROOT):
     for e in registry['entries']:
         o=next(o for o in original['entries'] if o['id']==e['id'])
         assert sha((root/o['asset']['path']).read_bytes())==o['asset']['sha256'],'original changed'
+        assert e['source']['tool']=='image_gen' and e['source']['licenseBasis']=='user-authorized-development-generation','weapon art license metadata missing'
         assert e['weaponAnimationStatus']=='complete' and e['template']=='one-hand-blade'
         assert e['depth']=='front-with-grip-occlusion' and len(e['grip'])==2 and all(.1<x<.9 for x in e['grip'])
         assert 1<e['windup']<3 and 3<e['strike']<5 and .01<=e['handRadius']<=.04
