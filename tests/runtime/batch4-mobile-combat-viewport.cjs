@@ -5,6 +5,7 @@ const fs=require("node:fs"),assert=require("node:assert/strict"),{chromium}=requ
  const begin=source.indexOf(" let battleViewportLastView="),end=source.indexOf(" function finishDungeonRender()",begin);
  assert(begin>=0&&end>begin,"viewport coordinator and dungeon render hook exist");
  assert(source.slice(end,end+240).includes("positionActiveDungeonCombat(main)"),"actual dungeon render calls viewport coordinator");
+ assert(source.includes('area.querySelector(".combat-arena")'),"target live arena after lineup");
  const snippet=source.slice(begin,end)+"\nwindow.testDungeonBattleViewport=positionActiveDungeonCombat;";
  const browser=await chromium.launch({headless:true});
  try{
@@ -15,15 +16,15 @@ const fs=require("node:fs"),assert=require("node:assert/strict"),{chromium}=requ
    const sleep=()=>new Promise(r=>setTimeout(r,80));
    const main=document.querySelector("#main");
    window.view="dungeon-arena";
-   main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第一戰</div><div style="height:680px"></div></section>';
+   main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第一戰</div><div class="lineup" style="height:470px"></div><div class="combat-arena" style="height:680px"></div></section>';
    window.testDungeonBattleViewport(main);await sleep();
    const initial=window.scrollY;
-   main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第二戰</div><div style="height:680px"></div></section>';
+   main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第二戰</div><div class="lineup" style="height:470px"></div><div class="combat-arena" style="height:680px"></div></section>';
    window.testDungeonBattleViewport(main);await sleep();
    const second=window.scrollY;
    window.scrollTo({top:0,behavior:"instant"});
    document.dispatchEvent(new Event("pointerdown",{bubbles:true}));
-   main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第三戰</div><div style="height:680px"></div></section>';
+   main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第三戰</div><div class="lineup" style="height:470px"></div><div class="combat-arena" style="height:680px"></div></section>';
    window.testDungeonBattleViewport(main);await sleep();
    const manual=window.scrollY;
    return {initial,second,manual};
