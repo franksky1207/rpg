@@ -22,7 +22,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     const before=await page.evaluate(()=>JSON.stringify(localStorage));
     await page.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();
     assert.equal(await page.locator('#caseList .center-case').count(),1);
-    await page.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();
+    await page.locator('#caseList').getByRole('button',{name:'戰鬥動畫模擬',exact:true}).click();
     await page.waitForFunction(()=>!!document.querySelector('.gm-b-simulation')||!document.getElementById('fallback').hidden,null,{timeout:30000});
     const mode=await page.evaluate(()=>({published:!!document.querySelector('.gm-b-published'),battle:!!document.querySelector('.gm-b-simulation'),fallback:!document.getElementById('fallback').hidden,reason:document.getElementById('fallbackReason').textContent}));
     if(mode.battle){
