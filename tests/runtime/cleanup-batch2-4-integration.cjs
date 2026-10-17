@@ -27,7 +27,10 @@ for(const p of formalProtected){
   const newDungeon="dungeonui.js?v=20261018-batch4-mobile-stage-anchor1";
   const newSheet='<link rel="stylesheet" href="battle-mobile-viewport.css?v=20261018-batch4-mobile1">';
   assert.ok(original.includes(oldDungeon)&&current.includes(newDungeon)&&current.includes(newSheet),"Expected approved Batch 4 cache token and mobile stylesheet");
-  assert.equal(current.replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center",""),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
+  const oldFormal="3d-test/t3b-formal-entry.js?v=20261015-phase5";
+ const newFormal="3d-test/t3b-formal-entry.js?v=20261018-batch4-toggle-fallback";
+ assert.ok(original.includes(oldFormal)&&current.includes(newFormal),"Expected approved Batch 4 formal entry cache key");
+ assert.equal(current.replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
   continue;
  }
  assert.equal(sha(actual(p)),sha(historic(base,p)),"Formal runtime unexpectedly modified: "+p);
