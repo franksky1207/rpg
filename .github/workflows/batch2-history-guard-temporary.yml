@@ -1,0 +1,21 @@
+name: Batch 2 Historical Guard Verification
+on:
+  push:
+    branches: [fix/batch2-retired-cleanup-guard-20261017]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check historical cleanup and approved cache update
+        run: |
+          node tests/runtime/cleanup-batch4-4-final-guard.cjs
+          node tests/runtime/html-cache-version-guard.js --self-test
+          node tests/runtime/resource-manifest-integrity.js
