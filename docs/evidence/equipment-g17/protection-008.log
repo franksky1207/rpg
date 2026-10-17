@@ -1,2 +1,0 @@
-node tests/equipment-gm/publication.cjs
-PASS exact GM allowlist, corrupt bytes/extra source refused, 3 sprites only, zero development dependencies

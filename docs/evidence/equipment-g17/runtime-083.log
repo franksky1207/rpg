@@ -1,2 +1,0 @@
-node tests/runtime/batch7-post-optimization-4-integrity.js
-Batch7 post optimization 4 AU benchmark integrity passed: {"versions":{"benchmark":2,"optimization":1,"guard":1,"prepared":1},"benchCalls":{"characterCalls":2,"statsCalls":2,"civCalls":2},"diagnosticCalls":{"characterCalls":1,"statsCalls":1,"civCalls":1},"formalExact":true,"guardStable":true,"guardDetectsMutation":true,"bench":{"runs":100,"completed":100,"winRate":0},"diagnostics":{"pairCount":21,"failedCount":0}}

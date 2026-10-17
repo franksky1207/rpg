@@ -1,5 +1,0 @@
-PASS first 55 and unmade last 150 index rows unchanged
-PASS all 397 historical file SHA-256 unchanged
-PASS official runtime, assets, game logic unchanged
-PASS all 45 G12 files excluded and absent from Pages staging; hardMissing=[]
-PASS G061 onwards not generated

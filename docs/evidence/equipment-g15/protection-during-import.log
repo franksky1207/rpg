@@ -1,2 +1,0 @@
-COMMAND: python3 scripts/equipment-sprites.py validate
-Sprite pipeline blocked: g071: missing/stale notes formal block; run generate

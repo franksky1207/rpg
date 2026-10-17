@@ -1,6 +1,0 @@
-PASS B2 actual contact-sheet browser decode/layout 1280 720
-PASS B2 actual contact-sheet browser decode/layout 1440 1080
-PASS B2 actual contact-sheet browser decode/layout 390 844
-PASS B2 actual contact-sheet browser decode/layout 360 800
-PASS B2 actual contact-sheet browser decode/layout 844 390
-PASS actual six GLBs, 108 clip samples, three LODs and 99 G007 subset/mixed/empty binds; scenes released

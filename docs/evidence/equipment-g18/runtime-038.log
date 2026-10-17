@@ -1,1 +1,0 @@
-Code cleanup Batch8 legacy/archive boundary integrity passed: {"schema":17,"minSupported":1,"legacyMode":"all-known","future":"fail-closed","legacyCleanup":"migration-owner-only","runtimeMergePolicy":"preserve-lazy-loading-boundaries","archived":3}

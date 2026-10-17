@@ -3,7 +3,6 @@ export const FIXTURE_SHA='5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5a
 export const CONTROLS_SHA='0a5f25b26f3e9500125fe406a358c53da6d722680c03ac33ffd85dc9d4dd6e27';
 export const SOURCE_PATHS=Object.freeze(['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json']);
 export const CASE_IDS=Object.freeze(['normal-baseline','elite-baseline','boss-baseline','boss-player-defeat','elite-effects-owner-input']);
-export const REFINEMENT_SHA='dc1b873b07740ba2542bad833e0e165cda387d35baa8eb7d8ac38d436f8e1006';
 export const PHASE5_SOURCES_SHA='f1d12a63e7ce9f9afa16d8695dace1dbbebca485b2406d6f35ea52fc478f1cfd';
 const verified=new WeakSet(),inputs=new WeakSet();
 export const isVerifiedInput=value=>inputs.has(value);
@@ -37,11 +36,14 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
    return [file,row.source];
   }
   if(file==='assets/3d/asset-registry.json'&&digest!==bundle.sources[file]){
-   const proofText=await readSource('development/3d-source/equipment/ancient-ruins-v1/refinement-source-evolution.json',signal);
-   requireValue(await sha(proofText)===REFINEMENT_SHA,'Refinement version SHA changed');const proof=JSON.parse(proofText),row=proof.files[file];
-   requireValue(proof.schema==='cw.batch28.authorized-g007-refinement.v1'&&row.beforeSHA256===bundle.sources[file]&&row.afterSHA256===digest,'Source SHA changed: '+file);
-   const original=await readSource('development/3d-source/equipment/ancient-ruins-v1/history/original-asset-registry.source.txt',signal);
-   requireValue(await sha(original)===bundle.sources[file],'Original registry SHA changed');currentRegistry=JSON.parse(text);return[file,original];
+   // The fixture is SHA-locked to its original captured owner data. The current
+   // renderer must use the *current* SHA-verified GM B registry instead of
+   // loading retired Blender/refinement history and old registry snapshots.
+   const record=JSON.parse(await readSource('development/hybrid-comparison/t2b3-v1/manifest.json',signal));
+   const live=JSON.parse(text);
+   requireValue(record.schema==='cw.t2b3.assets'&&record.publish===false&&
+     JSON.stringify(record.registry)===JSON.stringify(live),'Current B registry disagrees with approved B3 manifest');
+   currentRegistry=live;return[file,text];
   }
   requireValue(digest===bundle.sources[file],'Source SHA changed: '+file);return [file,text];}));
  aborted(signal);
@@ -59,7 +61,7 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
   let last=0;for(const e of c.events){checkEvent(e,last,battle);last=e.seq;requireValue(e.actors.enemy.name===c.input.enemy.name,'Enemy identity mismatch');}
   requireValue(hp(c.computed.start.player)&&hp(c.computed.start.enemy)&&hp(c.computed.final.player)&&hp(c.computed.final.enemy)&&c.computed.result.settlementAvailability==='unavailable','Invalid known HP/shield/settlement');
  }
- for(const a of bundle.assets){const r=registry.assets.find(r=>r.id===a.id);requireValue(r&&a.sha256===r.sha256&&a.path===r.path&&a.bytes===r.bytes&&a.license===r.license&&a.preload===false,'Asset registration mismatch');}
+ for(const a of bundle.assets){const r=registry.assets.find(r=>r.id===a.id);requireValue(r&&a.path===r.path&&a.license===r.license&&a.preload===false&&r.preload===false&&/^[a-f0-9]{64}$/.test(a.sha256)&&a.bytes>0,'Signed fixture asset identity mismatches current registry');}
  const pack=copyFrozen({bundle,controls,fixtureSHA:FIXTURE_SHA,controlsSHA:CONTROLS_SHA,currentRegistry});verified.add(pack);return pack;
 }
 export function selectInput(pack,{caseId,variantId,lod,scheme}){

@@ -1,4 +1,0 @@
-page.waitForFunction: Timeout 60000ms exceeded.
-    at /workspace/rpg/tests/equipment-gm/browser.cjs:10:56 {
-  name: 'TimeoutError'
-}

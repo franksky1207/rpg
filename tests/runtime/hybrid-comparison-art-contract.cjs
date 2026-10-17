@@ -1,22 +1,35 @@
 'use strict';
-// Candidate binary validation: no runtime import, account or combat calculation.
+// Current GM B artifact verification. Retired A/C authoring source history is not a runtime dependency.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto'),validator=require('gltf-validator');
-const root='development/hybrid-comparison/t2b2-v1',json=p=>JSON.parse(fs.readFileSync(p)),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-const lock=json(root+'/source-lock.json'),fixture=json('development/hybrid-comparison/t2a-v1/owner-fixtures.json');
-const doc=p=>{const b=fs.readFileSync(p);return JSON.parse(b.subarray(20,20+b.readUInt32LE(12)));};
+const root='development/hybrid-comparison/t2b2-v1',sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 (async()=>{
- for(const [p,h] of Object.entries(lock.sources))require('../../development/hybrid-comparison/t2b3-v1/source-version.cjs')(p,h);
- assert.equal(lock.fixtureSHA,fixture.sha256);assert.deepEqual(lock.representatives,fixture.representatives);
- for(const kind of ['normal','elite','boss']){const design=json(`${root}/enemies/${kind}/design.json`);assert.deepEqual(design.identity,fixture.representatives.find(r=>r.kind===kind));assert.equal(design.identity.formalId,null);assert.match(design.status,/pending/);}
- let n=0;const inventory=json(root+'/inventory.json');
- for(const row of inventory.files){assert.equal(sha(fs.readFileSync(path.join(root,row.path))),row.sha256);assert.equal(row.publish,false);if(!row.path.endsWith('.glb'))continue;
-  const file=path.join(root,row.path),r=await validator.validateBytes(fs.readFileSync(file),{maxIssues:10000});assert.equal(r.issues.numErrors,0,JSON.stringify(r.issues.messages));assert.equal(r.issues.numWarnings,0,JSON.stringify(r.issues.messages));const d=doc(file);
-  // Blender retains authored frame origin 1/30s. The contract is 700ms elapsed,
-  // so compare actual end-start and require consistent start across channels.
-  for(const name of ['idle','attack','hit','dodge','return','defeat']){const a=d.animations.find(a=>a.name==='B2_'+name);assert.ok(a,'Actual action '+name);assert.ok(a.channels.length>=6);const starts=a.samplers.map(s=>d.accessors[s.input].min[0]);assert.ok(starts.every(t=>Math.abs(t-1/30)<.0001));assert.ok(a.samplers.every(s=>Math.abs((d.accessors[s.input].max[0]-d.accessors[s.input].min[0])-.7)<.0001));}
-  if(row.path.startsWith('player/')){assert.equal(d.skins[0].joints.length,53);const baseline=doc(`assets/3d/characters/player-v1/player-${row.path.match(/(low|medium|high)/)[1]}.glb`);assert.deepEqual(d.skins[0].joints.map(i=>d.nodes[i].name),baseline.skins[0].joints.map(i=>baseline.nodes[i].name));assert.equal(d.meshes.length,1,'No equipment or extra models embedded');assert.equal(d.nodes.filter(n=>/^(socket\.|fx\.)/.test(n.name||'')).length,9);}
-  n++;console.log('PASS candidate GLB actions/rig/zero Khronos errors and warnings',row.path,row.metrics.triangles);
+ const inventory=JSON.parse(fs.readFileSync(root+'/inventory.json'));
+ const manifest=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2b3-v1/manifest.json'));
+ const fixture=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/owner-fixtures.json'));
+ assert.equal(inventory.files.length,165,'Current B2 registry');
+ assert.equal(Object.keys(manifest.files).length,174,'Approved B-only request closure');
+ assert.equal(sha(fs.readFileSync(root+'/inventory.json')),manifest.B2InventorySHA);
+ assert.equal(fixture.sha256,'5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99');
+ let glbCount=0,total=0;
+ for(const row of inventory.files){
+  const file=path.join(root,row.path),bytes=fs.readFileSync(file);
+  assert.equal(bytes.length,row.bytes,'Current bytes '+row.path);
+  assert.equal(sha(bytes),row.sha256,'Current SHA '+row.path);
+  assert.equal(row.publish,false);
+  assert.ok(!row.path.endsWith('.blend'),'Blender authoring source retired');
+  total+=bytes.length;
+  if(!row.path.endsWith('.glb'))continue;
+  const result=await validator.validateBytes(bytes,{maxIssues:10000});
+  assert.equal(result.issues.numErrors,0,'GLB validation '+row.path);
+  assert.equal(result.issues.numWarnings,0,'GLB warnings '+row.path);
+  glbCount++;
  }
- assert.equal(n,6);const pub=require('../../scripts/publish-assets.cjs').inspect(process.cwd());assert.ok(!pub.keep.some(p=>p.startsWith('development/')));assert.ok(pub.keep.includes('3d-test/gm-battle-simulation.js'),'GM-only B adapter must be published');assert.equal(pub.keep.length,410,'404 retained sources plus six exact weapon/body layers; build separately adds .nojekyll and .publish-candidate');require('../../scripts/gm-sprite-publication.cjs')(process.cwd(),pub.files);for(const p of ['3d-test/t3b-formal-assets.js','3d-test/t3b-formal-session.js','3d-test/t3b-formal-renderer.js','3d-test/t3b-formal-controller.js','3d-test/t3b-formal-owner-clock.js','3d-test/t3b-formal-entry.js'])assert.ok(pub.keep.includes(p),'Closed formal module retained '+p);assert.ok(pub.keep.includes('3d-test/t3b-formal-projection.js'),'Formal B projection must be included in published sources');
- console.log('PASS six candidates, formal IDs/sources, original fixture/runtime isolation, 410 copied sources exclude development, including T3-A policy and T3-B projection');
-})().catch(e=>{console.error(e);process.exitCode=1;});
+ assert.equal(total,inventory.totalBytes,'Current source byte ledger');
+ assert.equal(glbCount,3,'Three retained B player LOD GLBs; B enemy sprites use approved atlases');
+ const pub=require('../../scripts/publish-assets.cjs').inspect(process.cwd());
+ assert.equal(pub.missing.length,0);
+ assert.ok(!pub.keep.some(p=>p.startsWith('development/')),'Never publish development-only B2');
+ assert.ok(pub.keep.includes('3d-test/gm-battle-simulation.js'),'Retain approved GM B adapter');
+ require('../../scripts/gm-sprite-publication.cjs')(process.cwd(),pub.files);
+ console.log('PASS B-only GLB inspection, 165 current SHA assets, 174 verified B requests and formal release boundary');
+})().catch(error=>{console.error(error);process.exitCode=1;});

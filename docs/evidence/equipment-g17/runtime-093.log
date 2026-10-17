@@ -1,2 +1,0 @@
-node tests/runtime/special-fast-catchup-integrity.js
-Special encounter fast catch-up integrity passed: {"rows":[{"label":"w1-first","count":0,"world":1,"catchUp":true,"suppressed":true,"forcedSuppressed":true},{"label":"w1-rerun","count":1,"world":1,"catchUp":true,"suppressed":true,"forcedSuppressed":true},{"label":"w2-first","count":0,"world":2,"catchUp":true,"suppressed":true,"forcedSuppressed":true},{"label":"w2-rerun","count":1,"world":2,"catchUp":true,"suppressed":true,"forcedSuppressed":true}],"live":{"catchUp":false,"suppressed":false,"explicit":true}}

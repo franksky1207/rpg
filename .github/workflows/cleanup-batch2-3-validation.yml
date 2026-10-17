@@ -1,0 +1,54 @@
+name: Batch 2-3 Legacy Comparison Stage Isolation
+on:
+  push:
+    branches: [cleanup-batch2-3-legacy-runtime-20261017]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  retired-comparison-isolation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0
+      - name: Verify real game owner and source syntax
+        run: |
+          node --check scripts/stage-hybrid-preview.cjs
+          node --check tests/runtime/cleanup-batch2-3-staging.cjs
+          python3 scripts/formal-equipment-identities.py
+          node tests/runtime/js-integrity.js
+      - name: Build release and verify forbidden old entry
+        run: |
+          node scripts/build-publish-dry-run.cjs
+          node scripts/stage-hybrid-preview.cjs
+          node tests/runtime/cleanup-batch2-3-staging.cjs
+      - name: Install headless Chromium for real GM regression
+        run: |
+          npm install --prefix /tmp/gm-batch2-3 --no-save playwright@1.55.0
+          /tmp/gm-batch2-3/node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise real shipped GM center and formal battle
+        env:
+          NODE_PATH: /tmp/gm-batch2-3/node_modules
+          RUNTIME_SMOKE_URL: http://127.0.0.1:4189/index.html
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4189 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/gm-batch2-3-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4189/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/runtime/gm-3d-test-center-browser.js
+          node tests/equipment-gm/browser.cjs
+          node tests/equipment-formal/browser.cjs
+      - name: Verify official publisher isolation
+        run: |
+          node scripts/publish-asset-audit.cjs

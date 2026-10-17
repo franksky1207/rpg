@@ -1,2 +1,0 @@
-node tests/runtime/3d-equipment-contract.cjs
-PASS Batch28C 15 actual LODs, strict five formal identities, opaque helmet, paired boots, 53 joint/bind/weights, wrong-name/bind rejection, no base changes

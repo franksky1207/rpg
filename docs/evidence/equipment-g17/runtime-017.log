@@ -1,2 +1,0 @@
-node tests/runtime/newstate-save-owner-integrity.js
-New-state / save backup owner integrity passed

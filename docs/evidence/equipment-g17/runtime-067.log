@@ -1,2 +1,0 @@
-node tests/runtime/recent-optimization-batch4-closure.js
-Recent optimization Batch4 closure passed: {"schema":17,"w3AccessOwner":"thirdworlddungeonui","mirrorSettlementOwner":1,"auThresholdOwner":1,"migrationDiagnostics":1,"oldSaveMatrix":"expanded"}

@@ -192,3 +192,25 @@ html{scroll-behavior:auto!important}
 .gm-b-hud progress{width:100%;accent-color:#b95050}
 .center-workspace.center-maximized>.gm-b-view-picker{display:none}
 @media(max-width:600px){.gm-b-controls label{flex:1 1 42%;}.gm-b-buttons{width:100%}.gm-b-simulation{padding-left:8px;padding-right:8px}}
+
+/* Batch 2-2: published 2.5D GM-only visual stage. Uses genuine shipped
+   character WebP and battle backgrounds; no fabricated enemy mesh/atlas. */
+.center-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.center-categories::before{grid-column:1/-1;content:"視覺測試"}
+.center-cases::before{content:"可操作項目"}
+.gm-b-published{padding-top:54px;overscroll-behavior:contain}
+.gm-b-published .gm-b-warning{margin:8px 0 12px;font-size:12px;line-height:1.6;color:#d8c9a9}
+.gm-b-published-arena{display:flex;align-items:stretch;justify-content:space-between;height:clamp(230px,43dvh,430px);isolation:isolate;border:1px solid #74634b;border-radius:10px}
+.gm-b-published-arena .gm-b-scenery{position:absolute;inset:0;z-index:-1;opacity:.83;background:#121923 url("../assets/backgrounds/battle-main/desktop.webp") center/cover no-repeat}
+.gm-b-published-arena .gm-b-player{position:relative;display:flex;align-items:flex-end;justify-content:center;flex:1 1 56%;min-width:0;padding:8px 0}
+.gm-b-published-arena .gm-b-player canvas{position:static;inset:auto;display:block;object-fit:contain;width:auto;height:100%;max-width:100%;max-height:100%}
+.gm-b-published-arena .gm-b-player span{align-self:center;font-size:13px;padding:10px;background:#101923da;border-radius:9px}
+.gm-b-published-arena .gm-b-enemy{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;flex:1 1 44%;min-width:0;padding:12px;border-left:1px solid #a3a8af26;background:#09111b66;color:#e3d1ad;font-size:14px}
+.gm-b-published-arena .gm-b-enemy small{font-size:12px;color:#bbb7af}
+@media(max-width:650px){
+ .gm-b-published .gm-b-controls label{flex:1 1 42%}
+ .gm-b-published-arena{height:clamp(220px,40dvh,370px)}
+ .gm-b-published-arena .gm-b-enemy{padding:6px;font-size:12px}
+ .gm-b-published-arena .gm-b-enemy small{font-size:11px}
+ .gm-b-published-arena .gm-b-scenery{background-image:url("../assets/backgrounds/battle-main/mobile.webp")}
+}

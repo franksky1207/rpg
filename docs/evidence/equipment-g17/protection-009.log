@@ -1,2 +1,0 @@
-node tests/equipment-weapons/names.cjs
-PASS 210 identities / 1050 slots / 70 aliases / 210 gear-container migrations / 60 original concept images / immutable fixtures
