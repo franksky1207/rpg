@@ -19,6 +19,12 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  let floatSerial=0;
  let syncingHp=false;
  let structuredPlayback=false;
+ const pendingFxTimers=new Set();
+ function clearPendingFx(){
+  for(const timer of pendingFxTimers)clearTimeout(timer);
+  pendingFxTimers.clear();
+  document.querySelectorAll('.combat-fx-pop').forEach(el=>el.remove());
+ }
 
  function standardUiTarget(value){return value==="enemy"?"enemy":"player";}
  function standardOtherTarget(value){return standardUiTarget(value)==="player"?"enemy":"player";}
@@ -104,11 +110,12 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   return {token:p.token,mode:p.mode||"standard",playerHp:p.playerHp,playerMaxHp:p.playerMaxHp,enemyHp:p.enemyHp,enemyMaxHp:p.enemyMaxHp,playerShield:p.playerShield,playerShieldMax:p.playerShieldMax,enemyShield:p.enemyShield||0,enemyShieldMax:p.enemyShieldMax||0,actionStartedAt:p.actionStartedAt??null,action:window.CivilizationCombatEvents?.projectAction?.(p.events[p.index-1])||null,index:p.index,eventCount:p.events.length,lockPlayerFullHp:p.lockPlayerFullHp===true};
  };
  window.clearCombatPresentation=function(reason="clear"){
-  if(!presentation)return null;
+  if(!presentation){clearPendingFx();return null;}
   const cleared={token:presentation.token,reason};
   window.CivilizationCombatEvents?.endPresentation?.(presentation.token,reason);
   presentation.active=false;
   presentation=null;
+  clearPendingFx();
   document.querySelectorAll(".combat-shield-bar").forEach(el=>el.remove());
   return cleared;
  };
@@ -143,7 +150,10 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  function spawnFx(target,kind,text=null,delay=0){
   const cfg=FX_LABELS[kind]||{text:String(text||""),className:kind||""};
   const label=text||cfg.text;if(!label)return;
-  setTimeout(()=>{
+  const owner=presentation?.token??null;
+  const timer=setTimeout(()=>{
+   pendingFxTimers.delete(timer);
+   if(owner!==null&&(!presentation?.active||presentation.token!==owner))return;
    ensureCombatExtras();
    const card=combatCard(target),layer=card?.querySelector(".combat-fx-layer");if(!layer)return;
    const el=document.createElement("div"),lane=floatSerial++%3;
@@ -154,6 +164,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    layer.appendChild(el);
    el.addEventListener("animationend",()=>el.remove(),{once:true});
   },Math.max(0,delay));
+  pendingFxTimers.add(timer);
  }
  window.spawnCombatFx=spawnFx;
 
@@ -388,7 +399,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
-   if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"structured-end");
+   if(options.clearAfter===true&&presentation?.token===p.token)window.clearCombatPresentation(options.clearReason||"structured-end");
   }
  };
  window.COMBAT_STRUCTURED_PRESENTATION_VERSION=3;
@@ -484,7 +495,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
-   if(options.clearAfter===true)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
+   if(options.clearAfter===true&&presentation?.token===p.token)window.clearCombatPresentation(options.clearReason||"mirror-structured-end");
   }
  };
  window.MIRROR_STRUCTURED_PRESENTATION_VERSION=1;
@@ -530,12 +541,17 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   if(el instanceof Element&&el.classList.contains("combat-damage")&&event.animationName==="damagePop")el.classList.remove("dodge-text");
  },true);
 
+ const hpObservedIds=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar","combatEnemyHp","voidEnemyHp","combatEnemyBar","voidEnemyBar"]);
+ let hpSyncQueued=false;
  const hpObserver=new MutationObserver(mutations=>{
-  if(syncingHp||!presentation?.active||!combatScreen())return;
-  const ids=new Set(["combatPlayerHp","voidPlayerHp","combatPlayerBar","voidPlayerBar","combatEnemyHp","voidEnemyHp","combatEnemyBar","voidEnemyBar"]);
-  if(mutations.some(m=>ids.has(m.target?.id)||m.target?.id==="main"&&combatScreen()?.dataset.combatPresentationToken===String(presentation.token)))queueMicrotask(syncCombatHpDom);
+  if(syncingHp||!presentation?.active)return;
+  const screen=combatScreen();if(!screen)return;
+  if(!mutations.some(m=>hpObservedIds.has(m.target?.id)||(m.target?.id==="main"&&screen.dataset.combatPresentationToken===String(presentation.token))))return;
+  if(hpSyncQueued)return;
+  hpSyncQueued=true;
+  queueMicrotask(()=>{hpSyncQueued=false;syncCombatHpDom();});
  });
- hpObserver.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
+ hpObserver.observe(document.getElementById("main")||document.body,{subtree:true,childList:true,attributes:true,attributeFilter:["style"]});
 
  window.COMBAT_PRESENTATION_VERSION=COMBAT_PRESENTATION_VERSION;
  window.COMBAT_FULL_HP_LOCK_PRESENTATION_VERSION=1;
