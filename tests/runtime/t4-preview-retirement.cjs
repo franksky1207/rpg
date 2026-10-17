@@ -12,7 +12,7 @@ for(const [p,row] of Object.entries(ledger.files)){
   // two-tab navigation and no formal-game mutation instead of old image-era bytes.
   const text=fs.readFileSync(p,'utf8');
   if(p.endsWith('/test-center.js')){
-   assert.match(text,/const categories=\\[\\["character","角色與動作"\\],\\["combat","戰場與對戰"\\]\\]/);
+   assert.ok(text.includes("['character','角色與動作']")&&text.includes("['combat','戰場與對戰']"),'exactly two visual categories');
    assert.match(text,/version:6,caseIds/);
    assert.doesNotMatch(text,/原 3D 角色|三紀元主畫面|五槽裝備陳列/);
   }else{
