@@ -1,7 +1,5 @@
 name: Batch 2 Lifecycle Regression
 on:
-  push:
-    branches: [fix/batch2-combat-lifecycle-20261017]
   workflow_dispatch:
 permissions:
   contents: read
