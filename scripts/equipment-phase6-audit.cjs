@@ -23,7 +23,7 @@ assert.ok(read('3d-test/t3b-formal-controller.js').includes('const FORMAL_B_RELE
 const retired=['3d-test/formal-home.js','3d-test/formal-dom.js','3d-test/preview-expand.css'];
 for(const p of retired){assert.ok(!fs.existsSync(path.join(root,p)));assert.ok(!plan.keep.includes(p));assert.ok(!plan.references.some(r=>r.path===p));}
 const sources=plan.files.filter(p=>/\.(?:blend[12]?|py)$/.test(p)&&p.startsWith('development/3d-source/'));
-assert.ok(sources.some(p=>p.endsWith('ancient-ruins.blend')),'Keep original G007 Blender');
+assert.ok(!sources.some(p=>p.endsWith('ancient-ruins.blend')),'Retired G007 Blender should not remain tracked');
 assert.ok(sources.every(p=>!plan.keep.includes(p)),'Never publish Blender/build tools');
 const registry=JSON.parse(read('assets/3d/asset-registry.json'));
 const glbs=registry.assets.filter(a=>a.path.includes('equipment/ancient-ruins-v1/')&&a.path.endsWith('.glb'));

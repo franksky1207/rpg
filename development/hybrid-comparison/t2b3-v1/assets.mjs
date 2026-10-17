@@ -1,5 +1,5 @@
 /* Session-local verified reads. No persistent cache, player downloader or storage. */
-export const MANIFEST_SHA='389c4fca2dee3b51abd684c239f0c86aee2c0388e53f557fdab99c3dda4b1ebc';
+export const MANIFEST_SHA='1df3ef971a715e835e7ae9b6411e25d4897df6cb36297e34c363b14beed304b6';
 const root=new URL('../../../',import.meta.url);
 // Development-only SHA-verified, bounded warm cache. Never persisted or published.
 const WARM_LIMIT=24*1024*1024;
