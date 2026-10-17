@@ -20,7 +20,7 @@ for(const [scope,file] of cases){
  const start=performance.now();
  const x=fs.existsSync(file)?cp.spawnSync(process.execPath,[file],{encoding:"utf8",timeout:150000,maxBuffer:4*1024*1024,env:{...process.env,RUNTIME_SMOKE_URL:"http://127.0.0.1:4173/index.html"}}):null;
  const row={scope,file,status:!x?"missing":x.error?"error":x.status===0?"pass":"fail",elapsedMs:Math.round(performance.now()-start),exitCode:x?.status??null,tail:((x?.stdout||"")+"\n"+(x?.stderr||"")).slice(-900)};
- results.push(row);console.log("BATCH2",row.scope,row.status,row.elapsedMs+"ms");
+ results.push(row);console.log("BATCH2",row.scope,row.status,row.elapsedMs+"ms");if(row.status!=="pass")console.error("BATCH2_FAILURE_DETAIL",row.scope,row.tail);
 }
 const report={schema:"cw.batch2.final13.evidence.v1",sha:process.env.GITHUB_SHA||"local",scope:"Fixed original Batch2 15 items; 13 remaining categories. Existing regression execution only, NOT proof of all state combinations, memory leak slope or all-mode end-to-end.",results};
 fs.writeFileSync("batch2-final13-evidence.json",JSON.stringify(report,null,2)+"\n");
