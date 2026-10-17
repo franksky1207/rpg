@@ -20,7 +20,10 @@ for(const p of formalProtected){
   const oldToken="backgroundprogress.js?v=20261013-background-hud-recovery1";
   const newToken="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
   assert.ok(original.includes(oldToken)&&current.includes(newToken),"Expected approved backgroundprogress cache version");
-  assert.equal(current.replace(newToken,oldToken),original,"Unexpected formal HTML change beyond approved Batch 2 cache token");
+  const oldFx="combatfx.js?v=20261015-thrust1";
+  const newFx="combatfx.js?v=20261017-batch3-fx-lifecycle1";
+  assert.ok(original.includes(oldFx)&&current.includes(newFx),"Expected approved Batch 3 combatfx cache version");
+  assert.equal(current.replace(newToken,oldToken).replace(newFx,oldFx),original,"Unexpected formal HTML change beyond approved Batch 2/3 cache tokens");
   continue;
  }
  assert.equal(sha(actual(p)),sha(historic(base,p)),"Formal runtime unexpectedly modified: "+p);
