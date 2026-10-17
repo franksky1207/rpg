@@ -22,11 +22,16 @@ const assert=require("node:assert/strict");
    await sleep(35);
    const active=[...document.querySelectorAll(".combat-fx-pop")].map(x=>x.textContent);
    window.clearCombatPresentation("test-complete");
-   return {stale,active,remaining:document.querySelectorAll(".combat-fx-pop").length};
+   window.spawnCombatFx("enemy","heal","ORPHAN",75);
+   window.clearCombatPresentation("orphan-without-owner");
+   await sleep(130);
+   const orphan=document.querySelectorAll(".combat-fx-pop").length;
+   return {stale,active,remaining:document.querySelectorAll(".combat-fx-pop").length,orphan};
   });
   assert.equal(result.stale,0,"cancelled battle must not show delayed stale FX");
   assert.deepEqual(result.active,["NEW"],"active battle retains intended FX");
   assert.equal(result.remaining,0,"cleared battle must release FX nodes");
+  assert.equal(result.orphan,0,"unowned delayed FX must not revive after cleanup");
   console.log("BATCH3_FX_TIMER_LIFECYCLE_PASS",JSON.stringify(result));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e.stack||String(e));process.exitCode=1;});
