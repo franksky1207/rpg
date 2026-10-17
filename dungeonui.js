@@ -97,6 +97,8 @@
   const firstView=battleViewportLastView!==view;
   battleViewportLastView=view;battleViewportLastKey=key;
   if(window.matchMedia?.("(min-width: 821px)")?.matches)return;
+  if(document.body?.classList.contains("main-minimal-mode-open"))return;
+  if(typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true)return;
   if(typeof window.backgroundProgressIsActive==="function"&&window.backgroundProgressIsActive(isVoid?"void":view==="dungeon-arena"?"arena":"bounty")&&document.visibilityState==="hidden")return;
   const tick=++battleViewportQueued;
   const arrange=()=>{
