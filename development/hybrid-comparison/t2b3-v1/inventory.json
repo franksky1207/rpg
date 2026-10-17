@@ -871,8 +871,8 @@
     },
     {
       "path": "inventory.py",
-      "bytes": 1550,
-      "sha256": "3fc7ec101dd2fa370f2c33fc076a5e525722b995d38e169c4a7cfe5375f78e6b",
+      "bytes": 1542,
+      "sha256": "d42c0ba7310b991d2da261d92bbe6df896a883c2e4d8359b623b302d8934889b",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
@@ -954,5 +954,5 @@
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     }
   ],
-  "totalBytes": 12240320
+  "totalBytes": 12240312
 }
