@@ -30,6 +30,10 @@ jobs:
           python3 scripts/formal-equipment-identities.py
           node tests/runtime/js-integrity.js
           node tests/runtime/t4-preview-retirement.cjs
+          node tests/runtime/3d-asset-registry-integrity.cjs
+          node tests/runtime/3d-equipment-contract.cjs
+          node tests/runtime/3d-batch28-preflight.cjs
+          node tests/runtime/hybrid-comparison-renderer-contract.cjs
           node tests/runtime/combat-events-contract.cjs
           node tests/runtime/combat-events-integration.cjs
           node tests/runtime/t3b-formal-owner-clock.cjs

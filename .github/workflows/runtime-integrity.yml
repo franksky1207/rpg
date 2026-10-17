@@ -77,6 +77,7 @@ jobs:
           node tests/runtime/t3b-formal-renderer.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t3b-formal-controller.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/t4-preview-retirement.cjs
+          node tests/runtime/cleanup-batch4-3-current-inventory.cjs
           node tests/runtime/t3b-formal-owner-clock.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
