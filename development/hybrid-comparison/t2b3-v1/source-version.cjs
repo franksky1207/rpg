@@ -21,7 +21,17 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
   assert.ok(cp.execFileSync('git',['show','c1a8d4948ef4c0441b1051482cb0db63d4a3401b:'+path]).length>0,
     'Retain immediately preceding accepted GM source');
   const approved=cp.execFileSync('git',['show','41128d97b9ac5f0803334a43c0a1488f882874c6:'+path]);
-  assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
+  if(path==='3d-test/test-center.js'){
+   // The approved Batch 2-2 source remains pinned in Git history above.
+   // Pin the Batch 2-3 replacement to its exact accepted source commit;
+   // neither the formal player nor the other GM modules are unlocked.
+   const approved23=cp.execFileSync('git',['show','6406893b41ebd16b1351716e94fb316529f861c7:' +path]);
+   assert.equal(sha(fs.readFileSync(path)),sha(approved23),'GM two-category source must match approved Batch 2-3');
+
+  }else if(path==='3d-test/index.html'){
+   const approvedMarkup=cp.execFileSync('git',['show','02e1e4ca3bd26ae102007357846ddf260ef7b3b7:'+path]);
+   assert.equal(sha(fs.readFileSync(path)),sha(approvedMarkup),'GM 2.5D-only markup must match approved Batch 2-3');
+  }else assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
   return;
  }
 
