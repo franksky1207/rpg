@@ -1,7 +1,7 @@
 name: Batch 2-4 Integration and Regression
 on:
   push:
-    branches: [cleanup-batch2-4-integration-20261017, batch3-1-old-concept-prune]
+    branches: [cleanup-batch2-4-integration-20261017, batch3-1-old-concept-prune, batch3-2-retire-concept-tools]
   workflow_dispatch:
 permissions:
   contents: read
