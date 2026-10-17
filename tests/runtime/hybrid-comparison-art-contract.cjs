@@ -9,7 +9,7 @@ const root='development/hybrid-comparison/t2b2-v1',sha=b=>crypto.createHash('sha
  assert.equal(inventory.files.length,165,'Current B2 registry');
  assert.equal(Object.keys(manifest.files).length,174,'Approved B-only request closure');
  assert.equal(sha(fs.readFileSync(root+'/inventory.json')),manifest.B2InventorySHA);
- assert.equal(fixture.sha256,'5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99');
+ assert.equal(fixture.sha256,'7b551e35c24ac6e9ec676d9d9534f6bd30ebcde026ac945826d979e9a15b1820');
  let glbCount=0,total=0;
  for(const row of inventory.files){
   const file=path.join(root,row.path),bytes=fs.readFileSync(file);
