@@ -1,0 +1,35 @@
+name: Cleanup Batch 4-1 Residual Inventory
+on:
+  push:
+    branches: [batch4-1-residual-audit]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  residual-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Generate complete tracked-tree residual inventory
+        run: |
+          set -euo pipefail
+          node --check scripts/cleanup-batch4-1-audit.cjs
+          node scripts/cleanup-batch4-1-audit.cjs
+          node -e 'const r=require("./cleanup-batch4-1-inventory.json");if(!r.summary.inventoryFiles||!r.summary.head)throw Error("Missing actual audit inventory");console.log("Audited items:",r.summary.inventoryFiles)'
+      - name: Check formal owner and source contract
+        run: |
+          node tests/runtime/cleanup-batch2-4-integration.cjs
+          node tests/runtime/cleanup-batch3-1-tree.cjs
+          node tests/runtime/js-integrity.js
+      - name: Retain exact machine inventory as CI evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleanup-batch4-1-tracked-inventory
+          path: cleanup-batch4-1-inventory.json
+          if-no-files-found: error
