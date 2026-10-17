@@ -12,8 +12,8 @@ assert.equal(gone.reduce((s,x)=>s+x.size,0),352471565,"Original inventory byte c
 for(const x of gone)assert.ok(!now.has(x.path),"Concept file still tracked: "+x.path);
 const removedOutside=before.filter(x=>!x.path.startsWith(prefix)&&!now.has(x.path)).map(x=>x.path);
 const authorizedScripts=new Set(["scripts/equipment-art-review.py","scripts/equipment-asset-production-gate.py","scripts/equipment-concept-batches.py","scripts/equipment-concepts.py","scripts/equipment-modeling-gate.py","scripts/equipment-review-policy-v3.json"]);
-for(const path of removedOutside)assert.ok(path.startsWith("tests/equipment-concepts/")||authorizedScripts.has(path),"Unexpected source deletion: "+path);
-if(removedOutside.length)assert.equal(removedOutside.length,35,"Batch 3-2 must remove exact art-only script and fixture list");
+for(const path of removedOutside)assert.ok(path.startsWith("tests/equipment-concepts/")||authorizedScripts.has(path)||path.startsWith("development/hybrid-comparison/t2b3-v1/evidence/")||path.startsWith("development/hybrid-comparison/t2b2-v1/review/")||/^development\/hybrid-comparison\/t2b2-v1\/repair-r[12]\//.test(path),"Unexpected source deletion: "+path);
+if(removedOutside.length)assert.ok([35,247,667].includes(removedOutside.length),"Unknown deletion increment from batches 3-2 / 3-3: "+removedOutside.length);
 assert.equal(removedOutside.filter(path=>path.startsWith("tests/equipment-concepts/")).length,removedOutside.length?29:0,"Retired art-only fixture count");
 for(const p of ["development/3d-source/equipment/concepts/_concept-index.json","development/3d-source/equipment/concepts/_concept-identities.json"])
  assert.ok(!fs.existsSync(p),"Deleted catalogue still present: "+p);
