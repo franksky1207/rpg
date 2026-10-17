@@ -1,0 +1,25 @@
+name: Batch 2 Lifecycle Regression
+on:
+  push:
+    branches: [fix/batch2-combat-lifecycle-20261017]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check syntax and lifecycle
+        run: |
+          node --check backgroundprogress.js
+          node tests/runtime/batch2-background-sleeper-lifecycle.cjs
+          node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
+          node tests/runtime/special-fast-catchup-integrity.js
+          node tests/runtime/combat-events-integration.cjs
+          node tests/runtime/alternate-universe-combat-integrity.js
+          node tests/runtime/resource-manifest-integrity.js
