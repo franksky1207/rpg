@@ -1,18 +1,31 @@
 'use strict';
-const {chromium}=require('playwright'),fs=require('node:fs'),crypto=require('node:crypto'),assert=require('node:assert/strict');
-const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html',atlasRoot='development/hybrid-comparison/t2b2-v1/enemies/';
-const rows=['normal','elite','boss'].map(kind=>{const dir=atlasRoot+kind+'/atlases/',m=JSON.parse(fs.readFileSync(dir+'atlas.json'));return {name:'internal-only '+kind,reviewed:true,layout:{durationMs:700,samples:22,clipStart:1/30,clips:Object.fromEntries(m.rows.map(r=>{const b=fs.readFileSync(dir+r.rgba);return [r.action,{...r,asset:{path:'assets/test/'+kind+'/'+r.rgba,bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex'),license:'test-only memory approval; original B2 license unchanged'}}];}))}};});
-(async()=>{const browser=await chromium.launch({headless:true,executablePath:fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined,args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-try{const page=await browser.newPage();await page.route('**/assets/test/*/*.png*',r=>{const p=new URL(r.request().url()).pathname.split('/');r.fulfill({contentType:'image/png',body:fs.readFileSync(atlasRoot+p[3]+'/atlases/'+p[4])});});await page.goto(new URL('3d-test/',base).href);await page.waitForFunction(()=>Civilization3DTestCenter?.version===5);
- await page.locator('#categoryList button').filter({hasText:'戰鬥、動畫與特效'}).click();await page.locator('#caseList').getByRole('button',{name:'2.5D 戰鬥模擬',exact:true}).click();await page.locator('#gmBattleViewPicker').getByRole('button',{name:'戰場與生命顯示',exact:true}).click();
- await page.locator('#gmAtlasReview summary').click();await page.locator('#gmAtlasReview [role="status"]').waitFor();assert.match(await page.locator('#gmAtlasReview').textContent(),/unavailable/);assert.equal(await page.locator('#gmAtlasReview canvas').count(),0);const initial=await page.evaluate(()=>JSON.stringify(localStorage));
- await page.evaluate(rows=>window.CivilizationGMApprovedAtlasCatalog={schema:'civilization.formal.b.enemy-atlas.v1',approved:true,publish:true,entries:rows},rows);
- await page.locator('#gmAtlasReview summary').click();await page.waitForFunction(()=>document.getElementById('gmAtlasReview').__review===null);await page.locator('#gmAtlasReview summary').click();await page.waitForFunction(()=>document.querySelector('#gmAtlasReview').__review?.snapshot?.().ready);
- const report=[];for(let actor=0;actor<3;actor++){
-  await page.getByLabel('圖集角色').selectOption(String(actor));await page.waitForFunction(()=>document.querySelector('#gmAtlasReview').__review?.snapshot?.().ready);
-  for(const clip of ['idle','attack','hit','dodge','return','defeat']){await page.getByLabel('圖集動作').selectOption(clip);const hashes=[];for(const frame of [0,10,21]){await page.getByLabel('圖集畫格').evaluate((e,x)=>{e.value=x;e.dispatchEvent(new Event('input',{bubbles:true}));},String(frame));const png=await page.locator('#gmAtlasReview canvas').screenshot();hashes.push(crypto.createHash('sha256').update(png).digest('hex'));}assert.equal(new Set(hashes).size,3,'Actual atlas pixels '+actor+'/'+clip);report.push({actor,clip,hashes});}
- }
- await page.locator('#gmAtlasReview summary').click();await page.waitForFunction(()=>document.getElementById('gmAtlasReview').__review===null);await page.evaluate(()=>CivilizationGMApprovedAtlasCatalog.entries[0].layout.clips.idle.asset.sha256='0'.repeat(64));await page.locator('#gmAtlasReview summary').click();await page.waitForFunction(()=>document.querySelector('#gmAtlasReview [role="status"]')?.textContent?.includes('unavailable'));assert.equal(await page.evaluate(()=>document.getElementById('gmAtlasReview').__review.snapshot().bitmaps),0,'SHA failure releases every decoded bitmap');
- assert.equal(await page.evaluate(()=>JSON.stringify(localStorage)),initial);await page.locator('#categoryList button').filter({hasText:'主畫面與紀元'}).click();await page.locator('#caseList').getByRole('button',{name:'三紀元主畫面',exact:true}).click();await page.locator('#gmAtlasReview').waitFor({state:'detached'});assert.equal(await page.locator('#gmAtlasReview').count(),0);
- fs.writeFileSync('/tmp/gm-atlas-review-browser.json',JSON.stringify({passed:true,hardware:false,testApprovalOnly:true,source:'GM free review; not formal game',report},null,2));console.log('PASS existing GM case atlas review: unavailable, three real B2 atlases, six clips, source-frame pixels, no storage/RAF/official art promotion, route disposal');
-}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
+// Retirement regression for the removed standalone GM atlas-review UI.
+// Active B2/B3 integrity is enforced separately by current-inventory and renderer-contract tests.
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
+const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--use-gl=angle','--use-angle=swiftshader','--no-sandbox']});
+ try{
+  const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[];
+  page.on('pageerror',e=>errors.push(String(e)));
+  try{
+   await page.goto(new URL('3d-test/?embedded=1',base).href,{waitUntil:'domcontentloaded',timeout:60000});
+   await page.waitForFunction(()=>window.Civilization3DTestCenter?.version===6,null,{timeout:60000});
+   assert.equal(await page.locator('#gmAtlasReview').count(),0,'retired atlas UI must remain absent');
+   assert.equal(await page.locator('#categoryList .center-category').count(),2);
+   const storage=await page.evaluate(()=>JSON.stringify(localStorage));
+   await page.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();
+   await page.waitForFunction(()=>document.querySelector('[data-b="stage"]')?.dataset.renderReady==='true',null,{timeout:90000});
+   const actual=await page.evaluate(()=>document.getElementById('prototypeHost').__gmBattleSimulation?.diagnostics());
+   assert.equal(actual?.current?.actorKinds?.enemy,'AtlasActor','approved atlas actor must still render in current B');
+   assert.equal(await page.locator('#gmAtlasReview').count(),0,'no retired authoring panel after B load');
+   assert.equal(await page.locator('[data-b="case"] option').count(),5);
+   await page.locator('#categoryList').getByRole('button',{name:/角色與動作/}).click();
+   assert.equal(await page.locator('.gm-b-simulation').count(),0,'atlas renderer disposed on GM case switch');
+   assert.equal(await page.evaluate(s=>JSON.stringify(localStorage)===s,storage),true,'no user save writes');
+   assert.deepEqual(errors,[],'browser page errors');
+   fs.writeFileSync('/tmp/gm-atlas-review-browser.json',JSON.stringify({passed:true,legacyAtlasReviewAbsent:true,activeAtlasActor:true,routeDisposed:true,saveUnchanged:true,hardware:false},null,2));
+   console.log('PASS retired GM atlas UI absent; current B AtlasActor available, case disposal and save isolation');
+  }finally{await page.close();}
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});
