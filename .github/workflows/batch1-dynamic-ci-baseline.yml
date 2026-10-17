@@ -1,10 +1,5 @@
 name: Batch 1 Cross-Mode Dynamic CI Baseline
 on:
-  push:
-    branches: [audit/batch1-dynamic-baseline-20261017]
-    paths:
-      - scripts/batch1-dynamic-ci-baseline.cjs
-      - .github/workflows/batch1-dynamic-ci-baseline.yml
   workflow_dispatch:
 permissions:
   contents: read
