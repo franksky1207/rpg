@@ -21,7 +21,26 @@ const copy=(p,expected)=>{
 };
 const files=new Map();
 const add=(p,expected)=>{if(!files.has(p))files.set(p,expected||null);};
-for(const [p,record] of Object.entries(manifest.files))add(p,record);
+// Exact B-only request closure from the batch-1 GM audit. Every selected file
+// retains its original SHA/byte integrity gate in the immutable source manifest.
+// Do not publish retired A/C art simply because it remains in that ledger.
+const isBRequest=p=>{
+ if(/^assets\/3d\/equipment\/ancient-ruins-v1\/(?:weapon|helmet|armor|shoes|accessory)-(?:low|medium|high)\.glb$/.test(p))return true;
+ const prefix='development/hybrid-comparison/t2b2-v1/';
+ if(!p.startsWith(prefix))return p==='development/hybrid-comparison/t2b3-v1/lighting/player-studio.hdr';
+ const rel=p.slice(prefix.length);
+ if(/^enemies\/(?:normal|elite|boss)\/atlases\/(?:atlas\.json|(?:idle|attack|hit|dodge|return|defeat)-enemy(?:-depth)?\.png)$/.test(rel))return true;
+ if(/^repair-r1\/tiers\/(?:low|medium)\/(?:normal|elite|boss)\/(?:atlas\.json|(?:idle|attack|hit|dodge|return|defeat)-enemy(?:-depth)?\.png)$/.test(rel))return true;
+ if(/^player\/(?:atlases\/atlas\.json|candidate-(?:low|medium|high)\.glb)$/.test(rel))return true;
+ if(/^repair-r1\/cues\/(?:crit|counter|drain)-0[0-7]\.png$/.test(rel))return true;
+ if(rel==='repair-r2/color-source-contract.json')return true;
+ if(/^shared\/(?:background|midground|foreground|contact-shadow|impact-0[0-7])\.png$/.test(rel))return true;
+ return false;
+};
+const selected=Object.entries(manifest.files).filter(([p])=>isBRequest(p));
+if(selected.length!==174||Object.keys(manifest.files).length-selected.length!==374)
+ throw Error('GM B-only art request inventory diverged from Batch 1 audit: '+selected.length);
+for(const [p,record] of selected)add(p,record);
 for(const [p,record] of Object.entries(manifest.vendor))add(p,record);
 for(const p of ['playback.mjs','fixture-input.mjs','t2a-v1/owner-fixtures.json','t2a-v1/comparison-controls.json',
  't2b3-v1/manifest.json','t2b3-v1/icon.svg','t2b3-v1/renderer.mjs','t2b3-v1/assets.mjs','t2b3-v1/atlas.mjs','t2b3-v1/native.mjs','t2b3-v1/contract.mjs','t2b3-v1/vendor.mjs'])add(prefix+p);
