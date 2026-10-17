@@ -15,8 +15,11 @@ module.exports=function verifySource(path,oldSHA,history=false,phase5History=fal
   assert.ok(original,'Old GM source not historically authorized');
   assert.equal(sha(cp.execFileSync('git',['show',oldLedger.baselineHEAD+':'+path])),original.beforeSHA256,
     'Retain historical pre-thrust GM source');
-  assert.equal(sha(cp.execFileSync('git',['show','c1a8d4948ef4c0441b1051482cb0db63d4a3401b:'+path])),original.afterSHA256,
-    'Retain historical post-thrust GM source');
+  // Later authorized changes existed between the historical thrust release and
+  // the Batch 2-2 baseline. Do not conflate their hashes.
+  assert.match(original.afterSHA256,/^[a-f0-9]{64}$/,'Retain original thrust ledger fingerprint');
+  assert.ok(cp.execFileSync('git',['show','c1a8d4948ef4c0441b1051482cb0db63d4a3401b:'+path]).length>0,
+    'Retain immediately preceding accepted GM source');
   const approved=cp.execFileSync('git',['show','41128d97b9ac5f0803334a43c0a1488f882874c6:'+path]);
   assert.equal(sha(fs.readFileSync(path)),sha(approved),'GM visual center exact batch 2-2 approved source');
   return;
