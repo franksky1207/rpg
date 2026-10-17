@@ -19,6 +19,12 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  let floatSerial=0;
  let syncingHp=false;
  let structuredPlayback=false;
+ const pendingFxTimers=new Set();
+ function clearPendingFx(){
+  for(const timer of pendingFxTimers)clearTimeout(timer);
+  pendingFxTimers.clear();
+  document.querySelectorAll('.combat-fx-pop').forEach(el=>el.remove());
+ }
 
  function standardUiTarget(value){return value==="enemy"?"enemy":"player";}
  function standardOtherTarget(value){return standardUiTarget(value)==="player"?"enemy":"player";}
@@ -109,6 +115,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   window.CivilizationCombatEvents?.endPresentation?.(presentation.token,reason);
   presentation.active=false;
   presentation=null;
+  clearPendingFx();
   document.querySelectorAll(".combat-shield-bar").forEach(el=>el.remove());
   return cleared;
  };
@@ -143,7 +150,10 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  function spawnFx(target,kind,text=null,delay=0){
   const cfg=FX_LABELS[kind]||{text:String(text||""),className:kind||""};
   const label=text||cfg.text;if(!label)return;
-  setTimeout(()=>{
+  const owner=presentation?.token??null;
+  const timer=setTimeout(()=>{
+   pendingFxTimers.delete(timer);
+   if(owner!==null&&(!presentation?.active||presentation.token!==owner))return;
    ensureCombatExtras();
    const card=combatCard(target),layer=card?.querySelector(".combat-fx-layer");if(!layer)return;
    const el=document.createElement("div"),lane=floatSerial++%3;
@@ -154,6 +164,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    layer.appendChild(el);
    el.addEventListener("animationend",()=>el.remove(),{once:true});
   },Math.max(0,delay));
+  pendingFxTimers.add(timer);
  }
  window.spawnCombatFx=spawnFx;
 
