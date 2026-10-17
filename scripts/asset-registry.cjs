@@ -47,8 +47,11 @@ function inspectRegistry(root,available){
   if(!available.has(a.path))throw Error('Registered asset missing: '+a.id+' -> '+a.path);
   const bytes=fs.readFileSync(path.join(root,a.path));
   if(a.sha256!==sha(bytes)||a.bytes!==bytes.length)throw Error('Asset digest/size mismatch: '+a.id);
-  if(!a.license||!a.source?.path||!safe(a.source.path)||!available.has(a.source.path))throw Error('Asset source/license missing: '+a.id);
-  if(a.source.sha256!==sha(fs.readFileSync(path.join(root,a.source.path))))throw Error('Source digest mismatch: '+a.id);
+  if(!a.license||!a.source?.path||!safe(a.source.path)||!a.source.sha256||!/^[a-f0-9]{64}$/.test(a.source.sha256))throw Error('Asset source/license provenance missing: '+a.id);
+  // Retired Blender authoring sources are not runtime assets. Keep the declared
+  // immutable provenance digest, and verify actual bytes when source is retained.
+  if(available.has(a.source.path)&&a.source.sha256!==sha(fs.readFileSync(path.join(root,a.source.path))))throw Error('Source digest mismatch: '+a.id);
+  if(!available.has(a.source.path)&&!/^development\/3d-source\/.*\.blend$/.test(a.source.path))throw Error('Non-retired asset source missing: '+a.id);
   if(a.preload!==false||!Array.isArray(a.dependencies)||!Array.isArray(a.epochs)||!Array.isArray(a.scenes))throw Error('Explicit on-demand policy required: '+a.id);
   entries.set(a.id,a);
  }
