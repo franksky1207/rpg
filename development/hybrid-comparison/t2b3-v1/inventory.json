@@ -37,20 +37,6 @@
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
     {
-      "path": "bake-player-studio.py",
-      "bytes": 2763,
-      "sha256": "7ca703fc0c059f17a57850ac915867a69f059af630eec6a242de930053cb0ace",
-      "publish": false,
-      "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
-    },
-    {
-      "path": "build-manifest.py",
-      "bytes": 5189,
-      "sha256": "9d081f7e0327a411256104328fc9b76ad3a5e1e77a3b9363841425afabc6a7f4",
-      "publish": false,
-      "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
-    },
-    {
       "path": "contract.mjs",
       "bytes": 4709,
       "sha256": "4a4ff956abd48e16bd113f3a20a8fba7d84df1a6cef2dbd70b96d8002dd65796",
@@ -926,33 +912,12 @@
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     },
     {
-      "path": "source-evolution.json",
-      "bytes": 1303,
-      "sha256": "6d1222a664a1c224839b06949018f1b194c43fe20a5755d70696d88ab3f6fd5e",
-      "publish": false,
-      "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
-    },
-    {
-      "path": "source-version.cjs",
-      "bytes": 10098,
-      "sha256": "7d21e37ff5d5d86766f6c6f70675f3e3077d7c5236b4a4e8684ca4e9fee31286",
-      "publish": false,
-      "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
-    },
-    {
       "path": "vendor.mjs",
       "bytes": 1340,
       "sha256": "0e431eaa4c34e739d03a958a313ee841f4d6840fcdaf47a2cee3ffcf483bf128",
       "publish": false,
       "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
-    },
-    {
-      "path": "verify-source.py",
-      "bytes": 2014,
-      "sha256": "ef4fa36cc5659da7ec7e8633f95e99a28a95ceac213fd62e4d33e154c96a2860",
-      "publish": false,
-      "license": "Original repository source / provenance / technical evidence; see LICENSE.md"
     }
   ],
-  "totalBytes": 12240312
+  "totalBytes": 12218945
 }
