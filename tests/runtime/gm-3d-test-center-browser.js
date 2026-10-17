@@ -27,6 +27,9 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict');
   assert.equal(await page.locator('.gm-suit-preview canvas').count(),0,'direct iframe must not receive protected sprites');
   assert.equal(await page.locator('#fixturePanel').isVisible(),false);
   assert.equal(await page.locator('#scenarioFormal').isVisible(),false);
+  for(const retired of ['#fixturePanel','#scenarioFormal','#appearanceWorld','#alternateUniverse','#dungeonArenaRank','#scenarioCalamityIndex','#gmAtlasReview']){
+   assert.equal(await page.locator(retired).count(),0,'Removed 3D scenario controls must not remain in GM DOM: '+retired);
+  }
   await page.locator('#categoryList').getByRole('button',{name:/戰場與對戰/}).click();
   assert.equal(await page.locator('#caseList .center-case').count(),1);
   assert.equal(await page.locator('#caseTitle').innerText(),'2.5D 戰鬥模擬');
