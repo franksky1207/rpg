@@ -17,6 +17,13 @@ for(const name of ["assets/gm-equipment-2_5d/v1/catalog.json","3d-test/gm-battle
 const plan=require("../../scripts/publish-assets.cjs").inspect(root);
 assert.ok(!plan.keep.includes("3d-test/atlas-review.js"),"Retired GM atlas entry published");
 assert.ok(plan.excluded.some(row=>row.path==="3d-test/atlas-review.js"),"Retired GM source must remain tracked until deletion phase");
+const ledger=JSON.parse(fs.readFileSync(path.join(root,pre+"t2b3-v1/manifest.json"),"utf8"));
+const staged=Object.keys(ledger.files).filter(p=>fs.existsSync(path.join(stage,p)));
+assert.equal(staged.length,174,"Only the audited 174 GM B files may be staged");
+assert.equal(Object.keys(ledger.files).length-staged.length,374,"Expected 374 retired A/C-only files");
+const stagedSet=new Set(staged);
+for(const name of staged)assert.ok(ledger.files[name],"Staged asset outside audited ledger: "+name);
+for(const name of Object.keys(ledger.files))if(!stagedSet.has(name))assert.ok(!fs.existsSync(path.join(stage,name)),"Unrequested retired art staged: "+name);
 const approved=JSON.parse(fs.readFileSync(path.join(root,"development/equipment-2_5d/gm-publication.json"),"utf8"));
 const shipped=new Set(Object.keys(approved.files));
 for(const name of shipped)assert.ok(fs.existsSync(path.join(stage,name)),"Approved GM asset missing: "+name);
