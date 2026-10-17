@@ -15,6 +15,14 @@ const formalProtected=[
 ];
 for(const p of formalProtected){
  if(!fs.existsSync(p))continue;
+ if(p==="index.html"){
+  const original=historic(base,p).toString(),current=actual(p).toString();
+  const oldToken="backgroundprogress.js?v=20261013-background-hud-recovery1";
+  const newToken="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
+  assert.ok(original.includes(oldToken)&&current.includes(newToken),"Expected approved backgroundprogress cache version");
+  assert.equal(current.replace(newToken,oldToken),original,"Unexpected formal HTML change beyond approved Batch 2 cache token");
+  continue;
+ }
  assert.equal(sha(actual(p)),sha(historic(base,p)),"Formal runtime unexpectedly modified: "+p);
 }
 const batch21=[
