@@ -17,7 +17,7 @@ test('actual PNG16 depth decoded losslessly, malformed depth rejected',async()=>
 test('every manifest reference has exact bytes/SHA/publish isolation and retained C limits',async()=>{await init;const bytes=fs.readFileSync(root+'/manifest.json'),m=JSON.parse(bytes);const assets=await import('../../'+root+'/assets.mjs?v=20261012-t2b3-v1');assert.equal(sha(bytes),assets.MANIFEST_SHA);assert.equal(m.publish,false);assert.equal(sha(fs.readFileSync(art+'/inventory.json')),m.B2InventorySHA);for(const [p,row] of Object.entries(m.files)){const b=fs.readFileSync(p);assert.equal(b.length,row.bytes,p);assert.equal(sha(b),row.sha256,p);assert.equal(row.publish,false);}assert.match(m.knownLimits.nativeMaterialLighting,/unresolved/);assert.match(m.knownLimits.geometryContact,/remain/);assert.equal(m.knownLimits.humanArtApproved,false);for(const q of ['low','medium','high'])assert.equal(m.candidateCoverage[q].characterSHA256,sha(fs.readFileSync(art+'/player/candidate-'+q+'.glb')));});
 test('retained B2 assets are checked against current inventory; retired Blender and A/C files stay absent',async()=>{await init;
  const inventory=JSON.parse(fs.readFileSync(art+'/inventory.json'));
- assert.equal(inventory.files.length,199);
+ assert.equal(inventory.files.length,165);
  assert.equal(Object.keys(JSON.parse(fs.readFileSync(root+'/manifest.json')).files).length,174);
  let total=0;
  for(const row of inventory.files){const p=art+'/'+row.path,b=fs.readFileSync(p);assert.equal(b.length,row.bytes,'B2 size '+p);assert.equal(sha(b),row.sha256,'B2 SHA '+p);total+=b.length;}

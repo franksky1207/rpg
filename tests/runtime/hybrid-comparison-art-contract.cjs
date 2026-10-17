@@ -6,7 +6,7 @@ const root='development/hybrid-comparison/t2b2-v1',sha=b=>crypto.createHash('sha
  const inventory=JSON.parse(fs.readFileSync(root+'/inventory.json'));
  const manifest=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2b3-v1/manifest.json'));
  const fixture=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/owner-fixtures.json'));
- assert.equal(inventory.files.length,199,'Current B2 registry');
+ assert.equal(inventory.files.length,165,'Current B2 registry');
  assert.equal(Object.keys(manifest.files).length,174,'Approved B-only request closure');
  assert.equal(sha(fs.readFileSync(root+'/inventory.json')),manifest.B2InventorySHA);
  assert.equal(fixture.sha256,'5a74c2eeb00014b208bcb175d2bd6f7668e430112dc7ebec8a7b5ac3ced83d99');
@@ -31,5 +31,5 @@ const root='development/hybrid-comparison/t2b2-v1',sha=b=>crypto.createHash('sha
  assert.ok(!pub.keep.some(p=>p.startsWith('development/')),'Never publish development-only B2');
  assert.ok(pub.keep.includes('3d-test/gm-battle-simulation.js'),'Retain approved GM B adapter');
  require('../../scripts/gm-sprite-publication.cjs')(process.cwd(),pub.files);
- console.log('PASS B-only GLB inspection, 199 current SHA assets, 174 verified B requests and formal release boundary');
+ console.log('PASS B-only GLB inspection, 165 current SHA assets, 174 verified B requests and formal release boundary');
 })().catch(error=>{console.error(error);process.exitCode=1;});
