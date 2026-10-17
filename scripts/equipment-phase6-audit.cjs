@@ -6,7 +6,10 @@ const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,p))).digest('hex');
 const formal=new Set(plan.references.filter(r=>r.from==='index.html').map(r=>r.path));
 const modules=plan.keep.filter(p=>p.startsWith('3d-test/')&&/\.(?:m?js|css)$/.test(p)).map(p=>({path:p,sha256:sha(p),bytes:plan.sizes.get(p),classification:formal.has(p)?'formal-entry-or-shared':p.includes('equipment-sprites-v1/')?'shared-2.5d-lazy':'gm-or-legacy-lazy',consumers:[...new Set(plan.references.filter(r=>r.path===p).map(r=>r.from))].sort()}));
-assert.ok(modules.every(r=>r.consumers.length),'Unclassified published module: investigate; do not delete automatically');
+// The new two-tab GM viewer deliberately stops referencing obsolete 3D scene
+// modules; classify orphans for the next batch instead of restoring callers.
+const unusedModules=modules.filter(m=>m.consumers.length===0).map(m=>m.path);
+assert.ok(modules.every(m=>m.bytes>0&&/^[a-f0-9]{64}$/.test(m.sha256)),'Published module integrity missing');
 const entry=read('3d-test/t3b-formal-entry.js');
 assert.ok(entry.includes('if(context.wholeSuit===true)return;'));
 assert.ok(entry.indexOf('if(context.wholeSuit===true)return;')<entry.indexOf('ensure?.("engine")'));
@@ -28,5 +31,5 @@ const factories=[...read('3d-test/prototype-engine.js').matchAll(/function (crea
 const unusedFactories=factories.filter(f=>f.consumers.length===0).map(f=>f.name);
 assert.ok(factories.length>0,'3D factory source unexpectedly missing');
 assert.equal(plan.missing.length,0);
-const report={schema:'cw.equipment.phase6.dependencies.v1',baselineMain:'987767dc3d443d6b1f1dc1b359cf2a086100456c',modules,factories,unusedFactories,g007:glbs.map(a=>({path:a.path,sha256:a.sha256,bytes:a.bytes,license:a.license})),preservedSourceTools:sources,retired,removedThisBatch:[],release:{selectedFiles:plan.keep.length,selectedBytes:plan.keep.reduce((n,p)=>n+plan.sizes.get(p),0),backgrounds:plan.backgrounds.length,music:plan.audio.music.length,sfx:plan.audio.sfx.length,missing:plan.missing},limitations:['Lexical consumers prove a reason to retain, not actual runtime execution or absence of dynamic consumers.','Controlled B3 preview is staged separately after official release audit; it is not an unrestricted development directory publication.','Browser request assertions and original GM/G007 tests are required alongside this audit.']};
+const report={schema:'cw.equipment.phase6.dependencies.v1',baselineMain:'987767dc3d443d6b1f1dc1b359cf2a086100456c',modules,unusedModules,factories,unusedFactories,g007:glbs.map(a=>({path:a.path,sha256:a.sha256,bytes:a.bytes,license:a.license})),preservedSourceTools:sources,retired,removedThisBatch:[],release:{selectedFiles:plan.keep.length,selectedBytes:plan.keep.reduce((n,p)=>n+plan.sizes.get(p),0),backgrounds:plan.backgrounds.length,music:plan.audio.music.length,sfx:plan.audio.sfx.length,missing:plan.missing},limitations:['Lexical consumers prove a reason to retain, not actual runtime execution or absence of dynamic consumers.','Controlled B3 preview is staged separately after official release audit; it is not an unrestricted development directory publication.','Browser request assertions and original GM/G007 tests are required alongside this audit.']};
 console.log(JSON.stringify(report,null,2));
