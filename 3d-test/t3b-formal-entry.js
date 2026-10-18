@@ -44,10 +44,10 @@ function mount(options){
    signal.throwIfAborted();
   },
   policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:!animationEnabled()?"text":"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
-  onRetire:()=>{options.host.hidden=true;},
-  onReady:()=>{clearNotice();options.host.hidden=false;},
+  onRetire:()=>{options.host.hidden=true;options.host.closest(".combat-screen")?.classList.remove("formal-b-shared-layout");},
+  onReady:()=>{clearNotice();options.host.hidden=false;if(options.host.classList.contains("formal-b-shared-stage"))options.host.closest(".combat-screen")?.classList.add("formal-b-shared-layout");},
   onFallback:reason=>{
-   options.host.hidden=true;clearNotice();
+   options.host.hidden=true;options.host.closest(".combat-screen")?.classList.remove("formal-b-shared-layout");clearNotice();
    // Expected text / minimal policies are normal UI choices, not failures.
    if(reason!=="text-or-minimal-policy"){
     notice=document.createElement("p");notice.className="formal-b-visual-fallback";notice.dataset.status="unavailable";notice.setAttribute("role","status");
