@@ -31,7 +31,8 @@ if(changed.includes("index.html")){
  const expected=sealed
   .replace("3d-test/formal-player-sprites.css?v=20261015-phase5","3d-test/formal-player-sprites.css?v=20261019-batch8-shared1")
   .replace("3d-test/t3b-formal-renderer.js?v=20261015-thrust1&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1")
-  .replace("3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-entry.js?v=20261019-batch8-shared1");
+  .replace("3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-entry.js?v=20261019-batch8-shared1")
+  .replace("dungeonui.js?v=20261018-batch4-mobile-stage-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1");
  assert.equal(actual,expected,"Batch8 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
