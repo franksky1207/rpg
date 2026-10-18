@@ -1,0 +1,26 @@
+name: Higher Ten-Boss First-Turn Regression
+on:
+  pull_request:
+    paths:
+      - 'tests/runtime/thirdworld-ten-boss-first-turn-regression.js'
+      - '.github/workflows/higher-ten-boss-first-turn.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  first-turn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Actual formal combat round-one baseline
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/higher-first-turn-http.log 2>&1 &
+          for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done
+          node tests/runtime/thirdworld-ten-boss-first-turn-regression.js
