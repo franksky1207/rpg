@@ -1,0 +1,198 @@
+{
+  "schema": "cw.batch7.six-layer-review.v1",
+  "batch": 7,
+  "version": "20261018-six-layer-review-1",
+  "baselineMain": "29ab70fdc791dbbdce0e276a282f2e6b163f276b",
+  "baselinePrHead": "d1d2df60716fd8b3150966a37d99125b87f95594",
+  "formalReleaseAllowed": false,
+  "sourceZip": {
+    "name": "civilization_batch7_six_layer_candidates.zip",
+    "sha256": "e0b07a1c2012ab7ec0bc940119a046635d794c300b5a4b7976966b891f4bc459",
+    "bytes": 3400125,
+    "manifestPreserved": true,
+    "license": "User supplied for this project; not an assertion of third party ownership/licensing"
+  },
+  "entries": [
+    {
+      "id": "era-galaxy",
+      "setAccepted": false,
+      "acceptedLayers": [],
+      "sources": [
+        {
+          "path": "development/combat-animation/batch7/layer-sources/galaxy_attack_body.jpeg",
+          "sha256": "425771d77267b4c71a621b025cc1cfebfdccf9b23fa1c5882a76dd53f6d5bc04"
+        },
+        {
+          "path": "development/combat-animation/batch7/layer-sources/galaxy_weapon.png",
+          "sha256": "a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d"
+        }
+      ],
+      "checks": {
+        "identity": "visual-compatible-source-only; not approved as whole-body replacement",
+        "hiddenHandAndLegArmor": "visible repairs present; original occlusion patch and front-hand depth not accepted",
+        "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
+        "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
+        "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
+        "recomposition": "diagnostic compared to master; no set accepted",
+        "alphaHaloFringeCrop": "body JPEG has no alpha; precise matte not accepted",
+        "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
+      },
+      "blockers": [
+        "角色身份、全罩盔、鐵灰深藍和右向3/4大致相符，但補圖不是母圖的局部無損修補，不能整張取代母圖。",
+        "左拳與原持劍手的指節/握持方向不同；重組會把完整握柄畫在拳頭上，尚無核定的前手遮罩。",
+        "雙腿輪廓已補出，但腿甲接縫與膝部藍光須以原母圖局部遮罩核對；白底JPEG不是正式Alpha。",
+        "獨立劍可見柄尾、握柄、護手、劍身與藍光，未見夾帶手/甲；比例擬合只能作假設，握點尚未允收。"
+      ],
+      "finalGrip": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "depthAccepted": false,
+      "diagnosticLandmarksOnly": true,
+      "diagnostic": {
+        "path": "development/combat-animation/batch7/layer-review/galaxy-review.png",
+        "sha256": "43424187b91986e583b6caacbe1ebbc9453f7f9fb5f51d18d57e13a29fff7638",
+        "bytes": 795849
+      },
+      "actions": {
+        "idle": "blocked-not-accepted",
+        "attack": "blocked-not-accepted",
+        "hit": "blocked-not-accepted",
+        "dodge": "blocked-not-accepted",
+        "return": "blocked-not-accepted",
+        "defeat": "blocked-not-accepted"
+      }
+    },
+    {
+      "id": "era-universe",
+      "setAccepted": false,
+      "acceptedLayers": [],
+      "sources": [
+        {
+          "path": "development/combat-animation/batch7/layer-sources/universe_attack_body.jpeg",
+          "sha256": "80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42"
+        },
+        {
+          "path": "development/combat-animation/batch7/layer-sources/universe_weapon.png",
+          "sha256": "5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad"
+        }
+      ],
+      "checks": {
+        "identity": "visual-compatible-source-only; not approved as whole-body replacement",
+        "hiddenHandAndLegArmor": "visible repairs present; original occlusion patch and front-hand depth not accepted",
+        "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
+        "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
+        "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
+        "recomposition": "diagnostic compared to master; no set accepted",
+        "alphaHaloFringeCrop": "body JPEG has no alpha; precise matte not accepted",
+        "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
+      },
+      "blockers": [
+        "同主角風格與紫青配色大致保留；身體背景為實際JPEG棋盤像素，非透明，不能把灰格當低Alpha。",
+        "無武器圖改動了另一側右拳的閉合狀態、右腳寬度及腿甲細節，不能用整張替換母圖。",
+        "劍的柄、護手、紫青刃與光效齊全，未見人物部件；柄/護手角度及握持須重新對齊，不能靠檔名認列完成。",
+        "棋盤格貼近銀甲與藍紫光，直接全域灰/白色鍵會破壞甲片或光暈；沒有精準保留原RGB的已允收遮罩。"
+      ],
+      "finalGrip": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "depthAccepted": false,
+      "diagnosticLandmarksOnly": true,
+      "diagnostic": {
+        "path": "development/combat-animation/batch7/layer-review/universe-review.png",
+        "sha256": "2cc1f5a4acd8a76b0596617b416f936065202e991384e560764a314b97edfa81",
+        "bytes": 1107516
+      },
+      "actions": {
+        "idle": "blocked-not-accepted",
+        "attack": "blocked-not-accepted",
+        "hit": "blocked-not-accepted",
+        "dodge": "blocked-not-accepted",
+        "return": "blocked-not-accepted",
+        "defeat": "blocked-not-accepted"
+      }
+    },
+    {
+      "id": "era-higher",
+      "setAccepted": false,
+      "acceptedLayers": [],
+      "sources": [
+        {
+          "path": "development/combat-animation/batch7/layer-sources/higher_attack_body.jpeg",
+          "sha256": "6f78638a2a7885bda96dd29c384629bc421873dc0cce7e3978f8f020d5bfac6f"
+        },
+        {
+          "path": "development/combat-animation/batch7/layer-sources/higher_weapon.png",
+          "sha256": "30baa0c3a02ba9abb54301de06f3b3db4f04aa5b042d28c27d6e89bb5f911b52"
+        }
+      ],
+      "checks": {
+        "identity": "visual-compatible-source-only; not approved as whole-body replacement",
+        "hiddenHandAndLegArmor": "visible repairs present; original occlusion patch and front-hand depth not accepted",
+        "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
+        "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
+        "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
+        "recomposition": "diagnostic compared to master; no set accepted",
+        "alphaHaloFringeCrop": "body JPEG has no alpha; precise matte not accepted",
+        "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
+      },
+      "blockers": [
+        "頭盔、白金甲、星河披風與四顆外部星體的大方向保留；身體仍把披風、星環、星體與人物合在白底JPEG。",
+        "修正版劍保留藍色星核與金色元素，但護手彎鉤/刃根的寬度、負空間和原母圖不同；擬合端點也不能證明為同一把劍。",
+        "重組後柄穿過拳面；需要原母圖持劍手局部修補或獨立前手遮罩，不能用圓形遮擋假裝精確。",
+        "披風可依使用者新指示採獨立靜態後景層；不需要擺動/隱藏披風補繪，但身體/披風相對移動必須禁止，星環前後層與四星體仍缺獨立Alpha。"
+      ],
+      "finalGrip": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "depthAccepted": false,
+      "diagnosticLandmarksOnly": true,
+      "diagnostic": {
+        "path": "development/combat-animation/batch7/layer-review/higher-review.png",
+        "sha256": "b0e0f10866087529adb3b8d3b661d83f9d976a2d6e66f8819e91fb35492a5d1a",
+        "bytes": 1254888
+      },
+      "actions": {
+        "idle": "blocked-not-accepted",
+        "attack": "blocked-not-accepted",
+        "hit": "blocked-not-accepted",
+        "dodge": "blocked-not-accepted",
+        "return": "blocked-not-accepted",
+        "defeat": "blocked-not-accepted"
+      }
+    }
+  ],
+  "higherLowLoadPlan": {
+    "authorization": "User: 高維披風部分 你以最好處理的方式處理",
+    "capeMotion": "static-follow-body",
+    "clothSimulation": false,
+    "relativeCapeBodyMotionAllowed": false,
+    "requiresHiddenCapeRepair": false,
+    "runtimeReady": false,
+    "independentCelestialBodies": 4,
+    "layers": [
+      "rings-back",
+      "star-0",
+      "star-1",
+      "star-2",
+      "star-3",
+      "cape-static-back",
+      "body",
+      "weapon",
+      "hand-front",
+      "rings-front"
+    ],
+    "constraints": [
+      "No relative cape/body movement or rotation exposing unseen structure.",
+      "Cape is an independent controllable static draw layer, never part of the entire character bitmap.",
+      "Rings remain front/back layers and four stars remain independent; no orbit animation until hidden continuity is available.",
+      "Low tier: fixed placement, same shared transform, no blur/filter/extra RAF or particle systems.",
+      "Use existing Actor/Presenter clock and shared verified textures only after source-layer acceptance."
+    ]
+  }
+}

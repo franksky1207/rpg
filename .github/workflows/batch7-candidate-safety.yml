@@ -19,13 +19,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 -m pip install Pillow==11.3.0
+      - run: python3 -m pip install Pillow==11.3.0 numpy==2.3.3
       - name: Check immutable sources and non-release boundary (not art acceptance)
         run: |
           set -euo pipefail
           node --check scripts/batch7-prepare-candidates.cjs
           node tests/runtime/batch7-source-assets.cjs
           python3 scripts/batch7-audit-images.py > /tmp/batch7-image-audit.json
+          python3 scripts/batch7-review-layers.py > /tmp/batch7-layer-audit.json
+          node tests/runtime/batch7-layer-boundary.test.mjs
           node tests/runtime/batch5-era-animation-contract.cjs
           node tests/runtime/cleanup-batch4-4-final-guard.cjs
           node tests/runtime/cleanup-batch2-4-integration.cjs
@@ -52,6 +54,8 @@ jobs:
           name: batch7-candidate-safety-evidence
           path: |
             /tmp/batch7-image-audit.json
+            /tmp/batch7-layer-audit.json
+            development/combat-animation/batch7/layer-review/
             /tmp/batch7-appearance-browser.json
             /tmp/batch7-http.log
             publish-stage3-report.json

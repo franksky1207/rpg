@@ -1,0 +1,72 @@
+{
+  "schema": "cw.batch7.gpt-layer-candidates.v1",
+  "status": "unverified-candidates",
+  "files": [
+    {
+      "name": "galaxy_attack_body.jpeg",
+      "zip_path": "candidates/galaxy_attack_body.jpeg",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG",
+      "mode": "RGB",
+      "bytes": 244984,
+      "sha256": "425771d77267b4c71a621b025cc1cfebfdccf9b23fa1c5882a76dd53f6d5bc04",
+      "has_alpha": false
+    },
+    {
+      "name": "galaxy_weapon.png",
+      "zip_path": "candidates/galaxy_weapon.png",
+      "width": 1254,
+      "height": 1254,
+      "format": "PNG",
+      "mode": "RGBA",
+      "bytes": 684261,
+      "sha256": "a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d",
+      "has_alpha": true
+    },
+    {
+      "name": "universe_attack_body.jpeg",
+      "zip_path": "candidates/universe_attack_body.jpeg",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG",
+      "mode": "RGB",
+      "bytes": 586797,
+      "sha256": "80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42",
+      "has_alpha": false
+    },
+    {
+      "name": "universe_weapon.png",
+      "zip_path": "candidates/universe_weapon.png",
+      "width": 1254,
+      "height": 1254,
+      "format": "PNG",
+      "mode": "RGBA",
+      "bytes": 612210,
+      "sha256": "5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad",
+      "has_alpha": true
+    },
+    {
+      "name": "higher_attack_body.jpeg",
+      "zip_path": "candidates/higher_attack_body.jpeg",
+      "width": 1024,
+      "height": 1536,
+      "format": "JPEG",
+      "mode": "RGB",
+      "bytes": 612102,
+      "sha256": "6f78638a2a7885bda96dd29c384629bc421873dc0cce7e3978f8f020d5bfac6f",
+      "has_alpha": false
+    },
+    {
+      "name": "higher_weapon.png",
+      "zip_path": "candidates/higher_weapon.png",
+      "width": 1024,
+      "height": 1536,
+      "format": "PNG",
+      "mode": "RGBA",
+      "bytes": 802796,
+      "sha256": "30baa0c3a02ba9abb54301de06f3b3db4f04aa5b042d28c27d6e89bb5f911b52",
+      "has_alpha": true
+    }
+  ]
+}

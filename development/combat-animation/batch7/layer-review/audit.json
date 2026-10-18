@@ -1,0 +1,170 @@
+{
+  "scope": "source integrity, measured alpha and diagnostic alignment; NOT art or six-action acceptance",
+  "formalReleaseAllowed": false,
+  "rows": [
+    {
+      "name": "galaxy_attack_body.jpeg",
+      "zip_path": "candidates/galaxy_attack_body.jpeg",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG",
+      "mode": "RGB",
+      "bytes": 244984,
+      "sha256": "425771d77267b4c71a621b025cc1cfebfdccf9b23fa1c5882a76dd53f6d5bc04",
+      "has_alpha": false,
+      "actualAlphaRange": null,
+      "fullyTransparentPixels": 0,
+      "alphaBounds": null,
+      "edgeAlphaMax": null
+    },
+    {
+      "name": "galaxy_weapon.png",
+      "zip_path": "candidates/galaxy_weapon.png",
+      "width": 1254,
+      "height": 1254,
+      "format": "PNG",
+      "mode": "RGBA",
+      "bytes": 684261,
+      "sha256": "a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d",
+      "has_alpha": true,
+      "actualAlphaRange": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 1338517,
+      "alphaBounds": [
+        30,
+        21,
+        1254,
+        1238
+      ],
+      "edgeAlphaMax": 1
+    },
+    {
+      "name": "universe_attack_body.jpeg",
+      "zip_path": "candidates/universe_attack_body.jpeg",
+      "width": 1254,
+      "height": 1254,
+      "format": "JPEG",
+      "mode": "RGB",
+      "bytes": 586797,
+      "sha256": "80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42",
+      "has_alpha": false,
+      "actualAlphaRange": null,
+      "fullyTransparentPixels": 0,
+      "alphaBounds": null,
+      "edgeAlphaMax": null
+    },
+    {
+      "name": "universe_weapon.png",
+      "zip_path": "candidates/universe_weapon.png",
+      "width": 1254,
+      "height": 1254,
+      "format": "PNG",
+      "mode": "RGBA",
+      "bytes": 612210,
+      "sha256": "5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad",
+      "has_alpha": true,
+      "actualAlphaRange": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 1323811,
+      "alphaBounds": [
+        0,
+        39,
+        1244,
+        1230
+      ],
+      "edgeAlphaMax": 1
+    },
+    {
+      "name": "higher_attack_body.jpeg",
+      "zip_path": "candidates/higher_attack_body.jpeg",
+      "width": 1024,
+      "height": 1536,
+      "format": "JPEG",
+      "mode": "RGB",
+      "bytes": 612102,
+      "sha256": "6f78638a2a7885bda96dd29c384629bc421873dc0cce7e3978f8f020d5bfac6f",
+      "has_alpha": false,
+      "actualAlphaRange": null,
+      "fullyTransparentPixels": 0,
+      "alphaBounds": null,
+      "edgeAlphaMax": null
+    },
+    {
+      "name": "higher_weapon.png",
+      "zip_path": "candidates/higher_weapon.png",
+      "width": 1024,
+      "height": 1536,
+      "format": "PNG",
+      "mode": "RGBA",
+      "bytes": 802796,
+      "sha256": "30baa0c3a02ba9abb54301de06f3b3db4f04aa5b042d28c27d6e89bb5f911b52",
+      "has_alpha": true,
+      "actualAlphaRange": [
+        0,
+        254
+      ],
+      "fullyTransparentPixels": 1335412,
+      "alphaBounds": [
+        51,
+        49,
+        1012,
+        1519
+      ],
+      "edgeAlphaMax": 0
+    }
+  ],
+  "alignment": [
+    {
+      "scale": 0.5871756424644037,
+      "rotationDegrees": -4.634784017954768,
+      "translation": [
+        236.99592421019148,
+        427.8725371294511
+      ],
+      "mappedGrip": [
+        386.7874823548124,
+        604.241704276597
+      ],
+      "distanceToBodyGripSourcePx": 38.09641504361398,
+      "method": "manual guard/tip similarity fit; approximate landmarks, NOT final grip approval",
+      "id": "era-galaxy",
+      "diagnostic512GripResidual": 13.35082189792503
+    },
+    {
+      "scale": 0.5740155479477465,
+      "rotationDegrees": -6.535627135638812,
+      "translation": [
+        230.14719955457343,
+        476.0198701999199
+      ],
+      "mappedGrip": [
+        385.2207993318602,
+        594.0298052998799
+      ],
+      "distanceToBodyGripSourcePx": 45.02400042809885,
+      "method": "manual guard/tip similarity fit; approximate landmarks, NOT final grip approval",
+      "id": "era-universe",
+      "diagnostic512GripResidual": 15.740097710636185
+    },
+    {
+      "scale": 0.6149449560817727,
+      "rotationDegrees": -8.336601452997245,
+      "translation": [
+        258.7048056399974,
+        572.5737015716966
+      ],
+      "mappedGrip": [
+        434.44392342021865,
+        711.5222171916436
+      ],
+      "distanceToBodyGripSourcePx": 40.47461956491233,
+      "method": "manual guard/tip similarity fit; approximate landmarks, NOT final grip approval",
+      "id": "era-higher",
+      "diagnostic512GripResidual": 11.625976227730328
+    }
+  ]
+}

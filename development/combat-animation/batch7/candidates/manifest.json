@@ -156,5 +156,6 @@
         "Weapon/hand and leg occlusion unresolved."
       ]
     }
-  ]
+  ],
+  "supplementalLayerReview": "development/combat-animation/batch7/layer-review/review.json"
 }

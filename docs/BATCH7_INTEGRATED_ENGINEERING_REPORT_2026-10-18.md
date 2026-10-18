@@ -1,5 +1,7 @@
 # 第7批整合施工報告（未封箱，禁止合併）
 
+> 本文保留上次母圖整合歷史。本次六張補圖驗證、重組圖、固定30項及靜態高維披風方案，請讀 [六張補圖整合報告](BATCH7_SIX_LAYER_INTEGRATION_REVIEW_2026-10-18.md)。沒有解除發布阻擋。
+
 ## 1. 修改內容
 
 承接 `franksky1207/rpg` 原草稿 [PR #38](https://github.com/franksky1207/rpg/pull/38)，沿用分支 `batch7-era-player-sprite-20261018`，基礎施工 SHA `ba17656da5e03b6db3af5a100b1cb4703408c619`；fresh-read main 為 `29ab70fdc791dbbdce0e276a282f2e6b163f276b`，main 是分支祖先。保留原 PR 的全部合法修改，沒有重建第7批或另開 PR。
