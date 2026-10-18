@@ -30,7 +30,7 @@ async function finishIntro(page){
   if(process.env.W3_B_VISUAL_FAILURE==='1'){
    await page.waitForSelector('.formal-b-visual-fallback');
    assert.equal(await page.locator('.formal-b-whole-suit').count(),0,'injected visual failure preserves text fallback');
-  }else await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
+  }else await page.waitForSelector('.formal-b-whole-suit[data-suit="era-higher"]');
  };
  if(process.env.BACKGROUND_BASELINE_DIR)for(const file of ['backgroundprogress.js','combatfx.js','thirdworldrun.js','thirdworldplayerflow.js','thirdworldui.js'])await page.route('**/'+file+'?*',r=>r.fulfill({contentType:'text/javascript',body:fs.readFileSync(process.env.BACKGROUND_BASELINE_DIR+'/'+file)}));const errors=[];page.on('pageerror',e=>errors.push(String(e)));
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
