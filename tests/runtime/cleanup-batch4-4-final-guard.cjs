@@ -24,35 +24,15 @@ const unexpected=changed.filter(p=>!approvedBatch8.has(p)&&p!=="index.html"&&p!=
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
- // Permit only independently approved Batch 2 and Batch 3 script cache tokens.
- // Normalize both back to the historical values, then require exact HTML equality;
- // do not disable or loosen the broader retired-asset guard.
- const original=run("show",base+":index.html");
- const actual=fs.readFileSync("index.html","utf8").trim();
- // Independently approved Batch 7 extends only the two exact version tokens.
- assert.ok(actual.includes("&vbatch7=20261018-era-settings-r2")&&actual.includes("era-appearance-contract.js?v=20261018-batch7-v3"),"Expected Batch7 cache fingerprint");
- const current=actual.replaceAll("v=20261019-batch8-shared1","v=20261015-phase5").replace("3d-test/t3b-formal-renderer.js?v=20261015-phase5","3d-test/t3b-formal-renderer.js?v=20261015-thrust1&vbatch7sprite=20261018-lightweight1").replace("3d-test/t3b-formal-entry.js?v=20261015-phase5","3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings&vbatch7sprite=20261018-lightweight1").replaceAll("&vbatch7sprite=20261018-lightweight1", "").replace("&vbatch7=20261018-era-settings-r2","").replace("era-appearance-contract.js?v=20261018-batch7-v3","era-appearance-contract.js?v=20261018-batch5-contract1");
- const oldScript="backgroundprogress.js?v=20261013-background-hud-recovery1";
- const newScript="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
- assert.ok(original.includes(oldScript)&&current.includes(newScript),"Expected approved Batch 2 cache version");
- const oldFx="combatfx.js?v=20261015-thrust1";
- const newFx="combatfx.js?v=20261017-batch3-fx-lifecycle1";
- assert.ok(original.includes(oldFx)&&current.includes(newFx),"Expected approved Batch 3 combat FX cache version");
- const oldDungeon="dungeonui.js?v=20260923-universe-exp-fix1";
- const newDungeon="dungeonui.js?v=20261018-batch4-mobile-stage-anchor1";
- const newSheet='<link rel="stylesheet" href="battle-mobile-viewport.css?v=20261018-batch4-mobile1">';
- assert.ok(original.includes(oldDungeon)&&current.includes(newDungeon)&&current.includes(newSheet),"Expected approved Batch 4 dungeon UI/cache stylesheet");
- const oldFormal="3d-test/t3b-formal-entry.js?v=20261015-phase5";
- const newFormal="3d-test/t3b-formal-entry.js?v=20261018-batch4-toggle-fallback";
- const batch5Formal="3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings";
- const modeBase="3d-test/mode-foundation.js?v=20261010-dual-mode-preflight3&v2=20261010-b17-mode-policy&v3=20261010-opt5-account-migration";
- const modeBatch5=modeBase+"&vbatch5=20261018-animation-preference";
-  const gmOld="gm3dprototype.js?v=20261015-thrust1";
- const gmNew="gm3dprototype.js?v=20261018-gm-copy1";
-const contractScript='<script src="3d-test/era-appearance-contract.js?v=20261018-batch5-contract1"></script>\n';
- assert.ok(current.includes(batch5Formal)&&current.includes(modeBatch5)&&current.includes(contractScript.trim()),"Batch5 exact approved cache and contract script absent");
- assert.ok(original.includes(oldFormal)&&current.includes(batch5Formal),"Expected approved Batch 4 formal entry cache key");
- assert.equal(current.replace(gmNew,gmOld).replace(batch5Formal,newFormal).replace(modeBatch5,modeBase).replace(contractScript,"").replace(newScript,oldScript).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Historical index HTML changed beyond approved Batch 2/3/4 cache and stylesheet keys");
+ // Match the exact last sealed main file: only three independently approved
+ // Batch8 presentation-resource cache keys may differ, not gameplay HTML.
+ const sealed=run("show","32257058dd7003e284d9f548674617d8d2e9c263:index.html");
+ const actual=fs.readFileSync("index.html","utf8");
+ const expected=sealed
+  .replace("3d-test/formal-player-sprites.css?v=20261015-phase5","3d-test/formal-player-sprites.css?v=20261019-batch8-shared1")
+  .replace("3d-test/t3b-formal-renderer.js?v=20261015-thrust1&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1")
+  .replace("3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-entry.js?v=20261019-batch8-shared1");
+ assert.equal(actual,expected,"Batch8 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
