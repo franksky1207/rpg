@@ -31,13 +31,30 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      for(const id of cases){
       await page.locator('[data-b="case"]').selectOption(id);
       assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
-      // Playwright actionability wait observes the actual enabled control; a non-atomic read
-      // can race a later asynchronous renderer rebind after selecting a scenario.
+      // A selection may asynchronously rebuild the renderer. The play handler can also
+      // await binding; wait for real playback, then exercise controls atomically.
       await page.locator('[data-b="play"]').click({timeout:60000});
-      for(const name of ['pause','resume','stop']){
-       const btn=page.locator('[data-b="'+name+'"]');
-       if(await btn.isEnabled())await btn.click();
-      }
+      await page.waitForFunction(()=>{
+       const root=document.querySelector('.gm-b-simulation');
+       const published=root?.classList.contains('gm-b-published');
+       const pause=root?.querySelector('[data-b="pause"]');
+       const status=root?.querySelector('[data-b="status"]')?.textContent||'';
+       return (pause&&!pause.disabled)||published&&/播放中|播放完成/.test(status);
+      },null,{timeout:30000});
+      const controls=await page.evaluate(()=>{
+       const get=name=>document.querySelector('[data-b="'+name+'"]');
+       const pause=get('pause'),resume=get('resume'),stop=get('stop');
+       if(!pause||!resume||!stop||pause.disabled)return {ready:false};
+       pause.click();
+       const resumed=!resume.disabled;
+       if(resumed)resume.click();
+       stop.click();
+       return {ready:true,resumed,stopped:/已停止|已釋放/.test(get('status')?.textContent||'')};
+      });
+      // Published fallback has no disabled state model, while development Playback does.
+      assert.equal(controls.ready,true,'pause must be available after playback begins');
+      assert.equal(controls.stopped,true,'stop must release/finish GM simulation');
+
      }
      assert.equal(await page.locator('[data-b="case"] option').count(),5);
      reports.push({viewport,scenarios:cases,mode:mode.published?'published':'dev',controls:true,resourceDisposal:true});
