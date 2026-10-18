@@ -1,0 +1,39 @@
+{
+  "status": "user-approved-art-master-sources; engineering-pending",
+  "batch": 7,
+  "target_pr": 38,
+  "target_branch": "batch7-era-player-sprite-20261018",
+  "note": "These originals are not alpha-clean sprite layers and must not be published as final battle assets.",
+  "files": [
+    {
+      "epoch": "galaxy",
+      "path": "sources/galaxy_approved_master.png",
+      "original_filename": "E744CD3F-2E94-4E5E-B395-F2ADAA165FE9(2).png",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "sha256": "06e4bf6bb0ce50f4b90d8111db3608821ef0d582400cc760920abbfb45a54e56",
+      "bytes": 963810
+    },
+    {
+      "epoch": "universe",
+      "path": "sources/universe_approved_master.jpeg",
+      "original_filename": "ADF65784-DA16-4F1F-B7F1-801D11270847(2).jpeg",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGB",
+      "sha256": "e1b438fb7f7221d05a0468277f3e53e62173e95fd553d22cf333bea31e016239",
+      "bytes": 294184
+    },
+    {
+      "epoch": "higher",
+      "path": "sources/higher_approved_master.jpeg",
+      "original_filename": "19FAE52F-855C-470C-9B72-A848FE04A3F9.jpeg",
+      "width": 1024,
+      "height": 1536,
+      "mode": "RGB",
+      "sha256": "43e80f7a84ccc41f9716a1f5aba6f08d4b9fd2c969c74010fb3422b61c54f3b6",
+      "bytes": 587032
+    }
+  ]
+}

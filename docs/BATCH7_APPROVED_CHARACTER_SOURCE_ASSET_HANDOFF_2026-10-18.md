@@ -1,12 +1,12 @@
 # 第 7 批｜已定稿三紀元主角原圖・Codex 素材承接契約
 
-狀態：**美術母圖已選定；原始二進位檔案尚未上傳至 GitHub；不得標記為入庫成功或正式 Sprite 已發布**。
+狀態：**三張原始母圖已逐 byte 驗證並於 PR #38 候選來源區入庫；候選去背 WebP 不等於正式 Sprite。必要攻擊身體／武器／高維遮擋補層仍未通過，禁止發布與合併。**
 
 承接：草稿 PR [#38](https://github.com/franksky1207/rpg/pull/38)，分支 `batch7-era-player-sprite-20261018`。必須 fresh-read 最新分支與 main，不得覆蓋已完成的轉生外觀程式／測試；絕不可直接合併 main。
 
 ## 使用者定稿原圖（逐 byte 保留）
 
-Chat 已將三張使用者核准的母圖封裝為 `civilization_batch7_approved_character_sources.zip`，內含 `manifest.json`、本說明與以下原圖。**此 ZIP 是 Chat 生成的可下載交接檔，尚未在 repo 中**；Codex 需要使用者在 Codex 工作階段上傳此 ZIP，或由未來具有檔案上傳能力的流程放入工作目錄。不得將檔名存在誤認為可存取 ZIP。
+Chat 已將三張使用者核准的母圖封裝為 `civilization_batch7_approved_character_sources.zip`，內含 `manifest.json`、本說明與以下原圖。**本次已取得使用者實際上傳 ZIP，原圖與原 manifest 位於 `development/combat-animation/batch7/approved-sources/`**；Codex 需要使用者在 Codex 工作階段上傳此 ZIP，或由未來具有檔案上傳能力的流程放入工作目錄。不得將檔名存在誤認為可存取 ZIP。
 
 | 紀元 | ZIP 內路徑 | 尺寸 | 格式 | 原檔位元組 | SHA-256 |
 |---|---|---|---|---:|---|
@@ -28,5 +28,6 @@ Chat 已將三張使用者核准的母圖封裝為 `civilization_batch7_approved
 ## 目前 GitHub 已做到與沒有做到的界線
 
 - **已做到**：本母圖身份與 SHA-256 交接、PR #38 中外觀身份契約與轉生設定基礎、部分 CI 回歸。
-- **未做到**：Chat 中原始 PNG/JPEG 透過 GitHub 連接器直接上傳；未完成去背／Sprite 分層／正式動畫／入庫／GM 與 Pages 新素材驗收；不得宣告第7批封箱。
+- **本次已做到**：ZIP 三檔 SHA／格式／尺寸核對、逐 byte 原圖入庫、銀河 Alpha 檢查、可重建候選遮罩與 512×512 WebP、候選 SHA／容量／定位紀錄。
+- **未做到**：精準去背允收、可動畫 Sprite 分層、正式新動畫、GM 與 Pages 新素材驗收；不得宣告第7批封箱。候選與待補圖詳見 `docs/BATCH7_INTEGRATED_ENGINEERING_REPORT_2026-10-18.md`。
 - Code／測試／原始美術以最新 main 與分支內容為準；本文件不授權繞過任何驗證器。

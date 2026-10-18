@@ -1,0 +1,160 @@
+{
+  "schema": "cw.batch7.candidate-assets.v1",
+  "batch": 7,
+  "formalReleaseAllowed": false,
+  "license": "User-provided approved character masters; derivative engineering for this project. No third-party license claim.",
+  "recipe": "development/combat-animation/batch7/mask-recipe.json",
+  "note": "Full-image cutouts are engineering candidates, not animation layers. Missing body/weapon/occluded ornamental layers must block formal release. No runtime references permitted.",
+  "entries": [
+    {
+      "id": "era-galaxy",
+      "epoch": "galaxy",
+      "status": "candidate-only",
+      "formalBattleAllowed": false,
+      "gmPreviewAllowed": false,
+      "source": {
+        "path": "development/combat-animation/batch7/approved-sources/galaxy_approved_master.png",
+        "sha256": "06e4bf6bb0ce50f4b90d8111db3608821ef0d582400cc760920abbfb45a54e56"
+      },
+      "asset": {
+        "path": "development/combat-animation/batch7/candidates/galaxy-full-candidate.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 93246,
+        "sha256": "bceb46a4c91d91afae79712e2fe88d9cda9e99815f44819be2f445421a0a860e"
+      },
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "facing": "right-3/4",
+      "normalization": {
+        "sourceFootAnchor": [
+          650,
+          1237
+        ],
+        "scale": 0.3504482477587612,
+        "offset": [
+          28,
+          27
+        ],
+        "standingHeight": 430
+      },
+      "mask": {
+        "removedPixels": 0,
+        "sourceRgbPreservedBeforeResize": true
+      },
+      "acceptedLayers": [],
+      "missingLayers": [
+        "attack-body",
+        "independent-weapon"
+      ],
+      "blockers": [
+        "Original alpha retained; no RGB repaint.",
+        "Weapon overlaps thigh and shin: hidden armor and grip require approved local repair."
+      ]
+    },
+    {
+      "id": "era-universe",
+      "epoch": "universe",
+      "status": "candidate-only",
+      "formalBattleAllowed": false,
+      "gmPreviewAllowed": false,
+      "source": {
+        "path": "development/combat-animation/batch7/approved-sources/universe_approved_master.jpeg",
+        "sha256": "e1b438fb7f7221d05a0468277f3e53e62173e95fd553d22cf333bea31e016239"
+      },
+      "asset": {
+        "path": "development/combat-animation/batch7/candidates/universe-full-candidate.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 108134,
+        "sha256": "9fcdc4b0e47c487bdf65907d4857b7545aff883fe06f3b18c8e0d911ac1561d0"
+      },
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "facing": "right-3/4",
+      "normalization": {
+        "sourceFootAnchor": [
+          650,
+          1240
+        ],
+        "scale": 0.34959349593495936,
+        "offset": [
+          29,
+          28
+        ],
+        "standingHeight": 430
+      },
+      "mask": {
+        "removedPixels": 1172355,
+        "sourceRgbPreservedBeforeResize": true
+      },
+      "acceptedLayers": [],
+      "missingLayers": [
+        "attack-body",
+        "independent-weapon"
+      ],
+      "blockers": [
+        "Known exterior and arm/torso negative-space components only; do not key all whites.",
+        "Blade glow retains white matte; precision decontamination not accepted.",
+        "Weapon overlaps both legs; no accepted attack body or independent grip."
+      ]
+    },
+    {
+      "id": "era-higher",
+      "epoch": "higher",
+      "status": "candidate-only",
+      "formalBattleAllowed": false,
+      "gmPreviewAllowed": false,
+      "source": {
+        "path": "development/combat-animation/batch7/approved-sources/higher_approved_master.jpeg",
+        "sha256": "43e80f7a84ccc41f9716a1f5aba6f08d4b9fd2c969c74010fb3422b61c54f3b6"
+      },
+      "asset": {
+        "path": "development/combat-animation/batch7/candidates/higher-full-candidate.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 151336,
+        "sha256": "736b0fe6ea4b0fc794f301da75b18516c307944352c45fa3428895fa65ff8a45"
+      },
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "facing": "right-3/4",
+      "normalization": {
+        "sourceFootAnchor": [
+          635,
+          1517
+        ],
+        "scale": 0.28724114896459585,
+        "offset": [
+          74,
+          25
+        ],
+        "standingHeight": 430
+      },
+      "mask": {
+        "removedPixels": 850271,
+        "sourceRgbPreservedBeforeResize": true
+      },
+      "acceptedLayers": [],
+      "missingLayers": [
+        "attack-body",
+        "independent-weapon",
+        "cape-with-hidden-continuity",
+        "orbit-rings-with-hidden-continuity",
+        "celestial-bodies"
+      ],
+      "blockers": [
+        "Known negative spaces between rings/cape and legs masked without global white key.",
+        "Fine gold ring fringe and small enclosed white gaps still need precision matte review.",
+        "Cape and rings pass behind body; hidden continuity needs approved repair.",
+        "Weapon/hand and leg occlusion unresolved."
+      ]
+    }
+  ]
+}

@@ -52,3 +52,13 @@
 - **新版第4批（19項）施工與驗收**：正式開關用語「開啟／關閉戰鬥動畫」、正常文字／極簡回退靜音（真載入錯誤仍可診斷）、三紀元懸賞及競技場手機主戰鬥區視窗定位、高維三連戰前置陣容卡跳過、虛空一次進場／不逐層搶視窗、iPhone 版面與 GM 動畫測試中心。驗收報告 `docs/COMBAT_ANIMATION_RENEWAL_BATCH4_19_ITEM_ACCEPTANCE_2026-10-18.md`。封箱以合併 main 後同 SHA 的正式 Battle／GM／Runtime／Pages 成功為準。
 - 第5批才做三紀元造型技術契約（不量產美術），第6批全模式最終整合。iPhone 真機發熱驗證仍留六批完成後。
 - 強制施工 SOP：每批完整施工 → 逐項自檢 → 最新 SHA Actions 驗收 → 一次封箱報告，不拆小批、不以舊 SHA 全綠冒充新 SHA、不改正式玩家數值／結算／存檔。
+
+
+## 新版第7批承接（2026-10-18，本次授權範圍）
+
+- 沿用草稿 PR #38、`batch7-era-player-sprite-20261018` 與既有 `ba17656da5e03b6db3af5a100b1cb4703408c619`；main 基準為 `29ab70fdc791dbbdce0e276a282f2e6b163f276b`，沒有重建分支或重複 PR。
+- 已取得並驗證三張使用者核准母圖，原檔、mask recipe、候選 WebP 與完整 SHA 分離保存於 `development/combat-animation/batch7/`。候選未取得正式分層允收，不可當正式資源。
+- 修正外觀契約讀不到正式 lexical `state`、設定頁錯用 `state.world`、跨帳號本機 owner 不一致時誤解鎖，以及登出事件早於 session 清空的短暫授權；不修改 Save Schema17／正式數值／雲端 owner。
+- 外觀偏好僅本裝置登入帳號，雲端 upload/download 與合法匯入不攜帶此偏好；真頁面服務替身回歸不代表真帳號雲端驗收。
+- **仍未完成第7批**：缺可允收的攻擊身體、獨立武器／握點、高維披風／星環／星體補層及新 Sprite 正式 Renderer／GM／Pages 驗收。現役 G005/G007/G018 是未改動的舊發布，絕不認列為新三紀元主角。維持 PR 草稿，不合併 main。
+- 30項狀態、素材自檢及最新 SHA／Actions 證據入口：`docs/BATCH7_INTEGRATED_ENGINEERING_REPORT_2026-10-18.md` 與 PR #38 說明。第8批與 Issue #37 未施工。

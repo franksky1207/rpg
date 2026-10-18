@@ -28,8 +28,8 @@ if(changed.includes("index.html")){
  const original=run("show",base+":index.html");
  const actual=fs.readFileSync("index.html","utf8").trim();
  // Independently approved Batch 7 extends only the two exact version tokens.
- assert.ok(actual.includes("&vbatch7=20261018-era-settings")&&actual.includes("era-appearance-contract.js?v=20261018-batch7-v2"),"Expected Batch7 cache fingerprint");
- const current=actual.replace("&vbatch7=20261018-era-settings","").replace("era-appearance-contract.js?v=20261018-batch7-v2","era-appearance-contract.js?v=20261018-batch5-contract1");
+ assert.ok(actual.includes("&vbatch7=20261018-era-settings-r2")&&actual.includes("era-appearance-contract.js?v=20261018-batch7-v3"),"Expected Batch7 cache fingerprint");
+ const current=actual.replace("&vbatch7=20261018-era-settings-r2","").replace("era-appearance-contract.js?v=20261018-batch7-v3","era-appearance-contract.js?v=20261018-batch5-contract1");
  const oldScript="backgroundprogress.js?v=20261013-background-hud-recovery1";
  const newScript="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
  assert.ok(original.includes(oldScript)&&current.includes(newScript),"Expected approved Batch 2 cache version");

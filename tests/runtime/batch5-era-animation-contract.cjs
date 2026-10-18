@@ -45,7 +45,8 @@ assert.equal(c.select("higher").ok,false);
 w.civilizationAuthSession.user={id:"A"};
 const goodStorage=w.localStorage;
 w.localStorage={getItem(){throw Error("blocked");},setItem(){throw Error("blocked");}};
-assert.equal(c.choice(),"higher");
+assert.equal(c.choice(),null,"Unreadable local owner must fail closed");
+assert.equal(c.resolve({world:2}).visualId,"universe");
 assert.equal(c.select("universe").ok,false);
 w.localStorage=goodStorage;
 assert.equal(c.choice(),"galaxy");
@@ -64,5 +65,5 @@ assert.ok(mode.includes("首次正式轉生後解鎖"));
 assert.ok(mode.includes("變更從下一場戰鬥生效"));
 
 const html=fs.readFileSync("index.html","utf8");
-assert.ok(html.includes("era-appearance-contract.js?v=20261018-batch7-v2"));
+assert.ok(html.includes("era-appearance-contract.js?v=20261018-batch7-v3"));
 console.log("PASS Batch7 foundation: visual choice independent of gear, reincarnation gate, account isolation, next-battle apply, no art release");
