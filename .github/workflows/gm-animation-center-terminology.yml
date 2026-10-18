@@ -1,0 +1,45 @@
+name: GM Animation Center Terminology Gate
+on:
+  push:
+    branches: [fix/gm-animation-center-copy-full-20261018]
+  pull_request:
+    paths:
+      - 'gm3dprototype.js'
+      - '3d-test/**'
+      - 'index.html'
+      - 'tests/runtime/gm-animation-center-terminology.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gm-terminology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Exact visible text, syntax and protected runtime contracts
+        run: |
+          node --check gm3dprototype.js
+          node --check 3d-test/test-center.js
+          node --check 3d-test/gm-battle-simulation.js
+          node --check 3d-test/gm-battle-published.mjs
+          node --check 3d-test/gm-whole-suit.mjs
+          node tests/runtime/gm-animation-center-terminology.cjs
+          node tests/runtime/cleanup-batch4-4-final-guard.cjs
+          node tests/runtime/cleanup-batch2-4-integration.cjs
+          node tests/runtime/t4-preview-retirement.cjs
+          node tests/runtime/resource-manifest-integrity.js
+      - name: Install real browser
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: GM actual browser flow
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-terminology-http.log 2>&1 &
+          node tests/runtime/gm-3d-test-center-browser.js
+          node tests/runtime/gm-battle-simulation-browser.js

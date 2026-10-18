@@ -78,10 +78,10 @@ async function start(){
   let mod;
   if(entry().kind==="character"){
    status.textContent="GM 角色預覽：僅使用現有測試素材，不修改存檔。";
-   mod=await import("./gm-whole-suit.mjs?v=20261015-thrust1");
+   mod=await import("./gm-whole-suit.mjs?v=20261018-gm-copy1");
   }else{
-   status.textContent="GM 2.5D 戰鬥沙盒：不影響正式戰鬥或音效。";
-   mod=await import("./gm-battle-simulation.js?v=20261015-thrust1");
+   status.textContent="GM 戰鬥動畫測試：不影響正式戰鬥或音效。";
+   mod=await import("./gm-battle-simulation.js?v=20261018-gm-copy1");
   }
   if(ticket!==serial||abort.signal.aborted)return;
   viewer=await mod.mount({host,signal:abort.signal,quality:quality.value});

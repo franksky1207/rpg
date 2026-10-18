@@ -40,7 +40,7 @@ export async function mount({host,signal,quality='medium'}){
   // Published Pages explicitly excludes development fixture sources.
   // Use an authorized, truthful 2.5D viewer based only on shipped assets;
   // never publish raw dev originals, owner fixtures or unapproved enemies.
-  const published=await import('./gm-battle-published.mjs?v=20261017-batch2-2');
+  const published=await import('./gm-battle-published.mjs?v=20261018-gm-copy1');
   return published.mount({host,signal,quality});
  }
  const [{loadData,selectInput},{Playback,bindRenderer},{createRenderer,diagnostics},{elapsedClock}]=parts;
@@ -93,7 +93,7 @@ export async function mount({host,signal,quality='medium'}){
   if(bound===playback.id&&renderer&&!failed)return true;
   const id=playback.id;let candidate=null;failed=false;status('正在載入 B 戰鬥畫面…');
   binding=bindRenderer(playback,async context=>{candidate=await createRenderer(context,{stage:$('stage'),readClock,inspection,playerFactory,onError:error=>{failed=true;status('視覺暫不可用：'+error.message+'；可按播放重試。');}});return candidate;});controls();
-  try{const result=await binding;if(closed||playback.id!==id)return false;if(!result.ok){failed=true;status('B 畫面載入失敗；可按播放重試。');return false;}renderer=candidate;bound=id;$('stage').querySelector('canvas')?.setAttribute('aria-label','2.5D B 戰鬥模擬');status('2.5D B 沙盒｜靜音、不寫入正式角色或存檔');return true;}
+  try{const result=await binding;if(closed||playback.id!==id)return false;if(!result.ok){failed=true;status('B 畫面載入失敗；可按播放重試。');return false;}renderer=candidate;bound=id;$('stage').querySelector('canvas')?.setAttribute('aria-label','戰鬥動畫模擬');status('戰鬥動畫測試｜靜音、不寫入正式角色或存檔');return true;}
   finally{binding=null;if(!closed)controls();}
  }
  function choose(){if(!pack||closed)return;renderer=null;bound=null;failed=false;const selected=selection(),input=selectInput(pack,selected);playback.select(input,selected);$('slots').replaceChildren(...input.equipment.map((d,i)=>{const li=document.createElement('li');li.textContent=`${slots[i]}：${!d.present?'空槽':d.name+(d.assetKind==='equipment-glb'?'':'（素材 unavailable）')}`;return li;}));ready().catch(error=>{if(!closed)status(error.message);});}
@@ -110,7 +110,7 @@ export async function mount({host,signal,quality='medium'}){
   spriteEntry=null;$('suit-label').hidden=mode!=='free';$('appearance').textContent='正在同步角色…';
   // Retire old resources synchronously; delayed replies must not preserve free actor.
   if(pack){choose();$('stage').replaceChildren();}
-  if(mode==='legacy'){$('appearance').textContent='原3D五槽測試（不改正式裝備）';return;}
+  if(mode==='legacy'){$('appearance').textContent='既有五槽技術測試（不改正式裝備）';return;}
   try{
    const auth=await request('civilization3d:sprite-auth');if(closed||ticket!==appearanceSerial)return;authorized=auth.authorized===true;if(!authorized)throw Error('authorization');
    if(!catalog){const response=await fetch(new URL('../assets/gm-equipment-2_5d/v1/catalog.json',import.meta.url),{signal});if(!response.ok)throw Error('catalog');catalog=await response.json();if(catalog.schema!=='cw.gm.whole-suit.v1'||catalog.sets.length!==210)throw Error('catalog');}
