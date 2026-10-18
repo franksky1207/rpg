@@ -18,6 +18,7 @@ export class WholeSuitActor{
   if(this.closed||!this.lease||this.pool.stats().closed)throw Error('sprite-unavailable');
   // B projection already owns approach displacement. Its adapter uses rootMotion=false.
   let p=pose(plan.clip,plan.elapsedMs??plan.ms??0,{rootMotion:plan.rootMotion===true}),n=this.canvas.width,c=this.ctx;
+  if(this.entry.singleLayer&&plan.clip==='hit')p=Object.freeze({...p,rotation:-p.rotation});
   if(this.entry.singleLayer&&plan.clip==='defeat'){const t=Math.min(1,(plan.elapsedMs??plan.ms??0)/700);p=Object.freeze({...p,rotation:.65*t,x:-.10*t,y:-.05*t,scaleX:1-.5*t,scaleY:1-.5*t});}
   c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.9+p.y));c.rotate(plan.clip==='attack'&&!this.entry.singleLayer?0:p.rotation);c.scale(p.scaleX,p.scaleY);
   if(p.trail){c.globalAlpha=p.trail;c.drawImage(this.lease.bitmap,-n*.5-n*.035,-n*.9,n,n);}
