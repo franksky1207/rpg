@@ -9,7 +9,7 @@
 - 三張 `*-full-candidate.webp` 為 512×512 透明、右向3/4、pivot [0.5,0.9] 的候選完整角色。獨立 ID 為 `era-galaxy`／`era-universe`／`era-higher`，不是 G005/G007/G018。候選 manifest 記錄來源、SHA、容量、縮放／座標與未完成圖層。**acceptedLayers 為空，formalReleaseAllowed／formalBattleAllowed／gmPreviewAllowed 均為 false。**
 - 修正 `era-appearance-contract.js`：從正式全域 lexical `state` 讀取轉生次數，避免 `window.state` 為 undefined 而永不解鎖；匯入／雲端置換 state 後即時重新讀取，不持有舊 reference；本機進度 owner 與登入帳號不符時拒絕解鎖，登出事件立即鎖定。
 - 修正 `mode-foundation.js`：設定頁依 `currentWorldPhase()` 與正式紀元 roots 顯示目前外觀，不使用不存在的 `state.world`。明示新素材尚未正式推出，偏好僅本裝置／登入帳號，無跨裝置同步或隨存檔傳輸承諾。保留首次轉生預設高維、再次轉生保留選擇、下一場安全套用的既有契約。
-- 更新兩個 JS 的 HTML 指紋及歷史 HTML 精確比較測試的對應指紋；沒有刪斷言、停用測試或擴大允許的 HTML 變動。
+- 更新兩個 JS 的 HTML 指紋、resource-manifest 的內容雜湊及歷史 HTML 精確比較測試的對應指紋；沒有刪斷言、停用測試或擴大允許的 HTML 變動。
 - 新增真頁面桌機／手機外觀測試、不可變來源／非發布邊界測試、Pillow 唯讀圖檔稽核及第7批安全 Actions。更新 handoff、來源交接與施工狀態；具體補圖要求在 `development/combat-animation/batch7/PATCH_REQUESTS.md`。
 
 **正式 Renderer／SpritePool／GM／舊正式資源未換成候選素材。** 現役 G005/G007/G018 仍是未改動的既有發布，不能認列為新的三紀元外觀。這保留既有合法戰鬥，也避免把沒有攻擊身體的切圖假裝完成動畫。Save Schema17、雲端 owner、實際裝備、數值、結算、背景／離線、音效與 SW 未更動。未施工第8批或 Issue #37。
@@ -63,7 +63,7 @@
 | 19 | UI契約通過 | 桌機與390×844 viewport 下三選一、鎖定、預選、原動畫開關；明示尚未推出。 |
 | 20 | 相容性通過／遠端未測 | 真頁面 A/B／登出／重登入／local owner／服務替身雲端測試；真帳號未測。 |
 | 21 | 既有保護 | 沿用現役文字／極簡／背景／缺圖回退；新層故障路徑待正式接線。 |
-| 22 | 既有保護 | 沒有新增 RAF、Canvas、listener 或 decode 流程；新 Sprite lifecycle 尚未驗收。 |
+| 22 | 既有保護 | 沒有新增戰鬥 RAF、Canvas 或 decode 流程；契約新增兩個頁面級 auth listener（單例載入、不逐場新增）；新 Sprite lifecycle 尚未驗收。 |
 | 23 | 相容性通過 | 舊版污染丟棄、合法17轉生可讀、實際下載 owner＋reload；Schema17不變。 |
 | 24 | 契約保留／新呈現未測 | 選擇只存設定、發 next-battle 事件、不重建進行中戰鬥；新 Sprite 安全切換待接線。 |
 | 25 | 部分 | 候選右向／同畫布與定位；反向、握點、深度、攻擊位移待層完成。 |
