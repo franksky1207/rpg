@@ -172,7 +172,7 @@ async function createSuit(options,bundle){
   if(closed||signal.aborted||!isCurrent())return false;
   const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
-  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:false});
+  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
   actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0}px)`;
   actor.canvas.dataset.clip=p.clip;return true;
  }
