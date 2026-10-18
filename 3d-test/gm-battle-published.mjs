@@ -24,8 +24,8 @@ export async function mount({host,signal,quality='medium'}={}){
   <div class="gm-b-buttons">${[['play','播放'],['pause','暫停'],['resume','繼續'],['replay','重播'],['stop','停止']].map(([id,label])=>`<button type="button" data-b="${id}">${label}</button>`).join('')}</div>
  </div>
  <p class="gm-b-status" role="status" data-b="status">正在確認 GM 權限…</p>
- <p class="gm-b-warning">使用正式發布的 2.5D 角色與戰場背景；敵方動畫素材目前未發布，因此只顯示敵方狀態，不冒充敵人圖像。以下 HP 為視覺測試示範，非正式戰鬥計算或收益。</p>
- <div class="gm-b-arena gm-b-published-arena" data-b="stage" aria-label="2.5D 戰場預覽">
+ <p class="gm-b-warning">使用現有已發布的角色與戰場背景；敵方動畫素材目前未發布，因此只顯示敵方狀態，不冒充敵人圖像。以下 HP 為視覺測試示範，非正式戰鬥計算或收益。</p>
+ <div class="gm-b-arena gm-b-published-arena" data-b="stage" aria-label="戰鬥動畫預覽">
   <div class="gm-b-scenery" aria-hidden="true"></div>
   <div class="gm-b-player" data-b="player-visual"><span>等待已核准的角色素材</span></div>
   <div class="gm-b-enemy" data-b="enemy-visual"><strong>敵方視覺素材尚未發布</strong><small>不以假圖代替正式怪物</small></div>
@@ -70,7 +70,7 @@ export async function mount({host,signal,quality='medium'}={}){
    const a=await new WholeSuitActor(pool,entry,{signal:load.signal,tier:quality}).init();
    if(closed||!authorized||selected?.id!==id){a.dispose();return;}
    actor=a;$('player-visual').replaceChildren(a.canvas);
-   a.canvas.setAttribute('aria-label',id.toUpperCase()+' 真實2.5D角色');
+   a.canvas.setAttribute('aria-label',id.toUpperCase()+' 現有測試角色');
    setStatus(id.toUpperCase()+' 角色已載入；沙盒只展示畫面，不寫入正式資料。');
   }catch{if(!closed)setStatus('角色素材載入失敗，已安全回退。');}
   finally{requests.delete(load);}
