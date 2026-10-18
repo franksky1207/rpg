@@ -40,7 +40,7 @@ export async function mount({host,signal,quality='medium'}){
   // Published Pages explicitly excludes development fixture sources.
   // Use an authorized, truthful 2.5D viewer based only on shipped assets;
   // never publish raw dev originals, owner fixtures or unapproved enemies.
-  const published=await import('./gm-battle-published.mjs?v=20261017-batch2-2');
+  const published=await import('./gm-battle-published.mjs?v=20261018-gm-copy1');
   return published.mount({host,signal,quality});
  }
  const [{loadData,selectInput},{Playback,bindRenderer},{createRenderer,diagnostics},{elapsedClock}]=parts;
