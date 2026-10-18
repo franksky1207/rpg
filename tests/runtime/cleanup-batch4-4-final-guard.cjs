@@ -17,7 +17,7 @@ assert.doesNotMatch(text,/G20＝G096|210套兩張概念圖全量產/);
 const changed=run("diff","--name-only",base,"HEAD").split("\n").filter(Boolean);
 const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlineprogress|ui|engine|balance|audio|gm3dprototype)\.js$/,/^index\.html$/,/^assets\/gm-equipment-2_5d\//,/^assets\/3d\//,/^3d-test\//,/^development\/equipment-2_5d\//];
 // Batch 4 explicitly authorizes only these GM presentation entrypoints.
-const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js"]);
+const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js","3d-test/mode-foundation.js","3d-test/era-appearance-contract.js"]);
 const unexpected=changed.filter(p=>p!=="index.html"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
@@ -39,8 +39,13 @@ if(changed.includes("index.html")){
  assert.ok(original.includes(oldDungeon)&&current.includes(newDungeon)&&current.includes(newSheet),"Expected approved Batch 4 dungeon UI/cache stylesheet");
  const oldFormal="3d-test/t3b-formal-entry.js?v=20261015-phase5";
  const newFormal="3d-test/t3b-formal-entry.js?v=20261018-batch4-toggle-fallback";
+ const batch5Formal="3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings";
+ const modeBase="3d-test/mode-foundation.js?v=20261010-dual-mode-preflight3&v2=20261010-b17-mode-policy&v3=20261010-opt5-account-migration";
+ const modeBatch5=modeBase+"&vbatch5=20261018-animation-preference";
+ const contractScript='<script src="3d-test/era-appearance-contract.js?v=20261018-batch5-contract1"></script>\n';
+ assert.ok(current.includes(batch5Formal)&&current.includes(modeBatch5)&&current.includes(contractScript.trim()),"Batch5 exact approved cache and contract script absent");
  assert.ok(original.includes(oldFormal)&&current.includes(newFormal),"Expected approved Batch 4 formal entry cache key");
- assert.equal(current.replace(newScript,oldScript).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Historical index HTML changed beyond approved Batch 2/3/4 cache and stylesheet keys");
+ assert.equal(current.replace(batch5Formal,newFormal).replace(modeBatch5,modeBase).replace(contractScript,"").replace(newScript,oldScript).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Historical index HTML changed beyond approved Batch 2/3/4 cache and stylesheet keys");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
