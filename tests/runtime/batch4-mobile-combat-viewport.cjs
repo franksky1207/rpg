@@ -5,7 +5,7 @@ const fs=require("node:fs"),assert=require("node:assert/strict"),{chromium}=requ
  const begin=source.indexOf(" let battleViewportLastView="),end=source.indexOf(" function finishDungeonRender()",begin);
  assert(begin>=0&&end>begin,"viewport coordinator and dungeon render hook exist");
  assert(source.slice(end,end+240).includes("positionActiveDungeonCombat(main)"),"actual dungeon render calls viewport coordinator");
- assert(source.includes('area.querySelector(".combat-arena")'),"target live arena after lineup");
+ assert(source.includes('area.querySelector(".combat-head")'),"target stable battle heading before async stage insertion");
  const snippet=source.slice(begin,end)+"\nwindow.testDungeonBattleViewport=positionActiveDungeonCombat;";
  const browser=await chromium.launch({headless:true});
  try{
