@@ -19,3 +19,29 @@ F 23–24：原 Batch1 12、Batch2 13、Batch3 16、Batch4 19 的現役回歸不
 ## 規劃風險及測試界線
 
 外觀來源推導使用明確的裝備 epoch 欄位；正式遊戲若無一致的 epoch 欄位，本批不得擅自寫入 Save Schema 或對玩家資產憑名稱推測。現役 Renderer 使用三套已核准舊 Sprite 測試資產是暫行現況，不等於新的三紀元美術已接入。本批以技術契約封箱、不能宣稱三套新造型已完成。iPhone 真機 FPS、發熱、熱節流與長時間異宇宙實測，延至第 6 批封箱後另案。
+
+
+## 本批施工後驗收（分支階段，主線封箱另依合併 SHA）
+
+### 一、修改內容
+- 重新整理舊 `3d-test/mode-foundation.js`：登錄玩家不再看到早已取消的完整 3D 選擇彈窗；設定區名稱改為「戰鬥動畫」，唯一控制位置在設定頁，設定儲存於裝置 localStorage 的帳號專屬鍵，預設開啟。
+- `3d-test/t3b-formal-entry.js` 移除戰鬥內每場開關，改讀單一動畫偏好。改變偏好時通知正式角色呈現層中止舊渲染並清快取，極簡／背景 owner 不變。
+- 新 `3d-test/era-appearance-contract.js`：三紀元 read-only resolver，包括高維裝備轉生持續顯示高維身份、混穿優先權、敵人隔離、未核准美術不宣稱已發布。未綁定尚未完成的三套圖，因此現役 Sprite 仍可由現有公開授權資源承接；未建立新套裝視覺資產。
+- 更新 `index.html` 的精確 cache key／新契約載入，兩個歷史 guard 只明列批准的差異並維持原有來源逐字保護。
+- 更新模式瀏覽器回歸及正式 Battle 缺材／生命週期瀏覽器測試，以設定頁偏好代替被移除的戰鬥按鈕。加入 Batch5 專用 GitHub Actions。
+
+### 二、程式自我檢查
+- `Batch 5 Era Appearance and Animation Settings` 在分支 HEAD `4b8d5c580db5381bda666127ddea37ff25438675`：run [39083435244](https://github.com/franksky1207/rpg/actions/runs/39083435244) 與 [39083437933](https://github.com/franksky1207/rpg/actions/runs/39083437933) success。涵蓋 JS syntax、外觀 read-only、三紀元混穿／高維轉生、設定持久化與帳號隔離、舊 HTML 與清理 guard、Renderer controller、資源清單、桌機／手機戰鬥定位。
+- 原始 `210 套／1,050 槽` 正式資料來源與 `Save Schema 17` 未被修改，未增加美術資產，未修改 gameplay、背景／離線結算與音效。
+- 24 項為整合施工＋盤點＋預留美術規格的固定範圍，不代表 24 項都必須改寫程式。新外觀素材未獲准、美術製作與真機熱驗仍屬後續項目。
+
+### 三、GitHub Actions 與實機界線
+- `Equipment 2.5D GM Integration` [39083437948](https://github.com/franksky1207/rpg/actions/runs/39083437948)：success。
+- `Equipment 2.5D Formal Battle` [39083437918](https://github.com/franksky1207/rpg/actions/runs/39083437918)：success。最初驗收在舊測試要求被退役的場內切換鈕時失敗；修正既有測試改用正式設定 API，仍驗證 Canvas/資源清理與結算，沒有停用測試。
+- 所有測試均為 GitHub Node/Chromium（包含手機 viewport 模擬），**未進行 iPhone 真機發熱/FPS、真帳號雲端寫入或新美術人工核准**。不能將其當成完成。
+- 正式 main 的 Runtime、正式 Battle、GM、Publish/Pages、歷史 guard 將在 PR 合併後以實際新 SHA 重新驗收，不使用舊 SHA 綠燈冒充。
+
+### 四、提交、已知限制與封箱門檻
+- 施工分支：`feat/combat-renewal-batch5-integrated-20261018`，PR [#32](https://github.com/franksky1207/rpg/pull/32)。
+- 高維轉生的外觀優先權規格由純契約保護；現役裝備資料不一定完整帶 `epoch` 欄位，故此批**不宣稱新三紀元外觀已在所有真實玩家存檔上實際出圖**。缺少身份來源則拒絕猜測，等三套美術核准後再由正式裝備 owner 完整接入。
+- 只有最新提交的同 SHA 必要 Actions 全綠、PR 合併且正式 main Actions 和 Pages 最終成功，才可宣告第 5 批程式層封箱；**第 6 批不得自動開始**。
