@@ -15,8 +15,11 @@ async function start(page,armor='g007'){
  await start(page,['none' ,'unknown'].includes(fault)?fault:'g007');
  if(fault.startsWith('weapon-')){await page.waitForSelector('.formal-b-whole-suit[data-weapon-ready="false"]',{timeout:10000});assert.equal(await page.locator('.formal-b-visual-fallback').count(),0);}else if(fault==='lifecycle'){
   await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');await page.evaluate(()=>{state.equipment.armor.name=CivilizationFormalPlayerSprites.sets.find(r=>r.id==='g005').equipmentNames.armor;});assert.equal(await page.locator('.formal-b-whole-suit').getAttribute('data-suit'),'g007','battle appearance remains frozen');
-  await page.locator('[data-player-sprite-toggle]').click();assert.equal(await page.locator('.formal-b-whole-suit').count(),0);assert.equal(await page.evaluate(()=>CivilizationFormalBRenderer.spriteStats().refs),0);
-  await page.locator('[data-player-sprite-toggle]').click();await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
+  const disabled=await page.evaluate(()=>CivilizationPresentationMode.setCombatAnimationEnabled(false));assert.equal(disabled.ok,true);
+  await page.waitForFunction(()=>document.querySelectorAll('.formal-b-whole-suit').length===0);
+  assert.equal(await page.evaluate(()=>CivilizationFormalBRenderer.spriteStats().refs),0);
+  assert.equal(await page.locator('[data-player-sprite-toggle]').count(),0,'No battle-local animation switch');
+  const restored=await page.evaluate(()=>CivilizationPresentationMode.setCombatAnimationEnabled(true));assert.equal(restored.ok,true);
  }else if(fault!=='slow'){await page.waitForSelector('.formal-b-visual-fallback');assert.equal(await page.locator('.formal-b-whole-suit').count(),0);}
  await page.waitForFunction(()=>!battleBusy,null,{timeout:20000});
  if(fault==='lifecycle')for(let i=0;i<8;i++){await start(page);await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');await page.waitForFunction(()=>!battleBusy,null,{timeout:20000});}
