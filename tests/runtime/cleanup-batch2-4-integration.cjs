@@ -34,7 +34,7 @@ for(const p of formalProtected){
  const modeBatch5=modeBase+"&vbatch5=20261018-animation-preference";
  const contractScript='<script src="3d-test/era-appearance-contract.js?v=20261018-batch5-contract1"></script>\n';
  assert.ok(current.includes(batch5Formal)&&current.includes(modeBatch5)&&current.includes(contractScript.trim()),"Batch5 exact approved cache and contract script absent");
- assert.ok(original.includes(oldFormal)&&current.includes(newFormal),"Expected approved Batch 4 formal entry cache key");
+ assert.ok(original.includes(oldFormal)&&current.includes(batch5Formal),"Expected approved Batch 4 formal entry cache key");
  assert.equal(current.replace(batch5Formal,newFormal).replace(modeBatch5,modeBase).replace(contractScript,"").replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
   continue;
  }
