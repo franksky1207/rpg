@@ -30,16 +30,31 @@ const assert=require("node:assert/strict");
   assert.deepEqual(result.second,{mode:"text",saved:"text",dialogs:0});
   assert.equal(result.blocked,true);
   assert.equal(result.threeD,"3d-not-released");
-  // New-account modal is single-instance even if auth-ready fires repeatedly.
+  // The old full-3D chooser is retired, including on first login.
   await isolated.evaluate(()=>{
    window.civilizationAuthSession={user:{id:"opt6-new"}};
    window.dispatchEvent(new Event("civilization-auth-ready"));
    window.dispatchEvent(new Event("civilization-auth-ready"));
   });
-  assert.equal(await isolated.locator("#civilizationModeSelector").count(),1);
-  await isolated.locator("#civilizationModeChooseText").click();
   assert.equal(await isolated.locator("#civilizationModeSelector").count(),0);
-  assert.equal(await isolated.evaluate(()=>localStorage.getItem("civilization-war-presentation-mode-v1:opt6-new")),"text");
-  console.log("PASS 3D presentation mode: legacy preference, account swap, single modal, pending blocker, release gate");
+  const prefs=await isolated.evaluate(()=>{
+   const manager=window.CivilizationPresentationMode;
+   const initial=manager.combatAnimationEnabled();
+   const set=manager.setCombatAnimationEnabled(false);
+   const disabled=manager.combatAnimationEnabled();
+   window.civilizationAuthSession={user:{id:"opt6-b"}};
+   window.dispatchEvent(new Event("civilization-auth-ready"));
+   const independent=manager.combatAnimationEnabled();
+   window.civilizationAuthSession={user:{id:"opt6-new"}};
+   window.dispatchEvent(new Event("civilization-auth-ready"));
+   return {initial,set,disabled,independent,restored:manager.combatAnimationEnabled(),html:manager.settingsHtml()};
+  });
+  assert.equal(prefs.initial,true);
+  assert.deepEqual(prefs.set,{ok:true,enabled:false});
+  assert.equal(prefs.disabled,false);
+  assert.equal(prefs.independent,true);
+  assert.equal(prefs.restored,false);
+  assert.ok(prefs.html.includes("戰鬥動畫")&&!prefs.html.includes("3D 模式"));
+  console.log("PASS presentation preference: legacy compatibility, account isolation, retired modal and persistent animation switch");
  }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

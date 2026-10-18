@@ -2,7 +2,8 @@
 (function(global){
 "use strict";
 if(global.CivilizationFormalBEntry)return;
-let active=null,routeDispose=null,playerSpritesEnabled=true;
+let active=null,routeDispose=null;
+const animationEnabled=()=>global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false;
 function retireScene(){active?.dispose();active=null;}
 function dispose(){const close=routeDispose;routeDispose=null;close?.();retireScene();global.CivilizationFormalBRenderer?.clearSpriteCache?.();}
 function mount(options){
@@ -42,7 +43,7 @@ function mount(options){
    });}finally{URL.revokeObjectURL(url);}
    signal.throwIfAborted();
   },
-  policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:options.wholeSuit===true&&!playerSpritesEnabled?"text":"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
+  policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:!animationEnabled()?"text":"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
   onRetire:()=>{options.host.hidden=true;},
   onReady:()=>{clearNotice();options.host.hidden=false;},
   onFallback:reason=>{
@@ -73,12 +74,7 @@ function bindRoutes(options){
   clock.observe(event); // Metadata only: some formal owners compute before creating combat DOM.
   const screen=document.querySelector("#main .combat-screen");
   if(!screen||document.hidden){retireScene();host?.remove();host=null;id=null;return;}
-  if(options.wholeSuit===true&&!screen.querySelector('[data-player-sprite-toggle]')){
-   const button=document.createElement('button');button.type='button';button.className='btn';button.dataset.playerSpriteToggle='1';
-   const label=()=>button.textContent=playerSpritesEnabled?'關閉戰鬥動畫':'開啟戰鬥動畫';label();
-   button.addEventListener('click',()=>{playerSpritesEnabled=!playerSpritesEnabled;label();active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();});
-   (screen.querySelector('.combat-head')||screen).append(button);
-  }
+
   if(id!==frame.battleId||!host?.isConnected){
    retireScene();host?.remove();host=document.createElement("div");host.className="formal-b-battle-stage";host.style.cssText="width:100%;height:clamp(200px,42dvh,380px);position:relative;overflow:hidden";host.hidden=true;
    if(options.wholeSuit===true){
@@ -90,9 +86,11 @@ function bindRoutes(options){
   active?.accept(event,delivery);
  });
  if(!attached){observer.disconnect();throw Error("unavailable-formal-route-bridge");}
+ const preferenceChanged=()=>{active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();};
+ global.addEventListener("civilization-combat-animation-change",preferenceChanged);
  const pagehide=event=>{if(event?.persisted===true){active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();}else dispose();};
  global.addEventListener("pagehide",pagehide);
- routeDispose=()=>{global.removeEventListener("pagehide",pagehide);observer.disconnect();bridge.detach();host?.remove();host=null;};
+ routeDispose=()=>{global.removeEventListener("civilization-combat-animation-change",preferenceChanged);global.removeEventListener("pagehide",pagehide);observer.disconnect();bridge.detach();host?.remove();host=null;};
  return Object.freeze({dispose,snapshot:()=>active?.snapshot?.()||Object.freeze({ready:false,engines:0,rafs:0})});
 }
 function boot(){
