@@ -32,10 +32,12 @@ for(const p of formalProtected){
  const batch5Formal="3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings";
  const modeBase="3d-test/mode-foundation.js?v=20261010-dual-mode-preflight3&v2=20261010-b17-mode-policy&v3=20261010-opt5-account-migration";
  const modeBatch5=modeBase+"&vbatch5=20261018-animation-preference";
- const contractScript='<script src="3d-test/era-appearance-contract.js?v=20261018-batch5-contract1"></script>\n';
+  const gmOld="gm3dprototype.js?v=20261015-thrust1";
+ const gmNew="gm3dprototype.js?v=20261018-gm-copy1";
+const contractScript='<script src="3d-test/era-appearance-contract.js?v=20261018-batch5-contract1"></script>\n';
  assert.ok(current.includes(batch5Formal)&&current.includes(modeBatch5)&&current.includes(contractScript.trim()),"Batch5 exact approved cache and contract script absent");
  assert.ok(original.includes(oldFormal)&&current.includes(batch5Formal),"Expected approved Batch 4 formal entry cache key");
- assert.equal(current.replace(batch5Formal,newFormal).replace(modeBatch5,modeBase).replace(contractScript,"").replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
+ assert.equal(current.replace(gmNew,gmOld).replace(batch5Formal,newFormal).replace(modeBatch5,modeBase).replace(contractScript,"").replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
   continue;
  }
  assert.equal(sha(actual(p)),sha(historic(base,p)),"Formal runtime unexpectedly modified: "+p);
