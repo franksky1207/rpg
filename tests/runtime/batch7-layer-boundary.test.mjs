@@ -39,7 +39,7 @@ test('actual Actor failure disposes canvas and owns no candidate leases',async()
  assert.equal(pool.stats().bytes,0);assert.equal(pool.stats().refs,0);pool.dispose();
 });
 
-test('review documents six unaccepted actions per era and static cape constraints',()=>{
+test('review documents six unaccepted actions per era and replacement-only core layers',()=>{
  assert.equal(review.formalReleaseAllowed,false);assert.equal(review.batch,7);
  assert.deepEqual(review.entries.map(e=>e.id),['era-galaxy','era-universe','era-higher']);
  for(const entry of review.entries){
@@ -48,10 +48,9 @@ test('review documents six unaccepted actions per era and static cape constraint
   assert.ok(Object.values(entry.actions).every(x=>x==='blocked-not-accepted'));
   assert.equal(entry.finalGrip,null);assert.ok(entry.blockers.length);
  }
- const cape=review.higherLowLoadPlan;
- assert.equal(cape.capeMotion,'static-follow-body');assert.equal(cape.clothSimulation,false);
- assert.equal(cape.requiresHiddenCapeRepair,false);assert.equal(cape.runtimeReady,false);
- assert.ok(cape.layers.includes('rings-back')&&cape.layers.includes('rings-front'));
- assert.equal(cape.independentCelestialBodies,4);
- assert.equal(cape.relativeCapeBodyMotionAllowed,false);
+ const design=review.higherDesign;
+ assert.equal(design.version,2);assert.equal(design.cape,false);assert.equal(design.rings,false);
+ assert.equal(design.floatingBodies,0);assert.equal(design.oldRequirementsValid,false);
+ assert.deepEqual(design.requiredLayers,['complete-character','attack-body','independent-weapon']);
+ assert.equal(design.runtimeReady,false);
 });

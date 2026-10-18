@@ -18,14 +18,14 @@ SHA = {
     'galaxy_weapon.png': 'a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d',
     'universe_attack_body.jpeg': '80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42',
     'universe_weapon.png': '5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad',
-    'higher_attack_body.jpeg': '6f78638a2a7885bda96dd29c384629bc421873dc0cce7e3978f8f020d5bfac6f',
-    'higher_weapon.png': '30baa0c3a02ba9abb54301de06f3b3db4f04aa5b042d28c27d6e89bb5f911b52',
+    'higher_body_no_weapon_v2.png': '7dff371cf2aac63478f2b5eada2a85313da2944ca591d20718d15ba94461bb7b',
+    'higher_weapon_independent_v2.png': '1bd7d53030efabc1d0c08e1c9659221e9dd323bd16a06a9366a5574fb43494c1',
 }
 # Source pixels, manually inspected. Never imported by the shipped renderer.
 LANDMARKS = {
     'galaxy': dict(bodyGrip=[421,621], masterGrip=[405,610], masterGuard=[462,660], masterTip=[1010,1025], weaponGrip=[230,320], weaponGuard=[350,425], weaponTip=[1230,1120]),
     'universe': dict(bodyGrip=[422,620], masterGrip=[410,615], masterGuard=[465,660], masterTip=[1010,1080], weaponGrip=[245,235], weaponGuard=[370,365], weaponTip=[1230,1200]),
-    'higher': dict(bodyGrip=[447,750], masterGrip=[430,744], masterGuard=[510,803], masterTip=[1000,1390], weaponGrip=[250,265], weaponGuard=[350,430], weaponTip=[1000,1490]),
+    'higher': dict(bodyGrip=[313,770], masterGrip=[323,753], masterGuard=[390,810], masterTip=[978,1398], weaponGrip=[190,280], weaponGuard=[345,470], weaponTip=[996,1478]),
 }
 
 
@@ -37,7 +37,7 @@ def verify():
     for f in manifest['files']:
         p = BASE / 'layer-sources' / f['name']
         raw = p.read_bytes()
-        assert f['zip_path'] == 'candidates/' + f['name']
+        assert f['zip_path'] == ('sources/' if f['name'].startswith('higher') else 'candidates/') + f['name']
         assert hashlib.sha256(raw).hexdigest() == f['sha256'] == SHA[f['name']]
         assert len(raw) == f['bytes']
         with Image.open(p) as im:
@@ -93,11 +93,11 @@ def plots(out):
     out.mkdir(parents=True, exist_ok=True)
     recipe = json.loads((BASE / 'mask-recipe.json').read_text())
     geometry = []
-    for row in recipe['entries']:
+    for row in recipe['entries'] + [dict(epoch='higher',file='higher_complete_master_v2.png',footAnchor=[535,1518],headY=20)]:
         era = row['epoch']
         master = np.asarray(Image.open(BASE / 'approved-sources' / row['file']))
-        body = np.asarray(Image.open(BASE / 'layer-sources' / (era+'_attack_body.jpeg')))
-        weapon = np.asarray(Image.open(BASE / 'layer-sources' / (era+'_weapon.png')))
+        body = np.asarray(Image.open(BASE / 'layer-sources' / ('higher_body_no_weapon_v2.png' if era=='higher' else era+'_attack_body.jpeg')))
+        weapon = np.asarray(Image.open(BASE / 'layer-sources' / ('higher_weapon_independent_v2.png' if era=='higher' else era+'_weapon.png')))
         m,t,metrics = alignment(era)
         scale = 430/(row['footAnchor'][1]-row['headY'])
         offset = np.array([256,460.8])-np.array(row['footAnchor'])*scale
@@ -115,7 +115,7 @@ def plots(out):
             ax.plot([256],[460.8],'+',color='lime',markersize=10)
         draw(axes[0,0],master,norm);draw(axes[0,1],body,norm)
         draw(axes[0,2],body,norm);draw(axes[0,2],weapon,fit+norm)
-        for ax,title in zip(axes[0],['APPROVED MASTER','INCOMING BODY - JPEG BACKGROUND RETAINED','DIAGNOSTIC RECOMBINATION - NOT ACCEPTED']): ax.set_title(title,fontsize=9)
+        for ax,title in zip(axes[0],['APPROVED MASTER','INCOMING BODY - SOURCE BACKGROUND RETAINED','DIAGNOSTIC RECOMBINATION - NOT ACCEPTED']): ax.set_title(title,fontsize=9)
         # Native coordinate evidence; no masking, repainting or decontamination.
         for ax in axes[1]: ax.set_facecolor('#233047');ax.set_aspect('equal')
         draw(axes[1,0],master,Affine2D());draw(axes[1,1],weapon,fit)
@@ -131,7 +131,7 @@ def plots(out):
         axes[1,2].plot(*metrics['mappedGrip'],'x',color='red',markersize=14)
         axes[1,2].set_title(f"Fist/handle: green=body, red=fitted grip; residual {metrics['diagnostic512GripResidual']:.1f}px at 512",fontsize=9)
         fig.suptitle(era.upper()+' | read-only source plots | no alpha/hand-depth acceptance | green foot = pivot [0.5,0.9]',fontsize=11)
-        fig.tight_layout();fig.savefig(out/(era+'-review.png'));plt.close(fig)
+        fig.tight_layout();fig.savefig(out/(('higher-v2' if era=='higher' else era)+'-review.png'));plt.close(fig)
     return geometry
 
 

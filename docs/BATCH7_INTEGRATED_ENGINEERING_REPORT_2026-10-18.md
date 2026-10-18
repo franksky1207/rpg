@@ -1,14 +1,15 @@
 # 第7批整合施工報告（未封箱，禁止合併）
 
-> 本文保留上次母圖整合歷史。本次六張補圖驗證、重組圖、固定30項及靜態高維披風方案，請讀 [六張補圖整合報告](BATCH7_SIX_LAYER_INTEGRATION_REVIEW_2026-10-18.md)。沒有解除發布阻擋。
+> **高維正式替換 v2**：無披風、無星環、無漂浮星體；舊高維補圖與分層要求全部失效。只需完整角色、無武器身體、獨立武器。三張來源已保存，透明 Alpha／持劍手遮擋未允收；不得宣稱第7批完成。詳見 [新版替換報告](BATCH7_HIGHER_V2_REPLACEMENT_REVIEW_2026-10-18.md)。
+
 
 ## 1. 修改內容
 
 承接 `franksky1207/rpg` 原草稿 [PR #38](https://github.com/franksky1207/rpg/pull/38)，沿用分支 `batch7-era-player-sprite-20261018`，基礎施工 SHA `ba17656da5e03b6db3af5a100b1cb4703408c619`；fresh-read main 為 `29ab70fdc791dbbdce0e276a282f2e6b163f276b`，main 是分支祖先。保留原 PR 的全部合法修改，沒有重建第7批或另開 PR。
 
-- 三張核准母圖與 ZIP 原 manifest／README 無損保存於 `development/combat-animation/batch7/approved-sources/`，沒有重複提交 ZIP。
-- `mask-recipe.json` 記錄可重建去背種子、原尺寸及腳點；`scripts/batch7-prepare-candidates.cjs` 以 ImageMagick／Node 做連通區 Alpha 遮罩和統一縮放，不改角色 RGB。銀河保留原 Alpha；宇宙／高維只移除已盤點的白底負空間，保護白甲。
-- 三張 `*-full-candidate.webp` 為 512×512 透明、右向3/4、pivot [0.5,0.9] 的候選完整角色。獨立 ID 為 `era-galaxy`／`era-universe`／`era-higher`，不是 G005/G007/G018。候選 manifest 記錄來源、SHA、容量、縮放／座標與未完成圖層。**acceptedLayers 為空，formalReleaseAllowed／formalBattleAllowed／gmPreviewAllowed 均為 false。**
+- 目前三張核准母圖保存於 `development/combat-animation/batch7/approved-sources/`，沒有重複提交 ZIP。
+- `mask-recipe.json` 記錄可重建去背種子、原尺寸及腳點；`scripts/batch7-prepare-candidates.cjs` 以 ImageMagick／Node 做連通區 Alpha 遮罩和統一縮放，不改角色 RGB。銀河保留原 Alpha；宇宙只移除已盤點的白底負空間；高維舊配方已移除，新版未通過精準Alpha，保護白甲。
+- 銀河／宇宙兩張 `*-full-candidate.webp`（高維舊候選已刪除） 為 512×512 透明、右向3/4、pivot [0.5,0.9] 的候選完整角色。獨立 ID 為 `era-galaxy`／`era-universe`／`era-higher`，不是 G005/G007/G018。候選 manifest 記錄來源、SHA、容量、縮放／座標與未完成圖層。**acceptedLayers 為空，formalReleaseAllowed／formalBattleAllowed／gmPreviewAllowed 均為 false。**
 - 修正 `era-appearance-contract.js`：從正式全域 lexical `state` 讀取轉生次數，避免 `window.state` 為 undefined 而永不解鎖；匯入／雲端置換 state 後即時重新讀取，不持有舊 reference；本機進度 owner 與登入帳號不符時拒絕解鎖，登出事件立即鎖定。
 - 修正 `mode-foundation.js`：設定頁依 `currentWorldPhase()` 與正式紀元 roots 顯示目前外觀，不使用不存在的 `state.world`。明示新素材尚未正式推出，偏好僅本裝置／登入帳號，無跨裝置同步或隨存檔傳輸承諾。保留首次轉生預設高維、再次轉生保留選擇、下一場安全套用的既有契約。
 - 更新兩個 JS 的 HTML 指紋、resource-manifest 的內容雜湊及歷史 HTML 精確比較測試的對應指紋；沒有刪斷言、停用測試或擴大允許的 HTML 變動。
@@ -24,17 +25,17 @@
 |---|---|---:|---|
 | galaxy_approved_master.png | 1254×1254 | 963810 | `06e4bf6bb0ce50f4b90d8111db3608821ef0d582400cc760920abbfb45a54e56` |
 | universe_approved_master.jpeg | 1254×1254 | 294184 | `e1b438fb7f7221d05a0468277f3e53e62173e95fd553d22cf333bea31e016239` |
-| higher_approved_master.jpeg | 1024×1536 | 587032 | `43e80f7a84ccc41f9716a1f5aba6f08d4b9fd2c969c74010fb3422b61c54f3b6` |
+
 
 | 候選完整切圖（均512×512） | bytes | SHA-256 |
 |---|---:|---|
 | galaxy-full-candidate.webp | 93246 | `bceb46a4c91d91afae79712e2fe88d9cda9e99815f44819be2f445421a0a860e` |
 | universe-full-candidate.webp | 108134 | `9fcdc4b0e47c487bdf65907d4857b7545aff883fe06f3b18c8e0d911ac1561d0` |
-| higher-full-candidate.webp | 151336 | `736b0fe6ea4b0fc794f301da75b18516c307944352c45fa3428895fa65ff8a45` |
 
-銀河原 Alpha 範圍 0–255、四角透明，有 1,181,240 個全透明像素；alpha=1 遠端雜點使原圖完整 Alpha bounds 延伸至上下邊界，不能把原透明檔直接當已清理完畢。宇宙劍光仍有白色 matte；高維細金線白邊／封閉空隙未允收。三張候選縮放後四邊沒有裁切，但腳點／握點仍需圖層完成後正式視覺驗收。
 
-已嘗試局部影像編輯：銀河去劍試稿改動腿甲；宇宙去背試稿無法證明保留全部母圖色彩；高維去背試稿出現額外光暈。這些生成試稿不採用、不入正式資源。候選完整切圖不等於分層；沒有合格的獨立武器、無武器攻擊身體或高維完整披風／星環／星體層，不能宣稱新六動作通過。
+銀河原 Alpha 範圍 0–255、四角透明，有 1,181,240 個全透明像素；alpha=1 遠端雜點使原圖完整 Alpha bounds 延伸至上下邊界，不能把原透明檔直接當已清理完畢。宇宙劍光仍有白色 matte；高維v2完整圖與body為RGB，尚無透明候選。銀河／宇宙兩張候選縮放後四邊沒有裁切，但腳點／握點仍需圖層完成後正式視覺驗收。
+
+
 
 本機新增測試實際通過：來源及候選 SHA／格式／Alpha、Batch5/7 契約、正式 lexical state、三紀元設定文字、歷史轉生／合法 Schema17 migration／舊版污染 migration、首次預設／重複轉生偏好、混穿不變、帳號 owner mismatch、登出／重新登入／reload、手機選單寬度、外觀選擇不寫正式 save。另經**實際 cloudsave upload/download owner + 本機服務替身**確認偏好不進 payload，下載／migration／save／reload 後保留本帳號偏好；不代表真帳號遠端服務驗收。
 
@@ -52,7 +53,8 @@
 | 06 | 本裝置策略通過 | 帳號鍵值隔離與儲存失敗安全回退；不變更 Schema17，不聲稱跨裝置同步。 |
 | 07 | 來源完成／Sprite未完 | 銀河母圖 SHA／Alpha 合法，候選切圖未有攻擊層。 |
 | 08 | 來源完成／Sprite未完 | 宇宙原圖合法；白底初步遮罩，劍光去污染待修。 |
-| 09 | 來源完成／Sprite未完 | 高維原圖合法；白金、披風、星環／星體保留，精準遮罩與獨立層待修。 |
+| 09 | v2來源完成／Sprite未完 | 新高維三圖已取代舊設計；持劍手與Alpha待修。 |
+
 | 10 | 阻擋 | 固定武器設計保留於母圖，獨立柄／手遮擋未補齊。 |
 | 11 | 部分 | 512候選與 pivot／重建 recipe；沒有以三張完整切圖冒充可動畫分層。 |
 | 12 | 來源保留 | 不改原人物設計／顏色／風格；小尺寸三套比例待新層視覺允收。 |

@@ -1,1 +1,1 @@
-第7批三紀元主角已確認原圖（不可直接發行）。銀河 alpha PNG；宇宙及高維白底 JPEG。請原樣提取，先核對 SHA-256，再去背、分層、補出攻擊身體及獨立武器，完整六動作及驗收。勿修改原圖造型，勿用舊 G005/G007/G018 冒名。
+Current sources are indexed by manifest.json. Original import metadata is retained in ../source-history.json. Old higher-design image files were removed on user instruction. Higher v2 is the sole approved replacement: no cape, rings or floating bodies; full/body/weapon only. Source approval is not sprite/alpha/grip acceptance.

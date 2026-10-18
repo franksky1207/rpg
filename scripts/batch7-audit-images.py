@@ -16,7 +16,7 @@ for item in source['files']:
     with Image.open(file) as image:
         assert image.size == (item['width'], item['height'])
         assert image.mode == item['mode']
-        assert image.format == ('PNG' if item['epoch'] == 'galaxy' else 'JPEG')
+        assert image.format == ('JPEG' if item['epoch'] == 'universe' else 'PNG')
         assert len(raw) == item['bytes']
         assert hashlib.sha256(raw).hexdigest() == item['sha256']
         if item['epoch'] == 'galaxy':
@@ -25,8 +25,13 @@ for item in source['files']:
             assert all(alpha.getpixel(p) == 0 for p in [(0, 0), (1253, 0), (0, 1253), (1253, 1253)])
             rows.append({'epoch': item['epoch'], 'sourceAlphaBounds': alpha.getbbox(), 'sourceAlphaRange': alpha.getextrema(), 'transparentPixels': alpha.histogram()[0]})
         else:
-            rows.append({'epoch': item['epoch'], 'sourceAlpha': 'absent; JPEG white matte'})
+            rows.append({'epoch': item['epoch'], 'sourceAlpha': 'absent; RGB background matte'})
 for item in candidate['entries']:
+    if item['epoch'] == 'higher':
+        assert item['asset'] is None and item['replacementVersion'] == 2
+        assert item['acceptedLayers'] == [] and item['formalBattleAllowed'] is False
+        rows.append({'id':item['id'], 'candidateAsset':'absent; precise alpha and grip blocked'})
+        continue
     file = ROOT / item['asset']['path']
     raw = file.read_bytes()
     assert hashlib.sha256(raw).hexdigest() == item['asset']['sha256']

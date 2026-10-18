@@ -1,8 +1,1 @@
-《文明戰線》第7批｜六張 GPT 補圖候選素材
-
-此 ZIP 僅含三紀元無武器身體與獨立武器候選原圖（每紀元兩張）。
-這些檔案未經實際重組、握點、Alpha、六動作、正式 Renderer 或 GM 驗收。請勿直接改 formalReleaseAllowed 等發布旗標。
-JPEG 白色背景與 PNG 的透明外觀需逐一檢查，切勿假定圖檔透明。
-需與 GitHub PR #38 的 approved-sources 原母圖逐套對照，保留相同身份與代表武器。
-高維仍需披風、星環、星體的分層與遮擋處理。
-若不能可靠重組，記錄差異、保持候選狀態，不得冒充完成。
+Current sources are indexed by manifest.json. Original import metadata is retained in ../source-history.json. Old higher-design image files were removed on user instruction. Higher v2 is the sole approved replacement: no cape, rings or floating bodies; full/body/weapon only. Source approval is not sprite/alpha/grip acceptance.

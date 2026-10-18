@@ -1,16 +1,17 @@
 {
   "schema": "cw.batch7.six-layer-review.v1",
   "batch": 7,
-  "version": "20261018-six-layer-review-1",
+  "version": "20261018-higher-v2",
   "baselineMain": "29ab70fdc791dbbdce0e276a282f2e6b163f276b",
-  "baselinePrHead": "d1d2df60716fd8b3150966a37d99125b87f95594",
+  "baselinePrHead": "9bd97344abdd6847ad3f91cacea4053851e292bc",
   "formalReleaseAllowed": false,
   "sourceZip": {
     "name": "civilization_batch7_six_layer_candidates.zip",
     "sha256": "e0b07a1c2012ab7ec0bc940119a046635d794c300b5a4b7976966b891f4bc459",
     "bytes": 3400125,
-    "manifestPreserved": true,
-    "license": "User supplied for this project; not an assertion of third party ownership/licensing"
+    "manifestPreserved": false,
+    "license": "User supplied for this project; not an assertion of third party ownership/licensing",
+    "note": "Historical metadata preserved separately; old higher files removed by user instruction."
   },
   "entries": [
     {
@@ -52,8 +53,8 @@
       "diagnosticLandmarksOnly": true,
       "diagnostic": {
         "path": "development/combat-animation/batch7/layer-review/galaxy-review.png",
-        "sha256": "43424187b91986e583b6caacbe1ebbc9453f7f9fb5f51d18d57e13a29fff7638",
-        "bytes": 795849
+        "sha256": "ea45eaca442b60ec4cfefc425c4fb953a204c72eb824334200714f705ab6e255",
+        "bytes": 795919
       },
       "actions": {
         "idle": "blocked-not-accepted",
@@ -103,8 +104,8 @@
       "diagnosticLandmarksOnly": true,
       "diagnostic": {
         "path": "development/combat-animation/batch7/layer-review/universe-review.png",
-        "sha256": "2cc1f5a4acd8a76b0596617b416f936065202e991384e560764a314b97edfa81",
-        "bytes": 1107516
+        "sha256": "6de99c3f602ffd4812f9a1c18b8b241bab64e01c1d9518f8d17496ee9889bc75",
+        "bytes": 1107612
       },
       "actions": {
         "idle": "blocked-not-accepted",
@@ -121,29 +122,28 @@
       "acceptedLayers": [],
       "sources": [
         {
-          "path": "development/combat-animation/batch7/layer-sources/higher_attack_body.jpeg",
-          "sha256": "6f78638a2a7885bda96dd29c384629bc421873dc0cce7e3978f8f020d5bfac6f"
+          "path": "development/combat-animation/batch7/layer-sources/higher_body_no_weapon_v2.png",
+          "sha256": "7dff371cf2aac63478f2b5eada2a85313da2944ca591d20718d15ba94461bb7b"
         },
         {
-          "path": "development/combat-animation/batch7/layer-sources/higher_weapon.png",
-          "sha256": "30baa0c3a02ba9abb54301de06f3b3db4f04aa5b042d28c27d6e89bb5f911b52"
+          "path": "development/combat-animation/batch7/layer-sources/higher_weapon_independent_v2.png",
+          "sha256": "1bd7d53030efabc1d0c08e1c9659221e9dd323bd16a06a9366a5574fb43494c1"
         }
       ],
       "checks": {
-        "identity": "visual-compatible-source-only; not approved as whole-body replacement",
-        "hiddenHandAndLegArmor": "visible repairs present; original occlusion patch and front-hand depth not accepted",
+        "identity": "Approved replacement v2: no cape, rings or floating bodies",
+        "hiddenHandAndLegArmor": "Left fingers are open; master has closed grip. Foreground finger occlusion unresolved.",
         "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
         "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
         "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
-        "recomposition": "diagnostic compared to master; no set accepted",
-        "alphaHaloFringeCrop": "body JPEG has no alpha; precise matte not accepted",
+        "recomposition": "New v2 guard/tip fit diagnostic only; no accepted hand depth",
+        "alphaHaloFringeCrop": "Master/body RGB PNG: no alpha. Weapon RGBA range 0..254.",
         "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
       },
       "blockers": [
-        "頭盔、白金甲、星河披風與四顆外部星體的大方向保留；身體仍把披風、星環、星體與人物合在白底JPEG。",
-        "修正版劍保留藍色星核與金色元素，但護手彎鉤/刃根的寬度、負空間和原母圖不同；擬合端點也不能證明為同一把劍。",
-        "重組後柄穿過拳面；需要原母圖持劍手局部修補或獨立前手遮罩，不能用圓形遮擋假裝精確。",
-        "披風可依使用者新指示採獨立靜態後景層；不需要擺動/隱藏披風補繪，但身體/披風相對移動必須禁止，星環前後層與四星體仍缺獨立Alpha。"
+        "V2 body has open left fingers, unlike the gripping master; foreground hand occlusion unresolved.",
+        "Master and body are RGB PNG with no alpha; exact matte not accepted.",
+        "V2 independent weapon has diamond handle trim not matching the master gripping segment; requires local handle/guard registration and front-finger depth."
       ],
       "finalGrip": null,
       "pivot": [
@@ -153,9 +153,9 @@
       "depthAccepted": false,
       "diagnosticLandmarksOnly": true,
       "diagnostic": {
-        "path": "development/combat-animation/batch7/layer-review/higher-review.png",
-        "sha256": "b0e0f10866087529adb3b8d3b661d83f9d976a2d6e66f8819e91fb35492a5d1a",
-        "bytes": 1254888
+        "path": "development/combat-animation/batch7/layer-review/higher-v2-review.png",
+        "sha256": "68554c61cb78f566f54fd29700baee4d78b4049fe6a7c61036857a777c237ebc",
+        "bytes": 1270399
       },
       "actions": {
         "idle": "blocked-not-accepted",
@@ -167,32 +167,21 @@
       }
     }
   ],
-  "higherLowLoadPlan": {
-    "authorization": "User: 高維披風部分 你以最好處理的方式處理",
-    "capeMotion": "static-follow-body",
-    "clothSimulation": false,
-    "relativeCapeBodyMotionAllowed": false,
-    "requiresHiddenCapeRepair": false,
-    "runtimeReady": false,
-    "independentCelestialBodies": 4,
-    "layers": [
-      "rings-back",
-      "star-0",
-      "star-1",
-      "star-2",
-      "star-3",
-      "cape-static-back",
-      "body",
-      "weapon",
-      "hand-front",
-      "rings-front"
+  "replacementZip": {
+    "name": "civilization_batch7_higher_replacement_pack.zip",
+    "manifest": "development/combat-animation/batch7/replacement-pack/manifest.json"
+  },
+  "higherDesign": {
+    "version": 2,
+    "cape": false,
+    "rings": false,
+    "floatingBodies": 0,
+    "requiredLayers": [
+      "complete-character",
+      "attack-body",
+      "independent-weapon"
     ],
-    "constraints": [
-      "No relative cape/body movement or rotation exposing unseen structure.",
-      "Cape is an independent controllable static draw layer, never part of the entire character bitmap.",
-      "Rings remain front/back layers and four stars remain independent; no orbit animation until hidden continuity is available.",
-      "Low tier: fixed placement, same shared transform, no blur/filter/extra RAF or particle systems.",
-      "Use existing Actor/Presenter clock and shared verified textures only after source-layer acceptance."
-    ]
+    "oldRequirementsValid": false,
+    "runtimeReady": false
   }
 }

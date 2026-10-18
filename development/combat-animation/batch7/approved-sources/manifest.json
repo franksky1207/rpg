@@ -26,14 +26,21 @@
       "bytes": 294184
     },
     {
-      "epoch": "higher",
-      "path": "sources/higher_approved_master.jpeg",
-      "original_filename": "19FAE52F-855C-470C-9B72-A848FE04A3F9.jpeg",
+      "name": "higher_complete_master_v2.png",
+      "path": "development/combat-animation/batch7/approved-sources/higher_complete_master_v2.png",
+      "zip_path": "sources/higher_complete_master_v2.png",
       "width": 1024,
       "height": 1536,
+      "format": "PNG",
       "mode": "RGB",
-      "sha256": "43e80f7a84ccc41f9716a1f5aba6f08d4b9fd2c969c74010fb3422b61c54f3b6",
-      "bytes": 587032
+      "bytes": 2361318,
+      "sha256": "d0a934a3d44bd36f3da12d2169b089020cb37d818cbd41dca8fd2053f24bf661",
+      "has_alpha": false,
+      "sourcePackage": "civilization_batch7_higher_replacement_pack",
+      "original_path": "/mnt/data/星耀銀鎧宇宙騎士.png",
+      "epoch": "higher",
+      "replacementVersion": 2
     }
-  ]
+  ],
+  "sourceHistory": "../source-history.json"
 }
