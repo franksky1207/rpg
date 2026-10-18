@@ -31,7 +31,13 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      for(const id of cases){
       await page.locator('[data-b="case"]').selectOption(id);
       assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
-      // A fresh scenario can still be binding its renderer; wait for a playable state or an explicit failure.\n      await page.waitForFunction(()=>{\n       const play=document.querySelector('[data-b="play"]');\n       const message=document.querySelector('[data-b="status"]')?.textContent||'';\n       return (play&&!play.disabled)||/載入失敗|視覺暫不可用|素材驗證失敗/.test(message);\n      },null,{timeout:30000});\n      const controls=await page.evaluate(()=>{
+      // A fresh scenario may still be binding its renderer; verify readiness or a real failure.
+      await page.waitForFunction(()=>{
+       const play=document.querySelector('[data-b="play"]');
+       const message=document.querySelector('[data-b="status"]')?.textContent||'';
+       return (play&&!play.disabled)||/載入失敗|視覺暫不可用|素材驗證失敗/.test(message);
+      },null,{timeout:30000});
+      const controls=await page.evaluate(()=>{
        const get=id=>document.querySelector('[data-b="'+id+'"]');
        const play=get('play');
        if(!play||play.disabled)return {enabled:false};
