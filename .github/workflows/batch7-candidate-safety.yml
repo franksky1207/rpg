@@ -1,0 +1,69 @@
+name: Batch 7 Candidate Safety and Appearance
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths: ['3d-test/**', 'assets/era-player/**', 'index.html', 'development/combat-animation/batch7/**', 'scripts/batch7-*', 'tests/runtime/batch7-*', '.github/workflows/batch7-candidate-safety.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  candidate-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0 numpy==2.3.3
+      - name: Check immutable sources and non-release boundary (not art acceptance)
+        run: |
+          set -euo pipefail
+          node --check scripts/batch7-prepare-candidates.cjs
+          node tests/runtime/batch7-source-assets.cjs
+          python3 scripts/batch7-audit-images.py > /tmp/batch7-image-audit.json
+          python3 scripts/batch7-review-layers.py > /tmp/batch7-layer-audit.json
+          node --test tests/runtime/batch7-layer-boundary.test.mjs tests/runtime/batch7-era-pool.test.mjs
+          node tests/runtime/batch5-era-animation-contract.cjs
+          node tests/runtime/cleanup-batch4-4-final-guard.cjs
+          node tests/runtime/cleanup-batch2-4-integration.cjs
+          node scripts/build-publish-dry-run.cjs
+          node scripts/stage-hybrid-preview.cjs
+          test ! -d .publish-stage3/development/combat-animation/batch7
+      - name: Formal lightweight assets and publication gate
+        run: |
+          python3 tests/runtime/batch7-formal-assets.py
+          node -e "require('./scripts/era-sprite-publication.cjs')(process.cwd(),require('node:child_process').execFileSync('git',['ls-files'],{encoding:'utf8'}).trim().split('\n'))"
+      - name: Browser dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Real page appearance, settings and compatibility (fixture accounts)
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch7-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done
+          node tests/runtime/batch7-formal-sprites-browser.cjs
+          node tests/runtime/batch7-appearance-browser.cjs
+          node tests/runtime/3d-mode-browser-regression.js
+          node tests/runtime/save-schema17-compatibility-matrix.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch7-candidate-safety-evidence
+          path: |
+            /tmp/batch7-image-audit.json
+            /tmp/batch7-layer-audit.json
+            development/combat-animation/batch7/layer-review/
+            /tmp/batch7-appearance-browser.json
+            /tmp/batch7-formal-sprites-browser.json
+            /tmp/batch7-http.log
+            publish-stage3-report.json

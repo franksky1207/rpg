@@ -3,7 +3,7 @@
 "use strict";
 const categories=[["character","角色與動作"],["combat","戰場與對戰"]];
 const cases=[
- {id:"C-08-CHARACTER",cat:"character",title:"角色動作預覽",kind:"character",detail:"查看現有角色動畫的待機、攻擊、受擊、閃避、死亡與重播。現有素材並非未來三紀元角色。"},
+ {id:"C-08-CHARACTER",cat:"character",title:"角色動作預覽",kind:"character",detail:"檢查銀河、宇宙、高維角色的六種動作、方向、縮放、手機範圍與缺圖回退。"},
  {id:"C-15-BATTLE",cat:"combat",title:"戰鬥動畫模擬",kind:"battle-battle",detail:"檢視已發布戰場、可用角色、敵方情境、血量與播放控制，不發放收益。"}
 ];
 const $=id=>document.getElementById(id);
@@ -77,8 +77,8 @@ async function start(){
  try{
   let mod;
   if(entry().kind==="character"){
-   status.textContent="GM 角色預覽：僅使用現有測試素材，不修改存檔。";
-   mod=await import("./gm-whole-suit.mjs?v=20261018-gm-copy1");
+   status.textContent="GM 角色預覽：使用三紀元正式角色素材，不修改存檔。";
+   mod=await import("./gm-era-sprites.mjs?v=20261018-lightweight1");
   }else{
    status.textContent="GM 戰鬥動畫測試：不影響正式戰鬥或音效。";
    mod=await import("./gm-battle-simulation.js?v=20261018-gm-copy1");

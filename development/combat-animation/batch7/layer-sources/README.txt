@@ -1,0 +1,1 @@
+Current sources are indexed by manifest.json. Original import metadata is retained in ../source-history.json. Old higher-design image files were removed on user instruction. Higher v2 is the sole approved replacement: no cape, rings or floating bodies; full/body/weapon only. Source approval is not sprite/alpha/grip acceptance.

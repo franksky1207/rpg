@@ -39,7 +39,7 @@ async function finishIntro(page){
  },mode);
  const counter=mode==='galaxy'?()=>window.activeMainBattleContext?.completed||0:mode==='universe'?()=>window.activeSecondWorldMainlineContext?.completed||0:()=>getVoidMirageRunSnapshot()?.cleared||0;
  await page.waitForFunction(()=>getCombatPresentationSnapshot()?.active!==false&&document.querySelector('.combat-screen'),null,{timeout:15000});
- await page.waitForSelector('.formal-b-whole-suit[data-suit="g007"]');
+ await page.waitForSelector('.formal-b-whole-suit[data-suit="era-higher"]');
  await page.evaluate(mode=>{if(mode==='galaxy')openMinimalMode('main');if(mode==='universe')openSecondWorldMainlineMinimalMode();if(mode==='void')openVoidMirageMinimalMode();},mode);
  assert.equal(await page.evaluate(()=>isMinimalModeOpen()),true);
  const selector=mode==='galaxy'?'[data-main-minimal-mode-round]':mode==='universe'?'[data-second-world-minimal-round]':'[data-void-minimal-mode-cleared]';

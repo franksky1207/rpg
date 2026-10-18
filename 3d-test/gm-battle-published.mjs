@@ -2,13 +2,13 @@
  * Uses only approved published sprites and real published battle backgrounds.
  * This is NOT a combat calculator, enemy-art release, or game-state owner.
  */
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261015-thrust1';
-import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261015-thrust1';
-import './armor-selection.js?v=20261015-phase5';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261018-lightweight1';
+import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261018-lightweight1';
+import {release} from './era-player-sprites.mjs?v=20261018-lightweight1';
 
 export async function mount({host,signal,quality='medium'}={}){
  const own=new AbortController(),pool=createSpritePool();
- const pending=new Map();let closed=false,actor=null,frame=0,selected=null,catalog=null,authorized=false,guard=null;
+ const pending=new Map();let closed=false,actor=null,frame=0,selected=null,catalog=release,actorSerial=0,authorized=false,guard=null;
  let playing=false,paused=false,step=0,elapsed=0,lastTime=0,speed=1,mode='formal',scene='normal-baseline';
  const cases=[['normal-baseline','普通怪'],['elite-baseline','菁英怪'],['boss-baseline','Boss'],['boss-player-defeat','Boss 擊敗玩家'],['elite-effects-owner-input','菁英效果']];
  const clips=['idle','attack','hit','dodge','attack','defeat'];
@@ -16,7 +16,7 @@ export async function mount({host,signal,quality='medium'}={}){
  const doc=document.createElement('section');doc.className='gm-b-simulation gm-b-published';
  doc.innerHTML=`<div class="gm-b-controls">
   <label>角色來源<select data-b="source"><option value="formal">正式角色（唯讀）</option><option value="free">自由測試</option></select></label>
-  <label data-b="suit-label" hidden>現有測試角色<select data-b="suit"><option value="g005">G005</option><option value="g007">G007</option><option value="g018">G018</option></select></label>
+  <label data-b="suit-label" hidden>三紀元角色<select data-b="suit"><option value="era-galaxy">銀河</option><option value="era-universe">宇宙</option><option value="era-higher">高維</option></select></label>
   <button type="button" data-b="sync">重新同步角色</button>
   <label>速度<select data-b="speed"><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
   <label>敵方情境<select data-b="case">${cases.map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select></label>
@@ -51,7 +51,7 @@ export async function mount({host,signal,quality='medium'}={}){
   pending.set(id,{type,resolve,reject,timer});window.parent.postMessage({type,requestId:id},location.origin);
  });
  const setStatus=value=>{$('status').textContent=value;};
- const stopActor=()=>{actor?.dispose();actor=null;$('player-visual').replaceChildren();const notice=document.createElement('span');notice.textContent='無符合條件的已發布角色';$('player-visual').append(notice);};
+ const stopActor=()=>{actorSerial++;for(const a of requests)a.abort();actor?.dispose();actor=null;$('player-visual').replaceChildren();const notice=document.createElement('span');notice.textContent='無符合條件的已發布角色';$('player-visual').append(notice);};
  const reset=()=>{playing=false;paused=false;step=0;elapsed=0;lastTime=0;refreshHP();};
  const refreshHP=()=>{
   const [playerMax,enemyMax]=hpSamples[scene];const p=scene==='boss-player-defeat'?Math.max(0,playerMax-step*21):Math.max(0,playerMax-step*7),e=Math.max(0,enemyMax-step*23);
@@ -62,17 +62,17 @@ export async function mount({host,signal,quality='medium'}={}){
  };
  const loadActor=async row=>{
   stopActor();selected=row||null;
-  const id=row?.id;if(!authorized||!id){setStatus(authorized?'目前沒有符合的已發布角色。':'需要 GM 授權，預覽已停用。');return;}
+  const ticket=actorSerial,id=row?.id;if(!authorized||!id){setStatus(authorized?'目前沒有符合的已發布角色。':'需要 GM 授權，預覽已停用。');return;}
   const entry=catalog?.entries?.find(e=>e.id===id&&e.gmPreviewAllowed===true);
   if(!entry){setStatus('尚未製作此角色，未展示替代人物。');return;}
   const load=new AbortController();requests.add(load);
   try{
    const a=await new WholeSuitActor(pool,entry,{signal:load.signal,tier:quality}).init();
-   if(closed||!authorized||selected?.id!==id){a.dispose();return;}
+   if(closed||!authorized||ticket!==actorSerial||selected?.id!==id){a.dispose();return;}
    actor=a;$('player-visual').replaceChildren(a.canvas);
    a.canvas.setAttribute('aria-label',id.toUpperCase()+' 現有測試角色');
    setStatus(id.toUpperCase()+' 角色已載入；沙盒只展示畫面，不寫入正式資料。');
-  }catch{if(!closed)setStatus('角色素材載入失敗，已安全回退。');}
+  }catch{if(!closed&&ticket===actorSerial)setStatus('角色素材載入失敗，已安全回退。');}
   finally{requests.delete(load);}
  };
  let epoch=0;
@@ -83,21 +83,16 @@ export async function mount({host,signal,quality='medium'}={}){
    if(closed||ticket!==epoch)return;
    if(permission.authorized!==true)throw Error('denied');
    authorized=true;
-   if(!catalog){
-    const response=await fetch(new URL('../assets/gm-equipment-2_5d/v1/catalog.json',import.meta.url),{signal:own.signal,cache:'no-store'});
-    if(!response.ok)throw Error('catalog');
-    catalog=await response.json();
-    if(catalog.schema!=='cw.gm.whole-suit.v1'||catalog.formalBattleEnabled!==false||catalog.sets.length!==210)throw Error('catalog contract');
-   }
    if(mode==='free'){
     $('suit-label').hidden=false;
-    await loadActor(catalog.sets.find(row=>row.id===$('suit').value));return;
+    await loadActor(catalog.entries.find(row=>row.id===$('suit').value));return;
    }
    $('suit-label').hidden=true;
    const formal=await request('civilization3d:sprite-snapshot');
    if(closed||ticket!==epoch)return;
    if(formal.authorized!==true)throw Error('no formal authorization');
-   const row=window.CivilizationArmorSelection.select(formal.appearance,catalog.sets);
+   const era=formal.eraVisualId||({1:'galaxy',2:'universe',3:'higher'})[formal.appearance?.world];
+   const row=catalog.entries.find(e=>e.id==='era-'+era);
    await loadActor(row);
   }catch{if(!closed&&ticket===epoch){authorized=false;stopActor();setStatus('需要 GM 授權，或正式角色目前沒有可顯示素材。');}}
  }
@@ -123,12 +118,12 @@ export async function mount({host,signal,quality='medium'}={}){
  function dispose(){
   if(closed)return;closed=true;clearInterval(guard);cancelAnimationFrame(frame);++epoch;for(const a of requests)a.abort();
   for(const item of pending.values()){clearTimeout(item.timer);item.reject(Error('disposed'));}pending.clear();
-  for(const f of handlers)f();own.abort();stopActor();pool.dispose();host.replaceChildren();
+  signal?.removeEventListener('abort',dispose);for(const f of handlers)f();own.abort();stopActor();pool.dispose();host.replaceChildren();
  }
  signal?.addEventListener('abort',dispose,{once:true});
  if(signal?.aborted){dispose();return {dispose};}
  // Heartbeat is an authorization check only; it never drives the battle animation.
- guard=setInterval(async()=>{if(closed||document.hidden||!authorized)return;try{const response=await request('civilization3d:sprite-auth');if(!response.authorized){authorized=false;stopActor();reset();setStatus('GM 授權已失效，預覽停止。');}}catch{if(!closed){authorized=false;stopActor();reset();}}},2500);
+ guard=setInterval(async()=>{if(closed||document.hidden||!authorized)return;try{const response=await request('civilization3d:sprite-auth');if(!response.authorized){authorized=false;stopActor();pool.clear();reset();setStatus('GM 授權已失效，預覽停止。');}}catch{if(!closed){authorized=false;stopActor();reset();}}},2500);
  refreshHP();frame=requestAnimationFrame(tick);
  await synchronize();
  return {dispose,resize(){},setQuality(value){quality=value;if(authorized)synchronize();},

@@ -78,9 +78,30 @@ function switchMode(mode){
  global.location.reload();
  return {ok:true,reloading:true};
 }
+function appearanceHtml(){
+ const contract=global.CivilizationEraAppearanceContract;
+ if(!contract)return "";
+ const unlocked=contract.canChoose();
+ const selected=contract.choice();
+ const s=typeof state!=="undefined"?state:global.state;
+ const world=typeof global.currentWorldPhase==="function"?global.currentWorldPhase():s?.thirdWorld?.entered?3:s?.secondWorld?.entered?2:1;
+ const base=contract.resolve({world});
+ const labels={galaxy:"銀河戰甲",universe:"宇宙戰甲",higher:"高維戰甲"};
+ const options=contract.available.map(id=>'<option value="'+id+'"'+(selected===id?' selected':'')+'>'+labels[id]+'</option>').join("");
+ return '<div class="setting-row" style="display:block"><h3 style="margin:0 0 7px">角色外觀</h3>'+
+ '<div class="muted" style="margin-bottom:9px">三套角色外觀只影響戰鬥動畫，變更於下一場戰鬥套用。外觀設定不會隨雲端存檔或存檔匯入傳送。</div>'+
+ (unlocked?'<div class="muted" style="margin-bottom:9px">已完成轉生，可自由選擇三紀元主角外觀；只影響戰鬥動畫，不影響裝備能力。變更從下一場戰鬥生效，設定保存在本裝置的登入帳號。</div>'+
+ '<label>戰鬥造型 <select id="civilizationEraAppearanceChoice" onchange="window.CivilizationPresentationMode.setEraAppearance(this.value)">'+options+'</select></label>':
+ '<div class="muted">首次正式轉生後解鎖三套外觀自由選擇。目前依所在紀元顯示：'+(labels[base.visualId]||"尚未確認")+'。</div>')+'</div>';
+}
+function setEraAppearance(value){
+ const result=global.CivilizationEraAppearanceContract?.select(value)||{ok:false,reason:"unavailable"};
+ if(!result.ok){const element=document.getElementById("civilizationEraAppearanceChoice");if(element)element.value=global.CivilizationEraAppearanceContract?.choice()||"higher";}
+ return result;
+}
 function settingsHtml(){
  const enabled=animationEnabled();
- return '<div class="setting-row" style="display:block"><h3 style="margin:0 0 7px">戰鬥動畫</h3><div class="muted" style="margin-bottom:9px">控制支援動畫的正式戰鬥畫面；不影響文字戰鬥、傷害、速度或結算。設定儲存在這台裝置，登入時依帳號區分。</div><label style="display:inline-flex;align-items:center;gap:8px"><input type="checkbox" '+(enabled?'checked ':'')+'onchange="window.CivilizationPresentationMode.setCombatAnimationEnabled(this.checked)"> 開啟戰鬥動畫</label><div class="muted" style="margin-top:8px">關閉後使用文字戰鬥；變更立即生效，後續戰鬥也會記住選擇。</div></div>';
+ return appearanceHtml()+'<div class="setting-row" style="display:block"><h3 style="margin:0 0 7px">戰鬥動畫</h3><div class="muted" style="margin-bottom:9px">控制支援動畫的正式戰鬥畫面；不影響文字戰鬥、傷害、速度或結算。設定儲存在這台裝置，登入時依帳號區分。</div><label style="display:inline-flex;align-items:center;gap:8px"><input type="checkbox" '+(enabled?'checked ':'')+'onchange="window.CivilizationPresentationMode.setCombatAnimationEnabled(this.checked)"> 開啟戰鬥動畫</label><div class="muted" style="margin-top:8px">關閉後使用文字戰鬥；變更立即生效，後續戰鬥也會記住選擇。</div></div>';
 }
 
 global.addEventListener("civilization-auth-ready",onSession);
@@ -91,6 +112,6 @@ global.CivilizationPresentationMode=Object.freeze({
  canPreview3D:()=>true,shouldWarm3DAtStartup:()=>active==="3d",
  accountPreference:()=>read(userId()),selectMode:switchMode,settingsHtml,
  canSwitch,registerSwitchBlocker,unregisterSwitchBlocker,refresh:onSession,
- combatAnimationEnabled:animationEnabled,setCombatAnimationEnabled:setAnimationEnabled
+ combatAnimationEnabled:animationEnabled,setCombatAnimationEnabled:setAnimationEnabled,setEraAppearance
 });
 })(window);

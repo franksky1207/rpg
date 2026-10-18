@@ -1,0 +1,192 @@
+{
+  "schema": "cw.batch7.candidate-assets.v1",
+  "batch": 7,
+  "formalReleaseAllowed": false,
+  "license": "User-provided approved character masters; derivative engineering for this project. No third-party license claim.",
+  "recipe": "development/combat-animation/batch7/mask-recipe.json",
+  "note": "Only core full/body/weapon layers required for higher-v2. No ornamental layers. Candidates are not releasable.",
+  "entries": [
+    {
+      "id": "era-galaxy",
+      "epoch": "galaxy",
+      "status": "candidate-only",
+      "formalBattleAllowed": false,
+      "gmPreviewAllowed": false,
+      "source": {
+        "path": "development/combat-animation/batch7/approved-sources/galaxy_approved_master.png",
+        "sha256": "06e4bf6bb0ce50f4b90d8111db3608821ef0d582400cc760920abbfb45a54e56"
+      },
+      "asset": {
+        "path": "development/combat-animation/batch7/candidates/galaxy-full-candidate.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 93246,
+        "sha256": "bceb46a4c91d91afae79712e2fe88d9cda9e99815f44819be2f445421a0a860e"
+      },
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "facing": "right-3/4",
+      "normalization": {
+        "sourceFootAnchor": [
+          650,
+          1237
+        ],
+        "scale": 0.3504482477587612,
+        "offset": [
+          28,
+          27
+        ],
+        "standingHeight": 430
+      },
+      "mask": {
+        "removedPixels": 0,
+        "sourceRgbPreservedBeforeResize": true
+      },
+      "acceptedLayers": [],
+      "missingLayers": [
+        "attack-body",
+        "independent-weapon"
+      ],
+      "blockers": [
+        "Original alpha retained; no RGB repaint.",
+        "Weapon overlaps thigh and shin: hidden armor and grip require approved local repair."
+      ]
+    },
+    {
+      "id": "era-universe",
+      "epoch": "universe",
+      "status": "candidate-only",
+      "formalBattleAllowed": false,
+      "gmPreviewAllowed": false,
+      "source": {
+        "path": "development/combat-animation/batch7/approved-sources/universe_approved_master.jpeg",
+        "sha256": "e1b438fb7f7221d05a0468277f3e53e62173e95fd553d22cf333bea31e016239"
+      },
+      "asset": {
+        "path": "development/combat-animation/batch7/candidates/universe-full-candidate.webp",
+        "width": 512,
+        "height": 512,
+        "bytes": 108134,
+        "sha256": "9fcdc4b0e47c487bdf65907d4857b7545aff883fe06f3b18c8e0d911ac1561d0"
+      },
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "facing": "right-3/4",
+      "normalization": {
+        "sourceFootAnchor": [
+          650,
+          1240
+        ],
+        "scale": 0.34959349593495936,
+        "offset": [
+          29,
+          28
+        ],
+        "standingHeight": 430
+      },
+      "mask": {
+        "removedPixels": 1172355,
+        "sourceRgbPreservedBeforeResize": true
+      },
+      "acceptedLayers": [],
+      "missingLayers": [
+        "attack-body",
+        "independent-weapon"
+      ],
+      "blockers": [
+        "Known exterior and arm/torso negative-space components only; do not key all whites.",
+        "Blade glow retains white matte; precision decontamination not accepted.",
+        "Weapon overlaps both legs; no accepted attack body or independent grip."
+      ]
+    },
+    {
+      "id": "era-higher",
+      "epoch": "higher",
+      "status": "candidate-only",
+      "formalBattleAllowed": false,
+      "gmPreviewAllowed": false,
+      "source": {
+        "path": "development/combat-animation/batch7/approved-sources/higher_complete_master_v2.png",
+        "sha256": "d0a934a3d44bd36f3da12d2169b089020cb37d818cbd41dca8fd2053f24bf661"
+      },
+      "asset": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "facing": "right-3/4",
+      "normalization": null,
+      "mask": null,
+      "acceptedLayers": [],
+      "missingLayers": [
+        "attack-body",
+        "independent-weapon"
+      ],
+      "blockers": [
+        "V2 body has open left fingers, unlike the gripping master; foreground hand occlusion unresolved.",
+        "Master and body are RGB PNG with no alpha; exact matte not accepted."
+      ],
+      "replacementVersion": 2,
+      "sourceLayers": [
+        {
+          "name": "higher_complete_master_v2.png",
+          "path": "development/combat-animation/batch7/approved-sources/higher_complete_master_v2.png",
+          "zip_path": "sources/higher_complete_master_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "format": "PNG",
+          "mode": "RGB",
+          "bytes": 2361318,
+          "sha256": "d0a934a3d44bd36f3da12d2169b089020cb37d818cbd41dca8fd2053f24bf661",
+          "has_alpha": false,
+          "sourcePackage": "civilization_batch7_higher_replacement_pack",
+          "original_path": "/mnt/data/星耀銀鎧宇宙騎士.png",
+          "epoch": "higher",
+          "replacementVersion": 2
+        },
+        {
+          "name": "higher_body_no_weapon_v2.png",
+          "path": "development/combat-animation/batch7/layer-sources/higher_body_no_weapon_v2.png",
+          "zip_path": "sources/higher_body_no_weapon_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "format": "PNG",
+          "mode": "RGB",
+          "bytes": 2192943,
+          "sha256": "7dff371cf2aac63478f2b5eada2a85313da2944ca591d20718d15ba94461bb7b",
+          "has_alpha": false,
+          "sourcePackage": "civilization_batch7_higher_replacement_pack",
+          "original_path": "/mnt/data/星辰白金鎧甲騎士.png",
+          "epoch": "higher",
+          "replacementVersion": 2
+        },
+        {
+          "name": "higher_weapon_independent_v2.png",
+          "path": "development/combat-animation/batch7/layer-sources/higher_weapon_independent_v2.png",
+          "zip_path": "sources/higher_weapon_independent_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "format": "PNG",
+          "mode": "RGBA",
+          "bytes": 1483886,
+          "sha256": "1bd7d53030efabc1d0c08e1c9659221e9dd323bd16a06a9366a5574fb43494c1",
+          "has_alpha": true,
+          "sourcePackage": "civilization_batch7_higher_replacement_pack",
+          "original_path": "/mnt/data/星輝翼刃_銀河能量長劍.png",
+          "epoch": "higher",
+          "replacementVersion": 2
+        }
+      ],
+      "requiredLayers": [
+        "complete-character",
+        "attack-body",
+        "independent-weapon"
+      ]
+    }
+  ],
+  "supplementalLayerReview": "development/combat-animation/batch7/layer-review/review.json"
+}

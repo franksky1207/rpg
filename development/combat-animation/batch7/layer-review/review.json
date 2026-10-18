@@ -1,0 +1,187 @@
+{
+  "schema": "cw.batch7.six-layer-review.v1",
+  "batch": 7,
+  "version": "20261018-higher-v2",
+  "baselineMain": "29ab70fdc791dbbdce0e276a282f2e6b163f276b",
+  "baselinePrHead": "9bd97344abdd6847ad3f91cacea4053851e292bc",
+  "formalReleaseAllowed": false,
+  "sourceZip": {
+    "name": "civilization_batch7_six_layer_candidates.zip",
+    "sha256": "e0b07a1c2012ab7ec0bc940119a046635d794c300b5a4b7976966b891f4bc459",
+    "bytes": 3400125,
+    "manifestPreserved": false,
+    "license": "User supplied for this project; not an assertion of third party ownership/licensing",
+    "note": "Historical metadata preserved separately; old higher files removed by user instruction."
+  },
+  "entries": [
+    {
+      "id": "era-galaxy",
+      "setAccepted": false,
+      "acceptedLayers": [],
+      "sources": [
+        {
+          "path": "development/combat-animation/batch7/layer-sources/galaxy_attack_body.jpeg",
+          "sha256": "425771d77267b4c71a621b025cc1cfebfdccf9b23fa1c5882a76dd53f6d5bc04"
+        },
+        {
+          "path": "development/combat-animation/batch7/layer-sources/galaxy_weapon.png",
+          "sha256": "a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d"
+        }
+      ],
+      "checks": {
+        "identity": "visual-compatible-source-only; not approved as whole-body replacement",
+        "hiddenHandAndLegArmor": "visible repairs present; original occlusion patch and front-hand depth not accepted",
+        "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
+        "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
+        "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
+        "recomposition": "diagnostic compared to master; no set accepted",
+        "alphaHaloFringeCrop": "body JPEG has no alpha; precise matte not accepted",
+        "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
+      },
+      "blockers": [
+        "角色身份、全罩盔、鐵灰深藍和右向3/4大致相符，但補圖不是母圖的局部無損修補，不能整張取代母圖。",
+        "左拳與原持劍手的指節/握持方向不同；重組會把完整握柄畫在拳頭上，尚無核定的前手遮罩。",
+        "雙腿輪廓已補出，但腿甲接縫與膝部藍光須以原母圖局部遮罩核對；白底JPEG不是正式Alpha。",
+        "獨立劍可見柄尾、握柄、護手、劍身與藍光，未見夾帶手/甲；比例擬合只能作假設，握點尚未允收。"
+      ],
+      "finalGrip": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "depthAccepted": false,
+      "diagnosticLandmarksOnly": true,
+      "diagnostic": {
+        "path": "development/combat-animation/batch7/layer-review/galaxy-review.png",
+        "sha256": "ea45eaca442b60ec4cfefc425c4fb953a204c72eb824334200714f705ab6e255",
+        "bytes": 795919
+      },
+      "actions": {
+        "idle": "blocked-not-accepted",
+        "attack": "blocked-not-accepted",
+        "hit": "blocked-not-accepted",
+        "dodge": "blocked-not-accepted",
+        "return": "blocked-not-accepted",
+        "defeat": "blocked-not-accepted"
+      }
+    },
+    {
+      "id": "era-universe",
+      "setAccepted": false,
+      "acceptedLayers": [],
+      "sources": [
+        {
+          "path": "development/combat-animation/batch7/layer-sources/universe_attack_body.jpeg",
+          "sha256": "80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42"
+        },
+        {
+          "path": "development/combat-animation/batch7/layer-sources/universe_weapon.png",
+          "sha256": "5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad"
+        }
+      ],
+      "checks": {
+        "identity": "visual-compatible-source-only; not approved as whole-body replacement",
+        "hiddenHandAndLegArmor": "visible repairs present; original occlusion patch and front-hand depth not accepted",
+        "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
+        "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
+        "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
+        "recomposition": "diagnostic compared to master; no set accepted",
+        "alphaHaloFringeCrop": "body JPEG has no alpha; precise matte not accepted",
+        "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
+      },
+      "blockers": [
+        "同主角風格與紫青配色大致保留；身體背景為實際JPEG棋盤像素，非透明，不能把灰格當低Alpha。",
+        "無武器圖改動了另一側右拳的閉合狀態、右腳寬度及腿甲細節，不能用整張替換母圖。",
+        "劍的柄、護手、紫青刃與光效齊全，未見人物部件；柄/護手角度及握持須重新對齊，不能靠檔名認列完成。",
+        "棋盤格貼近銀甲與藍紫光，直接全域灰/白色鍵會破壞甲片或光暈；沒有精準保留原RGB的已允收遮罩。"
+      ],
+      "finalGrip": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "depthAccepted": false,
+      "diagnosticLandmarksOnly": true,
+      "diagnostic": {
+        "path": "development/combat-animation/batch7/layer-review/universe-review.png",
+        "sha256": "6de99c3f602ffd4812f9a1c18b8b241bab64e01c1d9518f8d17496ee9889bc75",
+        "bytes": 1107612
+      },
+      "actions": {
+        "idle": "blocked-not-accepted",
+        "attack": "blocked-not-accepted",
+        "hit": "blocked-not-accepted",
+        "dodge": "blocked-not-accepted",
+        "return": "blocked-not-accepted",
+        "defeat": "blocked-not-accepted"
+      }
+    },
+    {
+      "id": "era-higher",
+      "setAccepted": false,
+      "acceptedLayers": [],
+      "sources": [
+        {
+          "path": "development/combat-animation/batch7/layer-sources/higher_body_no_weapon_v2.png",
+          "sha256": "7dff371cf2aac63478f2b5eada2a85313da2944ca591d20718d15ba94461bb7b"
+        },
+        {
+          "path": "development/combat-animation/batch7/layer-sources/higher_weapon_independent_v2.png",
+          "sha256": "1bd7d53030efabc1d0c08e1c9659221e9dd323bd16a06a9366a5574fb43494c1"
+        }
+      ],
+      "checks": {
+        "identity": "Approved replacement v2: no cape, rings or floating bodies",
+        "hiddenHandAndLegArmor": "Left fingers are open; master has closed grip. Foreground finger occlusion unresolved.",
+        "weaponCompleteness": "grip/pommel/guard/blade/glow visible",
+        "weaponContamination": "no obvious hand or armor visually observed; edge matte not accepted",
+        "bodyWeaponAlignment": "manual similarity diagnostic only; final grip not accepted",
+        "recomposition": "New v2 guard/tip fit diagnostic only; no accepted hand depth",
+        "alphaHaloFringeCrop": "Master/body RGB PNG: no alpha. Weapon RGBA range 0..254.",
+        "silhouette512": "diagnostic normalized to 512 coordinate frame; transparent runtime silhouette not accepted"
+      },
+      "blockers": [
+        "V2 body has open left fingers, unlike the gripping master; foreground hand occlusion unresolved.",
+        "Master and body are RGB PNG with no alpha; exact matte not accepted.",
+        "V2 independent weapon has diamond handle trim not matching the master gripping segment; requires local handle/guard registration and front-finger depth."
+      ],
+      "finalGrip": null,
+      "pivot": [
+        0.5,
+        0.9
+      ],
+      "depthAccepted": false,
+      "diagnosticLandmarksOnly": true,
+      "diagnostic": {
+        "path": "development/combat-animation/batch7/layer-review/higher-v2-review.png",
+        "sha256": "68554c61cb78f566f54fd29700baee4d78b4049fe6a7c61036857a777c237ebc",
+        "bytes": 1270399
+      },
+      "actions": {
+        "idle": "blocked-not-accepted",
+        "attack": "blocked-not-accepted",
+        "hit": "blocked-not-accepted",
+        "dodge": "blocked-not-accepted",
+        "return": "blocked-not-accepted",
+        "defeat": "blocked-not-accepted"
+      }
+    }
+  ],
+  "replacementZip": {
+    "name": "civilization_batch7_higher_replacement_pack.zip",
+    "manifest": "development/combat-animation/batch7/replacement-pack/manifest.json"
+  },
+  "higherDesign": {
+    "version": 2,
+    "cape": false,
+    "rings": false,
+    "floatingBodies": 0,
+    "requiredLayers": [
+      "complete-character",
+      "attack-body",
+      "independent-weapon"
+    ],
+    "oldRequirementsValid": false,
+    "runtimeReady": false
+  }
+}

@@ -10,6 +10,7 @@ const modules=plan.keep.filter(p=>p.startsWith('3d-test/')&&/\.(?:m?js|css)$/.te
 // It is still tracked and published until batch 2-3 confirms all dependencies.
 // Never silently accept any other unclassified runtime module.
 const pending23=[];
+assert.ok(!plan.keep.includes('3d-test/gm-whole-suit.mjs'),'Old GM equipment selector is source/test-only after era replacement');
 assert.ok(!plan.keep.includes('3d-test/atlas-review.js'),'Retired atlas inspector unexpectedly published');
 const unclassified=modules.filter(r=>r.consumers.length===0).map(r=>r.path).sort();
 assert.deepEqual(unclassified,pending23.filter(p=>plan.keep.includes(p)).sort(),

@@ -15,7 +15,7 @@ function mount(options){
  const controller=global.CivilizationFormalBController.create({
   host:options.host,clock,
   resolve:async(frame,signal)=>{
-   if(options.wholeSuit===true){const context=await options.resolve(frame,options.appearance,signal);if(!context)throw Error("unavailable-formal-armor");return context;}
+   if(options.wholeSuit===true){const context=await options.resolve(frame,options.appearance,signal);if(!context)throw Error("unavailable-formal-armor");return {...context,eraVisualId:options.eraVisualId};}
    await global.Civilization3DLoader?.ensure?.("appearance");signal.throwIfAborted();
    const appearance=global.Civilization3DFormalSnapshots?.appearance?.();
    if(!appearance||appearance.source!=="formal"||appearance.world!==frame.world)throw Error("unavailable-formal-appearance");
@@ -61,13 +61,13 @@ function mount(options){
  return managed;
 }
 function bindRoutes(options){
- dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null;
+ dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null,eraVisualId=null;
  const bridge=global.CivilizationFormalHybridBridge;
  const observer=new MutationObserver(()=>{if(host&&!host.isConnected){retireScene();host=null;id=null;if(!document.querySelector("#main .combat-screen"))global.CivilizationFormalBRenderer?.clearSpriteCache?.();}if(!document.querySelector('#main .combat-screen'))global.CivilizationFormalBRenderer?.clearSpriteCache?.();if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();});
  observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
  const attached=bridge.attach((event,delivery)=>{
   const frame=global.CivilizationFormalBProjection.convert(event);if(!frame)return;
-  if(clockBattleId!==frame.battleId){clock=global.CivilizationFormalBOwnerClock.create();clockBattleId=frame.battleId;appearance=frame.appearance||null;}
+  if(clockBattleId!==frame.battleId){clock=global.CivilizationFormalBOwnerClock.create();clockBattleId=frame.battleId;appearance=frame.appearance||null;eraVisualId=global.CivilizationEraAppearanceContract?.resolve({world:frame.world})?.visualId||null;}
   if(frame.appearance)appearance=frame.appearance;
   if(!appearance){const session=global.CivilizationCombatEvents?.snapshot?.('formal');if(session?.battleId===frame.battleId)appearance=session.appearance;}
 
@@ -81,7 +81,7 @@ function bindRoutes(options){
     const card=screen.querySelector('#combatPlayerCard,#voidPlayerCard');if(!card){host.remove();host=null;return;}
     host.className='formal-b-suit-stage';host.style.cssText='';card.insertBefore(host,card.querySelector('h2'));
    }else{const anchor=screen.querySelector(".combat-arena");screen.insertBefore(host,anchor?.parentNode===screen?anchor:null);}id=frame.battleId;
-   mount({...options,appearance,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
+   mount({...options,appearance,eraVisualId,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
   }
   active?.accept(event,delivery);
  });
@@ -96,7 +96,7 @@ function bindRoutes(options){
 function boot(){
  // Only three verified player sprites; no enemy/GLB/full-3D release is implied.
  if(global.CivilizationFormalPlayerSprites?.playerSpritesEnabled===true){
-  return bindRoutes({wholeSuit:true,resolve:async(frame,appearance)=>({wholeSuit:true,appearance})});
+  return bindRoutes({wholeSuit:true,resolve:async(frame,appearance)=>({wholeSuit:true,appearance,world:frame.world})});
  }
  // Internal integration does not grant user approval of broad formal release.
  if(global.CivilizationFormalBController?.formalReleased!==true)return false;

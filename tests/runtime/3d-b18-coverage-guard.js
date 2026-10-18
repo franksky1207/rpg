@@ -11,7 +11,7 @@ const loader=read("tests/runtime/3d-gm-loader-browser.js");
 assert.match(center,/version:6/,"current GM center version");
 assert.match(center,/C-08-CHARACTER/);
 assert.match(center,/C-15-BATTLE/);
-assert.match(center,/gm-whole-suit\.mjs/,"current sprite preview is lazy");
+assert.match(center,/gm-era-sprites\.mjs/,"current sprite preview is lazy");
 assert.match(center,/gm-battle-simulation\.js/,"current B sandbox is lazy");
 assert.match(center,/AbortController/,"loads must be abortable");
 assert.match(center,/viewer\?\.dispose\?\.\(\)/,"previous viewers must dispose");

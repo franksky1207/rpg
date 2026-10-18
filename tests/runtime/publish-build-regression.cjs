@@ -16,12 +16,15 @@ try{
  write("lazy.js");write("development/needed.js",'const more="assets/models/part.bin";');write("assets/models/part.bin");
  write("audio/assets/custom-selected.ogg");write("audio/assets/not-used.ogg");write("config.json","{}");
  write("style.css",'body { background: url("assets/backgrounds/0.webp") }');write("docs/development.md");
+ write('3d-test/gm-whole-suit.mjs','// retired equipment selector fixture');
  write('assets/3d/unregistered.glb');write('assets/3d/raw.exr');write('new-source-format.xyz');
  // Keep real GM publication validation active even in the synthetic publisher fixture.
  const gmLock='development/equipment-2_5d/gm-publication.json',gm=JSON.parse(fs.readFileSync(gmLock));
  for(const p of [...Object.keys(gm.files),gmLock])write(p,fs.readFileSync(p));
  const formalLock='development/equipment-2_5d/formal-publication.json',formal=JSON.parse(fs.readFileSync(formalLock));
  for(const p of [...Object.keys(formal.files),formalLock,'3d-test/mode-foundation.js','3d-test/t3b-formal-controller.js'])write(p,fs.readFileSync(p));
+ const era=JSON.parse(fs.readFileSync('assets/era-player/v1/manifest.json'));
+ for(const p of ['assets/era-player/v1/manifest.json','3d-test/era-player-sprites.mjs',...era.entries.map(e=>e.asset.path)])write(p,fs.readFileSync(p));
  cp.execFileSync("git",["-C",root,"add","."]);
  assert.throws(()=>policy.inspect(root),/forbidden source/,"Development references must not bypass publication isolation");
  write("index.html",'<script src="core.js?v=1"></script><script data-src="lazy.js?v=1"></script><link href="style.css?v=1">');
@@ -30,6 +33,7 @@ try{
  assert.ok(!first.keep.includes("development/needed.js"),"development source stays excluded");
  assert.ok(first.keep.includes("assets/models/part.bin"));assert.ok(first.keep.includes("audio/assets/custom-selected.ogg"),"additional real dependency must be retained");
  assert.ok(!first.keep.includes("audio/assets/not-used.ogg"));assert.ok(!first.keep.includes("docs/development.md"));
+ assert.ok(!first.keep.includes('3d-test/gm-whole-suit.mjs'));
  assert.ok(!first.keep.includes('assets/3d/unregistered.glb'));assert.ok(!first.keep.includes('assets/3d/raw.exr'));assert.ok(!first.keep.includes('new-source-format.xyz'));
  write('core.js','const forbidden="assets/3d/unregistered.glb";');assert.throws(()=>policy.inspect(root),/forbidden source/);
  write("core.js",'fetch("missing.json");');

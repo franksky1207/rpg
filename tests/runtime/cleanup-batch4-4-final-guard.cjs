@@ -17,7 +17,7 @@ assert.doesNotMatch(text,/G20＝G096|210套兩張概念圖全量產/);
 const changed=run("diff","--name-only",base,"HEAD").split("\n").filter(Boolean);
 const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlineprogress|ui|engine|balance|audio|gm3dprototype)\.js$/,/^index\.html$/,/^assets\/gm-equipment-2_5d\//,/^assets\/3d\//,/^3d-test\//,/^development\/equipment-2_5d\//];
 // Batch 4 explicitly authorizes only these GM presentation entrypoints.
-const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js","3d-test/mode-foundation.js","3d-test/era-appearance-contract.js","3d-test/gm-battle-simulation.js","3d-test/gm-battle-published.mjs","3d-test/gm-whole-suit.mjs"]);
+const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js","3d-test/mode-foundation.js","3d-test/era-appearance-contract.js","3d-test/gm-battle-simulation.js","3d-test/gm-battle-published.mjs","3d-test/gm-whole-suit.mjs","3d-test/gm-era-sprites.mjs","3d-test/era-player-sprites.mjs","3d-test/t3b-formal-renderer.js","3d-test/equipment-sprites-v1/assets.mjs","3d-test/equipment-sprites-v1/actor.mjs","3d-test/equipment-sprites-v1/animation.mjs","development/equipment-2_5d/v1/actor.mjs","development/equipment-2_5d/v1/animation.mjs","development/equipment-2_5d/v1/assets.mjs","development/equipment-2_5d/gm-publication.json"]);
 const unexpected=changed.filter(p=>p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
@@ -26,7 +26,10 @@ if(changed.includes("index.html")){
  // Normalize both back to the historical values, then require exact HTML equality;
  // do not disable or loosen the broader retired-asset guard.
  const original=run("show",base+":index.html");
- const current=fs.readFileSync("index.html","utf8").trim();
+ const actual=fs.readFileSync("index.html","utf8").trim();
+ // Independently approved Batch 7 extends only the two exact version tokens.
+ assert.ok(actual.includes("&vbatch7=20261018-era-settings-r2")&&actual.includes("era-appearance-contract.js?v=20261018-batch7-v3"),"Expected Batch7 cache fingerprint");
+ const current=actual.replaceAll("&vbatch7sprite=20261018-lightweight1", "").replace("&vbatch7=20261018-era-settings-r2","").replace("era-appearance-contract.js?v=20261018-batch7-v3","era-appearance-contract.js?v=20261018-batch5-contract1");
  const oldScript="backgroundprogress.js?v=20261013-background-hud-recovery1";
  const newScript="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
  assert.ok(original.includes(oldScript)&&current.includes(newScript),"Expected approved Batch 2 cache version");

@@ -8,16 +8,16 @@
   ],
   "files": {
     "3d-test/equipment-sprites-v1/actor.mjs": {
-      "sha256": "5f1e77c667770581f7dbb15e4d637fb073e092482c56162d32fad4200d0748e6",
-      "bytes": 4183
+      "sha256": "8069e34058eaa05d9111218118dedf2d0a881e577cb5cdf285baca275b76d8f9",
+      "bytes": 4542
     },
     "3d-test/equipment-sprites-v1/animation.mjs": {
-      "sha256": "fa80c040619a8ad384d3d6cdd862e4d54aeabaf9e10c22f673543ae8ae2fc19c",
-      "bytes": 2847
+      "sha256": "c73cda9adffe0ff563a4bfeb63b8450cbd287cd7d358784d9ae6da7ac576d2d8",
+      "bytes": 2967
     },
     "3d-test/equipment-sprites-v1/assets.mjs": {
-      "sha256": "408211452865b177f762601ada61bdf69aaa3fa1ae10d27c38aa9609d829d129",
-      "bytes": 4285
+      "sha256": "4e7fbefa9377878f27212a9bc7cf920b1f406f720875072b0713da41a9b17dfc",
+      "bytes": 4548
     },
     "3d-test/equipment-sprites-v1/contract.mjs": {
       "sha256": "4a4ff956abd48e16bd113f3a20a8fba7d84df1a6cef2dbd70b96d8002dd65796",
