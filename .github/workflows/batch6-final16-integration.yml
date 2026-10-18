@@ -4,11 +4,13 @@ on:
     branches: [feat/combat-renewal-batch6-final-20261018, main]
     paths:
       - 'scripts/batch6-final16-evidence.cjs'
+      - 'tests/runtime/**'
       - '.github/workflows/batch6-final16-integration.yml'
       - 'docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md'
   pull_request:
     paths:
       - 'scripts/batch6-final16-evidence.cjs'
+      - 'tests/runtime/**'
       - '.github/workflows/batch6-final16-integration.yml'
       - 'docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md'
   workflow_dispatch:
