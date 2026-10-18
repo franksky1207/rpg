@@ -63,7 +63,7 @@ function mount(options){
 function bindRoutes(options){
  dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null,eraVisualId=null;
  const bridge=global.CivilizationFormalHybridBridge;
- const observer=new MutationObserver(()=>{if(host&&!host.isConnected){retireScene();host=null;id=null;if(!document.querySelector("#main .combat-screen"))global.CivilizationFormalBRenderer?.clearSpriteCache?.();}if(!document.querySelector('#main .combat-screen'))global.CivilizationFormalBRenderer?.clearSpriteCache?.();if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();});
+ const observer=new MutationObserver(()=>{if(host&&!host.isConnected){host.closest?.('.combat-screen')?.classList.remove('formal-b-shared-layout');retireScene();host=null;id=null;if(!document.querySelector("#main .combat-screen"))global.CivilizationFormalBRenderer?.clearSpriteCache?.();}if(!document.querySelector('#main .combat-screen'))global.CivilizationFormalBRenderer?.clearSpriteCache?.();if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();});
  observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
  const attached=bridge.attach((event,delivery)=>{
   const frame=global.CivilizationFormalBProjection.convert(event);if(!frame)return;
