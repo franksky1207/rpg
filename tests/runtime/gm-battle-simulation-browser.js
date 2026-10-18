@@ -31,7 +31,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      for(const id of cases){
       await page.locator('[data-b="case"]').selectOption(id);
       assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
-      const controls=await page.evaluate(()=>{
+      // A fresh scenario can still be binding its renderer; wait for a playable state or an explicit failure.\n      await page.waitForFunction(()=>{\n       const play=document.querySelector('[data-b="play"]');\n       const message=document.querySelector('[data-b="status"]')?.textContent||'';\n       return (play&&!play.disabled)||/載入失敗|視覺暫不可用|素材驗證失敗/.test(message);\n      },null,{timeout:30000});\n      const controls=await page.evaluate(()=>{
        const get=id=>document.querySelector('[data-b="'+id+'"]');
        const play=get('play');
        if(!play||play.disabled)return {enabled:false};
@@ -41,7 +41,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
       });
       assert.equal(typeof controls.enabled,'boolean');
       if(!controls.enabled){
-       await page.waitForFunction(()=>/授權|角色|素材|回退|無法/.test(document.querySelector('[data-b="status"]')?.textContent||''),null,{timeout:12000});
+       assert.match(await page.locator('[data-b="status"]').textContent(),/載入失敗|視覺暫不可用|素材驗證失敗/,'disabled play needs explicit error status');
        assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0);
       }
      }
