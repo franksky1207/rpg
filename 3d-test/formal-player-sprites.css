@@ -1,6 +1,21 @@
-/* Part of the existing player card: no enemy, HP, shield or control overlays. */
-.formal-b-suit-stage{height:clamp(110px,18dvh,180px);display:flex;justify-content:center;align-items:center;pointer-events:none;overflow:hidden;flex:none}
-.formal-b-suit-stage[hidden]{display:none}
-.formal-b-whole-suit{height:100%;width:auto;max-width:100%;object-fit:contain;pointer-events:none}
-.combatant.player:has(.formal-b-whole-suit){animation:none!important}
-@media(max-height:500px){.formal-b-suit-stage{height:96px}}
+/* Shared formal battlefield: HUD cards are peers, never sprite containers. */
+.formal-b-shared-stage{width:100%;height:clamp(230px,38dvh,390px);position:relative;display:block;overflow:hidden;flex:none;background:linear-gradient(180deg,#17273a,#0e1929);border:1px solid #34475c;border-radius:14px;isolation:isolate}
+.formal-b-shared-stage[hidden]{display:none}
+.formal-b-whole-suit,.formal-b-enemy-sprite{position:absolute;bottom:3%;height:87%;width:auto;max-width:44%;object-fit:contain;pointer-events:none;will-change:transform}
+.formal-b-player-sprite{left:8%}
+.formal-b-enemy-sprite{right:8%}
+.formal-b-shared-layout .combat-arena{flex:0 0 auto;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.formal-b-shared-layout .combat-arena>.combat-vs{display:none}
+.formal-b-shared-layout .combatant{min-height:0;padding:12px;will-change:auto}
+.formal-b-shared-layout .combatant.attacking,.formal-b-shared-layout .combatant.hit{animation:none!important}
+@media(max-width:760px){
+ .formal-b-shared-layout .combat-arena{display:contents}
+ .formal-b-shared-layout .combat-arena>.combatant.enemy{order:-3}
+ .formal-b-shared-layout>.formal-b-shared-stage{order:-2;height:clamp(205px,34dvh,300px)}
+ .formal-b-shared-layout .combat-arena>.combatant.player{order:-1}
+ .formal-b-shared-layout .combatant{min-height:0;padding:10px}
+ .formal-b-shared-stage .formal-b-whole-suit,.formal-b-shared-stage .formal-b-enemy-sprite{height:82%;max-width:47%}
+ .formal-b-player-sprite{left:2%}
+ .formal-b-enemy-sprite{right:2%}
+}
+@media(max-height:500px){.formal-b-shared-stage,.formal-b-shared-layout>.formal-b-shared-stage{height:clamp(135px,38dvh,210px)}}

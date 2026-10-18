@@ -73,13 +73,17 @@ function bindRoutes(options){
 
   clock.observe(event); // Metadata only: some formal owners compute before creating combat DOM.
   const screen=document.querySelector("#main .combat-screen");
-  if(!screen||document.hidden){retireScene();host?.remove();host=null;id=null;return;}
+  if(!screen||document.hidden){retireScene();host?.remove();screen?.classList.remove('formal-b-shared-layout');host=null;id=null;return;}
 
   if(id!==frame.battleId||!host?.isConnected){
    retireScene();host?.remove();host=document.createElement("div");host.className="formal-b-battle-stage";host.style.cssText="width:100%;height:clamp(200px,42dvh,380px);position:relative;overflow:hidden";host.hidden=true;
    if(options.wholeSuit===true){
-    const card=screen.querySelector('#combatPlayerCard,#voidPlayerCard');if(!card){host.remove();host=null;return;}
-    host.className='formal-b-suit-stage';host.style.cssText='';card.insertBefore(host,card.querySelector('h2'));
+    // One common battlefield, separate from both combatants' authoritative HUD cards.
+    host.className='formal-b-shared-stage';host.style.cssText='';
+    const anchor=screen.querySelector('.combat-arena');
+    if(!anchor){host.remove();host=null;return;}
+    screen.insertBefore(host,anchor);
+    screen.classList.add('formal-b-shared-layout');
    }else{const anchor=screen.querySelector(".combat-arena");screen.insertBefore(host,anchor?.parentNode===screen?anchor:null);}id=frame.battleId;
    mount({...options,appearance,eraVisualId,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
   }
@@ -90,7 +94,7 @@ function bindRoutes(options){
  global.addEventListener("civilization-combat-animation-change",preferenceChanged);
  const pagehide=event=>{if(event?.persisted===true){active?.suspend?.();global.CivilizationFormalBRenderer?.clearSpriteCache?.();}else dispose();};
  global.addEventListener("pagehide",pagehide);
- routeDispose=()=>{global.removeEventListener("civilization-combat-animation-change",preferenceChanged);global.removeEventListener("pagehide",pagehide);observer.disconnect();bridge.detach();host?.remove();host=null;};
+ routeDispose=()=>{global.removeEventListener("civilization-combat-animation-change",preferenceChanged);global.removeEventListener("pagehide",pagehide);observer.disconnect();bridge.detach();host?.closest('.combat-screen')?.classList.remove('formal-b-shared-layout');host?.remove();host=null;};
  return Object.freeze({dispose,snapshot:()=>active?.snapshot?.()||Object.freeze({ready:false,engines:0,rafs:0})});
 }
 function boot(){

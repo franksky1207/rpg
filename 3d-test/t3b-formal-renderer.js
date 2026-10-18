@@ -163,18 +163,56 @@ async function createSuit(options,bundle){
  catch(error){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw error;}
  clearTimeout(timer);
  let closed=false,activeClip='idle';
- const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();actor.dispose();};
+ const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();host.querySelector('.formal-b-enemy-sprite')?.remove();actor.dispose();};
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
- actor.canvas.className='formal-b-whole-suit';actor.canvas.dataset.suit=bundle.entry.id;
+ actor.canvas.className='formal-b-whole-suit formal-b-player-sprite';actor.canvas.dataset.suit=bundle.entry.id;
  actor.canvas.setAttribute('aria-label',bundle.entry.id.toUpperCase()+' 戰鬥角色');host.append(actor.canvas);
+ // Lightweight shared opponent, driven by the exact same formal owner sample.
+ // Its silhouette is a visual fallback, not an invented monster identity or gameplay state.
+ const enemyCanvas=global.document.createElement('canvas');
+ enemyCanvas.className='formal-b-enemy-sprite';
+ enemyCanvas.width=enemyCanvas.height=256;
+ enemyCanvas.setAttribute('role','img');
+ enemyCanvas.setAttribute('aria-label','敵方戰鬥動畫（共用替代輪廓）');
+ host.append(enemyCanvas);
+ const ec=enemyCanvas.getContext('2d');
+ if(!ec){enemyCanvas.remove();dispose();throw Error('enemy-canvas-unavailable');}
+ const kind=(host.closest('.combat-screen')?.querySelector('.combatant.enemy')?.textContent||'').toLowerCase();
+ const rank=/boss|首領|魔王|王者|災厄/.test(kind)?'boss':/elite|菁英|精英/.test(kind)?'elite':'normal';
+ host.dataset.enemyRank=rank;
+ function drawEnemy(frame){
+  const e=frame.enemy||frame;
+  const ms=Math.max(0,Math.min(700,e.elapsedMs||0)),t=ms/700;
+  const approach=Math.max(0,Math.min(.42,e.approach||0));
+  ec.clearRect(0,0,256,256);ec.save();
+  ec.translate(128,222);
+  // Opponent faces left, toward the player; effects stay inside its own canvas.
+  const offset=e.clip==='dodge'?Math.sin(Math.PI*t)*18:e.clip==='hit'?Math.sin(Math.PI*t)*9:0;
+  ec.translate(-offset,0);
+  ec.rotate(e.clip==='defeat'?-Math.min(.52,t*.52):e.clip==='hit'?-Math.sin(Math.PI*t)*.14:0);
+  const scale=e.clip==='defeat'?1-.26*t:1+((rank==='boss')?.10:rank==='elite'?.05:0);
+  ec.scale(scale,scale);
+  ec.globalAlpha=e.clip==='defeat'?1-t:1;
+  const fill=rank==='boss'?'#9d5167':rank==='elite'?'#7d6eb7':'#697f9e';
+  ec.fillStyle=fill;ec.strokeStyle='#d1ddeb';ec.lineWidth=4;
+  ec.beginPath();ec.moveTo(-55,-112);ec.lineTo(-83,-75);ec.lineTo(-64,-26);ec.lineTo(-42,-48);ec.lineTo(-35,0);ec.lineTo(-23,0);ec.lineTo(-17,-60);ec.lineTo(19,-60);ec.lineTo(25,0);ec.lineTo(40,0);ec.lineTo(45,-50);ec.lineTo(61,-26);ec.lineTo(82,-83);ec.lineTo(51,-117);ec.closePath();ec.fill();ec.stroke();
+  ec.beginPath();ec.moveTo(-43,-112);ec.lineTo(-62,-150);ec.lineTo(-22,-136);ec.lineTo(0,-155);ec.lineTo(23,-136);ec.lineTo(61,-150);ec.lineTo(40,-112);ec.closePath();ec.fill();ec.stroke();
+  ec.strokeStyle='#fbe5e8';ec.lineWidth=5;ec.beginPath();ec.moveTo(-26,-120);ec.lineTo(-9,-116);ec.moveTo(12,-116);ec.lineTo(29,-120);ec.stroke();
+  if(e.clip==='attack'){ec.strokeStyle='#ffb4c1';ec.lineWidth=7;ec.beginPath();ec.moveTo(-45,-68);ec.lineTo(-70-Math.sin(Math.PI*t)*25,-98);ec.stroke();}
+  if(e.clip==='hit'){ec.fillStyle='rgba(255,255,255,'+(Math.sin(Math.PI*t)*.32)+')';ec.fillRect(-85,-157,170,160);}
+  ec.restore();
+  enemyCanvas.dataset.clip=e.clip||'idle';
+  enemyCanvas.style.transform='translateX('+(-approach*140)+'px)';
+ }
+
  function sample(frame){
   if(closed||signal.aborted||!isCurrent())return false;
   const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
   actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
   actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0}px)`;
-  actor.canvas.dataset.clip=p.clip;return true;
+  actor.canvas.dataset.clip=p.clip;drawEnemy(frame);return true;
  }
  return Object.freeze({sample,resize(){},dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
