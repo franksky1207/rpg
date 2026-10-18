@@ -1,0 +1,43 @@
+name: Batch 6 Final 16 Integration
+on:
+  push:
+    branches: [feat/combat-renewal-batch6-final-20261018, main]
+    paths:
+      - 'scripts/batch6-final16-evidence.cjs'
+      - '.github/workflows/batch6-final16-integration.yml'
+      - 'docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md'
+  pull_request:
+    paths:
+      - 'scripts/batch6-final16-evidence.cjs'
+      - '.github/workflows/batch6-final16-integration.yml'
+      - 'docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  batch6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser testing dependencies
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute fixed 16-category integration matrix
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch6-http.log 2>&1 &
+          for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done
+          node --check scripts/batch6-final16-evidence.cjs
+          node scripts/batch6-final16-evidence.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch6-final16-evidence
+          path: batch6-final16-evidence.json
+          if-no-files-found: error
