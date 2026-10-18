@@ -12,6 +12,7 @@
 .formal-b-shared-layout .combatant.attacking,.formal-b-shared-layout .combatant.hit{animation:none!important}
 @media(max-width:760px){
  .formal-b-shared-layout .combat-arena{display:contents}
+ .formal-b-shared-layout>.combat-head,.formal-b-shared-layout>.muted{order:-4}
  .formal-b-shared-layout .combat-arena>.combatant.enemy{order:-3}
  .formal-b-shared-layout>.formal-b-shared-stage{order:-2;height:clamp(205px,34dvh,300px)}
  .formal-b-shared-layout .combat-arena>.combatant.player{order:-1}
