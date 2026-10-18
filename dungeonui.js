@@ -106,7 +106,8 @@
    if(document.visibilityState==="hidden"||Date.now()-battleViewportGestureAt<1800)return;
    // Higher-dimensional arena places three lineup cards before the live duel.
    // Anchor the real active arena, not the surrounding status / lineup wrapper.
-   const targetStage=area.querySelector(".combat-arena")||area;
+   // Anchor to the stable battle heading: the new shared stage may mount asynchronously.
+   const targetStage=area.querySelector(".combat-head")||area;
    const rect=targetStage.getBoundingClientRect();
    const visibleH=window.visualViewport?.height||window.innerHeight||0;
    if(!visibleH)return;
