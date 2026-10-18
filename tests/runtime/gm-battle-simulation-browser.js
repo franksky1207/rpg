@@ -31,24 +31,12 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      for(const id of cases){
       await page.locator('[data-b="case"]').selectOption(id);
       assert.equal(await page.locator('[data-b="case"]').inputValue(),id);
-      // A fresh scenario may still be binding its renderer; verify readiness or a real failure.
-      await page.waitForFunction(()=>{
-       const play=document.querySelector('[data-b="play"]');
-       const message=document.querySelector('[data-b="status"]')?.textContent||'';
-       return (play&&!play.disabled)||/載入失敗|視覺暫不可用|素材驗證失敗/.test(message);
-      },null,{timeout:30000});
-      const controls=await page.evaluate(()=>{
-       const get=id=>document.querySelector('[data-b="'+id+'"]');
-       const play=get('play');
-       if(!play||play.disabled)return {enabled:false};
-       play.click();
-       for(const id of ['pause','resume','stop']){const btn=get(id);if(btn&&!btn.disabled)btn.click();}
-       return {enabled:true};
-      });
-      assert.equal(typeof controls.enabled,'boolean');
-      if(!controls.enabled){
-       assert.match(await page.locator('[data-b="status"]').textContent(),/載入失敗|視覺暫不可用|素材驗證失敗/,'disabled play needs explicit error status');
-       assert.equal(await page.locator('[data-b="player-visual"] canvas').count(),0);
+      // Playwright actionability wait observes the actual enabled control; a non-atomic read
+      // can race a later asynchronous renderer rebind after selecting a scenario.
+      await page.locator('[data-b="play"]').click({timeout:60000});
+      for(const name of ['pause','resume','stop']){
+       const btn=page.locator('[data-b="'+name+'"]');
+       if(await btn.isEnabled())await btn.click();
       }
      }
      assert.equal(await page.locator('[data-b="case"] option').count(),5);
