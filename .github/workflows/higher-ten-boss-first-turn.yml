@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'tests/runtime/thirdworld-ten-boss-first-turn-regression.js'
+      - 'tests/runtime/thirdworld-realistic-save-first-turn.js'
       - '.github/workflows/higher-ten-boss-first-turn.yml'
   workflow_dispatch:
 permissions:
@@ -24,3 +25,4 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/higher-first-turn-http.log 2>&1 &
           for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done
           node tests/runtime/thirdworld-ten-boss-first-turn-regression.js
+          node tests/runtime/thirdworld-realistic-save-first-turn.js
