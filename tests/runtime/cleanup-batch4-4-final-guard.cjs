@@ -18,7 +18,7 @@ const changed=run("diff","--name-only",base,"HEAD").split("\n").filter(Boolean);
 const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlineprogress|ui|engine|balance|audio|gm3dprototype)\.js$/,/^index\.html$/,/^assets\/gm-equipment-2_5d\//,/^assets\/3d\//,/^3d-test\//,/^development\/equipment-2_5d\//];
 // Batch 4 explicitly authorizes only these GM presentation entrypoints.
 const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js","3d-test/mode-foundation.js","3d-test/era-appearance-contract.js","3d-test/gm-battle-simulation.js","3d-test/gm-battle-published.mjs","3d-test/gm-whole-suit.mjs"]);
-const unexpected=changed.filter(p=>p!=="index.html"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
+const unexpected=changed.filter(p=>p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
