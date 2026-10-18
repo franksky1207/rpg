@@ -148,7 +148,7 @@ async function prepareSuit(options){
  if(!identity?.ready||!entry||entry.formalBattleAllowed!==true)throw Error("unavailable-formal-armor");
  options.signal.throwIfAborted();
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
- verified.set(token,{kind:"whole-suit",entry,signal:options.signal});return token;
+ verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null});return token;
 }
 let spriteRuntime=null,spritePool=null;
 async function createSuit(options,bundle){
@@ -174,12 +174,13 @@ async function createSuit(options,bundle){
  enemyCanvas.className='formal-b-enemy-sprite';
  enemyCanvas.width=enemyCanvas.height=256;
  enemyCanvas.setAttribute('role','img');
- enemyCanvas.setAttribute('aria-label','敵方戰鬥動畫（共用替代輪廓）');
+ enemyCanvas.setAttribute('aria-label',(bundle.enemyName||'敵方')+' 戰鬥動畫（共用替代輪廓）');
  host.append(enemyCanvas);
  const ec=enemyCanvas.getContext('2d');
  if(!ec){enemyCanvas.remove();dispose();throw Error('enemy-canvas-unavailable');}
  const kind=(host.closest('.combat-screen')?.querySelector('.combatant.enemy')?.textContent||'').toLowerCase();
- const rank=/boss|首領|魔王|王者|災厄/.test(kind)?'boss':/elite|菁英|精英/.test(kind)?'elite':'normal';
+ const enemyKind=String(bundle.enemyKind||'').toLowerCase();
+ const rank=/boss|首領|魔王|王者|災厄/.test(enemyKind+' '+kind)?'boss':/elite|菁英|精英/.test(enemyKind+' '+kind)?'elite':'normal';
  host.dataset.enemyRank=rank;
  function drawEnemy(frame){
   const e=frame.enemy||frame;
