@@ -44,14 +44,14 @@ const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
    result.noPreferenceInSave=!JSON.stringify(state).includes(key)&&!Object.keys(state).some(k=>/appearance/i.test(k));
    document.getElementById("main").innerHTML='<div id="batch7-settings">'+mode.settingsHtml()+'</div>';
    const select=document.getElementById("civilizationEraAppearanceChoice"),rect=select.getBoundingClientRect();
-   result.selectorFits=rect.left>=0&&rect.right<=innerWidth;result.pendingArt=mode.settingsHtml().includes("三套新角色素材尚未正式推出");
+   result.selectorFits=rect.left>=0&&rect.right<=innerWidth;result.releasedArt=mode.settingsHtml().includes("三套角色外觀只影響戰鬥動畫");
    return result;
   });
   assert.equal(report.lexicalStateOnly,true,"Regression must use engine's lexical state, not window.state");assert.ok(report.locked);
   for(const [i,id,label] of [[0,"galaxy","銀河戰甲"],[1,"universe","宇宙戰甲"],[2,"higher","高維戰甲"]]){assert.equal(report.worlds[i].id,id);assert.ok(report.worlds[i].html.includes("目前依所在紀元顯示："+label));}
   assert.equal(report.firstDefault,"higher");assert.equal(report.selected.ok,true);assert.ok(report.noStateWrites);assert.deepEqual(report.gear,["universe","universe","universe"]);assert.equal(report.repeat,"universe");
   assert.deepEqual(report.mismatch,{locked:true,selected:false,choice:null});assert.equal(report.otherDefault,"higher");assert.equal(report.otherChoice,"galaxy");assert.ok(report.signoutLocked);assert.equal(report.restored,"universe");
-  assert.deepEqual(report.imported,{count:4,choice:"universe",version:17});assert.ok(report.legacyLocked&&report.noPreferenceInSave&&report.selectorFits&&report.pendingArt);
+  assert.deepEqual(report.imported,{count:4,choice:"universe",version:17});assert.ok(report.legacyLocked&&report.noPreferenceInSave&&report.selectorFits&&report.releasedArt);
   await page.selectOption("#civilizationEraAppearanceChoice","galaxy");assert.equal(await page.evaluate(()=>CivilizationEraAppearanceContract.choice()),"galaxy");
   const cloudUpload=await page.evaluate(async()=>{
    const before=CivilizationEraAppearanceContract.choice();let payload=null;

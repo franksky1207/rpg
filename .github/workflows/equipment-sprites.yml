@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'assets/era-player/**'
+      - '3d-test/equipment-sprites-v1/**'
       - 'development/equipment-2_5d/**'
       - 'scripts/equipment*'
       - 'scripts/formal-equipment-identities.py'
@@ -10,6 +12,8 @@ on:
       - '.github/workflows/equipment-sprites.yml'
   pull_request:
     paths:
+      - 'assets/era-player/**'
+      - '3d-test/equipment-sprites-v1/**'
       - 'development/equipment-2_5d/**'
       - 'development/3d-source/equipment/concepts/**'
       - 'scripts/equipment*'

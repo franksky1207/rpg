@@ -19,7 +19,7 @@ for(const p of formalProtected){
   const original=historic(base,p).toString(),actualHtml=actual(p).toString();
   // Only exact Batch7 cache fingerprints are normalized for this historical guard.
   assert.ok(actualHtml.includes("&vbatch7=20261018-era-settings-r2")&&actualHtml.includes("era-appearance-contract.js?v=20261018-batch7-v3"),"Missing authorized Batch7 cache fingerprints");
-  const current=actualHtml.replace("&vbatch7=20261018-era-settings-r2","").replace("era-appearance-contract.js?v=20261018-batch7-v3","era-appearance-contract.js?v=20261018-batch5-contract1");
+  const current=actualHtml.replaceAll("&vbatch7sprite=20261018-lightweight1", "").replace("&vbatch7=20261018-era-settings-r2","").replace("era-appearance-contract.js?v=20261018-batch7-v3","era-appearance-contract.js?v=20261018-batch5-contract1");
   const oldToken="backgroundprogress.js?v=20261013-background-hud-recovery1";
   const newToken="backgroundprogress.js?v=20261017-batch2-lifecycle-sleeper1";
   assert.ok(original.includes(oldToken)&&current.includes(newToken),"Expected approved backgroundprogress cache version");

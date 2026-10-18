@@ -43,7 +43,7 @@ function resolve({world,role="player"}={}){
  // existing cloud/local owner decides when downloaded progress belongs to it.
  const unlocked=count()>0&&ownsLocalProgress();
  const visualId=unlocked?choice()||IDS.higher:base;
- return Object.freeze({ready:true,visualId,source:unlocked?"reincarnation-preference":"current-world",artReleased:false});
+ return Object.freeze({ready:true,visualId,source:unlocked?"reincarnation-preference":"current-world",artReleased:true});
 }
 global.addEventListener?.("civilization-auth-signed-out",()=>{signedOut=true;});
 global.addEventListener?.("civilization-auth-ready",()=>{signedOut=false;});

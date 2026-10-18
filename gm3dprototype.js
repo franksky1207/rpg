@@ -63,7 +63,7 @@ window.addEventListener("message",event=>{
  if(event.data?.type==="civilization3d:sprite-snapshot"){
   const sender=event.source,origin=event.origin,requestId=event.data.requestId;
   (async()=>{let appearance=null;try{await window.Civilization3DLoader.ensure("appearance");if(allowed())appearance=window.Civilization3DFormalSnapshots?.appearance();}catch(_){}
-   if(overlay&&overlay.querySelector("iframe")?.contentWindow===sender)sender.postMessage({type:"civilization3d:sprite-snapshot-response",requestId,authorized:allowed(),appearance:allowed()?appearance:null},origin);
+   if(overlay&&overlay.querySelector("iframe")?.contentWindow===sender)sender.postMessage({type:"civilization3d:sprite-snapshot-response",requestId,authorized:allowed(),appearance:allowed()?appearance:null,eraVisualId:allowed()?window.CivilizationEraAppearanceContract?.resolve({world:appearance?.world})?.visualId:null},origin);
   })();return;
  }
  if(event.data?.type==="civilization3d:close"){close();return;}

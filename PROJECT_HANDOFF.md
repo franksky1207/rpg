@@ -1,3 +1,5 @@
+> **第7批最新承接**：三套完整持劍透明WebP、正式Renderer／Pool六動作、轉生設定及GM已完成輕量整合施工；30項與工程證據見 `docs/BATCH7_LIGHTWEIGHT_FINAL_ACCEPTANCE_2026-10-18.md`。本檔以下舊狀態保留追溯，精準手指／握點要求不再阻擋；是否封箱以PR #38最新同SHA Actions及Pages報告為準。第8批與Issue #37未施工。
+
 # 《文明戰線》正式交接（2.5D 舊美術清理第 5 批驗收）
 
 > 高維新版替換：正式設計無披風、無星環、無漂浮星體；舊高維分層要求全部失效。只需完整角色、無武器身體、獨立武器；最新來源與待補見 `development/combat-animation/batch7/layer-review/review.json`。

@@ -1,3 +1,5 @@
+> 歷史報告保留：本次最新施工／30項驗收請讀 [輕量正式整合驗收](BATCH7_LIGHTWEIGHT_FINAL_ACCEPTANCE_2026-10-18.md)。原精密分層阻擋不再是必要放行條件；當次SHA／Actions／Pages見PR #38。
+
 # 第7批高維v2替換整合驗證
 
 ## 1. 修改內容

@@ -141,19 +141,19 @@ async function create(options){
  }catch(error){dispose();throw error;}
 }
 async function prepareSuit(options){
- const release=global.CivilizationFormalPlayerSprites;
- if(release?.schema!=="cw.formal.player-sprites.v1"||release.playerSpritesEnabled!==true||release.legacy3DEnabled!==false)throw Error("unapproved-formal-sprites");
- const row=global.CivilizationArmorSelection?.select(options.appearance,release.sets);
- const entry=release.entries.find(e=>e.id===row?.id);
- if(!row||!entry||entry.formalBattleAllowed!==true||!['g005','g007','g018'].includes(row.id))throw Error("unavailable-formal-armor");
+ const {release}=await import('./era-player-sprites.mjs?v=20261018-lightweight1');
+ if(release.schema!=="cw.era-player-sprites.v1")throw Error("unapproved-formal-sprites");
+ const identity=['galaxy','universe','higher'].includes(options.eraVisualId)?{ready:true,visualId:options.eraVisualId}:global.CivilizationEraAppearanceContract?.resolve({world:options.world??options.appearance?.world});
+ const entry=release.entries.find(e=>e.id==='era-'+identity?.visualId);
+ if(!identity?.ready||!entry||entry.formalBattleAllowed!==true)throw Error("unavailable-formal-armor");
  options.signal.throwIfAborted();
- const token=Object.freeze({kind:"whole-suit",id:row.id});
+ const token=Object.freeze({kind:"whole-suit",id:entry.id});
  verified.set(token,{kind:"whole-suit",entry,signal:options.signal});return token;
 }
 let spriteRuntime=null,spritePool=null;
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261015-thrust1'),import('./equipment-sprites-v1/assets.mjs?v=20261015-thrust1')]);
+ spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261018-lightweight1'),import('./equipment-sprites-v1/assets.mjs?v=20261018-lightweight1')]);
  const [{WholeSuitActor},{createSpritePool}]=await spriteRuntime;
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
@@ -167,13 +167,13 @@ async function createSuit(options,bundle){
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
  actor.canvas.className='formal-b-whole-suit';actor.canvas.dataset.suit=bundle.entry.id;
- actor.canvas.setAttribute('aria-label',bundle.entry.id.toUpperCase()+' 2.5D戰鬥角色');host.append(actor.canvas);
+ actor.canvas.setAttribute('aria-label',bundle.entry.id.toUpperCase()+' 戰鬥角色');host.append(actor.canvas);
  function sample(frame){
   if(closed||signal.aborted||!isCurrent())return false;
   const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
   actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:false});
-  actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*90:0}px)`;
+  actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0}px)`;
   actor.canvas.dataset.clip=p.clip;return true;
  }
  return Object.freeze({sample,resize(){},dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});

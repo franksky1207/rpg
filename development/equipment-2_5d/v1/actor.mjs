@@ -1,10 +1,10 @@
 // Drop-in B draw(plan) actor adapter, not another battle renderer or clock.
-import {pose,weaponPose,GRID} from './animation.mjs?v=20261015-thrust1';
+import {pose,weaponPose,GRID} from './animation.mjs?v=20261018-lightweight1';
 export class WholeSuitActor{
  constructor(pool,entry,{tier='medium',signal,canvasFactory=()=>document.createElement('canvas')}={}){
   if(!GRID[tier])throw Error('invalid-sprite-tier');this.pool=pool;this.entry=entry;this.signal=signal;this.pivot=[.5,.9];this.closed=false;this.lease=null;this.layers=[];this.weaponReady=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=GRID[tier];this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
  }
- async init(){try{const lease=await this.pool.acquire(this.entry,{signal:this.signal});if(this.closed){lease.release();throw Error('sprite-aborted');}this.lease=lease;
+ async init(){try{if(!this.ctx)throw Error('canvas-unavailable');const lease=await this.pool.acquire(this.entry,{signal:this.signal});if(this.closed){lease.release();throw Error('sprite-aborted');}this.lease=lease;
    if(this.entry.weaponAnimation?.weaponAnimationStatus==='complete'){
     this.weaponLoad=(async()=>{
     const own=new AbortController();this.weaponAbort=own;const cancel=()=>own.abort();this.signal?.addEventListener('abort',cancel,{once:true});const timeout=setTimeout(cancel,2500);
@@ -17,8 +17,9 @@ export class WholeSuitActor{
  draw(plan){
   if(this.closed||!this.lease||this.pool.stats().closed)throw Error('sprite-unavailable');
   // B projection already owns approach displacement. Its adapter uses rootMotion=false.
-  const p=pose(plan.clip,plan.elapsedMs??plan.ms??0,{rootMotion:plan.rootMotion===true}),n=this.canvas.width,c=this.ctx;
-  c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.9+p.y));c.rotate(plan.clip==='attack'?0:p.rotation);c.scale(p.scaleX,p.scaleY);
+  let p=pose(plan.clip,plan.elapsedMs??plan.ms??0,{rootMotion:plan.rootMotion===true}),n=this.canvas.width,c=this.ctx;
+  if(this.entry.singleLayer&&plan.clip==='defeat'){const t=Math.min(1,(plan.elapsedMs??plan.ms??0)/700);p=Object.freeze({...p,rotation:.65*t,x:-.10*t,y:-.05*t,scaleX:1-.5*t,scaleY:1-.5*t});}
+  c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.9+p.y));c.rotate(plan.clip==='attack'&&!this.entry.singleLayer?0:p.rotation);c.scale(p.scaleX,p.scaleY);
   if(p.trail){c.globalAlpha=p.trail;c.drawImage(this.lease.bitmap,-n*.5-n*.035,-n*.9,n,n);}
   c.globalAlpha=p.alpha;
   let slash=p.slash;

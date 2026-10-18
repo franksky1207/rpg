@@ -1,0 +1,15 @@
+'use strict';
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
+(async()=>{const b=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']});try{const page=await b.newPage();await page.goto(new URL('3d-test/',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html').href);
+const report=await page.evaluate(async()=>{
+ const {release}=await import('./era-player-sprites.mjs?v=20261018-lightweight1'),{createSpritePool}=await import('./equipment-sprites-v1/assets.mjs?v=20261018-lightweight1'),{WholeSuitActor}=await import('./equipment-sprites-v1/actor.mjs?v=20261018-lightweight1');
+ let decodes=0,canvases=0;
+ const actual=createSpritePool({usage:'formal',limit:4*1024*1024,decode:async blob=>{decodes++;return createImageBitmap(blob);}});
+ const read=c=>{const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0,x=0,y=0,hash=2166136261,border=0;for(let i=0;i<d.length;i+=4){hash=Math.imul(hash^d[i]^d[i+1]^d[i+2]^d[i+3],16777619);if(d[i+3]>16){const px=(i/4)%c.width,py=Math.floor(i/4/c.width);n++;x+=px;y+=py;if(px===0||py===0||px===c.width-1||py===c.height-1)border++;}}return {n,x:x/Math.max(1,n),y:y/Math.max(1,n),hash:hash>>>0,border};};
+ const eras=[];
+ for(const e of release.entries){const actor=await new WholeSuitActor(actual,e,{tier:'medium'}).init();canvases++;const samples={};for(const clip of ['idle','attack','hit','dodge','return','defeat']){actor.draw({clip,elapsedMs:clip==='defeat'?560:336,rootMotion:true});samples[clip]=read(actor.canvas);}actor.draw({clip:'defeat',elapsedMs:700});samples.dead=read(actor.canvas);actor.dispose();eras.push({id:e.id,samples});}
+ const before=actual.stats();for(let i=0;i<100;i++){const a=await new WholeSuitActor(actual,release.entries[i%3]).init();a.draw({clip:'attack',elapsedMs:336,rootMotion:true});a.dispose();canvases++;}const after=actual.stats();actual.clear();const cleared=actual.stats();actual.dispose();return {eras,before,after,cleared,decodes,canvases};
+});
+for(const e of report.eras){const s=e.samples;assert.equal(new Set(Object.values(s).map(x=>x.hash)).size,7,'all six raster poses and final death differ');assert.ok(s.attack.x>s.idle.x+10,'attack advances');assert.ok(s.dodge.x<s.idle.x-8,'dodge retreats');assert.ok(s.return.x>s.idle.x+2&&s.return.x<s.attack.x,'smooth recovery');assert.equal(s.dead.n,0);for(const p of Object.values(s))assert.equal(p.border,0,'no canvas-edge silhouette clipping');assert.ok(s.idle.n>3000);}
+assert.equal(report.decodes,3);assert.equal(report.after.refs,0);assert.equal(report.after.pending,0);assert.equal(report.after.loads,3);assert.equal(report.after.bytes,3*512*512*4);assert.equal(report.cleared.bytes,0);assert.equal(report.cleared.entries,0);fs.writeFileSync('/tmp/batch7-formal-sprites-browser.json',JSON.stringify(report,null,2));console.log('PASS 18 actual raster poses, visible forward attack, no crop, 100 actor lifecycle, exactly 3 decodes');
+}finally{await b.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

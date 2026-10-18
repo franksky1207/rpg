@@ -89,8 +89,8 @@ function appearanceHtml(){
  const labels={galaxy:"銀河戰甲",universe:"宇宙戰甲",higher:"高維戰甲"};
  const options=contract.available.map(id=>'<option value="'+id+'"'+(selected===id?' selected':'')+'>'+labels[id]+'</option>').join("");
  return '<div class="setting-row" style="display:block"><h3 style="margin:0 0 7px">角色外觀</h3>'+
- '<div class="muted" style="margin-bottom:9px">三套新角色素材尚未正式推出；目前可先保存偏好，素材推出後才會套用。外觀設定不會隨雲端存檔或存檔匯入傳送。</div>'+
- (unlocked?'<div class="muted" style="margin-bottom:9px">已完成轉生，可自由選擇三紀元主角外觀；只影響戰鬥動畫，不影響裝備能力。素材正式推出後，變更從下一場戰鬥生效，設定保存在本裝置的登入帳號。</div>'+
+ '<div class="muted" style="margin-bottom:9px">三套角色外觀只影響戰鬥動畫，變更於下一場戰鬥套用。外觀設定不會隨雲端存檔或存檔匯入傳送。</div>'+
+ (unlocked?'<div class="muted" style="margin-bottom:9px">已完成轉生，可自由選擇三紀元主角外觀；只影響戰鬥動畫，不影響裝備能力。變更從下一場戰鬥生效，設定保存在本裝置的登入帳號。</div>'+
  '<label>戰鬥造型 <select id="civilizationEraAppearanceChoice" onchange="window.CivilizationPresentationMode.setEraAppearance(this.value)">'+options+'</select></label>':
  '<div class="muted">首次正式轉生後解鎖三套外觀自由選擇。目前依所在紀元顯示：'+(labels[base.visualId]||"尚未確認")+'。</div>')+'</div>';
 }

@@ -31,7 +31,7 @@ assert.equal(c.resolve({world:3}).visualId,"higher");
 assert.equal(c.select("higher").ok,false);
 assert.equal(c.resolve({world:1,role:"enemy"}).ready,false);
 assert.equal(c.resolve({world:4}).ready,false);
-assert.equal(c.resolve({world:1}).artReleased,false);
+assert.equal(c.resolve({world:1}).artReleased,true);
 assert.equal(c.select("INVALID").ok,false);
 w.state.reincarnation.count=3;
 w.civilizationAuthSession.user.id="A";
@@ -66,4 +66,4 @@ assert.ok(mode.includes("變更從下一場戰鬥生效"));
 
 const html=fs.readFileSync("index.html","utf8");
 assert.ok(html.includes("era-appearance-contract.js?v=20261018-batch7-v3"));
-console.log("PASS Batch7 foundation: visual choice independent of gear, reincarnation gate, account isolation, next-battle apply, no art release");
+console.log("PASS Batch7 foundation: visual choice independent of gear, reincarnation gate, account isolation, next-battle apply, lightweight art release");
