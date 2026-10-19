@@ -19,20 +19,11 @@ export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.cre
     if([...entries.values()].filter(e=>!e.bitmap).length>=maxPending)throw Error('sprite-load-concurrency');
     const controller=new AbortController();e={refs:0,used:++clock,bitmap:null,cost:0,controller,promise:null};entries.set(key,e);loads++;
     e.promise=(async()=>{
-     // Repair only a corrupted formal sprite, without clearing all background media.
-     const load=async repair=>{
-      const query=usage==='formal'?'?sha='+a.sha256+(repair?'&sprite-repair=1':''):'';
-      const response=await fetcher(new URL('../../'+a.path+query,import.meta.url),{signal:controller.signal,cache:repair?'reload':usage==='formal'?'force-cache':'no-store'});
-      if(!response.ok)throw Error('sprite-http:'+response.status);
-      const data=await response.arrayBuffer();if(data.byteLength!==a.bytes)throw Error('sprite-bytes');
-      const hash=[...new Uint8Array(await subtle.digest('SHA-256',data))].map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==a.sha256)throw Error('sprite-sha');
-      try{return await decode(new Blob([data],{type:'image/webp'}));}catch{throw Error('sprite-decode');}
-     };
-     let bitmap;
-     try{bitmap=await load(false);}catch(error){
-      if(usage!=='formal'||controller.signal.aborted||!/^sprite-(?:bytes|sha|decode)$/.test(String(error?.message||'')))throw error;
-      bitmap=await load(true); // One retry, no unbounded loops.
-     }
+     const response=await fetcher(new URL('../../'+a.path+(usage==='formal'?'?sha='+a.sha256:''),import.meta.url),{signal:controller.signal,cache:usage==='formal'?'force-cache':'no-store'});
+     if(!response.ok)throw Error('sprite-http:'+response.status);
+     const data=await response.arrayBuffer();if(data.byteLength!==a.bytes)throw Error('sprite-bytes');
+     const hash=[...new Uint8Array(await subtle.digest('SHA-256',data))].map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==a.sha256)throw Error('sprite-sha');
+     const bitmap=await decode(new Blob([data],{type:'image/webp'}));
      if(closed||controller.signal.aborted||entries.get(key)!==e){bitmap.close();throw Error('sprite-aborted');}
      if(bitmap.width!==a.width||bitmap.height!==a.height){bitmap.close();throw Error('sprite-dimensions');}
      e.cost=bitmap.width*bitmap.height*4;if(e.cost>limit){bitmap.close();throw Error('sprite-memory-budget');}
