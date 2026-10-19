@@ -24,6 +24,7 @@ jobs:
           node --check 3d-test/t3b-formal-entry.js
           node --check 3d-test/era-appearance-contract.js
           node tests/runtime/batch5-era-animation-contract.cjs
+          node tests/runtime/batch10-mobile-ui-contract.cjs
           node tests/runtime/cleanup-batch4-4-final-guard.cjs
           node tests/runtime/cleanup-batch2-4-integration.cjs
           node tests/runtime/t3b-formal-controller.cjs
