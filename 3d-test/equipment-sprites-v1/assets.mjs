@@ -19,24 +19,11 @@ export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.cre
     if([...entries.values()].filter(e=>!e.bitmap).length>=maxPending)throw Error('sprite-load-concurrency');
     const controller=new AbortController();e={refs:0,used:++clock,bitmap:null,cost:0,controller,promise:null};entries.set(key,e);loads++;
     e.promise=(async()=>{
-     const url=new URL('../../'+a.path,import.meta.url);
-     if(usage==='formal')url.searchParams.set('asset',a.sha256.slice(0,24));
-     const verified=async(repair)=>{
-      const target=new URL(url.href);if(repair)target.searchParams.set('repair','1');
-      const response=await fetcher(target,{signal:controller.signal,cache:repair?'reload':usage==='formal'?'force-cache':'no-store'});
-      if(!response.ok)throw Error('sprite-http:'+response.status);
-      const data=await response.arrayBuffer();if(data.byteLength!==a.bytes)throw Error('sprite-bytes');
-      const hash=[...new Uint8Array(await subtle.digest('SHA-256',data))].map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==a.sha256)throw Error('sprite-sha');
-      const image=await decode(new Blob([data],{type:'image/webp'}));
-      if(image.width!==a.width||image.height!==a.height){image.close();throw Error('sprite-dimensions');}
-      return image;
-     };
-     let bitmap;
-     try{bitmap=await verified(false);}
-     catch(error){
-      if(controller.signal.aborted||!['sprite-bytes','sprite-sha','sprite-dimensions'].includes(error?.message)&&error?.name!=='EncodingError')throw error;
-      bitmap=await verified(true);
-     }
+     const response=await fetcher(new URL('../../'+a.path+(usage==='formal'?'?sha='+a.sha256:''),import.meta.url),{signal:controller.signal,cache:usage==='formal'?'force-cache':'no-store'});
+     if(!response.ok)throw Error('sprite-http:'+response.status);
+     const data=await response.arrayBuffer();if(data.byteLength!==a.bytes)throw Error('sprite-bytes');
+     const hash=[...new Uint8Array(await subtle.digest('SHA-256',data))].map(n=>n.toString(16).padStart(2,'0')).join('');if(hash!==a.sha256)throw Error('sprite-sha');
+     const bitmap=await decode(new Blob([data],{type:'image/webp'}));
      if(closed||controller.signal.aborted||entries.get(key)!==e){bitmap.close();throw Error('sprite-aborted');}
      if(bitmap.width!==a.width||bitmap.height!==a.height){bitmap.close();throw Error('sprite-dimensions');}
      e.cost=bitmap.width*bitmap.height*4;if(e.cost>limit){bitmap.close();throw Error('sprite-memory-budget');}
