@@ -7,7 +7,7 @@ const base="5bfb00a44fd18263e3fe79581255871024f4396c";
 const decoupled="27ed18bbcb0f1e8d0af5420ecf132fb9fa0e5873";
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const historic=(ref,p)=>cp.execFileSync("git",["show",ref+":"+p]);
-const actual=p=>fs.readFileSync(p);
+const actual=p=>require("./pr48-presentation-baseline.cjs").original(p);
 const formalProtected=[
  "index.html","data.js","balance.js","combatcore.js","combatmath.js",
  "combat-events.js","engine.js","ui.js","audio/audio-core.js",

@@ -150,39 +150,58 @@ async function prepareSuit(options){
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
  verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null});return token;
 }
-let spriteRuntime=null,spritePool=null,warming=null;
+let spriteRuntime=null,spritePool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
+const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
+const warmAllowed=()=>!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
+function clearSpriteCache(){
+ clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);warmIdle=null;
+ warmController?.abort();spritePool?.clear();
+}
+function warmIdentity(){
+ const phase=Number(global.currentWorldPhase?.());
+ return global.CivilizationEraAppearanceContract?.resolve({world:phase});
+}
 function warmSprites(){
  if(warming)return warming;
- if(global.document?.hidden||global.navigator?.connection?.saveData||global.CivilizationPresentationMode?.combatAnimationEnabled?.()===false)return Promise.resolve(false);
+ if(!warmAllowed())return Promise.resolve(false);
+ const identity=warmIdentity();if(!identity?.ready)return Promise.resolve(false);
+ const ac=new AbortController();warmController=ac;
+ const abort=()=>{if(!warmAllowed())ac.abort();};
+ global.document?.addEventListener('visibilitychange',abort);
  warming=(async()=>{
-  const phase=Number(global.currentWorldPhase?.()||1);
-  const era=phase>=3?'higher':phase===2?'universe':'galaxy';
-  const [{release},[,poolModule]]=await Promise.all([
-   import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),
-   (spriteRuntime ||=Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]))
-  ]);
-  const entry=release.entries.find(e=>e.id==='era-'+era);
-  if(!entry||global.document?.hidden)return false;
+  const [{release},[,poolModule]]=await Promise.all([import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),runtime()]);
+  if(ac.signal.aborted||!warmAllowed()||warmIdentity()?.visualId!==identity.visualId)return false;
+  const entry=release.entries.find(e=>e.id==='era-'+identity.visualId);if(!entry)return false;
   spritePool ||= poolModule.createSpritePool({usage:'formal'});
-  const ac=new AbortController(),abort=()=>ac.abort();
-  global.document?.addEventListener('visibilitychange',abort,{once:true});
-  try{const lease=await spritePool.acquire(entry,{signal:ac.signal,layer:'body'});lease.release();return true;}
-  finally{global.document?.removeEventListener('visibilitychange',abort);}
- })().catch(()=>false).finally(()=>{warming=null;});
+  // Same content-addressed pool as live actors. At most two 512-square bitmaps
+  // (2 MiB decoded) for this appearance, never an actor, canvas, RAF or GPU engine.
+  for(const layer of [null,'body']){
+   if(ac.signal.aborted||!warmAllowed()||warmIdentity()?.visualId!==identity.visualId)return false;
+   const lease=await spritePool.acquire(entry,{signal:ac.signal,layer});lease.release();
+  }
+  return true;
+ })().catch(()=>false).finally(()=>{global.document?.removeEventListener('visibilitychange',abort);if(warmController===ac)warmController=null;warming=null;});
  return warming;
 }
-function scheduleWarm(){
- const run=()=>{if(!global.document?.hidden)void warmSprites();};
- if(typeof global.requestIdleCallback==='function')global.requestIdleCallback(run,{timeout:5000});
- else setTimeout(run,1800);
+function scheduleWarm(attempt=0){
+ clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);
+ const run=()=>{warmIdle=null;if(!warmAllowed())return;
+  if(global.CivilizationStartupCoordinator?.snapshot?.().status!=='ready'){if(attempt<30)warmTimer=setTimeout(()=>scheduleWarm(attempt+1),1000);return;}
+  void warmSprites();
+ };
+ if(typeof global.requestIdleCallback==='function')warmIdle=global.requestIdleCallback(run,{timeout:5000});
+ else warmTimer=setTimeout(run,1800);
 }
-if(global.document?.readyState==='loading')global.document.addEventListener('DOMContentLoaded',scheduleWarm,{once:true});
+global.document?.addEventListener('visibilitychange',()=>{if(global.document.hidden)clearSpriteCache();else scheduleWarm();});
+for(const event of ['civilization-auth-signed-out','pagehide'])global.addEventListener?.(event,clearSpriteCache);
+for(const event of ['civilization-auth-ready','civilization-era-appearance-change'])global.addEventListener?.(event,()=>{clearSpriteCache();scheduleWarm();});
+global.addEventListener?.('civilization-combat-animation-change',()=>{clearSpriteCache();if(warmAllowed())scheduleWarm();});
+if(global.document?.readyState==='loading')global.document.addEventListener('DOMContentLoaded',()=>scheduleWarm(),{once:true});
 else scheduleWarm();
 
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]);
- const [{WholeSuitActor},{createSpritePool}]=await spriteRuntime;
+ const [{WholeSuitActor},{createSpritePool}]=await runtime();
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -277,5 +296,5 @@ async function createSuit(options,bundle){
  }
  return Object.freeze({sample,resize:layoutSprites,dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
-global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,warmSprites,clearSpriteCache:()=>spritePool?.clear(),spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
+global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,warmSprites,scheduleWarm,clearSpriteCache,spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
 })(window);

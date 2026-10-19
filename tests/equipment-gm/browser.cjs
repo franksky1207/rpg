@@ -1,7 +1,7 @@
 'use strict';
 // Published GM center: real permission bridge, new era sprites and six actions.
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
-const {sdk,finishIntro}=require('../equipment-formal/helpers.cjs');
+const {sdk,finishIntro,assertStartupSprites}=require('../equipment-formal/helpers.cjs');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
 (async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']}),reports=[];
 try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width:844,height:390}]){
@@ -9,7 +9,7 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
  await page.addInitScript(ts=>{const RealDate=Date;class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[ts]));}static now(){return ts;}}window.Date=FixedDate;},Date.now());
  await page.goto(base+'?production=1');await page.evaluate(()=>ensureCivilizationScriptGroup('gm'));await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready'&&typeof openGm3DPrototype==='function');await finishIntro(page);
- assert.equal(requests.length,0,'no startup sprites');assert.equal(await page.evaluate(()=>{state.gm=false;return openGm3DPrototype();}),false);
+ await assertStartupSprites(page,requests);assert.equal(await page.evaluate(()=>{state.gm=false;return openGm3DPrototype();}),false);
  await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});
  const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');await frame.locator('[data-status]').filter({hasText:'已載入'}).waitFor();
  await page.waitForTimeout(1200);const truth=await page.evaluate(()=>JSON.stringify(state)),storage=await page.evaluate(()=>JSON.stringify(localStorage));

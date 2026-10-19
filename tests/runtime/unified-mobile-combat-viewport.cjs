@@ -20,3 +20,10 @@ hidden=false;mutation();flush();assert(Math.abs((700-y+125)-330)<18,"ready stage
 const before=y;handlers.touchmove();win.CivilizationCombatViewport.sync();flush();assert.equal(y,before,"manual scroll protected");
 combat=null;win.CivilizationCombatViewport.sync();assert.equal(win.CivilizationCombatViewport.snapshot().manual,false);
 console.log("UNIFIED_MOBILE_COMBAT_VIEWPORT_PASS");
+// A queued stable-layout callback must not outlive its original stage or gesture.
+combat={querySelector:()=>stage};hidden=false;y=0;win.CivilizationCombatViewport.sync();handlers.touchmove();flush();assert.equal(y,0,'gesture during pending RAF cancels centering');
+combat=null;win.CivilizationCombatViewport.sync();
+combat={querySelector:()=>stage};y=0;win.CivilizationCombatViewport.sync();hidden=true;mutation();flush();assert.equal(y,0,'retired loading stage cannot scroll');
+hidden=false;mutation();flush();assert(y>0);const once=y;
+combat={querySelector:()=>({...stage,getBoundingClientRect:()=>({top:1000-y,width:350,height:250})})};mutation();flush();assert.equal(y,once,'continuous screen replacement is not a new focus request');
+assert.equal(win.CivilizationCombatViewport.snapshot().observerCount,1,'one viewport observer');

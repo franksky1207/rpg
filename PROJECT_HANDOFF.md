@@ -1,3 +1,5 @@
+> **PR #48 承接修復施工中（2026-10-19）**：沿用 `fix/combat-center-stop-and-sprite-warmup-20261019`，main 基準 `39620ae6599096b3648688508bd80d567fe58e6e`。已追查七項失敗，修正停止鈕錯標／漏標、載入期定位與預載生命週期；既有驗證以精確授權差異延續。未經最新 PR／main Actions 與 Pages 完整成功，不得稱封箱。見 `docs/COMBAT_CENTER_STOP_FIX_2026-10-19.md`。iPhone 真機畫面、溫度與流暢度仍待驗收。
+
 > **手機戰鬥動畫定位整合（PR #46 已合併；快取補修 PR #47）**：新增共用 `combat-viewport-coordinator.js`，以正式舞台、Safari visualViewport 與停止鈕共同定位，僅手機可見動畫生效。範圍包含三紀元所有正式動畫戰鬥與連戰；不得改停止時機/數值/存檔。完整驗收與真機限制見 `docs/COMBAT_MOBILE_VIEWPORT_STOP_UNIFICATION_2026-10-19.md`；首頁 dungeonui.js 快取 token 由 PR #47 精確補修。最終發布需以最新 main 與 Pages Actions 證據為準，未經 iPhone 真機不可稱已驗收。
 
 > **第12批最新承接**：延續 PR #43 與原分支。使用者已取消必須前向突刺，改為依素材選定正式攻擊動畫；已實際比較11個對照並整合短距離上挑斬（前臂／劍一體、原肘甲遮擋）。保留半月光環移除、GM單一介面與27個原owner逐位元保護。三viewport×三紀元×三敵人體型實際渲染、接觸、無裁切及不穿越通過；完整回歸、最新Actions、合併與Pages結果以 `docs/COMBAT_ANIMATION_RENEWAL_BATCH12_EXECUTION_2026-10-19.md` 及 `verification-summary.json` 為準，未通過不得合併。以下歷史狀態依各批當時紀錄閱讀。
