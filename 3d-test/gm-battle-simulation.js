@@ -25,7 +25,7 @@ function displayHp(frame){
  return state;
 }
 
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-no-arc1';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
 import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261015-thrust1';
 import './armor-selection.js?v=20261015-phase5';
 export async function mount({host,signal,quality='medium'}){
@@ -40,7 +40,7 @@ export async function mount({host,signal,quality='medium'}){
   // Published Pages explicitly excludes development fixture sources.
   // Use an authorized, truthful 2.5D viewer based only on shipped assets;
   // never publish raw dev originals, owner fixtures or unapproved enemies.
-  const published=await import('./gm-battle-published.mjs?v=20261019-batch12-no-arc1&vbatch7sprite=20261018-lightweight1');
+  const published=await import('./gm-battle-published.mjs?v=20261019-batch12-rising-cut1&vbatch7sprite=20261018-lightweight1');
   return published.mount({host,signal,quality});
  }
  const [{loadData,selectInput},{Playback,bindRenderer},{createRenderer,diagnostics},{elapsedClock}]=parts;

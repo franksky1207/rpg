@@ -11,8 +11,8 @@ export function createSpritePool({fetcher=globalThis.fetch,decode=globalThis.cre
    if(entry?.status!=='complete'||entry.formalReleaseAllowed!==(era?true:false)||entry.gmTestStatus!==(era?'lightweight-accepted':'not-tested')||entry.version!=='1.0.0'||entry.facing!=='right-3/4'||entry.pivot?.join(',')!=='0.5,0.9')throw Error('sprite-unavailable');
    if(layer!==null&&(!['body','weapon'].includes(layer)||entry.weaponAnimation?.weaponAnimationStatus!=='complete'))throw Error('weapon-unavailable');
    const a=layer?entry.weaponAnimation[layer]:entry.asset,id=entry.id;
-   if(era&&layer!==null)throw Error('weapon-unavailable');
-   const expected=era?`assets/era-player/v1/${id}.webp`:layer?`development/equipment-2_5d/weapons-v1/${id}/${layer==='body'?'attack-body':'weapon'}.webp`:`development/equipment-2_5d/v1/characters/${id}/v1/character.webp`;
+   if(era&&layer!==null&&(entry.weaponAnimation?.template!=='short-rising-cut'||layer!=='body'))throw Error('weapon-unavailable');
+   const expected=era?layer?`assets/era-player/v1/${id}-attack-atlas.webp`:`assets/era-player/v1/${id}.webp`:layer?`development/equipment-2_5d/weapons-v1/${id}/${layer==='body'?'attack-body':'weapon'}.webp`:`development/equipment-2_5d/v1/characters/${id}/v1/character.webp`;
    if((era?!/^era-(galaxy|universe|higher)$/.test(id):entry.formalIdentity?.id!==id||!/^(?:g(?:00[1-9]|0[1-9]\d|100)|u(?:00[1-9]|0[1-9]\d|100)|h(?:0[1-9]|10))$/.test(id))||a?.path!==expected||!HASH.test(a.sha256)||!Number.isSafeInteger(a.bytes)||a.bytes<1||a.bytes>800000||a.width!==512||a.height!==512)throw Error('sprite-identity-version');
    const key=id+'|'+entry.version+'|'+a.sha256;let e=entries.get(key);
    if(!e){

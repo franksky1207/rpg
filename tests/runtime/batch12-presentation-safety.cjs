@@ -10,4 +10,9 @@ assert.match(center,/selectCase\(id\)/,'historical automated diagnostics retaine
 for(const p of ['3d-test/equipment-sprites-v1/actor.mjs','development/equipment-2_5d/v1/actor.mjs'])assert.doesNotMatch(fs.readFileSync(p,'utf8'),/if\(slash\)|c\.stroke\(/,'attack halo rendering must remain removed');
 const trial=JSON.parse(fs.readFileSync('development/combat-animation/batch12/thrust-feasibility.json'));
 assert.equal(trial.productionThrustAccepted,false,'missing art must not be declared accepted');
-console.log('PASS Batch12 presentation safety: '+owners.length+' unchanged formal owners; no categories or attack aura; unresolved art explicit');
+const release=JSON.parse(fs.readFileSync('assets/era-player/v1/manifest.json'));
+assert.equal(release.attackRevision,'20261019-batch12-rising-cut1');
+for(const entry of release.entries){assert.equal(entry.weaponAnimation.template,'short-rising-cut');assert.equal(entry.weaponAnimation.weaponAnimationStatus,'complete');assert.ok(entry.weaponAnimation.body.bytes<50000);assert.equal(entry.weaponAnimation.sourceSha256.length,2);}
+assert.match(fs.readFileSync('3d-test/gm-era-sprites.mjs','utf8'),/攻擊（短距離上挑斬）/);
+assert.doesNotMatch(fs.readFileSync('3d-test/gm-era-sprites.mjs','utf8'),/突刺待補|獨立武器突刺/);
+console.log('PASS Batch12 presentation safety: '+owners.length+' unchanged formal owners; no categories or attack aura; source-derived rising cut explicit');

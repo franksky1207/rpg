@@ -39,3 +39,11 @@ export function weaponPose(ms,config){
  else{stage='recover';const q=1-ease((t-.60)/.40);reach=.08*q;tilt=.02*q;}
  return Object.freeze({stage,angle:base+tilt,approach:reach,slash:Math.max(0,1-Math.abs(t-.48)/.10)});
 }
+
+// Source-derived elbow cut. Same owner-normalized 336ms impact; no owned clock.
+export function risingCutPose(ms,config){
+ const t=Math.max(0,Math.min(700,ms)),times=[0,196,336,420,700],angles=[0,config.windup,config.strike,config.strike,0];
+ let i=0;while(i<3&&t>times[i+1])i++;
+ let q=(t-times[i])/(times[i+1]-times[i]);q=q*q*(3-2*q);
+ return Object.freeze({angle:angles[i]+(angles[i+1]-angles[i])*q,stage:t<196?'windup':t<336?'attack':t<420?'impact':t<700?'recover':'idle'});
+}

@@ -2,9 +2,9 @@
  * Uses only approved published sprites and real published battle backgrounds.
  * This is NOT a combat calculator, enemy-art release, or game-state owner.
  */
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-no-arc1';
-import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261018-lightweight1';
-import {release} from './era-player-sprites.mjs?v=20261018-lightweight1';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
+import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1';
+import {release} from './era-player-sprites.mjs?v=20261019-batch12-rising-cut1';
 
 export async function mount({host,signal,quality='medium'}={}){
  const own=new AbortController(),pool=createSpritePool();
