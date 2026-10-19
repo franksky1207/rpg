@@ -186,6 +186,8 @@ async function createSuit(options,bundle){
   const e=frame.enemy||frame;
   const ms=Math.max(0,Math.min(700,e.elapsedMs||0)),t=ms/700;
   const approach=Math.max(0,Math.min(.42,e.approach||0));
+  if(enemyCanvas.dataset.renderKey===`${e.clip||'idle'}:${Math.floor(ms/35)}:${Math.round(approach*1000)}`)return;
+  enemyCanvas.dataset.renderKey=`${e.clip||'idle'}:${Math.floor(ms/35)}:${Math.round(approach*1000)}`;
   ec.clearRect(0,0,256,256);ec.save();
   ec.translate(128,222);
   // Opponent faces left, toward the player; effects stay inside its own canvas.
