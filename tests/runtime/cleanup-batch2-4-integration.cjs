@@ -44,6 +44,12 @@ const contractScript='<script src="3d-test/era-appearance-contract.js?v=20261018
  assert.equal(current.replace(gmNew,gmOld).replace(batch5Formal,newFormal).replace(modeBatch5,modeBase).replace(contractScript,"").replace(newToken,oldToken).replace(newFx,oldFx).replace(newDungeon,oldDungeon).replace(newSheet,"").replace("&vbatch4=20261018-animation-center","").replace(newFormal,oldFormal),original,"Unexpected formal HTML change beyond approved Batch 2/3/4 cache and stylesheet entries");
   continue;
  }
+ // Batch11 explicitly changes only the audio lifecycle owner; verify exact approved source instead of the retired Batch2-4 byte baseline.
+ if(p==="audio/audio-core.js"){
+  const approved=historic("1663be6e5b3d04e9a8f314aa3a11934ece6a5bb3",p);
+  assert.equal(sha(actual(p)),sha(approved),"Batch11 approved audio owner source unexpectedly modified");
+  continue;
+ }
  assert.equal(sha(actual(p)),sha(historic(base,p)),"Formal runtime unexpectedly modified: "+p);
 }
 const batch21=[
