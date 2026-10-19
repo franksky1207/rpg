@@ -15,7 +15,7 @@ function original(p){
   assert.equal(gitBlob,approvedFollowup[p],'unauthorized followup edit: '+p);
   // Controller remains subject to the older immutable-owner baseline;
   // index uses the pre-PR50 version for its legacy cache-token comparisons.
-  if(p==='index.html')return cp.execFileSync('git',['show','a98f7980aca5e85cb17335b56e6ce069e506ed18:index.html']);
+  if(p==='index.html')return cp.execFileSync('git',['show',patch.baseline+':'+p]);
   return cp.execFileSync('git',['show',patch.baseline+':'+p]);
  }
  const row=patch.files[p];if(!row)return fs.readFileSync(p);
