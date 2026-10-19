@@ -14,7 +14,7 @@ assert.match(source,/manual/);
 assert.match(d,/CivilizationCombatViewport/);
 const listeners={};let scroll=0,schedule=[],viewportHeight=660;
 const makeNode=(top,bottom)=>({top,bottom,height:bottom-top});
-const button={textContent:"停止連續討伐",getAttribute:()=>"stopCivilizationCalamityContinuousUI()"};
+const button={textContent:"停止連續討伐",getAttribute:()=>"stopCivilizationCalamityContinuousUI()",closest:()=>wrap};
 const wrap={parentElement:null,nextElementSibling:null,classList:{add(k){this[k]=true;}},getBoundingClientRect:()=>makeNode(320,370)};
 const screen={
  isConnected:true,
