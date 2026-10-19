@@ -25,4 +25,5 @@ assert.match(client,/CIV_CACHE_CLEAR/);
 assert.ok(html.includes("resource-cache-client.js?v=20261011-prefetch-fix1"));
 assert.ok(!sw.includes("localStorage")&&!sw.includes("indexedDB")&&!sw.includes("civilization.audio.preferences"));
 assert.equal(manifest.schema,1);
+require("./pr50-sprite-recovery-fault.cjs");
 console.log("Persistent resource cache structure PASS; managed asset digests:",Object.keys(manifest.files).length);
