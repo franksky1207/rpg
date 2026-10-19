@@ -63,6 +63,9 @@ jobs:
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: |
           set -o pipefail
+          node tests/runtime/unified-mobile-combat-viewport.cjs
+          node tests/runtime/pr48-stop-contract.cjs
+          node --test tests/runtime/pr48-sprite-warmup.test.mjs
           node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
           node tests/runtime/cleanup-batch4-4-final-guard.cjs 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/3d-formal-snapshots-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
@@ -120,6 +123,9 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/runtime/unified-mobile-combat-viewport-browser.cjs
+          node tests/runtime/pr48-mode-matrix-browser.cjs
+          node tests/runtime/pr48-live-combat-browser.cjs
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
@@ -227,6 +233,9 @@ jobs:
             audio-lifecycle-browser-report.json
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
+            /tmp/pr48-viewport-browser.json
+            /tmp/pr48-live-combat.json
+            /tmp/pr48-mode-matrix.json
             /tmp/t3b-formal-renderer-browser.json
             /tmp/batch28-consolidated
           if-no-files-found: ignore

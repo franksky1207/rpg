@@ -44,9 +44,14 @@ function mount(options){
    signal.throwIfAborted();
   },
   policy:state=>global.CivilizationHybridBattlePolicy.resolve({requestedMode:!animationEnabled()?"text":"hybrid-b",quality:global.document.body.classList.contains("main-minimal-mode-open")?"minimal":options.quality||"standard",...state,background:global.document.hidden}),
-  onRetire:()=>{options.host.hidden=true;options.host.closest(".combat-screen")?.classList.remove("formal-b-shared-layout");},
-  onReady:()=>{clearNotice();options.host.hidden=false;if(options.host.classList.contains("formal-b-shared-stage"))options.host.closest(".combat-screen")?.classList.add("formal-b-shared-layout");},
+  onRetire:()=>{
+   options.host.hidden=true;const screen=options.host.closest(".combat-screen");
+   if(options.host.classList.contains("formal-b-shared-stage")&&animationEnabled()&&!global.document.body.classList.contains("main-minimal-mode-open"))screen?.classList.add("formal-b-shared-layout","formal-b-stage-pending");
+   else screen?.classList.remove("formal-b-shared-layout","formal-b-stage-pending");
+  },
+  onReady:()=>{options.host.closest(".combat-screen")?.classList.remove("formal-b-stage-pending");clearNotice();options.host.hidden=false;if(options.host.classList.contains("formal-b-shared-stage"))options.host.closest(".combat-screen")?.classList.add("formal-b-shared-layout");},
   onFallback:reason=>{
+   options.host.closest(".combat-screen")?.classList.remove("formal-b-stage-pending");
    options.host.hidden=true;options.host.closest(".combat-screen")?.classList.remove("formal-b-shared-layout");clearNotice();
    // Expected text / minimal policies are normal UI choices, not failures.
    if(reason!=="text-or-minimal-policy"){
@@ -61,9 +66,19 @@ function mount(options){
  return managed;
 }
 function bindRoutes(options){
- dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null,eraVisualId=null;
+ dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null,eraVisualId=null,hadCombat=false,lastWarmVisual=null;
  const bridge=global.CivilizationFormalHybridBridge;
- const observer=new MutationObserver(()=>{const screen=document.querySelector('#main .combat-screen');if(host&&!host.isConnected){retireScene();host=null;id=null;}if(!screen&&!host)global.CivilizationFormalBRenderer?.clearSpriteCache?.();if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();});
+ const observer=new MutationObserver(()=>{
+  const screen=document.querySelector('#main .combat-screen'),leavingCombat=hadCombat&&!screen;
+  if(host&&!host.isConnected){retireScene();host=null;id=null;}
+  if(leavingCombat&&!host)global.CivilizationFormalBRenderer?.clearSpriteCache?.();
+  hadCombat=!!screen;
+  if(!screen){
+   const visual=global.CivilizationEraAppearanceContract?.resolve({world:global.currentWorldPhase?.()})?.visualId;
+   if(visual&&visual!==lastWarmVisual){lastWarmVisual=visual;if(!leavingCombat)global.CivilizationFormalBRenderer?.scheduleWarm?.();}
+  }
+  if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();
+ });
  observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
  const attached=bridge.attach((event,delivery)=>{
   const frame=global.CivilizationFormalBProjection.convert(event);if(!frame)return;
@@ -83,7 +98,7 @@ function bindRoutes(options){
     const anchor=screen.querySelector('.combat-arena');
     if(!anchor){host.remove();host=null;return;}
     screen.insertBefore(host,anchor);
-    screen.classList.add('formal-b-shared-layout');
+    screen.classList.add('formal-b-shared-layout','formal-b-stage-pending');
    }else{const anchor=screen.querySelector(".combat-arena");screen.insertBefore(host,anchor?.parentNode===screen?anchor:null);}id=frame.battleId;
    mount({...options,appearance,eraVisualId,host,clock,subscribe:false,onFallback:reason=>{host.hidden=true;options.onFallback?.(reason);}});
   }

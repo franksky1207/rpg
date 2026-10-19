@@ -23,14 +23,15 @@ const approvedBatch8=new Set(["3d-test/formal-player-sprites.css"]);
 // Batch12 permits exactly the single-interface layout rule; no other CSS change.
 const batch12Css="3d-test/test-center.css";
 assert.equal(fs.readFileSync(batch12Css,"utf8"),run("show","9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a:"+batch12Css)+"\n\n/* Batch12: one direct preview, no category/catalog navigation. */\n.center-layout{display:block}\n","Unexpected GM stylesheet change beyond Batch12 single-interface rule");
-const unexpected=changed.filter(p=>p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
+require("./pr48-presentation-baseline.cjs").original("ui.js");
+const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
  // Compare against sealed presentation baseline and explicitly approved cache keys.
  // Batch11 extends only the audio owner and formal renderer script cache tokens.
  const sealed=run("show","32257058dd7003e284d9f548674617d8d2e9c263:index.html");
- const actual=fs.readFileSync("index.html","utf8");
+ const actual=require("./pr48-presentation-baseline.cjs").original("index.html").toString();
  const expected=sealed
   .replace("gm3dprototype.js?v=20261018-gm-copy1","gm3dprototype.js?v=20261019-batch12-rising-cut1")
   .replace("3d-test/formal-player-sprites.css?v=20261015-phase5","3d-test/formal-player-sprites.css?v=20261019-batch8-shared1")

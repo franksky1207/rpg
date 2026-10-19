@@ -1,97 +1,50 @@
-/* Unified mobile combat focus. Presentation only: never owns battle state, events, timing or saves. */
-(function(global,doc){
-"use strict";
-if(global.CivilizationCombatViewport)return;
-let root=null,observer=null,queued=false,manual=false,lastScreen=null,lastStage=null,lastStop=null,layoutSerial=0;
-const mobile=()=>!!global.matchMedia?.("(max-width:820px), (max-height:500px) and (pointer:coarse)")?.matches;
-const animationExpected=()=>global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false;
-const live=()=>mobile()&&animationExpected()&&doc.visibilityState!=="hidden"&&!doc.body?.classList.contains("main-minimal-mode-open")&&global.gmBackgroundBattleEnabled?.()!==true;
-const usableStage=screen=>{
- const stage=screen?.querySelector(".formal-b-shared-stage:not([hidden]),.formal-b-battle-stage:not([hidden])");
- return stage||null; // no layout read during HUD mutation observation
-};
-const stopControl=screen=>{
- const scope=screen.closest(".calamity-battle-shell")||screen;
- const button=[...scope.querySelectorAll("button")].find(b=>{
-  const action=b.getAttribute("onclick")||"",label=b.textContent?.trim()||"";
-  return /^(停止連續|停止後續|本場結束後停止|本輪結束後停止|停止中)/.test(label)&&
-   /(?:Stop|stop|requestContinuousBattleStop)/.test(action);
- });
- if(!button)return null;
- const wrap=button.closest(".continuous-stop-wrap,.calamity-stop-wrap,.arena-actions,.controls");
- return wrap&&scope.contains(wrap)?wrap:null;
-};
-const moveStop=(screen,stage)=>{
- const wrap=stopControl(screen);
- if(!wrap)return null;
- if(wrap.parentElement!==screen||wrap.nextElementSibling!==stage)screen.insertBefore(wrap,stage);
- wrap.classList.add("combat-viewport-stop");
- return wrap;
-};
-function position(){
- queued=false;
- if(!root?.isConnected||!live())return;
- const screen=root.querySelector(".combat-screen");
- if(!screen){lastScreen=null;lastStage=null;lastStop=null;manual=false;return;}
- const stage=usableStage(screen);
- if(!stage)return;
- const stop=moveStop(screen,stage);
- if(manual||!stage.isConnected)return;
- const area=stage.getBoundingClientRect();if(area.height<=0)return;
- const control=stop?.getBoundingClientRect();
- const top=control?Math.min(control.top,area.top):area.top;
- const bottom=control?Math.max(control.bottom,area.bottom):area.bottom;
- const vp=global.visualViewport,offset=Number(vp?.offsetTop)||0;
- const height=Math.max(1,Number(vp?.height)||global.innerHeight||1);
- const safeTop=offset+12,safeBottom=offset+height-18;
- if(top>=safeTop&&bottom<=safeBottom)return;
- const startY=Number(global.scrollY)||0;
- const desired=bottom-top<=safeBottom-safeTop
-  ?startY+(top+bottom-safeTop-safeBottom)/2
-  :startY+top-safeTop;
- const pageHeight=Math.max(doc.scrollingElement?.scrollHeight||0,doc.documentElement?.scrollHeight||0);
- const maxScroll=Math.max(0,pageHeight-(global.innerHeight||height));
- const target=Math.max(0,Math.min(maxScroll,desired));
- if(Math.abs(target-startY)>12)global.scrollTo({top:target,behavior:"instant"});
+/* Mobile presentation only. Never moves controls or owns a combat clock. */
+(function(g,d){"use strict";
+if(g.CivilizationCombatViewport)return;
+let root,observer,lastStage=null,manual=false,focused=false,queued=false,token=0,lastWidth=0,lastRoute=null;
+const mobile=()=>!!g.matchMedia?.("(max-width:820px), (max-height:500px) and (pointer:coarse)")?.matches;
+const animationExpected=()=>g.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false;
+const live=()=>mobile()&&animationExpected()&&d.visibilityState!=="hidden"&&!d.body?.classList.contains("main-minimal-mode-open")&&g.gmBackgroundBattleEnabled?.()!==true;
+const stageOf=s=>s?.querySelector(".formal-b-shared-stage:not([hidden]),.formal-b-battle-stage:not([hidden])");
+const raf=f=>(g.requestAnimationFrame||((cb)=>setTimeout(cb,16)))(f);
+function cancel(){token++;queued=false;}
+function center(stage,ticket,prior=null,stable=0,tries=0){
+ if(ticket!==token||!live()||manual||!stage?.isConnected||stage.hidden){if(ticket===token)queued=false;return;}
+ const r=stage.getBoundingClientRect(),measure=[r.top,r.width,r.height];
+ if(r.width<1||r.height<1){queued=false;return;}
+ stable=prior&&measure.every((v,i)=>Math.abs(v-prior[i])<1)?stable+1:0;
+ if(stable<3){if(tries<30)raf(()=>center(stage,ticket,measure,stable,tries+1));else queued=false;return;}
+ queued=false;focused=true;
+ const vp=g.visualViewport,height=Number(vp?.height)||g.innerHeight||1,offset=Number(vp?.offsetTop)||0;
+ const delta=r.top+r.height/2-(offset+height/2);
+ const max=Math.max(0,Math.max(d.scrollingElement?.scrollHeight||0,d.documentElement?.scrollHeight||0)-(g.innerHeight||height));
+ const now=Number(g.scrollY)||0,target=Math.max(0,Math.min(max,now+delta));
+ if(Math.abs(target-now)>2)g.scrollTo({top:target,behavior:"instant"});
 }
-function schedule(){
- if(queued)return;
- queued=true;
- const serial=layoutSerial;
- const raf=global.requestAnimationFrame||((fn)=>setTimeout(fn,0));
- raf(()=>raf(()=>{if(serial===layoutSerial)position();else queued=false;}));
-}
-function inspect(force=false){
+function inspect(){
  if(!root?.isConnected)return;
+ const route=typeof view!=="undefined"?view:null;
+ if(route!==lastRoute){cancel();manual=false;focused=false;lastStage=null;lastRoute=route;}
  const screen=root.querySelector(".combat-screen");
- if(!screen){
-  if(lastScreen){lastScreen=null;lastStage=null;lastStop=null;manual=false;}
-  return;
- }
- const stage=usableStage(screen);
- if(!stage)return;
- const stop=stopControl(screen);
- if(!force&&screen===lastScreen&&stage===lastStage&&stop===lastStop)return;
- lastScreen=screen;lastStage=stage;lastStop=stop;
- schedule();
+ if(!screen){cancel();lastStage=null;if(route===null){manual=false;focused=false;}return;}
+ const stage=stageOf(screen);
+ if(stage!==lastStage){cancel();lastStage=stage;}
+ if(!stage||!live()||manual||focused||queued)return;
+ queued=true;const ticket=++token;raf(()=>center(stage,ticket));
 }
 function setup(){
- root=doc.getElementById("main");
- if(!root||typeof MutationObserver==="undefined")return;
- observer=new MutationObserver(()=>inspect());
- observer.observe(root,{childList:true,subtree:true,attributes:true,attributeFilter:["hidden"]});
- doc.addEventListener("touchmove",()=>{manual=true;},{passive:true});
- global.addEventListener("wheel",()=>{manual=true;},{passive:true});
- global.addEventListener("resize",()=>{layoutSerial++;queued=false;inspect(true);},{passive:true});
- global.visualViewport?.addEventListener?.("resize",()=>{layoutSerial++;queued=false;inspect(true);},{passive:true});
- doc.addEventListener("visibilitychange",()=>{if(!doc.hidden)inspect(true);});
- inspect(true);
+ root=d.getElementById("main");if(!root||typeof MutationObserver==="undefined")return;
+ root.addEventListener?.("click",()=>{if(!root.querySelector(".combat-screen")){cancel();manual=false;focused=false;}} ,{capture:true});
+ observer=new MutationObserver(inspect);
+ observer.observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:["hidden"]});
+ const gesture=()=>{manual=true;cancel();};
+ d.addEventListener("touchmove",gesture,{passive:true});g.addEventListener("wheel",gesture,{passive:true});
+ d.addEventListener("keydown",e=>{if(["ArrowUp","ArrowDown","PageUp","PageDown","Home","End"," "].includes(e.key)&&! /INPUT|TEXTAREA|SELECT/.test(e.target?.tagName||""))gesture();});
+ lastWidth=Number(g.visualViewport?.width)||g.innerWidth||0;
+ const resized=()=>{const width=Number(g.visualViewport?.width)||g.innerWidth||0;if(Math.abs(width-lastWidth)>55){lastWidth=width;cancel();focused=false;inspect();}};
+ g.addEventListener("resize",resized,{passive:true});g.visualViewport?.addEventListener?.("resize",resized,{passive:true});
+ d.addEventListener("visibilitychange",()=>{cancel();if(!d.hidden)inspect();});inspect();
 }
-global.CivilizationCombatViewport=Object.freeze({
- version:1,
- animationExpected,
- sync:()=>inspect(true),
- snapshot:()=>Object.freeze({mobile:mobile(),manual,stageActive:!!usableStage(root?.querySelector(".combat-screen")),observerCount:observer?1:0})
-});
-if(doc.readyState==="loading")doc.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
+g.CivilizationCombatViewport=Object.freeze({version:3,animationExpected,sync:inspect,snapshot:()=>({mobile:mobile(),manual,focused,stageActive:!!stageOf(root?.querySelector(".combat-screen")),observerCount:observer?1:0})});
+if(d.readyState==="loading")d.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
 })(window,document);

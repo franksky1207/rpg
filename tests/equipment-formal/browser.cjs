@@ -1,14 +1,14 @@
 'use strict';
 // Real index, formal UI, battle pipeline/core, owner clock and render path. Disposable browser state only.
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
-const {sdk,finishIntro}=require('./helpers.cjs');
+const {sdk,finishIntro,assertStartupSprites}=require('./helpers.cjs');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']}),reports=[];
  try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width:844,height:390}]){
  const page=await browser.newPage({viewport}),errors=[],requests=[],legacy3DRequests=[];page.on('pageerror',e=>errors.push(String(e)));page.on('request',r=>{if(/\/vendor\/babylonjs\/|\.glb(?:[?#]|$)|\/3d-test\/(?:prototype-engine|runtime)\.js/.test(r.url()))legacy3DRequests.push(r.url());if(/era-player.*webp/.test(r.url()))requests.push(r.url());});
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));await page.addInitScript(()=>{localStorage.setItem('civilization-war-presentation-mode-v1:t1a-snapshot-test','text');localStorage.setItem('civilization-war-combat-animation-v1:device','on');});
- await page.goto(base+(base.includes('?')?'&':'?')+'production=1',{waitUntil:'load'});await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});console.log('startup',viewport.width);await finishIntro(page);console.log('intro',viewport.width);assert.equal(requests.length,0);
+ await page.goto(base+(base.includes('?')?'&':'?')+'production=1',{waitUntil:'load'});await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});console.log('startup',viewport.width);await finishIntro(page);console.log('intro',viewport.width);await assertStartupSprites(page,requests);
  await page.evaluate(()=>{
   window.__samples=[];window.__lastResult=null;const animate=window.animateStructuredCombatPresentation;
   window.animateStructuredCombatPresentation=async function(r,o){__lastResult=r;return animate(r,o);};

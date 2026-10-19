@@ -45,8 +45,13 @@ const assert=require("node:assert/strict");
    await page.locator(".galaxy-review-prepare .enemy-card").nth(n).click();
    const beforeClick=await page.evaluate(()=>({view,screen:adventureScreen,era:window.getAdventureEraView?.(),phase:window.currentWorldPhase?.(state),buttons:document.querySelectorAll('button[onclick="startGalaxyReviewBattle()"]').length,content:document.getElementById("main")?.textContent?.slice(0,220),direct:typeof adventurePage==="function"?adventurePage().slice(0,220):"missing",renderSource:String(render).slice(0,270),isEntered:window.isSecondWorldEntered?.()}));
    assert.equal(beforeClick.buttons,1,JSON.stringify(beforeClick));
+   // Playback is deliberately accelerated to 1 ms. Hold its first sleep until
+   // the transient combat DOM has actually been asserted through the real click.
+   await page.evaluate(()=>{window.__reviewPresentationGate=new Promise(resolve=>window.__releaseReviewPresentation=resolve);window.mainBattlePresentationSleep=async()=>{await window.__reviewPresentationGate;await new Promise(resolve=>setTimeout(resolve,1));};});
    await page.locator('button[onclick="startGalaxyReviewBattle()"]').click();
    await page.waitForSelector(".galaxy-review-combat",{timeout:10000});
+   assert.equal(await page.evaluate(()=>battleBusy),true,"real review is active before playback is released");
+   await page.evaluate(()=>window.__releaseReviewPresentation());
    await page.waitForSelector("#battleResultModal.show",{timeout:10000});
    const inModal=await page.evaluate(()=>({locked:window.isAdventureReviewBattleActive?.(),source:window.getAdventureReviewBattleSource?.(),busy:battleBusy,save:JSON.stringify(state)}));
    assert.equal(inModal.locked,true);

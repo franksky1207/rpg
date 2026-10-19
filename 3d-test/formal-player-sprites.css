@@ -3,6 +3,7 @@
 .combat-message{display:none!important}
 .formal-b-shared-stage{width:100%;height:clamp(230px,38dvh,390px);position:relative;display:block;overflow:hidden;flex:none;background:transparent;border:0;border-radius:14px;isolation:isolate}
 .formal-b-shared-stage[hidden]{display:none}
+.combat-screen.formal-b-stage-pending>.formal-b-shared-stage[hidden]{display:block;visibility:hidden}
 .formal-b-whole-suit,.formal-b-enemy-sprite{position:absolute;bottom:3%;height:87%;width:auto;max-width:44%;object-fit:contain;pointer-events:none;will-change:transform}
 .formal-b-player-sprite{left:8%}
 .formal-b-enemy-sprite{right:8%}
@@ -22,3 +23,6 @@
  .formal-b-enemy-sprite{right:2%}
 }
 @media(max-height:500px){.formal-b-shared-stage,.formal-b-shared-layout>.formal-b-shared-stage{height:clamp(135px,38dvh,210px)}}
+
+/* Keep the same stage order and height through asynchronous preparation. */
+@media(max-width:760px){.formal-b-stage-pending>.formal-b-shared-stage{order:-2;height:clamp(205px,34dvh,300px)}}

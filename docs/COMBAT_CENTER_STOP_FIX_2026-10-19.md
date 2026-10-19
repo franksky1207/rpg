@@ -1,0 +1,28 @@
+# Battle animation centering and stop control correction
+
+Use functional data-combat-action=stop-continuous on existing stop buttons. Bounty, arena and mainline stop controls are authored before the animation, retaining handlers and original style. Calamity remains above battle. Do not move controls at runtime. Center only a ready stage, reserve space while hidden, do not auto-scroll during load or manual scrolling. Three-era and mobile Safari real-device verification pending.
+
+## PR #48 continuation — engineering acceptance in progress
+
+Baseline main: `39620ae6599096b3648688508bd80d567fe58e6e`; inherited PR head: `276408d1dacb1437c2dfdd87566786c049014e3b`. This is the same PR and branch, with no new combat system.
+
+Reproduced all seven failing PR checks. Batch12/GM terminology rejected authorized UI relocation against the old byte baseline; Batch5/7 rejected the new viewport cache URL against the historical exact HTML; Formal/GM/Batch6 still assumed zero startup Sprite requests. These were not all stale tests: two calamity start buttons were wrongly tagged as stops, both real calamity stops and galaxy main/void exit were missing functional tags, async retirement removed reserved geometry, old entry reset still scrolled during loading, old RAF callbacks could center retired stages, repeated stages could steal focus, and unrelated DOM changes aborted/cleared warmup.
+
+The historical protection now checks exact reviewed edits against immutable main before returning the original bytes to the old guards. `pr48-stop-contract.cjs` separately proves all nine original stop button attributes/labels/events and all other UI/gameplay bytes remain unchanged (apart from the explicit animated mobile entry-scroll guard). No original test/assertion was deleted. Startup tests now require exactly the two current-appearance SHA-addressed images, 2 MiB decoded, zero live leases/canvases/GPU engines; disabled animation still requires zero requests.
+
+Warmup uses the real `release` export, current-world owner and reincarnation appearance resolver, shared pool and HTTP/SW caching. It loads fallback and attack atlas sequentially at idle, aborts on hidden/clear/logout, recovers from failures, and does not instantiate actors, canvases, clocks or GPU engines. The existing six-image cache and art assets are preserved.
+
+Validation evidence and final SHA/Actions/Pages results will be appended only after actual completion. Physical iPhone Safari portrait/landscape visual center and toolbar transitions, temperature, battery drain and sustained frame smoothness remain real-device acceptance items. Chromium/WebKit automation is not a physical iPhone test.
+
+### Subsequent failures traced and repaired
+
+- The real `slow` fault exposed idle warmup competing with an already running battle and retaining a pending lease after settlement. Warmup now refuses an active combat screen; the original zero-live-reference assertion remains intact and passed locally.
+- Repeated `CivilizationEraAppearanceContract.select()` events cleared decoded sprites even when the selected look was unchanged. Appearance events now cancel only obsolete preparation; the bounded existing six-image pool remains reusable. The original eight-battle `hits >= 7` lifecycle assertion passed locally.
+- Batch6 CI caught the accelerated review browser test missing the transient combat screen: its 1 ms playback could complete before Playwright observed the real click. A test-only first-sleep latch now waits until the existing combat assertion has run, then releases unchanged core/presentation/settlement. All original read-only state, modal, retry and lock assertions are retained; one active-battle assertion was added.
+- The mode matrix uses already-completed universe Boss state to exercise genuine continuous combat. First-time universe Boss fights are intentionally forced to single mode by the existing story owner. High-era bounty remains unavailable under the formal era policy, even with the numerical fixture's reincarnation flag; the test asserts the policy and absence of an invented button rather than bypassing it. No new high-era bounty or calamity mode was introduced.
+
+Local evidence: full Batch6 representative integration executed 16 categories, 32/32 rows and 36 distinct original tests, with original child budgets and no prior-run reuse. Additional direct runs covered 42 isolated layout fixtures, real 日蝕王座 stop and high-era varied arena (three fights then automatic next round; stop completes that round), three warmup tests, original GM center in three viewports, formal combat in three viewports, Service Worker/cache behavior, and complete JavaScript structural validation. Final CI and release evidence remains mandatory.
+
+The full real-mode matrix additionally exposed stage collapse at retirement: a short high-era or Void fight could remove the shared layout, shrink the document, clamp/anchor the scroll and leave the next fight away from center. Retirement now keeps the same reserved stage geometry until genuine fallback or mode exit; mobile battle subtrees opt out of browser scroll anchoring. No second centering is introduced between continuous fights.
+
+The decoder fault fixture now injects its failure before navigation, because the shared pool captures the decoder when idle preparation creates it. Injecting after startup could leave the native decoder captured and fail to exercise the intended error. All original fault/lease/audio/cache assertions remain. The GM reincarnation integration fixture also waits for real startup readiness before replacing its isolated state; its previously timing-sensitive label assertions now include diagnostics and remain unchanged in substance.

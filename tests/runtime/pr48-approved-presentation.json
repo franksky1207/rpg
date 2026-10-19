@@ -1,0 +1,311 @@
+{
+  "baseline": "39620ae6599096b3648688508bd80d567fe58e6e",
+  "files": {
+    "dungeonvoidui.js": {
+      "beforeSha256": "b6d58f3cd82b81d9532238cd1bb0fe8373242447ef446159fd48a047e6a9f896",
+      "edits": [
+        [
+          75,
+          76,
+          [
+            "  return `<section class=\"void-shell\"><div class=\"card void-panel\"><div class=\"void-title main-minimal-mode-head\"><span class=\"main-minimal-mode-head-label\">【虛空幻境】</span>${run?.active?`<button type=\"button\" class=\"main-minimal-mode-enter\" onclick=\"openVoidMirageMinimalMode()\">極簡模式</button>`:\"\"}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class=\"void-actions void-top-exit\"><button data-combat-action=\"stop-continuous\" class=\"btn void-exit-btn\" ${voidUi.exitAfterFloor?\"disabled\":\"\"} onclick=\"requestVoidMirageExitUI()\">${exitLabel}</button></div><div class=\"combat-screen void-combat\"><div class=\"combat-head\">自動挑戰中</div><div class=\"combat-arena\"><div class=\"combatant player void-player\" id=\"voidPlayerCard\"><div class=\"combat-damage\" id=\"voidPlayerDamage\"></div><h2>${voidIdentityHtml()} Lv.${state.level}</h2><div class=\"void-player-meta\">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"voidPlayerHp\">${s.hp} / ${s.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"voidPlayerBar\" style=\"width:100%\"></span></div></div></div><div class=\"combat-vs void-vs\">VS</div><div class=\"combatant enemy void-enemy\" id=\"voidEnemyCard\"><div class=\"combat-damage\" id=\"voidEnemyDamage\"></div><div class=\"void-floor-badge${boss?\" void-boss-badge\":\"\"}\">${boss?\"雙特性關卡\":\"一般關卡\"}</div><h2>${e.name}</h2>${traits}<div class=\"void-enemy-meta\">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"voidEnemyHp\">${e.hp} / ${e.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"voidEnemyBar\" style=\"width:100%\"></span></div></div></div></div><div class=\"combat-message void-message\" id=\"voidCombatMessage\">準備戰鬥</div></div></div></section>`;"
+          ]
+        ]
+      ]
+    },
+    "ui.js": {
+      "beforeSha256": "a3714760cdf6d992905691840830955dbfb4e7ddccfaff45770d858098fc1935",
+      "edits": [
+        [
+          16,
+          16,
+          [
+            "  if(window.CivilizationCombatViewport?.animationExpected?.()&&window.matchMedia?.(\"(max-width:820px), (max-height:500px) and (pointer:coarse)\")?.matches)return;"
+          ]
+        ],
+        [
+          230,
+          232,
+          [
+            " const stop=continuous?`<div class=\"continuous-stop-wrap combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"continuousBattleStopBtn\" class=\"btn danger\" onclick=\"requestContinuousBattleStop()\" ${requested?\"disabled\":\"\"}>${requested?\"本場結束後停止\":\"停止連續戰鬥\"}</button></div>`:\"\";",
+            " return `<section class=\"combat-screen\"><div class=\"combat-head\">${head}</div>${stop}<div class=\"combat-arena\"><div class=\"combatant player\" id=\"combatPlayerCard\"><div class=\"combat-damage\" id=\"combatPlayerDamage\"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class=\"muted\">${currentWorldResource().label} ${currentWorldResource().amount.toLocaleString()}${currentWorldResource().secondaryLabel?`　${currentWorldResource().secondaryLabel} ${currentWorldResource().secondaryAmount.toLocaleString()}`:\"\"}</div><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatPlayerHp\">${state.hp} / ${s.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatPlayerBar\" style=\"width:${hpPct}%\"></span></div></div><div class=\"xp-block\"><div class=\"status-label\"><span>EXP</span><span>${progress.atCap?\"MAX\":progress.exp+\" / \"+need}</span></div><div class=\"bar\"><span class=\"xp\" style=\"width:${expPct}%\"></span></div></div></div><div class=\"combat-vs\">VS</div><div class=\"combatant enemy\" id=\"combatEnemyCard\"><div class=\"combat-damage\" id=\"combatEnemyDamage\"></div><h2 id=\"combatEnemyName\">${e.name} Lv.${e.level}</h2>${traits}<div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatEnemyHp\">${e.hp} / ${e.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatEnemyBar\" style=\"width:100%\"></span></div></div></div></div><div class=\"combat-message\" id=\"combatMessage\">準備戰鬥</div></section>`;"
+          ]
+        ]
+      ]
+    },
+    "dungeonarena.js": {
+      "beforeSha256": "4f483a86b819c9f9b738b5c9f43cb92f3a01c31a8df426a4c2c0fafd2be225ba",
+      "edits": [
+        [
+          28,
+          29,
+          [
+            " function selectionHtml(){if(typeof window.renderArenaVenueSelectionHtml===\"function\")return window.renderArenaVenueSelectionHtml();const ds=dailyStatus();return `<div class=\"function-page dungeon-page-shell arena-shell\"><div class=\"back-home\"><button class=\"btn back-btn\" onclick=\"go('dungeon')\">← 返回副本</button></div><section class=\"arena-panel\"><div class=\"arena-title\">競技場</div><div class=\"arena-attempts\">今日競技場：<strong>${ds.used} / ${ds.limit}</strong>・剩餘 ${ds.remaining} 輪</div><div class=\"notice\">競技場選擇介面載入中。</div></section></div>`;}function progressStrip(){return `<div class=\"arena-progress-strip\">${[0,1,2].map(i=>`<div class=\"arena-progress-step ${i<arenaState.stage?\"done\":i===arenaState.stage?\"current\":\"\"}\"><span>${i+1}</span>${ARENA_STAGE_NAMES[i]}</div>`).join(\"\")}</div>`;}function readyHtml(){const d=arenaState.position,ds=dailyStatus(),base=Math.max(0,Math.floor(Number(d?.totalPoints)||0)),actual=adjustedFullClearPoints(d),rewardText=actual!==base?`${actual} VIP 積分（基礎 ${base}）`:`${base} VIP 積分`;return `<div class=\"function-page dungeon-page-shell arena-shell\"><section class=\"arena-panel arena-ready-panel\"><div class=\"arena-title\">${d?.name||\"競技場\"}</div><div class=\"arena-attempts\">今日競技場：<strong>${ds.used} / ${ds.limit}</strong>・剩餘 ${ds.remaining} 輪</div>${progressStrip()}<div class=\"arena-stage-label\">三戰挑戰</div><h2>${arenaState.enemy?.name||\"模擬對手\"}</h2><div class=\"arena-traits\">第一戰特性：${arenaTraitNames(arenaState.enemy)}</div><div class=\"arena-carry\">每輪自動進行三戰，場間不回血；新一輪開始會重新滿血。正式開始一輪才使用 1 次今日額度。</div><div class=\"arena-earned\">全通可獲得：${rewardText}</div><div class=\"controls arena-actions\"><button class=\"btn arena-start-btn\" ${ds.remaining>0?\"\":\"disabled\"} onclick=\"startArenaStageFight(false)\">單次挑戰</button><button class=\"btn primary arena-start-btn\" ${ds.remaining>0?\"\":\"disabled\"} onclick=\"startArenaStageFight(true)\">連續挑戰</button></div></section></div>`;}function combatHtml(){const e=arenaState.enemy,s=arenaPlayerStats(),d=arenaState.position,stage=arenaState.stage,traits=typeof combatTraitBadgesHtml===\"function\"?combatTraitBadgesHtml(e?.traits):\"\",stop=arenaState.continuous?`<div class=\"controls arena-actions combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"arenaContinuousStop\" class=\"btn\" onclick=\"requestArenaContinuousStop()\">${arenaState.stopRequested?\"本輪結束後停止\":\"停止連續挑戰\"}</button></div>`:\"\";return `<section class=\"combat-screen arena-combat\"><div class=\"combat-head arena-combat-head\">【競技場】 ${d?.name||\"\"}・${ARENA_STAGE_NAMES[stage]}${arenaState.continuous?\"・連續挑戰\":\"\"}</div><div class=\"arena-progress-wrap\">${progressStrip()}</div>${stop}<div class=\"combat-arena\"><div class=\"combatant player arena-player\" id=\"combatPlayerCard\"><div class=\"combat-damage\" id=\"combatPlayerDamage\"></div><h2>${typeof window.playerIdentityNameHtml===\"function\"?window.playerIdentityNameHtml({compact:true}):escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatPlayerHp\">${state.hp} / ${s.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatPlayerBar\" style=\"width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%\"></span></div></div></div><div class=\"combat-vs arena-vs\">VS</div><div class=\"combatant enemy arena-enemy\" id=\"combatEnemyCard\"><div class=\"combat-damage\" id=\"combatEnemyDamage\"></div><div class=\"${positionClass(d?.id)} arena-combat-tier\">競技場對手</div><h2 id=\"combatEnemyName\">${e.name}</h2>${traits}<div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatEnemyHp\">${e.hp} / ${e.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatEnemyBar\" style=\"width:100%\"></span></div></div></div></div><div class=\"combat-message arena-message\" id=\"combatMessage\">準備戰鬥</div></section>`;}function continuousResultHtml(){const diff=arenaState.position,s=arenaState.summary,ds=dailyStatus();return `<div class=\"function-page dungeon-page-shell arena-shell\"><section class=\"arena-panel arena-result-panel\"><div class=\"arena-title\">競技場連續挑戰結算</div><div class=\"${positionClass(diff?.id)} arena-result-difficulty\">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class=\"arena-clear-count\">共完成：${s.runs} 輪・全通 ${s.fullClears} 輪・失敗 ${s.failedRuns} 輪</div><div class=\"arena-total-earned\">總獲得 VIP 積分：<strong>${s.totalPoints}</strong></div><div class=\"arena-current-points\">停止原因：${stopReasonText(s.stopReason)}</div><div class=\"arena-current-points\">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div><div class=\"arena-current-points\">今日競技場：${ds.used} / ${ds.limit}・剩餘 ${ds.remaining} 輪</div><div class=\"controls arena-actions\"><button class=\"btn\" onclick=\"go('dungeon')\">返回副本</button></div></section></div>`;}function resultHtml(){if(arenaState.continuous)return continuousResultHtml();const r=arenaState.result||{},diff=arenaState.position,ds=dailyStatus(),title=r.type===\"clear\"?\"競技場三戰完成\":\"競技場挑戰失敗\",cleared=arenaState.history.filter(x=>x.win).length,rows=arenaState.history.map((h,i)=>`<div class=\"arena-result-row\"><span>${ARENA_STAGE_NAMES[i]}</span><span>${h.win?`通過　基礎 +${h.baseStagePoints||0}`:\"失敗\"}</span></div>`).join(\"\");return `<div class=\"function-page dungeon-page-shell arena-shell\"><section class=\"arena-panel arena-result-panel\"><div class=\"arena-title\">${title}</div><div class=\"${positionClass(diff?.id)} arena-result-difficulty\">${diff?.name||arenaVenueName(arenaState.rank)}</div><div class=\"arena-clear-count\">已通過：${cleared} / 3 戰</div><div class=\"arena-result-list\">${rows}</div><div class=\"arena-total-earned\">本次獲得 VIP 積分：<strong>${arenaState.roundPoints}</strong></div><div class=\"arena-current-points\">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0)}</div><div class=\"arena-current-points\">今日競技場：${ds.used} / ${ds.limit}・剩餘 ${ds.remaining} 輪</div><div class=\"controls arena-actions\"><button class=\"btn arena-start-btn\" ${ds.remaining>0?\"\":\"disabled\"} onclick=\"${ds.remaining>0?\"openArenaDungeon()\":\"void(0)\"}\">${ds.remaining>0?\"再次選擇競技場\":\"今日競技場次數已用完\"}</button><button class=\"btn\" onclick=\"go('dungeon')\">返回副本</button></div></section></div>`;}window.renderArenaDungeon=function(){if(arenaState.phase===\"select\")return selectionHtml();if(arenaState.phase===\"combat\")return combatHtml();if(arenaState.phase===\"result\")return resultHtml();return readyHtml();};window.getArenaCoreState=function(){const assessment=typeof window.getArenaAssessmentStatus===\"function\"?window.getArenaAssessmentStatus():null,position=arenaState.position?{...arenaState.position,stagePoints:arenaState.position.stagePoints.slice()}:null;return {phase:arenaState.phase,rank:arenaState.rank,rankName:arenaRankName(arenaState.rank),position,difficulty:position,stage:arenaState.stage,enemy:arenaState.enemy?{...arenaState.enemy}:null,result:arenaState.result?{...arenaState.result}:null,gainedPoints:arenaState.gainedPoints,roundPoints:arenaState.roundPoints,roundBasePoints:arenaState.roundBasePoints,continuous:arenaState.continuous,stopRequested:arenaState.stopRequested,summary:{...arenaState.summary},daily:dailyStatus(),playerSnapshot:arenaState.playerSnapshot?{...arenaState.playerSnapshot}:null,enemyScalingSnapshot:arenaState.enemyScalingSnapshot?{...arenaState.enemyScalingSnapshot}:null,vipLevelSnapshot:arenaState.vipLevelSnapshot||0,assessment,history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};"
+          ]
+        ]
+      ]
+    },
+    "dungeonbounty.js": {
+      "beforeSha256": "3bad895b837f3e597e14ac39ada0f40cbda4307d5340275297946a8d76532808",
+      "edits": [
+        [
+          159,
+          161,
+          [
+            "  const stop=bountyState.continuous?`<div class=\"controls combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"bountyContinuousStop\" class=\"btn\" onclick=\"requestBountyContinuousStop()\">${bountyState.stopRequested?\"本場結束後停止\":\"停止連續挑戰\"}</button></div>`:\"\";",
+            "  return `<section class=\"combat-screen dungeon-bounty-combat\"><div class=\"combat-head dungeon-bounty-title\">【懸賞戰】 ${bountyState.tier.name}${bountyState.continuous?\"・連續挑戰\":\"\"}</div>${continuousStatus}${stop}<div class=\"combat-arena\"><div class=\"combatant player dungeon-bounty-player\" id=\"combatPlayerCard\"><div class=\"combat-damage\" id=\"combatPlayerDamage\"></div><h2>${typeof window.playerIdentityNameHtml===\"function\"?window.playerIdentityNameHtml({compact:true}):escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatPlayerHp\">${state.hp} / ${s.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatPlayerBar\" style=\"width:${Math.max(0,Math.min(100,state.hp/s.hp*100))}%\"></span></div></div></div><div class=\"combat-vs dungeon-bounty-vs\">VS</div><div class=\"combatant enemy dungeon-bounty-enemy\" id=\"combatEnemyCard\"><div class=\"combat-damage\" id=\"combatEnemyDamage\"></div><h2 id=\"combatEnemyName\">${e.name}</h2>${traits}<div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatEnemyHp\">${e.hp} / ${e.hp}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatEnemyBar\" style=\"width:100%\"></span></div></div></div></div><div class=\"combat-message dungeon-bounty-message\" id=\"combatMessage\">準備戰鬥</div></section>`;"
+          ]
+        ]
+      ]
+    },
+    "3d-test/t3b-formal-entry.js": {
+      "beforeSha256": "cd3da2d439357d5267b680e099225d6b5dc8f21652a56eef591c7fd91ebbe6de",
+      "edits": [
+        [
+          46,
+          48,
+          [
+            "  onRetire:()=>{",
+            "   options.host.hidden=true;const screen=options.host.closest(\".combat-screen\");",
+            "   if(options.host.classList.contains(\"formal-b-shared-stage\")&&animationEnabled()&&!global.document.body.classList.contains(\"main-minimal-mode-open\"))screen?.classList.add(\"formal-b-shared-layout\",\"formal-b-stage-pending\");",
+            "   else screen?.classList.remove(\"formal-b-shared-layout\",\"formal-b-stage-pending\");",
+            "  },",
+            "  onReady:()=>{options.host.closest(\".combat-screen\")?.classList.remove(\"formal-b-stage-pending\");clearNotice();options.host.hidden=false;if(options.host.classList.contains(\"formal-b-shared-stage\"))options.host.closest(\".combat-screen\")?.classList.add(\"formal-b-shared-layout\");},"
+          ]
+        ],
+        [
+          49,
+          49,
+          [
+            "   options.host.closest(\".combat-screen\")?.classList.remove(\"formal-b-stage-pending\");"
+          ]
+        ],
+        [
+          63,
+          64,
+          [
+            " dispose();let id=null,host=null,clockBattleId=null,clock=null,appearance=null,eraVisualId=null,hadCombat=false,lastWarmVisual=null;"
+          ]
+        ],
+        [
+          65,
+          66,
+          [
+            " const observer=new MutationObserver(()=>{",
+            "  const screen=document.querySelector('#main .combat-screen'),leavingCombat=hadCombat&&!screen;",
+            "  if(host&&!host.isConnected){retireScene();host=null;id=null;}",
+            "  if(leavingCombat&&!host)global.CivilizationFormalBRenderer?.clearSpriteCache?.();",
+            "  hadCombat=!!screen;",
+            "  if(!screen){",
+            "   const visual=global.CivilizationEraAppearanceContract?.resolve({world:global.currentWorldPhase?.()})?.visualId;",
+            "   if(visual&&visual!==lastWarmVisual){lastWarmVisual=visual;if(!leavingCombat)global.CivilizationFormalBRenderer?.scheduleWarm?.();}",
+            "  }",
+            "  if(global.document.body.classList.contains('main-minimal-mode-open'))active?.suspend?.();",
+            " });"
+          ]
+        ],
+        [
+          85,
+          86,
+          [
+            "    screen.classList.add('formal-b-shared-layout','formal-b-stage-pending');"
+          ]
+        ]
+      ]
+    },
+    "index.html": {
+      "beforeSha256": "462dedce04361c75a77ed894c983a42a280db0f37a2ba6ad55c37024b6621222",
+      "edits": [
+        [
+          3,
+          4,
+          [
+            "<link rel=\"stylesheet\" href=\"style.css?v=20260914-shop-retire-final2&settingsLayout=20261011-b02\"><link rel=\"stylesheet\" href=\"componentstyles.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"backgrounds.css?v=20261003-reincarnation-batch4-2\"><link rel=\"stylesheet\" href=\"backgroundpreload.css?v=20260914-maintenance1&v2=20261010-startup-progress3&v3=20261010-actual-progress&v3=20261010-gm-prestart4\"><link rel=\"stylesheet\" href=\"guide.css?v=20260915-boss-continuous-batch2\"><link rel=\"stylesheet\" href=\"dungeonarena.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"thirdworldarena.css?v=20260929-thirdworld-batch15-opt5\" data-third-world-arena-style-owner=\"1\"><link rel=\"stylesheet\" href=\"dungeonvoid.css?v=20260917-void-adapter-batch1\"><link rel=\"stylesheet\" href=\"dungeonplayerui.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"arenaplayerflow2.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"battleflow.css?v=20260919-combat-ui-cleanup1\"><link rel=\"stylesheet\" href=\"battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4\"><link rel=\"stylesheet\" href=\"mainminimalmode.css?v=20260917-void-adapter-batch1\"><link rel=\"stylesheet\" href=\"calamityui.css?v=20260922-review-batch4\"><link rel=\"stylesheet\" href=\"worldmapui.css?v=20260922-review-batch1&v2=20261010-review-click-fix\"><link rel=\"stylesheet\" href=\"thirdworldui.css?v=20260928-thirdworld-batch10-2\"><link rel=\"stylesheet\" href=\"adventureuipolish.css?v=20260922-adventure-integrity-batch2\"><link rel=\"stylesheet\" href=\"functionuipolish.css?v=20260915-enhancement-batch4\"><link rel=\"stylesheet\" href=\"inventoryredemption.css?v=20260914-inventory-redemption1\"><link rel=\"stylesheet\" href=\"dungeondesktoppolish.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"dungeonuipolish.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"combatsettlementpolish.css?v=20260914-maintenance1\"><link rel=\"stylesheet\" href=\"supabaseauth.css?v=20260916-password-reset1&settingsLayout=20261011-b02\"><link rel=\"stylesheet\" href=\"cloudsave.css?v=20260916-cloud-save-batch1&settingsLayout=20261011-b02\"><link rel=\"stylesheet\" href=\"story.css?v=20260922-review-batch4&v3d=20261010-story-b16-footer-fix&t4=20261013-preview-retire1\"><link rel=\"stylesheet\" href=\"playertitles.css?v=20260924-title-css-cleanup1\"><link rel=\"stylesheet\" href=\"playertitlesera.css?v=20260924-title-css-cleanup1\"><link rel=\"stylesheet\" href=\"playertitlesmirror.css?v=20260929-title-batch14-o2\" data-player-title-mirror-owner=\"3\"><link rel=\"stylesheet\" href=\"playertitleshigherdimensional.css?v=20260929-title-batch14-o2\" data-player-title-higher-dimensional-owner=\"1\"><link rel=\"stylesheet\" href=\"playertitlesalternateuniverse.css?v=20261007-au-title-batch2\" data-player-title-alternate-universe-owner=\"1\"><link rel=\"stylesheet\" href=\"worldphaseui.css?v=20260921-worldphase-batch3\"><link rel=\"stylesheet\" href=\"3d-test/worldphase-b04.css?v=20261009-b04\"><link rel=\"stylesheet\" href=\"3d-test/galaxy-b05.css?v=20261009-b05&t4=20261013-preview-retire1\"></head>"
+          ]
+        ],
+        [
+          82,
+          83,
+          [
+            "<script src=\"ui.js?v=20261002-autoprocess-policy-batch1&vaudio=20261010-a03-formal-coverage2&v2=20261004-reincarnation-speed-ui-fix1&v3=20261005-reincarnation-gear-root-fix1&v4=20261006-calamity-ui-opt-batch3&v5=20261008-gm-first-render1&v6=20261009-3d-b03&v7=20261009-galaxy-b05&v8=20261009-b05-combat-cleanup&v9=20261009-gm-startup-early&vgalaxyreview=20261010-review-combat6&vreviewroute=20261010-v8&vhome=20261010-first-home-reconcile&v17=20261010-b17-mode-settings&vopt4=20261010-home-reconcile&cacheUi=20261011-b03&audioPersist=20261011-audio-settings-save&settingsLayout=20261011-b02&settingsCopy=20261011-no-gm-v2&audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          88,
+          89,
+          [
+            "<script src=\"worldmapui.js?v=20260928-thirdworld-batch11-o2&v2=20261009-galaxy-b05&v3=20261009-galaxy-visible-fix&v4=20261010-review-click-fix&v13=20261010-repair2-universe-focus&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          93,
+          94,
+          [
+            "<script src=\"thirdworldui.js?v=20261013-background-hud-recovery1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          104,
+          105,
+          [
+            "<script src=\"calamityui.js?v=20260922-universe-calamity-batch2&v2=20261006-calamity-entry-scroll1&v3=20261006-calamity-ui-opt-batch3&v4=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          115,
+          116,
+          [
+            "<script src=\"secondworldcalamityui.js?v=20260927-thirdworld-ui-opt9-2&v2=20261006-calamity-live-ui1&v3=20261006-calamity-entry-scroll1&v4=20261006-calamity-ui-opt-batch3&v5=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          125,
+          127,
+          [
+            "<script src=\"dungeonbounty.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3\"></script>",
+            "<script src=\"dungeonarena.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          128,
+          129,
+          [
+            "<script src=\"thirdworldarenaui.js?v=20261010-six-track-battle-integration2&vaudio=20261010-a03-formal-coverage2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          132,
+          133,
+          [
+            "<script src=\"dungeonvoidui.js?v=20261010-six-track-battle-integration2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          207,
+          208,
+          [
+            "<script src=\"dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          262,
+          263,
+          [
+            "<script src=\"combat-viewport-coordinator.js?v=20261019-unified1&pr48=20261019-center3\"></script>"
+          ]
+        ],
+        [
+          266,
+          267,
+          [
+            "<link rel=\"stylesheet\" href=\"3d-test/formal-player-sprites.css?v=20261019-batch9-background1&pr48=20261019-center3\">"
+          ]
+        ],
+        [
+          273,
+          274,
+          [
+            "<script src=\"3d-test/t3b-formal-renderer.js?v=20261019-batch12-rising-cut1&spriteWarm=20261019-v2&pr48=20261019-center4\"></script>"
+          ]
+        ],
+        [
+          276,
+          277,
+          [
+            "<script src=\"3d-test/t3b-formal-entry.js?v=20261019-batch11-lifecycle1&pr48=20261019-center4\"></script>"
+          ]
+        ]
+      ]
+    },
+    "3d-test/index.html": {
+      "beforeSha256": "afd44f9fd878c1052a9946f8f7bdb41d8e872827d87166bb0f33b88cd2e74be8",
+      "edits": []
+    },
+    "calamityui.js": {
+      "beforeSha256": "1678cd09eeb1fb0c63150c2a83d0807716934fd8286def0c232f1b3409174c6e",
+      "edits": [
+        [
+          97,
+          98,
+          [
+            "   ${continuous?`<div class=\"calamity-stop-wrap\"><button data-combat-action=\"stop-continuous\" id=\"calamityStopBtn\" class=\"btn danger\" onclick=\"stopCivilizationCalamityContinuousUI()\" ${stopping?\"disabled\":\"\"}>${stopping?\"停止中\":\"停止連續討伐\"}</button></div>`:\"\"}"
+          ]
+        ]
+      ]
+    },
+    "secondworldcalamityui.js": {
+      "beforeSha256": "68e4efe66eb696005c9b21c275fe9021a5b144c5aa042dc38f9ca4e1b99dc403",
+      "edits": [
+        [
+          144,
+          145,
+          [
+            "   ${continuous?`<div class=\"calamity-stop-wrap\"><button data-combat-action=\"stop-continuous\" class=\"btn danger\" onclick=\"stopSecondWorldCalamityContinuousUI()\">停止連續討伐</button></div>`:\"\"}"
+          ]
+        ]
+      ]
+    },
+    "thirdworldarenaui.js": {
+      "beforeSha256": "de3fd931814e10fa4ca066e7310aa02b43de73599af3478a2289160a49c4c062",
+      "edits": [
+        [
+          20,
+          21,
+          [
+            " function combatHtml(){const rt=runtime(),round=rt.round,e=round?.enemy||{},stats=displayPlayer(),hp=Math.max(0,Number(state?.hp)||0),maxHp=Math.max(1,Number(stats.hp)||1),mode=typeof window.getThirdWorldArenaMode===\"function\"?window.getThirdWorldArenaMode(rt.mode):null,stage=Math.max(0,Math.min(2,Number(round?.stageIndex)||0)),stop=rt.requestedRuns>1?`<div class=\"controls arena-actions combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"w3ArenaStopBtn\" class=\"btn\" onclick=\"requestThirdWorldArenaUiStop()\">${rt.stopRequested?\"本輪結束後停止\":\"停止後續場次\"}</button></div>`:\"\";return `<section class=\"combat-screen arena-combat\"><div class=\"combat-head arena-combat-head\">【高維競技場・${esc(mode?.name||\"\")}】${STAGE_NAMES[stage]}・第 ${rt.startedRuns} / ${rt.requestedRuns} 輪</div>${progressHtml(rt)}${lineupHtml(rt)}${stop}<div class=\"combat-arena\"><div class=\"combatant player arena-player\" id=\"combatPlayerCard\"><div class=\"combat-damage\" id=\"combatPlayerDamage\"></div><h2>${typeof window.playerIdentityNameHtml===\"function\"?window.playerIdentityNameHtml({compact:true}):esc(typeof currentPlayerName===\"function\"?currentPlayerName():\"玩家\")} Lv.${state.level}</h2><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatPlayerHp\">${Math.round(hp)} / ${Math.round(maxHp)}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatPlayerBar\" style=\"width:${Math.max(0,Math.min(100,hp/maxHp*100))}%\"></span></div></div></div><div class=\"combat-vs arena-vs\">VS</div><div class=\"combatant enemy arena-enemy\" id=\"combatEnemyCard\"><div class=\"combat-damage\" id=\"combatEnemyDamage\"></div><div class=\"arena-combat-tier\">${esc(e.typeLabel||\"高維存在\")}</div><h2 id=\"combatEnemyName\">${esc(e.name||\"高維投影\")}</h2><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatEnemyHp\">${Math.round(Number(e.hp)||0)} / ${Math.round(Number(e.hp)||0)}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatEnemyBar\" style=\"width:100%\"></span></div></div></div></div><div class=\"combat-message arena-message\" id=\"combatMessage\">準備戰鬥</div></section>`;}"
+          ]
+        ]
+      ]
+    },
+    "thirdworldui.js": {
+      "beforeSha256": "d0c4159df9af3fc5b4188ba85735f50acf130f3900643e4be6d0d2a674c67970",
+      "edits": [
+        [
+          144,
+          145,
+          [
+            "  return `<section class=\"combat-screen third-world-combat-screen\"${presentation?` data-combat-presentation-token=\"${presentation.token}\"`:\"\"}><div class=\"combat-head main-minimal-mode-head third-world-combat-head\"><span class=\"main-minimal-mode-head-label third-world-combat-head-label\"><span>高維連戰・第 ${round} 場</span><small>死亡 ${deaths} / ${maxDeaths}｜目前最大 HP ${suppressionPct(capPercent)}｜${speedText}×</small></span><button type=\"button\" class=\"main-minimal-mode-enter\" onclick=\"openThirdWorldMinimalMode()\">極簡模式</button></div><div class=\"continuous-stop-wrap combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" class=\"btn danger\" onclick=\"stopThirdWorldRunFromPlayerUi()\">停止連續戰鬥</button></div><div class=\"combat-arena\"><div class=\"combatant player\" id=\"combatPlayerCard\"><div class=\"combat-damage\" id=\"combatPlayerDamage\"></div><h2>${typeof playerNameHtml===\"function\"?playerNameHtml():\"玩家\"} Lv.${whole(state?.level)}</h2><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatPlayerHp\">${fmt(playerStart)} / ${fmt(playerCap)}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatPlayerBar\" style=\"width:${playerPct}%\"></span></div></div></div><div class=\"combat-vs\">VS</div><div class=\"combatant enemy\" id=\"combatEnemyCard\"><div class=\"combat-damage\" id=\"combatEnemyDamage\"></div><h2 id=\"combatEnemyName\">${bossName}</h2><div class=\"big-hp\"><div class=\"status-label\"><span>HP</span><span id=\"combatEnemyHp\">${fmt(enemyStart)} / ${fmt(enemyMax)}</span></div><div class=\"bar\"><span class=\"hp\" id=\"combatEnemyBar\" style=\"width:${enemyPct}%\"></span></div></div></div></div><div class=\"combat-message\" id=\"combatMessage\">高維連戰進行中</div></section>`;"
+          ]
+        ]
+      ]
+    },
+    "worldmapui.js": {
+      "beforeSha256": "31d584cf83c04f5fcc65db6dc93ea447a1cb65c35bbdcc03cfab7fec71f09a4f",
+      "edits": [
+        [
+          415,
+          416,
+          [
+            "    const stop=continuous?`<div class=\"continuous-stop-wrap combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" class=\"btn danger\" onclick=\"requestSecondWorldContinuousStop()\" ${requested?\"disabled\":\"\"}>${requested?\"本場結束後停止\":\"停止連續戰鬥\"}</button></div>`:\"\";"
+          ]
+        ],
+        [
+          418,
+          419,
+          [
+            "      ${stop}<div class=\"combat-arena\">"
+          ]
+        ],
+        [
+          423,
+          424,
+          [
+            "      <div class=\"combat-message\" id=\"combatMessage\">準備戰鬥</div>"
+          ]
+        ]
+      ]
+    },
+    "dungeonui.js": {
+      "beforeSha256": "56eeff14b35b36d770cbbbb3c26902acef8e21324d1a9f78fd2f939280e5d04c",
+      "edits": [
+        [
+          86,
+          87,
+          [
+            "  if(window.CivilizationCombatViewport?.animationExpected?.())return; // animated mode waits for actual ready stage"
+          ]
+        ]
+      ]
+    }
+  }
+}

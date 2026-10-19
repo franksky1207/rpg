@@ -413,15 +413,15 @@
     const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
     const speedText=[1,1.5,2].includes(speed)?speed:1;
     const head=review?"宇宙紀元・回顧｜單場":continuous?`連續戰鬥・第 ${round} 場`:"單場戰鬥";
-    const stop=continuous?`<div class="continuous-stop-wrap"><button class="btn danger" onclick="requestSecondWorldContinuousStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
+    const stop=continuous?`<div class="continuous-stop-wrap combat-viewport-stop"><button data-combat-action="stop-continuous" class="btn danger" onclick="requestSecondWorldContinuousStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
     return `<section class="combat-screen universe-combat-screen">
       <div class="combat-head">${head}<span class="universe-combat-speed">${speedText}×</span></div>
-      <div class="combat-arena">
+      ${stop}<div class="combat-arena">
        <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${state.level}</h2>${review?'<div class="muted">純回顧挑戰｜無正式收益</div>':`<div class="muted">暗物質 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}　暗能量 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</div>`}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${Math.max(0,Math.floor(playerShownHp))} / ${Math.max(1,Math.floor(playerMax))}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div>${review?"":`<div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+progress.need}</span></div><div class="bar"><span class="xp" style="width:${progress.percent}%"></span></div></div>`}</div>
        <div class="combat-vs">VS</div>
        <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${encounter.name} Lv.${encounter.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${encounter.hp} / ${encounter.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div>
       </div>
-      <div class="combat-message" id="combatMessage">準備戰鬥</div>${stop}
+      <div class="combat-message" id="combatMessage">準備戰鬥</div>
     </section>`;
   }
 

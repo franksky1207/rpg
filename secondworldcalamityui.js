@@ -142,7 +142,7 @@
   const continuous=ui.mode==="continuous";
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
    <div class="calamity-combat-head"><span>${continuous?`連續討伐・第 ${Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1))} 場`:"單場挑戰"}</span></div>
-   ${continuous?`<div class="calamity-stop-wrap"><button class="btn danger" onclick="stopSecondWorldCalamityContinuousUI()">停止連續討伐</button></div>`:""}
+   ${continuous?`<div class="calamity-stop-wrap"><button data-combat-action="stop-continuous" class="btn danger" onclick="stopSecondWorldCalamityContinuousUI()">停止連續討伐</button></div>`:""}
    <div class="combat-screen calamity-combat"><div class="combat-arena">
     <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerName()} Lv.${state.level}</h2><div class="muted">ATK ${fmt(p.atk)}　DEF ${fmt(p.def)}<br>暴擊 ${Number(p.crit||0).toFixed(1)}%　閃避 ${Number(p.dodge||0).toFixed(1)}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(p.hp)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,php/p.hp*100))}%"></span></div></div></div>
     <div class="combat-vs">VS</div>
