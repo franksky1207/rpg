@@ -27,7 +27,7 @@
     "3d-test/shared-loader.js": "ca99e4943a4e6921886c3da2",
     "3d-test/t3a-hybrid-policy.js": "169cb6fd8eeae27dabe65cdf",
     "3d-test/t3b-formal-assets.js": "6606a61b83ccc8f59eb57537",
-    "3d-test/t3b-formal-controller.js": "74f8aa6f35bb7cd6eb21c178",
+    "3d-test/t3b-formal-controller.js": "d863318fd54649f8396c0900",
     "3d-test/t3b-formal-entry.js": "b1ad7a4791ffc64a626f07c6",
     "3d-test/t3b-formal-owner-clock.js": "878747628717866ac24d4d7f",
     "3d-test/t3b-formal-projection.js": "366c014746c30ed93d3f97fe",
