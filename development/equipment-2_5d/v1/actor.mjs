@@ -23,7 +23,6 @@ export class WholeSuitActor{
   c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.9+p.y));c.rotate(plan.clip==='attack'&&!this.entry.singleLayer?0:p.rotation);c.scale(p.scaleX,p.scaleY);
   if(p.trail){c.globalAlpha=p.trail;c.drawImage(this.lease.bitmap,-n*.5-n*.035,-n*.9,n,n);}
   c.globalAlpha=p.alpha;
-  let slash=p.slash;
   const attack=plan.clip==='attack'||plan.clip==='return'&&Number.isFinite(plan.attackElapsedMs),attackMs=plan.attackElapsedMs??plan.elapsedMs??plan.ms??0;
   if(attack&&(!this.wasAttack||attackMs<this.lastAttackMs))this.attackLayered=this.weaponReady;
   this.wasAttack=attack;this.lastAttackMs=attackMs;
@@ -31,7 +30,6 @@ export class WholeSuitActor{
   this.canvas.dataset&&(this.canvas.dataset.weaponReady=String(this.weaponReady));
   if(separated){
    const w=weaponPose(plan.attackElapsedMs??plan.elapsedMs??plan.ms??0,config),[gx,gy]=config.grip;
-   slash=w.slash;
    this.canvas.dataset&&(this.canvas.dataset.weaponStage=w.stage,this.canvas.dataset.weaponAngle=String(w.angle));
    c.translate(n*w.approach,0);c.drawImage(this.layers[0].bitmap,-n*.5,-n*.9,n,n);
    c.save();c.translate(n*(gx-.5),n*(gy-.9));c.rotate(w.angle);c.drawImage(this.layers[1].bitmap,-n*gx,-n*gy,n,n);c.restore();
@@ -40,7 +38,6 @@ export class WholeSuitActor{
   }else{this.canvas.dataset&&(this.canvas.dataset.weaponStage='inactive');c.drawImage(this.lease.bitmap,-n*.5,-n*.9,n,n);}
   if(p.flash){c.globalCompositeOperation='source-atop';c.globalAlpha=p.flash;c.fillStyle='#fff';c.fillRect(-n*.5,-n*.9,n,n);}
   c.restore();
-  if(slash){c.save();c.globalAlpha=slash*.6;c.strokeStyle='#c5efff';c.lineWidth=n*.018;c.beginPath();c.arc(n*.58,n*.43,n*.25,-1.1,1.1);c.stroke();c.restore();}
   return this.canvas;
  }
  dispose(){if(this.closed)return;this.closed=true;this.weaponAbort?.abort();this.signal?.removeEventListener('abort',this.abort);this.lease?.release();this.lease=null;for(const part of this.layers)part.release();this.layers=[];this.weaponReady=false;this.canvas.width=this.canvas.height=1;}

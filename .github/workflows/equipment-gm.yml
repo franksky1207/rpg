@@ -27,7 +27,7 @@ jobs:
           python3 scripts/formal-equipment-identities.py
           python3 scripts/equipment-sprites.py validate
           python3 scripts/equipment-gm-publication.py --check
-          node --test tests/equipment-gm/runtime.test.mjs
+          node --test tests/equipment-gm/no-attack-aura.test.mjs tests/equipment-gm/runtime.test.mjs
           node tests/equipment-gm/publication.cjs
           node tests/runtime/t4-preview-retirement.cjs
           node scripts/build-publish-dry-run.cjs

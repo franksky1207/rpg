@@ -153,7 +153,7 @@ async function prepareSuit(options){
 let spriteRuntime=null,spritePool=null;
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261018-lightweight1'),import('./equipment-sprites-v1/assets.mjs?v=20261018-lightweight1')]);
+ spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-no-arc1'),import('./equipment-sprites-v1/assets.mjs?v=20261018-lightweight1')]);
  const [{WholeSuitActor},{createSpritePool}]=await spriteRuntime;
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});

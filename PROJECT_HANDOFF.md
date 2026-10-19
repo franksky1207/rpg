@@ -1,3 +1,5 @@
+> **第12批最新承接（未封箱）**：以最新main `9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a`（PR #42）為基準。共用Actor移除半月光環、GM預設單一角色預覽，保留舊戰場自動化能力。三紀元垂臂／張掌候選不足以自然突刺，正式突刺、刀尖接觸及發布仍阻擋；不得宣稱36/36或合併發布完成。36項矩陣、最少補圖方案與驗收界線見 `docs/COMBAT_ANIMATION_RENEWAL_BATCH12_EXECUTION_2026-10-19.md`。以下歷史狀態以各批當時紀錄閱讀。
+
 > **新版第11批最終整合（2026-10-19）**：沿用 PR #42／`batch11-audio-resource-mobile-performance-20261019`；main 基準 `79da871`。修正正式 Sprite 去重狀態漏宣告造成第一次 sample 回退，保留原背景／極簡／數值與全部測試斷言；補上 lazy audio 原生瀏覽器回歸與資源快取識別。完整結果及封箱門檻見 `docs/COMBAT_ANIMATION_RENEWAL_BATCH11_AUDIO_RESOURCES_MOBILE_PERFORMANCE_2026-10-19.md`；修復提交 `9b9ede9d` 六項 PR Actions 全綠；本機 Batch 6 為 16 類、32/32、36 個不同原始測試，歷史分類使用同次完整執行證據。正式工程封箱以 PR #42 最終 head 六項 Actions、合併後最新 main 必要 Actions 及 Pages 全成功共同判定；最終 SHA 由 PR merge event 與同 SHA Actions 查核。iPhone 真機溫度／耗電與真帳號雲端寫入未測。
 
 > **第7批最新承接**：三套完整持劍透明WebP、正式Renderer／Pool六動作、轉生設定及GM已完成輕量整合施工；30項與工程證據見 `docs/BATCH7_LIGHTWEIGHT_FINAL_ACCEPTANCE_2026-10-18.md`。本檔以下舊狀態保留追溯，精準手指／握點要求不再阻擋；是否封箱以PR #38最新同SHA Actions及Pages報告為準。第8批與Issue #37未施工。

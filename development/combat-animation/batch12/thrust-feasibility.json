@@ -1,0 +1,101 @@
+{
+  "schema": "cw.batch12.thrust-feasibility.v1",
+  "baseline": "9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a",
+  "productionThrustAccepted": false,
+  "trial": "analytical anchored-handle / small-wrist / translation trials; no new artwork generated",
+  "limitations": "Approximate manual landmarks, not runtime collision measurements or visual animation approval.",
+  "entries": [
+    {
+      "era": "galaxy",
+      "sourceLandmarksApproximate": true,
+      "gripAnchoredTrial": {
+        "handleSeparationPx": 0,
+        "bladeDownAngleDegrees": 34.45,
+        "remainingDownAngleAfter10DegreeWrist": 24.45
+      },
+      "translationTrial": {
+        "weaponExtensionAt512Px": 40,
+        "handSeparationAt180Px": 14.06,
+        "armPoseMoves": false
+      },
+      "verdict": "needs-coordinated-arm-poses; translation detaches grip, wrist-only points down",
+      "minimumArt": [
+        "transparent matched windup body pose with closed gripping hand",
+        "transparent matched extended-thrust body pose with closed gripping hand"
+      ],
+      "reusable": "existing independent weapon; supply matching grip anchors for both poses"
+    },
+    {
+      "era": "universe",
+      "sourceLandmarksApproximate": true,
+      "gripAnchoredTrial": {
+        "handleSeparationPx": 0,
+        "bladeDownAngleDegrees": 37.78,
+        "remainingDownAngleAfter10DegreeWrist": 27.78
+      },
+      "translationTrial": {
+        "weaponExtensionAt512Px": 40,
+        "handSeparationAt180Px": 14.06,
+        "armPoseMoves": false
+      },
+      "verdict": "needs-coordinated-arm-poses; translation detaches grip, wrist-only points down",
+      "minimumArt": [
+        "transparent matched windup body pose with closed gripping hand",
+        "transparent matched extended-thrust body pose with closed gripping hand"
+      ],
+      "reusable": "existing independent weapon; supply matching grip anchors for both poses"
+    },
+    {
+      "era": "higher",
+      "sourceLandmarksApproximate": true,
+      "gripAnchoredTrial": {
+        "handleSeparationPx": 0,
+        "bladeDownAngleDegrees": 44.56,
+        "remainingDownAngleAfter10DegreeWrist": 34.56
+      },
+      "translationTrial": {
+        "weaponExtensionAt512Px": 40,
+        "handSeparationAt180Px": 14.06,
+        "armPoseMoves": false
+      },
+      "verdict": "needs-coordinated-arm-poses; translation detaches grip, wrist-only points down",
+      "minimumArt": [
+        "transparent matched windup body pose with closed gripping hand",
+        "transparent matched extended-thrust body pose with closed gripping hand"
+      ],
+      "reusable": "existing independent weapon; supply matching grip anchors for both poses"
+    }
+  ],
+  "sourceChecks": [
+    {
+      "path": "galaxy_attack_body.jpeg",
+      "sha256": "425771d77267b4c71a621b025cc1cfebfdccf9b23fa1c5882a76dd53f6d5bc04",
+      "bytes": 244984
+    },
+    {
+      "path": "galaxy_weapon.png",
+      "sha256": "a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d",
+      "bytes": 684261
+    },
+    {
+      "path": "universe_attack_body.jpeg",
+      "sha256": "80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42",
+      "bytes": 586797
+    },
+    {
+      "path": "universe_weapon.png",
+      "sha256": "5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad",
+      "bytes": 612210
+    },
+    {
+      "path": "higher_body_no_weapon_v2.png",
+      "sha256": "7dff371cf2aac63478f2b5eada2a85313da2944ca591d20718d15ba94461bb7b",
+      "bytes": 2192943
+    },
+    {
+      "path": "higher_weapon_independent_v2.png",
+      "sha256": "1bd7d53030efabc1d0c08e1c9659221e9dd323bd16a06a9366a5574fb43494c1",
+      "bytes": 1483886
+    }
+  ]
+}

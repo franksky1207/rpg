@@ -214,3 +214,6 @@ html{scroll-behavior:auto!important}
  .gm-b-published-arena .gm-b-enemy small{font-size:11px}
  .gm-b-published-arena .gm-b-scenery{background-image:url("../assets/backgrounds/battle-main/mobile.webp")}
 }
+
+/* Batch12: one direct preview, no category/catalog navigation. */
+.center-layout{display:block}
