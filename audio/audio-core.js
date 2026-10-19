@@ -83,7 +83,7 @@ function previewLevel(key,value){
 }
 function resetPreview({resetLevels=false}={}){stopCombat();stopPreview();if(resetLevels)previewLevels={master:defaults.master,music:defaults.music,ambient:defaults.ambient,battle:defaults.battle,ui:defaults.ui,notice:defaults.notice};}
 function setLevel(key,value){if(!channels.includes(key)&&!["enabled","musicEnabled","effectsEnabled"].includes(key))return false;if(["enabled","musicEnabled","effectsEnabled"].includes(key))prefs[key]=!!value;else prefs[key]=Math.max(0,Math.min(1,Number(value)||0));const persisted=persist();reconcile();document.dispatchEvent(new CustomEvent("civilization-audio-settings-changed",{detail:{key}}));if(music)music.volume=normalizeVolume("music",prefs.master,prefs.music);refreshFormalSfxVolume();if(session)session.volume=previewGain(session.dataset.channel||"music");return persisted;}
-function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)warmCombatSfx();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
+function unlock(){const first=!unlocked;unlocked=true;reconcile();if(first)document.dispatchEvent(new Event("civilization-audio-unlocked"));}
 let previewRequest=0;
 function previewReport(detail){document.dispatchEvent(new CustomEvent("civilization-audio-preview-status",{detail}));}
 function playbackError(error){return String(error?.name||"Error")+": "+String(error?.message||error||"未知播放失敗");}
@@ -207,7 +207,7 @@ function preparedSample(category,index,{retry=false}={}){
  preparedSfx.set(url,slot);audio.load();return slot;
 }
 function warmCombatSfx(){
- if(document.hidden||minimal())return false;
+ if(document.hidden||minimal()||!unlocked||!prefs.enabled||!prefs.effectsEnabled)return false;
  for(const [category,indices] of Object.entries(warmChoices))for(const index of indices)preparedSample(category,index,{retry:true});
  return true;
 }
@@ -355,7 +355,7 @@ function playSpatial(id,{position=null,volume=1,simulation=false}={}){
 }
 function runtimeStats(){return {sfxVoices:sfxVoices.size,music:!!music,formalMusicVoices:musicVoices.size,preview:!!session,combatVoices:combatVoices.size,unlocked,prohibited:prohibited(),listener:{...listener}};}
 document.addEventListener("DOMContentLoaded",()=>prioritizeEraTheme(currentEraForAudio()),{once:true});
-document.addEventListener("visibilitychange",()=>{update();if(!document.hidden&&unlocked&&prefs.effectsEnabled)warmCombatSfx();});
+document.addEventListener("visibilitychange",()=>{update();if(document.hidden)releasePreparedSfx();});
 window.addEventListener("pagehide",()=>{stop();stopGmSfx();releasePreparedSfx();if(spatialContext&&spatialContext.state!=="closed"){spatialContext.close().catch(()=>{});spatialContext=null;}},{passive:true});
 document.addEventListener("pointerdown",()=>{prioritizeEraTheme(currentEraForAudio());unlock();if(music&&music.paused&&!musicMuted()&&!document.querySelector('[data-gm-section="gm-audio-test"][open]'))resumeMusic();},{passive:true});
 // UI interaction clicks are intentionally silent; combat sound effects remain enabled.
