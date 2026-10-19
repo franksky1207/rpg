@@ -72,7 +72,6 @@ function notify(type,detail={}){
  if(type==="navigation")return syncView(detail.view,detail.subScreen);
  const era=detail.era||phase();
  if(type==="combat-start"){
-  g.CivilizationAudio?.warmCombatSfx?.();
   // Existing callers may start each round of a continuous run. Preserve the
   // active score for identical unlabelled rounds; explicit IDs can replace it.
   const requested=detail.runId==null?null:String(detail.runId);
