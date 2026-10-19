@@ -284,6 +284,7 @@
     "cloudsave.js": "afedf0f46179d8edec1e3cbb",
     "cloudsaveguide.js": "4e64b7f52924d6fe6d86ef11",
     "combat-events.js": "6823e682abc56eee90243240",
+    "combat-viewport-coordinator.js": "7d739052fe6e4df0b96769a8",
     "combatcore.js": "f26e8b556618cab2cf3fa65c",
     "combatfx.js": "1ed3f8f6aebe100b354c2327",
     "combatfxintegrity.js": "9346aeca677e64969d950a56",
@@ -528,7 +529,6 @@
     "worldphase.js": "a248c2fe6f07a80844d96bff",
     "worldphaseui.css": "ce3666950d7af88813085d22",
     "worldphaseui.js": "7a1c46eed72041511ed40654",
-    "worldtransitionsafety.js": "d6dfaf4816fbb36dc65afa39",
-    "combat-viewport-coordinator.js": "7d739052fe6e4df0b96769a8"
+    "worldtransitionsafety.js": "d6dfaf4816fbb36dc65afa39"
   }
 }
