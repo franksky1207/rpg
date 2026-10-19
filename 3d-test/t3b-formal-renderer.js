@@ -209,7 +209,19 @@ async function createSuit(options,bundle){
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
  const timer=setTimeout(cancel,5000);let actor;
  try{actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();}
- catch(error){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw error;}
+ catch(error){
+  if(!/^sprite-(?:bytes|sha|decode)$/.test(String(error?.message||''))||timeout.signal.aborted||signal.aborted){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw error;}
+  try{
+   // Refresh only the approved suit's assets, then initialize once more.
+   for(const asset of [bundle.entry.asset,bundle.entry.weaponAnimation?.body].filter(Boolean)){
+    const response=await fetch(asset.path+'?asset='+asset.sha256.slice(0,24)+'&sprite-repair=1',{signal:timeout.signal,cache:'reload'});
+    if(!response.ok)throw Error('sprite-repair-http:'+response.status);
+    await response.arrayBuffer();
+   }
+   spritePool?.clear();
+   actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();
+  }catch(repairError){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw repairError;}
+ }
  clearTimeout(timer);
  let closed=false,activeClip='idle',lastActorRenderKey=null,lastActorShift=null;
  const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();host.querySelector('.formal-b-enemy-sprite')?.remove();actor.dispose();};
