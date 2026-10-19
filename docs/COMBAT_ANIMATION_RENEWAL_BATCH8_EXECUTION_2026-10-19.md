@@ -1,6 +1,6 @@
 # 《文明戰線》新版第8批施工與驗收追蹤（2026-10-19）
 
-> **狀態：施工中，未封箱，未合併 main。** 正式對外狀態僅以 GitHub 最新 main 對應 Actions / Pages 為準；本文不得冒充驗收成功。
+> **狀態：正式程式與 GitHub Pages 已發布；自動化驗收封箱，真機及擴充覆蓋保留待補。** GitHub `main` 才是唯一真實來源，不把 CI 模擬當作 iPhone 真機通過。
 
 ## 使用者正式確認的版面
 
@@ -56,6 +56,34 @@
 3. 施工 SHA 與合併後 main SHA 分開核對；必須查正式 Pages 的當次版本。
 4. 沒有 iPhone 真機／熱節流數值不得聲稱真機流暢驗收；CI viewport 不算。
 5. 成功後才填寫四段最終報告：修改內容、程式自檢、Actions／實機、提交 SHA 與待補事項。
+
+## 第8批正式發布封箱紀錄（2026-10-19）
+
+### 一、修改內容
+- PR [#39](https://github.com/franksky1207/rpg/pull/39) 已合併，合併提交 `0396005e9acfd4b837c74051ebc2e4fa12097487`。
+- 正式主角 Sprite 脫離玩家資訊卡，在獨立舞台左側面向右；右側使用與正式 owner sample 同步的怪物共用輕量 Canvas 輪廓，並依正式敵方身分區分普通／菁英／Boss。
+- 桌機為戰場上方＋雙方資訊下方；手機為敵方資訊／左右戰場／玩家資訊。已隱藏舊戰鬥文字訊息框，保留文字及極簡模式的正式回退。
+- 副本手機連戰維持以穩定戰鬥標題為捲動錨；沒有更動正式戰鬥計算、轉生、獎勵、存檔或 Save Schema 17。
+
+### 二、程式自我檢查與24項證據界線
+- **01～06**：正式 DOM、CSS、手機 B、桌機左右雙角與邊界已由 Formal Battle Playwright 斷言及既有副本 viewport smoke 覆蓋；全面實機尺寸仍待補。
+- **07～12**：三紀元 Sprite、玩家動作、怪物替代輪廓及怪物分級已提交；Batch7 圖片安全測試、Formal Battle 回歸成功。全部怪物專屬圖、完整左攻細節及逐隻 Boss 真機回歸不宣稱通過。
+- **13～17**：保留共用 formal owner clock、正式 Presenter、HP／護盾計算與回退架構；正式戰鬥及 Batch6 16 類整合成功。未涵蓋的特殊事件人工觀察列待補。
+- **18～21**：未新增第二套 RAF 或戰鬥時鐘；SpritePool 與 GM 正式整合回歸成功。真機熱節流、GM 全缺圖情境及長時間連戰待補。
+- **22～24**：已確認同 SHA GitHub Actions、Pages 建置與部署結果；Chrome viewport 不等於真機。以上分類為既有測試支持的證據與限制，並非聲稱24項全部逐項真機通過。
+
+### 三、GitHub Actions、Pages 及驗收
+- PR 頭部 `db5fe59696565673908564c0b952f92a99628154`：六項同 SHA 的 PR Actions success。
+- 合併 SHA `0396005e9acfd4b837c74051ebc2e4fa12097487`：發現 HTML JS CSS Cache Version Guard 失敗，已在主分支後續修復，不以該合併 SHA 宣稱全綠。
+- 修復後 main SHA `2a7a9ed6bd6a329439ab49dd2bf5e2c44e274dea`：查核到 **14／14 項當次 GitHub Actions success**，含 Runtime Integrity、Formal Battle、Batch6 16 類、GM、Batch7、Cache Version Guard、Publish Asset Audit、Publish Release Gate、Publication Dry Run、Publish Optimized GitHub Pages。
+- GitHub Pages 正式發佈：[Publish Optimized GitHub Pages run #39176357053](https://github.com/franksky1207/rpg/actions/runs/39176357053)；當次 build-and-verify 及 deploy 工作均 success。
+- 正式 URL：<https://franksky1207.github.io/rpg/>。本紀錄證明 GitHub Actions 發佈成功；沒有 iPhone 本機載入、溫度或帳號存檔的真機驗證證據。
+
+### 四、提交、封箱界線與待補
+- 第8批**程式整合、自動化回歸與 Pages 發佈已達可發布狀態**；第8批的 **真機及完整覆蓋驗收仍列待補**，不標示 24／24 全數通過。
+- 待補：iPhone Safari 真機長時間連戰／熱節流、各大小裝置完整畫面、三紀元所有合法副本與特殊 Boss、GM 雙角缺圖回退逐項操作。
+- 延後議題：高維十王 Issue #37 仍不在本批修改範圍。
+- 本次文件補記本身若另產生新的 main SHA，須再以新 SHA 核對 Actions 與 Pages，不能拿先前 SHA 的綠燈代替。
 
 ## 目前明確未完成的事項
 
