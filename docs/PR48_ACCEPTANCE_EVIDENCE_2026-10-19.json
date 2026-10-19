@@ -498,5 +498,17 @@
     ]
   },
   "realDevice": false,
-  "closed": false
+  "closed": false,
+  "providerIncident": {
+    "name": "Degraded availability for GitHub Actions, GitHub Pages and Webhooks",
+    "status": "investigating",
+    "updated_at": "2026-10-19T15:56:34.100Z",
+    "shortlink": "https://stspg.io/nrv2k8s68bwn"
+  },
+  "strictTestSupplementSha": "0767436fd4c0aa77884a61841040abed36dfff79",
+  "codeMergeCompletedActionsVerified": 20,
+  "strictSupplementActionsObserved": {
+    "queued": 13,
+    "completed": 0
+  }
 }

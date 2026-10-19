@@ -33,7 +33,11 @@
 
 正式站 https://franksky1207.github.io/rpg/ 已實際取回本批 HTML、最佳化 manifest 與 26 個變動資源／依賴，bytes／SHA／JS MIME 均與正式候選吻合；含六張原 Sprite、共用模組、SW 與 client。最佳化 manifest 為 413 個指紋，原始庫完整 manifest 為 528 個，不能混為同一份。候選 37,862,709 bytes，32 張背景、17 個音訊、5 類 SFX，零遺漏依賴。
 
-GitHub 聚合狀態曾與實際執行紀錄不一致：Runtime 的 attempt 1 API 已為 completed/success、完整 log 已完成所有測試／upload／cleanup，但部分 run/job 聚合仍顯示 in_progress；Pages deploy log 已 `Reported success`，Pages deployment API 為 `succeed`、正式資產已驗證，但 workflow 聚合仍 waiting／queued。已確認環境允許 main、無人工 reviewer；review API 回 403、取消／強制取消回 409、直接重跑回「already running」。沒有因此修改部署保護、停用 workflow 或跳過測試。新的驗收提交將再次跑必要 CI；最終同 SHA 成功狀態及封箱結果必須重新核對，不能以此段描述代替成功終態。
+程式合併 SHA `7b8138bff0fa414037ffe72ab864848cc7a05f79` 的 20 項 Actions，已透過 GitHub `status=completed` 同 SHA 集合逐項確認全部 completed/success；先前部分聚合 API 的舊狀態不能當成仍在執行。該 SHA 的 Pages deployment 為 succeed，正式站資產已如上逐檔驗證。
+
+嚴格六勝測試與 Runtime 觸發補充提交 `0767436fd4c0aa77884a61841040abed36dfff79` 已推至 main 及原 PR 分支，本機嚴格測試成功，但其 13 項 Actions 全部 queued、尚未開始，不能宣稱該提交 CI 或 Pages 通過。GitHub 官方於 2026-10-19 15:49 UTC 公告 [Actions、Pages、Webhooks 可用性事故](https://stspg.io/nrv2k8s68bwn)，觀察時狀態 investigating，明確指出 workflow processing、site builds、webhook delivery 延遲。這是服務端外部阻礙；沒有降低測試門檻或解除部署保護。
+
+本文件補充後仍須等待最新 main 同 SHA 必要 Actions 全部成功與 Pages 發布，再核對正式資產。在此之前本批**尚未封箱**。精確最新 main SHA 與執行狀態另記錄於既有 PR #48，避免文件自引用 SHA 無止境提交。
 
 ## 證據
 
