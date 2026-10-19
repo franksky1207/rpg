@@ -8,7 +8,7 @@ const animationExpected=()=>global.CivilizationPresentationMode?.combatAnimation
 const live=()=>mobile()&&animationExpected()&&doc.visibilityState!=="hidden"&&!doc.body?.classList.contains("main-minimal-mode-open")&&global.gmBackgroundBattleEnabled?.()!==true;
 const usableStage=screen=>{
  const stage=screen?.querySelector(".formal-b-shared-stage:not([hidden]),.formal-b-battle-stage:not([hidden])");
- return stage&&stage.getBoundingClientRect().height>0?stage:null;
+ return stage||null; // no layout read during HUD mutation observation
 };
 const stopControl=screen=>{
  const scope=screen.closest(".calamity-battle-shell")||screen;
@@ -37,7 +37,8 @@ function position(){
  if(!stage)return;
  const stop=moveStop(screen,stage);
  if(manual||!stage.isConnected)return;
- const area=stage.getBoundingClientRect(),control=stop?.getBoundingClientRect();
+ const area=stage.getBoundingClientRect();if(area.height<=0)return;
+ const control=stop?.getBoundingClientRect();
  const top=control?Math.min(control.top,area.top):area.top;
  const bottom=control?Math.max(control.bottom,area.bottom):area.bottom;
  const vp=global.visualViewport,offset=Number(vp?.offsetTop)||0;
