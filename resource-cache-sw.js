@@ -75,6 +75,9 @@ async function media(request){
 // Background preload is deliberately limited to shipped gameplay media, not raw source/audio libraries.
 let preloadJob=null,preloadGeneration=0;
 function shouldPreload(p){
+ // Six released player sprites (three eras x standing/attack atlas) are part of formal combat.
+ // Exact whitelist excludes GM previews, old equipment models, and unpublished assets.
+ if(/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(p))return true;
  if(p.startsWith("assets/backgrounds/"))return MEDIA.test(p);
  if(p.startsWith("audio/assets/era-themes/"))return p.endsWith("-theme-loop.ogg");
  if(p.startsWith("audio/assets/battle-themes/"))return p.endsWith("-battle-loop.ogg");
@@ -85,7 +88,7 @@ function shouldPreload(p){
   return m[1]==="normal-attack"||m[1]==="critical"?n<=3:m[1]==="dodge"||m[1]==="victory"?n===1:[4,5,29].includes(n);
  }
  // New models are cached only after a scene requests them. Manifest membership
- // never grants global preloading; retain exactly the existing 49 selected media.
+ // never grants global preloading; retain 49 existing media plus six formal player sprites.
  return false;
 }
 async function preloadAssets(report){
