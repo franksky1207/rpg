@@ -150,8 +150,20 @@ async function prepareSuit(options){
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
  verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null});return token;
 }
+// Repair a mismatched formal sprite at the fetch boundary; leave generated GM pool unchanged.
+async function verifiedFormalSpriteFetch(url,options){
+ const requestUrl=new URL(url,global.location.href),expected=requestUrl.searchParams.get('sha');
+ const first=await global.fetch(url,options);
+ if(!first.ok||!expected||!/^[a-f0-9]{64}$/.test(expected))return first;
+ const raw=await first.clone().arrayBuffer();
+ const digest=Array.from(new Uint8Array(await global.crypto.subtle.digest('SHA-256',raw)),b=>b.toString(16).padStart(2,'0')).join('');
+ if(digest===expected)return first;
+ const repair=new URL(requestUrl.href);
+ repair.searchParams.delete('sha');repair.searchParams.set('asset',expected.slice(0,24));repair.searchParams.set('repair','1');
+ return global.fetch(repair,{...options,cache:'reload'});
+}
 let spriteRuntime=null,spritePool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
-const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261020-sprite-repair1')]).catch(error=>{spriteRuntime=null;throw error;}));
+const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
 const warmAllowed=()=>!global.document?.querySelector?.('#main .combat-screen')&&!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
 function cancelWarmup(){
  clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);warmIdle=null;
@@ -173,7 +185,7 @@ function warmSprites(){
   const [{release},[,poolModule]]=await Promise.all([import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),runtime()]);
   if(ac.signal.aborted||!warmAllowed()||warmIdentity()?.visualId!==identity.visualId)return false;
   const entry=release.entries.find(e=>e.id==='era-'+identity.visualId);if(!entry)return false;
-  spritePool ||= poolModule.createSpritePool({usage:'formal'});
+  spritePool ||= poolModule.createSpritePool({usage:'formal',fetcher:verifiedFormalSpriteFetch};
   // Same content-addressed pool as live actors. At most two 512-square bitmaps
   // (2 MiB decoded) for this appearance, never an actor, canvas, RAF or GPU engine.
   for(const layer of [null,'body']){
@@ -205,7 +217,7 @@ async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
  const [{WholeSuitActor},{createSpritePool}]=await runtime();
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
- spritePool ||= createSpritePool({usage:'formal'});
+ spritePool ||= createSpritePool({usage:'formal',fetcher:verifiedFormalSpriteFetch};
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
  const timer=setTimeout(cancel,5000);let actor;
  try{actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();}
