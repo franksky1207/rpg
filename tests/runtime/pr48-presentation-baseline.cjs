@@ -8,7 +8,18 @@ function original(p){
  const before=cp.execFileSync('git',['show',patch.baseline+':'+p],{maxBuffer:8*1024*1024});
  assert.equal(crypto.createHash('sha256').update(before).digest('hex'),row.beforeSha256);
  const lines=before.toString().split('\n');for(const [start,end,text] of [...row.edits].reverse())lines.splice(start,end-start,...text);const expected=lines.join('\n');
- assert.equal(fs.readFileSync(p,'utf8'),expected,'source differs from exact approved PR48 presentation patch: '+p);
+ let approved=expected;
+ if(p==='index.html'){
+  const amendments=[
+   ['combatsettlementpolish.css?v=20260914-maintenance1','combatsettlementpolish.css?v=20261020-combat-glass1'],
+   ['3d-test/t3b-formal-renderer.js?v=20261019-batch12-rising-cut1','3d-test/t3b-formal-renderer.js?v=20261020-sprite-repair1']
+  ];
+  for(const [oldValue,newValue] of amendments){
+   assert.equal(approved.split(oldValue).length,2,'approved PR49 cache version anchor must be unique');
+   approved=approved.replace(oldValue,newValue);
+  }
+ }
+ assert.equal(fs.readFileSync(p,'utf8'),approved,'source differs from exact approved PR48 + PR49 presentation patches: '+p);
  return before;
 }
 module.exports={original};

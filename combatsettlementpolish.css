@@ -259,3 +259,10 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
   html body #offlineRewardPage .offline-section{background:rgba(14,20,26,.95)}
   html body #offlineRewardPage .offline-reward-card{background:rgba(13,19,25,.97)}
 }
+
+/* Combat-only glass: preserve layout, text, HUD and existing mode accents. */
+#main>.calamity-shell:has(.calamity-combat)>.calamity-panel{background:rgba(7,11,18,.28)}
+#main>.combat-screen .combatant,#main .calamity-combat .combatant,#main .w3-arena-panel:has(.combat-screen) .combatant{background:linear-gradient(180deg,rgba(25,31,40,.44),rgba(10,15,22,.52))!important}
+#main .dungeon-bounty-player,#main .arena-player,#main .void-player{background:linear-gradient(180deg,rgba(23,34,43,.44),rgba(13,21,29,.52))!important}
+#main .dungeon-bounty-enemy,#main .arena-enemy,#main .void-enemy{background:linear-gradient(180deg,rgba(40,29,39,.46),rgba(20,17,28,.54))!important}
+#main .w3-arena-panel:has(.combat-screen){background:linear-gradient(180deg,rgba(23,27,42,.34),rgba(16,19,29,.40))}
