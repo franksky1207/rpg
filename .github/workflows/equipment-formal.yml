@@ -61,6 +61,7 @@ jobs:
           node tests/equipment-formal/failures.cjs
           node tests/equipment-formal/review.cjs
           node tests/equipment-formal/higher-dungeons.cjs
+          node tests/runtime/batch11-audio-lazy-browser.cjs
           FORMAL_SPRITE_ACCEPTANCE=1 node tests/runtime/audio-lifecycle-browser.js
       - uses: actions/upload-artifact@v4
         if: always()
@@ -71,5 +72,6 @@ jobs:
             /tmp/weapons-*.png
             /tmp/equipment-weapons-*.json
             /tmp/equipment-formal-*.json
+            /tmp/batch11-audio-lazy-browser.json
             /tmp/formal-http.log
             /tmp/equipment-phase6-dependencies.json

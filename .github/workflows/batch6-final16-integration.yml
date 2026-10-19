@@ -4,12 +4,14 @@ on:
     branches: [feat/combat-renewal-batch6-final-20261018, main]
     paths:
       - 'scripts/batch6-final16-evidence.cjs'
+      - 'scripts/batch6-suite-runner.cjs'
       - 'tests/runtime/**'
       - '.github/workflows/batch6-final16-integration.yml'
       - 'docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md'
   pull_request:
     paths:
       - 'scripts/batch6-final16-evidence.cjs'
+      - 'scripts/batch6-suite-runner.cjs'
       - 'tests/runtime/**'
       - '.github/workflows/batch6-final16-integration.yml'
       - 'docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md'
@@ -36,10 +38,19 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch6-http.log 2>&1 &
           for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done
           node --check scripts/batch6-final16-evidence.cjs
+          node tests/runtime/batch6-suite-runner.cjs
           node scripts/batch6-final16-evidence.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: batch6-final16-evidence
-          path: batch6-final16-evidence.json
+          path: |
+            batch6-final16-evidence.json
+            batch6-final16-logs/
+            batch1-fixed12-evidence.json
+            batch2-final13-evidence.json
+            batch3-integrated-evidence.json
+            /tmp/cross-era-background-browser.json
+            /tmp/thirdworld-background-browser.json
+            /tmp/batch11-audio-lazy-browser.json
           if-no-files-found: error

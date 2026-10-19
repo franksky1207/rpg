@@ -162,7 +162,7 @@ async function createSuit(options,bundle){
  try{actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();}
  catch(error){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw error;}
  clearTimeout(timer);
- let closed=false,activeClip='idle';
+ let closed=false,activeClip='idle',lastActorRenderKey=null,lastActorShift=null;
  const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();host.querySelector('.formal-b-enemy-sprite')?.remove();actor.dispose();};
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
@@ -182,10 +182,15 @@ async function createSuit(options,bundle){
  const enemyKind=String(bundle.enemyKind||'').toLowerCase();
  const rank=/boss|首領|魔王|王者|災厄/.test(enemyKind+' '+kind)?'boss':/elite|菁英|精英/.test(enemyKind+' '+kind)?'elite':'normal';
  host.dataset.enemyRank=rank;
+ let lastEnemyRenderKey=null;
  function drawEnemy(frame){
   const e=frame.enemy||frame;
   const ms=Math.max(0,Math.min(700,e.elapsedMs||0)),t=ms/700;
   const approach=Math.max(0,Math.min(.42,e.approach||0));
+  // Use a local key instead of mutating data-* attributes on every animation sample.
+  const renderKey=`${e.clip||'idle'}:${Math.floor(ms/35)}:${Math.round(approach*1000)}`;
+  if(lastEnemyRenderKey===renderKey)return;
+  lastEnemyRenderKey=renderKey;
   ec.clearRect(0,0,256,256);ec.save();
   ec.translate(128,222);
   // Opponent faces left, toward the player; effects stay inside its own canvas.
@@ -211,9 +216,22 @@ async function createSuit(options,bundle){
   if(closed||signal.aborted||!isCurrent())return false;
   const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
-  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
-  actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0}px)`;
-  actor.canvas.dataset.clip=p.clip;drawEnemy(frame);return true;
+  // The official owner still samples every RAF; only duplicate pixels are skipped.
+  // Active animation is sampled at 30 FPS and idle at 20 FPS on mobile-sized canvases.
+  const elapsed=Number.isFinite(p.elapsedMs)?Math.max(0,p.elapsedMs):0;
+  const step=p.clip==='idle'?50:35;
+  const actorTick=Math.floor(elapsed/step);
+  const attackTick=weapon?Math.floor(Math.max(0,frame.weaponAttack.elapsedMs||0)/35):-1;
+  const actorKey=`${p.clip}:${actorTick}:${attackTick}`;
+  if(lastActorRenderKey!==actorKey){
+   actor.draw({clip:p.clip,elapsedMs:actorTick*step,attackElapsedMs:weapon?attackTick*35:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
+   lastActorRenderKey=actorKey;
+  }
+  const shift=Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0;
+  const shiftKey=Math.round(shift*10)/10;
+  if(lastActorShift!==shiftKey){actor.canvas.style.transform=`translateX(${shiftKey}px)`;lastActorShift=shiftKey;}
+  if(actor.canvas.dataset.clip!==p.clip)actor.canvas.dataset.clip=p.clip;
+  drawEnemy(frame);return true;
  }
  return Object.freeze({sample,resize(){},dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
