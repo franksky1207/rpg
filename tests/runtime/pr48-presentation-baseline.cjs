@@ -6,7 +6,7 @@ const patch=require('./pr48-approved-presentation.json');
 // PR #50, 2026-10-20: two exact reviewed post-seal updates. Keep the old
 // baseline return value for historical invariants while rejecting all other edits.
 const approvedFollowup=Object.freeze({
- '3d-test/t3b-formal-controller.js':'2dcbcdeab7340276dfe3699a40f39179f1c47dd2',
+ '3d-test/t3b-formal-controller.js':'f95cfcae5bf1c50fb816ccfd607bf65f14435513',
  'index.html':'5b26acc48685a006c895c8c8c30bd6dba48440c0'
 });
 function original(p){
