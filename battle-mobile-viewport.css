@@ -54,3 +54,11 @@
  #main .function-page .setting-row input[type="checkbox"]{flex-shrink:0}
  #main .dungeon-bounty-combat .controls,#main .arena-combat .controls,#main .void-combat .controls{max-width:100%;flex-wrap:wrap}
 }
+
+/* Unified animated viewport: move each existing stop control above the visible stage. */
+@media(max-width:820px){
+ #main .combat-screen>.combat-viewport-stop{display:flex;justify-content:center;align-items:center;flex:none;order:-2;margin:8px 0 10px;max-width:100%;position:relative;z-index:2}
+ #main .combat-screen>.combat-viewport-stop .btn{min-height:44px;min-width:min(185px,85%);max-width:100%;touch-action:manipulation}
+ #main .combat-screen.formal-b-shared-layout>.formal-b-shared-stage{order:-2}
+ #main .combat-screen.formal-b-shared-layout>.combat-viewport-stop{order:-2}
+}
