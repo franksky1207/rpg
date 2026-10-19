@@ -72,5 +72,6 @@ jobs:
             /tmp/weapons-*.png
             /tmp/equipment-weapons-*.json
             /tmp/equipment-formal-*.json
+            /tmp/batch11-audio-lazy-browser.json
             /tmp/formal-http.log
             /tmp/equipment-phase6-dependencies.json

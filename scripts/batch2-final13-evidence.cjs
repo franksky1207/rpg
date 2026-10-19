@@ -15,6 +15,8 @@ const cases=[
 ["12 broad existing regression","scripts/batch1-fixed12-evidence.cjs"],
 ["13 release manifest","tests/runtime/resource-manifest-integrity.js"]
 ];
+module.exports=cases;
+if(require.main===module){
 let results=[];
 for(const [scope,file] of cases){
  const start=performance.now();
@@ -25,3 +27,5 @@ for(const [scope,file] of cases){
 const report={schema:"cw.batch2.final13.evidence.v1",sha:process.env.GITHUB_SHA||"local",scope:"Fixed original Batch2 15 items; 13 remaining categories. Existing regression execution only, NOT proof of all state combinations, memory leak slope or all-mode end-to-end.",results};
 fs.writeFileSync("batch2-final13-evidence.json",JSON.stringify(report,null,2)+"\n");
 if(results.some(x=>x.status!=="pass"))process.exitCode=1;
+
+}

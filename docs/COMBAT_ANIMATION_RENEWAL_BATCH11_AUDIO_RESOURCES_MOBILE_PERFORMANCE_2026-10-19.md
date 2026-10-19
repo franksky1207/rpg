@@ -46,7 +46,14 @@
 - 歷史 SCOPE 06／09 的失敗位於等待 `.formal-b-whole-suit`，亦受相同 Renderer 錯誤影響。修正後原 cross-era background 與 thirdworld background/minimal 測試通過，保留連戰進度、三次背景切換、catch-up、HP／盾、GM 暫停／恢復、bfcache／離場斷言；不調整正式背景結算或數值。
 - 音效偏好 integrity 只把已退休的 `20261011-no-ui-click-prefs` 更新為實際 `20261019-batch11-lazy-sfx1`；保留 storage、toggle、volume、UI click 停用等斷言。新增 native browser 測試驗證 gesture／combat-start 不預載 SFX、首次實際播放只請求一個 sample、隱藏分頁釋放聲音與 prepared bank、返回不 warm、極簡靜音及音量／開關跨 reload 持久化。
 - 對實際已變動的 audio-scenes、formal entry、renderer 同步 HTML cache key，並重新產生四個正式資源指紋；歷史 HTML guard 僅增加精確版本替換，仍完整比較其餘 HTML／owner／174 筆資源 SHA。
-- Formal browser 在 Renderer 回退時立即顯示 `diagnostics().failed` 原因，保留原 15 秒 timeout 與全部 raster、HP、幾何、數值、資源斷言。Batch 6 增加真實 Formal Sprite browser 與 lazy audio browser，讓代表性 16 類含這兩個具體回歸。
+- Formal browser 在 Renderer 回退時立即回報 `diagnostics()` 失敗狀態，保留原 15 秒 timeout 與全部 raster、HP、幾何、數值、資源斷言。Batch 6 增加真實 Formal Sprite browser 與 lazy audio browser，讓代表性 16 類含這兩個具體回歸；保留每個原始子測試完整 stdout／stderr 及歷史批次報告於 Actions artifact，避免只看到最後一個截斷錯誤。
 - 本機 JavaScript structural integrity、音效／formal／GM／weapon／pool 六個單元測試檔、100 actor lifecycle／18 raster poses、發布候選 build/stage、歷史 cleanup guard 已通過。缺少的歷史 Git 物件 `27ed18b` 補取後，原 byte-level 契約通過，未放寬斷言。
 
 目前完整 Batch 6、最新 PR Actions 與合併後 main／Pages 仍待完成，**尚未封箱**。Chromium 手機 viewport 不等於 iPhone Safari 真機；溫度、耗電、長時間熱節流及真帳號雲端操作仍未驗收。
+
+
+### 歷史整合器的重複工作與父期限
+
+原 Batch 6 → Batch 3 → Batch 2 → Batch 1 反覆包裝同一批原始測試。此次本機原 Batch 2 13 類全數通過耗時 140,785ms，當中的 Batch 1 12 類全通過耗時 69,258ms；原音效生命周期單獨耗時 111,197ms。Batch 3 又分別重跑音效、Batch 1、Batch 2 與其他 15 個案例，父層 300,000ms 可能先於正常子測試結束，產生沒有完整結果的 aggregate error。
+
+`batch6-suite-runner.cjs` 在**一次新的整合 invocation**內展開原始 manifests，完整執行每個不同 path／args 的 leaf，再把同次證據映射回所有原分類；失敗也原樣傳遞到每個包含它的分類。不讀取上次 JSON、不用父 SHA、不刪除案例或原斷言；同一 leaf 採所有引用中最嚴格的原 timeout，沒有延長任何 browser／leaf timeout。三個歷史 runner 的原 standalone 行為保留，只匯出原 manifests 供本整合器使用。新增 runner 自我測試核對 12／13／18 個歷史分類、所有不同原始測試完整執行一次、失敗傳遞、原 timeout 與下一次 invocation 必須重新執行。

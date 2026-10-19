@@ -20,6 +20,8 @@ const entries=[
  ["historical batch 1 12-point regression","scripts/batch1-fixed12-evidence.cjs"],
  ["historical batch 2 13-point regression","scripts/batch2-final13-evidence.cjs"]
 ];
+module.exports=entries;
+if(require.main===module){
 const rows=[];
 for(const [scope,file,args=[]] of entries){
  const start=performance.now();
@@ -30,3 +32,5 @@ for(const [scope,file,args=[]] of entries){
 }
 fs.writeFileSync("batch3-integrated-evidence.json",JSON.stringify({schema:"cw.batch3.integrated.v1",sha:process.env.GITHUB_SHA||"local",note:"Representative existing contract/isolated Chromium gate; NOT a 16-item full performance proof, official alternate UI complete trace, iPhone thermal test, or memory leak slope.",rows},null,2)+"\n");
 if(rows.some(x=>x.status!=="pass"))process.exitCode=1;
+
+}

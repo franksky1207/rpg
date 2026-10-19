@@ -15,6 +15,8 @@ const items=[
  ["11","Resource/disposal","node","tests/runtime/hybrid-comparison-renderer-contract.cjs"],
  ["12","Release/regression","node","tests/runtime/resource-manifest-integrity.js"]
 ];
+module.exports=items;
+if(require.main===module){
 const results=[];
 for(const [id,scope,kind,file] of items){
  if(!fs.existsSync(file)){results.push({id,scope,file,status:"unavailable"});continue;}
@@ -25,3 +27,5 @@ for(const [id,scope,kind,file] of items){
 const out={schema:"cw.batch1.fixed12.evidence.v1",sha:process.env.GITHUB_SHA||"local",claims:"Only existing automated regression checks; pass does not prove full-mode lifecycle, art-reference closure, genuine heavy animation stress or memory-leak stability",results};
 fs.writeFileSync("batch1-fixed12-evidence.json",JSON.stringify(out,null,2)+"\n");
 if(results.some(x=>x.status!=="pass"))process.exitCode=1;
+
+}

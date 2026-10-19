@@ -36,16 +36,13 @@ const tests=[
 ["16","Earlier batch 3 integration","scripts/batch3-integrated-evidence.cjs"]
 ];
 const rows=[];let failures=0;
+const runner=require('./batch6-suite-runner.cjs').createRunner(tests);
 for(const [category,label,path,args=[]] of tests){
- const started=Date.now();let row={category,label,path,args,status:"missing",durationMs:0,exitCode:null};
- if(fs.existsSync(path)){
-  const r=cp.spawnSync(process.execPath,[path,...args],{encoding:"utf8",timeout:300000,maxBuffer:16*1024*1024,env:{...process.env,RUNTIME_SMOKE_URL:"http://127.0.0.1:4173/index.html"}});
-  row={...row,status:r.error?"error":r.status===0?"pass":"fail",durationMs:Date.now()-started,exitCode:r.status,tail:((r.stdout||"")+"\n"+(r.stderr||"")).slice(-3000)};
- }
+ const row={category,label,path,args,...runner.run(path,args)};
  if(row.status!=="pass")failures++;
  rows.push(row);console.log("BATCH6",category,row.status,label,row.durationMs);
  if(row.status!=="pass")console.error(row.tail||"Missing test: "+path);
 }
-const result={schema:"cw.batch6.final16.integration.v1",sha:process.env.GITHUB_SHA||"local",scope:"Representative automated suite across 16 fixed categories; not all cartesian states, iPhone hardware thermals, true cloud account write or approved visual art.",total:rows.length,passed:rows.length-failures,failed:failures,rows};
+const result={schema:"cw.batch6.final16.integration.v1",sha:process.env.GITHUB_SHA||"local",scope:"Representative automated suite across 16 fixed categories; not all cartesian states, iPhone hardware thermals, true cloud account write or approved visual art.",execution:runner.summary(),total:rows.length,passed:rows.length-failures,failed:failures,rows};
 fs.writeFileSync("batch6-final16-evidence.json",JSON.stringify(result,null,2)+"\n");
 if(failures)process.exitCode=1;
