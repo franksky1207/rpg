@@ -124,6 +124,7 @@ jobs:
             sleep 0.25
           done
           node tests/runtime/unified-mobile-combat-viewport-browser.cjs
+          node tests/runtime/pr48-mode-matrix-browser.cjs
           node tests/runtime/pr48-live-combat-browser.cjs
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
@@ -234,6 +235,7 @@ jobs:
             combat-events-owner-browser-report.json
             /tmp/pr48-viewport-browser.json
             /tmp/pr48-live-combat.json
+            /tmp/pr48-mode-matrix.json
             /tmp/t3b-formal-renderer-browser.json
             /tmp/batch28-consolidated
           if-no-files-found: ignore

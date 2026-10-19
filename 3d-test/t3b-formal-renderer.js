@@ -152,11 +152,12 @@ async function prepareSuit(options){
 }
 let spriteRuntime=null,spritePool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
 const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
-const warmAllowed=()=>!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
-function clearSpriteCache(){
+const warmAllowed=()=>!global.document?.querySelector?.('#main .combat-screen')&&!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
+function cancelWarmup(){
  clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);warmIdle=null;
- warmController?.abort();spritePool?.clear();
+ warmController?.abort();
 }
+function clearSpriteCache(){cancelWarmup();spritePool?.clear();}
 function warmIdentity(){
  const phase=Number(global.currentWorldPhase?.());
  return global.CivilizationEraAppearanceContract?.resolve({world:phase});
@@ -194,7 +195,8 @@ function scheduleWarm(attempt=0){
 }
 global.document?.addEventListener('visibilitychange',()=>{if(global.document.hidden)clearSpriteCache();else scheduleWarm();});
 for(const event of ['civilization-auth-signed-out','pagehide'])global.addEventListener?.(event,clearSpriteCache);
-for(const event of ['civilization-auth-ready','civilization-era-appearance-change'])global.addEventListener?.(event,()=>{clearSpriteCache();scheduleWarm();});
+global.addEventListener?.('civilization-auth-ready',()=>{clearSpriteCache();scheduleWarm();});
+global.addEventListener?.('civilization-era-appearance-change',()=>{cancelWarmup();scheduleWarm();});
 global.addEventListener?.('civilization-combat-animation-change',()=>{clearSpriteCache();if(warmAllowed())scheduleWarm();});
 if(global.document?.readyState==='loading')global.document.addEventListener('DOMContentLoaded',()=>scheduleWarm(),{once:true});
 else scheduleWarm();

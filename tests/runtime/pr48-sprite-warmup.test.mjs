@@ -15,7 +15,8 @@ test('real release export and shared pool: current era only, deduplicated warmup
  assert.deepEqual(await Promise.all([f.api.warmSprites(),f.api.warmSprites()]),[true,true]);
  assert.equal(f.stats().fetches.length-start,2);assert(f.stats().fetches.slice(start).every(p=>p.includes('era-'+id)));
  const s=f.api.spriteStats();assert.equal(s.bytes,2*512*512*4);assert.equal(s.refs,0);assert.equal(s.pending,0);
- await f.api.warmSprites();assert.equal(f.stats().fetches.length-start,2,'cached warm does not refetch/decode');
+ f.win.dispatchEvent(new Event('civilization-era-appearance-change'));
+ await f.api.warmSprites();assert.equal(f.stats().fetches.length-start,2,'same/next appearance events preserve reusable decoded cache');
  }
  f.api.clearSpriteCache();f.setPhase(1);f.setChoice('higher');await f.api.warmSprites();assert(f.stats().fetches.at(-1).includes('era-higher'),'reincarnation appearance is authoritative');
  f.api.clearSpriteCache();assert.equal(f.api.spriteStats().bytes,0);
@@ -24,6 +25,7 @@ test('disabled, hidden, data saver and unknown phase never download; HTTP failur
  const f=setup();f.setEnabled(false);assert.equal(await f.api.warmSprites(),false);f.setEnabled(true);
  f.doc.hidden=true;assert.equal(await f.api.warmSprites(),false);f.doc.hidden=false;
  f.win.navigator.connection.saveData=true;assert.equal(await f.api.warmSprites(),false);f.win.navigator.connection.saveData=false;
+ f.doc.querySelector=()=>({});assert.equal(await f.api.warmSprites(),false,'idle warmup cannot compete with a live battle');f.doc.querySelector=()=>null;
  f.setPhase(0);assert.equal(await f.api.warmSprites(),false);assert.equal(f.stats().fetches.length,0);f.setPhase(1);
  f.setFault(true);assert.equal(await f.api.warmSprites(),false);assert.equal(f.api.spriteStats().refs,0);assert.equal(f.api.spriteStats().bytes,0);
  f.setFault(false);assert.equal(await f.api.warmSprites(),true);f.api.clearSpriteCache();
