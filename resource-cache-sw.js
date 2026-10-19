@@ -39,7 +39,9 @@ async function media(request){
  const specified=new URL(request.url).searchParams.get("asset");
  if(specified&&specified!==digest)return fetch(request);
  const cache=await caches.open(ACTIVE),key=keyFor(path,digest);
- const saved=await cache.match(key);
+ const repair=new URL(request.url).searchParams.get('sprite-repair')==='1'&&/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path);
+ if(repair)await cache.delete(key);
+ const saved=repair?null:await cache.match(key);
  if(saved){
   const range=request.headers.get("range");
   if(!range)return saved;

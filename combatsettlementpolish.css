@@ -259,3 +259,8 @@ html body #offlineRewardPage .offline-limit-note{color:#b6c0ca}
   html body #offlineRewardPage .offline-section{background:rgba(14,20,26,.95)}
   html body #offlineRewardPage .offline-reward-card{background:rgba(13,19,25,.97)}
 }
+
+/* Combat-only glass parity; do not change selection/result cards. */
+#main>.calamity-shell:has(.calamity-combat)>.calamity-panel{background:linear-gradient(180deg,rgba(10,17,27,.30),rgba(8,13,22,.40))}
+#main>.combat-screen:not(.dungeon-bounty-combat):not(.arena-combat) .combatant{background:linear-gradient(180deg,rgba(25,31,40,.48),rgba(10,15,22,.55))}
+#main .w3-arena-panel:has(.combat-screen),#main .w3-arena-panel:has(.w3-arena-combat){background:linear-gradient(180deg,rgba(23,27,42,.37),rgba(16,19,29,.48))}

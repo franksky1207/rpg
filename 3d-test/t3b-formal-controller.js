@@ -9,11 +9,11 @@ function create(options){
  const projection=options.projection||global.CivilizationFormalBProjection;
  const rendererAPI=options.rendererAPI||global.CivilizationFormalBRenderer;
  let disposed=false,epoch=0,battleId=null,lastSeq=-1,abort=null,renderer=null,loading=false,failed=false,attached=false,ended=false,upstream=null,upstreamAbort=null;
- let frames=0,rejected=0,fallbacks=0,raf=0;
+ let frames=0,rejected=0,fallbacks=0,raf=0,lastFailure='',retries=0;
  const policy=()=>options.policy?.({rendererReady:!!renderer,assetsVerified:!!renderer,webglAvailable:!!renderer});
  const allowed=()=>{const p=policy();return (p?.requestedMode==="hybrid-b"||p?.mode==="hybrid-b")&&p?.quality!=="minimal"&&!global.document?.hidden;};
  function retire(){if(upstream&&upstreamAbort)upstream.removeEventListener("abort",upstreamAbort);upstream=null;upstreamAbort=null;if(raf){global.cancelAnimationFrame?.(raf);raf=0;}epoch++;abort?.abort();abort=null;renderer?.dispose();renderer=null;loading=false;try{options.onRetire?.();}catch(_){} }
- function fallback(reason){retire();failed=reason!=="text-or-minimal-policy";fallbacks++;try{options.onFallback?.(reason);}catch(_){} }
+ function fallback(reason){retire();lastFailure=String(reason||'unknown').slice(0,96);failed=reason!=="text-or-minimal-policy";fallbacks++;try{options.onFallback?.(reason);}catch(_){} }
  function current(ticket,id){return !disposed&&!ended&&ticket===epoch&&battleId===id&&!global.document?.hidden;}
  async function initialize(frame){
   const ticket=epoch,id=frame.battleId;loading=true;abort=new AbortController();const signal=abort.signal;
@@ -39,7 +39,7 @@ function create(options){
   if(disposed)return false;
   const frame=projection?.convert(event);
   if(!frame||frame.canCommit!==false||frame.canEmitCombatEvents!==false){rejected++;return false;}
-  if(frame.battleId!==battleId){retire();battleId=frame.battleId;lastSeq=-1;failed=false;ended=false;}
+  if(frame.battleId!==battleId){retire();battleId=frame.battleId;lastSeq=-1;failed=false;ended=false;retries=0;}
   if(ended){
    const session=global.CivilizationCombatEvents?.snapshot?.('formal'),p=global.getCombatPresentationSnapshot?.();
    // Several official owners compute headless, then explicitly bind a paced token.
@@ -57,7 +57,7 @@ function create(options){
   // Do not replay computed combat-action/outcome history as paced animation.
   if(event.phase!=="presentation"&&frame.type!=="battle-start"&&frame.type!=="snapshot")return false;
   if(!allowed()){fallback("text-or-minimal-policy");return false;}
-  if(!renderer){if(!loading&&!failed)void initialize(frame);return false;}
+  if(!renderer){if(failed&&retries<1&&frame.type==='snapshot'&&frame.phase==='presentation'){failed=false;retries++;}if(!loading&&!failed)void initialize(frame);return false;}
   // The presentation owner must supply an actual sample. No synthetic actor/HP or second clock.
   const sample=options.clock?.sample?.(event);
   if(!sample)return false;
@@ -69,7 +69,7 @@ function create(options){
  function attach(){if(disposed||attached)return false;attached=bridge?.attach?.(accept)===true;return attached;}
  function dispose(){if(disposed)return;disposed=true;retire();if(attached)bridge?.detach?.();attached=false;global.document?.removeEventListener?.("visibilitychange",visibility);global.removeEventListener?.("pagehide",pagehide);}
  global.document?.addEventListener?.("visibilitychange",visibility);global.addEventListener?.("pagehide",pagehide);
- return Object.freeze({accept,attach,dispose,suspend:()=>{if(renderer||loading){retire();failed=false;options.clock?.reset?.({resume:true});}},snapshot:()=>Object.freeze({battleId,lastSeq,disposed,loading,ready:!!renderer,ended,failed,frames,rejected,fallbacks,engines:renderer?(renderer.snapshot?.().engines??1):0,canvases:renderer?1:0,rafs:raf?1:0,canCommit:false,canEmitCombatEvents:false})});
+ return Object.freeze({accept,attach,dispose,suspend:()=>{if(renderer||loading){retire();failed=false;options.clock?.reset?.({resume:true});}},snapshot:()=>Object.freeze({battleId,lastSeq,disposed,loading,ready:!!renderer,ended,failed,lastFailure,retries,frames,rejected,fallbacks,engines:renderer?(renderer.snapshot?.().engines??1):0,canvases:renderer?1:0,rafs:raf?1:0,canCommit:false,canEmitCombatEvents:false})});
 }
 global.CivilizationFormalBController=Object.freeze({version:1,create,formalReleased:FORMAL_B_RELEASED,fixtureAllowed:false});
 })(window);
