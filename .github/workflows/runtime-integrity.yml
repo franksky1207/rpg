@@ -8,6 +8,10 @@ on:
     branches: [main]
     paths:
       - '**/*.js'
+      - 'tests/runtime/pr48-*.cjs'
+      - 'tests/runtime/pr48-*.mjs'
+      - 'tests/runtime/pr48-approved-presentation.json'
+      - 'tests/runtime/unified-mobile-combat-viewport*.cjs'
       - 'tests/runtime/3d-formal-snapshots-contract.cjs'
       - 'tests/runtime/t3a-hybrid-policy.cjs'
       - 'tests/runtime/t3b-formal-projection.cjs'

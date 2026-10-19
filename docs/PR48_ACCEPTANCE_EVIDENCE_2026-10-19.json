@@ -1,0 +1,502 @@
+{
+  "codeMergeSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+  "preMergeHead": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+  "prActions": [
+    {
+      "conclusion": "success",
+      "databaseId": 39275382208,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "HTML JS CSS Cache Version Guard",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275382208"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275377309,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Runtime Integrity",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275377309"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275365985,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Batch 12 Material Selected Attack Acceptance",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275365985"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275365833,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Batch 5 Era Appearance and Animation Settings",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275365833"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275366031,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Batch 7 Candidate Safety and Appearance",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275366031"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275365822,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Equipment 2.5D GM Integration",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275365822"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275365948,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "GM Animation Center Terminology Gate",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275365948"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275365817,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Equipment 2.5D Formal Battle",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275365817"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39275365874,
+      "headSha": "a9407dc27b7aacd3bd418ef2e137c620832422dd",
+      "name": "Batch 6 Final 16 Integration",
+      "status": "completed",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39275365874"
+    }
+  ],
+  "mainObservedActions": [
+    {
+      "databaseId": 39277240472,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "GM Animation Center Terminology Gate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277240472",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277231972,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Batch 5 Era Appearance and Animation Settings",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277231972",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113281,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Publish Release Gate (Stage 4)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113281",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113290,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Batch 2-4 Integration and Regression",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113290",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113322,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Equipment 2.5D Formal Battle",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113322",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113324,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Batch 6 Final 16 Integration",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113324",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113479,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Equipment 2.5D GM Integration",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113479",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113492,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Batch 12 Material Selected Attack Acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113492",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113357,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "GM 3D Test Center Browser",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113357",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113371,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Batch 7 Candidate Safety and Appearance",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113371",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113298,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Hybrid Comparison T2-B1",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113298",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113438,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Publication Dry Run (Stage 3)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113438",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113398,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "HTML JS CSS Cache Version Guard",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113398",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113414,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Story Integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113414",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113373,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Publish Asset Audit (Stage 2)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113373",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113434,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Asset Version Manifest",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113434",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113292,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Hybrid Comparison T2-A",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113292",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113383,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Galaxy 3D Button Browser Smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113383",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113458,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Runtime Integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113458",
+      "run_attempt": 1
+    },
+    {
+      "databaseId": 39277113399,
+      "headSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+      "name": "Publish Optimized GitHub Pages",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39277113399",
+      "run_attempt": 1
+    }
+  ],
+  "publishedPages": {
+    "mainSha": "7b8138bff0fa414037ffe72ab864848cc7a05f79",
+    "url": "https://franksky1207.github.io/rpg/",
+    "realDevice": false,
+    "htmlSha256": "998b3ceac8c40f7ba1a00a943dc178eb1c6a57f22b69fedf1b26ee1b7bf1b45f",
+    "optimizedManifestEntries": 413,
+    "verifiedChangedResourcesAndDependencies": [
+      {
+        "path": "ui.js",
+        "bytes": 59076,
+        "sha256": "118ad786801c6966b97668bf4ece67aefeb1b464484cb1b1d02671fbac7efdbf",
+        "url": "https://franksky1207.github.io/rpg/ui.js?v=20261002-autoprocess-policy-batch1&vaudio=20261010-a03-formal-coverage2&v2=20261004-reincarnation-speed-ui-fix1&v3=20261005-reincarnation-gear-root-fix1&v4=20261006-calamity-ui-opt-batch3&v5=20261008-gm-first-render1&v6=20261009-3d-b03&v7=20261009-galaxy-b05&v8=20261009-b05-combat-cleanup&v9=20261009-gm-startup-early&vgalaxyreview=20261010-review-combat6&vreviewroute=20261010-v8&vhome=20261010-first-home-reconcile&v17=20261010-b17-mode-settings&vopt4=20261010-home-reconcile&cacheUi=20261011-b03&audioPersist=20261011-audio-settings-save&settingsLayout=20261011-b02&settingsCopy=20261011-no-gm-v2&audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "worldmapui.js",
+        "bytes": 29023,
+        "sha256": "cbe0d8816b4fc42dbdb5cea3204151b7c78be2a48c903414e22cae364e689bd2",
+        "url": "https://franksky1207.github.io/rpg/worldmapui.js?v=20260928-thirdworld-batch11-o2&v2=20261009-galaxy-b05&v3=20261009-galaxy-visible-fix&v4=20261010-review-click-fix&v13=20261010-repair2-universe-focus&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "thirdworldui.js",
+        "bytes": 33793,
+        "sha256": "7069c1c20570ff10aa23df4d15c5805277a2afcf5db7dca2c960cf199c4dd2db",
+        "url": "https://franksky1207.github.io/rpg/thirdworldui.js?v=20261013-background-hud-recovery1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "dungeonui.js",
+        "bytes": 24128,
+        "sha256": "d64d642005f335214719396a04ce958fbe99d32413f1bc56103e3b57a5821d86",
+        "url": "https://franksky1207.github.io/rpg/dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "dungeonarena.js",
+        "bytes": 31742,
+        "sha256": "e3129675a7d03607598429c61661db9ed9fba7e639f440605934ae73a2d995af",
+        "url": "https://franksky1207.github.io/rpg/dungeonarena.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "dungeonbounty.js",
+        "bytes": 31401,
+        "sha256": "c183a829df3591a276719292e9a961b32bfd5eeec6a2ab484f242ffa0b432be4",
+        "url": "https://franksky1207.github.io/rpg/dungeonbounty.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "dungeonvoidui.js",
+        "bytes": 19862,
+        "sha256": "6fb52c15c82d4c0fa7ae49f5016b2c6a3a0123aab914f33d7203c48f7c91abd2",
+        "url": "https://franksky1207.github.io/rpg/dungeonvoidui.js?v=20261010-six-track-battle-integration2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "thirdworldarenaui.js",
+        "bytes": 15187,
+        "sha256": "b2eee700439fe124cdc91bfb2ba0fe001890cd3ab996fa8aa73dcb3f7655b327",
+        "url": "https://franksky1207.github.io/rpg/thirdworldarenaui.js?v=20261010-six-track-battle-integration2&vaudio=20261010-a03-formal-coverage2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "calamityui.js",
+        "bytes": 23984,
+        "sha256": "6701f0c71fc915d60a31a791008c3d60c3eef9645468c79da8ed1f28373bca3d",
+        "url": "https://franksky1207.github.io/rpg/calamityui.js?v=20260922-universe-calamity-batch2&v2=20261006-calamity-entry-scroll1&v3=20261006-calamity-ui-opt-batch3&v4=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "secondworldcalamityui.js",
+        "bytes": 34532,
+        "sha256": "7b4ee7a6587ca1d6f538c6584a8253e073f0cb4e0fc79faf15ed71a254d8e818",
+        "url": "https://franksky1207.github.io/rpg/secondworldcalamityui.js?v=20260927-thirdworld-ui-opt9-2&v2=20261006-calamity-live-ui1&v3=20261006-calamity-entry-scroll1&v4=20261006-calamity-ui-opt-batch3&v5=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "combat-viewport-coordinator.js",
+        "bytes": 3822,
+        "sha256": "e0c74592bbc3e1a777413f303979e52e70dcc0882762de75bfd7c0556f463f93",
+        "url": "https://franksky1207.github.io/rpg/combat-viewport-coordinator.js?v=20261019-unified1&pr48=20261019-center3",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "battle-mobile-viewport.css",
+        "bytes": 3862,
+        "sha256": "94b6676fcf86ed2a70221584918cf4642872ba17174cc828d2ea13b5c63e301c",
+        "url": "https://franksky1207.github.io/rpg/battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4",
+        "contentType": "text/css; charset=utf-8"
+      },
+      {
+        "path": "3d-test/formal-player-sprites.css",
+        "bytes": 2116,
+        "sha256": "d869c59de028944728ef9a07fdeaceb307714fb55418187ed1a14a0948397533",
+        "url": "https://franksky1207.github.io/rpg/3d-test/formal-player-sprites.css?v=20261019-batch9-background1&pr48=20261019-center3",
+        "contentType": "text/css; charset=utf-8"
+      },
+      {
+        "path": "3d-test/t3b-formal-renderer.js",
+        "bytes": 28113,
+        "sha256": "eaf6e2d5f0d9412f24b1488b0680cccc5fe778cb0e33de33d8159ea073cfa57b",
+        "url": "https://franksky1207.github.io/rpg/3d-test/t3b-formal-renderer.js?v=20261019-batch12-rising-cut1&spriteWarm=20261019-v2&pr48=20261019-center4",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "3d-test/t3b-formal-entry.js",
+        "bytes": 10012,
+        "sha256": "b1ad7a4791ffc64a626f07c6b1ebd7764e5e82fdc9b781f5624d942c4a5f7f86",
+        "url": "https://franksky1207.github.io/rpg/3d-test/t3b-formal-entry.js?v=20261019-batch11-lifecycle1&pr48=20261019-center4",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "3d-test/era-player-sprites.mjs",
+        "bytes": 4551,
+        "sha256": "1441d0bb569f0505458dfe727f78d59c4cf5e3847fb9931d35e478568995cb85",
+        "url": "https://franksky1207.github.io/rpg/3d-test/era-player-sprites.mjs?asset=1441d0bb569f0505458dfe72",
+        "contentType": "text/javascript; charset=utf-8"
+      },
+      {
+        "path": "3d-test/equipment-sprites-v1/actor.mjs",
+        "bytes": 5443,
+        "sha256": "cf9d0b4f64caf4e5bc3e62eaa5211f15c7123749edfd7e5662b417a11d9fefb3",
+        "url": "https://franksky1207.github.io/rpg/3d-test/equipment-sprites-v1/actor.mjs?asset=cf9d0b4f64caf4e5bc3e62ea",
+        "contentType": "text/javascript; charset=utf-8"
+      },
+      {
+        "path": "3d-test/equipment-sprites-v1/assets.mjs",
+        "bytes": 4673,
+        "sha256": "90548b56707f48569abdd8c95833bd522c08cda5f066e722691998f772f6d111",
+        "url": "https://franksky1207.github.io/rpg/3d-test/equipment-sprites-v1/assets.mjs?asset=90548b56707f48569abdd8c9",
+        "contentType": "text/javascript; charset=utf-8"
+      },
+      {
+        "path": "resource-cache-sw.js",
+        "bytes": 8921,
+        "sha256": "deec4336a5b7b5e3e06ffa6df31d4409be62d861658eb46ea56edc9611dcc666",
+        "url": "https://franksky1207.github.io/rpg/resource-cache-sw.js?asset=deec4336a5b7b5e3e06ffa6d",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "resource-cache-client.js",
+        "bytes": 5523,
+        "sha256": "eb4ff5d77a62268d52faf1222d45a19f7b79317d7eb97d86f7e38a6c670dfc5a",
+        "url": "https://franksky1207.github.io/rpg/resource-cache-client.js?v=20261011-prefetch-fix1",
+        "contentType": "application/javascript; charset=utf-8"
+      },
+      {
+        "path": "assets/era-player/v1/era-galaxy.webp",
+        "bytes": 95972,
+        "sha256": "634aee890ff0e86e42956412050ba424d18fc618f28dd37a46955ed1de439e63",
+        "url": "https://franksky1207.github.io/rpg/assets/era-player/v1/era-galaxy.webp?sha=634aee890ff0e86e42956412050ba424d18fc618f28dd37a46955ed1de439e63",
+        "contentType": "image/webp"
+      },
+      {
+        "path": "assets/era-player/v1/era-galaxy-attack-atlas.webp",
+        "bytes": 38454,
+        "sha256": "29e039f2d91c6613e7cb22ed375fc1917884a2997983ed8419ac09fbc74df57e",
+        "url": "https://franksky1207.github.io/rpg/assets/era-player/v1/era-galaxy-attack-atlas.webp?sha=29e039f2d91c6613e7cb22ed375fc1917884a2997983ed8419ac09fbc74df57e",
+        "contentType": "image/webp"
+      },
+      {
+        "path": "assets/era-player/v1/era-universe.webp",
+        "bytes": 114740,
+        "sha256": "b2c424c5523ec4e548e8791f86d1829f964f30c0e16882fe02a1f22add9128be",
+        "url": "https://franksky1207.github.io/rpg/assets/era-player/v1/era-universe.webp?sha=b2c424c5523ec4e548e8791f86d1829f964f30c0e16882fe02a1f22add9128be",
+        "contentType": "image/webp"
+      },
+      {
+        "path": "assets/era-player/v1/era-universe-attack-atlas.webp",
+        "bytes": 44544,
+        "sha256": "5bec9b73753d4652628ab2aaf1a4b86ba1039576aa4d52fc47ea0fbfc4f8a12e",
+        "url": "https://franksky1207.github.io/rpg/assets/era-player/v1/era-universe-attack-atlas.webp?sha=5bec9b73753d4652628ab2aaf1a4b86ba1039576aa4d52fc47ea0fbfc4f8a12e",
+        "contentType": "image/webp"
+      },
+      {
+        "path": "assets/era-player/v1/era-higher.webp",
+        "bytes": 124158,
+        "sha256": "f1d1605f5ffa9b7a714327a1d7e1af8915d854d8fb914dde76ba84412b9a2c98",
+        "url": "https://franksky1207.github.io/rpg/assets/era-player/v1/era-higher.webp?sha=f1d1605f5ffa9b7a714327a1d7e1af8915d854d8fb914dde76ba84412b9a2c98",
+        "contentType": "image/webp"
+      },
+      {
+        "path": "assets/era-player/v1/era-higher-attack-atlas.webp",
+        "bytes": 44690,
+        "sha256": "9d1c87424057e5cbfc3aece68746def68ab63c93a6fcbc42f4264d73b0e124a9",
+        "url": "https://franksky1207.github.io/rpg/assets/era-player/v1/era-higher-attack-atlas.webp?sha=9d1c87424057e5cbfc3aece68746def68ab63c93a6fcbc42f4264d73b0e124a9",
+        "contentType": "image/webp"
+      }
+    ]
+  },
+  "strictVariedLocalProof": {
+    "fullClears": 2,
+    "failedRuns": 0,
+    "stopReason": "manual",
+    "battles": [
+      {
+        "name": "高維投影·破界天裁",
+        "mode": "arena",
+        "round": 1,
+        "stage": 0,
+        "win": true
+      },
+      {
+        "name": "高維投影·永劫重垣",
+        "mode": "arena",
+        "round": 1,
+        "stage": 1,
+        "win": true
+      },
+      {
+        "name": "高維投影·宿因天秤",
+        "mode": "arena",
+        "round": 1,
+        "stage": 2,
+        "win": true
+      },
+      {
+        "name": "高維投影·破界天裁",
+        "mode": "arena",
+        "round": 2,
+        "stage": 0,
+        "win": true
+      },
+      {
+        "name": "高維投影·永劫重垣",
+        "mode": "arena",
+        "round": 2,
+        "stage": 1,
+        "win": true
+      },
+      {
+        "name": "高維投影·宿因天秤",
+        "mode": "arena",
+        "round": 2,
+        "stage": 2,
+        "win": true
+      }
+    ]
+  },
+  "realDevice": false,
+  "closed": false
+}
