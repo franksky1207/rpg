@@ -80,11 +80,19 @@ const policy=require("../../scripts/publish-assets.cjs");
    return {preload,status,range,clear,after,preserved};
   });
   metrics.cache=cache;
-  assert.equal(cache.preload.failed,0);assert.equal(cache.preload.total,49);assert.equal(cache.status.entries,49);assert.ok(cache.status.bytes>0);
+  // Existing 49 gameplay media + six released player Sprite/attack-atlas assets.
+  const formalPlayerSprites=["galaxy","universe","higher"].flatMap(era=>[
+   "assets/era-player/v1/era-"+era+".webp",
+   "assets/era-player/v1/era-"+era+"-attack-atlas.webp"
+  ]);
+  const expectedCachedMedia=49+formalPlayerSprites.length;
+  for(const asset of formalPlayerSprites)assert.ok(manifest.files[asset],"missing formal player asset: "+asset);
+  assert.equal(cache.preload.failed,0);assert.equal(cache.preload.total,expectedCachedMedia);
+  assert.equal(cache.status.entries,expectedCachedMedia);assert.ok(cache.status.bytes>0);
   assert.equal(cache.range.status,206);assert.equal(cache.range.bytes,4);assert.match(cache.range.header,/^bytes 2-5\/\d+$/);
   assert.equal(cache.clear.ok,true);assert.equal(cache.after.entries,0);assert.equal(cache.preserved,true);
   metrics.cache=cache;assert.deepEqual(metrics.missing,[]);assert.deepEqual(metrics.pageErrors,[]);
-  metrics.passed=true;console.log("PASS isolated candidate: all HTTP bytes/digests, 17 audio decodes, desktop/mobile settings, 49 cached media, Range, clear/save isolation");
+  metrics.passed=true;console.log("PASS isolated candidate: all HTTP bytes/digests, 17 audio decodes, desktop/mobile settings, 55 cached media (49 existing + six formal player sprites), Range, clear/save isolation");
  }catch(error){metrics.passed=false;metrics.error=String(error.stack||error);throw error;}
  finally{fs.writeFileSync("publish-stage4-browser-report.json",JSON.stringify(metrics,null,2)+"\n");await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
