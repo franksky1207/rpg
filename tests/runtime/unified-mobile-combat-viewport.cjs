@@ -1,59 +1,22 @@
 "use strict";
 const assert=require("node:assert/strict"),fs=require("node:fs"),vm=require("node:vm");
-const source=fs.readFileSync("combat-viewport-coordinator.js","utf8");
-const css=fs.readFileSync("battle-mobile-viewport.css","utf8");
-const index=fs.readFileSync("index.html","utf8");
-const d=fs.readFileSync("dungeonui.js","utf8");
-assert.match(index,/combat-viewport-coordinator\.js\?v=20261019-unified1/);
-assert.match(css,/combat-viewport-stop/);
-assert.match(source,/\.formal-b-shared-stage:not\(\[hidden\]\)/);
-assert.match(source,/visualViewport/);
-assert.match(source,/touchmove/);
-assert.match(source,/mutation/i);
-assert.match(source,/manual/);
-assert.match(d,/CivilizationCombatViewport/);
-const listeners={};let scroll=0,schedule=[],viewportHeight=660;
-const makeNode=(top,bottom)=>({top,bottom,height:bottom-top});
-const button={textContent:"停止連續討伐",getAttribute:()=>"stopCivilizationCalamityContinuousUI()",closest:()=>wrap};
-const wrap={parentElement:null,nextElementSibling:null,classList:{add(k){this[k]=true;}},getBoundingClientRect:()=>makeNode(320,370)};
-const screen={
- isConnected:true,
- closest:()=>({contains:()=>true,querySelectorAll:()=>[button]}),
- querySelector:s=>s.includes("formal-b-shared-stage")?stage:null,
- insertBefore(w,t){w.parentElement=this;w.nextElementSibling=t;},
-};
-const stage={isConnected:true,getBoundingClientRect:()=>makeNode(400,680)};
-let combat=screen;
+const src=fs.readFileSync("combat-viewport-coordinator.js","utf8");
+assert.doesNotMatch(src,/textContent|insertBefore|stopControl/);
+assert.match(src,/visualViewport/);
+for(const p of ["dungeonbounty.js","dungeonarena.js","thirdworldarenaui.js","worldmapui.js","thirdworldui.js","calamityui.js","secondworldcalamityui.js"]){
+ const s=fs.readFileSync(p,"utf8");assert.match(s,/data-combat-action="stop-continuous"/,p);
+}
+const handlers={};let y=0,hidden=true;const q=[];
+const stage={isConnected:true,get hidden(){return hidden;},getBoundingClientRect(){return {top:700-y,bottom:950-y,width:350,height:250}}};
+let combat={querySelector:()=>hidden?null:stage};
 const root={isConnected:true,querySelector:()=>combat};
-const observer={observe(){}};
-const document={
- readyState:"complete",visibilityState:"visible",hidden:false,
- body:{classList:{contains:()=>false}},
- scrollingElement:{scrollHeight:2400},documentElement:{scrollHeight:2400},
- getElementById:id=>id==="main"?root:null,
- addEventListener:(name,fn)=>listeners[name]=fn
-};
-const window={
- matchMedia:()=>({matches:true}),innerHeight:660,get scrollY(){return scroll;},
- visualViewport:{height:viewportHeight,offsetTop:0,addEventListener:(name,fn)=>listeners["vv-"+name]=fn},
- CivilizationPresentationMode:{combatAnimationEnabled:()=>true},
- requestAnimationFrame:fn=>{schedule.push(fn);},
- scrollTo:arg=>{scroll=arg.top;},
- addEventListener:(name,fn)=>listeners[name]=fn
-};
-const context={window,document,MutationObserver:class{constructor(fn){this.fn=fn;}observe(){}}};
-vm.runInNewContext(source,context);
-const flush=()=>{for(let n=0;n<5&&schedule.length;n++){const tasks=schedule; schedule=[];tasks.forEach(fn=>fn());}};
-flush();
-assert(scroll>0,"actual visual stage must scroll into view");
-assert.equal(wrap.parentElement,screen,"stop is relocated inside combat screen");
-assert.equal(wrap.nextElementSibling,stage,"stop stays above visual stage");
-const before=scroll;
-listeners.touchmove();
-window.CivilizationCombatViewport.sync();flush();
-assert.equal(scroll,before,"manual scrolling suppresses programmatic reposition");
-combat=null;window.CivilizationCombatViewport.sync();
-assert.equal(window.CivilizationCombatViewport.snapshot().manual,false,"leaving combat resets manual protection");
-combat=screen;window.CivilizationCombatViewport.sync();flush();
-assert.equal(window.CivilizationCombatViewport.snapshot().observerCount,1,"one shared observer");
+const doc={readyState:"complete",visibilityState:"visible",hidden:false,body:{classList:{contains:()=>false}},scrollingElement:{scrollHeight:2200},documentElement:{scrollHeight:2200},getElementById:()=>root,addEventListener:(k,v)=>handlers[k]=v};
+let mutation;
+const win={matchMedia:()=>({matches:true}),innerHeight:660,innerWidth:390,get scrollY(){return y;},visualViewport:{width:390,height:660,offsetTop:0,addEventListener:()=>{}},CivilizationPresentationMode:{combatAnimationEnabled:()=>true},requestAnimationFrame:fn=>q.push(fn),scrollTo:v=>{y=v.top;},addEventListener:(k,v)=>handlers[k]=v};
+vm.runInNewContext(src,{window:win,document:doc,MutationObserver:class{constructor(f){mutation=f;}observe(){}}});
+const flush=()=>{for(let i=0;i<15&&q.length;i++){let a=q.splice(0);a.forEach(f=>f());}};
+flush();assert.equal(y,0,"loading must not move viewport");
+hidden=false;mutation();flush();assert(Math.abs((700-y+125)-330)<18,"ready stage must be centered");
+const before=y;handlers.touchmove();win.CivilizationCombatViewport.sync();flush();assert.equal(y,before,"manual scroll protected");
+combat=null;win.CivilizationCombatViewport.sync();assert.equal(win.CivilizationCombatViewport.snapshot().manual,false);
 console.log("UNIFIED_MOBILE_COMBAT_VIEWPORT_PASS");

@@ -150,7 +150,35 @@ async function prepareSuit(options){
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
  verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null});return token;
 }
-let spriteRuntime=null,spritePool=null;
+let spriteRuntime=null,spritePool=null,warming=null;
+function warmSprites(){
+ if(warming)return warming;
+ if(global.document?.hidden||global.navigator?.connection?.saveData||global.CivilizationPresentationMode?.combatAnimationEnabled?.()===false)return Promise.resolve(false);
+ warming=(async()=>{
+  const phase=Number(global.currentWorldPhase?.()||1);
+  const era=phase>=3?'higher':phase===2?'universe':'galaxy';
+  const [{release},[,poolModule]]=await Promise.all([
+   import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),
+   (spriteRuntime ||=Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]))
+  ]);
+  const entry=release.entries.find(e=>e.id==='era-'+era);
+  if(!entry||global.document?.hidden)return false;
+  spritePool ||= poolModule.createSpritePool({usage:'formal'});
+  const ac=new AbortController(),abort=()=>ac.abort();
+  global.document?.addEventListener('visibilitychange',abort,{once:true});
+  try{const lease=await spritePool.acquire(entry,{signal:ac.signal,layer:'body'});lease.release();return true;}
+  finally{global.document?.removeEventListener('visibilitychange',abort);}
+ })().catch(()=>false).finally(()=>{warming=null;});
+ return warming;
+}
+function scheduleWarm(){
+ const run=()=>{if(!global.document?.hidden)void warmSprites();};
+ if(typeof global.requestIdleCallback==='function')global.requestIdleCallback(run,{timeout:5000});
+ else setTimeout(run,1800);
+}
+if(global.document?.readyState==='loading')global.document.addEventListener('DOMContentLoaded',scheduleWarm,{once:true});
+else scheduleWarm();
+
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
  spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]);
@@ -249,5 +277,5 @@ async function createSuit(options,bundle){
  }
  return Object.freeze({sample,resize:layoutSprites,dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
-global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,clearSpriteCache:()=>spritePool?.clear(),spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
+global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,warmSprites,clearSpriteCache:()=>spritePool?.clear(),spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
 })(window);

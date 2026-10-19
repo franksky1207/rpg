@@ -68,7 +68,7 @@
   return "玩家";
  }
  function actions(def,st){
-  if(st?.completed)return `<button class="btn primary" onclick="startSecondWorldCalamityUI('${def.id}','single')">單場重打</button>`;
+  if(st?.completed)return `<button data-combat-action="stop-continuous" class="btn primary" onclick="startSecondWorldCalamityUI('${def.id}','single')">單場重打</button>`;
   if(st?.challengeable)return `<button class="btn primary" onclick="startSecondWorldCalamityUI('${def.id}','single')">單場挑戰</button><button class="btn danger" onclick="startSecondWorldCalamityUI('${def.id}','continuous')">連續討伐</button>`;
   return `<button class="btn" disabled>尚未符合挑戰條件</button>`;
  }

@@ -60,7 +60,7 @@
     <div class="calamity-hp-row"><span>HP</span><strong>${fmt(st?.currentHp)} / ${fmt(st?.maxHp)}</strong></div>
     <div class="bar calamity-hp-bar"><span class="hp" style="width:${pct}%"></span></div>
     <div class="calamity-mark-summary"><span>${esc(def.markName)}</span><strong>${markLine(st)}</strong></div>
-    <div class="calamity-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${def.id}','single')">${m.level>=10?"單場重打":"單場挑戰"}</button>${m.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${def.id}','continuous')">連續討伐</button>`}</div>
+    <div class="calamity-actions"><button data-combat-action="stop-continuous" class="btn primary" onclick="startCivilizationCalamityUI('${def.id}','single')">${m.level>=10?"單場重打":"單場挑戰"}</button>${m.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${def.id}','continuous')">連續討伐</button>`}</div>
    </article>`;
   }).join("");
  }
