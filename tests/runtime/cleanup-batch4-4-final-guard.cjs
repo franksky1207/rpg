@@ -36,7 +36,7 @@ if(changed.includes("index.html")){
   .replace("battle-mobile-viewport.css?v=20261018-batch4-mobile1","battle-mobile-viewport.css?v=20261019-batch10-usability1")
   .replace("3d-test/formal-player-sprites.css?v=20261019-batch8-shared1","3d-test/formal-player-sprites.css?v=20261019-batch9-background1")
   .replace("audio/audio-core.js?v=audio-20261011-volume-slider-fix","audio/audio-core.js?v=audio-20261011-volume-slider-fix&audioPersist=20261019-batch11-lazy-sfx1")
-  .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch11-mobile-canvas1");
+  .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch11-mobile-canvas2");
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
