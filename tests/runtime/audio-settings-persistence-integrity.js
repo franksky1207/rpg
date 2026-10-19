@@ -16,5 +16,5 @@ assert.match(ui,/data-audio-toggle="musicEnabled"/);
 assert.match(ui,/data-audio-toggle="effectsEnabled"/);
 assert.match(ui,/data-audio-volume="music"/);
 assert.match(ui,/data-audio-volume="effects"/);
-for(const stamp of ["20261011-no-ui-click-prefs","20261011-no-ui-click","20261011-audio-settings-save"])assert.ok(html.includes(stamp));
+for(const stamp of ["20261019-batch11-lazy-sfx1","20261011-no-ui-click","20261011-audio-settings-save"])assert.ok(html.includes(stamp));
 console.log("PASS: silent UI click; persisted audio toggles and levels; updated script versions");

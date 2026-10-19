@@ -2,6 +2,7 @@
 // Batch 6 final integration gate: explicit existing coverage, no hidden skips or gameplay mutations.
 const fs=require("node:fs"),cp=require("node:child_process");
 const tests=[
+["01","Formal Sprite battle lifecycle","tests/equipment-formal/browser.cjs"],
 ["01","Mainline combat/event owner","tests/runtime/combat-events-integration.cjs"],
 ["01","Ordinary and boss world target","tests/runtime/first-world-target-context-combat-batch3-integrity.js"],
 ["02-03","Dungeon bounty and arena battle UI","tests/runtime/batch4-mobile-combat-viewport.cjs"],
@@ -25,6 +26,7 @@ const tests=[
 ["14","Save and load owner","tests/runtime/save-load-pipeline-integrity.js"],
 ["14","Reincarnation protection","tests/runtime/reincarnation-save-integrity.js"],
 ["15","Audio lifecycle","tests/runtime/audio-lifecycle-browser.js"],
+["15","Lazy audio and native persistence","tests/runtime/batch11-audio-lazy-browser.cjs"],
 ["15","Audio persistent preferences","tests/runtime/audio-settings-persistence-integrity.js"],
 ["16","Manifest integrity","tests/runtime/resource-manifest-integrity.js"],
 ["16","Cache policy","tests/runtime/resource-cache-integrity.js"],

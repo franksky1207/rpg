@@ -162,7 +162,7 @@ async function createSuit(options,bundle){
  try{actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();}
  catch(error){clearTimeout(timer);signal.removeEventListener('abort',cancel);throw error;}
  clearTimeout(timer);
- let closed=false,activeClip='idle';
+ let closed=false,activeClip='idle',lastActorRenderKey=null,lastActorShift=null;
  const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();host.querySelector('.formal-b-enemy-sprite')?.remove();actor.dispose();};
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}

@@ -36,3 +36,17 @@
 - PR 的 Actions 全數成功後才能合併；合併後逐一核對最新 `main` 的 Runtime、Formal Battle、GM、Cache、Pages 與 Publisher。尚無可對應的成功結果時，禁止標記封箱。
 - 手機長時間連戰、iPhone Safari 真機發熱、耗電及真正帳號雲端操作，未經實測不得聲稱已通過。
 - 合併後四段回報須記錄：修改內容、自我檢查、Actions/實機實際覆蓋、SHA 與待補；不得以父 SHA 的成功替代最新 main SHA。
+
+
+## 五、2026-10-19 最終整合修復（驗收進行中）
+
+- 核對 PR #42 head `c973b2f36c65b41ab96f55769e16fcb0df72154c`、正式 main `79da8711c5b8078fb0af3f9992e3340a4ff3e7dd`。六項 Actions 確實四成功、Formal Battle 與 Batch 6 失敗；日誌來源為 runs `39196988791`、`39196988827`。
+- **真正根因**：`createSuit.sample()` 新增的 `lastActorRenderKey`、`lastActorShift` 未在 strict-mode closure 宣告。第一個 sample 即拋出 ReferenceError，controller 捕捉後執行 fallback / retire，移除角色並釋放 ref，因此測試只看到逾時、refs=0，而非 pageerror。補上每個 renderer instance 私有狀態；不更改戰鬥計算、事件、owner clock 或 timeout。
+- `.combat-screen`／`.combat-arena` 建立與事件訂閱維持既有架構：computed 事件先收 metadata，正式 presentation token 才驅動取樣，async 資源載入受 epoch／AbortSignal 防護。實際開戰、三紀元、三 viewport、死亡／閃避、動畫關閉／重開、重入、缺圖／SHA／decode／canvas 回退已通過原測試；沒有恢復逐場按鈕或戰鬥文字框。
+- 歷史 SCOPE 06／09 的失敗位於等待 `.formal-b-whole-suit`，亦受相同 Renderer 錯誤影響。修正後原 cross-era background 與 thirdworld background/minimal 測試通過，保留連戰進度、三次背景切換、catch-up、HP／盾、GM 暫停／恢復、bfcache／離場斷言；不調整正式背景結算或數值。
+- 音效偏好 integrity 只把已退休的 `20261011-no-ui-click-prefs` 更新為實際 `20261019-batch11-lazy-sfx1`；保留 storage、toggle、volume、UI click 停用等斷言。新增 native browser 測試驗證 gesture／combat-start 不預載 SFX、首次實際播放只請求一個 sample、隱藏分頁釋放聲音與 prepared bank、返回不 warm、極簡靜音及音量／開關跨 reload 持久化。
+- 對實際已變動的 audio-scenes、formal entry、renderer 同步 HTML cache key，並重新產生四個正式資源指紋；歷史 HTML guard 僅增加精確版本替換，仍完整比較其餘 HTML／owner／174 筆資源 SHA。
+- Formal browser 在 Renderer 回退時立即顯示 `diagnostics().failed` 原因，保留原 15 秒 timeout 與全部 raster、HP、幾何、數值、資源斷言。Batch 6 增加真實 Formal Sprite browser 與 lazy audio browser，讓代表性 16 類含這兩個具體回歸。
+- 本機 JavaScript structural integrity、音效／formal／GM／weapon／pool 六個單元測試檔、100 actor lifecycle／18 raster poses、發布候選 build/stage、歷史 cleanup guard 已通過。缺少的歷史 Git 物件 `27ed18b` 補取後，原 byte-level 契約通過，未放寬斷言。
+
+目前完整 Batch 6、最新 PR Actions 與合併後 main／Pages 仍待完成，**尚未封箱**。Chromium 手機 viewport 不等於 iPhone Safari 真機；溫度、耗電、長時間熱節流及真帳號雲端操作仍未驗收。

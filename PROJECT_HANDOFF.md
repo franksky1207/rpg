@@ -1,3 +1,5 @@
+> **新版第11批最終整合（2026-10-19）**：沿用 PR #42／`batch11-audio-resource-mobile-performance-20261019`；main 基準 `79da871`。修正正式 Sprite 去重狀態漏宣告造成第一次 sample 回退，保留原背景／極簡／數值與全部測試斷言；補上 lazy audio 原生瀏覽器回歸與資源快取識別。完整結果及封箱門檻見 `docs/COMBAT_ANIMATION_RENEWAL_BATCH11_AUDIO_RESOURCES_MOBILE_PERFORMANCE_2026-10-19.md`；最新 Actions／main／Pages 尚待驗收，不得視為已封箱，iPhone 真機溫度／耗電未測。
+
 > **第7批最新承接**：三套完整持劍透明WebP、正式Renderer／Pool六動作、轉生設定及GM已完成輕量整合施工；30項與工程證據見 `docs/BATCH7_LIGHTWEIGHT_FINAL_ACCEPTANCE_2026-10-18.md`。本檔以下舊狀態保留追溯，精準手指／握點要求不再阻擋；是否封箱以PR #38最新同SHA Actions及Pages報告為準。第8批與Issue #37未施工。
 
 # 《文明戰線》正式交接（2.5D 舊美術清理第 5 批驗收）
