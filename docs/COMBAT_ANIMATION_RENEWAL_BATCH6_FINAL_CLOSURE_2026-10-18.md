@@ -1,3 +1,5 @@
+> **2026-10-19 第11批重驗補充**：PR #42 修復提交 `9b9ede9d` 的 Batch 6 Actions [39202755026](https://github.com/franksky1207/rpg/actions/runs/39202755026) 成功。本機 16 類 32/32、36 個不同原始測試通過；原 Batch 1／2／3 manifests 的全部分類保留，重複引用改採同次原始執行證據，無舊報告快取或 timeout 放寬。下列早期施工狀態留作歷史，不再用來判斷當前分支結果；正式 main／Pages 與第11批工程封箱依 `COMBAT_ANIMATION_RENEWAL_BATCH11_AUDIO_RESOURCES_MOBILE_PERFORMANCE_2026-10-19.md` 第六節及 PR #42 merge event 的同 SHA Actions／deployment 判定。iPhone 真機熱量／耗電仍未驗收。
+
 # 《文明戰線》新版第 6 批・16 類跨模式最終整合與六批封箱
 
 日期：2026-10-18。**本文件在 CI / 正式 main 尚未通過前屬施工中紀錄，不構成封箱證明。**

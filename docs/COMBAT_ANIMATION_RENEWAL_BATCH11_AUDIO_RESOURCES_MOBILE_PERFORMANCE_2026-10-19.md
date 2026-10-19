@@ -1,6 +1,6 @@
 # 《文明戰線》新版第11批｜音效、動畫、資源、舊依賴與手機效能整合
 
-> 施工分支：`batch11-audio-resource-mobile-performance-20261019`。本報告為施工紀錄，並非已合併 main 或 iPhone 真機溫控合格聲明。驗收依據是最新 SHA 的 Actions 與正式 Pages。
+> 施工分支：`batch11-audio-resource-mobile-performance-20261019`。本報告記錄工程驗收及發布封箱門檻。正式合併 SHA 由 PR #42 的 merge event 查得；工程封箱須同時有該 main 最新 SHA 的必要 Actions 與正式 Pages 成功紀錄。iPhone 真機溫控不在本次已驗收範圍。
 
 ## 一、固定施工界線
 
@@ -38,7 +38,7 @@
 - 合併後四段回報須記錄：修改內容、自我檢查、Actions/實機實際覆蓋、SHA 與待補；不得以父 SHA 的成功替代最新 main SHA。
 
 
-## 五、2026-10-19 最終整合修復（驗收進行中）
+## 五、2026-10-19 最終整合修復
 
 - 核對 PR #42 head `c973b2f36c65b41ab96f55769e16fcb0df72154c`、正式 main `79da8711c5b8078fb0af3f9992e3340a4ff3e7dd`。六項 Actions 確實四成功、Formal Battle 與 Batch 6 失敗；日誌來源為 runs `39196988791`、`39196988827`。
 - **真正根因**：`createSuit.sample()` 新增的 `lastActorRenderKey`、`lastActorShift` 未在 strict-mode closure 宣告。第一個 sample 即拋出 ReferenceError，controller 捕捉後執行 fallback / retire，移除角色並釋放 ref，因此測試只看到逾時、refs=0，而非 pageerror。補上每個 renderer instance 私有狀態；不更改戰鬥計算、事件、owner clock 或 timeout。
@@ -49,7 +49,7 @@
 - Formal browser 在 Renderer 回退時立即回報 `diagnostics()` 失敗狀態，保留原 15 秒 timeout 與全部 raster、HP、幾何、數值、資源斷言。Batch 6 增加真實 Formal Sprite browser 與 lazy audio browser，讓代表性 16 類含這兩個具體回歸；保留每個原始子測試完整 stdout／stderr 及歷史批次報告於 Actions artifact，避免只看到最後一個截斷錯誤。
 - 本機 JavaScript structural integrity、音效／formal／GM／weapon／pool 六個單元測試檔、100 actor lifecycle／18 raster poses、發布候選 build/stage、歷史 cleanup guard 已通過。缺少的歷史 Git 物件 `27ed18b` 補取後，原 byte-level 契約通過，未放寬斷言。
 
-目前完整 Batch 6、最新 PR Actions 與合併後 main／Pages 仍待完成，**尚未封箱**。Chromium 手機 viewport 不等於 iPhone Safari 真機；溫度、耗電、長時間熱節流及真帳號雲端操作仍未驗收。
+修復提交 `9b9ede9d9c72d9e8389ba6707df133b4c6a22537` 的六項 PR Actions 已全數成功，本機完整 Batch 6 為 32/32、36 個不同原始測試。正式發布封箱依下列同 SHA main／Pages 規則判定。Chromium 手機 viewport 不等於 iPhone Safari 真機；溫度、耗電、長時間熱節流及真帳號雲端操作仍未驗收。
 
 
 ### 歷史整合器的重複工作與父期限
@@ -57,3 +57,44 @@
 原 Batch 6 → Batch 3 → Batch 2 → Batch 1 反覆包裝同一批原始測試。此次本機原 Batch 2 13 類全數通過耗時 140,785ms，當中的 Batch 1 12 類全通過耗時 69,258ms；原音效生命周期單獨耗時 111,197ms。Batch 3 又分別重跑音效、Batch 1、Batch 2 與其他 15 個案例，父層 300,000ms 可能先於正常子測試結束，產生沒有完整結果的 aggregate error。
 
 `batch6-suite-runner.cjs` 在**一次新的整合 invocation**內展開原始 manifests，完整執行每個不同 path／args 的 leaf，再把同次證據映射回所有原分類；失敗也原樣傳遞到每個包含它的分類。不讀取上次 JSON、不用父 SHA、不刪除案例或原斷言；同一 leaf 採所有引用中最嚴格的原 timeout，沒有延長任何 browser／leaf timeout。三個歷史 runner 的原 standalone 行為保留，只匯出原 manifests 供本整合器使用。新增 runner 自我測試核對 12／13／18 個歷史分類、所有不同原始測試完整執行一次、失敗傳遞、原 timeout 與下一次 invocation 必須重新執行。
+
+
+## 六、工程驗收與發布封箱證據
+
+已驗證修復提交：`9b9ede9d9c72d9e8389ba6707df133b4c6a22537`。本節之後的文件提交不變更 runtime／測試實作；最終 PR head 仍須完成六項 Actions 才能合併。
+
+| 必要 PR Actions | 修復提交結果與日誌 |
+| --- | --- |
+| Batch 5 Era Appearance and Animation Settings | [成功 39202755017](https://github.com/franksky1207/rpg/actions/runs/39202755017) |
+| Batch 7 Candidate Safety and Appearance | [成功 39202755025](https://github.com/franksky1207/rpg/actions/runs/39202755025) |
+| Equipment 2.5D GM Integration | [成功 39202755059](https://github.com/franksky1207/rpg/actions/runs/39202755059) |
+| GM Animation Center Terminology Gate | [成功 39202755012](https://github.com/franksky1207/rpg/actions/runs/39202755012) |
+| Equipment 2.5D Formal Battle | [成功 39202755009](https://github.com/franksky1207/rpg/actions/runs/39202755009) |
+| Batch 6 Final 16 Integration | [成功 39202755026](https://github.com/franksky1207/rpg/actions/runs/39202755026) |
+
+本機完整 Batch 6：**16 類、32 筆全部通過，36 個不同原始測試重新執行；原 child budgets 保留、舊 invocation 證據使用數為零**。GitHub 產出完整各原始 stdout／stderr、16 類報告及 Batch 1／2／3 分類映射，均由上表 artifact 追溯。
+
+| 類別 | 實際自動化覆蓋 |
+| --- | --- |
+| 01 主線／事件 | 正式三 viewport Sprite、三外觀、死亡／閃避、mainline event owner、普通／Boss target |
+| 02 懸賞 | 正式手機主戰鬥區與音訊生命週期 |
+| 03 競技 | 三紀元音訊、手機主戰鬥區、高維競技開始／退出 |
+| 04 鏡像 | 正式 owner／事件、音訊、回合及結算 |
+| 05 虛空 | 正式高維 Sprite／結算、背景、音訊、離場 |
+| 06 災厄 | shared terminal／catch-up 契約及正式音訊流程 |
+| 07 異宇宙 | 正式 combat／settlement 契約、真 UI controller matched-input trace、正式音訊；無資源收益 owner 不變 |
+| 08 回顧／重入 | 實際 review DOM／token／Sprite、galaxy review、連續重入與離場快取歸零 |
+| 09 外觀／Renderer | 三紀元完整角色、共用敵人輪廓與透明舞台、背景、SHA／缺材安全回退 |
+| 10 HP／資源 | player／enemy HP parity、護盾、FX timer ownership、100-event／100-battle presenter pressure、100 actor lifecycle |
+| 11 動畫／極簡 | 動畫關閉／重開、文字回退、極簡停視覺／靜音、無逐場按鈕 |
+| 12 背景／離線 | 原 cross-era／higher background、persisted pagehide／返回、GM off 暫停、Fast Catch-up、offline provenance |
+| 13 GM／倍速 | GM 五情境／三 viewport、無雲端／save 寫入、正式 owner clock／GM speed 隔離 |
+| 14 存檔／正式玩法 | Schema17 compatibility matrix、save/load、轉生保護；正式 numerical owners 無 diff |
+| 15 音訊 | 原生 playing／單 owner、全部正式模式及 reload、lazy SFX／background release／偏好持久化 |
+| 16 發布／整合 | manifest／cache／版本 guard／現役資源保護、原 Batch 1／2／3 全分類映射 |
+
+以上為代表性自動化案例及共用 owner 契約，並非所有合法模式 × 紀元 × 裝置 × 狀態的完整笛卡兒積，也不是實體 GPU／記憶體斜率或 iPhone 能耗量測。
+
+**工程封箱判定**：最終 head 的六項 PR Actions 成功 → [PR #42](https://github.com/franksky1207/rpg/pull/42) 正式合併 → merge event 指向的最新 main（如資源 bot 再提交則追到新 head）必要 Runtime／Formal／GM／Batch 6／Cache／Publisher／Pages 全數成功 → [正式 Pages](https://franksky1207.github.io/rpg/) 實際入口與資源指紋對應該發布。實際最終 SHA 與發布結果以 PR merge event、同 SHA Actions／Pages deployment 及本次交付回報一併查核，不把較早成功替代最新 main。
+
+**獨立保留未驗收事項**：iPhone Safari 真機長時間異宇宙／連戰的溫度、耗電、熱節流、App 切換與實體裝置記憶體；真帳號雲端寫入。本批不宣稱上述真機與真帳號驗收完成，也不展開第12批功能。
