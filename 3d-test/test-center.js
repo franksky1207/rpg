@@ -58,7 +58,7 @@ async function start(){
    mod=await import("./gm-era-sprites.mjs?v=20261019-batch12-single1");
   }else{
    status.textContent="GM 戰鬥動畫測試：不影響正式戰鬥或音效。";
-   mod=await import("./gm-battle-simulation.js?v=20261018-gm-copy1");
+   mod=await import("./gm-battle-simulation.js?v=20261019-batch12-no-arc1");
   }
   if(ticket!==serial||abort.signal.aborted)return;
   viewer=await mod.mount({host,signal:abort.signal,quality:quality.value});

@@ -1,5 +1,5 @@
 // Authorized presentation only. Uses B's visual samples and WholeSuitActor draw(plan).
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261015-thrust1';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-no-arc1';
 import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261015-thrust1';
 import {animationController} from './equipment-sprites-v1/animation.mjs';
 const EPOCH={galaxy:'銀河紀元',universe:'宇宙紀元',higher:'高維紀元'};
