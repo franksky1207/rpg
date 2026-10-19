@@ -182,12 +182,15 @@ async function createSuit(options,bundle){
  const enemyKind=String(bundle.enemyKind||'').toLowerCase();
  const rank=/boss|首領|魔王|王者|災厄/.test(enemyKind+' '+kind)?'boss':/elite|菁英|精英/.test(enemyKind+' '+kind)?'elite':'normal';
  host.dataset.enemyRank=rank;
+ let lastEnemyRenderKey=null;
  function drawEnemy(frame){
   const e=frame.enemy||frame;
   const ms=Math.max(0,Math.min(700,e.elapsedMs||0)),t=ms/700;
   const approach=Math.max(0,Math.min(.42,e.approach||0));
-  if(enemyCanvas.dataset.renderKey===`${e.clip||'idle'}:${Math.floor(ms/35)}:${Math.round(approach*1000)}`)return;
-  enemyCanvas.dataset.renderKey=`${e.clip||'idle'}:${Math.floor(ms/35)}:${Math.round(approach*1000)}`;
+  // Use a local key instead of mutating data-* attributes on every animation sample.
+  const renderKey=`${e.clip||'idle'}:${Math.floor(ms/35)}:${Math.round(approach*1000)}`;
+  if(lastEnemyRenderKey===renderKey)return;
+  lastEnemyRenderKey=renderKey;
   ec.clearRect(0,0,256,256);ec.save();
   ec.translate(128,222);
   // Opponent faces left, toward the player; effects stay inside its own canvas.
