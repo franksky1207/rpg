@@ -21,3 +21,9 @@
 25 視窗及按鈕幾何單元測試；26 CI/Pages/真機分別驗收。
 
 驗收界線：JavaScript 模擬與 GitHub Actions 無法取代 iPhone 真機 Safari、所有合法存檔的全模式逐場實玩；未經真機測試不可宣稱已通過。
+
+## 自我檢查與後續快取補正
+
+第26項工程來源 PR #46 已合併。分支同 SHA 六類 Actions 全綠，`Equipment 2.5D Formal Battle` 驗證 `UNIFIED_MOBILE_COMBAT_VIEWPORT_PASS` 與 18 組真 Chromium 幾何 fixture（六種停止模式 × 手機直向／橫向／桌機）；歷史 16 類整合流程亦通過。
+
+合併後首頁 Cache Version Guard 發現 `dungeonui.js` 引用尚未增加新快取 token；以 PR #47 限縮補修，保留歷史嚴格守衛及原 stop owner。最新正式 main、Pages、是否仍有紅燈，須查最新 SHA Actions，不能拿合併前結果冒充正式驗收。

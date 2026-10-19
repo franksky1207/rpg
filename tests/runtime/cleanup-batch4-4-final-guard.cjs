@@ -46,6 +46,7 @@ if(changed.includes("index.html")){
   .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch12-rising-cut1")
   // Mobile combat presentation: only the approved shared viewport script and stylesheet cache token.
   .replace("battle-mobile-viewport.css?v=20261019-batch10-usability1","battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1")
+  .replace("dungeonui.js?v=20261019-batch8-stable-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1")
   .replace('<script src="3d-test/formal-snapshots.js','<script src="combat-viewport-coordinator.js?v=20261019-unified1"></script>\n<script src="3d-test/formal-snapshots.js');
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
 }
