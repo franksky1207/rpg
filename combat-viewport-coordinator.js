@@ -3,7 +3,7 @@
 "use strict";
 if(global.CivilizationCombatViewport)return;
 let root=null,observer=null,queued=false,manual=false,lastScreen=null,lastStage=null,lastStop=null,layoutSerial=0;
-const mobile=()=>!!global.matchMedia?.("(max-width:820px)")?.matches;
+const mobile=()=>!!global.matchMedia?.("(max-width:820px), (max-height:500px) and (pointer:coarse)")?.matches;
 const animationExpected=()=>global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false;
 const live=()=>mobile()&&animationExpected()&&doc.visibilityState!=="hidden"&&!doc.body?.classList.contains("main-minimal-mode-open")&&global.gmBackgroundBattleEnabled?.()!==true;
 const usableStage=screen=>{
