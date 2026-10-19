@@ -35,7 +35,7 @@ if(changed.includes("index.html")){
   .replace("dungeonui.js?v=20261018-batch4-mobile-stage-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1")
   .replace("battle-mobile-viewport.css?v=20261018-batch4-mobile1","battle-mobile-viewport.css?v=20261019-batch10-usability1")
   .replace("3d-test/formal-player-sprites.css?v=20261019-batch8-shared1","3d-test/formal-player-sprites.css?v=20261019-batch9-background1")
-  .replace("audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&t4=20261013-preview-retire1","audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1&t4=20261013-preview-retire1")
+  .replace("settingsCopy=20261011-no-gm-v2&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1","settingsCopy=20261011-no-gm-v2&audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1")
   .replace("audio/audio-core.js?v=audio-20261011-volume-slider-fix","audio/audio-core.js?v=audio-20261011-volume-slider-fix&audioPersist=20261019-batch11-lazy-sfx1")
   .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch11-mobile-canvas2");
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
