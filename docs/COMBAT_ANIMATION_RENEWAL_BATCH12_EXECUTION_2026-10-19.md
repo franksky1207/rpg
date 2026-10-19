@@ -83,3 +83,23 @@ iPhone真機與真帳號雲端操作明確未驗收。
 - 初始Actions三個失敗同源於歷史guard拒絕 `test-center.css`。現改為精確比對main原CSS加唯一核准的單介面規則，其他CSS差異仍失敗。`ff6d38db` 的Batch7、GM Integration、GM Terminology、Sprite Pipeline實際成功；Batch5在手機scroll測試失敗（initial=0、second=948）。
 - 手機scroll根因：測試只睡80ms後讀值，未保證owner已排程RAF執行；在忙碌runner讀到第一場尚未捲動，第二場才取得已提交位置。改等待owner RAF及下一個已提交frame，保留原 `initial>600`、兩場差<25、手動手勢不搶捲動、桌機不捲動全部斷言。沒有更改正式捲動owner或延長timeout。
 - 尚無本批合併後main／Runtime／Pages證據，因突刺素材阻擋維持Draft；不以任何自動化綠燈替代美術與真機允收。
+
+### 本機完整回歸結論與Actions追蹤入口
+
+最後完整invocation：**16類、32/32筆、36個不同原始leaf全部通過；原budgets保留，priorRunEvidenceUsed=false**。invocation開始於 `ff6d38dbd3ac6f48b2489b820bfc323c9b447adc`；後續僅手機測試的RAF等待與文件變更，該手機修復已另外在 `78fd889fc3d14d5459fad0092229484bd495e274` 本機及Actions通過。發布後端、正式數值、音訊與動畫owner沒有再修改。機器可讀摘要 `development/combat-animation/batch12/verification-summary.json` 保留32筆分類／狀態、原報告SHA與未測界線；完整stdout／stderr留在本機 `/tmp/batch12-evidence/`，Actions亦有各次artifact。
+
+下表均綁定工程提交 **`78fd889fc3d14d5459fad0092229484bd495e274`**，不是報告後續提交的新head；新head必須再驗證，最終結果由PR #43 checks與交付回報列明。連結保留實際當次日誌，並非把尚在執行的項目預先標成功。
+
+| 工作流程 | 該工程提交實際run |
+| --- | --- |
+| Runtime Integrity（分支手動，不是合併main） | https://github.com/franksky1207/rpg/actions/runs/39212358399 |
+| Publication Dry Run（成功，無部署） | https://github.com/franksky1207/rpg/actions/runs/39212360867 |
+| Batch5（成功） | https://github.com/franksky1207/rpg/actions/runs/39212365407 |
+| Batch7（成功） | https://github.com/franksky1207/rpg/actions/runs/39212365459 |
+| Sprite Pipeline（成功） | https://github.com/franksky1207/rpg/actions/runs/39212365406 |
+| GM Integration（成功） | https://github.com/franksky1207/rpg/actions/runs/39212365310 |
+| GM Terminology（結果待run最終結論） | https://github.com/franksky1207/rpg/actions/runs/39212365315 |
+| Formal Battle（結果待run最終結論） | https://github.com/franksky1207/rpg/actions/runs/39212365377 |
+| Batch6完整整合（結果待run最終結論） | https://github.com/franksky1207/rpg/actions/runs/39212365390 |
+
+本文件是未封箱的施工與阻礙報告；沒有第12批最終main SHA或Pages部署，正式main仍應重新查GitHub，不取本分支SHA冒充正式版。

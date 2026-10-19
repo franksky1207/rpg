@@ -1,0 +1,196 @@
+{
+  "schema": "cw.batch12.verification-summary.v1",
+  "baselineMain": "9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a",
+  "integrationInvocationStartedAtSha": "ff6d38dbd3ac6f48b2489b820bfc323c9b447adc",
+  "mobileRafFixSeparatelyVerifiedAtSha": "78fd889fc3d14d5459fad0092229484bd495e274",
+  "integration": {
+    "total": 32,
+    "passed": 32,
+    "failed": 0,
+    "execution": {
+      "uniqueOriginalTests": 36,
+      "originalBudgetsPreserved": true,
+      "priorRunEvidenceUsed": false
+    }
+  },
+  "localCases": [
+    {
+      "category": "01",
+      "label": "Formal Sprite battle lifecycle",
+      "status": "pass"
+    },
+    {
+      "category": "01",
+      "label": "Mainline combat/event owner",
+      "status": "pass"
+    },
+    {
+      "category": "01",
+      "label": "Ordinary and boss world target",
+      "status": "pass"
+    },
+    {
+      "category": "02-03",
+      "label": "Dungeon bounty and arena battle UI",
+      "status": "pass"
+    },
+    {
+      "category": "04",
+      "label": "Mirror presenter and combat events",
+      "status": "pass"
+    },
+    {
+      "category": "05-06",
+      "label": "Void and calamity recovery",
+      "status": "pass"
+    },
+    {
+      "category": "07",
+      "label": "Alternate universe full combat",
+      "status": "pass"
+    },
+    {
+      "category": "07",
+      "label": "Alternate universe browser UI",
+      "status": "pass"
+    },
+    {
+      "category": "08",
+      "label": "Review and battle reentry",
+      "status": "pass"
+    },
+    {
+      "category": "09",
+      "label": "Three-era appearance and renderer",
+      "status": "pass"
+    },
+    {
+      "category": "09",
+      "label": "Renderer contract",
+      "status": "pass"
+    },
+    {
+      "category": "10",
+      "label": "FX timers and stale ownership",
+      "status": "pass"
+    },
+    {
+      "category": "10",
+      "label": "Presenter replacement pressure",
+      "status": "pass"
+    },
+    {
+      "category": "11",
+      "label": "Animation user settings",
+      "status": "pass"
+    },
+    {
+      "category": "12",
+      "label": "Background pending promises",
+      "status": "pass"
+    },
+    {
+      "category": "12",
+      "label": "Three-era background browser",
+      "status": "pass"
+    },
+    {
+      "category": "12",
+      "label": "Third era visibility and minimal",
+      "status": "pass"
+    },
+    {
+      "category": "12",
+      "label": "Offline settlement provenance",
+      "status": "pass"
+    },
+    {
+      "category": "13",
+      "label": "GM battle and isolation",
+      "status": "pass"
+    },
+    {
+      "category": "13",
+      "label": "GM animation terminology",
+      "status": "pass"
+    },
+    {
+      "category": "14",
+      "label": "Save schema compatibility",
+      "status": "pass"
+    },
+    {
+      "category": "14",
+      "label": "Save and load owner",
+      "status": "pass"
+    },
+    {
+      "category": "14",
+      "label": "Reincarnation protection",
+      "status": "pass"
+    },
+    {
+      "category": "15",
+      "label": "Audio lifecycle",
+      "status": "pass"
+    },
+    {
+      "category": "15",
+      "label": "Lazy audio and native persistence",
+      "status": "pass"
+    },
+    {
+      "category": "15",
+      "label": "Audio persistent preferences",
+      "status": "pass"
+    },
+    {
+      "category": "16",
+      "label": "Manifest integrity",
+      "status": "pass"
+    },
+    {
+      "category": "16",
+      "label": "Cache policy",
+      "status": "pass"
+    },
+    {
+      "category": "16",
+      "label": "HTML JS CSS version guard",
+      "status": "pass"
+    },
+    {
+      "category": "16",
+      "label": "Legacy art removal inventory",
+      "status": "pass"
+    },
+    {
+      "category": "16",
+      "label": "Earlier batch 2 final13",
+      "status": "pass"
+    },
+    {
+      "category": "16",
+      "label": "Earlier batch 3 integration",
+      "status": "pass"
+    }
+  ],
+  "unitTests": {
+    "passed": 31,
+    "failed": 0
+  },
+  "unchangedFormalOwners": 27,
+  "viewportWidths": [
+    1365,
+    390,
+    844
+  ],
+  "nativeAudioCases": 50,
+  "hardwareIphoneTested": false,
+  "trueCloudAccountWriteTested": false,
+  "productionThrustAccepted": false,
+  "merged": false,
+  "pagesPublished": false,
+  "fullIntegrationReportSha256": "5a51dc3ed0085042a769fdc0714908a92033f27a0149f0a93343b751db5d9da9",
+  "rawLocalEvidence": "/tmp/batch12-evidence"
+}
