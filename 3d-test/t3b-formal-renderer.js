@@ -185,7 +185,7 @@ function warmSprites(){
   const [{release},[,poolModule]]=await Promise.all([import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),runtime()]);
   if(ac.signal.aborted||!warmAllowed()||warmIdentity()?.visualId!==identity.visualId)return false;
   const entry=release.entries.find(e=>e.id==='era-'+identity.visualId);if(!entry)return false;
-  spritePool ||= poolModule.createSpritePool({usage:'formal',fetcher:verifiedFormalSpriteFetch};
+  spritePool ||= poolModule.createSpritePool({usage:'formal',fetcher:verifiedFormalSpriteFetch});
   // Same content-addressed pool as live actors. At most two 512-square bitmaps
   // (2 MiB decoded) for this appearance, never an actor, canvas, RAF or GPU engine.
   for(const layer of [null,'body']){
@@ -217,7 +217,7 @@ async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
  const [{WholeSuitActor},{createSpritePool}]=await runtime();
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
- spritePool ||= createSpritePool({usage:'formal',fetcher:verifiedFormalSpriteFetch};
+ spritePool ||= createSpritePool({usage:'formal',fetcher:verifiedFormalSpriteFetch});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
  const timer=setTimeout(cancel,5000);let actor;
  try{actor=await new WholeSuitActor(spritePool,bundle.entry,{signal:timeout.signal,tier:'medium'}).init();}
