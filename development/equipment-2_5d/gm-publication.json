@@ -16,8 +16,8 @@
       "bytes": 3450
     },
     "3d-test/equipment-sprites-v1/assets.mjs": {
-      "sha256": "90548b56707f48569abdd8c95833bd522c08cda5f066e722691998f772f6d111",
-      "bytes": 4673
+      "bytes": 5285,
+      "sha256": "2c3c14ee9d7581e57914bfb4299bf434798340f6f68cf7a4a7edb8a35aa1d5b3"
     },
     "3d-test/equipment-sprites-v1/contract.mjs": {
       "sha256": "4a4ff956abd48e16bd113f3a20a8fba7d84df1a6cef2dbd70b96d8002dd65796",
