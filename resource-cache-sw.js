@@ -39,7 +39,10 @@ async function media(request){
  const specified=new URL(request.url).searchParams.get("asset");
  if(specified&&specified!==digest)return fetch(request);
  const cache=await caches.open(ACTIVE),key=keyFor(path,digest);
- const saved=await cache.match(key);
+ // A verified sprite can request one-asset repair without clearing all 55 media.
+ const repair=new URL(request.url).searchParams.get('repair')==='1';
+ if(repair)await cache.delete(key);
+ const saved=repair?null:await cache.match(key);
  if(saved){
   const range=request.headers.get("range");
   if(!range)return saved;
