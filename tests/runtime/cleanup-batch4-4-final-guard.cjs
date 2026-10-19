@@ -24,8 +24,8 @@ const unexpected=changed.filter(p=>!approvedBatch8.has(p)&&p!=="index.html"&&p!=
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
- // Match the exact last sealed main file: only three independently approved
- // Batch8 presentation-resource cache keys may differ, not gameplay HTML.
+ // Compare against sealed presentation baseline and explicitly approved cache keys.
+ // Batch11 extends only the audio owner and formal renderer script cache tokens.
  const sealed=run("show","32257058dd7003e284d9f548674617d8d2e9c263:index.html");
  const actual=fs.readFileSync("index.html","utf8");
  const expected=sealed
@@ -34,7 +34,9 @@ if(changed.includes("index.html")){
   .replace("3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-entry.js?v=20261019-batch8-shared1")
   .replace("dungeonui.js?v=20261018-batch4-mobile-stage-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1")
   .replace("battle-mobile-viewport.css?v=20261018-batch4-mobile1","battle-mobile-viewport.css?v=20261019-batch10-usability1")
-  .replace("3d-test/formal-player-sprites.css?v=20261019-batch8-shared1","3d-test/formal-player-sprites.css?v=20261019-batch9-background1");
+  .replace("3d-test/formal-player-sprites.css?v=20261019-batch8-shared1","3d-test/formal-player-sprites.css?v=20261019-batch9-background1")
+  .replace("audio/audio-core.js?v=audio-20261011-volume-slider-fix","audio/audio-core.js?v=audio-20261011-volume-slider-fix&audioPersist=20261019-batch11-lazy-sfx1")
+  .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch11-mobile-canvas1");
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
