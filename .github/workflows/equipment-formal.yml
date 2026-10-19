@@ -31,7 +31,7 @@ jobs:
           node scripts/equipment-phase6-audit.cjs > /tmp/equipment-phase6-dependencies.json
           node tests/equipment-formal/publication.cjs
           node tests/equipment-weapons/names.cjs
-          node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
+          node --test tests/equipment-gm/no-attack-aura.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
           node tests/runtime/t3b-formal-owner-clock.cjs
           node tests/runtime/t3b-formal-controller.cjs
           node scripts/build-publish-dry-run.cjs

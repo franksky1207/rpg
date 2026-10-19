@@ -7,13 +7,14 @@ const fs=require("node:fs"),assert=require("node:assert/strict"),{chromium}=requ
  assert(source.slice(end,end+240).includes("positionActiveDungeonCombat(main)"),"actual dungeon render calls viewport coordinator");
  assert(source.includes('area.querySelector(".combat-head")'),"target stable battle heading before async stage insertion");
  const snippet=source.slice(begin,end)+"\nwindow.testDungeonBattleViewport=positionActiveDungeonCombat;";
- const browser=await chromium.launch({headless:true});
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH});
  try{
   const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
   await page.setContent('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><div style="height:1020px"></div><main id="main"></main><div style="height:1300px"></div>');
   await page.addScriptTag({content:snippet});
   const data=await page.evaluate(async()=>{
-   const sleep=()=>new Promise(r=>setTimeout(r,80));
+   // Wait for the owner-scheduled RAF and its committed scroll, not 80ms of wall time.
+   const sleep=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
    const main=document.querySelector("#main");
    window.view="dungeon-arena";
    main.innerHTML='<section class="combat-screen"><div class="combat-head">高維異相競技場 第一戰</div><div class="lineup" style="height:470px"></div><div class="combat-arena" style="height:680px"></div></section>';
@@ -39,7 +40,7 @@ const fs=require("node:fs"),assert=require("node:assert/strict"),{chromium}=requ
     window.scrollTo({top:0,behavior:"instant"});
     document.querySelector("#main").innerHTML='<section class="combat-screen"><div class="combat-head">懸賞戰</div></section>';
     window.testDungeonBattleViewport(document.querySelector("#main"));
-    await new Promise(r=>setTimeout(r,80));
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     return window.scrollY;
   });
   assert.equal(desktop,0,"desktop must not be auto-scrolled");

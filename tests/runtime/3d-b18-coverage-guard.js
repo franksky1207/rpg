@@ -8,7 +8,7 @@ const center=read("3d-test/test-center.js");
 const html=read("3d-test/index.html");
 const gm=read("gm3dprototype.js");
 const loader=read("tests/runtime/3d-gm-loader-browser.js");
-assert.match(center,/version:6/,"current GM center version");
+assert.match(center,/version:7/,"current GM center version");
 assert.match(center,/C-08-CHARACTER/);
 assert.match(center,/C-15-BATTLE/);
 assert.match(center,/gm-era-sprites\.mjs/,"current sprite preview is lazy");

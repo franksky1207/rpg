@@ -1,0 +1,53 @@
+name: Batch 12 Material Selected Attack Acceptance
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths: ['3d-test/**', 'assets/era-player/**', 'development/equipment-2_5d/v1/**', 'scripts/batch12-*', 'tests/runtime/batch12-*', 'docs/COMBAT_ANIMATION_RENEWAL_BATCH12*', '.github/workflows/batch12-attack-acceptance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-raster:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0 numpy==2.3.3
+      - name: Source integrity, deterministic packed assets and unchanged gameplay owners
+        run: |
+          python3 scripts/batch12-render-candidates.py
+          python3 scripts/batch12-build-attack-assets.py --check
+          node tests/runtime/batch12-presentation-safety.cjs
+          node --test tests/equipment-gm/no-attack-aura.test.mjs tests/runtime/batch7-era-pool.test.mjs tests/runtime/batch7-layer-boundary.test.mjs
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Actual formal pixels, contact, desktop and mobile, all original pool budgets
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch12-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done
+          node scripts/batch12-candidate-evidence.cjs
+          node scripts/batch12-visual-evidence.cjs
+          python3 scripts/batch12-package-visual-evidence.py
+          node tests/runtime/batch7-formal-sprites-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch12-material-selected-attack-raster
+          path: |
+            development/combat-animation/batch12/rendered/
+            /tmp/batch7-formal-sprites-browser.json
+            /tmp/batch12-http.log

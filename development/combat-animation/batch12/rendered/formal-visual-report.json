@@ -1,0 +1,3651 @@
+{
+  "reports": [
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "rows": [
+        {
+          "era": "galaxy",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 21,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "galaxy",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 23,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 1,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "galaxy",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 73,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 2,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 12,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 2,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 10,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 3,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 46,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 4,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 61,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 4,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 58,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 5,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 264,
+              "height": 264,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 63,
+              "minGap": 0.1218719482421875
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 6,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        }
+      ],
+      "after": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 6,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "rows": [
+        {
+          "era": "galaxy",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 21,
+              "minGap": 0.08251667022705078
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "galaxy",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 23,
+              "minGap": 0.08251619338989258
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 1,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "galaxy",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 73,
+              "minGap": 0.08251571655273438
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 2,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 12,
+              "minGap": 0.08251667022705078
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 2,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 10,
+              "minGap": 0.08251667022705078
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 3,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 46,
+              "minGap": 0.08251595497131348
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 4,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 61,
+              "minGap": 0.08251667022705078
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 4,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 58,
+              "minGap": 0.08251667022705078
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 5,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 172.01560974121094,
+              "height": 172.015625,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 172.01564025878906,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 172.015625,
+              "height": 172.015625,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 63,
+              "minGap": 0.08251667022705078
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 6,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        }
+      ],
+      "after": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 6,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      }
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "rows": [
+        {
+          "era": "galaxy",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 21,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 0,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "galaxy",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 23,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 1,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "galaxy",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 73,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 1,
+            "bytes": 1048576,
+            "limit": 16777216,
+            "hits": 2,
+            "loads": 1,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 12,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 2,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 10,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 3,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "universe",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 46,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 2,
+            "bytes": 2097152,
+            "limit": 16777216,
+            "hits": 4,
+            "loads": 2,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "normal",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-35",
+              "ms": 35,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-70",
+              "ms": 70,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-105",
+              "ms": 105,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-140",
+              "ms": 140,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-175",
+              "ms": 175,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "windup",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-210",
+              "ms": 210,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-245",
+              "ms": 245,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-315",
+              "ms": 315,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-350",
+              "ms": 350,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-385",
+              "ms": 385,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-455",
+              "ms": 455,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-490",
+              "ms": 490,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-525",
+              "ms": 525,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-595",
+              "ms": 595,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-630",
+              "ms": 630,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "motion-665",
+              "ms": 665,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 61,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 4,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "elite",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 58,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 5,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        },
+        {
+          "era": "higher",
+          "rank": "boss",
+          "frames": [
+            {
+              "stage": "idle",
+              "ms": 0,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "windup",
+              "ms": 196,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "attack",
+              "ms": 280,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "attack",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "impact",
+              "ms": 336,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "impact",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "hold",
+              "ms": 420,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "recover",
+              "ms": 560,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "recover",
+              "weaponReady": "true"
+            },
+            {
+              "stage": "idle-end",
+              "ms": 700,
+              "border": 0,
+              "width": 128.75,
+              "height": 128.75,
+              "weaponStage": "idle",
+              "weaponReady": "true"
+            }
+          ],
+          "contacts": [
+            {
+              "overlap": 63,
+              "minGap": 0.07598876953125
+            }
+          ],
+          "stats": {
+            "entries": 3,
+            "bytes": 3145728,
+            "limit": 16777216,
+            "hits": 6,
+            "loads": 3,
+            "pending": 0,
+            "refs": 0,
+            "closed": false
+          }
+        }
+      ],
+      "after": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 16777216,
+        "hits": 6,
+        "loads": 3,
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      }
+    }
+  ],
+  "hardware": false,
+  "method": "Actual formal Renderer/Actor and CSS; owner-normalized 336ms impact, alpha contact checked against actual enemy silhouette"
+}

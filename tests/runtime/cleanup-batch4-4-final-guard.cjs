@@ -20,7 +20,10 @@ const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlinepr
 const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js","3d-test/mode-foundation.js","3d-test/era-appearance-contract.js","3d-test/gm-battle-simulation.js","3d-test/gm-battle-published.mjs","3d-test/gm-whole-suit.mjs","3d-test/gm-era-sprites.mjs","3d-test/era-player-sprites.mjs","3d-test/t3b-formal-renderer.js","3d-test/equipment-sprites-v1/assets.mjs","3d-test/equipment-sprites-v1/actor.mjs","3d-test/equipment-sprites-v1/animation.mjs","development/equipment-2_5d/v1/actor.mjs","development/equipment-2_5d/v1/animation.mjs","development/equipment-2_5d/v1/assets.mjs","development/equipment-2_5d/gm-publication.json"]);
 // Batch8/9 authorize the presentation stylesheet only; gameplay and retired assets remain protected.
 const approvedBatch8=new Set(["3d-test/formal-player-sprites.css"]);
-const unexpected=changed.filter(p=>!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
+// Batch12 permits exactly the single-interface layout rule; no other CSS change.
+const batch12Css="3d-test/test-center.css";
+assert.equal(fs.readFileSync(batch12Css,"utf8"),run("show","9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a:"+batch12Css)+"\n\n/* Batch12: one direct preview, no category/catalog navigation. */\n.center-layout{display:block}\n","Unexpected GM stylesheet change beyond Batch12 single-interface rule");
+const unexpected=changed.filter(p=>p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
@@ -29,6 +32,7 @@ if(changed.includes("index.html")){
  const sealed=run("show","32257058dd7003e284d9f548674617d8d2e9c263:index.html");
  const actual=fs.readFileSync("index.html","utf8");
  const expected=sealed
+  .replace("gm3dprototype.js?v=20261018-gm-copy1","gm3dprototype.js?v=20261019-batch12-rising-cut1")
   .replace("3d-test/formal-player-sprites.css?v=20261015-phase5","3d-test/formal-player-sprites.css?v=20261019-batch8-shared1")
   .replace("3d-test/t3b-formal-renderer.js?v=20261015-thrust1&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1")
   .replace("3d-test/t3b-formal-entry.js?v=20261018-batch5-central-settings&vbatch7sprite=20261018-lightweight1","3d-test/t3b-formal-entry.js?v=20261019-batch8-shared1")
@@ -39,7 +43,7 @@ if(changed.includes("index.html")){
   .replace("3d-test/t3b-formal-entry.js?v=20261019-batch8-shared1","3d-test/t3b-formal-entry.js?v=20261019-batch11-lifecycle1")
   .replace("settingsCopy=20261011-no-gm-v2&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1","settingsCopy=20261011-no-gm-v2&audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1")
   .replace("audio/audio-core.js?v=audio-20261011-volume-slider-fix&audioPersist=20261011-no-ui-click-prefs","audio/audio-core.js?v=audio-20261011-volume-slider-fix&audioPersist=20261019-batch11-lazy-sfx1")
-  .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch11-mobile-canvas3");
+  .replace("3d-test/t3b-formal-renderer.js?v=20261019-batch8-shared1","3d-test/t3b-formal-renderer.js?v=20261019-batch12-rising-cut1");
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];

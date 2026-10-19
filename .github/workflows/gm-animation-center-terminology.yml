@@ -30,6 +30,7 @@ jobs:
           node --check 3d-test/gm-battle-published.mjs
           node --check 3d-test/gm-whole-suit.mjs
           node tests/runtime/gm-animation-center-terminology.cjs
+          node tests/runtime/batch12-presentation-safety.cjs
           node tests/runtime/cleanup-batch4-4-final-guard.cjs
           node tests/runtime/cleanup-batch2-4-integration.cjs
           node tests/runtime/t4-preview-retirement.cjs

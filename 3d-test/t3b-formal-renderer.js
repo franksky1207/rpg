@@ -141,7 +141,7 @@ async function create(options){
  }catch(error){dispose();throw error;}
 }
 async function prepareSuit(options){
- const {release}=await import('./era-player-sprites.mjs?v=20261018-lightweight1');
+ const {release}=await import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1');
  if(release.schema!=="cw.era-player-sprites.v1")throw Error("unapproved-formal-sprites");
  const identity=['galaxy','universe','higher'].includes(options.eraVisualId)?{ready:true,visualId:options.eraVisualId}:global.CivilizationEraAppearanceContract?.resolve({world:options.world??options.appearance?.world});
  const entry=release.entries.find(e=>e.id==='era-'+identity?.visualId);
@@ -153,7 +153,7 @@ async function prepareSuit(options){
 let spriteRuntime=null,spritePool=null;
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261018-lightweight1'),import('./equipment-sprites-v1/assets.mjs?v=20261018-lightweight1')]);
+ spriteRuntime ||= Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]);
  const [{WholeSuitActor},{createSpritePool}]=await spriteRuntime;
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
@@ -182,6 +182,19 @@ async function createSuit(options,bundle){
  const enemyKind=String(bundle.enemyKind||'').toLowerCase();
  const rank=/boss|首領|魔王|王者|災厄/.test(enemyKind+' '+kind)?'boss':/elite|菁英|精英/.test(enemyKind+' '+kind)?'elite':'normal';
  host.dataset.enemyRank=rank;
+ // Visual docking follows the existing owner approach (max 58.8px). Keep both
+ // sprites square and near the shared centre even in a wide, short landscape stage.
+ // This changes presentation coordinates only, never event timing or collision rules.
+ let layoutKey='';
+ function layoutSprites(){
+  const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
+  if(key===layoutKey||!w||!h)return;layoutKey=key;
+  const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
+  for(const canvas of [actor.canvas,enemyCanvas]){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
+  actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
+  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
+ }
+ layoutSprites();
  let lastEnemyRenderKey=null;
  function drawEnemy(frame){
   const e=frame.enemy||frame;
@@ -214,7 +227,7 @@ async function createSuit(options,bundle){
 
  function sample(frame){
   if(closed||signal.aborted||!isCurrent())return false;
-  const p=frame.player||frame;activeClip=p.clip;
+  layoutSprites();const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
   // The official owner still samples every RAF; only duplicate pixels are skipped.
   // Active animation is sampled at 30 FPS and idle at 20 FPS on mobile-sized canvases.
@@ -222,9 +235,10 @@ async function createSuit(options,bundle){
   const step=p.clip==='idle'?50:35;
   const actorTick=Math.floor(elapsed/step);
   const attackTick=weapon?Math.floor(Math.max(0,frame.weaponAttack.elapsedMs||0)/35):-1;
-  const actorKey=`${p.clip}:${actorTick}:${attackTick}`;
+  const impactPhase=weapon&&frame.weaponAttack.elapsedMs>=336?1:0;
+  const actorKey=`${p.clip}:${actorTick}:${attackTick}:${impactPhase}`;
   if(lastActorRenderKey!==actorKey){
-   actor.draw({clip:p.clip,elapsedMs:actorTick*step,attackElapsedMs:weapon?attackTick*35:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
+   actor.draw({clip:p.clip,elapsedMs:actorTick*step,attackElapsedMs:weapon?Math.max(0,frame.weaponAttack.elapsedMs||0):undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
    lastActorRenderKey=actorKey;
   }
   const shift=Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0;
@@ -233,7 +247,7 @@ async function createSuit(options,bundle){
   if(actor.canvas.dataset.clip!==p.clip)actor.canvas.dataset.clip=p.clip;
   drawEnemy(frame);return true;
  }
- return Object.freeze({sample,resize(){},dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
+ return Object.freeze({sample,resize:layoutSprites,dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
 global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,clearSpriteCache:()=>spritePool?.clear(),spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
 })(window);

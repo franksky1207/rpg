@@ -54,6 +54,46 @@
         "scale": 0.3518821603927987,
         "alphaZero": 213999,
         "alphaOpaque": 40671
+      },
+      "weaponAnimation": {
+        "weaponAnimationStatus": "complete",
+        "template": "short-rising-cut",
+        "joint": [
+          0.36611328125,
+          0.3778515625
+        ],
+        "capRadius": 0.037109375,
+        "windup": 0.12,
+        "strike": -0.88,
+        "grip": [
+          0.3428515625,
+          0.47779296875
+        ],
+        "sourceSha256": [
+          "425771d77267b4c71a621b025cc1cfebfdccf9b23fa1c5882a76dd53f6d5bc04",
+          "a7826c8251cac295c18e407c9754c0bdb71a597a2427d36b086305a6e3edae2d"
+        ],
+        "body": {
+          "path": "assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 38454,
+          "sha256": "29e039f2d91c6613e7cb22ed375fc1917884a2997983ed8419ac09fbc74df57e"
+        },
+        "atlas": {
+          "body": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "arm": [
+            256,
+            0,
+            256,
+            256
+          ]
+        }
       }
     },
     {
@@ -110,6 +150,46 @@
         "scale": 0.34846029173419774,
         "alphaZero": 210387,
         "alphaOpaque": 46931
+      },
+      "weaponAnimation": {
+        "weaponAnimationStatus": "complete",
+        "template": "short-rising-cut",
+        "joint": [
+          0.36390625,
+          0.37560546875
+        ],
+        "capRadius": 0.037109375,
+        "windup": 0.12,
+        "strike": -0.88,
+        "grip": [
+          0.34478515625,
+          0.47802734375
+        ],
+        "sourceSha256": [
+          "80fb84f81ff41cedd9be2da1d49e7e5cf79d50474d11f167002687350957ec42",
+          "5e19114ece1139e673cd3e8f0af77c4a0e3bf8a1ae09426a34b46bbeaf983fad"
+        ],
+        "body": {
+          "path": "assets/era-player/v1/era-universe-attack-atlas.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 44544,
+          "sha256": "5bec9b73753d4652628ab2aaf1a4b86ba1039576aa4d52fc47ea0fbfc4f8a12e"
+        },
+        "atlas": {
+          "body": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "arm": [
+            256,
+            0,
+            256,
+            256
+          ]
+        }
       }
     },
     {
@@ -170,7 +250,48 @@
         "scale": 0.2859042553191489,
         "alphaZero": 213432,
         "alphaOpaque": 42671
+      },
+      "weaponAnimation": {
+        "weaponAnimationStatus": "complete",
+        "template": "short-rising-cut",
+        "joint": [
+          0.37302734375,
+          0.37119140625
+        ],
+        "capRadius": 0.037109375,
+        "windup": 0.12,
+        "strike": -0.88,
+        "grip": [
+          0.37470703125,
+          0.48052734375
+        ],
+        "sourceSha256": [
+          "7dff371cf2aac63478f2b5eada2a85313da2944ca591d20718d15ba94461bb7b",
+          "1bd7d53030efabc1d0c08e1c9659221e9dd323bd16a06a9366a5574fb43494c1"
+        ],
+        "body": {
+          "path": "assets/era-player/v1/era-higher-attack-atlas.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 44690,
+          "sha256": "9d1c87424057e5cbfc3aece68746def68ab63c93a6fcbc42f4264d73b0e124a9"
+        },
+        "atlas": {
+          "body": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "arm": [
+            256,
+            0,
+            256,
+            256
+          ]
+        }
       }
     }
-  ]
+  ],
+  "attackRevision": "20261019-batch12-rising-cut1"
 }
