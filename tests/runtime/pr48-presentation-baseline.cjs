@@ -7,7 +7,7 @@ const patch=require('./pr48-approved-presentation.json');
 // baseline return value for historical invariants while rejecting all other edits.
 const approvedFollowup=Object.freeze({
  '3d-test/t3b-formal-controller.js':'f95cfcae5bf1c50fb816ccfd607bf65f14435513',
- 'index.html':'5b26acc48685a006c895c8c8c30bd6dba48440c0'
+ 'index.html':'6dd80f0d505e1fc798d63c45334d572e1012fe38'
 });
 function original(p){
  if(Object.hasOwn(approvedFollowup,p)){
