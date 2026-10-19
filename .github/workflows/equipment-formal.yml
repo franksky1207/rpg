@@ -32,6 +32,7 @@ jobs:
           node tests/equipment-formal/publication.cjs
           node tests/equipment-weapons/names.cjs
           node --test tests/equipment-gm/no-attack-aura.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
+          node tests/runtime/unified-mobile-combat-viewport.cjs
           node tests/runtime/t3b-formal-owner-clock.cjs
           node tests/runtime/t3b-formal-controller.cjs
           node scripts/build-publish-dry-run.cjs
@@ -57,6 +58,7 @@ jobs:
           # The historical B developer fixture needs unpublished development/ sources.
           # Published GM now runs authorized shipped-only visuals; verify that real release instead.
           node tests/equipment-gm/browser.cjs
+          node tests/runtime/unified-mobile-combat-viewport-browser.cjs
           node tests/equipment-formal/browser.cjs
           node tests/equipment-formal/failures.cjs
           node tests/equipment-formal/review.cjs
@@ -73,5 +75,6 @@ jobs:
             /tmp/equipment-weapons-*.json
             /tmp/equipment-formal-*.json
             /tmp/batch11-audio-lazy-browser.json
+            /tmp/unified-mobile-*.png
             /tmp/formal-http.log
             /tmp/equipment-phase6-dependencies.json
