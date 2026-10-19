@@ -440,7 +440,8 @@
       "poolLimitBytes": 4194304,
       "refsAfter": 0,
       "bytesAfterClear": 0
-    }
+    },
+    "publicationPolicyFixtureRegression": true
   },
   "raster": {
     "candidateSheets": 66,
@@ -469,7 +470,8 @@
   "release": {
     "mergeRequiresLatestHeadActions": true,
     "actionsAndMergeAndPagesEvidence": "https://github.com/franksky1207/rpg/pull/43",
-    "status": "Local gates passed; final same-head Actions and publication closure tracked on PR #43"
+    "status": "Local gates passed; final same-head Actions and publication closure tracked on PR #43",
+    "supersededFailedPublicationRun": "https://github.com/franksky1207/rpg/actions/runs/39226501778"
   },
   "limitations": [
     "Automated viewports, not iPhone hardware thermals/battery/throttling or long Safari sessions",

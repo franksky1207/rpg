@@ -101,3 +101,5 @@
 原動作與圖集資源測試仍保持：18種真raster姿態、全部六動作加死亡終態不同、零邊緣裁切、原4MiB限制、100 actor生命週期、恰好3次decode。原正式故障案例仍注入404／SHA／decode／slow／Canvas，不以新URL逃過故障。無生成式AI素材、無補圖要求。
 
 `tests/runtime/batch12-presentation-safety.cjs` 保護27個原owner；`scripts/batch12-visual-evidence.cjs` 實際渲染正式Renderer；新增 Batch12 Material Selected Attack Acceptance Actions 重建來源衍生圖集及渲染。原Batch5、Batch6、Batch7、GM、Formal、Sprite、Runtime、Publication等workflow保留。
+
+同head初次Publication Dry Run (`39226501778`) 發現原發布政策合成fixture只複製三張完整角色圖、漏新圖集，先撞到精確allowlist而未到原禁止development斷言。已只補齊fixture的三張圖集，原禁止來源／遺漏／SHA等斷言完全保留，本機重新通過；正式產物原本即含圖集。修復後提交需重新核對全部必要Actions，絕不忽略該紅燈。
