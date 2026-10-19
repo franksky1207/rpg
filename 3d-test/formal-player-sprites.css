@@ -1,7 +1,7 @@
 /* Shared formal battlefield: HUD cards are peers, never sprite containers. */
 /* The retired combat-message is retained only as a compatibility DOM update target. */
 .combat-message{display:none!important}
-.formal-b-shared-stage{width:100%;height:clamp(230px,38dvh,390px);position:relative;display:block;overflow:hidden;flex:none;background:linear-gradient(180deg,#17273a,#0e1929);border:1px solid #34475c;border-radius:14px;isolation:isolate}
+.formal-b-shared-stage{width:100%;height:clamp(230px,38dvh,390px);position:relative;display:block;overflow:hidden;flex:none;background:transparent;border:0;border-radius:14px;isolation:isolate}
 .formal-b-shared-stage[hidden]{display:none}
 .formal-b-whole-suit,.formal-b-enemy-sprite{position:absolute;bottom:3%;height:87%;width:auto;max-width:44%;object-fit:contain;pointer-events:none;will-change:transform}
 .formal-b-player-sprite{left:8%}
