@@ -75,3 +75,11 @@ iPhone真機與真帳號雲端操作明確未驗收。
 透明PNG/WebP、512×512、站腳pivot `[0.5,0.9]` 與正式三套身份一致；高維仍無披風／星環／漂浮物。僅有新身體或武器獨立平移不滿足要求。
 
 本批不以未核准候選硬接正式Renderer；不合併或封箱。補齊素材後仍在同一第12批PR續作，完成刀尖幾何、Owner Clock命中與全回歸，再驗證最新main／Pages。
+
+## 驗收追蹤附記（PR #43）
+
+- Draft PR：[43](https://github.com/franksky1207/rpg/pull/43)。初始施工提交 `e24c19a3af706bf793877295be7ba1120b305241`；快取與歷史保護修復 `ff6d38dbd3ac6f48b2489b820bfc323c9b447adc`。報告後續提交會形成新的head，須另查checks，不能拿本節較早SHA代替。
+- 本機：JS structural integrity（414檔、Schema17）、31項單元測試、27個正式owner逐位元保護、SHA／資源manifest／發布dry-run與174依賴stage、三viewport授權GM、GM載入／真失敗回退／重啟／手機最大化、原生音訊50案例均通過。完整16類整合結果待最後invocation完成後補記；先前音訊headless-shell失敗未抹除。
+- 初始Actions三個失敗同源於歷史guard拒絕 `test-center.css`。現改為精確比對main原CSS加唯一核准的單介面規則，其他CSS差異仍失敗。`ff6d38db` 的Batch7、GM Integration、GM Terminology、Sprite Pipeline實際成功；Batch5在手機scroll測試失敗（initial=0、second=948）。
+- 手機scroll根因：測試只睡80ms後讀值，未保證owner已排程RAF執行；在忙碌runner讀到第一場尚未捲動，第二場才取得已提交位置。改等待owner RAF及下一個已提交frame，保留原 `initial>600`、兩場差<25、手動手勢不搶捲動、桌機不捲動全部斷言。沒有更改正式捲動owner或延長timeout。
+- 尚無本批合併後main／Runtime／Pages證據，因突刺素材阻擋維持Draft；不以任何自動化綠燈替代美術與真機允收。
