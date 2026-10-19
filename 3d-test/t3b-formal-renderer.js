@@ -213,9 +213,22 @@ async function createSuit(options,bundle){
   if(closed||signal.aborted||!isCurrent())return false;
   const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
-  actor.draw({clip:p.clip,elapsedMs:p.elapsedMs,attackElapsedMs:weapon?frame.weaponAttack.elapsedMs:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
-  actor.canvas.style.transform=`translateX(${Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0}px)`;
-  actor.canvas.dataset.clip=p.clip;drawEnemy(frame);return true;
+  // The official owner still samples every RAF; only duplicate pixels are skipped.
+  // Active animation is sampled at 30 FPS and idle at 20 FPS on mobile-sized canvases.
+  const elapsed=Number.isFinite(p.elapsedMs)?Math.max(0,p.elapsedMs):0;
+  const step=p.clip==='idle'?50:35;
+  const actorTick=Math.floor(elapsed/step);
+  const attackTick=weapon?Math.floor(Math.max(0,frame.weaponAttack.elapsedMs||0)/35):-1;
+  const actorKey=`${p.clip}:${actorTick}:${attackTick}`;
+  if(lastActorRenderKey!==actorKey){
+   actor.draw({clip:p.clip,elapsedMs:actorTick*step,attackElapsedMs:weapon?attackTick*35:undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
+   lastActorRenderKey=actorKey;
+  }
+  const shift=Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0;
+  const shiftKey=Math.round(shift*10)/10;
+  if(lastActorShift!==shiftKey){actor.canvas.style.transform=`translateX(${shiftKey}px)`;lastActorShift=shiftKey;}
+  if(actor.canvas.dataset.clip!==p.clip)actor.canvas.dataset.clip=p.clip;
+  drawEnemy(frame);return true;
  }
  return Object.freeze({sample,resize(){},dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
