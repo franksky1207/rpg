@@ -84,7 +84,7 @@
  }
  function positionActiveDungeonCombat(main){
   if(typeof window==="undefined"||typeof document==="undefined")return;
-  if(window.CivilizationCombatViewport?.animationExpected?.())return; // animated stage is owned by shared visual viewport coordinator
+  if(window.CivilizationCombatViewport?.snapshot?.().stageActive===true)return; // shared owner takes over only after real animated stage is mounted
   if(!["dungeon-bounty","dungeon-arena","dungeon-void-mirage"].includes(view)){
    battleViewportLastView="";battleViewportLastKey="";return;
   }
