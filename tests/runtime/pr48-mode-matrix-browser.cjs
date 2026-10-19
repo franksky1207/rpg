@@ -23,12 +23,18 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
    else if(phase===2)void startSecondWorldBossContinuous(0);else void startThirdWorldRunFromPlayerUi(0);
   }else if(mode==='bounty'){enterBountyDungeon();startBountyFight(true);}
   else if(mode==='arena'){openArenaDungeon();if(phase===3)startThirdWorldArenaUi('fixed',5);else{startArenaDungeon('normal');startArenaStageFight(true);}}
-  else if(mode==='void'){enterVoidMirageDungeon();startVoidMirageChallengeUI();}
-  else {window.playerCombatStats=()=>({hp:1000,atk:100,def:0,crit:0,dodge:0});state.hp=1000;if(phase===1){const d=getCivilizationCalamityDefinitions()[0];state.bossKilled[d.mapIndex]=true;startCivilizationCalamityUI(d.id,'continuous');}else{const d=getSecondWorldCalamityDefinitions()[0];state.secondWorld.mainline.bossKilled[d.bossIndex]=true;view='calamity';startSecondWorldCalamityUI(d.id,'continuous');}}
+  else if(mode==='void'){window.playerCombatStats=()=>({hp:1000,atk:1,def:0,crit:0,dodge:0});state.specializations.combo=0;state.specializations.drain=0;enterVoidMirageDungeon();startVoidMirageChallengeUI();}
+  else {window.playerCombatStats=()=>({hp:1000,atk:100,def:0,crit:0,dodge:0});state.hp=1000;if(phase===1){const d=getCivilizationCalamityDefinitions()[0];state.bossKilled[d.mapIndex]=true;startCivilizationCalamityUI(d.id,'continuous');}else{const d=getSecondWorldCalamityDefinitions()[1];state.secondWorld.mainline.bossKilled[d.bossIndex]=true;view='calamity';startSecondWorldCalamityUI(d.id,'continuous');}}
  },item);
  if(item.phase===3&&item.mode==='bounty'){assert.equal(availability.blocked,true,'formal high-era bounty remains unavailable');assert.equal(availability.stops,0,'no invented high-era bounty stop');reports.push({item,size,availability});console.log('PASS existing unavailable mode',item,size);continue;}
- await page.waitForFunction(()=>document.querySelector('.formal-b-shared-stage:not([hidden])')&&CivilizationCombatViewport.snapshot().focused,null,{timeout:20000}).catch(async e=>{console.log(item,size,errors,await page.evaluate(()=>({view,html:document.querySelector('#main').innerHTML.slice(0,1200),diag:CivilizationFormalBEntry.diagnostics(),vp:CivilizationCombatViewport.snapshot()})));throw e;});
- const proof=await page.evaluate(()=>{const b=document.querySelector('[data-combat-action="stop-continuous"]'),s=document.querySelector('.formal-b-shared-stage'),r=s.getBoundingClientRect();return {count:document.querySelectorAll('[data-combat-action="stop-continuous"]').length,above:b?.getBoundingClientRect().bottom<=r.top+1,delta:r.top+r.height/2-visualViewport.offsetTop-visualViewport.height/2,scrolls:__scrollProof,handler:b?.getAttribute('onclick')};});
+ const handle=await page.waitForFunction(()=>{
+  const s=document.querySelector('.formal-b-shared-stage:not([hidden])');if(!s||!CivilizationCombatViewport.snapshot().focused)return false;
+  const r=s.getBoundingClientRect(),delta=r.top+r.height/2-visualViewport.offsetTop-visualViewport.height/2;if(r.height<=0||Math.abs(delta)>=4)return false;
+  const b=document.querySelector('[data-combat-action="stop-continuous"]');return {count:document.querySelectorAll('[data-combat-action="stop-continuous"]').length,above:b?.getBoundingClientRect().bottom<=r.top+1,delta,scrolls:__scrollProof,handler:b?.getAttribute('onclick')};
+ },null,{timeout:20000}).catch(async e=>{console.log(item,size,errors,await page.evaluate(()=>({view,y:scrollY,scrolls:__scrollProof,stage:document.querySelector('.formal-b-shared-stage')?.getBoundingClientRect().toJSON(),html:document.querySelector('#main').innerHTML.slice(0,1200),diag:CivilizationFormalBEntry.diagnostics(),vp:CivilizationCombatViewport.snapshot()})));throw e;});
+ // Capture geometry in the same browser turn as Ready: a one-hit Void floor can
+ // retire before the next IPC. The complete original numeric assertions follow.
+ const proof=await handle.jsonValue();await handle.dispose();
  assert.equal(proof.count,1,JSON.stringify({item,proof}));assert(proof.above,JSON.stringify({item,proof}));assert(Math.abs(proof.delta)<4,JSON.stringify({item,proof}));assert(proof.scrolls.every(s=>s.ready),'no animated entry scroll before Ready: '+JSON.stringify({item,proof}));
  await page.locator('[data-combat-action="stop-continuous"]').evaluate(b=>b.click());assert.equal(await page.evaluate(()=>__originalStops),1,'exact original stop handler executes once');assert.deepEqual(errors,[]);
  reports.push({item,size,proof});console.log('PASS real mode',item,size);

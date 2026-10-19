@@ -14,6 +14,7 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
   // Load the tested GM owner explicitly; automatic development diagnostics also
   // mutate the GM context revision and can invalidate the 100-run fixture.
   await page.goto(url+(url.includes('?')?'&':'?')+'production=1',{waitUntil:"domcontentloaded",timeout:60000});
+  await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});
   await page.evaluate(()=>ensureCivilizationScriptGroup('gm'));
   await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION===2&&window.GM_POWER_BENCHMARK_MODE_STATE_VERSION===2&&typeof window.applyReincarnationResetState==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function",{timeout:30000});
   // Do not replace the global formal state while startup/restore is still running.
@@ -135,7 +136,7 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
   assert.equal(report.directBenchmark.formalStateStable,true);assert.equal(report.directBenchmark.completed,100);
   assert.equal(report.uiRunFormalStable,true,"Using the visible AU benchmark controls must not mutate formal state.");
   assert.equal(report.refreshFormalStable,true,"Refreshing the GM test UI after a sandbox change must not mutate formal state.");
-  assert.ok(report.html0.includes("異宇宙測試"));assert.ok(report.html0.includes("王編號")&&report.html0.includes("上一隻")&&report.html0.includes("下一隻"));
+  assert.ok(report.html0.includes("異宇宙測試"),"GM integration missing: "+report.html0.slice(-1400));assert.ok(report.html0.includes("王編號")&&report.html0.includes("上一隻")&&report.html0.includes("下一隻"),"GM AU navigation missing: "+report.html0.slice(-2200));
   assert.ok(!report.html0.includes("特性 A")&&!report.html0.includes("檢查 21 組雙特性"),"Internal trait diagnostics must not clutter the GM benchmark UI.");
   assert.ok(report.html0.includes("0 / 8"),"Fresh/cleared benchmark summary must be 0 / 8.");assert.ok(!report.html0.includes(" / 7"));
   assert.ok(report.summary0.includes("尚未執行任何戰鬥測試"));

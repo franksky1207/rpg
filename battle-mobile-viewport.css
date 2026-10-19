@@ -67,3 +67,7 @@
 @media(max-width:820px), (max-height:500px) and (pointer:coarse){
  #main:has(.formal-b-stage-pending,.formal-b-shared-layout)::after{content:"";display:block;height:50dvh;pointer-events:none}
 }
+
+@media(max-width:820px), (max-height:500px) and (pointer:coarse){
+ #main .combat-screen.formal-b-shared-layout,#main .combat-screen.formal-b-stage-pending{overflow-anchor:none}
+}

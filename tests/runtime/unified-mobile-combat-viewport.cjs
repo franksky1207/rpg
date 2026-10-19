@@ -27,3 +27,6 @@ combat={querySelector:()=>stage};y=0;win.CivilizationCombatViewport.sync();hidde
 hidden=false;mutation();flush();assert(y>0);const once=y;
 combat={querySelector:()=>({...stage,getBoundingClientRect:()=>({top:1000-y,width:350,height:250})})};mutation();flush();assert.equal(y,once,'continuous screen replacement is not a new focus request');
 assert.equal(win.CivilizationCombatViewport.snapshot().observerCount,1,'one viewport observer');
+combat=null;win.CivilizationCombatViewport.sync();win.visualViewport.offsetTop=29;win.visualViewport.height=480;
+combat={querySelector:()=>stage};y=0;win.CivilizationCombatViewport.sync();flush();assert(Math.abs(700-y+125-(29+240))<3,'visualViewport toolbar offset and visible height determine only the stage center');
+combat=null;win.CivilizationCombatViewport.sync();win.matchMedia=()=>({matches:false});combat={querySelector:()=>stage};y=0;win.CivilizationCombatViewport.sync();flush();assert.equal(y,0,'desktop never uses mobile positioning');
