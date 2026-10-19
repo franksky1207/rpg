@@ -57,7 +57,7 @@ function create(options){
   // Do not replay computed combat-action/outcome history as paced animation.
   if(event.phase!=="presentation"&&frame.type!=="battle-start"&&frame.type!=="snapshot")return false;
   if(!allowed()){fallback("text-or-minimal-policy");return false;}
-  if(!renderer){if(failed&&retries<1&&frame.type==='snapshot'&&frame.phase==='presentation'){failed=false;retries++;}if(!loading&&!failed)void initialize(frame);return false;}
+  if(!renderer){if(failed&&retries<1&&frame.phase==='presentation'&&['snapshot','combat-action','encounter'].includes(frame.type)){failed=false;retries++;}if(!loading&&!failed)void initialize(frame);return false;}
   // The presentation owner must supply an actual sample. No synthetic actor/HP or second clock.
   const sample=options.clock?.sample?.(event);
   if(!sample)return false;
