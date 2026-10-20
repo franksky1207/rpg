@@ -40,10 +40,12 @@ for directory in ("audio/assets", "3d-test/assets", "assets/3d", "assets/models"
             if file.is_file() and file.suffix.lower() in MEDIA_SUFFIXES:
                 paths.add(file.relative_to(root).as_posix())
 # Controlled GM assets and copied whole-suit runtime; never development sources.
-for directory in ('assets/gm-equipment-2_5d/v1', '3d-test/equipment-sprites-v1', 'assets/era-player/v1'):
+for directory in ('assets/gm-equipment-2_5d/v1', '3d-test/equipment-sprites-v1', 'assets/era-player/v1', 'assets/monsters/v1'):
     for file in (root / directory).rglob('*'):
         if file.is_file():
             paths.add(file.relative_to(root).as_posix())
+for file in (root / '3d-test').glob('monster-*.mjs'):
+    paths.add(file.relative_to(root).as_posix())
 paths.add('3d-test/gm-era-sprites.mjs')
 paths.add('3d-test/era-player-sprites.mjs')
 paths.add('3d-test/fixture-owner-history.json')
