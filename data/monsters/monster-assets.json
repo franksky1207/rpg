@@ -1,6 +1,6 @@
 {
   "schema": "cw.monster-sprites.v1",
-  "status": "trial-art-not-runtime-integrated",
+  "status": "gm-trial-integrated-formal-disabled",
   "assets": [
     {
       "assetId": "hm-01",

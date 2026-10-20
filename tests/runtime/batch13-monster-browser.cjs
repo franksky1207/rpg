@@ -23,9 +23,10 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
    for(const clip of ['idle','attack','hit','defeat'])for(let ms=0;ms<=700;ms+=35){actor.draw({clip,elapsedMs:ms});if(read(actor.canvas).border)throw Error(a.assetId+' clipped '+clip+':'+ms);}
    actor.draw({clip:'defeat',elapsedMs:700});samples.dead=read(actor.canvas);actor.dispose();results.push({id:a.assetId,samples});}
   for(let i=0;i<180;i++){const a=await new MonsterActor(pool,registry.assets[i%6].assetId).init();a.draw({clip:'attack',elapsedMs:336});a.dispose();if(pool.stats().bytes>pool.stats().limit)throw Error('budget');}
-  const stress=pool.stats();pool.dispose();return {results,stress,disposed:pool.stats(),lookup:plannedAssetId('galaxy-map-001')};
+  const stress=pool.stats(),transfers=performance.getEntriesByType('resource').filter(e=>e.name.includes('/assets/monsters/v1/')).map(e=>({url:e.name,bytes:e.transferSize}));pool.dispose();return {results,stress,transfers,disposed:pool.stats(),lookup:plannedAssetId('galaxy-map-001')};
  });
  assert.equal(poses.lookup,'hm-01');for(const a of poses.results){const s=a.samples;assert.equal(new Set(Object.values(s).map(v=>v.hash)).size,5);assert.equal(s.dead.count,0);assert.ok(s.idle.count>1000);}
+ assert.ok(poses.transfers.filter(e=>e.bytes>0).length<=6,'LRU re-decode must reuse disk cache, not download again');assert.ok(poses.transfers.filter(e=>e.bytes===0).length>=150,'warm image requests served without network bytes');
  assert.equal(poses.stress.refs,0);assert.equal(poses.stress.pending,0);assert.ok(poses.stress.entries<=2);assert.equal(poses.disposed.bytes,0);
  for(const id of ids){
   const before=await frame.locator('.gm-suit-preview').boundingBox();
