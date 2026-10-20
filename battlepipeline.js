@@ -111,7 +111,7 @@
     if(shouldStopContinuous(ctx))break;
     if(hasMoreBattles(ctx)){currentCombatEncounter=encounterForContext(ctx,{preview:false});await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}
    }
-   currentCombatEncounter=null;clearPreviewForContext(ctx);battleBusy=false;window.activeMainBattleContext=null;save();render();setTimeout(()=>{showBattleResult(ctx,defeat);if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);},0);return true;
+   currentCombatEncounter=null;clearPreviewForContext(ctx);battleBusy=false;window.activeMainBattleContext=null;save();render();setTimeout(()=>{if(battleBusy||window.activeMainBattleContext||window.activeSecondWorldMainlineContext)return;showBattleResult(ctx,defeat);if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);},0);return true;
   }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);stopMainBackground(mainBackgroundStarted);if(battleBusy&&window.activeMainBattleContext===ctx){battleBusy=false;window.activeMainBattleContext=null;}}
  };
  window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
