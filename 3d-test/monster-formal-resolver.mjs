@@ -11,12 +11,12 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
   key='galaxy-map-'+String(map*5+slot+1).padStart(3,'0');
  }else{
   // Official W2 boss encounter carries the stable second-world boss id.
-  if(typeof id!=='string'||!/^universe-boss-(?:0[0-9]{2}|100)$/.test(id))return null;
+  if(typeof id!=='string'||!/^universe-boss-(?:0(?:0[1-9]|[1-9][0-9])|100)$/.test(id))return null;
   key=id;
  }
  const mapping=findMapping(key);
  if(!mapping||mapping.world!==(world===1?'galaxy':'universe')||mapping.name!==name||mapping.kind!==kind)return null;
- if(world===1&&mapping.mapIndex!==Math.floor((Number(key.slice(-3))-1)/5)%10+1)return null;
+ if(world===1&&(mapping.region!==Math.floor(Number(location.split(':')[0])/10)+1||mapping.mapIndex!==Math.floor(Number(location.split(':')[0])%10)+1||mapping.slot!==Number(location.split(':')[1])+1))return null;
  if(world===2&&id!==mapping.id)return null;
  const asset=findAsset(mapping.assetId);
  if(!asset||asset.formalBattleAllowed!==true||asset.gmPreviewAllowed!==true||asset.facing!=='left-3/4')return null;
