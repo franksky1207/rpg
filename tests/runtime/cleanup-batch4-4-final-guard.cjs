@@ -65,4 +65,4 @@ for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing
 const check=JSON.parse(fs.readFileSync("development/hybrid-comparison/t2b3-v1/manifest.json","utf8"));
 assert.equal(Object.keys(check.files).length,174,"Current B-only manifest unexpectedly changed");
 const result={baseline:base,head:run("rev-parse","HEAD"),changedFiles:changed.length,prohibitedTracked:0,protectedFilesChecked:needs.length,manifestEntries:174,formalRuntimeChanges:0};
-console.log("PASS cleanup batch 4-4 current-only and unmodified formal runtime",JSON.stringify(result));
+console.log("PASS cleanup batch 4-4 historical assets preserved; Batch14 scoped formal visuals",JSON.stringify(result));
