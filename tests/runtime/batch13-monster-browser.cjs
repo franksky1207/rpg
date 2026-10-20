@@ -10,6 +10,9 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  await page.addInitScript(ts=>{const RealDate=Date;class FixedDate extends RealDate{constructor(...args){super(...(args.length?args:[ts]));}static now(){return ts;}}window.Date=FixedDate;},Date.now());
  await page.goto(base+'?production=1');await page.evaluate(()=>ensureCivilizationScriptGroup('gm'));
  await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready'&&typeof openGm3DPrototype==='function');await finishIntro(page);
+ // Playwright routing disables the entire HTTP cache. Remove the SDK bootstrap route
+ // after startup so force-cache is measured under real browser cache semantics.
+ await page.unroute('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
  await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');
  await frame.locator('[data-status]').filter({hasText:'已載入'}).waitFor();
  await page.waitForTimeout(1200);const truth=await page.evaluate(()=>JSON.stringify(state)),storage=await page.evaluate(()=>JSON.stringify(localStorage));
