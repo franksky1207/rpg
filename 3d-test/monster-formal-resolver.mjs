@@ -12,7 +12,7 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  }else{
   // Official W2 boss encounter carries the stable second-world boss id.
   if(typeof id!=='string'||!/^universe-boss-(?:0(?:0[1-9]|[1-9][0-9])|100)$/.test(id))return null;
-  if(typeof location!=='string'||!/^(?:0|[1-9]\\d*)$/.test(location)||Number(location)!==Number(id.slice(-3))-1)return null;
+  if(typeof location!=='string'||!/^(?:0|[1-9]\d*)$/.test(location)||Number(location)!==Number(id.slice(-3))-1)return null;
   key=id;
  }
  const mapping=findMapping(key);
