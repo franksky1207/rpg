@@ -11,7 +11,9 @@ const approvedFollowup=Object.freeze({
 });
 function original(p){
  if(Object.hasOwn(approvedFollowup,p)){
-  const gitBlob=cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();
+  // Batch13 authorizes exactly one GM cache-token replacement; every other byte stays locked.
+  const bytes=fs.readFileSync(p),reviewed=p==='index.html'?bytes.toString().replace('gm3dprototype.js?v=20261020-six-trial1','gm3dprototype.js?v=20261019-batch12-rising-cut1'):bytes;
+  const gitBlob=cp.execFileSync('git',['hash-object','--stdin'],{input:reviewed,encoding:'utf8'}).trim();
   assert.equal(gitBlob,approvedFollowup[p],'unauthorized followup edit: '+p);
   // Controller remains subject to the older immutable-owner baseline;
   // index uses the pre-PR50 version for its legacy cache-token comparisons.
