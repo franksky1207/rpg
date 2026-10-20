@@ -41,6 +41,7 @@ jobs:
           node tests/runtime/batch6-suite-runner.cjs
           node tests/runtime/cross-combat-stale-continuous-regression.cjs
           node tests/runtime/unified-combat-runtime-contract.cjs
+          node tests/runtime/cross-mode-late-settlement-regression.cjs
           node scripts/batch6-final16-evidence.cjs
       - uses: actions/upload-artifact@v4
         if: always()
