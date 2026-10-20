@@ -1,0 +1,14 @@
+"use strict";
+const fs=require("node:fs");
+const assert=require("node:assert/strict");
+const source=fs.readFileSync("backgroundprogress.js","utf8");
+const start=source.indexOf("function continuousRunConflictStatus(");
+const end=source.indexOf("function createContinuousRunInfrastructure(",start);
+assert(start>=0&&end>start,"shared continuous-run conflict entrypoint exists");
+const body=source.slice(start,end);
+assert(body.includes('window.worldTransitionRuntimeStatus()'),"uses the existing unified runtime blocker");
+assert(body.includes('runtime-status-invalid'),"malformed runtime snapshots fail closed");
+assert(body.includes('runtime-status-check-error'),"runtime checker exceptions fail closed");
+assert(body.includes('background-flow:'),"other background flow retains mutual exclusion");
+assert(body.includes('text.startsWith(`${ownBlocker}:`)'),"own blocker must be filtered to avoid self-deadlock");
+console.log("Unified combat runtime contract source guard passed");
