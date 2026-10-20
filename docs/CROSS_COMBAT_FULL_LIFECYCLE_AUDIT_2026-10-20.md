@@ -18,3 +18,20 @@
 - CI 全綠、合併 main 後 Runtime、正式戰鬥、Pages、快取版本核對與 iPhone 真機測試。
 
 **結論：不得將這份稽核視為全戰鬥驗收封箱；若 CI 失敗應先修。**
+
+## 2026-10-20 最終狀況更新（僅紀錄，不更動遊戲程式）
+
+最新核對正式 `main`：`a3133bb5ba78ca3941bddacb56c450a7ac909de1`。PR #51～#55 的已知修復已合併；玩家已親測懸賞／競技連戰之後可直接進入文明災厄。
+
+### 正式版 Actions
+該 SHA 的 8 個工作流程均為 `completed/success`：Runtime Integrity、Batch 6 Final 16 Integration、Equipment 2.5D Formal Battle、Equipment 2.5D GM Integration、Batch 7 Candidate Safety and Appearance、Batch 12 Material Selected Attack Acceptance、Batch 2-4 Integration and Regression、Publish Optimized GitHub Pages。
+
+### 第一階段稽核結果與證據界線
+- 已檢視 `worldtransitionsafety.js`、`backgroundprogress.js` 的共用互斥／fail-closed 回歸路徑及 `battlepipeline.js` 延遲結算回呼修正。
+- `tests/runtime/cross-combat-stale-continuous-regression.cjs`、`unified-combat-runtime-contract.cjs`、`cross-mode-late-settlement-regression.cjs` 經 Batch6 工作流執行；相關失敗未見於正式版上述成功工作流程。
+- `tests/runtime/pr48-mode-matrix-browser.cjs` 是多紀元／多模式的停止按鈕與版面驗證；`cross-era-background-browser.js`、`thirdworld-background-browser.js` 有真瀏覽器背景戰鬥驗證，但**不能把這些視為全部模式 A→B 連續實際切換**。
+- `alternate-universe-combat-integrity.js` 等異宇宙檢查主要是契約／狀態驗證，也**不是全路徑異宇宙→其他模式 UI 切換**。
+- 在現有證據可支持的驗收範圍內沒有發現需要再修改正式遊戲的錯誤；因此本次不做遊戲程式修改，也不新增不必要 PR。
+
+### 第二階段結論
+**既有回歸／正式版 CI／Pages：通過，狀況已更新；全合法模式兩兩切換矩陣：未完整執行，不宣告完全封箱。** 仍待執行項目含高維與異宇宙跨模式 UI、A 結束／停止／敗北→B 啟動、極簡／背景／離線與舊非同步回呼隔離，以及真機 iPhone 驗收。本輪僅狀況紀錄，未對遊戲功能進行施工。
