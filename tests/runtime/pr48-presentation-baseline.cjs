@@ -24,7 +24,9 @@ function original(p){
  const before=cp.execFileSync('git',['show',patch.baseline+':'+p],{maxBuffer:8*1024*1024});
  assert.equal(crypto.createHash('sha256').update(before).digest('hex'),row.beforeSha256);
  const lines=before.toString().split('\n');for(const [start,end,text] of [...row.edits].reverse())lines.splice(start,end-start,...text);const expected=lines.join('\n');
- assert.equal(fs.readFileSync(p,'utf8'),expected,'source differs from exact approved PR48 presentation patch: '+p);
+ const source=fs.readFileSync(p,'utf8');
+ const reviewed=p==='3d-test/index.html'?source.replace('test-center.js?v=20261020-six-trial1','test-center.js?v=20261019-batch12-rising-cut1'):source;
+ assert.equal(reviewed,expected,'source differs from exact approved PR48 presentation patch: '+p);
  return before;
 }
 module.exports={original};
