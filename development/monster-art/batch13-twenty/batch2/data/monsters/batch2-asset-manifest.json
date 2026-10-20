@@ -1,0 +1,81 @@
+{
+  "schema": "cw.monster-art-batch2.v1",
+  "status": "approved-art-not-runtime-integrated",
+  "assets": [
+    {
+      "assetId": "mech-03",
+      "description": "戰爭巨像",
+      "path": "assets/monsters/v1/mechanical/mech-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 271572,
+      "sha256": "3064d8f3c79d1f38340a37204b98581769c9b238cc713b20f73fe41a74b9ce32",
+      "alphaBounds": [
+        26,
+        26,
+        486,
+        486
+      ]
+    },
+    {
+      "assetId": "veh-02",
+      "description": "固定式防衛砲台",
+      "path": "assets/monsters/v1/mechanical/veh-02.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 233024,
+      "sha256": "e1d15a044c5af2a8e87ee1c278725d361204501902926dfedee3c8281ff6887a",
+      "alphaBounds": [
+        26,
+        55,
+        486,
+        463
+      ]
+    },
+    {
+      "assetId": "ship-04",
+      "description": "帝艦／母艦",
+      "path": "assets/monsters/v1/starship/ship-04.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 156170,
+      "sha256": "250600278e6d3f1924b7dd96b0d5e97402f35c2199d7bdc0ca4b65ac790c14a0",
+      "alphaBounds": [
+        26,
+        50,
+        486,
+        477
+      ]
+    },
+    {
+      "assetId": "fort-01",
+      "description": "太空堡壘",
+      "path": "assets/monsters/v1/structure/fort-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 175996,
+      "sha256": "f58b4e47af146c2e3deaa400cb401dd99781a7a2157cc47a61f2022a8f390b1b",
+      "alphaBounds": [
+        26,
+        46,
+        486,
+        466
+      ]
+    },
+    {
+      "assetId": "fort-03",
+      "description": "戰爭巨構",
+      "path": "assets/monsters/v1/structure/fort-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 198470,
+      "sha256": "ea98eca12e63e0b7d4b1b418342ae9c08be7b1663b459672e5c7579a0c57f68e",
+      "alphaBounds": [
+        26,
+        46,
+        486,
+        466
+      ]
+    }
+  ]
+}

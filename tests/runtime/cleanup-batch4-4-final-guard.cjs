@@ -25,10 +25,10 @@ const batch12Css="3d-test/test-center.css";
 assert.equal(fs.readFileSync(batch12Css,"utf8"),run("show","9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a:"+batch12Css)+"\n\n/* Batch12: one direct preview, no category/catalog navigation. */\n.center-layout{display:block}\n","Unexpected GM stylesheet change beyond Batch12 single-interface rule");
 require("./pr48-presentation-baseline.cjs").original("ui.js");
 // Batch13: exactly three independently validated trial-only monster presentation modules.
-const batch13Lock=JSON.parse(fs.readFileSync('development/monster-art/batch13-six/runtime-lock.json','utf8'));
+const batch13Lock=JSON.parse(fs.readFileSync('development/monster-art/batch13-twenty/runtime-lock.json','utf8'));
 const approvedBatch13=new Set(['3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','3d-test/monster-sprites.mjs']);
 assert.deepEqual(Object.keys(batch13Lock).sort(),[...approvedBatch13].sort());
-for(const p of approvedBatch13){assert.ok(live.has(p),'Batch13 module missing: '+p);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),batch13Lock[p],'Batch13 module differs from reviewed trial: '+p);}
+for(const p of approvedBatch13){assert.ok(live.has(p),'Batch13 module missing: '+p);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),batch13Lock[p],'Batch13 module differs from reviewed twenty-image integration: '+p);}
 assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,false,'trial must not enable formal monsters');
 const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);

@@ -1,3 +1,5 @@
+> **第13批20圖整合（2026-10-20）**：14張新圖加PR #58既有六張，609正式身份對應與63筆外型修正，沿用GM／Actor／Pool；正式戰鬥維持關閉。驗收、來源核對與剩餘真機項目見 [docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md](docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md)；最終是否完成以本批PR與最新main同SHA Actions／Pages成功為準。
+
 # 《文明戰線》目前待辦狀態
 
 更新日期：2026-10-17（UTC+8；本次為清理分支交接，非正式 main 驗收）  

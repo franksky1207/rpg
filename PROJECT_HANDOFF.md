@@ -1,3 +1,5 @@
+> **第13批20圖整合（2026-10-20）**：14張新圖加PR #58既有六張，609正式身份對應與63筆外型修正，沿用GM／Actor／Pool；正式戰鬥維持關閉。驗收、來源核對與剩餘真機項目見 [docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md](docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md)；最終是否完成以本批PR與最新main同SHA Actions／Pages成功為準。
+
 > **PR #48 接手結果與驗收索引（2026-10-19）**：修正已沿原分支合併，程式 main SHA `7b8138bff0fa414037ffe72ab864848cc7a05f79`；合併前 head `a9407dc27b7aacd3bd418ef2e137c620832422dd` 九項 Actions 全成功。停止原鈕採功能標記並保留行為；Ready 舞台中心對準 visualViewport，保留連戰空間與手動操作；Sprite 沿用六圖 pool／智慧下載。指定高維異相案例另加嚴為完整六戰全勝、兩輪全通才可通過。最新驗收、SHA、Pages 與工程封箱狀態以 `docs/COMBAT_CENTER_STOP_FIX_2026-10-19.md` 最新紀錄及 PR #48 說明為準；不得以舊 SHA 或僅啟動 workflow 代替最終成功。iPhone Safari 實際畫面、溫度、耗電與流暢度仍待真機。
 
 > **手機戰鬥動畫定位整合（PR #46 已合併；快取補修 PR #47）**：新增共用 `combat-viewport-coordinator.js`，以正式舞台、Safari visualViewport 與停止鈕共同定位，僅手機可見動畫生效。範圍包含三紀元所有正式動畫戰鬥與連戰；不得改停止時機/數值/存檔。完整驗收與真機限制見 `docs/COMBAT_MOBILE_VIEWPORT_STOP_UNIFICATION_2026-10-19.md`；首頁 dungeonui.js 快取 token 由 PR #47 精確補修。最終發布需以最新 main 與 Pages Actions 證據為準，未經 iPhone 真機不可稱已驗收。

@@ -1,4 +1,4 @@
-name: Batch13 Six Monster Sprite Trial
+name: Batch13 Twenty Monster GM Integration
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 jobs:
-  six-monsters:
+  twenty-monsters:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -25,6 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 tests/runtime/batch13-monster-assets.py
+          node tests/runtime/batch13-monster-mappings.cjs
           python3 scripts/generate-monster-trial-registry.py --check
           node --test tests/runtime/batch13-monster-pool.test.mjs
           node tests/runtime/batch12-presentation-safety.cjs
@@ -35,7 +36,7 @@ jobs:
         run: |
           npm install --prefix /tmp/batch13-browser --no-save playwright@1.55.0
           /tmp/batch13-browser/node_modules/.bin/playwright install --with-deps chromium
-      - name: Verify deployed candidate, six monsters and existing player GM
+      - name: Verify deployed candidate, twenty monsters and existing player GM
         env:
           NODE_PATH: /tmp/batch13-browser/node_modules
           RUNTIME_SMOKE_URL: http://127.0.0.1:4173/index.html
@@ -53,7 +54,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: batch13-six-monster-evidence
+          name: batch13-twenty-monster-evidence
           path: |
             /tmp/batch13-*.png
             /tmp/batch13-monster-browser.json
