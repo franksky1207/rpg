@@ -347,7 +347,7 @@ async function createSuit(options,bundle){
   const shiftKey=Math.round(shift*10)/10;
   if(lastActorShift!==shiftKey){actor.canvas.style.transform=`translateX(${shiftKey}px)`;lastActorShift=shiftKey;}
   if(actor.canvas.dataset.clip!==p.clip)actor.canvas.dataset.clip=p.clip;
-  drawEnemy(frame);return true;
+  if(!monsterAttempt)void activateMonster();drawEnemy(frame);return true;
  }
  return Object.freeze({sample,resize:layoutSprites,dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
