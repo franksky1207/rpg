@@ -27,10 +27,11 @@ require("./pr48-presentation-baseline.cjs").original("ui.js");
 // Batch13: exactly three independently validated trial-only monster presentation modules.
 const batch13Lock=JSON.parse(fs.readFileSync('development/monster-art/batch13-twenty/runtime-lock.json','utf8'));
 const approvedBatch13=new Set(['3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','3d-test/monster-sprites.mjs']);
+const batch14Authorized=new Set(['3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','3d-test/monster-sprites.mjs','3d-test/monster-formal-resolver.mjs','3d-test/t3b-formal-renderer.js']);
 assert.deepEqual(Object.keys(batch13Lock).sort(),[...approvedBatch13].sort());
-for(const p of approvedBatch13){assert.ok(live.has(p),'Batch13 module missing: '+p);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),batch13Lock[p],'Batch13 module differs from reviewed twenty-image integration: '+p);}
-assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,false,'trial must not enable formal monsters');
-const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&protectedRoots.some(re=>re.test(p)));
+for(const p of approvedBatch13){assert.ok(live.has(p),'Batch13 module missing: '+p);if(!batch14Authorized.has(p))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),batch13Lock[p],'Batch13 module differs from reviewed twenty-image integration: '+p);}
+assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,true,'Batch14 formal approval required');
+const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
@@ -56,7 +57,7 @@ if(changed.includes("index.html")){
   .replace("dungeonui.js?v=20261019-batch8-stable-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1")
   .replace('<script src="3d-test/formal-snapshots.js','<script src="combat-viewport-coordinator.js?v=20261019-unified1"></script>\n<script src="3d-test/formal-snapshots.js')
 
- assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
+ assert.equal(actual,expected.replace('3d-test/t3b-formal-renderer.js?v=20261020-sprite-recovery2&spriteWarm=20261019-v2&pr48=20261019-center4','3d-test/t3b-formal-renderer.js?v=20261020-sprite-recovery2&spriteWarm=20261019-v2&pr48=20261019-center4&batch14=20261021-formal1'),"Batch14 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
