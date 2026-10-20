@@ -19,7 +19,7 @@ const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlinepr
 // Batch 4 explicitly authorizes only these GM presentation entrypoints.
 const approvedBatch4Gm=new Set(["3d-test/index.html","3d-test/test-center.js","3d-test/t3b-formal-entry.js","3d-test/mode-foundation.js","3d-test/era-appearance-contract.js","3d-test/gm-battle-simulation.js","3d-test/gm-battle-published.mjs","3d-test/gm-whole-suit.mjs","3d-test/gm-era-sprites.mjs","3d-test/era-player-sprites.mjs","3d-test/t3b-formal-renderer.js","3d-test/equipment-sprites-v1/assets.mjs","3d-test/equipment-sprites-v1/actor.mjs","3d-test/equipment-sprites-v1/animation.mjs","development/equipment-2_5d/v1/actor.mjs","development/equipment-2_5d/v1/animation.mjs","development/equipment-2_5d/v1/assets.mjs","development/equipment-2_5d/gm-publication.json"]);
 // Batch8/9 authorize the presentation stylesheet only; gameplay and retired assets remain protected.
-const approvedBatch8=new Set(["3d-test/formal-player-sprites.css"]);
+const approvedBatch8=new Set(["3d-test/formal-player-sprites.css","3d-test/t3b-formal-controller.js"]); // PR50 exact content is SHA-locked in pr48-presentation-baseline.cjs
 // Batch12 permits exactly the single-interface layout rule; no other CSS change.
 const batch12Css="3d-test/test-center.css";
 assert.equal(fs.readFileSync(batch12Css,"utf8"),run("show","9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a:"+batch12Css)+"\n\n/* Batch12: one direct preview, no category/catalog navigation. */\n.center-layout{display:block}\n","Unexpected GM stylesheet change beyond Batch12 single-interface rule");

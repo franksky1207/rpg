@@ -3,7 +3,21 @@
 // Historic guards still compare EVERY byte outside this explicit patch set.
 const fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const patch=require('./pr48-approved-presentation.json');
+// PR #50, 2026-10-20: two exact reviewed post-seal updates. Keep the old
+// baseline return value for historical invariants while rejecting all other edits.
+const approvedFollowup=Object.freeze({
+ '3d-test/t3b-formal-controller.js':'f95cfcae5bf1c50fb816ccfd607bf65f14435513',
+ 'index.html':'6dd80f0d505e1fc798d63c45334d572e1012fe38'
+});
 function original(p){
+ if(Object.hasOwn(approvedFollowup,p)){
+  const gitBlob=cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();
+  assert.equal(gitBlob,approvedFollowup[p],'unauthorized followup edit: '+p);
+  // Controller remains subject to the older immutable-owner baseline;
+  // index uses the pre-PR50 version for its legacy cache-token comparisons.
+  if(p==='index.html')return cp.execFileSync('git',['show',patch.baseline+':'+p]);
+  return cp.execFileSync('git',['show',patch.baseline+':'+p]);
+ }
  const row=patch.files[p];if(!row)return fs.readFileSync(p);
  const before=cp.execFileSync('git',['show',patch.baseline+':'+p],{maxBuffer:8*1024*1024});
  assert.equal(crypto.createHash('sha256').update(before).digest('hex'),row.beforeSha256);

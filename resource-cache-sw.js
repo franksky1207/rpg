@@ -4,6 +4,9 @@ const PREFIX="civilization-resource-v1-", ACTIVE=PREFIX+"media";
 const MANIFEST="resource-manifest.json";
 const MEDIA=/\.(?:ogg|mp3|wav|png|jpe?g|webp|avif|glb|gltf|bin|ktx2|basis)$/i;
 let known=null, refreshJob=null, manifestTag=null;
+const verifiedSpriteCache=new Set();
+const isFormalSprite=path=>/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path);
+async function verifiedSprite(response,digest){const bytes=await response.clone().arrayBuffer();const hash=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('').slice(0,24)===digest;}
 const asPath=url=>{const u=new URL(url);const scope=new URL(self.registration.scope);if(u.origin!==scope.origin||!u.pathname.startsWith(scope.pathname))return null;return decodeURIComponent(u.pathname.slice(scope.pathname.length));};
 const hex=s=>typeof s==="string"&&/^[a-f0-9]{24}$/.test(s);
 async function refresh(){
@@ -18,6 +21,7 @@ async function refresh(){
   if(!entries.size)throw Error("manifest-empty");
   manifestTag=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(JSON.stringify(doc))).then(x=>Array.from(new Uint8Array(x),b=>b.toString(16).padStart(2,"0")).join("").slice(0,16));
   await clean(entries);
+  verifiedSpriteCache.clear();
   known=entries;
   return entries;
  })().finally(()=>refreshJob=null);
@@ -39,7 +43,16 @@ async function media(request){
  const specified=new URL(request.url).searchParams.get("asset");
  if(specified&&specified!==digest)return fetch(request);
  const cache=await caches.open(ACTIVE),key=keyFor(path,digest);
- const saved=await cache.match(key);
+ const repair=new URL(request.url).searchParams.get('sprite-repair')==='1'&&/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path);
+ if(repair)await cache.delete(key);
+ let saved=repair?null:await cache.match(key);
+ // Validate a formal sprite once per SW lifetime, not on every animation frame.
+ // A stale cache hit is removed and the original request is fetched again.
+ if(saved&&isFormalSprite(path)&&!verifiedSpriteCache.has(key)){
+  let valid=false;try{valid=await verifiedSprite(saved,digest);}catch(_){}
+  if(!valid){await cache.delete(key);saved=null;}
+  else verifiedSpriteCache.add(key);
+ }
  if(saved){
   const range=request.headers.get("range");
   if(!range)return saved;
@@ -68,7 +81,7 @@ async function media(request){
   const hash=await crypto.subtle.digest("SHA-256",bytes);
   const actual=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("").slice(0,24);
   if(actual!==digest)return fetched; // deployment in progress; never cache mismatched bytes
-  try{await cache.put(key,fetched.clone());}catch(_){} // quota errors must not block playback
+  try{await cache.put(key,fetched.clone());if(isFormalSprite(path))verifiedSpriteCache.add(key);}catch(_){} // quota errors must not block playback
  }catch(_){return fetched;} // hashing unavailable: return uncached response
  return fetched;
 }
@@ -150,5 +163,5 @@ self.addEventListener("message",event=>{
   }
   respond({ok:true,version:manifestTag,entries:keys.length,bytes,measured});
  }).catch(()=>respond({ok:false})));
- if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{preloadGeneration++;for(const name of await caches.keys())if(name.startsWith(PREFIX))await caches.delete(name);respond({ok:true});})().catch(()=>respond({ok:false})));
+ if(data.type==="CIV_CACHE_CLEAR")event.waitUntil((async()=>{verifiedSpriteCache.clear();preloadGeneration++;for(const name of await caches.keys())if(name.startsWith(PREFIX))await caches.delete(name);respond({ok:true});})().catch(()=>respond({ok:false})));
 });
