@@ -2,7 +2,7 @@ import hashlib,json,pathlib
 from PIL import Image
 r=pathlib.Path(__file__).resolve().parents[2]
 m=json.loads((r/'data/monsters/monster-assets.json').read_text())
-assert m['formalBattleEnabled'] is False
+assert m['formalBattleEnabled'] is True
 assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==20
 assert [a['assetId'] for a in m['assets'][:6]]==['hm-01','mech-02','ship-01','beast-03','core-01','bio-02']
 for a in m['assets']:
@@ -11,7 +11,7 @@ for a in m['assets']:
   assert im.format=='WEBP' and im.size==(512,512) and im.mode=='RGBA'
   assert im.getchannel('A').getextrema()==(0,255)
   assert list(im.getbbox())==a['visualBounds']==a['alphaBounds']
- assert not a['formalBattleAllowed'] and a['gmPreviewAllowed']
+ assert a['formalBattleAllowed'] and a['gmPreviewAllowed']
 source=r/'development/monster-art/batch13-six'
 for line in (source/'manifest.sha256').read_text().splitlines():
  sha,path=line.split(None,1)

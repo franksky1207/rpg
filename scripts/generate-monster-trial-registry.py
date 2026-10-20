@@ -1,4 +1,4 @@
-"""Generate the single shared, GM-only registry; never activates formal battle."""
+"""Generate the single shared GM/formal registry with explicit main-only approval."""
 import json,pathlib,sys
 r=pathlib.Path(__file__).resolve().parents[1]
 read=lambda p:json.loads((r/p).read_text())
@@ -6,12 +6,13 @@ m=read('data/monsters/monster-assets.json')
 d=read('docs/MONSTER_MAP_MAPPING_BATCH13_STEP1_2026-10-20.json')
 mappings=read('data/monsters/monster-mappings.json')
 variants=read('data/monsters/monster-variants.json')
-assert m['formalBattleEnabled'] is mappings['formalBattleEnabled'] is False
+assert m['formalBattleEnabled'] is mappings['formalBattleEnabled'] is True
+assert all(a['formalBattleAllowed'] is True for a in m['assets'])
 assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==20
 assert len(mappings['records'])==len({x['id'] for x in mappings['records']})==609
 assert {x['assetId'] for x in mappings['records']}=={a['assetId'] for a in m['assets']}
 encode=lambda x:json.dumps(x,ensure_ascii=False,separators=(',',':'))
-code='// Twenty approved images. Shared GM/future presentation data; formal battle disabled.\nconst data='+encode(m)+';\n'
+code='// Twenty approved images. Shared GM/formal main presentation data; scope is checked by formal consumer.\nconst data='+encode(m)+';\n'
 code+='const planned='+encode({x['id']:x['assetId'] for x in d['records']})+';\n'
 code+='const identities='+encode({x['id']:x for x in mappings['records']})+';\n'
 code+='const colors='+encode(variants['palettes'])+';\n'

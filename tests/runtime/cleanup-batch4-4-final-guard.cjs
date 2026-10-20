@@ -24,13 +24,16 @@ const approvedBatch8=new Set(["3d-test/formal-player-sprites.css","3d-test/t3b-f
 const batch12Css="3d-test/test-center.css";
 assert.equal(fs.readFileSync(batch12Css,"utf8"),run("show","9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a:"+batch12Css)+"\n\n/* Batch12: one direct preview, no category/catalog navigation. */\n.center-layout{display:block}\n","Unexpected GM stylesheet change beyond Batch12 single-interface rule");
 require("./pr48-presentation-baseline.cjs").original("ui.js");
-// Batch13: exactly three independently validated trial-only monster presentation modules.
+// Batch14: preserve the exact original twenty-image GM evidence, but allow audited formal consumers.
 const batch13Lock=JSON.parse(fs.readFileSync('development/monster-art/batch13-twenty/runtime-lock.json','utf8'));
 const approvedBatch13=new Set(['3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','3d-test/monster-sprites.mjs']);
 assert.deepEqual(Object.keys(batch13Lock).sort(),[...approvedBatch13].sort());
-for(const p of approvedBatch13){assert.ok(live.has(p),'Batch13 module missing: '+p);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),batch13Lock[p],'Batch13 module differs from reviewed twenty-image integration: '+p);}
-assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,false,'trial must not enable formal monsters');
-const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&protectedRoots.some(re=>re.test(p)));
+for(const p of approvedBatch13)assert.ok(live.has(p),'Batch13 module missing: '+p);
+const approvedBatch14=new Set([...approvedBatch13,'3d-test/monster-formal-resolver.mjs']);
+const batch14Authorized=approvedBatch14;
+assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,true,'Batch14 must explicitly authorize map-monster visuals');
+assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).formalBattleEnabled,true,'Batch14 identity registry must be approved');
+const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
@@ -56,11 +59,11 @@ if(changed.includes("index.html")){
   .replace("dungeonui.js?v=20261019-batch8-stable-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1")
   .replace('<script src="3d-test/formal-snapshots.js','<script src="combat-viewport-coordinator.js?v=20261019-unified1"></script>\n<script src="3d-test/formal-snapshots.js')
 
- assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
+ assert.equal(actual,expected,"Batch14 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
 const check=JSON.parse(fs.readFileSync("development/hybrid-comparison/t2b3-v1/manifest.json","utf8"));
 assert.equal(Object.keys(check.files).length,174,"Current B-only manifest unexpectedly changed");
 const result={baseline:base,head:run("rev-parse","HEAD"),changedFiles:changed.length,prohibitedTracked:0,protectedFilesChecked:needs.length,manifestEntries:174,formalRuntimeChanges:0};
-console.log("PASS cleanup batch 4-4 current-only and unmodified formal runtime",JSON.stringify(result));
+console.log("PASS cleanup batch 4-4 historical assets preserved; Batch14 scoped formal visuals",JSON.stringify(result));

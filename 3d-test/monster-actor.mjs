@@ -29,8 +29,8 @@ export function monsterPlacement(width,height,visual={},scale=visual.scale||1){
  return {size,x:(width-size)/2+size*.68*(.5-pivot[0])+(visual.offsetX||0),y:(height-size)/2+size*.68*(.5-pivot[1])+(visual.offsetY||0)};
 }
 export class MonsterActor{
- constructor(pool,id,{signal,identity=null,tier='medium',canvasFactory=()=>document.createElement('canvas')}={}){
-  this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
+ constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
+  this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
  }
  async init(){try{this.lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed)throw Error('monster-aborted');if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){

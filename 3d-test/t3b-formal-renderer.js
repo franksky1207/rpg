@@ -148,16 +148,16 @@ async function prepareSuit(options){
  if(!identity?.ready||!entry||entry.formalBattleAllowed!==true)throw Error("unavailable-formal-armor");
  options.signal.throwIfAborted();
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
- verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null});return token;
+ verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null,enemyId:options.identity?.id||null,enemyMode:options.identity?.mode||null,enemyWorld:options.identity?.world||null,enemyLocation:options.identity?.location||null});return token;
 }
-let spriteRuntime=null,spritePool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
+let spriteRuntime=null,spritePool=null,spriteMonsterPool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
 const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
 const warmAllowed=()=>!global.document?.querySelector?.('#main .combat-screen')&&!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
 function cancelWarmup(){
  clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);warmIdle=null;
  warmController?.abort();
 }
-function clearSpriteCache(){cancelWarmup();spritePool?.clear();}
+function clearSpriteCache(){cancelWarmup();spritePool?.clear();spriteMonsterPool?.clear();}
 function warmIdentity(){
  const phase=Number(global.currentWorldPhase?.());
  return global.CivilizationEraAppearanceContract?.resolve({world:phase});
@@ -224,7 +224,47 @@ async function createSuit(options,bundle){
  }
  clearTimeout(timer);
  let closed=false,activeClip='idle',lastActorRenderKey=null,lastActorShift=null;
- const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();host.querySelector('.formal-b-enemy-sprite')?.remove();actor.dispose();};
+ let monsterActor=null,monsterAttempt=0,monsterMapping=null,monsterReady=false,monsterLastKey=null,monsterError='';
+ let lastEnemyFrame=null;
+ let monsterPoolPromise=null;
+ const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261021-batch14-formal1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
+ // Monster optional: keep the existing known-good silhouette until verified sprite is ready.
+ async function activateMonster(){
+  if(monsterAttempt||closed||signal.aborted||!isCurrent()||bundle.enemyMode!=='main'||![1,2].includes(bundle.enemyWorld))return;
+  monsterAttempt=1;
+  try{
+   const [{resolveFormalMonster},{MonsterActor}]=await Promise.all([
+    import('./monster-formal-resolver.mjs?v=20261021-batch14-formal1'),
+    import('./monster-actor.mjs?v=20261021-batch14-formal1')
+   ]);
+   if(closed||signal.aborted||!isCurrent())return;
+   const approved=resolveFormalMonster({mode:bundle.enemyMode,world:bundle.enemyWorld,kind:bundle.enemyKind,name:bundle.enemyName,location:bundle.enemyLocation,id:bundle.enemyId});
+   if(!approved)return;
+   monsterMapping=approved.mapping;
+   const pool=await loadMonsterPool();
+   if(closed||signal.aborted||!isCurrent())return;
+   const actor=await new MonsterActor(pool,approved.asset.assetId,{signal,identity:approved.mapping.id,usage:'formal',tier:'medium'}).init();
+   if(closed||signal.aborted||!isCurrent()){actor.dispose();return;}
+   monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
+   actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
+   host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
+   const w=host.clientWidth,h=host.clientHeight;const mobile=global.matchMedia('(max-width:760px)').matches;const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44));
+   actor.canvas.style.width=size+'px';actor.canvas.style.height=size+'px';
+   actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
+   if(lastEnemyFrame)drawMonster(lastEnemyFrame);
+  }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
+ }
+
+ function drawMonster(frame){
+  if(!monsterActor||!monsterReady)return;
+  const e=frame.enemy||frame,elapsed=Number.isFinite(e.elapsedMs)?Math.max(0,e.elapsedMs):0;
+  const clip=e.clip==='return'?'idle':e.clip==='dodge'?'hit':e.clip||'idle';
+  const tick=Math.floor(elapsed/(clip==='idle'?50:35)),key=clip+':'+tick;
+  if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),palette:monsterMapping.visual.palette});monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';return;}}
+  const shift=Number.isFinite(e.approach)?Math.min(.42,Math.max(0,e.approach))*140:0;
+  monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
+ }
+ const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();monsterActor?.dispose();monsterActor=null;host.querySelectorAll('.formal-b-enemy-sprite').forEach(node=>node.remove());actor.dispose();};
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
  actor.canvas.className='formal-b-whole-suit formal-b-player-sprite';actor.canvas.dataset.suit=bundle.entry.id;
@@ -251,13 +291,14 @@ async function createSuit(options,bundle){
   const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
   const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
-  for(const canvas of [actor.canvas,enemyCanvas]){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
+  for(const canvas of [actor.canvas,enemyCanvas,monsterActor?.canvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
-  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
+  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';if(monsterActor)monsterActor.canvas.style.left=enemyCanvas.style.left;
  }
  layoutSprites();
  let lastEnemyRenderKey=null;
  function drawEnemy(frame){
+  lastEnemyFrame=frame;if(monsterReady){drawMonster(frame);if(monsterReady)return;}
   const e=frame.enemy||frame;
   const ms=Math.max(0,Math.min(700,e.elapsedMs||0)),t=ms/700;
   const approach=Math.max(0,Math.min(.42,e.approach||0));
@@ -288,7 +329,7 @@ async function createSuit(options,bundle){
 
  function sample(frame){
   if(closed||signal.aborted||!isCurrent())return false;
-  layoutSprites();const p=frame.player||frame;activeClip=p.clip;
+  layoutSprites();if(!monsterAttempt)void activateMonster();const p=frame.player||frame;activeClip=p.clip;
   const weapon=frame.weaponAttack?.role==='player'&&['attack','return'].includes(p.clip);
   // The official owner still samples every RAF; only duplicate pixels are skipped.
   // Active animation is sampled at 30 FPS and idle at 20 FPS on mobile-sized canvases.
@@ -310,5 +351,5 @@ async function createSuit(options,bundle){
  }
  return Object.freeze({sample,resize:layoutSprites,dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
-global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,warmSprites,scheduleWarm,clearSpriteCache,spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
+global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,warmSprites,scheduleWarm,clearSpriteCache,spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},monsterStats:()=>spriteMonsterPool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
 })(window);

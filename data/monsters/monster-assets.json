@@ -1,6 +1,6 @@
 {
   "schema": "cw.monster-sprites.v1",
-  "status": "twenty-gm-integrated-formal-disabled",
+  "status": "twenty-gm-integrated-main-formal-enabled",
   "assets": [
     {
       "assetId": "hm-01",
@@ -35,7 +35,7 @@
         465
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "mech-02",
@@ -70,7 +70,7 @@
         478
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "ship-01",
@@ -105,7 +105,7 @@
         390
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "beast-03",
@@ -140,7 +140,7 @@
         486
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "core-01",
@@ -175,7 +175,7 @@
         477
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "bio-02",
@@ -210,7 +210,7 @@
         403
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "hm-02",
@@ -245,7 +245,7 @@
         475
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "hm-04",
@@ -280,7 +280,7 @@
         463
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "cmd-01",
@@ -315,7 +315,7 @@
         459
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "dr-02",
@@ -350,7 +350,7 @@
         409
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "mech-01",
@@ -385,7 +385,7 @@
         466
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "mech-03",
@@ -420,7 +420,7 @@
         486
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "veh-02",
@@ -455,7 +455,7 @@
         463
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "ship-04",
@@ -490,7 +490,7 @@
         477
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "fort-01",
@@ -525,7 +525,7 @@
         466
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "fort-03",
@@ -560,7 +560,7 @@
         466
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "cmd-03",
@@ -595,7 +595,7 @@
         488
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "beast-01",
@@ -630,7 +630,7 @@
         474
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "core-03",
@@ -665,7 +665,7 @@
         482
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     },
     {
       "assetId": "energy-01",
@@ -700,9 +700,9 @@
         414
       ],
       "gmPreviewAllowed": true,
-      "formalBattleAllowed": false
+      "formalBattleAllowed": true
     }
   ],
   "version": "20261020-twenty-gm1",
-  "formalBattleEnabled": false
+  "formalBattleEnabled": true
 }
