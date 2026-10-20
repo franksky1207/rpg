@@ -1,5 +1,5 @@
 // Independent monster validation and bounded decode pool. Player whitelist stays intact.
-import {findAsset} from './monster-sprites.mjs?v=20261020-six-trial1';
+import {findAsset} from './monster-sprites.mjs?v=20261020-twenty-gm1';
 export function createMonsterPool({fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,limit=2*512*512*4}={}){
  const entries=new Map();let closed=false,hits=0,loads=0,clock=0;
  const cost=512*512*4,maxEntries=Math.max(1,Math.min(2,Math.floor(limit/cost)));

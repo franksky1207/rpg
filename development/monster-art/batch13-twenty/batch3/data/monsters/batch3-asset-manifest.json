@@ -1,0 +1,66 @@
+{
+  "schema": "cw.monster-art-batch3.v1",
+  "status": "approved-art-not-runtime-integrated",
+  "assets": [
+    {
+      "assetId": "cmd-03",
+      "description": "星際王者／霸主",
+      "path": "assets/monsters/v1/humanoid/cmd-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 277890,
+      "sha256": "95725d758dceed5c47c37366324853953ca3d5a3c128857d0dbada499428d096",
+      "alphaBounds": [
+        24,
+        25,
+        488,
+        488
+      ]
+    },
+    {
+      "assetId": "beast-01",
+      "description": "一般異獸／獵獸",
+      "path": "assets/monsters/v1/biological/beast-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102738,
+      "sha256": "25f799509743011aaa4d0514e9de07981d87276051a04a5b4bd5178e8c167b4b",
+      "alphaBounds": [
+        29,
+        31,
+        488,
+        474
+      ]
+    },
+    {
+      "assetId": "core-03",
+      "description": "終極文明核心",
+      "path": "assets/monsters/v1/core/core-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 305476,
+      "sha256": "dee77c6332340ade3f2c265b32e065d4ea81f0b63fba1e95ec3227431fa7da97",
+      "alphaBounds": [
+        24,
+        27,
+        488,
+        482
+      ]
+    },
+    {
+      "assetId": "energy-01",
+      "description": "能量戰體",
+      "path": "assets/monsters/v1/energy/energy-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 168438,
+      "sha256": "9b90dddd04eb58af93868b03be2c2b48bffbf550789adf55529451183fe4b477",
+      "alphaBounds": [
+        24,
+        97,
+        488,
+        414
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema": "cw.monster-sprites.v1",
-  "status": "gm-trial-integrated-formal-disabled",
+  "status": "twenty-gm-integrated-formal-disabled",
   "assets": [
     {
       "assetId": "hm-01",
@@ -211,8 +211,498 @@
       ],
       "gmPreviewAllowed": true,
       "formalBattleAllowed": false
+    },
+    {
+      "assetId": "hm-02",
+      "description": "星際武裝人形",
+      "path": "assets/monsters/v1/humanoid/hm-02.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 108680,
+      "sha256": "222faefcec6533414e10f52dab148340d71d3fab2633875fc60942a15dd2278d",
+      "alphaBounds": [
+        57,
+        53,
+        455,
+        475
+      ],
+      "name": "星際武裝人形",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        57,
+        53,
+        455,
+        475
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "hm-04",
+      "description": "重裝人形",
+      "path": "assets/monsters/v1/humanoid/hm-04.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 129048,
+      "sha256": "e92605f9c04f611108a2c6bcff6dbeff73f937b5d39c4b5ca1f0e97dc2234c91",
+      "alphaBounds": [
+        52,
+        49,
+        464,
+        463
+      ],
+      "name": "重裝人形",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        52,
+        49,
+        464,
+        463
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "cmd-01",
+      "description": "軍官／指揮官",
+      "path": "assets/monsters/v1/humanoid/cmd-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 181120,
+      "sha256": "c9e919910bc80bdd0a51c72e3e6576027506db09a615c4db044d1deab8524d35",
+      "alphaBounds": [
+        26,
+        52,
+        486,
+        459
+      ],
+      "name": "軍官／指揮官",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        52,
+        486,
+        459
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "dr-02",
+      "description": "戰鬥無人機",
+      "path": "assets/monsters/v1/mechanical/dr-02.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 144238,
+      "sha256": "3b17ac4bfd878daa2ddd535a034865031f94bf0e4cc960947ade556d1f41ee2e",
+      "alphaBounds": [
+        26,
+        102,
+        486,
+        409
+      ],
+      "name": "戰鬥無人機",
+      "animationType": "mechanical-strike",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        102,
+        486,
+        409
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "mech-01",
+      "description": "戰鬥機甲",
+      "path": "assets/monsters/v1/mechanical/mech-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 238054,
+      "sha256": "5cc137aad2ead71073aedc567ae13a56dae00d458c7560e3ce31642579f8b166",
+      "alphaBounds": [
+        26,
+        46,
+        486,
+        466
+      ],
+      "name": "戰鬥機甲",
+      "animationType": "mechanical-strike",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        46,
+        486,
+        466
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "mech-03",
+      "description": "戰爭巨像",
+      "path": "assets/monsters/v1/mechanical/mech-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 271572,
+      "sha256": "3064d8f3c79d1f38340a37204b98581769c9b238cc713b20f73fe41a74b9ce32",
+      "alphaBounds": [
+        26,
+        26,
+        486,
+        486
+      ],
+      "name": "戰爭巨像",
+      "animationType": "mechanical-strike",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        26,
+        486,
+        486
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "veh-02",
+      "description": "固定式防衛砲台",
+      "path": "assets/monsters/v1/mechanical/veh-02.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 233024,
+      "sha256": "e1d15a044c5af2a8e87ee1c278725d361204501902926dfedee3c8281ff6887a",
+      "alphaBounds": [
+        26,
+        55,
+        486,
+        463
+      ],
+      "name": "固定式防衛砲台",
+      "animationType": "stationary-shot",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        55,
+        486,
+        463
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "ship-04",
+      "description": "帝艦／母艦",
+      "path": "assets/monsters/v1/starship/ship-04.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 156170,
+      "sha256": "250600278e6d3f1924b7dd96b0d5e97402f35c2199d7bdc0ca4b65ac790c14a0",
+      "alphaBounds": [
+        26,
+        50,
+        486,
+        477
+      ],
+      "name": "帝艦／母艦",
+      "animationType": "ranged-shot",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        50,
+        486,
+        477
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "fort-01",
+      "description": "太空堡壘",
+      "path": "assets/monsters/v1/structure/fort-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 175996,
+      "sha256": "f58b4e47af146c2e3deaa400cb401dd99781a7a2157cc47a61f2022a8f390b1b",
+      "alphaBounds": [
+        26,
+        46,
+        486,
+        466
+      ],
+      "name": "太空堡壘",
+      "animationType": "stationary-shot",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        46,
+        486,
+        466
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "fort-03",
+      "description": "戰爭巨構",
+      "path": "assets/monsters/v1/structure/fort-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 198470,
+      "sha256": "ea98eca12e63e0b7d4b1b418342ae9c08be7b1663b459672e5c7579a0c57f68e",
+      "alphaBounds": [
+        26,
+        46,
+        486,
+        466
+      ],
+      "name": "戰爭巨構",
+      "animationType": "stationary-shot",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        26,
+        46,
+        486,
+        466
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "cmd-03",
+      "description": "星際王者／霸主",
+      "path": "assets/monsters/v1/humanoid/cmd-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 277890,
+      "sha256": "95725d758dceed5c47c37366324853953ca3d5a3c128857d0dbada499428d096",
+      "alphaBounds": [
+        24,
+        25,
+        488,
+        488
+      ],
+      "name": "星際王者／霸主",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        24,
+        25,
+        488,
+        488
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "beast-01",
+      "description": "一般異獸／獵獸",
+      "path": "assets/monsters/v1/biological/beast-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 102738,
+      "sha256": "25f799509743011aaa4d0514e9de07981d87276051a04a5b4bd5178e8c167b4b",
+      "alphaBounds": [
+        29,
+        31,
+        488,
+        474
+      ],
+      "name": "一般異獸／獵獸",
+      "animationType": "pounce",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        29,
+        31,
+        488,
+        474
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "core-03",
+      "description": "終極文明核心",
+      "path": "assets/monsters/v1/core/core-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 305476,
+      "sha256": "dee77c6332340ade3f2c265b32e065d4ea81f0b63fba1e95ec3227431fa7da97",
+      "alphaBounds": [
+        24,
+        27,
+        488,
+        482
+      ],
+      "name": "終極文明核心",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        24,
+        27,
+        488,
+        482
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
+    },
+    {
+      "assetId": "energy-01",
+      "description": "能量戰體",
+      "path": "assets/monsters/v1/energy/energy-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 168438,
+      "sha256": "9b90dddd04eb58af93868b03be2c2b48bffbf550789adf55529451183fe4b477",
+      "alphaBounds": [
+        24,
+        97,
+        488,
+        414
+      ],
+      "name": "能量戰體",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        24,
+        97,
+        488,
+        414
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": false
     }
   ],
-  "version": "20261020-six-trial1",
+  "version": "20261020-twenty-gm1",
   "formalBattleEnabled": false
 }
