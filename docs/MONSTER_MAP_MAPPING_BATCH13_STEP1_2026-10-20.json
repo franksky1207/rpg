@@ -193,16 +193,6 @@
       "assetId": "unique-universe-100",
       "designName": "宇宙最終王",
       "status": "planned-not-generated"
-    },
-    {
-      "assetId": "special-01",
-      "designName": "偽裝補給艙／機械寶箱",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "special-02",
-      "designName": "機率增幅信標／浮空裝置",
-      "status": "planned-not-generated"
     }
   ],
   "records": [
@@ -8826,7 +8816,7 @@
       "name": "誘餌補給艙",
       "kind": "special",
       "tier": "high",
-      "assetId": "special-01",
+      "assetId": "fort-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8850,7 +8840,7 @@
       "name": "機率增幅信標",
       "kind": "special",
       "tier": "low",
-      "assetId": "special-02",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8916,8 +8906,8 @@
     }
   ],
   "notes": [
-    "目前是設計對應草案，不代表已完成人工逐怪視覺審核",
-    "原本38張基礎候選不足以合理涵蓋誘餌補給艙及機率增幅信標，暫增2個專用外觀ID，總數40張候選。",
-    "所有圖片尚未製作；下一步應逐名語意審核並確認顏色、尺寸、錨點、動畫後才能封箱。"
+    "地圖怪採低成本共用外型，不為個別特殊怪單獨新增圖片；誘餌補給艙暫借用 fort-01、機率增幅信標暫借用 energy-01，容許外型近似，不要求字面完全一致。",
+    "第一階段候選恢復 38 張（36 類基礎及兩紀元最終主線 Boss 各一張）；實際製圖前再審核有無可縮減之處，地圖怪不為個別名字擴張圖數。",
+    "目前對應表屬設計草案，不是已完成人工逐怪視覺審核；全部圖片尚未生成。"
   ]
 }
