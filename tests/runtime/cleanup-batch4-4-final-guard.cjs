@@ -30,6 +30,7 @@ const approvedBatch13=new Set(['3d-test/monster-actor.mjs','3d-test/monster-spri
 assert.deepEqual(Object.keys(batch13Lock).sort(),[...approvedBatch13].sort());
 for(const p of approvedBatch13)assert.ok(live.has(p),'Batch13 module missing: '+p);
 const approvedBatch14=new Set([...approvedBatch13,'3d-test/monster-formal-resolver.mjs']);
+const batch14Authorized=approvedBatch14;
 assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,true,'Batch14 must explicitly authorize map-monster visuals');
 assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).formalBattleEnabled,true,'Batch14 identity registry must be approved');
 const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
