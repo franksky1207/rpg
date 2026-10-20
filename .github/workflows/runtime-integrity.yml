@@ -4,6 +4,10 @@ name: Runtime Integrity
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
 # W1 target-context optimization 4 exact-head retrigger. 2026-10-09 deferred GM title regression follow-up.
 on:
+  pull_request:
+    paths:
+      - 'tests/runtime/pr48-stop-contract.cjs'
+      - '.github/workflows/runtime-integrity.yml'
   push:
     branches: [main]
     paths:
