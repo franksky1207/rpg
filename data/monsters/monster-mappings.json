@@ -1,7 +1,7 @@
 {
   "schema": "cw.monster-mappings.v1",
   "sourceMainSha": "b6fb5632aa6928b277deb0b1df765a89aebe22e4",
-  "formalBattleEnabled": false,
+  "formalBattleEnabled": true,
   "records": [
     {
       "id": "galaxy-map-001",
@@ -16,7 +16,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-001",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -44,7 +44,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-002",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -72,7 +72,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-003",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -100,7 +100,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-004",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.96,
@@ -128,7 +128,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-005",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.19,
@@ -156,7 +156,7 @@
       "combatStyle": "attack",
       "assetId": "beast-01",
       "variantId": "galaxy-map-006",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.05,
@@ -184,7 +184,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-007",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -212,7 +212,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-008",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -240,7 +240,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-009",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.18,
@@ -268,7 +268,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-010",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.19,
@@ -296,7 +296,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-011",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -324,7 +324,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-012",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -352,7 +352,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-013",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -380,7 +380,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-014",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.18,
@@ -408,7 +408,7 @@
       "combatStyle": "balanced",
       "assetId": "core-01",
       "variantId": "galaxy-map-015",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.12,
@@ -436,7 +436,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-016",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -464,7 +464,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-017",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.08,
@@ -492,7 +492,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-018",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -520,7 +520,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-019",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.18,
@@ -548,7 +548,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-020",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.19,
@@ -576,7 +576,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-021",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -604,7 +604,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-022",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -632,7 +632,7 @@
       "combatStyle": "attack",
       "assetId": "beast-01",
       "variantId": "galaxy-map-023",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.05,
@@ -660,7 +660,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-024",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.96,
@@ -688,7 +688,7 @@
       "combatStyle": "tank",
       "assetId": "bio-02",
       "variantId": "galaxy-map-025",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.25,
@@ -716,7 +716,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-026",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -744,7 +744,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-027",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -772,7 +772,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-028",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -800,7 +800,7 @@
       "combatStyle": "tank",
       "assetId": "beast-01",
       "variantId": "galaxy-map-029",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.14,
@@ -828,7 +828,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-030",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.26,
@@ -856,7 +856,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-031",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -884,7 +884,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-032",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -912,7 +912,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-033",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -940,7 +940,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-034",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.18,
@@ -968,7 +968,7 @@
       "combatStyle": "balanced",
       "assetId": "core-01",
       "variantId": "galaxy-map-035",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.12,
@@ -996,7 +996,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-036",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -1024,7 +1024,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-037",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -1052,7 +1052,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-038",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -1080,7 +1080,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-039",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.96,
@@ -1108,7 +1108,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-040",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.19,
@@ -1136,7 +1136,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-041",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.96,
@@ -1164,7 +1164,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-042",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.83,
@@ -1192,7 +1192,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-043",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -1220,7 +1220,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-044",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.11,
@@ -1248,7 +1248,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-045",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.19,
@@ -1276,7 +1276,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-046",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -1304,7 +1304,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-047",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.08,
@@ -1332,7 +1332,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-048",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 0.88,
@@ -1360,7 +1360,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-049",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.11,
@@ -1388,7 +1388,7 @@
       "combatStyle": "tank",
       "assetId": "core-03",
       "variantId": "galaxy-map-050",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "earth",
         "scale": 1.12,
@@ -1416,7 +1416,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-051",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -1444,7 +1444,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-052",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -1472,7 +1472,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-053",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.98,
@@ -1500,7 +1500,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-054",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.96,
@@ -1528,7 +1528,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-055",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -1556,7 +1556,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-056",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -1584,7 +1584,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-057",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -1612,7 +1612,7 @@
       "combatStyle": "tank",
       "assetId": "hm-01",
       "variantId": "galaxy-map-058",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -1640,7 +1640,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-059",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.9,
@@ -1668,7 +1668,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-060",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.12,
@@ -1696,7 +1696,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-061",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -1724,7 +1724,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-062",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.08,
@@ -1752,7 +1752,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-063",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -1780,7 +1780,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-064",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.96,
@@ -1808,7 +1808,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-065",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -1836,7 +1836,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-066",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -1864,7 +1864,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-067",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -1892,7 +1892,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-068",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.08,
@@ -1920,7 +1920,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-069",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.18,
@@ -1948,7 +1948,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-070",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -1976,7 +1976,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-071",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.08,
@@ -2004,7 +2004,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-072",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2032,7 +2032,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-073",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -2060,7 +2060,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-074",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.18,
@@ -2088,7 +2088,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-075",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -2116,7 +2116,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-076",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2144,7 +2144,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-077",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.08,
@@ -2172,7 +2172,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-078",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -2200,7 +2200,7 @@
       "combatStyle": "tank",
       "assetId": "beast-01",
       "variantId": "galaxy-map-079",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.14,
@@ -2228,7 +2228,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-080",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.03,
@@ -2256,7 +2256,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-081",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -2284,7 +2284,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-082",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2312,7 +2312,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-083",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.93,
@@ -2340,7 +2340,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-084",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.9,
@@ -2368,7 +2368,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-085",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -2396,7 +2396,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-086",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -2424,7 +2424,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-087",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2452,7 +2452,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-088",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.98,
@@ -2480,7 +2480,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-089",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.11,
@@ -2508,7 +2508,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-090",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -2536,7 +2536,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-091",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2564,7 +2564,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-092",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2592,7 +2592,7 @@
       "combatStyle": "tank",
       "assetId": "hm-01",
       "variantId": "galaxy-map-093",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2620,7 +2620,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-094",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.11,
@@ -2648,7 +2648,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-095",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.19,
@@ -2676,7 +2676,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-096",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2704,7 +2704,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-097",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.83,
@@ -2732,7 +2732,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-098",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 0.88,
@@ -2760,7 +2760,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-099",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.11,
@@ -2788,7 +2788,7 @@
       "combatStyle": "tank",
       "assetId": "core-03",
       "variantId": "galaxy-map-100",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.12,
@@ -2816,7 +2816,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-101",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -2844,7 +2844,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-102",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -2872,7 +2872,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-103",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -2900,7 +2900,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-104",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.18,
@@ -2928,7 +2928,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-105",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -2956,7 +2956,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-106",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -2984,7 +2984,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-107",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3012,7 +3012,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-108",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3040,7 +3040,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-109",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.96,
@@ -3068,7 +3068,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-110",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -3096,7 +3096,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-111",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3124,7 +3124,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-112",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3152,7 +3152,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-113",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3180,7 +3180,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-114",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.18,
@@ -3208,7 +3208,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-115",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -3236,7 +3236,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-116",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3264,7 +3264,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-117",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -3292,7 +3292,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-118",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3320,7 +3320,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-119",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.11,
@@ -3348,7 +3348,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-120",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -3376,7 +3376,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-121",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3404,7 +3404,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-122",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3432,7 +3432,7 @@
       "combatStyle": "balanced",
       "assetId": "energy-01",
       "variantId": "galaxy-map-123",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.93,
@@ -3460,7 +3460,7 @@
       "combatStyle": "tank",
       "assetId": "mech-02",
       "variantId": "galaxy-map-124",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.18,
@@ -3488,7 +3488,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-125",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -3516,7 +3516,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-126",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3544,7 +3544,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-127",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3572,7 +3572,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-128",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.98,
@@ -3600,7 +3600,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-129",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.11,
@@ -3628,7 +3628,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-130",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -3656,7 +3656,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-131",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3684,7 +3684,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-132",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -3712,7 +3712,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-133",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3740,7 +3740,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-134",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.11,
@@ -3768,7 +3768,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-135",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -3796,7 +3796,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-136",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3824,7 +3824,7 @@
       "combatStyle": "tank",
       "assetId": "energy-01",
       "variantId": "galaxy-map-137",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.93,
@@ -3852,7 +3852,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-138",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -3880,7 +3880,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-139",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.11,
@@ -3908,7 +3908,7 @@
       "combatStyle": "balanced",
       "assetId": "core-01",
       "variantId": "galaxy-map-140",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.12,
@@ -3936,7 +3936,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-141",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -3964,7 +3964,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-142",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -3992,7 +3992,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-143",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -4020,7 +4020,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-144",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.18,
@@ -4048,7 +4048,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-145",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.12,
@@ -4076,7 +4076,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-146",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -4104,7 +4104,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-147",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.83,
@@ -4132,7 +4132,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-148",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 0.88,
@@ -4160,7 +4160,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-149",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.11,
@@ -4188,7 +4188,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-150",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "ice",
         "scale": 1.19,
@@ -4216,7 +4216,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-151",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4244,7 +4244,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-152",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.83,
@@ -4272,7 +4272,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-153",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4300,7 +4300,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-154",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.18,
@@ -4328,7 +4328,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-155",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -4356,7 +4356,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-156",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4384,7 +4384,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-157",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4412,7 +4412,7 @@
       "combatStyle": "tank",
       "assetId": "hm-01",
       "variantId": "galaxy-map-158",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4440,7 +4440,7 @@
       "combatStyle": "attack",
       "assetId": "mech-02",
       "variantId": "galaxy-map-159",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.18,
@@ -4468,7 +4468,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-160",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -4496,7 +4496,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-161",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4524,7 +4524,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-162",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.83,
@@ -4552,7 +4552,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-163",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4580,7 +4580,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-164",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.11,
@@ -4608,7 +4608,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-165",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -4636,7 +4636,7 @@
       "combatStyle": "attack",
       "assetId": "beast-01",
       "variantId": "galaxy-map-166",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.05,
@@ -4664,7 +4664,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-167",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4692,7 +4692,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-168",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4720,7 +4720,7 @@
       "combatStyle": "tank",
       "assetId": "beast-01",
       "variantId": "galaxy-map-169",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.14,
@@ -4748,7 +4748,7 @@
       "combatStyle": "tank",
       "assetId": "bio-02",
       "variantId": "galaxy-map-170",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.25,
@@ -4776,7 +4776,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-171",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4804,7 +4804,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-172",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4832,7 +4832,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-173",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.83,
@@ -4860,7 +4860,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-174",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.11,
@@ -4888,7 +4888,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-175",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -4916,7 +4916,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-176",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4944,7 +4944,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-177",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -4972,7 +4972,7 @@
       "combatStyle": "tank",
       "assetId": "hm-01",
       "variantId": "galaxy-map-178",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5000,7 +5000,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-179",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.11,
@@ -5028,7 +5028,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-180",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -5056,7 +5056,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-181",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.08,
@@ -5084,7 +5084,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-182",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5112,7 +5112,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-183",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.83,
@@ -5140,7 +5140,7 @@
       "combatStyle": "attack",
       "assetId": "mech-02",
       "variantId": "galaxy-map-184",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.18,
@@ -5168,7 +5168,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-185",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.12,
@@ -5196,7 +5196,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-186",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5224,7 +5224,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-187",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.02,
@@ -5252,7 +5252,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-188",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5280,7 +5280,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-189",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.11,
@@ -5308,7 +5308,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-190",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -5336,7 +5336,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-191",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5364,7 +5364,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-192",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.83,
@@ -5392,7 +5392,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-193",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5420,7 +5420,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-194",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.11,
@@ -5448,7 +5448,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-195",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -5476,7 +5476,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-196",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 0.88,
@@ -5504,7 +5504,7 @@
       "combatStyle": "attack",
       "assetId": "mech-02",
       "variantId": "galaxy-map-197",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.08,
@@ -5532,7 +5532,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-03",
       "variantId": "galaxy-map-198",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.08,
@@ -5560,7 +5560,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-199",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.11,
@@ -5588,7 +5588,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-200",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "sand",
         "scale": 1.19,
@@ -5616,7 +5616,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-201",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -5644,7 +5644,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-202",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.83,
@@ -5672,7 +5672,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-203",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -5700,7 +5700,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-204",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -5728,7 +5728,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-205",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -5756,7 +5756,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-206",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -5784,7 +5784,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-207",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.83,
@@ -5812,7 +5812,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-208",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.98,
@@ -5840,7 +5840,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-209",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.96,
@@ -5868,7 +5868,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-210",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.12,
@@ -5896,7 +5896,7 @@
       "combatStyle": "balanced",
       "assetId": "ship-01",
       "variantId": "galaxy-map-211",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.02,
@@ -5924,7 +5924,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-212",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -5952,7 +5952,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-213",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.08,
@@ -5980,7 +5980,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-214",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -6008,7 +6008,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-215",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -6036,7 +6036,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-216",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6064,7 +6064,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-217",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.83,
@@ -6092,7 +6092,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-218",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.08,
@@ -6120,7 +6120,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-219",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -6148,7 +6148,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-220",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -6176,7 +6176,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-221",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6204,7 +6204,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-222",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6232,7 +6232,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-223",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.83,
@@ -6260,7 +6260,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-224",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -6288,7 +6288,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-225",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -6316,7 +6316,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-226",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6344,7 +6344,7 @@
       "combatStyle": "balanced",
       "assetId": "ship-01",
       "variantId": "galaxy-map-227",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.02,
@@ -6372,7 +6372,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-228",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.08,
@@ -6400,7 +6400,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-229",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -6428,7 +6428,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-230",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -6456,7 +6456,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-231",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.83,
@@ -6484,7 +6484,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-232",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6512,7 +6512,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-233",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.08,
@@ -6540,7 +6540,7 @@
       "combatStyle": "attack",
       "assetId": "mech-03",
       "variantId": "galaxy-map-234",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.96,
@@ -6568,7 +6568,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-235",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.12,
@@ -6596,7 +6596,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-236",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6624,7 +6624,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-237",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.98,
@@ -6652,7 +6652,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-238",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6680,7 +6680,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-239",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.96,
@@ -6708,7 +6708,7 @@
       "combatStyle": "balanced",
       "assetId": "fort-01",
       "variantId": "galaxy-map-240",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.26,
@@ -6736,7 +6736,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-241",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6764,7 +6764,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-242",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.83,
@@ -6792,7 +6792,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-243",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6820,7 +6820,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-244",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -6848,7 +6848,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-245",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -6876,7 +6876,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-246",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6904,7 +6904,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-247",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.08,
@@ -6932,7 +6932,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-03",
       "variantId": "galaxy-map-248",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.88,
@@ -6960,7 +6960,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-249",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.11,
@@ -6988,7 +6988,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-250",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 1.19,
@@ -7016,7 +7016,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-251",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7044,7 +7044,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-252",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -7072,7 +7072,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-253",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7100,7 +7100,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-254",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -7128,7 +7128,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-255",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -7156,7 +7156,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-256",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7184,7 +7184,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-257",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -7212,7 +7212,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-258",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.08,
@@ -7240,7 +7240,7 @@
       "combatStyle": "attack",
       "assetId": "mech-03",
       "variantId": "galaxy-map-259",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.18,
@@ -7268,7 +7268,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-260",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.12,
@@ -7296,7 +7296,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-261",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7324,7 +7324,7 @@
       "combatStyle": "tank",
       "assetId": "hm-01",
       "variantId": "galaxy-map-262",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7352,7 +7352,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-263",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7380,7 +7380,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-264",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -7408,7 +7408,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-265",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -7436,7 +7436,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-266",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7464,7 +7464,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-267",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7492,7 +7492,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-268",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -7520,7 +7520,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-269",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -7548,7 +7548,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-270",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -7576,7 +7576,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-271",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.08,
@@ -7604,7 +7604,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-272",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7632,7 +7632,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-273",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -7660,7 +7660,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-274",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.96,
@@ -7688,7 +7688,7 @@
       "combatStyle": "attack",
       "assetId": "core-01",
       "variantId": "galaxy-map-275",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.12,
@@ -7716,7 +7716,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-276",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7744,7 +7744,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-277",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7772,7 +7772,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-278",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7800,7 +7800,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-279",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -7828,7 +7828,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-280",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -7856,7 +7856,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-281",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -7884,7 +7884,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-282",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -7912,7 +7912,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-283",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.08,
@@ -7940,7 +7940,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-284",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -7968,7 +7968,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-285",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -7996,7 +7996,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-286",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -8024,7 +8024,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-287",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -8052,7 +8052,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-288",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -8080,7 +8080,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-289",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.96,
@@ -8108,7 +8108,7 @@
       "combatStyle": "balanced",
       "assetId": "core-01",
       "variantId": "galaxy-map-290",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.12,
@@ -8136,7 +8136,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-291",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -8164,7 +8164,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-292",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.08,
@@ -8192,7 +8192,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-293",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.83,
@@ -8220,7 +8220,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-294",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -8248,7 +8248,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-295",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -8276,7 +8276,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-296",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -8304,7 +8304,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-297",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -8332,7 +8332,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-298",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.88,
@@ -8360,7 +8360,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-299",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -8388,7 +8388,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-300",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.19,
@@ -8416,7 +8416,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-301",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -8444,7 +8444,7 @@
       "combatStyle": "balanced",
       "assetId": "ship-01",
       "variantId": "galaxy-map-302",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -8472,7 +8472,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-303",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -8500,7 +8500,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-304",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -8528,7 +8528,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-305",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -8556,7 +8556,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-306",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -8584,7 +8584,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-307",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.08,
@@ -8612,7 +8612,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-308",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -8640,7 +8640,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-309",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -8668,7 +8668,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-310",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -8696,7 +8696,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-311",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -8724,7 +8724,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-312",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.08,
@@ -8752,7 +8752,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-313",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -8780,7 +8780,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-314",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -8808,7 +8808,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-315",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -8836,7 +8836,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-316",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -8864,7 +8864,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-317",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.83,
@@ -8892,7 +8892,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-318",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -8920,7 +8920,7 @@
       "combatStyle": "tank",
       "assetId": "fort-01",
       "variantId": "galaxy-map-319",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.18,
@@ -8948,7 +8948,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-320",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.12,
@@ -8976,7 +8976,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-321",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9004,7 +9004,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-322",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.08,
@@ -9032,7 +9032,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-323",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9060,7 +9060,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-324",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -9088,7 +9088,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-325",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -9116,7 +9116,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-326",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9144,7 +9144,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-327",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9172,7 +9172,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-328",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9200,7 +9200,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-329",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -9228,7 +9228,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-330",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -9256,7 +9256,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-331",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -9284,7 +9284,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-332",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -9312,7 +9312,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-333",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -9340,7 +9340,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-334",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -9368,7 +9368,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-335",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -9396,7 +9396,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-336",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9424,7 +9424,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-337",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.08,
@@ -9452,7 +9452,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-338",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9480,7 +9480,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-339",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -9508,7 +9508,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-340",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -9536,7 +9536,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-341",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9564,7 +9564,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-342",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.83,
@@ -9592,7 +9592,7 @@
       "combatStyle": "attack",
       "assetId": "mech-02",
       "variantId": "galaxy-map-343",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.08,
@@ -9620,7 +9620,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-344",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -9648,7 +9648,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-345",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -9676,7 +9676,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-346",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.88,
@@ -9704,7 +9704,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-347",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.02,
@@ -9732,7 +9732,7 @@
       "combatStyle": "balanced",
       "assetId": "fort-01",
       "variantId": "galaxy-map-348",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.08,
@@ -9760,7 +9760,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-349",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -9788,7 +9788,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-350",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.19,
@@ -9816,7 +9816,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-351",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -9844,7 +9844,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-352",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.83,
@@ -9872,7 +9872,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-353",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -9900,7 +9900,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-354",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.11,
@@ -9928,7 +9928,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-355",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.19,
@@ -9956,7 +9956,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-356",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -9984,7 +9984,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-357",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.93,
@@ -10012,7 +10012,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-358",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.08,
@@ -10040,7 +10040,7 @@
       "combatStyle": "attack",
       "assetId": "mech-03",
       "variantId": "galaxy-map-359",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -10068,7 +10068,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-360",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -10096,7 +10096,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-361",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10124,7 +10124,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-362",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.08,
@@ -10152,7 +10152,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-363",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.93,
@@ -10180,7 +10180,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-364",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.11,
@@ -10208,7 +10208,7 @@
       "combatStyle": "balanced",
       "assetId": "core-01",
       "variantId": "galaxy-map-365",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -10236,7 +10236,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-366",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.83,
@@ -10264,7 +10264,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-367",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10292,7 +10292,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-368",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.93,
@@ -10320,7 +10320,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-369",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -10348,7 +10348,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-370",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -10376,7 +10376,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-371",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10404,7 +10404,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-372",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.93,
@@ -10432,7 +10432,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-373",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.08,
@@ -10460,7 +10460,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-374",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.11,
@@ -10488,7 +10488,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-375",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.19,
@@ -10516,7 +10516,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-376",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -10544,7 +10544,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-377",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10572,7 +10572,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-378",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -10600,7 +10600,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-379",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.11,
@@ -10628,7 +10628,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-380",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -10656,7 +10656,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-381",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10684,7 +10684,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-382",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.83,
@@ -10712,7 +10712,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-383",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.98,
@@ -10740,7 +10740,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-384",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.01,
@@ -10768,7 +10768,7 @@
       "combatStyle": "tank",
       "assetId": "energy-01",
       "variantId": "galaxy-map-385",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.09,
@@ -10796,7 +10796,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-01",
       "variantId": "galaxy-map-386",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10824,7 +10824,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-387",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.83,
@@ -10852,7 +10852,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-388",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -10880,7 +10880,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-389",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.18,
@@ -10908,7 +10908,7 @@
       "combatStyle": "balanced",
       "assetId": "core-01",
       "variantId": "galaxy-map-390",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -10936,7 +10936,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-391",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -10964,7 +10964,7 @@
       "combatStyle": "balanced",
       "assetId": "ship-01",
       "variantId": "galaxy-map-392",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.02,
@@ -10992,7 +10992,7 @@
       "combatStyle": "attack",
       "assetId": "core-01",
       "variantId": "galaxy-map-393",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -11020,7 +11020,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-394",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.11,
@@ -11048,7 +11048,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-395",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -11076,7 +11076,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-396",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.96,
@@ -11104,7 +11104,7 @@
       "combatStyle": "attack",
       "assetId": "energy-01",
       "variantId": "galaxy-map-397",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.93,
@@ -11132,7 +11132,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-398",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 0.88,
@@ -11160,7 +11160,7 @@
       "combatStyle": "tank",
       "assetId": "fort-01",
       "variantId": "galaxy-map-399",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.18,
@@ -11188,7 +11188,7 @@
       "combatStyle": "attack",
       "assetId": "core-01",
       "variantId": "galaxy-map-400",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "cyan",
         "scale": 1.12,
@@ -11216,7 +11216,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-401",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.96,
@@ -11244,7 +11244,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-402",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -11272,7 +11272,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-403",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -11300,7 +11300,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-404",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.11,
@@ -11328,7 +11328,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-405",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.12,
@@ -11356,7 +11356,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-406",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -11384,7 +11384,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-407",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -11412,7 +11412,7 @@
       "combatStyle": "tank",
       "assetId": "veh-02",
       "variantId": "galaxy-map-408",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.98,
@@ -11440,7 +11440,7 @@
       "combatStyle": "attack",
       "assetId": "mech-03",
       "variantId": "galaxy-map-409",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.18,
@@ -11468,7 +11468,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-410",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.03,
@@ -11496,7 +11496,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-411",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.02,
@@ -11524,7 +11524,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-412",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.83,
@@ -11552,7 +11552,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-413",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.02,
@@ -11580,7 +11580,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-414",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.11,
@@ -11608,7 +11608,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-415",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.19,
@@ -11636,7 +11636,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-416",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -11664,7 +11664,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-417",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -11692,7 +11692,7 @@
       "combatStyle": "attack",
       "assetId": "mech-02",
       "variantId": "galaxy-map-418",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -11720,7 +11720,7 @@
       "combatStyle": "tank",
       "assetId": "fort-03",
       "variantId": "galaxy-map-419",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.18,
@@ -11748,7 +11748,7 @@
       "combatStyle": "tank",
       "assetId": "core-01",
       "variantId": "galaxy-map-420",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.12,
@@ -11776,7 +11776,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-421",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -11804,7 +11804,7 @@
       "combatStyle": "attack",
       "assetId": "fort-03",
       "variantId": "galaxy-map-422",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -11832,7 +11832,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-02",
       "variantId": "galaxy-map-423",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -11860,7 +11860,7 @@
       "combatStyle": "tank",
       "assetId": "fort-01",
       "variantId": "galaxy-map-424",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.18,
@@ -11888,7 +11888,7 @@
       "combatStyle": "attack",
       "assetId": "fort-03",
       "variantId": "galaxy-map-425",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.26,
@@ -11916,7 +11916,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-426",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -11944,7 +11944,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-02",
       "variantId": "galaxy-map-427",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.96,
@@ -11972,7 +11972,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-428",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -12000,7 +12000,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-429",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.11,
@@ -12028,7 +12028,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-430",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.03,
@@ -12056,7 +12056,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-431",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -12084,7 +12084,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-432",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -12112,7 +12112,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-433",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -12140,7 +12140,7 @@
       "combatStyle": "attack",
       "assetId": "mech-03",
       "variantId": "galaxy-map-434",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.96,
@@ -12168,7 +12168,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-435",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.19,
@@ -12196,7 +12196,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-436",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.02,
@@ -12224,7 +12224,7 @@
       "combatStyle": "tank",
       "assetId": "hm-04",
       "variantId": "galaxy-map-437",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.96,
@@ -12252,7 +12252,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-438",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.02,
@@ -12280,7 +12280,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-439",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.11,
@@ -12308,7 +12308,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-440",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.19,
@@ -12336,7 +12336,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-441",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.88,
@@ -12364,7 +12364,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-442",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -12392,7 +12392,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-443",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -12420,7 +12420,7 @@
       "combatStyle": "tank",
       "assetId": "ship-04",
       "variantId": "galaxy-map-444",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.11,
@@ -12448,7 +12448,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-445",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.19,
@@ -12476,7 +12476,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-446",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 0.96,
@@ -12504,7 +12504,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-447",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.02,
@@ -12532,7 +12532,7 @@
       "combatStyle": "balanced",
       "assetId": "fort-03",
       "variantId": "galaxy-map-448",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.08,
@@ -12560,7 +12560,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-449",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.05,
@@ -12588,7 +12588,7 @@
       "combatStyle": "attack",
       "assetId": "core-01",
       "variantId": "galaxy-map-450",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.12,
@@ -12616,7 +12616,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-451",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -12644,7 +12644,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-01",
       "variantId": "galaxy-map-452",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.08,
@@ -12672,7 +12672,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-453",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.08,
@@ -12700,7 +12700,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-454",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -12728,7 +12728,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-455",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -12756,7 +12756,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-456",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -12784,7 +12784,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-457",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -12812,7 +12812,7 @@
       "combatStyle": "tank",
       "assetId": "dr-02",
       "variantId": "galaxy-map-458",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.83,
@@ -12840,7 +12840,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-459",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -12868,7 +12868,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-460",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -12896,7 +12896,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-461",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -12924,7 +12924,7 @@
       "combatStyle": "tank",
       "assetId": "mech-01",
       "variantId": "galaxy-map-462",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.08,
@@ -12952,7 +12952,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-463",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.83,
@@ -12980,7 +12980,7 @@
       "combatStyle": "tank",
       "assetId": "ship-04",
       "variantId": "galaxy-map-464",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -13008,7 +13008,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-465",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -13036,7 +13036,7 @@
       "combatStyle": "attack",
       "assetId": "hm-04",
       "variantId": "galaxy-map-466",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13064,7 +13064,7 @@
       "combatStyle": "balanced",
       "assetId": "fort-01",
       "variantId": "galaxy-map-467",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.08,
@@ -13092,7 +13092,7 @@
       "combatStyle": "attack",
       "assetId": "veh-02",
       "variantId": "galaxy-map-468",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.98,
@@ -13120,7 +13120,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-469",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.18,
@@ -13148,7 +13148,7 @@
       "combatStyle": "tank",
       "assetId": "fort-01",
       "variantId": "galaxy-map-470",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.26,
@@ -13176,7 +13176,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-471",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13204,7 +13204,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-472",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13232,7 +13232,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-473",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.83,
@@ -13260,7 +13260,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-474",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -13288,7 +13288,7 @@
       "combatStyle": "attack",
       "assetId": "cmd-01",
       "variantId": "galaxy-map-475",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -13316,7 +13316,7 @@
       "combatStyle": "attack",
       "assetId": "hm-01",
       "variantId": "galaxy-map-476",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13344,7 +13344,7 @@
       "combatStyle": "balanced",
       "assetId": "dr-02",
       "variantId": "galaxy-map-477",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.83,
@@ -13372,7 +13372,7 @@
       "combatStyle": "tank",
       "assetId": "hm-02",
       "variantId": "galaxy-map-478",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13400,7 +13400,7 @@
       "combatStyle": "tank",
       "assetId": "ship-01",
       "variantId": "galaxy-map-479",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -13428,7 +13428,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-480",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -13456,7 +13456,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-04",
       "variantId": "galaxy-map-481",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13484,7 +13484,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-482",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13512,7 +13512,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-483",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.02,
@@ -13540,7 +13540,7 @@
       "combatStyle": "attack",
       "assetId": "ship-01",
       "variantId": "galaxy-map-484",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -13568,7 +13568,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-485",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -13596,7 +13596,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-486",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13624,7 +13624,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-487",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.02,
@@ -13652,7 +13652,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-488",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13680,7 +13680,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-489",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.18,
@@ -13708,7 +13708,7 @@
       "combatStyle": "balanced",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-490",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -13736,7 +13736,7 @@
       "combatStyle": "attack",
       "assetId": "hm-02",
       "variantId": "galaxy-map-491",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13764,7 +13764,7 @@
       "combatStyle": "balanced",
       "assetId": "mech-03",
       "variantId": "galaxy-map-492",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13792,7 +13792,7 @@
       "combatStyle": "attack",
       "assetId": "dr-02",
       "variantId": "galaxy-map-493",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.83,
@@ -13820,7 +13820,7 @@
       "combatStyle": "tank",
       "assetId": "mech-03",
       "variantId": "galaxy-map-494",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.18,
@@ -13848,7 +13848,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-495",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.19,
@@ -13876,7 +13876,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-496",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13904,7 +13904,7 @@
       "combatStyle": "attack",
       "assetId": "mech-01",
       "variantId": "galaxy-map-497",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.08,
@@ -13932,7 +13932,7 @@
       "combatStyle": "balanced",
       "assetId": "hm-02",
       "variantId": "galaxy-map-498",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 0.88,
@@ -13960,7 +13960,7 @@
       "combatStyle": "tank",
       "assetId": "cmd-03",
       "variantId": "galaxy-map-499",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.11,
@@ -13988,7 +13988,7 @@
       "combatStyle": "attack",
       "assetId": "core-03",
       "variantId": "galaxy-map-500",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "white",
         "scale": 1.12,
@@ -14012,7 +14012,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-001",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14036,7 +14036,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-002",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14060,7 +14060,7 @@
       "kind": "boss",
       "assetId": "ship-04",
       "variantId": "universe-boss-003",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14084,7 +14084,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-004",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14108,7 +14108,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-005",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14132,7 +14132,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-006",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14156,7 +14156,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-007",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14180,7 +14180,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-008",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14204,7 +14204,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-009",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14228,7 +14228,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-010",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14252,7 +14252,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-011",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14276,7 +14276,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-012",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -14300,7 +14300,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-013",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14324,7 +14324,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-014",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14348,7 +14348,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-015",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14372,7 +14372,7 @@
       "kind": "boss",
       "assetId": "bio-02",
       "variantId": "universe-boss-016",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.25,
@@ -14396,7 +14396,7 @@
       "kind": "boss",
       "assetId": "ship-01",
       "variantId": "universe-boss-017",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14420,7 +14420,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-018",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14444,7 +14444,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-019",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14468,7 +14468,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-020",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14492,7 +14492,7 @@
       "kind": "boss",
       "assetId": "beast-03",
       "variantId": "universe-boss-021",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.23,
@@ -14516,7 +14516,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-022",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14540,7 +14540,7 @@
       "kind": "boss",
       "assetId": "energy-01",
       "variantId": "universe-boss-023",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.09,
@@ -14564,7 +14564,7 @@
       "kind": "boss",
       "assetId": "ship-01",
       "variantId": "universe-boss-024",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14588,7 +14588,7 @@
       "kind": "boss",
       "assetId": "bio-02",
       "variantId": "universe-boss-025",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.25,
@@ -14612,7 +14612,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-026",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14636,7 +14636,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-027",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14660,7 +14660,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-028",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14684,7 +14684,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-029",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14708,7 +14708,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-030",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14732,7 +14732,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-031",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14756,7 +14756,7 @@
       "kind": "boss",
       "assetId": "bio-02",
       "variantId": "universe-boss-032",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.25,
@@ -14780,7 +14780,7 @@
       "kind": "boss",
       "assetId": "ship-01",
       "variantId": "universe-boss-033",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14804,7 +14804,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-034",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14828,7 +14828,7 @@
       "kind": "boss",
       "assetId": "energy-01",
       "variantId": "universe-boss-035",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.09,
@@ -14852,7 +14852,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-036",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -14876,7 +14876,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-037",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14900,7 +14900,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-038",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14924,7 +14924,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-039",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -14948,7 +14948,7 @@
       "kind": "boss",
       "assetId": "fort-03",
       "variantId": "universe-boss-040",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -14972,7 +14972,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-041",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -14996,7 +14996,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-042",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15020,7 +15020,7 @@
       "kind": "boss",
       "assetId": "ship-04",
       "variantId": "universe-boss-043",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15044,7 +15044,7 @@
       "kind": "boss",
       "assetId": "beast-03",
       "variantId": "universe-boss-044",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.23,
@@ -15068,7 +15068,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-045",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15092,7 +15092,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-046",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15116,7 +15116,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-047",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15140,7 +15140,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-048",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15164,7 +15164,7 @@
       "kind": "boss",
       "assetId": "core-03",
       "variantId": "universe-boss-049",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15188,7 +15188,7 @@
       "kind": "boss",
       "assetId": "ship-04",
       "variantId": "universe-boss-050",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15212,7 +15212,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-051",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15236,7 +15236,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-052",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15260,7 +15260,7 @@
       "kind": "boss",
       "assetId": "ship-04",
       "variantId": "universe-boss-053",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15284,7 +15284,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-054",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15308,7 +15308,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-055",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15332,7 +15332,7 @@
       "kind": "boss",
       "assetId": "bio-02",
       "variantId": "universe-boss-056",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.25,
@@ -15356,7 +15356,7 @@
       "kind": "boss",
       "assetId": "fort-03",
       "variantId": "universe-boss-057",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15380,7 +15380,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-058",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15404,7 +15404,7 @@
       "kind": "boss",
       "assetId": "mech-01",
       "variantId": "universe-boss-059",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15428,7 +15428,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-060",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15452,7 +15452,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-061",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15476,7 +15476,7 @@
       "kind": "boss",
       "assetId": "energy-01",
       "variantId": "universe-boss-062",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.09,
@@ -15500,7 +15500,7 @@
       "kind": "boss",
       "assetId": "bio-02",
       "variantId": "universe-boss-063",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.25,
@@ -15524,7 +15524,7 @@
       "kind": "boss",
       "assetId": "ship-01",
       "variantId": "universe-boss-064",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15548,7 +15548,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-065",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15572,7 +15572,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-066",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15596,7 +15596,7 @@
       "kind": "boss",
       "assetId": "fort-03",
       "variantId": "universe-boss-067",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15620,7 +15620,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-068",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15644,7 +15644,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-069",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15668,7 +15668,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-070",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15692,7 +15692,7 @@
       "kind": "boss",
       "assetId": "fort-03",
       "variantId": "universe-boss-071",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15716,7 +15716,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-072",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15740,7 +15740,7 @@
       "kind": "boss",
       "assetId": "ship-01",
       "variantId": "universe-boss-073",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15764,7 +15764,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-074",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15788,7 +15788,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-075",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15812,7 +15812,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-076",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15836,7 +15836,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-077",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15860,7 +15860,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-078",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15884,7 +15884,7 @@
       "kind": "boss",
       "assetId": "fort-01",
       "variantId": "universe-boss-079",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15908,7 +15908,7 @@
       "kind": "boss",
       "assetId": "fort-03",
       "variantId": "universe-boss-080",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -15932,7 +15932,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-081",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -15956,7 +15956,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-082",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -15980,7 +15980,7 @@
       "kind": "boss",
       "assetId": "beast-03",
       "variantId": "universe-boss-083",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.23,
@@ -16004,7 +16004,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-084",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -16028,7 +16028,7 @@
       "kind": "boss",
       "assetId": "ship-04",
       "variantId": "universe-boss-085",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -16052,7 +16052,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-086",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -16076,7 +16076,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-087",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -16100,7 +16100,7 @@
       "kind": "boss",
       "assetId": "energy-01",
       "variantId": "universe-boss-088",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.09,
@@ -16124,7 +16124,7 @@
       "kind": "boss",
       "assetId": "cmd-01",
       "variantId": "universe-boss-089",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.09,
@@ -16148,7 +16148,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-090",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -16172,7 +16172,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-091",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -16196,7 +16196,7 @@
       "kind": "boss",
       "assetId": "ship-04",
       "variantId": "universe-boss-092",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -16220,7 +16220,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-093",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -16244,7 +16244,7 @@
       "kind": "boss",
       "assetId": "fort-03",
       "variantId": "universe-boss-094",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.26,
@@ -16268,7 +16268,7 @@
       "kind": "boss",
       "assetId": "core-03",
       "variantId": "universe-boss-095",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -16292,7 +16292,7 @@
       "kind": "boss",
       "assetId": "core-03",
       "variantId": "universe-boss-096",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -16316,7 +16316,7 @@
       "kind": "boss",
       "assetId": "bio-02",
       "variantId": "universe-boss-097",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.25,
@@ -16340,7 +16340,7 @@
       "kind": "boss",
       "assetId": "core-01",
       "variantId": "universe-boss-098",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
@@ -16364,7 +16364,7 @@
       "kind": "boss",
       "assetId": "cmd-03",
       "variantId": "universe-boss-099",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.19,
@@ -16388,7 +16388,7 @@
       "kind": "boss",
       "assetId": "core-03",
       "variantId": "universe-boss-100",
-      "status": "gm-integrated-formal-disabled",
+      "status": "gm-integrated-main-formal-enabled",
       "visual": {
         "palette": "deep-space",
         "scale": 1.12,
