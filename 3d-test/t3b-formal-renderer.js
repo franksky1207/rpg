@@ -233,7 +233,7 @@ async function createSuit(options,bundle){
   if(monsterAttempt||closed||signal.aborted||!isCurrent()||bundle.enemyMode!=='main'||![1,2].includes(bundle.enemyWorld))return;
   monsterAttempt=1;
   try{
-   const [{resolveFormalMonster},{MonsterActor,monsterPlacement}]=await Promise.all([
+   const [{resolveFormalMonster},{MonsterActor}]=await Promise.all([
     import('./monster-formal-resolver.mjs?v=20261021-batch14-formal1'),
     import('./monster-actor.mjs?v=20261021-batch14-formal1')
    ]);
@@ -264,7 +264,7 @@ async function createSuit(options,bundle){
   const shift=Number.isFinite(e.approach)?Math.min(.42,Math.max(0,e.approach))*140:0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
- const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();host.querySelector('.formal-b-enemy-sprite')?.remove();actor.dispose();};
+ const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();monsterActor?.dispose();monsterActor=null;host.querySelectorAll('.formal-b-enemy-sprite').forEach(node=>node.remove());actor.dispose();};
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
  actor.canvas.className='formal-b-whole-suit formal-b-player-sprite';actor.canvas.dataset.suit=bundle.entry.id;
