@@ -253,8 +253,8 @@ async function createSuit(options,bundle){
    actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
   }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
-  finally{}
  }
+
  function drawMonster(frame){
   if(!monsterActor||!monsterReady)return;
   const e=frame.enemy||frame,elapsed=Number.isFinite(e.elapsedMs)?Math.max(0,e.elapsedMs):0;
@@ -298,7 +298,7 @@ async function createSuit(options,bundle){
  layoutSprites();
  let lastEnemyRenderKey=null;
  function drawEnemy(frame){
-  lastEnemyFrame=frame;if(monsterReady){drawMonster(frame);return;}
+  lastEnemyFrame=frame;if(monsterReady){drawMonster(frame);if(monsterReady)return;}
   const e=frame.enemy||frame;
   const ms=Math.max(0,Math.min(700,e.elapsedMs||0)),t=ms/700;
   const approach=Math.max(0,Math.min(.42,e.approach||0));
