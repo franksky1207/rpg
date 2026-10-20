@@ -1,6 +1,6 @@
 {
   "schema": "cw.monster-map-design-mapping.v1",
-  "status": "planning-only",
+  "status": "planning-only-compact-revision",
   "sourceMainSha": "0d8505203fe4f9e6dba3fdda59d61c44b1dc107d",
   "assetsStatus": "none-generated",
   "assetRegistry": [
@@ -30,18 +30,8 @@
       "status": "planned-not-generated"
     },
     {
-      "assetId": "hm-06",
-      "designName": "動力裝甲兵",
-      "status": "planned-not-generated"
-    },
-    {
       "assetId": "cmd-01",
       "designName": "軍官",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "cmd-02",
-      "designName": "軍閥",
       "status": "planned-not-generated"
     },
     {
@@ -52,11 +42,6 @@
     {
       "assetId": "cmd-04",
       "designName": "終極統帥",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "dr-01",
-      "designName": "偵察無人機",
       "status": "planned-not-generated"
     },
     {
@@ -85,11 +70,6 @@
       "status": "planned-not-generated"
     },
     {
-      "assetId": "veh-01",
-      "designName": "地面戰車",
-      "status": "planned-not-generated"
-    },
-    {
       "assetId": "veh-02",
       "designName": "防衛砲台",
       "status": "planned-not-generated"
@@ -102,11 +82,6 @@
     {
       "assetId": "ship-02",
       "designName": "戰艦",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "ship-03",
-      "designName": "母艦",
       "status": "planned-not-generated"
     },
     {
@@ -135,18 +110,8 @@
       "status": "planned-not-generated"
     },
     {
-      "assetId": "beast-02",
-      "designName": "裝甲巨獸",
-      "status": "planned-not-generated"
-    },
-    {
       "assetId": "beast-03",
       "designName": "吞星獸",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "bio-01",
-      "designName": "生化異變體",
       "status": "planned-not-generated"
     },
     {
@@ -172,26 +137,6 @@
     {
       "assetId": "energy-01",
       "designName": "能量戰體",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "energy-02",
-      "designName": "星體存在",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "energy-03",
-      "designName": "深空異常體",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "unique-galaxy-500",
-      "designName": "銀河最終王",
-      "status": "planned-not-generated"
-    },
-    {
-      "assetId": "unique-universe-100",
-      "designName": "宇宙最終王",
       "status": "planned-not-generated"
     }
   ],
@@ -222,7 +167,7 @@
       "level": 2,
       "kind": "normal",
       "combatStyle": "balanced",
-      "assetId": "dr-01",
+      "assetId": "dr-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -312,7 +257,7 @@
       "level": 8,
       "kind": "normal",
       "combatStyle": "tank",
-      "assetId": "hm-06",
+      "assetId": "hm-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -387,7 +332,7 @@
       "level": 13,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "bio-01",
+      "assetId": "hm-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -417,7 +362,7 @@
       "level": 15,
       "kind": "boss",
       "combatStyle": "balanced",
-      "assetId": "hm-01",
+      "assetId": "core-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -447,7 +392,7 @@
       "level": 17,
       "kind": "normal",
       "combatStyle": "tank",
-      "assetId": "veh-01",
+      "assetId": "mech-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -507,7 +452,7 @@
       "level": 21,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "bio-01",
+      "assetId": "hm-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -552,7 +497,7 @@
       "level": 24,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "bio-01",
+      "assetId": "hm-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -612,7 +557,7 @@
       "level": 28,
       "kind": "normal",
       "combatStyle": "tank",
-      "assetId": "hm-06",
+      "assetId": "hm-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -627,7 +572,7 @@
       "level": 29,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "beast-02",
+      "assetId": "beast-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -837,7 +782,7 @@
       "level": 43,
       "kind": "normal",
       "combatStyle": "tank",
-      "assetId": "hm-06",
+      "assetId": "hm-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1002,7 +947,7 @@
       "level": 54,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "hm-06",
+      "assetId": "hm-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1212,7 +1157,7 @@
       "level": 68,
       "kind": "normal",
       "combatStyle": "tank",
-      "assetId": "veh-01",
+      "assetId": "mech-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1242,7 +1187,7 @@
       "level": 70,
       "kind": "boss",
       "combatStyle": "attack",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1377,7 +1322,7 @@
       "level": 79,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "beast-02",
+      "assetId": "beast-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1482,7 +1427,7 @@
       "level": 86,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "dr-01",
+      "assetId": "dr-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1677,7 +1622,7 @@
       "level": 99,
       "kind": "elite",
       "combatStyle": "balanced",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -1737,7 +1682,7 @@
       "level": 103,
       "kind": "normal",
       "combatStyle": "tank",
-      "assetId": "dr-01",
+      "assetId": "dr-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -2262,7 +2207,7 @@
       "level": 138,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "dr-01",
+      "assetId": "dr-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -2427,7 +2372,7 @@
       "level": 149,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -2592,7 +2537,7 @@
       "level": 160,
       "kind": "boss",
       "combatStyle": "tank",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -2727,7 +2672,7 @@
       "level": 169,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "beast-02",
+      "assetId": "beast-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -3177,7 +3122,7 @@
       "level": 199,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -3342,7 +3287,7 @@
       "level": 210,
       "kind": "boss",
       "combatStyle": "tank",
-      "assetId": "hm-02",
+      "assetId": "core-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -3762,7 +3707,7 @@
       "level": 238,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "hm-06",
+      "assetId": "hm-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -3927,7 +3872,7 @@
       "level": 249,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -3972,7 +3917,7 @@
       "level": 252,
       "kind": "normal",
       "combatStyle": "balanced",
-      "assetId": "dr-01",
+      "assetId": "dr-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -5142,7 +5087,7 @@
       "level": 330,
       "kind": "boss",
       "combatStyle": "balanced",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -5637,7 +5582,7 @@
       "level": 363,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "energy-03",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -5832,7 +5777,7 @@
       "level": 376,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "hm-01",
+      "assetId": "core-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -5952,7 +5897,7 @@
       "level": 384,
       "kind": "elite",
       "combatStyle": "attack",
-      "assetId": "energy-03",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -5967,7 +5912,7 @@
       "level": 385,
       "kind": "boss",
       "combatStyle": "tank",
-      "assetId": "energy-03",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -6057,7 +6002,7 @@
       "level": 391,
       "kind": "normal",
       "combatStyle": "attack",
-      "assetId": "hm-02",
+      "assetId": "core-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -6132,7 +6077,7 @@
       "level": 396,
       "kind": "normal",
       "combatStyle": "balanced",
-      "assetId": "hm-01",
+      "assetId": "core-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -6882,7 +6827,7 @@
       "level": 446,
       "kind": "normal",
       "combatStyle": "balanced",
-      "assetId": "hm-01",
+      "assetId": "core-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -7152,7 +7097,7 @@
       "level": 464,
       "kind": "elite",
       "combatStyle": "tank",
-      "assetId": "ship-03",
+      "assetId": "ship-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -7692,7 +7637,7 @@
       "level": 500,
       "kind": "boss",
       "combatStyle": "attack",
-      "assetId": "unique-galaxy-500",
+      "assetId": "core-03",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -7725,7 +7670,7 @@
       "name": "黑潮母艦",
       "level": 515,
       "kind": "boss",
-      "assetId": "ship-03",
+      "assetId": "ship-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -7934,7 +7879,7 @@
       "name": "赤界戰爭元帥",
       "level": 610,
       "kind": "boss",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8275,7 +8220,7 @@
       "name": "焚界遠征母艦",
       "level": 765,
       "kind": "boss",
-      "assetId": "ship-03",
+      "assetId": "ship-04",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8374,7 +8319,7 @@
       "name": "黑鏈天體",
       "level": 810,
       "kind": "boss",
-      "assetId": "energy-02",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8660,7 +8605,7 @@
       "name": "暗界戰爭天體",
       "level": 940,
       "kind": "boss",
-      "assetId": "energy-02",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8671,7 +8616,7 @@
       "name": "群星深淵統帥",
       "level": 945,
       "kind": "boss",
-      "assetId": "energy-03",
+      "assetId": "energy-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8792,7 +8737,7 @@
       "name": "文明終焉核心",
       "level": 1000,
       "kind": "boss",
-      "assetId": "unique-universe-100",
+      "assetId": "core-03",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8876,7 +8821,7 @@
       "name": "黑市武裝頭目",
       "kind": "special",
       "tier": "mid",
-      "assetId": "cmd-02",
+      "assetId": "cmd-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8906,8 +8851,8 @@
     }
   ],
   "notes": [
-    "地圖怪採低成本共用外型，不為個別特殊怪單獨新增圖片；誘餌補給艙暫借用 fort-01、機率增幅信標暫借用 energy-01，容許外型近似，不要求字面完全一致。",
-    "第一階段候選恢復 38 張（36 類基礎及兩紀元最終主線 Boss 各一張）；實際製圖前再審核有無可縮減之處，地圖怪不為個別名字擴張圖數。",
-    "目前對應表屬設計草案，不是已完成人工逐怪視覺審核；全部圖片尚未生成。"
+    "使用者要求地圖怪重用優先，不為少數特殊怪開新圖；原40候選縮至27候選（不是已生成圖片）。",
+    "609個正式身份皆有有效候選assetId；本次僅重映射與稽核；美術逐筆審核仍待完成。",
+    "誘餌補給艙共用太空堡壘、機率增幅信標共用能量戰體；銀河Lv500與宇宙U100共用終極文明核心，不做地圖專屬王圖。"
   ]
 }
