@@ -24,13 +24,14 @@ const approvedBatch8=new Set(["3d-test/formal-player-sprites.css","3d-test/t3b-f
 const batch12Css="3d-test/test-center.css";
 assert.equal(fs.readFileSync(batch12Css,"utf8"),run("show","9748c72cd17b2c3dd0e8aaf749a4fcd821a1f23a:"+batch12Css)+"\n\n/* Batch12: one direct preview, no category/catalog navigation. */\n.center-layout{display:block}\n","Unexpected GM stylesheet change beyond Batch12 single-interface rule");
 require("./pr48-presentation-baseline.cjs").original("ui.js");
-// Batch13: exactly three independently validated trial-only monster presentation modules.
+// Batch14: preserve the exact original twenty-image GM evidence, but allow audited formal consumers.
 const batch13Lock=JSON.parse(fs.readFileSync('development/monster-art/batch13-twenty/runtime-lock.json','utf8'));
 const approvedBatch13=new Set(['3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','3d-test/monster-sprites.mjs']);
-const batch14Authorized=new Set(['3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','3d-test/monster-sprites.mjs','3d-test/monster-formal-resolver.mjs','3d-test/t3b-formal-renderer.js']);
 assert.deepEqual(Object.keys(batch13Lock).sort(),[...approvedBatch13].sort());
-for(const p of approvedBatch13){assert.ok(live.has(p),'Batch13 module missing: '+p);if(!batch14Authorized.has(p))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),batch13Lock[p],'Batch13 module differs from reviewed twenty-image integration: '+p);}
-assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,true,'Batch14 formal approval required');
+for(const p of approvedBatch13)assert.ok(live.has(p),'Batch13 module missing: '+p);
+const approvedBatch14=new Set([...approvedBatch13,'3d-test/monster-formal-resolver.mjs']);
+assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,true,'Batch14 must explicitly authorize map-monster visuals');
+assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).formalBattleEnabled,true,'Batch14 identity registry must be approved');
 const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
