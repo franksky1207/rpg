@@ -1,0 +1,96 @@
+{
+  "schema": "cw.monster-art-step3.v1",
+  "status": "trial-art-not-runtime-integrated",
+  "assets": [
+    {
+      "assetId": "hm-01",
+      "description": "輕裝士兵",
+      "path": "assets/monsters/v1/humanoid/hm-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 75458,
+      "sha256": "8cf609169310d0e81a244675fe9e1612b6932285a31d3fd138d229cf7bf91b28",
+      "alphaBounds": [
+        53,
+        64,
+        466,
+        465
+      ]
+    },
+    {
+      "assetId": "mech-02",
+      "description": "重型機甲",
+      "path": "assets/monsters/v1/mechanical/mech-02.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 192414,
+      "sha256": "9bb4cc17c794bfd53b7d8384132fa687ca952721e71d18f23ea3f988528e734c",
+      "alphaBounds": [
+        30,
+        43,
+        481,
+        478
+      ]
+    },
+    {
+      "assetId": "ship-01",
+      "description": "巡弋艦",
+      "path": "assets/monsters/v1/starship/ship-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 111612,
+      "sha256": "d9e44757158ec1b87a8bae5acd4467c6564d0573935e3059ce7d3fe66effac6b",
+      "alphaBounds": [
+        26,
+        110,
+        484,
+        390
+      ]
+    },
+    {
+      "assetId": "beast-03",
+      "description": "吞星獸",
+      "path": "assets/monsters/v1/creature/beast-03.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 246048,
+      "sha256": "21e21590aeb7037e57985e7100ef5e3f1a5237113ef519694f6d84963b982bb9",
+      "alphaBounds": [
+        32,
+        48,
+        486,
+        486
+      ]
+    },
+    {
+      "assetId": "core-01",
+      "description": "防衛核心",
+      "path": "assets/monsters/v1/core/core-01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 241636,
+      "sha256": "f6aa423e3b5a6e07deda2705698427b1a018c1acd7b9bc7d14649e5554ad1d38",
+      "alphaBounds": [
+        52,
+        38,
+        477,
+        477
+      ]
+    },
+    {
+      "assetId": "bio-02",
+      "description": "母巢",
+      "path": "assets/monsters/v1/biological/bio-02.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 191300,
+      "sha256": "2315c417eb6e14ddeefcb7f2e80eacede6e7a0334d40d5d5f0fd0e2ecad699ce",
+      "alphaBounds": [
+        31,
+        103,
+        486,
+        403
+      ]
+    }
+  ]
+}

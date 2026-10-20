@@ -35,7 +35,7 @@ function open(){
   exit.addEventListener("click",close);
   bar.append(title,exit);
   const frame=document.createElement("iframe");
-  frame.src="3d-test/?embedded=1&v=20261019-batch12-rising-cut1";
+  frame.src="3d-test/?embedded=1&v=20261020-six-trial1";
   frame.title="文明戰線 GM 動畫測試中心";
   frame.style.cssText="display:block;flex:1;min-height:0;width:100%;border:0;background:#060c18";
   layer.append(bar,frame);
