@@ -48,7 +48,8 @@ if(changed.includes("index.html")){
   // Mobile combat presentation: only the approved shared viewport script and stylesheet cache token.
   .replace("battle-mobile-viewport.css?v=20261019-batch10-usability1","battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1")
   .replace("dungeonui.js?v=20261019-batch8-stable-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1")
-  .replace('<script src="3d-test/formal-snapshots.js','<script src="combat-viewport-coordinator.js?v=20261019-unified1"></script>\n<script src="3d-test/formal-snapshots.js');
+  .replace('<script src="3d-test/formal-snapshots.js','<script src="combat-viewport-coordinator.js?v=20261019-unified1"></script>\n<script src="3d-test/formal-snapshots.js')
+
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
