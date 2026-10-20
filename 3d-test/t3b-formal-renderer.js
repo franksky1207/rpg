@@ -248,7 +248,7 @@ async function createSuit(options,bundle){
    monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
    host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
-   const w=host.clientWidth,h=host.clientHeight;const size=Math.min(h*(global.matchMedia('(max-width:760px)').matches?.82:.87),w*(global.matchMedia('(max-width:760px)').matches?.47:.44));
+   const w=host.clientWidth,h=host.clientHeight;const mobile=global.matchMedia('(max-width:760px)').matches;const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44));
    actor.canvas.style.width=size+'px';actor.canvas.style.height=size+'px';
    actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
@@ -260,7 +260,7 @@ async function createSuit(options,bundle){
   const e=frame.enemy||frame,elapsed=Number.isFinite(e.elapsedMs)?Math.max(0,e.elapsedMs):0;
   const clip=e.clip==='return'?'idle':e.clip==='dodge'?'hit':e.clip||'idle';
   const tick=Math.floor(elapsed/(clip==='idle'?50:35)),key=clip+':'+tick;
-  if(key!==monsterLastKey){monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),palette:monsterMapping.visual.palette});monsterLastKey=key;}
+  if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),palette:monsterMapping.visual.palette});monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';return;}}
   const shift=Number.isFinite(e.approach)?Math.min(.42,Math.max(0,e.approach))*140:0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
