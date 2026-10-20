@@ -32,4 +32,23 @@ assert.deepEqual(check({bounty:{phase:"transition",continuous:true}}),["bounty-a
 assert.deepEqual(check({bounty:{phase:"result",continuous:true},arena:{phase:"combat",continuous:true}}),["arena-active"],"settled bounty cannot mask live arena");
 assert.deepEqual(check({extra:{getVoidMirageRunSnapshot:()=>({active:true})}}),["void-active"],"other live blockers must remain");
 assert.deepEqual(check({extra:{getVoidMirageRunSnapshot:()=>{throw Error("fault")}}}),["void-check-error"],"failed runtime check must fail closed");
+// Cross-mode runtime owner matrix: completed owners must release; live owners must retain protection.
+const owners=[
+ ["mirror","mirrorDungeonStatus",()=>({status:"running"}),()=>({status:"completed"}),"mirror-active"],
+ ["void","getVoidMirageRunSnapshot",()=>({active:true}),()=>({active:false,phase:"ended"}),"void-active"],
+ ["galaxy calamity","getCivilizationCalamityRunSnapshot",()=>({active:true}),()=>({active:false,phase:"ended"}),"galaxy-calamity-active"],
+ ["universe calamity","getSecondWorldCalamityRunSnapshot",()=>({active:true}),()=>({active:false,phase:"ended"}),"second-world-calamity-active"]
+];
+for(const [name,accessor,live,ended,reason] of owners){
+ assert.deepEqual(check({extra:{[accessor]:ended}}),[],name+" finished owner must release runtime");
+ assert.deepEqual(check({extra:{[accessor]:live}}),[reason],name+" live owner must block");
+ for(const previous of ["bounty","arena"]){
+  assert.deepEqual(check({[previous]:{phase:"result",continuous:true},extra:{[accessor]:live}}),[reason],name+" live owner still blocks after completed "+previous);
+  assert.deepEqual(check({[previous]:{phase:"result",continuous:true},extra:{[accessor]:ended}}),[],name+" completed owner does not block after "+previous);
+ }
+ assert.deepEqual(check({extra:{[accessor]:()=>{throw Error("injected "+name)}}}),[name==="galaxy calamity"?"galaxy-calamity-check-error":name==="universe calamity"?"second-world-calamity-check-error":name+"-check-error"],name+" errors fail closed");
+}
+assert.deepEqual(check({extra:{activeSpecialEncounter:{id:"test"}}}),["special-encounter-active"],"live special encounter protects runtime");
+assert.deepEqual(check({extra:{activeSpecialEncounter:null}}),[],"finished special encounter releases runtime");
+assert.deepEqual(check({bounty:{phase:"combat"},arena:{phase:"combat"},extra:{getVoidMirageRunSnapshot:()=>({active:true})}}),["bounty-active","arena-active","void-active"],"parallel invalid active owners are all surfaced");
 console.log("Cross-combat subsystem lifecycle regression passed");
