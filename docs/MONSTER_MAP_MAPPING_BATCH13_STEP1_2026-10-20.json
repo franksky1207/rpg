@@ -193,6 +193,16 @@
       "assetId": "unique-universe-100",
       "designName": "宇宙最終王",
       "status": "planned-not-generated"
+    },
+    {
+      "assetId": "special-01",
+      "designName": "偽裝補給艙／機械寶箱",
+      "status": "planned-not-generated"
+    },
+    {
+      "assetId": "special-02",
+      "designName": "機率增幅信標／浮空裝置",
+      "status": "planned-not-generated"
     }
   ],
   "records": [
@@ -8816,7 +8826,7 @@
       "name": "誘餌補給艙",
       "kind": "special",
       "tier": "high",
-      "assetId": "fort-01",
+      "assetId": "special-01",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8840,7 +8850,7 @@
       "name": "機率增幅信標",
       "kind": "special",
       "tier": "low",
-      "assetId": "energy-01",
+      "assetId": "special-02",
       "variantId": "default",
       "status": "design-proposed"
     },
@@ -8904,5 +8914,10 @@
       "variantId": "default",
       "status": "design-proposed"
     }
+  ],
+  "notes": [
+    "目前是設計對應草案，不代表已完成人工逐怪視覺審核",
+    "原本38張基礎候選不足以合理涵蓋誘餌補給艙及機率增幅信標，暫增2個專用外觀ID，總數40張候選。",
+    "所有圖片尚未製作；下一步應逐名語意審核並確認顏色、尺寸、錨點、動畫後才能封箱。"
   ]
 }
