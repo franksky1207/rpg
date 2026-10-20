@@ -49,8 +49,7 @@ if(changed.includes("index.html")){
   .replace("battle-mobile-viewport.css?v=20261019-batch10-usability1","battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1")
   .replace("dungeonui.js?v=20261019-batch8-stable-anchor1","dungeonui.js?v=20261019-batch8-stable-anchor1&v26=20261019-unified1")
   .replace('<script src="3d-test/formal-snapshots.js','<script src="combat-viewport-coordinator.js?v=20261019-unified1"></script>\n<script src="3d-test/formal-snapshots.js')
-  // PR53 authorized late-settlement guard requires a fresh browser cache pin.
-  .replace("battlepipeline.js?v=20260930-audit-batch4&v2=20261005-w1-target-context-batch3&v3=20261005-w1-target-opt2&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1","battlepipeline.js?v=20260930-audit-batch4&v2=20261005-w1-target-context-batch3&v3=20261005-w1-target-opt2&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&lifecycle=20261020-late-settlement-v1");
+
  assert.equal(actual,expected,"Batch8/9 index differs from exactly approved cache-only changes");
 }
 const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.webp","assets/gm-equipment-2_5d/v1/g007.webp","assets/gm-equipment-2_5d/v1/g018.webp","tests/runtime/cleanup-batch4-3-current-inventory.cjs"];
