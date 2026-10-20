@@ -261,6 +261,7 @@
   if(typeof window.worldTransitionRuntimeStatus==="function"){
    try{
     const status=window.worldTransitionRuntimeStatus();
+    if(!status||typeof status!=="object"||status.blocked===true&&(!Array.isArray(status.blockers)||status.blockers.length===0))blockers.push("runtime-status-invalid");
     (Array.isArray(status?.blockers)?status.blockers:[]).forEach(reason=>{
      const text=String(reason||"");
      if(!text)return;
