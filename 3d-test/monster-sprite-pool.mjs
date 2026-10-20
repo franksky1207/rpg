@@ -1,6 +1,6 @@
 // Independent monster validation and bounded decode pool. Player whitelist stays intact.
 import {findAsset} from './monster-sprites.mjs?v=20261020-twenty-gm1';
-export function createMonsterPool({fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,limit=2*512*512*4}={}){
+export function createMonsterPool({fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,limit=2*512*512*4,usage='gm'}={}){
  const entries=new Map();let closed=false,hits=0,loads=0,clock=0;
  const cost=512*512*4,maxEntries=Math.max(1,Math.min(2,Math.floor(limit/cost)));
  function remove(key,e){if(entries.get(key)!==e)return;e.controller.abort();e.bitmap?.close();entries.delete(key);}
@@ -8,7 +8,7 @@ export function createMonsterPool({fetcher=globalThis.fetch,decode=globalThis.cr
  return Object.freeze({
   async acquire(id,{signal}={}){
    const a=findAsset(id);if(closed||signal?.aborted)throw Error('monster-aborted');
-   if(!a||a.gmPreviewAllowed!==true||a.facing!=='left-3/4'||a.width!==512||a.height!==512||!/^[a-f0-9]{64}$/.test(a.sha256))throw Error('monster-unavailable');
+   if(!a||(usage==='formal'?a.formalBattleAllowed!==true:a.gmPreviewAllowed!==true)||a.facing!=='left-3/4'||a.width!==512||a.height!==512||!/^[a-f0-9]{64}$/.test(a.sha256))throw Error('monster-unavailable');
    let e=entries.get(id);
    if(!e){trim(1);if(entries.size>=maxEntries)throw Error('monster-memory-budget');
     e={refs:0,used:++clock,bitmap:null,controller:new AbortController()};entries.set(id,e);loads++;
