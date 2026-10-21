@@ -1,3 +1,5 @@
+> **怪物製圖與整合正式SOP（2026-10-21）**：後續所有怪物原型、身份配色、GM預覽、正式Sprite、資源與發布批次，開工前必讀 [docs/MONSTER_ART_PRODUCTION_SOP.md](docs/MONSTER_ART_PRODUCTION_SOP.md)。沿用第13批20圖與第15-4批609身份驗收成功方法；真實Alpha、正式／GM共用Actor尺寸、逐身份三視窗、故障恢復及同SHA Actions／main／Pages為強制門檻。最新main為唯一真實來源。
+
 > **第15-4批施工**：正式／GM改共用既有Actor版面來源，609身份×3畫面逐筆結果及正式Sprite適用範圍見 [驗收報告](docs/BATCH15_4_FORMAL_GM_ACCEPTANCE_2026-10-21.md)。同SHA Actions、合併與Pages完成前不封箱。
 
 > **第13批20圖整合（2026-10-20）**：14張新圖加PR #58既有六張，609正式身份對應與63筆外型修正，沿用GM／Actor／Pool；正式戰鬥維持關閉。驗收、來源核對與剩餘真機項目見 [docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md](docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md)；最終是否完成以本批PR與最新main同SHA Actions／Pages成功為準。
