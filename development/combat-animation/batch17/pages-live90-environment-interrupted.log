@@ -1,0 +1,153 @@
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'earth',
+  bossIndex: 0,
+  assetId: 'bio-02',
+  name: '灰潮母巢',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'solar',
+  bossIndex: 1,
+  assetId: 'boss-c-01-v01',
+  name: '日蝕王座',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'nearstar',
+  bossIndex: 2,
+  assetId: 'fort-03',
+  name: '星骸迴廊',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'frontier',
+  bossIndex: 3,
+  assetId: 'cmd-03',
+  name: '黑域牧者',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'orion',
+  bossIndex: 4,
+  assetId: 'boss-c-02-v01',
+  name: '滅世天環',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'galactic-frontier',
+  bossIndex: 5,
+  assetId: 'ship-04',
+  name: '寂滅方舟',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'galactic-mid',
+  bossIndex: 6,
+  assetId: 'energy-01',
+  name: '萬域蝕潮',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'core-outer',
+  bossIndex: 7,
+  assetId: 'core-03',
+  name: '深核奇點',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'core-war',
+  bossIndex: 8,
+  assetId: 'cmd-03',
+  name: '無聲裁決',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 1,
+  mode: 'calamity',
+  bossId: 'galactic-unification',
+  bossIndex: 9,
+  assetId: 'boss-c-03-v01',
+  name: '終末之眼',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-01',
+  bossIndex: 0,
+  assetId: 'energy-01',
+  name: '彼岸黑潮',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-02',
+  bossIndex: 1,
+  assetId: 'core-03',
+  name: '群星焚爐',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-03',
+  bossIndex: 2,
+  assetId: 'cmd-03',
+  name: '邊星獵皇',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-04',
+  bossIndex: 3,
+  assetId: 'ship-04',
+  name: '萬軍葬艦',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-05',
+  bossIndex: 4,
+  assetId: 'core-03',
+  name: '超域蝕核',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-06',
+  bossIndex: 5,
+  assetId: 'mech-03',
+  name: '無盡兵災',
+  viewport: { width: 1365, height: 900 }
+}
+PASS live entry {
+  world: 2,
+  mode: 'calamity',
+  bossId: 'universe-calamity-07',
+  bossIndex: 6,
+  assetId: 'bio-02',
+  name: '星脈噬巢',
+  viewport: { width: 1365, height: 900 }
+}

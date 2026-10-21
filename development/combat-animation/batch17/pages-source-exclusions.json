@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "path": "development/monster-art/batch17/preview/contact_sheet.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-08_shijie_shenyuan.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/C-02_mieshi_tianhuan.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-10_gaowei_yuandian.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-06_weixi_zhiren.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-02_yongjie_zhongyuan.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-05_wanxiang_huiyan.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-01_pojie_tiancai.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/C-03_eyes_shared.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-07_n逆因輪轉.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/C-01_rishi_wangzuo.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/U-01_zhongzhan_tianqiong.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-03_suyin_tiancheng.png",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "docs/BATCH17_BOSS_SPRITES_2026-10-21.md",
+      "status": 404,
+      "published": false
+    },
+    {
+      "path": "development/combat-animation/batch17/all-identities.json",
+      "status": 404,
+      "published": false
+    }
+  ],
+  "formalSourceExcluded": true
+}

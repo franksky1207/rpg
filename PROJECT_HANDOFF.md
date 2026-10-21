@@ -1,4 +1,4 @@
-> **第17批Boss Sprite施工中（2026-10-21）**：PR #71分支已整合12張新WebP、30個Boss與高維競技投影；180版面、120故障、1827舊身份、222副本／特殊怪及88媒體候選通過。fixture精確同步與兩欄位守衛例外已於2026-10-22獲使用者明確授權並完成，完整回歸及最新head Actions驗證中，尚未合併／發布；正式驗收、同SHA Actions及Pages狀態見 [第17批報告](docs/BATCH17_BOSS_SPRITES_2026-10-21.md)。尚未正式封箱；真實iPhone待人工。
+> **第17批工程封箱（2026-10-22）**：PR #71已合併，功能main SHA `32bd7cf23eab8026a884040ced9f3789a2d0a583`；最終PR head十項、功能main二十三項Actions全部成功，Runtime及正式Pages部署通過。12張WebP、30Boss與高維競技投影整合完成；180共用版面、正式Pages真實入口90案例、120故障、279快速切換、1827舊身份、222副本／特殊怪及88媒體快取驗收通過。PNG原稿／預覽與報告未混入Pages。精確fixture同步與兩欄位守衛例外已獲使用者授權；歷史原文保留。完整SHA、倍率、發布及文件補記見 [第17批封箱報告](docs/BATCH17_BOSS_SPRITES_2026-10-21.md)及[PR #71最終紀錄](https://github.com/franksky1207/rpg/pull/71)。真實iPhone流暢度／溫度／耗電／記憶體與背景恢復仍待人工。
 
 > **第16批副本Sprite整合（2026-10-21）**：56個副本固定身份與銀河／宇宙鏡像沿現役Actor／Renderer／Pool整合；V-01獨立登錄、共用真實Alpha版面owner。範圍、逐身份三視窗、故障恢復與最新發布狀態見 [第16批驗收報告](docs/BATCH16_DUNGEON_SPRITES_2026-10-21.md)。本機168／1827尺寸、224故障、6鏡像、8正式入口、80視覺切換與Batch6 32/32均通過；最新PR head、正式main與Pages封箱證據以PR #66最新紀錄為準，真實iPhone仍待人工。
 

@@ -1,0 +1,215 @@
+{
+  "head": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+  "checks": [
+    {
+      "id": 39688213420,
+      "name": "Publication Dry Run (Stage 3)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213420"
+    },
+    {
+      "id": 39688213387,
+      "name": "Publish Asset Audit (Stage 2)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213387"
+    },
+    {
+      "id": 39688213292,
+      "name": "Asset Version Manifest",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213292"
+    },
+    {
+      "id": 39688213391,
+      "name": "Hybrid Comparison T2-A",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213391"
+    },
+    {
+      "id": 39688213392,
+      "name": "Story Integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213392"
+    },
+    {
+      "id": 39688213364,
+      "name": "HTML JS CSS Cache Version Guard",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213364"
+    },
+    {
+      "id": 39688213489,
+      "name": "Galaxy 3D Button Browser Smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213489"
+    },
+    {
+      "id": 39688213425,
+      "name": "Hybrid Comparison T2-B3 Renderers",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213425"
+    },
+    {
+      "id": 39688213483,
+      "name": "Batch 12 Material Selected Attack Acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213483"
+    },
+    {
+      "id": 39688213412,
+      "name": "Batch 7 Candidate Safety and Appearance",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213412"
+    },
+    {
+      "id": 39688213418,
+      "name": "Hybrid Comparison T2-B1",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213418"
+    },
+    {
+      "id": 39688213416,
+      "name": "Hybrid Comparison T2-B2 Assets",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213416"
+    },
+    {
+      "id": 39688213343,
+      "name": "Equipment 2.5D GM Integration",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213343"
+    },
+    {
+      "id": 39688213297,
+      "name": "GM 3D Test Center Browser",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213297"
+    },
+    {
+      "id": 39688213456,
+      "name": "Batch17 Boss Sprite Acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213456"
+    },
+    {
+      "id": 39688213434,
+      "name": "Publish Release Gate (Stage 4)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213434"
+    },
+    {
+      "id": 39688213443,
+      "name": "Batch 2-4 Integration and Regression",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213443"
+    },
+    {
+      "id": 39688213444,
+      "name": "Batch13 Twenty Monster GM Integration",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213444"
+    },
+    {
+      "id": 39688213424,
+      "name": "Equipment 2.5D Formal Battle",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213424"
+    },
+    {
+      "id": 39688213476,
+      "name": "Publish Optimized GitHub Pages",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213476"
+    },
+    {
+      "id": 39688213463,
+      "name": "Batch 6 Final 16 Integration",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213463"
+    },
+    {
+      "id": 39688213375,
+      "name": "Batch16 Dungeon Sprite Acceptance",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213375"
+    },
+    {
+      "id": 39688213411,
+      "name": "Runtime Integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
+      "event": "push",
+      "url": "https://github.com/franksky1207/rpg/actions/runs/39688213411"
+    }
+  ],
+  "success": 23,
+  "failure": 0,
+  "pending": 0
+}

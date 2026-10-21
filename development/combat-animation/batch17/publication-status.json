@@ -1,30 +1,64 @@
 {
-  "head": "ca1b0e79c00c2d2c317df6cc7853144e1987d83c",
+  "openingMainSHA": "f2d37f4c382248e3130f66d400246dc5e42e3639",
+  "finalPRHead": "18774098c2f9cbdb2e21f5f2a1eb82a87115183c",
+  "functionalMainSHA": "32bd7cf23eab8026a884040ced9f3789a2d0a583",
   "pr": "https://github.com/franksky1207/rpg/pull/71",
-  "bossWorkflow": {
-    "run": 39640446114,
-    "job": 119362237930,
-    "conclusion": "success",
-    "url": "https://github.com/franksky1207/rpg/actions/runs/39640446114"
-  },
-  "mainMerged": false,
-  "pagesBatch17Deployed": false,
-  "blocked": "Auto-review requires explicit user authorization for exact fixture live digest sync and identity projection guard exception. Awaiting response; no update or merge performed.",
-  "dungeonWorkflow": {
-    "run": 39640445971,
-    "conclusion": "success",
-    "url": "https://github.com/franksky1207/rpg/actions/runs/39640445971"
-  },
-  "initialHeadChecks": {
-    "success": 3,
-    "failure": 7,
+  "prChecks": {
+    "success": 10,
+    "failure": 0,
     "pending": 0
   },
+  "functionalMainChecks": {
+    "success": 23,
+    "failure": 0,
+    "pending": 0
+  },
+  "runtimeRun": 39688213411,
+  "pagesRun": 39688213476,
+  "pagesURL": "https://franksky1207.github.io/rpg/",
+  "mainMerged": true,
+  "pagesBatch17Deployed": true,
+  "pagesHTTP": {
+    "newAssets": 12,
+    "exactModules": 7,
+    "passed": true,
+    "excludedSourcePaths404": 15
+  },
+  "pagesSharedRendererCases": 180,
+  "pagesRealBossViewportCases": 90,
+  "pagesRealEntryModes": 5,
+  "pagesNativeCacheMedia": 88,
+  "pagesNativeBossCorruptRepair": 12,
+  "actualLiveAlphaMin": 1.6500024027295006,
+  "actualLiveAlphaMax": 1.9732035173124576,
+  "resourceFailureCases": 120,
+  "rapidSwitches": 279,
+  "batch15IdentityViewportCases": 1827,
+  "batch16DungeonAndSpecialCases": 222,
   "batch6CI": {
     "total": 32,
-    "passed": 28,
-    "failed": 4,
-    "sameRun": true,
-    "reason": "Renderer/GM fixture SHA chain blocks four entries; full original suite executed"
-  }
+    "passed": 32,
+    "failed": 0,
+    "sameRun": true
+  },
+  "localBatch6": {
+    "total": 32,
+    "passed": 31,
+    "failed": 1,
+    "isolatedFailedTestRerun": "passed; not combined into 32/32"
+  },
+  "userAuthorizedExactFixtureSync": true,
+  "historicalFixtureSourcesUnchanged": true,
+  "blocked": null,
+  "realIPhoneVerified": false,
+  "manualPending": [
+    "long-session FPS",
+    "temperature",
+    "power",
+    "memory and OS reclamation",
+    "background suspend/resume",
+    "true cloud account write"
+  ],
+  "reportRefreshMain": "See final PR #71 publication record and this file Git commit metadata",
+  "verifiedAtUTC": "2026-10-21T23:19:01.756219+00:00"
 }

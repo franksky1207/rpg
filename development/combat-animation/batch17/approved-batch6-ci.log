@@ -1,0 +1,646 @@
+﻿2026-10-21T22:32:03.7373275Z Current runner version: '2.338.0'
+2026-10-21T22:32:03.7408938Z ##[group]Runner Image Provisioner
+2026-10-21T22:32:03.7410278Z Hosted Compute Agent
+2026-10-21T22:32:03.7411619Z Version: 20261015.610
+2026-10-21T22:32:03.7412683Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-21T22:32:03.7414048Z Build Date: 2026-10-14T17:06:54Z
+2026-10-21T22:32:03.7415330Z Worker ID: {3d47e181-f58b-4bdc-8702-f92633b21e9e}
+2026-10-21T22:32:03.7416594Z Region: eastus
+2026-10-21T22:32:03.7417538Z Cloud: Azure
+2026-10-21T22:32:03.7418434Z ##[endgroup]
+2026-10-21T22:32:03.7421205Z ##[group]Operating System
+2026-10-21T22:32:03.7422290Z Ubuntu
+2026-10-21T22:32:03.7423286Z 24.04.5
+2026-10-21T22:32:03.7424109Z LTS
+2026-10-21T22:32:03.7424914Z ##[endgroup]
+2026-10-21T22:32:03.7426042Z ##[group]Runner Image
+2026-10-21T22:32:03.7427036Z Image: ubuntu-24.04
+2026-10-21T22:32:03.7428082Z Version: 20261018.339.1
+2026-10-21T22:32:03.7430226Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-21T22:32:03.7433396Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-21T22:32:03.7435064Z ##[endgroup]
+2026-10-21T22:32:03.7437064Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T22:32:03.7439889Z Contents: read
+2026-10-21T22:32:03.7441214Z Metadata: read
+2026-10-21T22:32:03.7442120Z ##[endgroup]
+2026-10-21T22:32:03.7445680Z Secret source: Actions
+2026-10-21T22:32:03.7447249Z Cache mode: write
+2026-10-21T22:32:03.7448573Z Prepare workflow directory
+2026-10-21T22:32:03.7934037Z Prepare all required actions
+2026-10-21T22:32:03.8005694Z Getting action download info
+2026-10-21T22:32:04.0136554Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-21T22:32:04.1387112Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-10-21T22:32:04.2330358Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-21T22:32:04.4496056Z Complete job name: batch6
+2026-10-21T22:32:04.5313132Z ##[group]Run actions/checkout@v4
+2026-10-21T22:32:04.5314037Z with:
+2026-10-21T22:32:04.5314463Z   fetch-depth: 0
+2026-10-21T22:32:04.5314935Z   repository: franksky1207/rpg
+2026-10-21T22:32:04.5318956Z   token: ***
+2026-10-21T22:32:04.5319405Z   ssh-strict: true
+2026-10-21T22:32:04.5319840Z   ssh-user: git
+2026-10-21T22:32:04.5320284Z   persist-credentials: true
+2026-10-21T22:32:04.5321021Z   clean: true
+2026-10-21T22:32:04.5321482Z   sparse-checkout-cone-mode: true
+2026-10-21T22:32:04.5322008Z   fetch-tags: false
+2026-10-21T22:32:04.5322453Z   show-progress: true
+2026-10-21T22:32:04.5322894Z   lfs: false
+2026-10-21T22:32:04.5323306Z   submodules: false
+2026-10-21T22:32:04.5323752Z   set-safe-directory: true
+2026-10-21T22:32:04.5324256Z   allow-unsafe-pr-checkout: false
+2026-10-21T22:32:04.5325046Z ##[endgroup]
+2026-10-21T22:32:04.6369869Z Syncing repository: franksky1207/rpg
+2026-10-21T22:32:04.6372795Z ##[group]Getting Git version info
+2026-10-21T22:32:04.6373939Z Working directory is '/home/runner/work/rpg/rpg'
+2026-10-21T22:32:04.6375614Z [command]/usr/bin/git version
+2026-10-21T22:32:04.6427256Z git version 2.55.0
+2026-10-21T22:32:04.6449972Z ##[endgroup]
+2026-10-21T22:32:04.6465549Z Temporarily overriding HOME='/home/runner/work/_temp/2f72ab99-4c97-493b-ac3c-1032298ffa5c' before making global git config changes
+2026-10-21T22:32:04.6467947Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T22:32:04.6471353Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/rpg/rpg
+2026-10-21T22:32:04.6542840Z Deleting the contents of '/home/runner/work/rpg/rpg'
+2026-10-21T22:32:04.6544990Z ##[group]Initializing the repository
+2026-10-21T22:32:04.6546146Z [command]/usr/bin/git init /home/runner/work/rpg/rpg
+2026-10-21T22:32:04.6645101Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-21T22:32:04.6646920Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-21T22:32:04.6648740Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-21T22:32:04.6649762Z hint: call:
+2026-10-21T22:32:04.6651162Z hint:
+2026-10-21T22:32:04.6652167Z hint: 	git config --global init.defaultBranch <name>
+2026-10-21T22:32:04.6653328Z hint:
+2026-10-21T22:32:04.6654400Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-21T22:32:04.6656125Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-21T22:32:04.6657448Z hint:
+2026-10-21T22:32:04.6658151Z hint: 	git branch -m <name>
+2026-10-21T22:32:04.6658956Z hint:
+2026-10-21T22:32:04.6660145Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-21T22:32:04.6662439Z Initialized empty Git repository in /home/runner/work/rpg/rpg/.git/
+2026-10-21T22:32:04.6665163Z [command]/usr/bin/git remote add origin https://github.com/franksky1207/rpg
+2026-10-21T22:32:04.6717137Z ##[endgroup]
+2026-10-21T22:32:04.6718368Z ##[group]Disabling automatic garbage collection
+2026-10-21T22:32:04.6720423Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-21T22:32:04.6758022Z ##[endgroup]
+2026-10-21T22:32:04.6759272Z ##[group]Setting up auth
+2026-10-21T22:32:04.6766452Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T22:32:04.6804041Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T22:32:04.7223215Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T22:32:04.7278250Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T22:32:04.7629067Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T22:32:04.7685483Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T22:32:04.7981876Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-21T22:32:04.8038641Z ##[endgroup]
+2026-10-21T22:32:04.8040120Z ##[group]Fetching the repository
+2026-10-21T22:32:04.8052802Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +b65a5202198afa2b2bd6fe28937c15bad430c3f8:refs/remotes/pull/71/merge
+2026-10-21T22:32:17.6636327Z From https://github.com/franksky1207/rpg
+2026-10-21T22:32:17.6643264Z  * [new branch]        audit/batch1-animation-frame-trace-20261017 -> origin/audit/batch1-animation-frame-trace-20261017
+2026-10-21T22:32:17.6647078Z  * [new branch]        audit/batch1-dynamic-baseline-20261017   -> origin/audit/batch1-dynamic-baseline-20261017
+2026-10-21T22:32:17.6651253Z  * [new branch]        audit/batch1-fixed12-closure-20261017    -> origin/audit/batch1-fixed12-closure-20261017
+2026-10-21T22:32:17.6654894Z  * [new branch]        audit/batch2-final13-20261017            -> origin/audit/batch2-final13-20261017
+2026-10-21T22:32:17.6658912Z  * [new branch]        audit/cleanup-batch1-gm-2026-10-17       -> origin/audit/cleanup-batch1-gm-2026-10-17
+2026-10-21T22:32:17.6663200Z  * [new branch]        audit/cross-combat-runtime-contract-20261020 -> origin/audit/cross-combat-runtime-contract-20261020
+2026-10-21T22:32:17.6667618Z  * [new branch]        batch10-formal-mobile-usability-20261019 -> origin/batch10-formal-mobile-usability-20261019
+2026-10-21T22:32:17.6673274Z  * [new branch]        batch11-audio-resource-mobile-performance-20261019 -> origin/batch11-audio-resource-mobile-performance-20261019
+2026-10-21T22:32:17.6676991Z  * [new branch]        batch12-forward-thrust-final-20261019    -> origin/batch12-forward-thrust-final-20261019
+2026-10-21T22:32:17.6680364Z  * [new branch]        batch13-six-monster-sprite-test          -> origin/batch13-six-monster-sprite-test
+2026-10-21T22:32:17.6684473Z  * [new branch]        batch13-twenty-monster-integration       -> origin/batch13-twenty-monster-integration
+2026-10-21T22:32:17.6688815Z  * [new branch]        batch14-formal-map-monster-sprites-20261021 -> origin/batch14-formal-map-monster-sprites-20261021
+2026-10-21T22:32:17.6692902Z  * [new branch]        batch14-formal-map-monsters-20261021     -> origin/batch14-formal-map-monsters-20261021
+2026-10-21T22:32:17.6696420Z  * [new branch]        batch15-1-monster-scale-floor-20261021   -> origin/batch15-1-monster-scale-floor-20261021
+2026-10-21T22:32:17.6699658Z  * [new branch]        batch15-1-monster-visible-size           -> origin/batch15-1-monster-visible-size
+2026-10-21T22:32:17.6702899Z  * [new branch]        batch15-2-monster-palette-20261021       -> origin/batch15-2-monster-palette-20261021
+2026-10-21T22:32:17.6706497Z  * [new branch]        batch15-3-gm-monster-picker-20261021     -> origin/batch15-3-gm-monster-picker-20261021
+2026-10-21T22:32:17.6709534Z  * [new branch]        batch16-dungeon-sprites                  -> origin/batch16-dungeon-sprites
+2026-10-21T22:32:17.6713003Z  * [new branch]        batch16-identity-final-review            -> origin/batch16-identity-final-review
+2026-10-21T22:32:17.6717586Z  * [new branch]        batch16-publication-count                -> origin/batch16-publication-count
+2026-10-21T22:32:17.6722598Z  * [new branch]        batch17-boss-integration-20261021        -> origin/batch17-boss-integration-20261021
+2026-10-21T22:32:17.6727108Z  * [new branch]        batch3-1-old-concept-prune               -> origin/batch3-1-old-concept-prune
+2026-10-21T22:32:17.6732181Z  * [new branch]        batch3-2-retire-concept-tools            -> origin/batch3-2-retire-concept-tools
+2026-10-21T22:32:17.6736722Z  * [new branch]        batch3-3-retire-art-evidence             -> origin/batch3-3-retire-art-evidence
+2026-10-21T22:32:17.6741436Z  * [new branch]        batch3-4-retire-docs                     -> origin/batch3-4-retire-docs
+2026-10-21T22:32:17.6745371Z  * [new branch]        batch4-1-residual-audit                  -> origin/batch4-1-residual-audit
+2026-10-21T22:32:17.6749203Z  * [new branch]        batch4-2-art-unlink                      -> origin/batch4-2-art-unlink
+2026-10-21T22:32:17.6753126Z  * [new branch]        batch4-3-runtime-dependency-cleanup      -> origin/batch4-3-runtime-dependency-cleanup
+2026-10-21T22:32:17.6756661Z  * [new branch]        batch4-4-final-zero-residual-regression  -> origin/batch4-4-final-zero-residual-regression
+2026-10-21T22:32:17.6760039Z  * [new branch]        batch7-era-player-sprite-20261018        -> origin/batch7-era-player-sprite-20261018
+2026-10-21T22:32:17.6764491Z  * [new branch]        batch8-shared-battlefield-20261019       -> origin/batch8-shared-battlefield-20261019
+2026-10-21T22:32:17.6768049Z  * [new branch]        batch9-existing-background-stage-20261019 -> origin/batch9-existing-background-stage-20261019
+2026-10-21T22:32:17.6771764Z  * [new branch]        cleanup-batch2-1-decouple-20261017       -> origin/cleanup-batch2-1-decouple-20261017
+2026-10-21T22:32:17.6776148Z  * [new branch]        cleanup-batch2-2-gm-visual-center-20261017 -> origin/cleanup-batch2-2-gm-visual-center-20261017
+2026-10-21T22:32:17.6782225Z  * [new branch]        cleanup-batch2-3-legacy-runtime-20261017 -> origin/cleanup-batch2-3-legacy-runtime-20261017
+2026-10-21T22:32:17.6788316Z  * [new branch]        cleanup-batch2-3-runtime-dependencies-20261017 -> origin/cleanup-batch2-3-runtime-dependencies-20261017
+2026-10-21T22:32:17.6794354Z  * [new branch]        cleanup-batch2-4-integration-20261017    -> origin/cleanup-batch2-4-integration-20261017
+2026-10-21T22:32:17.6799241Z  * [new branch]        codex/g09-gm-diagnostics                 -> origin/codex/g09-gm-diagnostics
+2026-10-21T22:32:17.6802318Z  * [new branch]        diag/js-syntax-scan                      -> origin/diag/js-syntax-scan
+2026-10-21T22:32:17.6805352Z  * [new branch]        docs/boss-art-plan-20261021              -> origin/docs/boss-art-plan-20261021
+2026-10-21T22:32:17.6808475Z  * [new branch]        feat/combat-animation-batch3-20261017    -> origin/feat/combat-animation-batch3-20261017
+2026-10-21T22:32:17.6813276Z  * [new branch]        feat/combat-animation-batch4-20261018    -> origin/feat/combat-animation-batch4-20261018
+2026-10-21T22:32:17.6816828Z  * [new branch]        feat/combat-renewal-batch5-integrated-20261018 -> origin/feat/combat-renewal-batch5-integrated-20261018
+2026-10-21T22:32:17.6820502Z  * [new branch]        feat/combat-renewal-batch6-final-20261018 -> origin/feat/combat-renewal-batch6-final-20261018
+2026-10-21T22:32:17.6824186Z  * [new branch]        feat/equipment-g16                       -> origin/feat/equipment-g16
+2026-10-21T22:32:17.6827499Z  * [new branch]        fix-gm-monster-visible-height-20261021   -> origin/fix-gm-monster-visible-height-20261021
+2026-10-21T22:32:17.6831377Z  * [new branch]        fix/batch2-cache-version-20261017        -> origin/fix/batch2-cache-version-20261017
+2026-10-21T22:32:17.6835076Z  * [new branch]        fix/batch2-cleanup-batch24-guard-20261017 -> origin/fix/batch2-cleanup-batch24-guard-20261017
+2026-10-21T22:32:17.6838824Z  * [new branch]        fix/batch2-combat-lifecycle-20261017     -> origin/fix/batch2-combat-lifecycle-20261017
+2026-10-21T22:32:17.6842675Z  * [new branch]        fix/batch2-retired-cleanup-guard-20261017 -> origin/fix/batch2-retired-cleanup-guard-20261017
+2026-10-21T22:32:17.6846567Z  * [new branch]        fix/batch3-cleanup-integration-cache-guard -> origin/fix/batch3-cleanup-integration-cache-guard
+2026-10-21T22:32:17.6850303Z  * [new branch]        fix/batch4-gm-browser-label-20261018     -> origin/fix/batch4-gm-browser-label-20261018
+2026-10-21T22:32:17.6854531Z  * [new branch]        fix/batch4-gm-center-browser-regression-20261018 -> origin/fix/batch4-gm-center-browser-regression-20261018
+2026-10-21T22:32:17.6859104Z  * [new branch]        fix/batch4-gm-historical-protection-20261018 -> origin/fix/batch4-gm-historical-protection-20261018
+2026-10-21T22:32:17.6863171Z  * [new branch]        fix/combat-batch3-historical-cache-guard -> origin/fix/combat-batch3-historical-cache-guard
+2026-10-21T22:32:17.6866823Z  * [new branch]        fix/combat-center-stop-and-sprite-warmup-20261019 -> origin/fix/combat-center-stop-and-sprite-warmup-20261019
+2026-10-21T22:32:17.6870380Z  * [new branch]        fix/combat-center-stop-warmup-20261019   -> origin/fix/combat-center-stop-warmup-20261019
+2026-10-21T22:32:17.6874280Z  * [new branch]        fix/combat-renewal-batch6-gm-ready-20261018 -> origin/fix/combat-renewal-batch6-gm-ready-20261018
+2026-10-21T22:32:17.6877917Z  * [new branch]        fix/combat-sprite-cache-recovery-glass-20261020 -> origin/fix/combat-sprite-cache-recovery-glass-20261020
+2026-10-21T22:32:17.6881738Z  * [new branch]        fix/combat-sprite-recovery-glass-20261020 -> origin/fix/combat-sprite-recovery-glass-20261020
+2026-10-21T22:32:17.6885411Z  * [new branch]        fix/cross-combat-runtime-stale-continuous-20261020 -> origin/fix/cross-combat-runtime-stale-continuous-20261020
+2026-10-21T22:32:17.6888956Z  * [new branch]        fix/cross-mode-late-settlement-20261020  -> origin/fix/cross-mode-late-settlement-20261020
+2026-10-21T22:32:17.6970137Z  * [new branch]        fix/gm-animation-center-copy-full-20261018 -> origin/fix/gm-animation-center-copy-full-20261018
+2026-10-21T22:32:17.6975553Z  * [new branch]        fix/higher-boss-rerun-first-turn-20261018 -> origin/fix/higher-boss-rerun-first-turn-20261018
+2026-10-21T22:32:17.6981118Z  * [new branch]        fix/hybrid-t2-fixture-sync-20261017      -> origin/fix/hybrid-t2-fixture-sync-20261017
+2026-10-21T22:32:17.6986349Z  * [new branch]        fix/hybrid-t2-followup-contract-20261017 -> origin/fix/hybrid-t2-followup-contract-20261017
+2026-10-21T22:32:17.6991213Z  * [new branch]        fix/player-sprite-preload-acceptance-20261019 -> origin/fix/player-sprite-preload-acceptance-20261019
+2026-10-21T22:32:17.6995381Z  * [new branch]        fix/pr48-retired-background-runtime-guard-20261020 -> origin/fix/pr48-retired-background-runtime-guard-20261020
+2026-10-21T22:32:17.6999251Z  * [new branch]        fix/pr53-postmerge-cache-batch12-guard-20261020 -> origin/fix/pr53-postmerge-cache-batch12-guard-20261020
+2026-10-21T22:32:17.7003028Z  * [new branch]        fix/pr54-runtime-guard-postmerge-20261020 -> origin/fix/pr54-runtime-guard-postmerge-20261020
+2026-10-21T22:32:17.7006632Z  * [new branch]        fix/pr54-runtime-protected-owner-followup-20261020 -> origin/fix/pr54-runtime-protected-owner-followup-20261020
+2026-10-21T22:32:17.7010422Z  * [new branch]        fix/preload-six-formal-player-sprites-20261019 -> origin/fix/preload-six-formal-player-sprites-20261019
+2026-10-21T22:32:17.7014353Z  * [new branch]        fix/special-monster-formal-sprites-20261021 -> origin/fix/special-monster-formal-sprites-20261021
+2026-10-21T22:32:17.7017995Z  * [new branch]        fix/unified-mobile-combat-viewport-stop-20261019 -> origin/fix/unified-mobile-combat-viewport-stop-20261019
+2026-10-21T22:32:17.7021812Z  * [new branch]        fix/unified-viewport-cache-guard-20261019 -> origin/fix/unified-viewport-cache-guard-20261019
+2026-10-21T22:32:17.7024414Z  * [new branch]        main                                     -> origin/main
+2026-10-21T22:32:17.7026448Z  * [new branch]        tmp-mapbg-upload                         -> origin/tmp-mapbg-upload
+2026-10-21T22:32:17.7028940Z  * [new branch]        work-stage-g021-g025-20261014            -> origin/work-stage-g021-g025-20261014
+2026-10-21T22:32:17.7031487Z  * [new ref]           b65a5202198afa2b2bd6fe28937c15bad430c3f8 -> pull/71/merge
+2026-10-21T22:32:17.7035127Z ##[endgroup]
+2026-10-21T22:32:17.7036624Z ##[group]Determining the checkout info
+2026-10-21T22:32:17.7038439Z ##[endgroup]
+2026-10-21T22:32:17.7039427Z [command]/usr/bin/git sparse-checkout disable
+2026-10-21T22:32:17.7042643Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-21T22:32:17.7046163Z ##[group]Checking out the ref
+2026-10-21T22:32:17.7047716Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/71/merge
+2026-10-21T22:32:18.7003228Z Updating files:  63% (1073/1688)
+2026-10-21T22:32:18.7069676Z Updating files:  64% (1081/1688)
+2026-10-21T22:32:18.7105261Z Updating files:  65% (1098/1688)
+2026-10-21T22:32:18.7117386Z Updating files:  66% (1115/1688)
+2026-10-21T22:32:18.7130812Z Updating files:  67% (1131/1688)
+2026-10-21T22:32:18.7150507Z Updating files:  68% (1148/1688)
+2026-10-21T22:32:18.7164607Z Updating files:  69% (1165/1688)
+2026-10-21T22:32:18.7180302Z Updating files:  70% (1182/1688)
+2026-10-21T22:32:18.7195482Z Updating files:  71% (1199/1688)
+2026-10-21T22:32:18.7214520Z Updating files:  72% (1216/1688)
+2026-10-21T22:32:18.7230244Z Updating files:  73% (1233/1688)
+2026-10-21T22:32:18.7245344Z Updating files:  74% (1250/1688)
+2026-10-21T22:32:18.7261346Z Updating files:  75% (1266/1688)
+2026-10-21T22:32:18.7278421Z Updating files:  76% (1283/1688)
+2026-10-21T22:32:18.7287568Z Updating files:  77% (1300/1688)
+2026-10-21T22:32:18.7299248Z Updating files:  78% (1317/1688)
+2026-10-21T22:32:18.7313596Z Updating files:  79% (1334/1688)
+2026-10-21T22:32:18.7333020Z Updating files:  80% (1351/1688)
+2026-10-21T22:32:18.7364551Z Updating files:  81% (1368/1688)
+2026-10-21T22:32:18.7388031Z Updating files:  82% (1385/1688)
+2026-10-21T22:32:18.7400152Z Updating files:  83% (1402/1688)
+2026-10-21T22:32:18.7410548Z Updating files:  84% (1418/1688)
+2026-10-21T22:32:18.7422788Z Updating files:  85% (1435/1688)
+2026-10-21T22:32:18.7431898Z Updating files:  86% (1452/1688)
+2026-10-21T22:32:18.7441089Z Updating files:  87% (1469/1688)
+2026-10-21T22:32:18.7453213Z Updating files:  88% (1486/1688)
+2026-10-21T22:32:18.7466911Z Updating files:  89% (1503/1688)
+2026-10-21T22:32:18.7478986Z Updating files:  90% (1520/1688)
+2026-10-21T22:32:18.7491179Z Updating files:  91% (1537/1688)
+2026-10-21T22:32:18.7505081Z Updating files:  92% (1553/1688)
+2026-10-21T22:32:18.7518763Z Updating files:  93% (1570/1688)
+2026-10-21T22:32:18.7530823Z Updating files:  94% (1587/1688)
+2026-10-21T22:32:18.7544681Z Updating files:  95% (1604/1688)
+2026-10-21T22:32:18.7558203Z Updating files:  96% (1621/1688)
+2026-10-21T22:32:18.7577334Z Updating files:  97% (1638/1688)
+2026-10-21T22:32:18.7831904Z Updating files:  98% (1655/1688)
+2026-10-21T22:32:18.7845584Z Updating files:  99% (1672/1688)
+2026-10-21T22:32:18.7846037Z Updating files: 100% (1688/1688)
+2026-10-21T22:32:18.7846441Z Updating files: 100% (1688/1688), done.
+2026-10-21T22:32:18.7873793Z Note: switching to 'refs/remotes/pull/71/merge'.
+2026-10-21T22:32:18.7874332Z 
+2026-10-21T22:32:18.7874821Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-21T22:32:18.7875699Z changes and commit them, and you can discard any commits you make in this
+2026-10-21T22:32:18.7876522Z state without impacting any branches by switching back to a branch.
+2026-10-21T22:32:18.7876932Z 
+2026-10-21T22:32:18.7877271Z If you want to create a new branch to retain commits you create, you may
+2026-10-21T22:32:18.7877941Z do so (now or later) by using -c with the switch command. Example:
+2026-10-21T22:32:18.7878323Z 
+2026-10-21T22:32:18.7878498Z   git switch -c <new-branch-name>
+2026-10-21T22:32:18.7878767Z 
+2026-10-21T22:32:18.7878933Z Or undo this operation with:
+2026-10-21T22:32:18.7879181Z 
+2026-10-21T22:32:18.7879329Z   git switch -
+2026-10-21T22:32:18.7879524Z 
+2026-10-21T22:32:18.7879861Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-21T22:32:18.7880311Z 
+2026-10-21T22:32:18.7881210Z HEAD is now at b65a5202 Merge 18774098c2f9cbdb2e21f5f2a1eb82a87115183c into f2d37f4c382248e3130f66d400246dc5e42e3639
+2026-10-21T22:32:18.8019267Z ##[endgroup]
+2026-10-21T22:32:18.8024341Z [command]/usr/bin/git log -1 --format=%H
+2026-10-21T22:32:18.8062419Z b65a5202198afa2b2bd6fe28937c15bad430c3f8
+2026-10-21T22:32:18.8388165Z ##[group]Run actions/setup-node@v4
+2026-10-21T22:32:18.8388560Z with:
+2026-10-21T22:32:18.8388813Z   node-version: 24
+2026-10-21T22:32:18.8389088Z   always-auth: false
+2026-10-21T22:32:18.8389362Z   check-latest: false
+2026-10-21T22:32:18.8392370Z   token: ***
+2026-10-21T22:32:18.8392641Z ##[endgroup]
+2026-10-21T22:32:18.9897493Z Found in cache @ /opt/hostedtoolcache/node/24.22.0/x64
+2026-10-21T22:32:18.9903196Z (node:2332) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-21T22:32:18.9904181Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-21T22:32:18.9906997Z ##[group]Environment details
+2026-10-21T22:32:19.4268591Z node: v24.22.0
+2026-10-21T22:32:19.4269054Z npm: 11.19.1
+2026-10-21T22:32:19.4269293Z yarn: 1.22.22
+2026-10-21T22:32:19.4270284Z ##[endgroup]
+2026-10-21T22:32:19.4431943Z ##[group]Run npm install --no-save playwright@1.55.0
+2026-10-21T22:32:19.4432445Z [36;1mnpm install --no-save playwright@1.55.0[0m
+2026-10-21T22:32:19.4432860Z [36;1mnpx playwright install --with-deps chromium[0m
+2026-10-21T22:32:19.4602187Z shell: /usr/bin/bash -e {0}
+2026-10-21T22:32:19.4602499Z ##[endgroup]
+2026-10-21T22:32:21.4082961Z 
+2026-10-21T22:32:21.4091037Z added 2 packages in 2s
+2026-10-21T22:32:22.1860971Z Installing dependencies...
+2026-10-21T22:32:22.1968505Z Switching to root user to install dependencies...
+2026-10-21T22:32:22.2773064Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-21T22:32:22.3043329Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-10-21T22:32:22.3167376Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-10-21T22:32:22.3182949Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-10-21T22:32:22.3261428Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-10-21T22:32:22.3308658Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-10-21T22:32:22.3863479Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [630 kB]
+2026-10-21T22:32:22.4042772Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [567 kB]
+2026-10-21T22:32:22.5045154Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1400 kB]
+2026-10-21T22:32:22.5122903Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [310 kB]
+2026-10-21T22:32:22.5162791Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1706 kB]
+2026-10-21T22:32:22.5242673Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [342 kB]
+2026-10-21T22:32:22.6107670Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1146 kB]
+2026-10-21T22:32:22.6168383Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-10-21T22:32:22.6194126Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1222 kB]
+2026-10-21T22:32:25.5913000Z Fetched 7936 kB in 1s (9388 kB/s)
+2026-10-21T22:32:26.6300373Z Reading package lists...
+2026-10-21T22:32:26.6619955Z Reading package lists...
+2026-10-21T22:32:26.8722598Z Building dependency tree...
+2026-10-21T22:32:26.8734203Z Reading state information...
+2026-10-21T22:32:27.0154088Z libasound2t64 is already the newest version (1.2.11-1ubuntu0.3).
+2026-10-21T22:32:27.0154749Z libasound2t64 set to manually installed.
+2026-10-21T22:32:27.0155366Z libatk-bridge2.0-0t64 is already the newest version (2.52.0-1build1).
+2026-10-21T22:32:27.0156189Z libatk-bridge2.0-0t64 set to manually installed.
+2026-10-21T22:32:27.0156787Z libatk1.0-0t64 is already the newest version (2.52.0-1build1).
+2026-10-21T22:32:27.0157312Z libatk1.0-0t64 set to manually installed.
+2026-10-21T22:32:27.0157892Z libatspi2.0-0t64 is already the newest version (2.52.0-1build1).
+2026-10-21T22:32:27.0158488Z libatspi2.0-0t64 set to manually installed.
+2026-10-21T22:32:27.0159332Z libcairo2 is already the newest version (1.18.0-3build1).
+2026-10-21T22:32:27.0159855Z libcairo2 set to manually installed.
+2026-10-21T22:32:27.0160494Z libcups2t64 is already the newest version (2.4.7-1.2ubuntu7.14).
+2026-10-21T22:32:27.0161482Z libcups2t64 set to manually installed.
+2026-10-21T22:32:27.0162058Z libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+2026-10-21T22:32:27.0162616Z libdbus-1-3 set to manually installed.
+2026-10-21T22:32:27.0163178Z libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.2).
+2026-10-21T22:32:27.0163727Z libdrm2 set to manually installed.
+2026-10-21T22:32:27.0164263Z libgbm1 is already the newest version (25.2.8-0ubuntu0.24.04.4).
+2026-10-21T22:32:27.0164928Z libgbm1 set to manually installed.
+2026-10-21T22:32:27.0165454Z libnspr4 is already the newest version (2:4.35-1.1build1).
+2026-10-21T22:32:27.0166484Z libnspr4 set to manually installed.
+2026-10-21T22:32:27.0167050Z libpango-1.0-0 is already the newest version (1.52.1+ds-1build1).
+2026-10-21T22:32:27.0167601Z libpango-1.0-0 set to manually installed.
+2026-10-21T22:32:27.0168149Z libx11-6 is already the newest version (2:1.8.7-1ubuntu0.1).
+2026-10-21T22:32:27.0168846Z libx11-6 set to manually installed.
+2026-10-21T22:32:27.0169333Z libxcb1 is already the newest version (1.15-1ubuntu2).
+2026-10-21T22:32:27.0169810Z libxcb1 set to manually installed.
+2026-10-21T22:32:27.0170356Z libxcomposite1 is already the newest version (1:0.4.5-1build3).
+2026-10-21T22:32:27.0171287Z libxcomposite1 set to manually installed.
+2026-10-21T22:32:27.0171828Z libxdamage1 is already the newest version (1:1.1.6-1build1).
+2026-10-21T22:32:27.0172230Z libxdamage1 set to manually installed.
+2026-10-21T22:32:27.0172728Z libxext6 is already the newest version (2:1.3.4-1build2).
+2026-10-21T22:32:27.0173108Z libxext6 set to manually installed.
+2026-10-21T22:32:27.0173516Z libxfixes3 is already the newest version (1:6.0.0-2build1).
+2026-10-21T22:32:27.0173911Z libxfixes3 set to manually installed.
+2026-10-21T22:32:27.0174316Z libxkbcommon0 is already the newest version (1.6.0-1build1).
+2026-10-21T22:32:27.0174925Z libxkbcommon0 set to manually installed.
+2026-10-21T22:32:27.0175334Z libxrandr2 is already the newest version (2:1.5.2-2build1).
+2026-10-21T22:32:27.0175726Z libxrandr2 set to manually installed.
+2026-10-21T22:32:27.0176219Z fonts-noto-color-emoji is already the newest version (2.047-0ubuntu0.24.04.1).
+2026-10-21T22:32:27.0176891Z libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+2026-10-21T22:32:27.0177324Z libfontconfig1 set to manually installed.
+2026-10-21T22:32:27.0177788Z libfreetype6 is already the newest version (2.13.2+dfsg-1ubuntu0.2).
+2026-10-21T22:32:27.0178237Z libfreetype6 set to manually installed.
+2026-10-21T22:32:27.0178670Z fonts-liberation is already the newest version (1:2.1.5-3).
+2026-10-21T22:32:27.0179117Z fonts-liberation set to manually installed.
+2026-10-21T22:32:27.0179526Z The following additional packages will be installed:
+2026-10-21T22:32:27.0180090Z   gir1.2-glib-2.0 libglib2.0-bin libglib2.0-data libnss3-tools
+2026-10-21T22:32:27.0180522Z   xfonts-encodings xfonts-utils xserver-common
+2026-10-21T22:32:27.0181120Z Suggested packages:
+2026-10-21T22:32:27.0181417Z   low-memory-monitor
+2026-10-21T22:32:27.0181665Z Recommended packages:
+2026-10-21T22:32:27.0181969Z   fonts-ipafont-mincho fonts-tlwg-loma xfonts-base
+2026-10-21T22:32:27.0392758Z The following NEW packages will be installed:
+2026-10-21T22:32:27.0393414Z   fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+2026-10-21T22:32:27.0399137Z   fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+2026-10-21T22:32:27.0399660Z   xfonts-utils
+2026-10-21T22:32:27.0402891Z The following packages will be upgraded:
+2026-10-21T22:32:27.0405027Z   gir1.2-glib-2.0 libglib2.0-0t64 libglib2.0-bin libglib2.0-data libnss3
+2026-10-21T22:32:27.0408886Z   libnss3-tools xserver-common xvfb
+2026-10-21T22:32:27.0608172Z 8 upgraded, 9 newly installed, 0 to remove and 47 not upgraded.
+2026-10-21T22:32:27.0608671Z Need to get 25.9 MB of archives.
+2026-10-21T22:32:27.0609370Z After this operation, 79.5 MB of additional disk space will be used.
+2026-10-21T22:32:27.0610292Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-21T22:32:27.1648910Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-ipafont-gothic all 00303-21ubuntu1 [3513 kB]
+2026-10-21T22:32:27.3699202Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-data all 2.80.0-6ubuntu3.10 [50.2 kB]
+2026-10-21T22:32:27.4523198Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-bin amd64 2.80.0-6ubuntu3.10 [97.9 kB]
+2026-10-21T22:32:27.5353907Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 gir1.2-glib-2.0 amd64 2.80.0-6ubuntu3.10 [183 kB]
+2026-10-21T22:32:27.6203503Z Get:6 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-0t64 amd64 2.80.0-6ubuntu3.10 [1548 kB]
+2026-10-21T22:32:27.7203130Z Get:7 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 fonts-freefont-ttf all 20211204+svn4273-2 [5641 kB]
+2026-10-21T22:32:27.9174250Z Get:8 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [107 kB]
+2026-10-21T22:32:28.0000005Z Get:9 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-unifont all 1:15.1.01-1build1 [2993 kB]
+2026-10-21T22:32:28.1079997Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-wqy-zenhei all 0.9.45-8 [7472 kB]
+2026-10-21T22:32:28.3616662Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libnss3 amd64 2:3.98-1ubuntu0.3 [1445 kB]
+2026-10-21T22:32:28.4800366Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libnss3-tools amd64 2:3.98-1ubuntu0.3 [615 kB]
+2026-10-21T22:32:28.5766025Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-encodings all 1:1.0.5-0ubuntu2 [578 kB]
+2026-10-21T22:32:28.6720057Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-utils amd64 1:7.7+6build3 [94.4 kB]
+2026-10-21T22:32:28.7549760Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 xfonts-cyrillic all 1:1.0.5+nmu1 [384 kB]
+2026-10-21T22:32:28.8454046Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-scalable all 1:1.0.3-1.3 [304 kB]
+2026-10-21T22:32:28.9338935Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 xserver-common all 2:21.1.12-1ubuntu1.9 [35.0 kB]
+2026-10-21T22:32:29.0158893Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 xvfb amd64 2:21.1.12-1ubuntu1.9 [877 kB]
+2026-10-21T22:32:29.3306955Z Fetched 25.9 MB in 2s (13.0 MB/s)
+2026-10-21T22:32:29.3557310Z Selecting previously unselected package fonts-ipafont-gothic.
+2026-10-21T22:32:29.3795365Z (Reading database ... 
+2026-10-21T22:32:29.3796118Z (Reading database ... 5%
+2026-10-21T22:32:29.3796947Z (Reading database ... 10%
+2026-10-21T22:32:29.3797606Z (Reading database ... 15%
+2026-10-21T22:32:29.3798180Z (Reading database ... 20%
+2026-10-21T22:32:29.3798575Z (Reading database ... 25%
+2026-10-21T22:32:29.3798979Z (Reading database ... 30%
+2026-10-21T22:32:29.3799356Z (Reading database ... 35%
+2026-10-21T22:32:29.3799726Z (Reading database ... 40%
+2026-10-21T22:32:29.3800093Z (Reading database ... 45%
+2026-10-21T22:32:29.3801031Z (Reading database ... 50%
+2026-10-21T22:32:29.3833398Z (Reading database ... 55%
+2026-10-21T22:32:29.5293128Z (Reading database ... 60%
+2026-10-21T22:32:29.7307418Z (Reading database ... 65%
+2026-10-21T22:32:29.8026448Z (Reading database ... 70%
+2026-10-21T22:32:29.9366888Z (Reading database ... 75%
+2026-10-21T22:32:30.0843076Z (Reading database ... 80%
+2026-10-21T22:32:30.2449574Z (Reading database ... 85%
+2026-10-21T22:32:30.3411233Z (Reading database ... 90%
+2026-10-21T22:32:30.4058170Z (Reading database ... 95%
+2026-10-21T22:32:30.4058809Z (Reading database ... 100%
+2026-10-21T22:32:30.4059671Z (Reading database ... 214410 files and directories currently installed.)
+2026-10-21T22:32:30.4104194Z Preparing to unpack .../00-fonts-ipafont-gothic_00303-21ubuntu1_all.deb ...
+2026-10-21T22:32:30.4213389Z Unpacking fonts-ipafont-gothic (00303-21ubuntu1) ...
+2026-10-21T22:32:30.6919896Z Preparing to unpack .../01-libglib2.0-data_2.80.0-6ubuntu3.10_all.deb ...
+2026-10-21T22:32:30.6939832Z Unpacking libglib2.0-data (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.9) ...
+2026-10-21T22:32:30.7350358Z Preparing to unpack .../02-libglib2.0-bin_2.80.0-6ubuntu3.10_amd64.deb ...
+2026-10-21T22:32:30.7369358Z Unpacking libglib2.0-bin (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.9) ...
+2026-10-21T22:32:30.7891820Z Preparing to unpack .../03-gir1.2-glib-2.0_2.80.0-6ubuntu3.10_amd64.deb ...
+2026-10-21T22:32:30.7913385Z Unpacking gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.9) ...
+2026-10-21T22:32:30.8374473Z Preparing to unpack .../04-libglib2.0-0t64_2.80.0-6ubuntu3.10_amd64.deb ...
+2026-10-21T22:32:30.8463616Z Unpacking libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.9) ...
+2026-10-21T22:32:30.8971773Z Selecting previously unselected package fonts-freefont-ttf.
+2026-10-21T22:32:30.9121989Z Preparing to unpack .../05-fonts-freefont-ttf_20211204+svn4273-2_all.deb ...
+2026-10-21T22:32:30.9128110Z Unpacking fonts-freefont-ttf (20211204+svn4273-2) ...
+2026-10-21T22:32:30.9990087Z Selecting previously unselected package fonts-tlwg-loma-otf.
+2026-10-21T22:32:31.0136096Z Preparing to unpack .../06-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+2026-10-21T22:32:31.0144452Z Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+2026-10-21T22:32:31.0412450Z Selecting previously unselected package fonts-unifont.
+2026-10-21T22:32:31.0559156Z Preparing to unpack .../07-fonts-unifont_1%3a15.1.01-1build1_all.deb ...
+2026-10-21T22:32:31.0572984Z Unpacking fonts-unifont (1:15.1.01-1build1) ...
+2026-10-21T22:32:31.1692506Z Selecting previously unselected package fonts-wqy-zenhei.
+2026-10-21T22:32:31.1842023Z Preparing to unpack .../08-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+2026-10-21T22:32:31.1965971Z Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+2026-10-21T22:32:31.7183928Z Preparing to unpack .../09-libnss3_2%3a3.98-1ubuntu0.3_amd64.deb ...
+2026-10-21T22:32:31.7205946Z Unpacking libnss3:amd64 (2:3.98-1ubuntu0.3) over (2:3.98-1ubuntu0.2) ...
+2026-10-21T22:32:31.7795027Z Preparing to unpack .../10-libnss3-tools_2%3a3.98-1ubuntu0.3_amd64.deb ...
+2026-10-21T22:32:31.7815743Z Unpacking libnss3-tools (2:3.98-1ubuntu0.3) over (2:3.98-1ubuntu0.2) ...
+2026-10-21T22:32:31.8276576Z Selecting previously unselected package xfonts-encodings.
+2026-10-21T22:32:31.8426656Z Preparing to unpack .../11-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...
+2026-10-21T22:32:31.8433759Z Unpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...
+2026-10-21T22:32:31.8757148Z Selecting previously unselected package xfonts-utils.
+2026-10-21T22:32:31.8899690Z Preparing to unpack .../12-xfonts-utils_1%3a7.7+6build3_amd64.deb ...
+2026-10-21T22:32:31.8907745Z Unpacking xfonts-utils (1:7.7+6build3) ...
+2026-10-21T22:32:31.9290999Z Selecting previously unselected package xfonts-cyrillic.
+2026-10-21T22:32:31.9436551Z Preparing to unpack .../13-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...
+2026-10-21T22:32:31.9443444Z Unpacking xfonts-cyrillic (1:1.0.5+nmu1) ...
+2026-10-21T22:32:31.9799528Z Selecting previously unselected package xfonts-scalable.
+2026-10-21T22:32:31.9941423Z Preparing to unpack .../14-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+2026-10-21T22:32:31.9947729Z Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+2026-10-21T22:32:32.0360547Z Preparing to unpack .../15-xserver-common_2%3a21.1.12-1ubuntu1.9_all.deb ...
+2026-10-21T22:32:32.0383020Z Unpacking xserver-common (2:21.1.12-1ubuntu1.9) over (2:21.1.12-1ubuntu1.8) ...
+2026-10-21T22:32:32.0783747Z Preparing to unpack .../16-xvfb_2%3a21.1.12-1ubuntu1.9_amd64.deb ...
+2026-10-21T22:32:32.0803653Z Unpacking xvfb (2:21.1.12-1ubuntu1.9) over (2:21.1.12-1ubuntu1.8) ...
+2026-10-21T22:32:32.1376155Z Setting up fonts-wqy-zenhei (0.9.45-8) ...
+2026-10-21T22:32:32.1496442Z Setting up fonts-freefont-ttf (20211204+svn4273-2) ...
+2026-10-21T22:32:32.1515236Z Setting up libnss3:amd64 (2:3.98-1ubuntu0.3) ...
+2026-10-21T22:32:32.1533790Z Setting up libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) ...
+2026-10-21T22:32:32.1636323Z Setting up libglib2.0-data (2.80.0-6ubuntu3.10) ...
+2026-10-21T22:32:32.1653276Z Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+2026-10-21T22:32:32.1669612Z Setting up xfonts-encodings (1:1.0.5-0ubuntu2) ...
+2026-10-21T22:32:32.1685377Z Setting up gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) ...
+2026-10-21T22:32:32.1700134Z Setting up fonts-ipafont-gothic (00303-21ubuntu1) ...
+2026-10-21T22:32:32.1762074Z update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+2026-10-21T22:32:32.1775984Z Setting up xserver-common (2:21.1.12-1ubuntu1.9) ...
+2026-10-21T22:32:32.1791191Z Setting up libnss3-tools (2:3.98-1ubuntu0.3) ...
+2026-10-21T22:32:32.1805501Z Setting up fonts-unifont (1:15.1.01-1build1) ...
+2026-10-21T22:32:32.1821705Z Setting up xvfb (2:21.1.12-1ubuntu1.9) ...
+2026-10-21T22:32:32.1835907Z Setting up libglib2.0-bin (2.80.0-6ubuntu3.10) ...
+2026-10-21T22:32:32.1850507Z Setting up xfonts-utils (1:7.7+6build3) ...
+2026-10-21T22:32:32.1889455Z Setting up xfonts-cyrillic (1:1.0.5+nmu1) ...
+2026-10-21T22:32:32.2189757Z Setting up xfonts-scalable (1:1.0.3-1.3) ...
+2026-10-21T22:32:32.2466847Z Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+2026-10-21T22:32:32.2771170Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-21T22:32:32.2791893Z Not building database; man-db/auto-update is not 'true'.
+2026-10-21T22:32:32.2805168Z Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+2026-10-21T22:32:32.9472033Z 
+2026-10-21T22:32:32.9472879Z Running kernel seems to be up-to-date.
+2026-10-21T22:32:32.9473451Z 
+2026-10-21T22:32:32.9473742Z Restarting services...
+2026-10-21T22:32:32.9941144Z  systemctl restart packagekit.service php8.3-fpm.service polkit.service udisks2.service
+2026-10-21T22:32:33.1872167Z 
+2026-10-21T22:32:33.1882553Z Service restarts being deferred:
+2026-10-21T22:32:33.1883783Z  systemctl restart ModemManager.service
+2026-10-21T22:32:33.1884681Z  systemctl restart networkd-dispatcher.service
+2026-10-21T22:32:33.1885442Z 
+2026-10-21T22:32:33.1886174Z No containers need to be restarted.
+2026-10-21T22:32:33.1886712Z 
+2026-10-21T22:32:33.1887315Z No user sessions are running outdated binaries.
+2026-10-21T22:32:33.1887726Z 
+2026-10-21T22:32:33.1888279Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-21T22:32:34.1687798Z Downloading Chromium 140.0.7339.16 (playwright build v1187) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1187/chromium-linux.zip
+2026-10-21T22:32:34.3645738Z |                                                                                |   0% of 173.7 MiB
+2026-10-21T22:32:34.5518154Z |■■■■■■■■                                                                        |  10% of 173.7 MiB
+2026-10-21T22:32:34.7601065Z |■■■■■■■■■■■■■■■■                                                                |  20% of 173.7 MiB
+2026-10-21T22:32:34.8445188Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 173.7 MiB
+2026-10-21T22:32:34.9122674Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 173.7 MiB
+2026-10-21T22:32:35.2424409Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 173.7 MiB
+2026-10-21T22:32:35.3838405Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 173.7 MiB
+2026-10-21T22:32:35.6098524Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 173.7 MiB
+2026-10-21T22:32:35.7292689Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 173.7 MiB
+2026-10-21T22:32:35.8035516Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 173.7 MiB
+2026-10-21T22:32:35.8816414Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 173.7 MiB
+2026-10-21T22:32:39.1709140Z Chromium 140.0.7339.16 (playwright build v1187) downloaded to /home/runner/.cache/ms-playwright/chromium-1187
+2026-10-21T22:32:39.1711798Z Downloading FFMPEG playwright build v1011 from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+2026-10-21T22:32:39.3280275Z |                                                                                |   0% of 2.3 MiB
+2026-10-21T22:32:39.3408558Z |■■■■■■■■                                                                        |  10% of 2.3 MiB
+2026-10-21T22:32:39.3469947Z |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+2026-10-21T22:32:39.3512722Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+2026-10-21T22:32:39.3545279Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+2026-10-21T22:32:39.3575690Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+2026-10-21T22:32:39.3631518Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+2026-10-21T22:32:39.3644260Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+2026-10-21T22:32:39.3672252Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+2026-10-21T22:32:39.3731047Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+2026-10-21T22:32:39.3738049Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+2026-10-21T22:32:39.4301879Z FFMPEG playwright build v1011 downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1011
+2026-10-21T22:32:39.4304865Z Downloading Chromium Headless Shell 140.0.7339.16 (playwright build v1187) from https://cdn.playwright.dev/dbazure/download/playwright/builds/chromium/1187/chromium-headless-shell-linux.zip
+2026-10-21T22:32:39.5911074Z |                                                                                |   0% of 104.3 MiB
+2026-10-21T22:32:39.6815222Z |■■■■■■■■                                                                        |  10% of 104.3 MiB
+2026-10-21T22:32:39.7405464Z |■■■■■■■■■■■■■■■■                                                                |  20% of 104.3 MiB
+2026-10-21T22:32:40.0337431Z |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 104.3 MiB
+2026-10-21T22:32:40.0965335Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 104.3 MiB
+2026-10-21T22:32:40.1500189Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 104.3 MiB
+2026-10-21T22:32:40.1891134Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 104.3 MiB
+2026-10-21T22:32:40.2316100Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 104.3 MiB
+2026-10-21T22:32:40.2776169Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 104.3 MiB
+2026-10-21T22:32:40.3218605Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 104.3 MiB
+2026-10-21T22:32:40.5586702Z |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 104.3 MiB
+2026-10-21T22:32:42.2841756Z Chromium Headless Shell 140.0.7339.16 (playwright build v1187) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1187
+2026-10-21T22:32:43.0710303Z ##[group]Run python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch6-http.log 2>&1 &
+2026-10-21T22:32:43.0711584Z [36;1mpython3 -m http.server 4173 --bind 127.0.0.1 >/tmp/batch6-http.log 2>&1 &[0m
+2026-10-21T22:32:43.0712671Z [36;1mfor i in {1..40}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break || sleep .25; done[0m
+2026-10-21T22:32:43.0713611Z [36;1mnode --check scripts/batch6-final16-evidence.cjs[0m
+2026-10-21T22:32:43.0714497Z [36;1mnode tests/runtime/batch6-suite-runner.cjs[0m
+2026-10-21T22:32:43.0715240Z [36;1mnode tests/runtime/cross-combat-stale-continuous-regression.cjs[0m
+2026-10-21T22:32:43.0716147Z [36;1mnode tests/runtime/unified-combat-runtime-contract.cjs[0m
+2026-10-21T22:32:43.0716959Z [36;1mnode tests/runtime/cross-mode-late-settlement-regression.cjs[0m
+2026-10-21T22:32:43.0717696Z [36;1mnode tests/runtime/pr48-stop-contract.cjs[0m
+2026-10-21T22:32:43.0718283Z [36;1mnode scripts/batch6-final16-evidence.cjs[0m
+2026-10-21T22:32:43.0789755Z shell: /usr/bin/bash -e {0}
+2026-10-21T22:32:43.0790172Z ##[endgroup]
+2026-10-21T22:32:43.1799657Z curl: (7) Failed to connect to 127.0.0.1 port 4173 after 0 ms: Couldn't connect to server
+2026-10-21T22:32:43.5262448Z PASS full original manifest, same-run identity, failure propagation, exact child budgets and fresh invocation
+2026-10-21T22:32:43.5920538Z Cross-combat subsystem lifecycle regression passed
+2026-10-21T22:32:43.6302070Z Unified combat runtime dynamic contract passed
+2026-10-21T22:32:43.6636578Z Late settlement cross-mode isolation regression passed
+2026-10-21T22:32:43.7650605Z PR48_STOP_CONTRACT_PASS 9 original stop owners; gameplay and every button attribute preserved
+2026-10-21T22:33:17.4538980Z BATCH6_ORIGINAL pass tests/equipment-formal/browser.cjs 33650
+2026-10-21T22:33:17.4542049Z BATCH6 01 pass Formal Sprite battle lifecycle 33650
+2026-10-21T22:33:19.7267711Z BATCH6_ORIGINAL pass tests/runtime/combat-events-integration.cjs 2272
+2026-10-21T22:33:19.7268481Z BATCH6 01 pass Mainline combat/event owner 2272
+2026-10-21T22:33:21.1857090Z BATCH6_ORIGINAL pass tests/runtime/first-world-target-context-combat-batch3-integrity.js 1459
+2026-10-21T22:33:21.1858110Z BATCH6 01 pass Ordinary and boss world target 1459
+2026-10-21T22:33:21.7732328Z BATCH6_ORIGINAL pass tests/runtime/batch4-mobile-combat-viewport.cjs 587
+2026-10-21T22:33:21.7733352Z BATCH6 02-03 pass Dungeon bounty and arena battle UI 587
+2026-10-21T22:33:28.3380924Z BATCH6_ORIGINAL pass tests/runtime/combat-events-owner-browser.js 6564
+2026-10-21T22:33:28.3391257Z BATCH6 04 pass Mirror presenter and combat events 6564
+2026-10-21T22:33:28.3693319Z BATCH6_ORIGINAL pass tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js 31
+2026-10-21T22:33:28.3694030Z BATCH6 05-06 pass Void and calamity recovery 31
+2026-10-21T22:33:28.4033422Z BATCH6_ORIGINAL pass tests/runtime/alternate-universe-combat-integrity.js 34
+2026-10-21T22:33:28.4034473Z BATCH6 07 pass Alternate universe full combat 34
+2026-10-21T22:33:28.4417537Z BATCH6_ORIGINAL pass tests/runtime/alternate-universe-batch4-3-regression.js 38
+2026-10-21T22:33:28.4418743Z BATCH6 07 pass Alternate universe browser UI 38
+2026-10-21T22:33:30.6227101Z BATCH6_ORIGINAL pass tests/runtime/galaxy-review-combat-browser.js 2181
+2026-10-21T22:33:30.6227689Z BATCH6 08 pass Review and battle reentry 2181
+2026-10-21T22:33:30.6562317Z BATCH6_ORIGINAL pass tests/runtime/batch5-era-animation-contract.cjs 33
+2026-10-21T22:33:30.6563341Z BATCH6 09 pass Three-era appearance and renderer 33
+2026-10-21T22:33:30.9647987Z BATCH6_ORIGINAL pass tests/runtime/hybrid-comparison-renderer-contract.cjs 308
+2026-10-21T22:33:30.9648687Z BATCH6 09 pass Renderer contract 308
+2026-10-21T22:33:31.7185605Z BATCH6_ORIGINAL pass tests/runtime/batch3-fx-timer-lifecycle.cjs 754
+2026-10-21T22:33:31.7186718Z BATCH6 10 pass FX timers and stale ownership 754
+2026-10-21T22:33:32.2955830Z BATCH6_ORIGINAL pass tests/runtime/batch3-presenter-pressure.cjs 576
+2026-10-21T22:33:32.2956818Z BATCH6 10 pass Presenter replacement pressure 576
+2026-10-21T22:33:32.9093529Z BATCH6_ORIGINAL pass tests/runtime/3d-mode-browser-regression.js 614
+2026-10-21T22:33:32.9094072Z BATCH6 11 pass Animation user settings 614
+2026-10-21T22:33:33.0039767Z BATCH6_ORIGINAL pass tests/runtime/batch2-background-sleeper-lifecycle.cjs 94
+2026-10-21T22:33:33.0040413Z BATCH6 12 pass Background pending promises 94
+2026-10-21T22:33:45.3745866Z BATCH6_ORIGINAL pass tests/runtime/cross-era-background-browser.js 12371
+2026-10-21T22:33:45.3746907Z BATCH6 12 pass Three-era background browser 12371
+2026-10-21T22:34:05.8417173Z BATCH6_ORIGINAL pass tests/runtime/thirdworld-background-browser.js 20467
+2026-10-21T22:34:05.8418524Z BATCH6 12 pass Third era visibility and minimal 20467
+2026-10-21T22:34:06.9717284Z BATCH6_ORIGINAL pass tests/runtime/offline-sample-provenance-opt4-integrity.js 1130
+2026-10-21T22:34:06.9718339Z BATCH6 12 pass Offline settlement provenance 1130
+2026-10-21T22:35:10.9438283Z BATCH6_ORIGINAL pass tests/runtime/gm-battle-simulation-browser.js 63972
+2026-10-21T22:35:10.9438868Z BATCH6 13 pass GM battle and isolation 63972
+2026-10-21T22:35:10.9742875Z BATCH6_ORIGINAL pass tests/runtime/gm-animation-center-terminology.cjs 31
+2026-10-21T22:35:10.9743458Z BATCH6 13 pass GM animation terminology 31
+2026-10-21T22:35:12.3163859Z BATCH6_ORIGINAL pass tests/runtime/save-schema17-compatibility-matrix.js 1342
+2026-10-21T22:35:12.3164921Z BATCH6 14 pass Save schema compatibility 1342
+2026-10-21T22:35:13.8498902Z BATCH6_ORIGINAL pass tests/runtime/save-load-pipeline-integrity.js 1533
+2026-10-21T22:35:13.8499509Z BATCH6 14 pass Save and load owner 1533
+2026-10-21T22:35:15.0138891Z BATCH6_ORIGINAL pass tests/runtime/reincarnation-save-integrity.js 1164
+2026-10-21T22:35:15.0140312Z BATCH6 14 pass Reincarnation protection 1164
+2026-10-21T22:36:56.5928432Z BATCH6_ORIGINAL pass tests/runtime/audio-lifecycle-browser.js 101579
+2026-10-21T22:36:56.5929284Z BATCH6 15 pass Audio lifecycle 101579
+2026-10-21T22:37:00.0436066Z BATCH6_ORIGINAL pass tests/runtime/batch11-audio-lazy-browser.cjs 3451
+2026-10-21T22:37:00.0436818Z BATCH6 15 pass Lazy audio and native persistence 3451
+2026-10-21T22:37:00.0789573Z BATCH6_ORIGINAL pass tests/runtime/audio-settings-persistence-integrity.js 35
+2026-10-21T22:37:00.0790602Z BATCH6 15 pass Audio persistent preferences 35
+2026-10-21T22:37:00.1115837Z BATCH6_ORIGINAL pass tests/runtime/resource-manifest-integrity.js 33
+2026-10-21T22:37:00.1116936Z BATCH6 16 pass Manifest integrity 33
+2026-10-21T22:37:00.1475925Z BATCH6_ORIGINAL pass tests/runtime/resource-cache-integrity.js 36
+2026-10-21T22:37:00.1476744Z BATCH6 16 pass Cache policy 36
+2026-10-21T22:37:00.1807290Z BATCH6_ORIGINAL pass tests/runtime/html-cache-version-guard.js 33
+2026-10-21T22:37:00.1808156Z BATCH6 16 pass HTML JS CSS version guard 33
+2026-10-21T22:37:00.2823272Z BATCH6_ORIGINAL pass tests/runtime/cleanup-batch4-3-current-inventory.cjs 102
+2026-10-21T22:37:00.2824356Z BATCH6 16 pass Legacy art removal inventory 102
+2026-10-21T22:37:01.6438215Z BATCH6_ORIGINAL pass tests/runtime/gm-alternate-universe-management-batch7-3-integrity.js 1361
+2026-10-21T22:37:03.7124028Z BATCH6_ORIGINAL pass tests/runtime/hybrid-comparison-playback-contract.cjs 2069
+2026-10-21T22:37:08.6761324Z BATCH6_ORIGINAL pass tests/runtime/batch1-animation-frame-trace.cjs 4963
+2026-10-21T22:37:08.6768743Z BATCH6 16 pass Earlier batch 2 final13 8394
+2026-10-21T22:37:11.0092590Z BATCH6_ORIGINAL pass tests/runtime/batch3-alternate-controller-trace.cjs 2332
+2026-10-21T22:38:36.9451657Z BATCH6_ORIGINAL pass tests/runtime/t3b-formal-renderer.cjs 85935
+2026-10-21T22:38:36.9779363Z BATCH6_ORIGINAL pass tests/runtime/loading-resource-policy-integrity.js 32
+2026-10-21T22:38:36.9781818Z BATCH6 16 pass Earlier batch 3 integration 88302
+2026-10-21T22:38:36.9904976Z ##[group]Run actions/upload-artifact@v4
+2026-10-21T22:38:36.9905286Z with:
+2026-10-21T22:38:36.9905495Z   name: batch6-final16-evidence
+2026-10-21T22:38:36.9906651Z   path: batch6-final16-evidence.json
+batch6-final16-logs/
+batch1-fixed12-evidence.json
+batch2-final13-evidence.json
+batch3-integrated-evidence.json
+/tmp/cross-era-background-browser.json
+/tmp/thirdworld-background-browser.json
+/tmp/batch11-audio-lazy-browser.json
+
+2026-10-21T22:38:36.9907845Z   if-no-files-found: error
+2026-10-21T22:38:36.9908084Z   compression-level: 6
+2026-10-21T22:38:36.9908305Z   overwrite: false
+2026-10-21T22:38:36.9908523Z   include-hidden-files: false
+2026-10-21T22:38:36.9908763Z ##[endgroup]
+2026-10-21T22:38:37.1680314Z (node:12812) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-21T22:38:37.1681576Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-21T22:38:37.1893933Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-21T22:38:37.1897093Z The least common ancestor is /. This will be the root directory of the artifact
+2026-10-21T22:38:37.1898041Z With the provided path, there will be 43 files uploaded
+2026-10-21T22:38:37.1898944Z Artifact name is valid!
+2026-10-21T22:38:37.1899449Z Root directory input is valid!
+2026-10-21T22:38:37.3825499Z Beginning upload of artifact content to blob storage
+2026-10-21T22:38:37.4505205Z (node:12812) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-21T22:38:37.4988372Z Uploaded bytes 39965
+2026-10-21T22:38:37.5199329Z Finished uploading artifact content to blob storage!
+2026-10-21T22:38:37.5201278Z SHA256 digest of uploaded artifact zip is 0cb1e083ef00dbb23afe9d7f330dabb5759bbe85f6c963e41bd3a8ff8e9bfef4
+2026-10-21T22:38:37.5202502Z Finalizing artifact upload
+2026-10-21T22:38:37.7383243Z Artifact batch6-final16-evidence.zip successfully finalized. Artifact ID 12386533112
+2026-10-21T22:38:37.7384987Z Artifact batch6-final16-evidence has been successfully uploaded! Final size is 39965 bytes. Artifact ID is 12386533112
+2026-10-21T22:38:37.7390158Z Artifact download URL: https://github.com/franksky1207/rpg/actions/runs/39687173964/artifacts/12386533112
+2026-10-21T22:38:37.7641071Z Post job cleanup.
+2026-10-21T22:38:37.9052503Z (node:12826) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-21T22:38:37.9078299Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-21T22:38:37.9176817Z Post job cleanup.
+2026-10-21T22:38:38.0116900Z [command]/usr/bin/git version
+2026-10-21T22:38:38.0167688Z git version 2.55.0
+2026-10-21T22:38:38.0214911Z Temporarily overriding HOME='/home/runner/work/_temp/693b032c-25f1-4875-a50f-88da02ea3ce5' before making global git config changes
+2026-10-21T22:38:38.0216529Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T22:38:38.0221260Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/rpg/rpg
+2026-10-21T22:38:38.0267641Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T22:38:38.0309359Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T22:38:38.0588784Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T22:38:38.0631619Z http.https://github.com/.extraheader
+2026-10-21T22:38:38.0647142Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-21T22:38:38.0700258Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T22:38:38.1056460Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T22:38:38.1117035Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T22:38:38.1682092Z Cleaning up orphan processes
+2026-10-21T22:38:38.2060549Z Terminate orphan process: pid (3278) (python3)
+2026-10-21T22:38:38.2113866Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
