@@ -85,7 +85,7 @@ export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
   this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
  }
- async init(){try{this.lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed)throw Error('monster-aborted');if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
+ async init(){try{const lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
   if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
   // Center the actual alpha region; contain the full subject with pose margins.
