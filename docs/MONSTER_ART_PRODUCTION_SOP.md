@@ -79,3 +79,4 @@
 - 原609筆對照基準僅允許九筆指定狀態改動，其餘欄位保持逐筆 deepEqual，並保留56筆副本、原型SHA與既有第15批回歸；不可用刪除測試取代驗收。
 - 自動化證據：PR #70 最新提交的 **Batch16 Dungeon Sprite Acceptance** artifact `batch16-dungeon-evidence`（`/tmp/batch16-*.json` 與畫面）；第15批／GM證據由 **Batch13 Twenty Monster GM Integration** 保存。最新提交全部必要 Actions 完成 success 後才可合併，合併後另核對 main Runtime／Pages；queued／in_progress／skipped／cancelled 皆不代表通過。
 - 此處記錄測試範圍與重現方式，實際發布結論以對應 SHA 的 Actions／部署為準。Chromium桌機與手機視窗模擬不等同 iPhone Safari 真機；GPU、溫度、電池、長時間背景恢復須玩家真機確認。
+- Actions 揭露舊 presentation baseline 鎖住首頁舊快取 URL、GM terminology 鎖住舊測試中心 URL；本次僅精確正規化／更新三個已核准版本字串，其餘完整檔案 blob 比對與可見文案門檻保留，未改成任意版本或放寬內容。
