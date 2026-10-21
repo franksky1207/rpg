@@ -302,10 +302,10 @@ async function createSuit(options,bundle){
    const visibleHeight=(bounds[3]-bounds[1])/512;
    const visibleWidth=(bounds[2]-bounds[0])/512;
    const playerVisibleHeight=(bundle.entry.asset.alphaBounds[3]-bundle.entry.asset.alphaBounds[1])/512;
-   const targetRatio=global.CivilizationMonsterScale?.targetRatio(monsterActor.entry.assetId,visual.scale)||Math.max(.9,Number(visual.scale)||1);
+   const targetRatio=Math.max(.9,Math.min(2,Number(visual.scale)||1));
    const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
    const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
-   const maxSize=Math.min(h*.98,w*.54/Math.max(.01,visibleWidth));
+   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]))));
    const monsterSize=Math.min(requiredSize,maxSize);
    monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
    monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
