@@ -37,7 +37,8 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   await frame.locator('select[data-monster]').selectOption(id);await frame.locator(`[data-monster-status]`).filter({hasText:'SHA-256 已驗證'}).waitFor();
   const after=await frame.locator('.gm-suit-preview').boundingBox();assert.equal(before.width,after.width);assert.equal(before.height,after.height,'no decode layout jump');
   const shared=await frame.locator('[data-monster-identity] option').evaluateAll(options=>options.slice(1).map(o=>o.value));assert.ok(shared.length>0);await frame.locator('[data-monster-identity]').selectOption(shared[0]);await frame.locator('[data-monster-status]').filter({hasText:'SHA-256 已驗證'}).waitFor();
-  await frame.locator('[data-monster-scale]').selectOption('1.3');await frame.locator('[data-monster-palette]').selectOption('cool');
+  assert.equal(await frame.locator('[data-monster-scale],[data-monster-palette],[data-monster-next]').count(),0,'retired GM overrides stay removed');
+  const selectedLabel=await frame.locator('[data-monster-description]').innerText();assert.ok(selectedLabel.includes('配色')&&selectedLabel.includes('尺寸'),'identity appearance is read-only text');
   const layout=await frame.locator('.gm-suit-preview').evaluate(e=>{
    function visual(c){const box=c.getBoundingClientRect(),n=c.width,d=c.getContext('2d').getImageData(0,0,n,n).data;let l=n,r=0,t=n,b=0;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}return {left:box.left+l/n*box.width,right:box.left+r/n*box.width,top:box.top+t/n*box.height,bottom:box.top+b/n*box.height};}
    const box=e.getBoundingClientRect();return {stage:{left:box.left,right:box.right,top:box.top,bottom:box.bottom},player:visual(e.querySelector('[data-suit]')),enemy:visual(e.querySelector('[data-monster]'))};
