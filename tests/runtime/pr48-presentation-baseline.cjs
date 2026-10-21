@@ -13,6 +13,10 @@ function original(p){
  if(Object.hasOwn(approvedFollowup,p)){
   // Batch13 authorizes exactly one GM cache-token replacement; every other byte stays locked.
   let bytes=fs.readFileSync(p);
+  if(p==='index.html')bytes=Buffer.from(bytes.toString()
+   .replace('gm3dprototype.js?v=20261021-batch16-dungeons2','gm3dprototype.js?v=20261021-batch16-dungeons1')
+   .replace('t3b-formal-renderer.js?v=20261021-batch16-dungeons2','t3b-formal-renderer.js?v=20261021-batch16-dungeons1'));
+
   if(p==='3d-test/t3b-formal-controller.js')bytes=Buffer.from(bytes.toString()
    .replace('name:frame.actorNames.enemy,playerName:frame.actorNames.player,mode:','name:frame.actorNames.enemy,mode:'));
   if(p==='index.html')bytes=Buffer.from(bytes.toString()
@@ -38,7 +42,7 @@ function original(p){
  assert.equal(crypto.createHash('sha256').update(before).digest('hex'),row.beforeSha256);
  const lines=before.toString().split('\n');for(const [start,end,text] of [...row.edits].reverse())lines.splice(start,end-start,...text);const expected=lines.join('\n');
  const source=fs.readFileSync(p,'utf8');
- const reviewed=p==='3d-test/index.html'?source.replace('test-center.js?v=20261021-batch16-dungeons1','test-center.js?v=20261021-batch15-pair1').replace('test-center.js?v=20261021-batch15-pair1','test-center.js?v=20261020-twenty-gm1').replace('test-center.js?v=20261020-twenty-gm1','test-center.js?v=20261019-batch12-rising-cut1'):source;
+ const reviewed=p==='3d-test/index.html'?source.replace('test-center.js?v=20261021-batch16-dungeons2','test-center.js?v=20261021-batch16-dungeons1').replace('test-center.js?v=20261021-batch16-dungeons1','test-center.js?v=20261021-batch15-pair1').replace('test-center.js?v=20261021-batch15-pair1','test-center.js?v=20261020-twenty-gm1').replace('test-center.js?v=20261020-twenty-gm1','test-center.js?v=20261019-batch12-rising-cut1'):source;
  assert.equal(reviewed,expected,'source differs from exact approved PR48 presentation patch: '+p);
  return before;
 }

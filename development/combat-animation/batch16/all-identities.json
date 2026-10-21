@@ -602,22 +602,22 @@
         "height": 900
       },
       "id": "universe-bounty-08",
-      "assetId": "veh-02",
+      "assetId": "ship-01",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 116.79345703125,
-        "monsterHeight": 142.5,
-        "ratio": 1.2201025949756055,
+        "playerHeight": 76.833984375,
+        "monsterHeight": 93.75,
+        "ratio": 1.2201631968275757,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 87.591796875,
-        "monsterHeight": 106.875,
-        "ratio": 1.220148504916717,
+        "playerHeight": 57.62548828125,
+        "monsterHeight": 70.3125,
+        "ratio": 1.2201631968275757,
         "contained": true,
         "separated": true
       },
@@ -683,22 +683,22 @@
         "height": 900
       },
       "id": "universe-bounty-11",
-      "assetId": "mech-03",
+      "assetId": "ship-04",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 118.2041015625,
-        "monsterHeight": 163.125,
-        "ratio": 1.3800282548888394,
+        "playerHeight": 82.19970703125,
+        "monsterHeight": 113.4375,
+        "ratio": 1.380023166711218,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 88.646484375,
-        "monsterHeight": 122.34375,
-        "ratio": 1.3801308744794765,
+        "playerHeight": 61.646484375,
+        "monsterHeight": 85.078125,
+        "ratio": 1.3800969489592243,
         "contained": true,
         "separated": true
       },
@@ -710,22 +710,22 @@
         "height": 900
       },
       "id": "universe-bounty-12",
-      "assetId": "mech-02",
+      "assetId": "core-01",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 112.75927734375,
-        "monsterHeight": 155.625,
-        "ratio": 1.380152513088325,
+        "playerHeight": 116.84619140625,
+        "monsterHeight": 161.25,
+        "ratio": 1.380019306229393,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 84.57275390625,
-        "monsterHeight": 116.71875,
-        "ratio": 1.3800987269420628,
+        "playerHeight": 87.63134765625,
+        "monsterHeight": 120.9375,
+        "ratio": 1.3800712100697057,
         "contained": true,
         "separated": true
       },
@@ -2114,22 +2114,22 @@
         "height": 844
       },
       "id": "universe-bounty-08",
-      "assetId": "veh-02",
+      "assetId": "ship-01",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 110.7685546875,
-        "monsterHeight": 135.14306640625,
-        "ratio": 1.2200490183113368,
+        "playerHeight": 76.833984375,
+        "monsterHeight": 93.75,
+        "ratio": 1.2201631968275757,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 110.7685546875,
-        "monsterHeight": 135.14306640625,
-        "ratio": 1.2200490183113368,
+        "playerHeight": 87.0380859375,
+        "monsterHeight": 106.195068359375,
+        "ratio": 1.2200988477116923,
         "contained": true,
         "separated": true
       },
@@ -2195,22 +2195,22 @@
         "height": 844
       },
       "id": "universe-bounty-11",
-      "assetId": "mech-03",
+      "assetId": "ship-04",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 111.1904296875,
-        "monsterHeight": 153.4500732421875,
-        "ratio": 1.3800654757199695,
+        "playerHeight": 82.19970703125,
+        "monsterHeight": 113.4375,
+        "ratio": 1.380023166711218,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 111.1904296875,
-        "monsterHeight": 153.4500732421875,
-        "ratio": 1.3800654757199695,
+        "playerHeight": 90.5185546875,
+        "monsterHeight": 124.9141845703125,
+        "ratio": 1.3799843026831085,
         "contained": true,
         "separated": true
       },
@@ -2222,22 +2222,22 @@
         "height": 844
       },
       "id": "universe-bounty-12",
-      "assetId": "mech-02",
+      "assetId": "core-01",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 108.69873046875,
-        "monsterHeight": 150.011962890625,
-        "ratio": 1.3800709745524784,
+        "playerHeight": 111.62548828125,
+        "monsterHeight": 154.037841796875,
+        "ratio": 1.379952232851725,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 108.69873046875,
-        "monsterHeight": 150.011962890625,
-        "ratio": 1.3800709745524784,
+        "playerHeight": 111.62548828125,
+        "monsterHeight": 154.037841796875,
+        "ratio": 1.379952232851725,
         "contained": true,
         "separated": true
       },
@@ -3626,22 +3626,22 @@
         "height": 390
       },
       "id": "universe-bounty-08",
-      "assetId": "veh-02",
+      "assetId": "ship-01",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 116.79345703125,
-        "monsterHeight": 142.5,
-        "ratio": 1.2201025949756055,
+        "playerHeight": 76.833984375,
+        "monsterHeight": 93.75,
+        "ratio": 1.2201631968275757,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 87.591796875,
-        "monsterHeight": 106.875,
-        "ratio": 1.220148504916717,
+        "playerHeight": 57.62548828125,
+        "monsterHeight": 70.3125,
+        "ratio": 1.2201631968275757,
         "contained": true,
         "separated": true
       },
@@ -3707,22 +3707,22 @@
         "height": 390
       },
       "id": "universe-bounty-11",
-      "assetId": "mech-03",
+      "assetId": "ship-04",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 118.2041015625,
-        "monsterHeight": 163.125,
-        "ratio": 1.3800282548888394,
+        "playerHeight": 82.19970703125,
+        "monsterHeight": 113.4375,
+        "ratio": 1.380023166711218,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 88.646484375,
-        "monsterHeight": 122.34375,
-        "ratio": 1.3801308744794765,
+        "playerHeight": 61.646484375,
+        "monsterHeight": 85.078125,
+        "ratio": 1.3800969489592243,
         "contained": true,
         "separated": true
       },
@@ -3734,22 +3734,22 @@
         "height": 390
       },
       "id": "universe-bounty-12",
-      "assetId": "mech-02",
+      "assetId": "core-01",
       "world": "universe",
       "kind": "dungeon-bounty",
       "formalSupported": true,
       "formalNA": null,
       "gm": {
-        "playerHeight": 112.75927734375,
-        "monsterHeight": 155.625,
-        "ratio": 1.380152513088325,
+        "playerHeight": 116.84619140625,
+        "monsterHeight": 161.25,
+        "ratio": 1.380019306229393,
         "contained": true,
         "separated": true
       },
       "formal": {
-        "playerHeight": 84.57275390625,
-        "monsterHeight": 116.71875,
-        "ratio": 1.3800987269420628,
+        "playerHeight": 87.63134765625,
+        "monsterHeight": 120.9375,
+        "ratio": 1.3800712100697057,
         "contained": true,
         "separated": true
       },

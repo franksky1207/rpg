@@ -58,3 +58,5 @@
 - 光效採局部drop-shadow與現有sample驅動的微漂浮／低強度脈動；reduced-motion、低核心裝置、data-effects=off停非必要光效。極簡／背景仍由既有正式policy回退。
 - 新驗收入口：batch16-dungeon-contract.cjs、batch16-all-identities-browser.cjs、batch16-mirror-browser.cjs、batch16-monster-recovery-browser.cjs。原609身份1827案例與既有Batch13／Batch6測試須保持通過。
 - 最終候選是否封箱，以第16批報告、最新PR head及合併後main的Actions／Pages實際結果為準。
+
+第16批追加身份語義守衛：名稱明確以艦／艇結尾者使用starship輪廓；核心／主機使用core輪廓；艦長／艦主等指揮官本人不誤判成艦艇。自動尺寸／配色測試不能代替名稱與輪廓逐筆覆核，封箱前須檢視56筆identity-review.json及GM實際圖像。

@@ -17269,7 +17269,7 @@
     {
       "id": "universe-bounty-08",
       "name": "暗物質武裝艇",
-      "assetId": "veh-02",
+      "assetId": "ship-01",
       "world": "universe",
       "mode": "bounty",
       "kind": "dungeon-bounty",
@@ -17287,7 +17287,7 @@
         "offsetY": 0,
         "maxStageFraction": 0.42,
         "facing": "left-3/4",
-        "animationType": "stationary-shot",
+        "animationType": "ranged-shot",
         "sizePolicy": "dungeon",
         "visibleRatio": 1.22,
         "effect": "rim",
@@ -17356,7 +17356,7 @@
     {
       "id": "universe-bounty-11",
       "name": "萬域私戰艦",
-      "assetId": "mech-03",
+      "assetId": "ship-04",
       "world": "universe",
       "mode": "bounty",
       "kind": "dungeon-bounty",
@@ -17374,7 +17374,7 @@
         "offsetY": 0,
         "maxStageFraction": 0.42,
         "facing": "left-3/4",
-        "animationType": "mechanical-strike",
+        "animationType": "ranged-shot",
         "sizePolicy": "dungeon",
         "visibleRatio": 1.38,
         "effect": "rim",
@@ -17385,7 +17385,7 @@
     {
       "id": "universe-bounty-12",
       "name": "跨域劫掠主機",
-      "assetId": "mech-02",
+      "assetId": "core-01",
       "world": "universe",
       "mode": "bounty",
       "kind": "dungeon-bounty",
@@ -17403,7 +17403,7 @@
         "offsetY": 0,
         "maxStageFraction": 0.42,
         "facing": "left-3/4",
-        "animationType": "mechanical-strike",
+        "animationType": "pulse",
         "sizePolicy": "dungeon",
         "visibleRatio": 1.38,
         "effect": "rim",
@@ -18223,7 +18223,7 @@
       "variantId": "void-boss-09",
       "status": "dungeon-formal-enabled",
       "visual": {
-        "palette": "spectral-blue",
+        "palette": "deep-violet",
         "scale": 1,
         "pivot": [
           0.5,

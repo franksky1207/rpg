@@ -11,8 +11,8 @@ for(const p of surfaces){
 }
 assert.ok(read("3d-test/index.html").includes("GM 動畫測試中心"));
 assert.ok(read("3d-test/test-center.js").includes("C-08-CHARACTER")&&read("3d-test/test-center.js").includes("C-15-BATTLE"));
-assert.ok(read("index.html").includes("gm3dprototype.js?v=20261021-batch16-dungeons1"));
-assert.ok(read("3d-test/index.html").includes("test-center.js?v=20261021-batch16-dungeons1"));
+assert.ok(read("index.html").includes("gm3dprototype.js?v=20261021-batch16-dungeons2"));
+assert.ok(read("3d-test/index.html").includes("test-center.js?v=20261021-batch16-dungeons2"));
 assert.ok(read("3d-test/test-center.js").includes("gm-battle-simulation.js?v=20261019-batch12-rising-cut1"));
 assert.ok(read("3d-test/gm-battle-simulation.js").includes("gm-battle-published.mjs?v=20261019-batch12-rising-cut1"));
 console.log("PASS GM animation center user-facing terminology and asset cache; two existing tests retained");
