@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "id": "void-regular-02",
+      "fault": "load-timeout",
+      "requests": 4,
+      "recoveredWithoutReload": true,
+      "continuousReentries": 2,
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 2097152,
+        "hits": 0,
+        "loads": 4,
+        "images": [],
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "realDevice": false
+    }
+  ]
+}

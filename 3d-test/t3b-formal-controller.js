@@ -19,7 +19,7 @@ function create(options){
   const ticket=epoch,id=frame.battleId;loading=true;abort=new AbortController();const signal=abort.signal;
   try{
    const context=await options.resolve(frame,signal);if(!current(ticket,id))return;
-   const bundle=await rendererAPI.prepare({...context,identity:{...frame.enemyIdentity,name:frame.actorNames.enemy,mode:frame.mode,world:frame.world},signal});
+   const bundle=await rendererAPI.prepare({...context,identity:{...frame.enemyIdentity,name:frame.actorNames.enemy,playerName:frame.actorNames.player,mode:frame.mode,world:frame.world},signal});
    if(!current(ticket,id))return;
    await options.loadRuntime?.(context,signal);if(!current(ticket,id))return;
    const result=await rendererAPI.create({bundle,host:options.host,signal,isCurrent:()=>current(ticket,id),onFallback:fallback});

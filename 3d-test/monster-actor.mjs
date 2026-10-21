@@ -1,6 +1,6 @@
 // Shared visual adapter, no battle state or owned timers. Formal activation is separate.
 import {pose} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
-import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261020-twenty-gm1';
+import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-batch16-dungeons1';
 export {palettes};
 export function monsterPose(type,clip,ms){
  const p={...pose(clip,ms,{rootMotion:true})},t=Math.min(1,ms/700),s=Math.sin(Math.PI*t);
@@ -38,7 +38,7 @@ const kindScale={
    };
 const footprints=new WeakMap();
 export function visibleFootprint(actor){
- const key=actor.entry,tier=actor.canvas.width;
+ const key=actor.entry,tier=actor.canvas.width+':'+!!actor.mirrored;
  if(footprints.get(key)?.has(tier))return footprints.get(key).get(tier);
  actor.draw({clip:'idle',elapsedMs:0});
  const c=actor.canvas,n=c.width,data=c.getContext('2d').getImageData(0,0,n,n).data;
@@ -57,9 +57,15 @@ export function visibleFootprint(actor){
 }
 export function battleSpriteLayout(player,monster,width,height,visual={}){
  const p=visibleFootprint(player),m=visibleFootprint(monster);
- const ratio=Math.max(.9*p.maxH/p.h*m.h/m.minH,Math.min(2.3,(kindScale[monster.entry.assetId]||1)*(Number(visual.scale)||1)));
+ let ratio=Math.max(.9*p.maxH/p.h*m.h/m.minH,Math.min(2.3,(kindScale[monster.entry.assetId]||1)*(Number(visual.scale)||1)));
+ if(visual.sizePolicy==='dungeon'){
+  // Measured cycle extrema, excluding CSS glow, bound every idle sample to [1,1.5].
+  const min=p.maxH/p.h*m.h/m.minH,max=1.5*p.minH/p.h*m.h/m.maxH;
+  if(min>max)throw Error('dungeon-size-envelope');
+  ratio=Math.max(min,Math.min(max,Number(visual.visibleRatio)||1.1));
+ }
  // Unit = the player's painted idle height. Offsets retain their 512px design units.
- const ps=1/p.h,ms=ratio/m.h,gap=.22;
+ const ps=1/p.h,ms=ratio/m.h,gap=visual.sizePolicy==='dungeon'?.65:.22;
  const ox=(visual.offsetX||0)/512,oy=(visual.offsetY||0)/512;
  const px=-(p.l+p.r)/2*ps-p.w*ps/2-gap/2;
  const mx=-(m.l+m.r)/2*ms+m.w*ms/2+gap/2+ox;
@@ -70,7 +76,7 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
  const scale=Math.min(width/(right-left),height/(bottom-top));
  const x=(width-(right-left)*scale)/2-left*scale,y=(height-(bottom-top)*scale)/2-top*scale;
  const box=(a,b,size)=>({x:x+a*scale,y:y+b*scale,size:size*scale});
- return {player:box(px,py,ps),monster:box(mx,my,ms),ratio};
+ return {player:box(px,py,ps),monster:box(mx,my,ms),ratio,approachLimit:visual.sizePolicy==='dungeon'?gap*.15*scale:Infinity};
 }
 export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
  const layout=battleSpriteLayout(player,monster,width,height,visual);
@@ -88,6 +94,9 @@ export class MonsterActor{
  async init(){try{const lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
   if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
+  const effects=this.mapping?.visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(this.canvas);
+  if(effects&&clip==='idle'&&this.mapping?.visual.effect==='float')p.y-=.008*Math.sin(elapsedMs/1600*Math.PI*2);
+  if(effects&&clip==='idle'&&this.mapping?.visual.effect==='pulse')p.flash+=.035*(1+Math.sin(elapsedMs/1600*Math.PI*2))/2;
   // Center the actual alpha region; contain the full subject with pose margins.
   const size=Math.min(n*.68/(r-l),n*.68/(b-t))*512;
   c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
@@ -97,7 +106,20 @@ export class MonsterActor{
   if(clip==='attack'&&['mechanical-strike','ranged-shot','stationary-shot','pulse'].includes(a.animationType)){
    const q=Math.max(0,1-Math.abs(elapsedMs-336)/120);if(q){c.save();c.globalAlpha=q;c.fillStyle=a.animationType==='pulse'?'#c6a1fa':'#b2eaff';const w=n*(a.animationType==='ranged-shot'?.15:.09);c.fillRect(n*.08,n*.49,w,n*.018);c.restore();}
   }
-  this.canvas.style.filter=palettes[palette]||palettes.original;this.canvas.dataset.clip=clip;return this.canvas;
+  this.canvas.style.filter=palettes[palette]||palettes.original;if(this.mapping?.visual.sizePolicy==='dungeon')applyDungeonEffects(this.canvas,this.mapping.visual);this.canvas.dataset.clip=clip;return this.canvas;
  }
  dispose(){if(this.closed)return;this.closed=true;this.signal?.removeEventListener('abort',this.abort);this.lease?.release();this.lease=null;this.canvas.width=this.canvas.height=1;this.canvas.remove();}
+}
+
+// CSS effects live outside the painted canvas, never participate in body measurements.
+// Reduced motion, explicit effects-off and low-end devices retain only base palette.
+function dungeonEffectsEnabled(canvas){
+ const disabled=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches||globalThis.navigator?.hardwareConcurrency<=2||canvas.closest?.('[data-effects="off"]');
+ return !disabled;
+}
+export function applyDungeonEffects(canvas,visual={}){
+ const glow=visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(canvas);
+ canvas.style.filter=(palettes[visual.palette]||'none')+(glow?' drop-shadow(0 0 '+(visual.energy===3?3:2)+'px '+(visual.palette?.includes('crimson')?'#833459':'#505b90')+')':'');
+ if(glow&&visual.effect==='afterimage')canvas.style.filter+=' drop-shadow(2px 0 1px #453a6540)';
+ canvas.dataset.effect=glow?visual.effect||'rim':'off';
 }

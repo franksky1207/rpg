@@ -8,8 +8,8 @@
   ],
   "files": {
     "3d-test/equipment-sprites-v1/actor.mjs": {
-      "sha256": "cf9d0b4f64caf4e5bc3e62eaa5211f15c7123749edfd7e5662b417a11d9fefb3",
-      "bytes": 5443
+      "sha256": "67635e0f0d42b8849ce49f10044437c75731fc2ca2c97ea3489920ce1fe3de35",
+      "bytes": 5493
     },
     "3d-test/equipment-sprites-v1/animation.mjs": {
       "sha256": "19a4e5382a376d8a521dbae1c80052a0533d89a722dbf7b91fc34870b593e3ee",

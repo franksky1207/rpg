@@ -9,8 +9,8 @@ const files=[...new Set(design.records.filter(r=>r.world==='galaxy').map(r=>r.so
 for(const file of files)vm.runInContext(fs.readFileSync(file,'utf8'),ctx,{filename:file});
 vm.runInContext(fs.readFileSync('secondworlddata.js','utf8'),ctx);
 vm.runInContext(fs.readFileSync('specialmonsters.js','utf8')+'\nwindow.specials=SPECIAL_MONSTERS;',ctx);
-const assets=new Map(registry.assets.map(a=>[a.assetId,a]));assert.equal(assets.size,20);assert.equal(data.formalBattleEnabled,true);assert.equal(registry.formalBattleEnabled,true);assert.equal(registry.assets.every(a=>a.formalBattleAllowed===true),true);
-assert.equal(data.records.length,609);assert.equal(new Set(data.records.map(r=>r.id)).size,609);
+const assets=new Map(registry.assets.map(a=>[a.assetId,a]));assert.equal(assets.size,21);assert.equal(data.formalBattleEnabled,true);assert.equal(registry.formalBattleEnabled,true);assert.equal(registry.assets.every(a=>a.formalBattleAllowed===true),true);
+assert.equal(data.records.length,665);assert.equal(new Set(data.records.map(r=>r.id)).size,665);
 const sourceRows=[];
 for(let region=0;region<regions.length;region++)for(let map=0;map<regions[region].maps.length;map++)for(let slot=0;slot<5;slot++){
  const [name,level,kind,combatStyle]=regions[region].maps[map].enemies[slot];sourceRows.push({id:'galaxy-map-'+String(sourceRows.length+1).padStart(3,'0'),source:files[region],region:region+1,mapIndex:map+1,slot:slot+1,name,level,kind,combatStyle,world:'galaxy'});

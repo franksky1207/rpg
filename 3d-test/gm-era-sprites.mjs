@@ -1,8 +1,9 @@
-import {registry,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261020-twenty-gm1';
-import {MonsterActor,visualPlacement,applyBattleSpriteLayout} from './monster-actor.mjs?v=20261021-batch15-pair1';
-import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261020-twenty-gm1';
+import {resolveFormalMirror} from './monster-formal-resolver.mjs?v=20261021-batch16-dungeons1';
+import {registry,mappings,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261021-batch16-dungeons1';
+import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects} from './monster-actor.mjs?v=20261021-batch16-dungeons1';
+import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261021-batch16-dungeons1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
-import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
+import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1';
 import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1';
 import {release} from './era-player-sprites.mjs?v=20261019-batch12-rising-cut1';
 import {animationController} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
@@ -10,14 +11,27 @@ export async function mount({host,signal,quality='medium'}={}){
  const own=new AbortController(),pool=createSpritePool({limit:4*1024*1024}),animation=animationController(),pending=new Map();
  const monsterPool=createMonsterPool(),monsterAnimation=animationController();
  let monster=null,monsterLoading=null,monsterSerial=0,monsterClip='idle',lastFrame=-1;
- let visualNow=0,lastTick=null,lastClip="idle";
+ let visualNow=0,lastTick=null,lastClip="idle",mirrorPlayerName='預覽角色';
  let closed=false,authorized=false,actor=null,loading=null,serial=0,raf=0,lastAuth=-Infinity,authPending=false,lastStats=0;
- host.innerHTML='<section class="gm-suit"><p>三紀元完整角色 · 隔離預覽，不修改角色、裝備或存檔。</p><label>怪物原型 <select data-monster><option value="">關閉（角色測試）</option></select></label> <label>使用此原型的怪物 <select data-monster-identity><option value="">選擇怪物身份</option></select></label> <label>紀元 <select data-era><option value="era-galaxy">銀河</option><option value="era-universe">宇宙</option><option value="era-higher">高維</option></select></label><label>速度 <select data-speed><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label> <button type="button" data-replay>重播動作</button><p>正式攻擊：短距離上挑斬。沿用原身體、獨立武器與肘甲遮擋；蓄力、上挑、命中停頓、收回。</p><p data-monster-description role="status">選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。</p><div class="gm-suit-preview" style="position:relative;height:240px;overflow:hidden;margin-inline:auto;max-width:100%"><span data-target role="img" aria-label="攻擊距離參考目標" style="position:absolute;top:96px;width:24px;height:40px;border:2px solid #9cb8cc;display:flex;align-items:center;font-size:11px;pointer-events:none">目標</span><span data-placeholder>確認 GM 權限中</span></div><div class="gm-b-hud" data-monster-hud hidden><div><span>玩家</span><progress max="100" value="100" aria-label="玩家測試血條"></progress></div><div><span data-monster-name>怪物</span><progress max="100" value="100" aria-label="怪物測試血條"></progress></div></div><div class="gm-monster-actions" hidden>怪物：<button data-monster-action="idle">待機</button> <button data-monster-action="attack">攻擊</button> <button data-monster-action="hit">受擊</button> <button data-monster-action="defeat">死亡</button> <button data-duel>怪物攻擊玩家</button> <button data-player-duel>玩家攻擊怪物</button></div><p data-monster-status role="status"></p><details data-monster-shared hidden><summary>共用身份與外觀參數</summary><pre data-monster-identities style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto"></pre></details><p class="gm-suit-status" role="status" data-status></p><div class="gm-suit-actions"></div><button type="button" data-missing>測試缺圖回退</button> <button type="button" data-reload>重新載入</button><pre data-diagnostics style="white-space:pre-wrap"></pre></section>';
+ host.innerHTML='<section class="gm-suit"><p>三紀元完整角色 · 隔離預覽，不修改角色、裝備或存檔。</p><label>副本預覽 <select data-dungeon><option value="">地圖／原型</option><option value="galaxy/bounty">銀河懸賞</option><option value="universe/bounty">宇宙懸賞</option><option value="galaxy/arena">銀河競技場</option><option value="universe/arena">宇宙競技場</option><option value="both/void">虛空幻境</option><option value="galaxy/mirror">銀河鏡像</option><option value="universe/mirror">宇宙鏡像</option></select></label> <label>怪物原型 <select data-monster><option value="">關閉（角色測試）</option></select></label> <label>使用此原型的怪物 <select data-monster-identity><option value="">選擇怪物身份</option></select></label> <label>紀元 <select data-era><option value="era-galaxy">銀河</option><option value="era-universe">宇宙</option><option value="era-higher">高維</option></select></label><label>速度 <select data-speed><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label> <button type="button" data-replay>重播動作</button><p>正式攻擊：短距離上挑斬。沿用原身體、獨立武器與肘甲遮擋；蓄力、上挑、命中停頓、收回。</p><p data-monster-description role="status">選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。</p><div class="gm-suit-preview" style="position:relative;height:240px;overflow:hidden;margin-inline:auto;max-width:100%"><span data-target role="img" aria-label="攻擊距離參考目標" style="position:absolute;top:96px;width:24px;height:40px;border:2px solid #9cb8cc;display:flex;align-items:center;font-size:11px;pointer-events:none">目標</span><span data-placeholder>確認 GM 權限中</span></div><div class="gm-b-hud" data-monster-hud hidden><div><span>玩家</span><progress max="100" value="100" aria-label="玩家測試血條"></progress></div><div><span data-monster-name>怪物</span><progress max="100" value="100" aria-label="怪物測試血條"></progress></div></div><div class="gm-monster-actions" hidden>怪物：<button data-monster-action="idle">待機</button> <button data-monster-action="attack">攻擊</button> <button data-monster-action="hit">受擊</button> <button data-monster-action="dodge">閃避</button> <button data-monster-action="return">回位</button> <button data-monster-action="defeat">死亡</button> <button data-duel>怪物攻擊玩家</button> <button data-player-duel>玩家攻擊怪物</button></div><p data-monster-status role="status"></p><details data-monster-shared hidden><summary>共用身份與外觀參數</summary><pre data-monster-identities style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto"></pre></details><p class="gm-suit-status" role="status" data-status></p><div class="gm-suit-actions"></div><button type="button" data-missing>測試缺圖回退</button> <button type="button" data-reload>重新載入</button><pre data-diagnostics style="white-space:pre-wrap"></pre></section>';
  const ui=host.firstElementChild,$=s=>ui.querySelector(s),preview=$('.gm-suit-preview'),placeholder=$('[data-placeholder]'),status=$('[data-status]'),era=$('[data-era]');
  for(const a of registry.assets){const option=document.createElement('option');option.value=a.assetId;option.textContent=a.name+' · '+a.assetId;$('[data-monster]').append(option);}
- function selectedMapping(){return findMapping($('[data-monster-identity]').value);}
+ function selectedMapping(){
+  if($('[data-monster]').value==='mirror')return resolveFormalMirror({mode:'mirror',world:era.value==='era-universe'?2:1,name:'鏡像・'+mirrorPlayerName,playerName:mirrorPlayerName},release.entries.find(e=>e.id===era.value));
+  return findMapping($('[data-monster-identity]').value);
+ }
+ $('[data-monster]').append(new Option('鏡像角色（正式玩家外觀）','mirror'));
+ $('[data-dungeon]').addEventListener('change',async()=>{
+  const value=$('[data-dungeon]').value;
+  if(!value){$('[data-monster]').value='';sharedIdentities();await showMonster();return;}
+  const [world,mode]=value.split('/');era.value=world==='universe'?'era-universe':'era-galaxy';await show();
+  if(mode==='mirror'){$('[data-monster]').value='mirror';sharedIdentities();await showMonster();return;}
+  const rows=Object.values(mappings).filter(r=>r.mode===mode&&r.world===world),select=$('[data-monster-identity]');
+  select.replaceChildren(...rows.map(r=>new Option(r.name,r.id)));
+  $('[data-monster]').value=rows[0].assetId;describeMonster();await showMonster();
+ },{signal:own.signal});
  function sharedIdentities(){const rows=identitiesForAsset($('[data-monster]').value),select=$('[data-monster-identity]');select.replaceChildren(new Option('選擇怪物身份',''));for(const row of rows)select.append(new Option(row.name+' · '+row.id,row.id));$('[data-monster-shared]').hidden=!rows.length;$('[data-monster-shared] summary').textContent='此原型的怪物（'+rows.length+'）';$('[data-monster-identities]').textContent=rows.map(row=>row.id+' · '+row.name+' · '+row.visual.palette+' · '+Math.round(row.visual.scale*100)+'%').join('\n');describeMonster();}
- function describeMonster(){const asset=registry.assets.find(a=>a.assetId===$('[data-monster]').value),row=selectedMapping();$('[data-monster-description]').textContent=asset?(asset.name+' · '+asset.assetId+'｜使用身份 '+identitiesForAsset(asset.assetId).length+' 種｜'+(row?'選取：'+row.name+' · 配色 '+row.visual.palette+' · 尺寸 '+Math.round(row.visual.scale*100)+'% · 動作 '+row.visual.animationType:'請選擇使用此原型的怪物，查看正式配色、大小與動作')):'選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。';}
+ function describeMonster(){if($('[data-monster]').value==='mirror'){$('[data-monster-description]').textContent='鏡像・'+mirrorPlayerName+'｜沿用玩家正式外觀｜冷紫銀白｜尺寸 106%｜輪廓光';return;}const asset=registry.assets.find(a=>a.assetId===$('[data-monster]').value),row=selectedMapping();$('[data-monster-description]').textContent=asset?(asset.name+' · '+asset.assetId+'｜使用身份 '+identitiesForAsset(asset.assetId).length+' 種｜'+(row?'選取：'+row.name+' · 配色 '+row.visual.palette+' · 尺寸 '+Math.round((row.visual.visibleRatio||row.visual.scale)*100)+'% · 特效 '+(row.visual.effect||'原有動作')+' · 動作 '+row.visual.animationType:'請選擇使用此原型的怪物，查看正式配色、大小與動作')):'選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。';}
  
  const setEnabled=ok=>{ui.querySelectorAll('select,button').forEach(b=>b.disabled=!ok);};
  function clear(){serial++;loading?.abort();loading=null;actor?.canvas.remove();actor?.dispose();actor=null;animation.cancel();placeholder.hidden=false;}
@@ -28,7 +42,7 @@ export async function mount({host,signal,quality='medium'}={}){
   const requestId=crypto.randomUUID(),timer=setTimeout(()=>{pending.delete(requestId);reject(Error('authorization-timeout'));},5000);
   pending.set(requestId,{resolve,reject,timer});window.parent.postMessage({type:'civilization3d:sprite-auth',requestId},location.origin);
  });}
- window.addEventListener('message',event=>{if(event.source!==window.parent||event.origin!==location.origin||event.data?.type!=='civilization3d:sprite-auth-response')return;const p=pending.get(event.data.requestId);if(!p)return;clearTimeout(p.timer);pending.delete(event.data.requestId);p.resolve(event.data.authorized===true);},{signal:own.signal});
+ window.addEventListener('message',event=>{if(event.source!==window.parent||event.origin!==location.origin||event.data?.type!=='civilization3d:sprite-auth-response')return;const p=pending.get(event.data.requestId);if(!p)return;clearTimeout(p.timer);pending.delete(event.data.requestId);if(event.data.authorized===true&&typeof event.data.playerName==='string')mirrorPlayerName=event.data.playerName;p.resolve(event.data.authorized===true);},{signal:own.signal});
  async function authorize(){if(closed||authPending)return authorized;authPending=true;try{authorized=await request();}catch{authorized=false;}finally{authPending=false;lastAuth=performance.now();}
   if(closed)return false;setEnabled(authorized);if(!authorized){clear();clearMonster();monsterPool.clear();pool.clear();status.textContent='需要 GM 授權，請返回遊戲重新開啟。';diagnostics();}return authorized;
  }
@@ -45,10 +59,10 @@ export async function mount({host,signal,quality='medium'}={}){
  }
  for(const [clip,label] of [['idle','待機'],['attack','攻擊（短距離上挑斬）'],['hit','受擊'],['dodge','閃避'],['return','回位'],['defeat','死亡']]){const b=document.createElement('button');b.type='button';b.dataset.action=clip;b.textContent=label;b.addEventListener('click',()=>{if(authorized&&actor){lastClip=clip;animation.play(clip,visualNow);}},{signal:own.signal});$('.gm-suit-actions').append(b);}
   $('[data-replay]').addEventListener('click',()=>{if(authorized&&actor)animation.play(lastClip,visualNow);},{signal:own.signal});
- era.addEventListener('change',()=>show(),{signal:own.signal});
+ era.addEventListener('change',async()=>{await show();if($('[data-monster]').value==='mirror')await showMonster();},{signal:own.signal});
  $('[data-missing]').addEventListener('click',()=>show(true),{signal:own.signal});$('[data-reload]').addEventListener('click',async()=>{if(await authorize()){void show();void showMonster();}},{signal:own.signal});
- function tick(now){raf=0;if(closed||document.hidden)return;if(lastTick!==null)visualNow+=Math.max(0,now-lastTick)*Number($('[data-speed]').value);lastTick=now;if(now-lastAuth>2000)void authorize();if(actor&&authorized&&Math.floor(visualNow/33)!==lastFrame){lastFrame=Math.floor(visualNow/33);const s=animation.sample(visualNow);actor.canvas.dataset.clip=s.clip;actor.draw({clip:s.clip,elapsedMs:s.elapsedMs,rootMotion:true});if(monster){const m=monsterAnimation.sample(visualNow);monster.draw({...m,palette:selectedMapping()?.visual.palette||'original'});}}raf=requestAnimationFrame(tick);if(now-lastStats>250){lastStats=now;diagnostics();}}
- function clearMonster(){monsterSerial++;monsterLoading?.abort();monsterLoading=null;monster?.dispose();monster=null;monsterAnimation.cancel();}
+ function tick(now){raf=0;if(closed||document.hidden)return;if(lastTick!==null)visualNow+=Math.max(0,now-lastTick)*Number($('[data-speed]').value);lastTick=now;if(now-lastAuth>2000)void authorize();if(actor&&authorized&&Math.floor(visualNow/33)!==lastFrame){lastFrame=Math.floor(visualNow/33);const s=animation.sample(visualNow);actor.canvas.dataset.clip=s.clip;actor.draw({clip:s.clip,elapsedMs:s.elapsedMs,rootMotion:true});if(monster){const m=monsterAnimation.sample(visualNow);monster.draw({...m,palette:selectedMapping()?.visual.palette||'original'});if(monster.mirrored)applyDungeonEffects(monster.canvas,selectedMapping()?.visual);}}raf=requestAnimationFrame(tick);if(now-lastStats>250){lastStats=now;diagnostics();}}
+ function clearMonster(){monsterSerial++;monsterLoading?.abort();monsterLoading=null;monster?.canvas.remove();monster?.dispose();monster=null;monsterAnimation.cancel();}
  function duelLayout(){
   const active=!!$('[data-monster]').value;
   $('.gm-monster-actions').hidden=!active;$('[data-monster-hud]').hidden=!active;$('[data-target]').hidden=active;
@@ -60,24 +74,24 @@ export async function mount({host,signal,quality='medium'}={}){
    const p=visualPlacement(b,half,h,1);
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
-  if(actor&&monster)applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});
+  if(actor&&monster){const layout=applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});$('[data-monster-description]').dataset.actualRatio=String(layout.ratio);const label=$('[data-monster-description]');label.textContent=label.textContent.replace(/｜實測可見倍率.*$/,'')+'｜實測可見倍率 '+layout.ratio.toFixed(3)+'×';}
  }
  async function showMonster(){
   clearMonster();duelLayout();const id=$('[data-monster]').value,ticket=monsterSerial;
   if(!id){$('[data-monster-status]').textContent='';diagnostics();return;}
-  if(!authorized||closed)return;const entry=registry.assets.find(a=>a.assetId===id);
+  if(!authorized||closed)return;const entry=id==='mirror'?{name:'鏡像・'+mirrorPlayerName}:registry.assets.find(a=>a.assetId===id);
   $('[data-monster-status]').textContent=`${entry.name} · ${id}：載入及 SHA-256 驗證中…`;
   $('[data-monster-name]').textContent=entry.name+' · '+id;
   monsterLoading=new AbortController();
-  try{const next=await new MonsterActor(monsterPool,id,{signal:monsterLoading.signal,tier:quality,identity:$('[data-monster-identity]').value||null}).init();
+  try{const next=await (id==='mirror'?new WholeSuitActor(pool,release.entries.find(e=>e.id===era.value),{signal:monsterLoading.signal,tier:quality}):new MonsterActor(monsterPool,id,{signal:monsterLoading.signal,tier:quality,identity:$('[data-monster-identity]').value||null})).init();if(id==='mirror'){next.mirrored=true;next.canvas.dataset.mirror=era.value;}
    if(closed||!authorized||ticket!==monsterSerial){next.dispose();return;}
-   monster=next;preview.append(next.canvas);monsterAnimation.play('idle',visualNow);duelLayout();next.draw();
+   monster=next;preview.append(next.canvas);monsterAnimation.play('idle',visualNow);duelLayout();next.draw({clip:'idle',elapsedMs:0});if(next.mirrored)applyDungeonEffects(next.canvas,selectedMapping()?.visual);
    $('[data-monster-status]').textContent=`${entry.name} · ${id} · 512×512 · 左向 · SHA-256 已驗證`;
   }catch(e){if(!closed&&ticket===monsterSerial)$('[data-monster-status]').textContent=`${entry.name} · ${id}：圖片載入失敗，可重新載入（${e.message}）`;}
   diagnostics();
  }
- $('[data-monster]').addEventListener('change',()=>{sharedIdentities();void showMonster();},{signal:own.signal});
- $('[data-monster-identity]').addEventListener('change',()=>{describeMonster();void showMonster();},{signal:own.signal});
+ $('[data-monster]').addEventListener('change',()=>{$('[data-dungeon]').value='';sharedIdentities();void showMonster();},{signal:own.signal});
+ $('[data-monster-identity]').addEventListener('change',()=>{const row=selectedMapping();if(row)$('[data-monster]').value=row.assetId;describeMonster();void showMonster();},{signal:own.signal});
  for(const b of ui.querySelectorAll('[data-monster-action]'))b.addEventListener('click',()=>{if(authorized&&monster){monsterClip=b.dataset.monsterAction;monsterAnimation.play(monsterClip,visualNow);}},{signal:own.signal});
  $('[data-duel]').addEventListener('click',()=>{if(authorized&&actor&&monster){animation.play('hit',visualNow);monsterAnimation.play('attack',visualNow);}},{signal:own.signal});
   $('[data-player-duel]').addEventListener('click',()=>{if(authorized&&actor&&monster){animation.play('attack',visualNow);monsterAnimation.play('hit',visualNow);}},{signal:own.signal});

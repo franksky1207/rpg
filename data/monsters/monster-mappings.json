@@ -16627,6 +16627,1650 @@
         "facing": "left-3/4",
         "animationType": "short-thrust"
       }
+    },
+    {
+      "id": "galaxy-bounty-01",
+      "name": "武裝逃逸者",
+      "assetId": "hm-01",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-01",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "galaxy-bounty-02",
+      "name": "非法改裝兵",
+      "assetId": "hm-02",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-02",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "galaxy-bounty-03",
+      "name": "黑市護衛",
+      "assetId": "hm-04",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-03",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "galaxy-bounty-04",
+      "name": "走私突擊手",
+      "assetId": "hm-02",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-04",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "galaxy-bounty-05",
+      "name": "失控安保機",
+      "assetId": "dr-02",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-05",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "galaxy-bounty-06",
+      "name": "裝甲追緝犯",
+      "assetId": "hm-04",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-06",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "galaxy-bounty-07",
+      "name": "戰區破壞手",
+      "assetId": "mech-01",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-07",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.22,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "galaxy-bounty-08",
+      "name": "非法火力平台",
+      "assetId": "veh-02",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-08",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.22,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "galaxy-bounty-09",
+      "name": "禁區滲透指揮",
+      "assetId": "cmd-01",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-09",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "galaxy-bounty-10",
+      "name": "深空走私艦長",
+      "assetId": "cmd-01",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-10",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "galaxy-bounty-11",
+      "name": "都市級威脅體",
+      "assetId": "mech-03",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-11",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "galaxy-bounty-12",
+      "name": "殲滅協議載體",
+      "assetId": "mech-02",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-12",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "galaxy-bounty-13",
+      "name": "戰爭失控核心",
+      "assetId": "core-01",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-13",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "galaxy-bounty-14",
+      "name": "軌道破壞平台",
+      "assetId": "fort-01",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-14",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "galaxy-bounty-15",
+      "name": "深空封鎖母艦",
+      "assetId": "ship-04",
+      "world": "galaxy",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "galaxy-bounty-15",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "ranged-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "universe-bounty-01",
+      "name": "界航偷渡者",
+      "assetId": "hm-01",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-01",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "universe-bounty-02",
+      "name": "星群私兵",
+      "assetId": "hm-02",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-02",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "universe-bounty-03",
+      "name": "暗域護運隊",
+      "assetId": "hm-04",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-03",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "ancient",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "universe-bounty-04",
+      "name": "跨域劫運兵",
+      "assetId": "hm-02",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-04",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "universe-bounty-05",
+      "name": "漂流戰械",
+      "assetId": "dr-02",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-05",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 1
+      },
+      "bountyTier": "normal"
+    },
+    {
+      "id": "universe-bounty-06",
+      "name": "星路私掠者",
+      "assetId": "hm-04",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-06",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "ancient",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "universe-bounty-07",
+      "name": "界域破航兵",
+      "assetId": "mech-01",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-07",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.22,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "universe-bounty-08",
+      "name": "暗物質武裝艇",
+      "assetId": "veh-02",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-08",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.22,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "universe-bounty-09",
+      "name": "星群滲透官",
+      "assetId": "cmd-01",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-09",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "ancient",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "universe-bounty-10",
+      "name": "跨域走私艦主",
+      "assetId": "cmd-01",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-10",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.08,
+        "effect": "rim",
+        "energy": 2
+      },
+      "bountyTier": "high"
+    },
+    {
+      "id": "universe-bounty-11",
+      "name": "萬域私戰艦",
+      "assetId": "mech-03",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-11",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "universe-bounty-12",
+      "name": "跨域劫掠主機",
+      "assetId": "mech-02",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-12",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "ancient",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "universe-bounty-13",
+      "name": "戰線叛離主機",
+      "assetId": "core-01",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-13",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "universe-bounty-14",
+      "name": "星路封鎖要塞",
+      "assetId": "fort-01",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-14",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "universe-bounty-15",
+      "name": "跨域掠奪母艦",
+      "assetId": "ship-04",
+      "world": "universe",
+      "mode": "bounty",
+      "kind": "dungeon-bounty",
+      "source": "dungeonbounty.js",
+      "variantId": "universe-bounty-15",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "ancient",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "ranged-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.38,
+        "effect": "rim",
+        "energy": 3
+      },
+      "bountyTier": "danger"
+    },
+    {
+      "id": "galaxy-arena-01",
+      "name": "基礎模擬單元",
+      "assetId": "mech-01",
+      "world": "galaxy",
+      "mode": "arena",
+      "kind": "dungeon-arena",
+      "source": "dungeonarena.js",
+      "variantId": "galaxy-arena-01",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cool",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.2,
+        "effect": "rim",
+        "energy": 1
+      },
+      "arenaStage": 0
+    },
+    {
+      "id": "galaxy-arena-02",
+      "name": "戰術強化單元",
+      "assetId": "mech-02",
+      "world": "galaxy",
+      "mode": "arena",
+      "kind": "dungeon-arena",
+      "source": "dungeonarena.js",
+      "variantId": "galaxy-arena-02",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "warm",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.3,
+        "effect": "rim",
+        "energy": 2
+      },
+      "arenaStage": 1
+    },
+    {
+      "id": "galaxy-arena-03",
+      "name": "極限測試平台",
+      "assetId": "mech-03",
+      "world": "galaxy",
+      "mode": "arena",
+      "kind": "dungeon-arena",
+      "source": "dungeonarena.js",
+      "variantId": "galaxy-arena-03",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.4,
+        "effect": "rim",
+        "energy": 3
+      },
+      "arenaStage": 2
+    },
+    {
+      "id": "universe-arena-01",
+      "name": "星域戰爭構裝",
+      "assetId": "mech-01",
+      "world": "universe",
+      "mode": "arena",
+      "kind": "dungeon-arena",
+      "source": "dungeonarena.js",
+      "variantId": "universe-arena-01",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.2,
+        "effect": "rim",
+        "energy": 1
+      },
+      "arenaStage": 0
+    },
+    {
+      "id": "universe-arena-02",
+      "name": "宇宙征戰構裝",
+      "assetId": "mech-02",
+      "world": "universe",
+      "mode": "arena",
+      "kind": "dungeon-arena",
+      "source": "dungeonarena.js",
+      "variantId": "universe-arena-02",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.3,
+        "effect": "rim",
+        "energy": 2
+      },
+      "arenaStage": 1
+    },
+    {
+      "id": "universe-arena-03",
+      "name": "文明終焉構裝",
+      "assetId": "mech-03",
+      "world": "universe",
+      "mode": "arena",
+      "kind": "dungeon-arena",
+      "source": "dungeonarena.js",
+      "variantId": "universe-arena-03",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "ancient",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.4,
+        "effect": "rim",
+        "energy": 3
+      },
+      "arenaStage": 2
+    },
+    {
+      "id": "void-regular-01",
+      "name": "虛影獵手",
+      "assetId": "beast-01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-01",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "spectral-blue",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pounce",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-02",
+      "name": "幻境遊魂",
+      "assetId": "void-phantom-v01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-02",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "spectral-blue",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1500000000000001,
+        "effect": "float",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-03",
+      "name": "裂隙行者",
+      "assetId": "hm-02",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-03",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.2000000000000002,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-04",
+      "name": "異相戰影",
+      "assetId": "void-phantom-v01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-04",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "dark-crimson-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-05",
+      "name": "迷界殘像",
+      "assetId": "void-phantom-v01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-05",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1500000000000001,
+        "effect": "afterimage",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-06",
+      "name": "虛空獵兵",
+      "assetId": "hm-04",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-06",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.2000000000000002,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-07",
+      "name": "幻域追獵者",
+      "assetId": "beast-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-07",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pounce",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-08",
+      "name": "失真戰體",
+      "assetId": "energy-01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-08",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "dark-crimson-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1500000000000001,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-09",
+      "name": "空間殘響",
+      "assetId": "void-phantom-v01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-09",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.2000000000000002,
+        "effect": "pulse",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-regular-10",
+      "name": "幻象執行者",
+      "assetId": "cmd-01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-regular-10",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.1,
+        "effect": "rim",
+        "energy": 1
+      },
+      "isBossFloor": false,
+      "bossCycle": null
+    },
+    {
+      "id": "void-boss-01",
+      "name": "幻境獵王",
+      "assetId": "beast-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-01",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "spectral-blue",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pounce",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.35,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 0
+    },
+    {
+      "id": "void-boss-02",
+      "name": "虛影統領",
+      "assetId": "cmd-01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-02",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.3900000000000001,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 1
+    },
+    {
+      "id": "void-boss-03",
+      "name": "裂隙霸主",
+      "assetId": "mech-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-03",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.4300000000000002,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 2
+    },
+    {
+      "id": "void-boss-04",
+      "name": "異相主宰",
+      "assetId": "core-01",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-04",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "dark-crimson-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.35,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 3
+    },
+    {
+      "id": "void-boss-05",
+      "name": "幻域支配者",
+      "assetId": "cmd-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-05",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "spectral-blue",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.3900000000000001,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 4
+    },
+    {
+      "id": "void-boss-06",
+      "name": "虛空夢魘",
+      "assetId": "beast-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-06",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pounce",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.4300000000000002,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 5
+    },
+    {
+      "id": "void-boss-07",
+      "name": "裂界災厄",
+      "assetId": "fort-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-07",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "cyan-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.35,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 6
+    },
+    {
+      "id": "void-boss-08",
+      "name": "失真君王",
+      "assetId": "mech-02",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-08",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "dark-crimson-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.3900000000000001,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 7
+    },
+    {
+      "id": "void-boss-09",
+      "name": "虛境帝皇",
+      "assetId": "cmd-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-09",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "spectral-blue",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.4300000000000002,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 8
+    },
+    {
+      "id": "void-boss-10",
+      "name": "虛無終焉者",
+      "assetId": "core-03",
+      "world": "both",
+      "mode": "void",
+      "kind": "dungeon-void-mirage",
+      "source": "dungeonvoid.js",
+      "variantId": "void-boss-10",
+      "status": "dungeon-formal-enabled",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "maxStageFraction": 0.42,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "sizePolicy": "dungeon",
+        "visibleRatio": 1.35,
+        "effect": "rim",
+        "energy": 3
+      },
+      "isBossFloor": true,
+      "bossCycle": 9
     }
   ]
 }

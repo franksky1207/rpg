@@ -24,7 +24,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    function read(c){const n=c.width,d=c.getContext('2d').getImageData(0,0,n,n).data,box=c.getBoundingClientRect();let l=n,t=n,r=-1,b=-1;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}return {height:(b-t+1)/n*box.height,left:box.left+l/n*box.width,right:box.left+(r+1)/n*box.width,top:box.top+t/n*box.height,bottom:box.top+(b+1)/n*box.height};}
    function pair(host,p,m){const player=read(p),monster=read(m),stage=host.getBoundingClientRect();return {playerHeight:player.height,monsterHeight:monster.height,ratio:monster.height/player.height,contained:[player,monster].every(b=>b.left>=stage.left-.01&&b.right<=stage.right+.01&&b.top>=stage.top-.01&&b.bottom<=stage.bottom+.01),separated:player.right<monster.left};}
    async function select(selector,value){const e=gm.querySelector(selector);e.value=value;e.dispatchEvent(new Event('change'));}
-   for(const row of Object.values(mappings)){
+   for(const row of Object.values(mappings).filter(r=>!r.mode)){
     const errors=[];let view=null,battle=null,formalSupported=false;
     const world=row.world==='universe'?2:1;
     const identity={mode:'main',world,name:row.name,kind:row.kind,id:row.id,location:world===1?`${(row.region-1)*10+row.mapIndex-1}:${row.slot-1}`:String(Number(row.id.slice(-3))-1)};
