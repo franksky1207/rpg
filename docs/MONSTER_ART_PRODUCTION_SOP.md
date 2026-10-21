@@ -1,0 +1,51 @@
+# 《文明戰線》怪物製圖與正式整合 SOP v1.0
+
+> 生效：2026-10-21。依第13批20圖整合、第15-1～15-4批驗收歸納。每批開工前先讀最新 main、PROJECT_HANDOFF.md、本文件、實際資料與相關測試；main 是唯一正式真實來源。未授權不得自行擴大正式啟用範圍。
+
+## 1. 成功定義與固定規格
+- 怪物美術採科幻2.5D／3/4視角，清楚易辨、適合小尺寸戰鬥；不追求過度精細3D或複雜骨架。
+- 素材512×512，背景必須有真正Alpha透明；怪物原生面向左，完整主體與輪廓不能截斷。正式部署使用透明WebP，PNG原始素材、來源與SHA留在開發區，不能誤放入Pages／智慧下載。
+- 每張圖先描述輪廓、武器、機械／生物特徵、與既有原型的差別，再逐張製圖、逐張人工確認。背景、朝向、造型有錯先修圖，不能以CSS掩飾。美術核准不等於程式驗收。
+- 相似身份共用原型，重要Boss及明顯不同外觀需單獨評估；身份差異可用有限配色、體型與偏移表達，但不能讓名稱與外型嚴重不符。
+- 玩家在左、怪物在右；正式戰鬥與GM的怪物／玩家**實際可見高度比例相同**。怪物不低於玩家可見高度90%；空間不足時雙方一起等比例縮小，禁止GM單獨補倍率。特殊巨型身份可大於玩家。
+
+## 2. 逐批工作順序
+1. **來源盤點**：讀正式地圖、Boss、特殊身份與現有原型；依名稱意義分類、列共用關係及例外Boss，確認本批範圍和正式Sprite啟用範圍。
+2. **原型設計**：先核對已存在圖，避免重畫；逐張提出造型描述、辨識重點、面向、透明背景要求；每張獲得使用者確認後才繼續下一張。
+3. **封裝與素材校驗**：原圖與部署WebP分離；核對ZIP CRC／路徑安全、512×512、真實Alpha、邊界、WebP格式、bytes、SHA-256、唯一ID與路徑；保留原六張等既有素材的雜湊，不得無故重壓。
+4. **身份映射**：以 data/monsters/monster-assets.json、monster-mappings.json、monster-variants.json 為來源，透過 scripts/generate-monster-trial-registry.py 生成正式登錄。逐筆核對正式名稱、地圖索引、slot、Boss ID、specialId、assetId、palette、scale、offset與動作。歷史plannedAssetId僅供追溯，實際以有效mapping為準。
+5. **GM先驗**：使用既有角色與動作測試中心；以「原型→使用此原型的怪物身份」選取，配色／大小／原型摘要唯讀，速度可保留；勿恢復一大堆人工配色與倍率選單。逐身份檢查顏色辨識、比例、左右對打、四動作與切換回收。
+6. **正式整合**：只有明確授權的怪物與戰鬥模式才開正式Sprite。重用現役MonsterActor、MonsterPool、正式Renderer與同一版面owner；不能另外建立GM尺寸算法或補丁檔。保留背景、極簡、連戰、數值、獎勵、存檔及智慧下載既有owner。
+7. **驗收**：每個實際身份均跑桌機1365×900、手機直向390×844、橫向844×390；量測真實Canvas不透明像素、玩家與怪物相對高度、90%下限、GM／正式比例誤差、舞台越界、左右分離、配色與身份。未正式啟用的身份必須明列「GM通過、正式不適用」，不能算成正式Sprite通過。
+8. **故障與跨模式**：測試HTTP／SHA／解碼失敗、清除資源重下載、下載中離場、快速換怪、初始化中dispose、晚到lease釋放、背景切換、跨戰鬥、背景／離線／Fast Catch-up、連戰、文明災厄；確保可原頁恢復，refs／pending／bytes不殘留，不動玩法資料。
+9. **發布封箱**：每批一次完整施工、自我檢查、最新PR head同SHA必要Actions、合併main、合併後Runtime與Pages實際發布核對。失敗須讀log修根因；取消、執行中、舊SHA綠燈皆不等於通過。輸出修改內容、逐身份結果、失敗清單、Actions、main SHA、Pages及真機未測項目。
+
+## 3. 第一次20原型／609身份成功基準
+- 第13批：20張透明WebP（原六張＋新增十四張）；609身份（銀河500、宇宙Boss100、特殊9）有效映射，20原型均有使用；63筆名稱／外型錯配已修正。
+- 第15-4批：以3d-test/monster-actor.mjs的共用 applyBattleSpriteLayout 為版面owner，正式Renderer及GM直接重用；真實Actor 256px待機Alpha>16像素與1600ms待機週期量測，避免畫布透明邊與動畫造成誤判。量測資料按素材／tier快取，不能逐動畫幀讀回。
+- 609身份×3視窗＝1827案例全過，最小可見高度比例91.3588%，正式／GM最大比例差0.041807個百分點。600身份屬當批正式Sprite適用範圍；9特殊身份GM通過、正式resolver不適用。**不得推論高維、異宇宙或所有副本都已啟用Sprite。**
+- 資源故障恢復、Batch6跨模式回歸及正式／GM瀏覽器測試通過；真實iPhone溫度、耗電、OS背景掛起、真帳號雲端仍須另行真機驗證。
+
+## 4. 失敗模式與禁止回退
+| 過去失敗 | 固定解法 |
+|---|---|
+| 背景假透明、造型重複、面向錯 | 原始Alpha與實際像素驗證；逐張描述與核准，不能反覆盲畫 |
+| 只看20原型導致身份錯配 | 全部正式來源身份逐筆映射及名稱／外型檢查 |
+| GM選項過多、顏色差異不清 | 原型→身份兩層唯讀預覽，有限但清楚的身份配色 |
+| GM怪物比正式小、90%檢查失敗 | 共用Actor版面owner，量測真實Alpha；雙方共同縮放 |
+| 以0.68估算透明內容、92%／99%補倍率 | 禁止猜測補償倍率；不得恢復已刪 monster-visible-size.mjs |
+| 載入後動畫消失、清除快取後失效 | 共享資源池、SHA、late lease釋放、重試與故障注入 |
+| 歷史守衛與快取版本測試失敗 | 僅精確允許合法範圍與版本token，禁止放寬整個守衛 |
+| Actions未結束就宣告完成 | 同SHA全綠、main合併、Runtime與Pages核對後才封箱 |
+
+## 5. 重要程式與報告入口
+- 資料：data/monsters/monster-assets.json、monster-mappings.json、monster-variants.json
+- 生成：scripts/generate-monster-trial-registry.py
+- 共用Actor／版面：3d-test/monster-actor.mjs
+- GM：3d-test/gm-era-sprites.mjs
+- 正式Renderer：3d-test/t3b-formal-renderer.js
+- 測試：tests/runtime/batch13-monster-browser.cjs、batch13-monster-mappings.cjs、batch13-monster-pool.test.mjs
+- 基準報告：docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md、docs/BATCH15_4_FORMAL_GM_ACCEPTANCE_2026-10-21.md
+- 全身份證據：development/combat-animation/batch15/all-identities.json
+
+本SOP適用後續怪物製圖與整合；如現役main實作更新，須先稽核差異、經確認後同步修訂SOP，不能依舊文件覆寫新程式。
