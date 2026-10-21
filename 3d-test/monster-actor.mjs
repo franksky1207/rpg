@@ -34,14 +34,13 @@ export function monsterPlacement(width,height,visual={},scale=visual.scale||1){
 export const PLAYER_VISIBLE_FRACTION=430/512;
 export function monsterVisibleSize(entry,visual={}){
  const [l,t,r,b]=entry.visualBounds;
- const subjectHeight=b-t,subjectWidth=r-l;
  const requested=Number.isFinite(visual.scale)?visual.scale:1;
- // Fit to the physical square viewport; avoid clipped wide monsters and allow
- // large units to remain larger when the stage gives enough horizontal room.
- const ratio=subjectWidth/subjectHeight;
- const requestedHeight=Math.max(PLAYER_VISIBLE_FRACTION*.90,Math.min(PLAYER_VISIBLE_FRACTION*1.80,PLAYER_VISIBLE_FRACTION*requested));
- const fitHeight=Math.min(requestedHeight,.96/ratio);
- return {visibleFraction:fitHeight,relativeToPlayer:fitHeight/PLAYER_VISIBLE_FRACTION,scale:requested,clippedByAspect:fitHeight<PLAYER_VISIBLE_FRACTION*.90};
+ // 90% player visible-height floor, retaining identity-level scale differences.
+ // The transparent canvas is allowed to expand for wide sprites; don't shrink
+ // the visual height simply because an approved original is wider than tall.
+ const targetHeight=Math.max(PLAYER_VISIBLE_FRACTION*.90,Math.min(PLAYER_VISIBLE_FRACTION*1.80,PLAYER_VISIBLE_FRACTION*requested));
+ const requiredAspect=(r-l)/(b-t);
+ return {visibleFraction:targetHeight,relativeToPlayer:targetHeight/PLAYER_VISIBLE_FRACTION,scale:requested,requiredAspect};
 }
 export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
