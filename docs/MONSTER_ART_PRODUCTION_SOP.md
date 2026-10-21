@@ -66,3 +66,16 @@
 - `specialcore.js`在既有`visualContext`以`location=enemy.specialId`傳送唯一身份；`monster-formal-resolver.mjs`明確限制9個ID及各紀元名稱；正式Renderer另開`special`模式白名單。
 - 9筆`monster-mappings.json`與生成登錄的狀態改為`special-formal-enabled`，**不增加圖片、不改經驗／傷害／獎勵／掉落／存檔／戰鬥算法**。高維特殊遭遇仍被原邏輯禁止。
 - 驗收須涵蓋18個身份／紀元組合、3種視窗、正式／GM共同版面、模式切換、背景／Fast Catch-up、資源失敗回退、智慧下載與cache清除。靜態契約通過不代表實際瀏覽器、iPhone或Pages已驗收，須記錄真實結果。
+
+### 第16批特殊怪追加修復與可重現驗收
+- 補齊首頁 `specialcore.js`／正式 Renderer 以及 GM 入口的 URL 版本；共用 monster pool、Actor、resolver 使用同版登錄，避免舊快取繼續漏圖。
+- special resolver 限定啟用狀態、九個精確 specialId、各紀元正式名稱；若另外提供 id，必須與 specialId 或正式 mapping id 一致。未知身份安全保留替代輪廓。
+- 共用 `battleSpriteLayout` 對特殊怪保留接近距離與動作空間，修復窄舞台靠近時角色重疊；不改 mapping 尺寸、不降低 90% 最小可見高度、不新增 Renderer／計時器／圖片。
+- `batch16-special-contract.cjs` 從實際 gameplay owner 讀取名稱，驗證18組身份、原型、面向、錯誤欄位拒絕及 specialFightCore 的 context／結果。
+- `batch16-all-identities-browser.cjs` 現涵蓋56個副本身份與18個特殊怪紀元身份，共74組×3視窗=222案例；逐個檢查 GM／正式像素、尺寸、包含、間距、idle/attack/hit/dodge/return/defeat 全動畫與死亡清空。
+- `batch16-special-live-browser.cjs` 經真正 maybeHandleSpecialEncounter → buildSpecialMonsterFromPlayer → specialFightCore → combat events → 正式投影／Renderer → 結算／save，驗證18組正式Sprite可見且替代輪廓隱藏；再對18組檢查 Fast Catch-up 不建立Sprite並保持結算一致。僅固定隨機遭遇選擇，未替換戰鬥／獎勵／存檔 owner。
+- `batch16-cross-mode-browser.cjs` 擴至260次模式切換，包含18種特殊怪組合、地圖、懸賞、競技場、虛空、鏡像與既有排除模式；檢查背景清快取、重入、降級與零殘留 lease。
+- `batch16-monster-recovery-browser.cjs` 擴至74組×4故障=296案例，HTTP／SHA／解碼／載入離場後原頁復原、連續重入與清除；`batch16-resource-timeout-browser.cjs` 加入18組特殊怪逾時復原。
+- 原609筆對照基準僅允許九筆指定狀態改動，其餘欄位保持逐筆 deepEqual，並保留56筆副本、原型SHA與既有第15批回歸；不可用刪除測試取代驗收。
+- 自動化證據：PR #70 最新提交的 **Batch16 Dungeon Sprite Acceptance** artifact `batch16-dungeon-evidence`（`/tmp/batch16-*.json` 與畫面）；第15批／GM證據由 **Batch13 Twenty Monster GM Integration** 保存。最新提交全部必要 Actions 完成 success 後才可合併，合併後另核對 main Runtime／Pages；queued／in_progress／skipped／cancelled 皆不代表通過。
+- 此處記錄測試範圍與重現方式，實際發布結論以對應 SHA 的 Actions／部署為準。Chromium桌機與手機視窗模擬不等同 iPhone Safari 真機；GPU、溫度、電池、長時間背景恢復須玩家真機確認。

@@ -29,6 +29,7 @@ jobs:
           python3 tests/runtime/batch13-monster-assets.py
           python3 scripts/generate-monster-trial-registry.py --check
           node tests/runtime/batch16-dungeon-contract.cjs
+          node tests/runtime/batch16-special-contract.cjs
           node tests/runtime/batch16-cache.cjs
           node --test tests/runtime/batch13-monster-pool.test.mjs
           node scripts/build-publish-dry-run.cjs
@@ -47,6 +48,7 @@ jobs:
           node tests/runtime/batch16-all-identities-browser.cjs
           node tests/runtime/batch16-mirror-browser.cjs
           node tests/runtime/batch16-live-dungeons-browser.cjs
+          node tests/runtime/batch16-special-live-browser.cjs
           node tests/runtime/batch16-cross-mode-browser.cjs
           node tests/runtime/batch16-native-cache-browser.cjs
           node tests/runtime/publish-candidate-browser.js

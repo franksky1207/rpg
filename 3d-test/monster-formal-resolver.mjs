@@ -7,7 +7,8 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
   const approvedIds=['gold_slime','mimic','reaper','lucky_rabbit','ancient_guardian','relic_guardian','bandit_king','collector','mysterious_traveler'];
   if(!approvedIds.includes(location))return null;
   const row=findMapping('special-'+location);
-  if(!row||row.world!=='both'||row.kind!=='special'||row.specialId!==location)return null;
+  if(!row||row.world!=='both'||row.kind!=='special'||row.specialId!==location||row.status!=='special-formal-enabled')return null;
+  if(id!=null&&id!==row.id&&id!==location)return null;
   // Owner-verified alternate names, never generic substring matching.
   const universeNames={
    gold_slime:'星源聚合體',mimic:'虛空誘餌艙',reaper:'終焉協議體',lucky_rabbit:'星運增幅信標',

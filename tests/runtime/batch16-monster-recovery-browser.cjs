@@ -2,7 +2,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
 (async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']}),report={passed:false,rows:[]};
-const dungeonRows=JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).records.filter(r=>r.mode);
+const dungeonRows=JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).records.filter(r=>r.mode).concat(require('./batch16-special-fixtures.cjs'));
 try{for(const row of dungeonRows)for(const fault of ['http','integrity','decode','leave-download']){
  const page=await browser.newPage();await page.route('**/batch15-recovery.html',r=>r.fulfill({contentType:'text/html',body:'<div id="stage" style="position:relative;width:390px;height:240px"></div>'}));
  let broken=true,held,requests=0;
@@ -12,7 +12,7 @@ try{for(const row of dungeonRows)for(const fault of ['http','integrity','decode'
  await page.addScriptTag({url:new URL('3d-test/t3b-formal-renderer.js',base).href});
  await page.evaluate(async row=>{
   const {mappings}=await import('./3d-test/monster-sprites.mjs'),mapping=mappings[row.id],api=CivilizationFormalBRenderer;
-  window.__start=async()=>{window.__ac=new AbortController();const bundle=await api.prepare({wholeSuit:true,eraVisualId:row.world==='universe'?'universe':'galaxy',identity:{mode:row.mode,world:row.world==='universe'?2:1,kind:row.kind,name:row.name,location:row.mode==='arena'?String(row.arenaStage):row.mode==='void'?String(row.isBossFloor?(row.bossCycle+1)*10:1):null,id:row.id},signal:__ac.signal});window.__renderer=await api.create({bundle,signal:__ac.signal,isCurrent:()=>!__ac.signal.aborted,host:document.querySelector('#stage')});__renderer.sample({player:{clip:'idle',elapsedMs:0},enemy:{clip:'idle',elapsedMs:0}});};await __start();
+  window.__start=async()=>{window.__ac=new AbortController();const bundle=await api.prepare({wholeSuit:true,eraVisualId:row.world==='universe'?'universe':'galaxy',identity:{mode:row.mode,world:row.world==='universe'?2:1,kind:row.kind,name:row.name,location:row.mode==='special'?row.specialId:row.mode==='arena'?String(row.arenaStage):row.mode==='void'?String(row.isBossFloor?(row.bossCycle+1)*10:1):null,id:row.id},signal:__ac.signal});window.__renderer=await api.create({bundle,signal:__ac.signal,isCurrent:()=>!__ac.signal.aborted,host:document.querySelector('#stage')});__renderer.sample({player:{clip:'idle',elapsedMs:0},enemy:{clip:'idle',elapsedMs:0}});};await __start();
  },row);
  while(!requests)await page.waitForTimeout(10);
  if(fault==='leave-download'){
