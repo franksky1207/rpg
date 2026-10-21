@@ -31,7 +31,14 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
  assert.equal(resolveFormalMirror({mode:'mirror',world:3,name:'鏡像・測試者',playerName:'測試者'},{formalBattleAllowed:true}),null);
  // All numeric/gameplay owners and 609 original mappings/images are unchanged.
  const before=JSON.parse(cp.execFileSync('git',['show','cff02989:data/monsters/monster-mappings.json'],{encoding:'utf8'}));
- assert.deepEqual(read('data/monsters/monster-mappings.json').records.filter(r=>!r.mode),before.records);
+ const currentOriginal=read('data/monsters/monster-mappings.json').records.filter(r=>!r.mode);
+ assert.equal(currentOriginal.length,before.records.length,'original 609 identities must be preserved');
+ const approvedSpecialIds=new Set(['gold_slime','mimic','reaper','lucky_rabbit','ancient_guardian','relic_guardian','bandit_king','collector','mysterious_traveler']);
+ assert.deepEqual(currentOriginal.map(row=>{
+  if(!approvedSpecialIds.has(row.specialId))return row;
+  assert.equal(row.status,'special-formal-enabled','approved special Sprite status');
+  return {...row,status:'gm-integrated-formal-disabled'};
+ }),before.records,'only nine approved special status flags may change');
  for(const file of ['dungeonbounty.js','dungeonarena.js','dungeonvoid.js','mirrordungeonrun.js','combatcore.js','dungeoncore.js','mirrorcombatcore.js','offline.js']){
   if(!fs.existsSync(file))continue;
   assert.equal(fs.readFileSync(file,'utf8'),cp.execFileSync('git',['show','cff02989:'+file],{encoding:'utf8'}),file);
