@@ -1,5 +1,5 @@
 """Validate handoff bytes independently of the generated runtime registry."""
-import pathlib,json,hashlib
+import pathlib,json,hashlib,csv
 from PIL import Image
 r=pathlib.Path(__file__).resolve().parents[2]
 dev=r/'development/monster-art/batch17'
@@ -23,4 +23,11 @@ for line in (dev/'metadata/sha256sums.txt').read_text().splitlines():
 runtime=json.loads((r/'resource-manifest.json').read_text())['files']
 assert not any(p.startswith('development/') for p in runtime)
 assert len([p for p in runtime if p.startswith('assets/monsters/v1/boss/')])==12
+planned=json.loads((dev/'metadata/boss_30_mapping.json').read_text())
+csv_rows=list(csv.DictReader((dev/'metadata/boss_30_mapping.csv').open(encoding='utf-8-sig')))
+assert len(planned)==len(csv_rows)==30
+for row,record in zip(planned,csv_rows):
+ for key in ['era','index','boss_name','art_code_or_existing_asset']:
+  assert str(row[key])==record[key]
+ assert row['suggested_visible_height_to_player']==float(record['suggested_visible_height_to_player'])
 print('PASS 24 original image bytes/SHA/dimensions/alpha/safe margins and 12 unmodified formal WebP; no development preload')

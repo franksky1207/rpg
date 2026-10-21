@@ -1,0 +1,46 @@
+batch5	Static, source and regression contracts	﻿2026-10-21T17:04:32.6372657Z ##[group]Run node --check 3d-test/mode-foundation.js
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6372952Z [36;1mnode --check 3d-test/mode-foundation.js[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6373155Z [36;1mnode --check 3d-test/t3b-formal-entry.js[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6373365Z [36;1mnode --check 3d-test/era-appearance-contract.js[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6373592Z [36;1mnode tests/runtime/batch5-era-animation-contract.cjs[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6373813Z [36;1mnode tests/runtime/batch10-mobile-ui-contract.cjs[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6374031Z [36;1mnode tests/runtime/cleanup-batch4-4-final-guard.cjs[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6374256Z [36;1mnode tests/runtime/cleanup-batch2-4-integration.cjs[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6374480Z [36;1mnode tests/runtime/t3b-formal-controller.cjs[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6374674Z [36;1mnode tests/runtime/t3b-formal-projection.cjs[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6374878Z [36;1mnode tests/runtime/resource-manifest-integrity.js[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6375106Z [36;1mpython3 scripts/formal-equipment-identities.py --help[0m
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6520525Z shell: /usr/bin/bash -e {0}
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.6520697Z ##[endgroup]
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.7507968Z PASS Batch7 foundation: visual choice independent of gear, reincarnation gate, account isolation, next-battle apply, lightweight art release
+batch5	Static, source and regression contracts	2026-10-21T17:04:32.7732231Z PASS batch10 mobile and formal-settings compatibility contract
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3332101Z node:assert:152
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3332963Z   throw new AssertionError(obj);
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3333546Z   ^
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3333666Z
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3333953Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334265Z + actual - expected
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334369Z
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334421Z + [
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334548Z +   'combat-events.js'
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334675Z + ]
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334782Z - []
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3334867Z
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3335103Z     at Object.<anonymous> (/home/runner/work/rpg/rpg/tests/runtime/cleanup-batch4-4-final-guard.cjs:38:8)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3335473Z     at Module._compile (node:internal/modules/cjs/loader:1929:14)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3335730Z     at Object..js (node:internal/modules/cjs/loader:2060:10)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3335970Z     at Module.load (node:internal/modules/cjs/loader:1651:32)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3336206Z     at Module._load (node:internal/modules/cjs/loader:1443:12)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3336450Z     at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3336754Z     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337028Z     at node:internal/main/run_main_module:33:47 {
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337210Z   generatedMessage: false,
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337354Z   code: 'ERR_ASSERTION',
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337512Z   actual: [ 'combat-events.js' ],
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337665Z   expected: [],
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337810Z   operator: 'deepStrictEqual',
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3337955Z   diff: 'simple'
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3338074Z }
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3338136Z
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3338217Z Node.js v24.22.0
+batch5	Static, source and regression contracts	2026-10-21T17:04:33.3401946Z ##[error]Process completed with exit code 1.

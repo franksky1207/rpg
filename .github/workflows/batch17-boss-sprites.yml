@@ -49,6 +49,7 @@ jobs:
           node tests/runtime/batch17-all-identities-browser.cjs
           node tests/runtime/batch17-monster-recovery-browser.cjs
           node tests/runtime/batch17-live-bosses-browser.cjs
+          node tests/runtime/batch17-fast-switch-browser.cjs
           node tests/runtime/batch17-native-cache-browser.cjs
           node tests/runtime/publish-candidate-browser.js
       - uses: actions/upload-artifact@v4

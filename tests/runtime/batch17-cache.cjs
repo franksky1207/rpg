@@ -11,6 +11,7 @@ const ctx=vm.createContext({URL,Request,Response,Headers,TextEncoder,crypto:webc
  assert.ok(url(req).includes(asset.path));loads++;if(fault==='http')return basic(new Response('offline',{status:503}));const data=Buffer.from(body);if(fault==='sha')data[100]^=1;return basic(new Response(data));
 }});vm.runInContext(fs.readFileSync('resource-cache-sw.js','utf8'),ctx);
 await (async()=>{
+ assert.equal(ctx.shouldPreload('assets/monsters/v1/boss/unapproved.webp'),false);assert.equal(ctx.shouldPreload('development/monster-art/batch17/preview/contact_sheet.png'),false);assert.equal(ctx.shouldPreload('development/monster-art/batch17/images/png/C-03_eyes_shared.png'),false);
  assert.equal(ctx.shouldPreload(asset.path),true);assert.equal(ctx.shouldPreload('assets/monsters/v1/void/unapproved.webp'),false);assert.equal(ctx.shouldPreload('development/monster-art/batch16-v01/reference/void-phantom-v01-preview.png'),false);
  await ctx.refresh();let status=[];await ctx.preloadAssets(v=>status.push(v));assert.equal(status.at(-1).saved,1);assert.equal(loads,1);
  await ctx.media(new Request(scope+asset.path));assert.equal(loads,1,'preloaded bytes reused');await ctx.preloadAssets(()=>{});assert.equal(loads,1,'no repeated background download');
