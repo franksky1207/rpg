@@ -44,11 +44,11 @@ export function monsterVisibleSize(entry,visual={}){
 }
 export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
-  this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
+  this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.baseSize=this.canvas.height;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
  }
  async init(){try{this.lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed)throw Error('monster-aborted');if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
-  if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
+  if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.baseSize,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
   // Subject size is driven by approved per-identity scale, with a 90%-of-player minimum.
   const target=monsterVisibleSize(a,this.mapping?.visual||{});
   const size=n*target.visibleFraction*512/(b-t);
@@ -56,7 +56,7 @@ export class MonsterActor{
   // surface while maintaining the same visible height and center anchor.
   const requiredWidth=Math.ceil((r-l)/512*size*1.08);
   const width=Math.max(n,requiredWidth),center=width/2;
-  if(this.canvas.width!==width){this.canvas.width=width;this.ctx=this.canvas.getContext('2d');}
+  if(this.canvas.width!==width){this.canvas.width=width;}
   c.clearRect(0,0,width,n);c.save();c.translate(center+n*p.x,n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
   c.drawImage(this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
   if(p.flash){c.globalCompositeOperation='source-atop';c.globalAlpha=p.flash;c.fillStyle='#fff';c.fillRect(-n,-n,n*2,n*2);}c.restore();
