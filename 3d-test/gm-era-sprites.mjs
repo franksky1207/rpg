@@ -66,7 +66,13 @@ export async function mount({host,signal,quality='medium'}={}){
    const playerBounds=release.entries.find(e=>e.id===era.value)?.asset.alphaBounds;
    const playerCanvas=actor?.canvas;
    // visualPlacement has already sized the player CSS box. Compare actual alpha pixels.
-   const playerVisibleHeight=(playerCanvas?.getBoundingClientRect().height||Math.min(h*.87,w*.44))*(playerBounds[3]-playerBounds[1])/512;
+   // GM character atlases can paint outside the declared alphaBounds during idle.
+   // Measure the real canvas alpha footprint, matching the browser visual test.
+   const context=playerCanvas?.getContext('2d'),n=playerCanvas?.width||0;
+   let minY=n,maxY=-1;
+   if(context&&n){const pixels=context.getImageData(0,0,n,n).data;for(let p=3;p<pixels.length;p+=4)if(pixels[p]>16){const y=Math.floor((p-3)/4/n);if(y<minY)minY=y;if(y>maxY)maxY=y;}}
+   const paintedFraction=maxY>=minY?(maxY-minY+1)/n:(playerBounds[3]-playerBounds[1])/512;
+   const playerVisibleHeight=(playerCanvas?.getBoundingClientRect().height||Math.min(h*.87,w*.44))*paintedFraction;
    const {size,actualRatio}=monsterVisibleSize({assetId:entry.assetId,bounds:entry.visualBounds,visual,playerVisibleHeight,stageWidth:w,stageHeight:h});
    const x=half+(half-size)/2+(visual.offsetX||0),y=(h-size)/2+(visual.offsetY||0);
    monster.canvas.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${size}px;height:${size}px;max-width:none`;
