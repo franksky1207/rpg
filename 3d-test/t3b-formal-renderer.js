@@ -248,9 +248,7 @@ async function createSuit(options,bundle){
    monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
    host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
-   const w=host.clientWidth,h=host.clientHeight;const mobile=global.matchMedia('(max-width:760px)').matches;const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44));
-   actor.canvas.style.width=size+'px';actor.canvas.style.height=size+'px';
-   actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
+   layoutKey='';layoutSprites();
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
   }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
  }
@@ -288,10 +286,11 @@ async function createSuit(options,bundle){
  // This changes presentation coordinates only, never event timing or collision rules.
  let layoutKey='';
  function layoutSprites(){
-  const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
+  const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}:${monsterReady}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
   const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
-  for(const canvas of [actor.canvas,enemyCanvas,monsterActor?.canvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
+  for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
+  if(monsterActor&&monsterReady){monsterActor.canvas.style.width=size+'px';monsterActor.canvas.style.height=size+'px';monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
   enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';if(monsterActor)monsterActor.canvas.style.left=enemyCanvas.style.left;
  }
