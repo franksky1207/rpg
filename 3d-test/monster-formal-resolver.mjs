@@ -8,16 +8,11 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
   if(!approvedIds.includes(location))return null;
   const row=findMapping('special-'+location);
   if(!row||row.world!=='both'||row.kind!=='special'||row.specialId!==location)return null;
+  // Owner-verified alternate names, never generic substring matching.
   const universeNames={
-   gold_slime: '星源聚合體',
-   mimic: '虛空誘餌艙',
-   reaper: '終焉協議體',
-   lucky_rabbit: '星運增幅信標',
-   ancient_guardian: '古域警戒機',
-   relic_guardian: '星藏保全體',
-   bandit_king: '暗域黑市王',
-   collector: '星骸回收者',
-   mysterious_traveler: '界域交易使'
+   gold_slime:'星源聚合體',mimic:'虛空誘餌艙',reaper:'終焉協議體',lucky_rabbit:'星運增幅信標',
+   ancient_guardian:'古域警戒機',relic_guardian:'星藏保全體',bandit_king:'暗域黑市王',
+   collector:'星骸回收者',mysterious_traveler:'界域交易使'
   };
   if(name!==(world===2?universeNames[location]:row.name))return null;
   const asset=findAsset(row.assetId);
