@@ -60,3 +60,9 @@
 - 最終候選是否封箱，以第16批報告、最新PR head及合併後main的Actions／Pages實際結果為準。
 
 第16批追加身份語義守衛：名稱明確以艦／艇結尾者使用starship輪廓；核心／主機使用core輪廓；艦長／艦主等指揮官本人不誤判成艦艇。自動尺寸／配色測試不能代替名稱與輪廓逐筆覆核，封箱前須檢視56筆identity-review.json及GM實際圖像。
+
+## 第16批補修：特殊怪正式 Sprite（2026-10-21）
+- 將已完成GM映射的9隻特殊怪正式啟用，銀河／宇宙各9個身份組合。第二紀元有獨立正式名稱，仍以原本specialId作為唯一身份owner，不做模糊名稱推測。
+- `specialcore.js`在既有`visualContext`以`location=enemy.specialId`傳送唯一身份；`monster-formal-resolver.mjs`明確限制9個ID及各紀元名稱；正式Renderer另開`special`模式白名單。
+- 9筆`monster-mappings.json`與生成登錄的狀態改為`special-formal-enabled`，**不增加圖片、不改經驗／傷害／獎勵／掉落／存檔／戰鬥算法**。高維特殊遭遇仍被原邏輯禁止。
+- 驗收須涵蓋18個身份／紀元組合、3種視窗、正式／GM共同版面、模式切換、背景／Fast Catch-up、資源失敗回退、智慧下載與cache清除。靜態契約通過不代表實際瀏覽器、iPhone或Pages已驗收，須記錄真實結果。
