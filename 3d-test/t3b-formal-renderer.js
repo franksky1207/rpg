@@ -310,7 +310,10 @@ async function createSuit(options,bundle){
    const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
    const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
    const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]))));
-   const monsterSize=Math.min(requiredSize,maxSize);
+   // If the narrow enemy lane cannot fit the requested visual ratio, keep the 90% floor:
+   // width containment is preferred but must never silently shrink enemies below it.
+   const floorSize=size*playerVisibleHeight*.9/Math.max(.01,drawnHeightRatio);
+   const monsterSize=Math.max(floorSize,Math.min(requiredSize,maxSize));
    monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
    monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
    monsterActor.canvas.style.left=(w/2+halfApproach+size*.32-monsterSize*.5)+'px';
