@@ -94,8 +94,9 @@ export class MonsterActor{
  async init(){try{const lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
   if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
-  if(clip==='idle'&&this.mapping?.visual.effect==='float')p.y-=.008*Math.sin(elapsedMs/1600*Math.PI*2);
-  if(clip==='idle'&&this.mapping?.visual.effect==='pulse')p.flash+=.035*(1+Math.sin(elapsedMs/1600*Math.PI*2))/2;
+  const effects=this.mapping?.visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(this.canvas);
+  if(effects&&clip==='idle'&&this.mapping?.visual.effect==='float')p.y-=.008*Math.sin(elapsedMs/1600*Math.PI*2);
+  if(effects&&clip==='idle'&&this.mapping?.visual.effect==='pulse')p.flash+=.035*(1+Math.sin(elapsedMs/1600*Math.PI*2))/2;
   // Center the actual alpha region; contain the full subject with pose margins.
   const size=Math.min(n*.68/(r-l),n*.68/(b-t))*512;
   c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
@@ -112,9 +113,12 @@ export class MonsterActor{
 
 // CSS effects live outside the painted canvas, never participate in body measurements.
 // Reduced motion, explicit effects-off and low-end devices retain only base palette.
-export function applyDungeonEffects(canvas,visual={}){
+function dungeonEffectsEnabled(canvas){
  const disabled=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches||globalThis.navigator?.hardwareConcurrency<=2||canvas.closest?.('[data-effects="off"]');
- const glow=visual.sizePolicy==='dungeon'&&!disabled;
+ return !disabled;
+}
+export function applyDungeonEffects(canvas,visual={}){
+ const glow=visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(canvas);
  canvas.style.filter=(palettes[visual.palette]||'none')+(glow?' drop-shadow(0 0 '+(visual.energy===3?3:2)+'px '+(visual.palette?.includes('crimson')?'#833459':'#505b90')+')':'');
  if(glow&&visual.effect==='afterimage')canvas.style.filter+=' drop-shadow(2px 0 1px #453a6540)';
  canvas.dataset.effect=glow?visual.effect||'rim':'off';

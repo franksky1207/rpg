@@ -20,5 +20,12 @@ const report=await page.evaluate(async()=>{
   if(enabled)for(let i=0;i<60;i++){const start=performance.now();renderer.sample({player:{clip:'idle',elapsedMs:i*50},enemy:{clip:'idle',elapsedMs:i*50}});sampleCpuMs.push(performance.now()-start);}
   rows.push({pass,id,mode,world,enabled});
  }
- renderer.dispose();ac.abort();api.clearSpriteCache();sampleCpuMs.sort((a,b)=>a-b);return {passed:true,rows,samplingCpu:{samples:sampleCpuMs.length,p50:sampleCpuMs[Math.floor(sampleCpuMs.length*.5)],p95:sampleCpuMs[Math.floor(sampleCpuMs.length*.95)],max:Math.max(...sampleCpuMs),gpuAndHardwareThermalsMeasured:false},monster:api.monsterStats(),player:api.spriteStats(),realDevice:false};
+ // Effects-off must disable new body motion/flash as well as CSS glow.
+ const {MonsterActor}=await import('./3d-test/monster-actor.mjs'),{createMonsterPool}=await import('./3d-test/monster-sprite-pool.mjs'),probes=createMonsterPool(),probe=document.createElement('div');probe.dataset.effects='off';document.body.append(probe);
+ let effectsOffBodies=0;
+ for(const id of ['void-regular-02','void-regular-04','void-regular-05','void-regular-09']){
+  const row=mappings[id],visual=await new MonsterActor(probes,row.assetId,{identity:id}).init(),raw=await new MonsterActor(probes,row.assetId).init();probe.append(visual.canvas);visual.draw({clip:'idle',elapsedMs:400});raw.draw({clip:'idle',elapsedMs:400});
+  const a=visual.ctx.getImageData(0,0,256,256).data,b=raw.ctx.getImageData(0,0,256,256).data;if(a.some((v,i)=>v!==b[i])||visual.canvas.style.filter.includes('drop-shadow'))throw Error('effects-off-body '+id);effectsOffBodies++;visual.dispose();raw.dispose();
+ }
+ probes.dispose();probe.remove();renderer.dispose();ac.abort();api.clearSpriteCache();sampleCpuMs.sort((a,b)=>a-b);return {passed:true,rows,effectsOffBodies,samplingCpu:{samples:sampleCpuMs.length,p50:sampleCpuMs[Math.floor(sampleCpuMs.length*.5)],p95:sampleCpuMs[Math.floor(sampleCpuMs.length*.95)],max:Math.max(...sampleCpuMs),gpuAndHardwareThermalsMeasured:false},monster:api.monsterStats(),player:api.spriteStats(),realDevice:false};
 });assert.equal(report.rows.length,80);assert.equal(report.monster.refs,0);assert.equal(report.monster.pending,0);assert.equal(report.monster.bytes,0);assert.equal(report.player.refs,0);fs.writeFileSync('/tmp/batch16-cross-mode.json',JSON.stringify(report,null,2));console.log('PASS 80 visual mode switches, start/stop, background cache clear, effects downgrade and high/calamity/alternate exclusions');}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

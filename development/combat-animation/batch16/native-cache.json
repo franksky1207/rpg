@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "nativeChromium": true,
+  "realDevice": false,
+  "sha256": "6b52b6a956847f0ce77c0043187dbc3a85b6e87e12f2026476246187ff8c133d",
+  "cold": {
+    "phase": "complete",
+    "total": 76,
+    "done": 76,
+    "saved": 76,
+    "failed": 0
+  },
+  "warm": {
+    "phase": "complete",
+    "total": 76,
+    "done": 76,
+    "saved": 0,
+    "failed": 0
+  },
+  "corruptDiskRepaired": true,
+  "redownload": {
+    "phase": "complete",
+    "total": 76,
+    "done": 76,
+    "saved": 76,
+    "failed": 0
+  },
+  "sourceExcluded": true
+}

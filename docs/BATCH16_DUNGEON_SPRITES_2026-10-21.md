@@ -52,3 +52,7 @@ PR #66首輪head 89da0b81的GM／Formal發布失敗來自手動更新publication
 - SW測試：batch16-cache.cjs執行真實SW函式與Cache API替身；不將替身宣稱為真機或完整瀏覽器SW驗收。Pages上線後另核對實際資源指紋與真實入口。
 
 PR #66中間head 203492b0的10項Actions全成功。追加的V-01 SW白名單、快取測試、80次視覺切換、資源超時及完整證據必須以其後最終head重新驗收；203492b0綠燈不能代替最終head。發布前不改傷害／HP／ATK／DEF／掉落／存檔／VIP／離線或Fast計算。
+
+## 原生SW與完整效果降級
+
+另以真正Chromium Service Worker／CacheStorage實測76個選定媒體：首次預載saved76／failed0；warm再預載saved0；V-01磁碟毀損重新驗SHA並修復；清除後重新預載saved76／failed0；開發PNG不入快取。測試已納入batch16-native-cache-browser.cjs，仍不代表iPhone OS背景或耗電測試。效果關閉策略由同一Actor helper共用，除了CSS輪廓光，亦停用本批新增的漂浮與脈動；四個V-01身份在效果關閉時Canvas像素與無特效原型逐位元一致，保留基本配色與原有動作。這些追加檢查須以最終PR head的Actions確認。
