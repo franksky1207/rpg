@@ -259,6 +259,7 @@ async function createSuit(options,bundle){
   const clip=e.clip==='return'?'idle':e.clip==='dodge'?'hit':e.clip||'idle';
   const tick=Math.floor(elapsed/(clip==='idle'?50:35)),key=clip+':'+tick;
   if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),palette:monsterMapping.visual.palette});monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';return;}}
+  if(monsterActor.canvas.style.width!==(monsterActor.canvas.width/monsterActor.canvas.height*parseFloat(monsterActor.canvas.style.height))+'px'){layoutKey='';layoutSprites();}
   const shift=Number.isFinite(e.approach)?Math.min(.42,Math.max(0,e.approach))*140:0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
@@ -290,9 +291,9 @@ async function createSuit(options,bundle){
   if(key===layoutKey||!w||!h)return;layoutKey=key;
   const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
   for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
-  if(monsterActor&&monsterReady){monsterActor.canvas.style.width=size+'px';monsterActor.canvas.style.height=size+'px';monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';}
+  if(monsterActor&&monsterReady){const ratio=monsterActor.canvas.width/monsterActor.canvas.height;monsterActor.canvas.style.width=(size*ratio)+'px';monsterActor.canvas.style.height=size+'px';monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
-  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';if(monsterActor)monsterActor.canvas.style.left=enemyCanvas.style.left;
+  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';if(monsterActor)monsterActor.canvas.style.left=(w/2-size*.18+halfApproach-(monsterActor.canvas.width/monsterActor.canvas.height-1)*size/2)+'px';
  }
  layoutSprites();
  let lastEnemyRenderKey=null;
