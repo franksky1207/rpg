@@ -1,6 +1,6 @@
 // Shared visual adapter, no battle state or owned timers. Formal activation is separate.
 import {pose} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
-import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-batch16-dungeons2';
+import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-special-formal1';
 export {palettes};
 export function monsterPose(type,clip,ms){
  const p={...pose(clip,ms,{rootMotion:true})},t=Math.min(1,ms/700),s=Math.sin(Math.PI*t);
