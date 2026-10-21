@@ -141,7 +141,7 @@ async function create(options){
  }catch(error){dispose();throw error;}
 }
 async function prepareSuit(options){
- const [{release},{monsterVisibleSize}]=await Promise.all([import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),import('./monster-visible-size.mjs?v=20261021-gm-formal-size1')]);
+ const {release}=await import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1');
  if(release.schema!=="cw.era-player-sprites.v1")throw Error("unapproved-formal-sprites");
  const identity=['galaxy','universe','higher'].includes(options.eraVisualId)?{ready:true,visualId:options.eraVisualId}:global.CivilizationEraAppearanceContract?.resolve({world:options.world??options.appearance?.world});
  const entry=release.entries.find(e=>e.id==='era-'+identity?.visualId);
@@ -203,7 +203,7 @@ else scheduleWarm();
 
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [{WholeSuitActor},{createSpritePool}]=await runtime();
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261021-batch15-pair1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -235,7 +235,7 @@ async function createSuit(options,bundle){
   try{
    const [{resolveFormalMonster},{MonsterActor}]=await Promise.all([
     import('./monster-formal-resolver.mjs?v=20261021-batch14-formal1'),
-    import('./monster-actor.mjs?v=20261021-batch14-formal1')
+    import('./monster-actor.mjs?v=20261021-batch15-pair1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const approved=resolveFormalMonster({mode:bundle.enemyMode,world:bundle.enemyWorld,kind:bundle.enemyKind,name:bundle.enemyName,location:bundle.enemyLocation,id:bundle.enemyId});
@@ -292,17 +292,7 @@ async function createSuit(options,bundle){
   for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
   enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
-  // Batch 15-1: compare actual alpha heights, not equal-sized transparent canvases.
-  // Cap at the available enemy lane; the 90% floor is verified by monster-scale.mjs.
-  if(monsterActor&&monsterMapping){
-   const visual=monsterMapping.visual||{},bounds=monsterActor.entry.visualBounds;
-   const playerVisibleHeight=(bundle.entry.asset.alphaBounds[3]-bundle.entry.asset.alphaBounds[1])/512;
-   const {size:monsterSize,actualRatio}=monsterVisibleSize({assetId:monsterActor.entry.assetId,bounds,visual,playerVisibleHeight:size*playerVisibleHeight,stageWidth:w,stageHeight:h});
-   monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
-   monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
-   monsterActor.canvas.style.left=(w/2+halfApproach+size*.32-monsterSize*.5)+'px';
-   monsterActor.canvas.dataset.actualRatio=actualRatio.toFixed(3);
-  }
+  if(monsterActor&&monsterMapping)applyBattleSpriteLayout(actor,monsterActor,w,h,monsterMapping.visual);
  }
  layoutSprites();
  let lastEnemyRenderKey=null;

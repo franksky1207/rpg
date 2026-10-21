@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "fault": "http",
+      "requests": 14,
+      "recoveredWithoutReload": true,
+      "continuousReentries": 12,
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 2097152,
+        "hits": 0,
+        "loads": 14,
+        "images": [],
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "realDevice": false
+    },
+    {
+      "fault": "integrity",
+      "requests": 14,
+      "recoveredWithoutReload": true,
+      "continuousReentries": 12,
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 2097152,
+        "hits": 0,
+        "loads": 14,
+        "images": [],
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "realDevice": false
+    },
+    {
+      "fault": "decode",
+      "requests": 14,
+      "recoveredWithoutReload": true,
+      "continuousReentries": 12,
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 2097152,
+        "hits": 0,
+        "loads": 14,
+        "images": [],
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "realDevice": false
+    },
+    {
+      "fault": "leave-download",
+      "requests": 14,
+      "recoveredWithoutReload": true,
+      "continuousReentries": 12,
+      "stats": {
+        "entries": 0,
+        "bytes": 0,
+        "limit": 2097152,
+        "hits": 0,
+        "loads": 14,
+        "images": [],
+        "pending": 0,
+        "refs": 0,
+        "closed": false
+      },
+      "realDevice": false
+    }
+  ]
+}

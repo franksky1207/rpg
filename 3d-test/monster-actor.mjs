@@ -28,6 +28,59 @@ export function monsterPlacement(width,height,visual={},scale=visual.scale||1){
  const pivot=visual.pivot||[.5,.5];
  return {size,x:(width-size)/2+size*.68*(.5-pivot[0])+(visual.offsetX||0),y:(height-size)/2+size*.68*(.5-pivot[1])+(visual.offsetY||0)};
 }
+
+// Formal combat owns the pair's scale. Both consumers fit this same pair uniformly.
+const kindScale={
+    'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
+    'mech-01':1.38,'mech-02':1.53,'mech-03':1.78,'veh-02':1.3,
+    'ship-01':1.38,'ship-04':1.78,'fort-01':1.72,'fort-03':1.85,
+    'beast-01':1.16,'beast-03':1.65,'bio-02':1.54,'core-01':1.25,'core-03':1.74,'energy-01':1.34
+   };
+const footprints=new WeakMap();
+export function visibleFootprint(actor){
+ const key=actor.entry,tier=actor.canvas.width;
+ if(footprints.get(key)?.has(tier))return footprints.get(key).get(tier);
+ actor.draw({clip:'idle',elapsedMs:0});
+ const c=actor.canvas,n=c.width,data=c.getContext('2d').getImageData(0,0,n,n).data;
+ let l=n,t=n,r=-1,b=-1;
+ for(let i=3;i<data.length;i+=4)if(data[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}
+ if(r<l||b<t)throw Error('empty-sprite-footprint');
+ let minH=Infinity,maxH=0;
+ for(let ms=0;ms<1600;ms+=25){
+  actor.draw({clip:'idle',elapsedMs:ms});const d=c.getContext('2d').getImageData(0,0,n,n).data;let top=n,bottom=-1;
+  for(let i=3;i<d.length;i+=4)if(d[i]>16){const y=Math.floor((i-3)/4/n);top=Math.min(top,y);bottom=Math.max(bottom,y);}
+  const h=(bottom-top+1)/n;minH=Math.min(minH,h);maxH=Math.max(maxH,h);
+ }
+ actor.draw({clip:'idle',elapsedMs:0});
+ const result={minH,maxH,l:l/n,t:t/n,r:(r+1)/n,b:(b+1)/n,w:(r-l+1)/n,h:(b-t+1)/n};
+ if(!footprints.has(key))footprints.set(key,new Map());footprints.get(key).set(tier,result);return result;
+}
+export function battleSpriteLayout(player,monster,width,height,visual={}){
+ const p=visibleFootprint(player),m=visibleFootprint(monster);
+ const ratio=Math.max(.9*p.maxH/p.h*m.h/m.minH,Math.min(2.3,(kindScale[monster.entry.assetId]||1)*(Number(visual.scale)||1)));
+ // Unit = the player's painted idle height. Offsets retain their 512px design units.
+ const ps=1/p.h,ms=ratio/m.h,gap=.22;
+ const ox=(visual.offsetX||0)/512,oy=(visual.offsetY||0)/512;
+ const px=-(p.l+p.r)/2*ps-p.w*ps/2-gap/2;
+ const mx=-(m.l+m.r)/2*ms+m.w*ms/2+gap/2+ox;
+ const py=-(p.t+p.b)/2*ps,my=-(m.t+m.b)/2*ms+oy;
+ // Fit canvas envelopes as well as alpha: animated poses stay within the stage.
+ const left=Math.min(px,mx),right=Math.max(px+ps,mx+ms);
+ const top=Math.min(py,my),bottom=Math.max(py+ps,my+ms);
+ const scale=Math.min(width/(right-left),height/(bottom-top));
+ const x=(width-(right-left)*scale)/2-left*scale,y=(height-(bottom-top)*scale)/2-top*scale;
+ const box=(a,b,size)=>({x:x+a*scale,y:y+b*scale,size:size*scale});
+ return {player:box(px,py,ps),monster:box(mx,my,ms),ratio};
+}
+export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
+ const layout=battleSpriteLayout(player,monster,width,height,visual);
+ for(const [actor,key] of [[player,'player'],[monster,'monster']]){
+  const b=layout[key],s=actor.canvas.style;
+  Object.assign(s,{position:'absolute',left:b.x+'px',top:b.y+'px',width:b.size+'px',height:b.size+'px',maxWidth:'none',right:'auto'});
+ }
+ monster.canvas.dataset.actualRatio=String(layout.ratio);return layout;
+}
+
 export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
   this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});

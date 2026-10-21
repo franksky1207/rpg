@@ -1,6 +1,5 @@
 import {registry,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261020-twenty-gm1';
-import {MonsterActor,visualPlacement} from './monster-actor.mjs?v=20261020-twenty-gm1';
-import {monsterVisibleSize} from './monster-visible-size.mjs?v=20261021-gm-formal-size1';
+import {MonsterActor,visualPlacement,applyBattleSpriteLayout} from './monster-actor.mjs?v=20261021-batch15-pair1';
 import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261020-twenty-gm1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
@@ -40,7 +39,7 @@ export async function mount({host,signal,quality='medium'}={}){
   const entry=missing?{...row,asset:{...row.asset,sha256:'0'.repeat(64)},weaponAnimation:{...row.weaponAnimation,body:{...row.weaponAnimation.body,sha256:'0'.repeat(64)}}}:row;
   try{const next=await new WholeSuitActor(pool,entry,{tier:quality,signal:loading.signal}).init();
    if(closed||!authorized||ticket!==serial){next.dispose();return;}
-   actor=next;actor.canvas.dataset.suit=row.id;actor.canvas.style.cssText='position:absolute;left:calc(50% - 90px);top:20px;height:180px;width:180px;max-width:100%;object-fit:contain';preview.append(actor.canvas);placeholder.hidden=true;transform();animation.play('idle',visualNow);status.textContent='已載入，可檢查六種動作。';
+   actor=next;actor.draw({clip:'idle',elapsedMs:0});actor.canvas.dataset.suit=row.id;actor.canvas.style.cssText='position:absolute;left:calc(50% - 90px);top:20px;height:180px;width:180px;max-width:100%;object-fit:contain';preview.append(actor.canvas);placeholder.hidden=true;transform();animation.play('idle',visualNow);status.textContent='已載入，可檢查六種動作。';
   }catch{if(!closed&&ticket===serial){status.textContent='缺圖或驗證失敗：已安全回退文字，未修改正式資料。';placeholder.textContent='角色暫時無法顯示';}}
   diagnostics();
  }
@@ -61,23 +60,7 @@ export async function mount({host,signal,quality='medium'}={}){
    const p=visualPlacement(b,half,h,1);
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
-  if(monster){
-   const visual=selectedMapping()?.visual||{},entry=monster.entry;
-   const playerBounds=release.entries.find(e=>e.id===era.value)?.asset.alphaBounds;
-   const playerCanvas=actor?.canvas;
-   // visualPlacement has already sized the player CSS box. Compare actual alpha pixels.
-   // GM character atlases can paint outside the declared alphaBounds during idle.
-   // Measure the real canvas alpha footprint, matching the browser visual test.
-   const context=playerCanvas?.getContext('2d'),n=playerCanvas?.width||0;
-   let minY=n,maxY=-1;
-   if(context&&n){const pixels=context.getImageData(0,0,n,n).data;for(let p=3;p<pixels.length;p+=4)if(pixels[p]>16){const y=Math.floor((p-3)/4/n);if(y<minY)minY=y;if(y>maxY)maxY=y;}}
-   const paintedFraction=maxY>=minY?(maxY-minY+1)/n:(playerBounds[3]-playerBounds[1])/512;
-   const playerVisibleHeight=(playerCanvas?.getBoundingClientRect().height||Math.min(h*.87,w*.44))*paintedFraction;
-   const {size,actualRatio}=monsterVisibleSize({assetId:entry.assetId,bounds:entry.visualBounds,visual,playerVisibleHeight,stageWidth:w,stageHeight:h});
-   const x=half+(half-size)/2+(visual.offsetX||0),y=(h-size)/2+(visual.offsetY||0);
-   monster.canvas.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${size}px;height:${size}px;max-width:none`;
-   monster.canvas.dataset.actualRatio=actualRatio.toFixed(3);
-  }
+  if(actor&&monster)applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});
  }
  async function showMonster(){
   clearMonster();duelLayout();const id=$('[data-monster]').value,ticket=monsterSerial;
