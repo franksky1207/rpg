@@ -10,6 +10,14 @@ const approvedFollowup=Object.freeze({
  'index.html':'feca31e9a962a97e4e687df0f3e10a41c9430e52'
 });
 function original(p){
+ if(p==='combat-events.js'){
+  const before=cp.execFileSync('git',['show','f2d37f4c382248e3130f66d400246dc5e42e3639:'+p]);
+  const from='id:text(enemy.id)||text(enemy.bossId),';
+  const to='id:text(enemy.id)||text(enemy.bossId)||text(enemy.calamityId)||text(enemy.higherDimensionalBossId),';
+  assert.equal(before.toString().split(from).length,2,'exact single identity projection');
+  assert.equal(fs.readFileSync(p,'utf8'),before.toString().replace(from,to),'only Batch17 source IDs may extend presentation metadata');
+  return before;
+ }
  if(Object.hasOwn(approvedFollowup,p)){
   // Batch16 special: normalize only the two reviewed entrypoint cache revisions.
   // All remaining bytes still pass the immutable blob comparison below.

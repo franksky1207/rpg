@@ -101,7 +101,7 @@ PR編號與連結、最新head、各測試實測結果、合併main SHA、Runtim
 
 首輪Actions的六個歷史守衛／fixture驗證鏈因新增兩個呈現身份來源而失敗；相關失敗log與同head狀態已存development/combat-animation/batch17。實際combat-events.js僅將既有calamityId／higherDimensionalBossId加入enemy.id來源，無戰鬥計算或State修改；待補修採與開工main全檔位元比較，只允許該精確替換，歷史fixture原文亦完全不變。
 
-自動核准審查拒絕執行原equipment-formal-fixture-history.py生成器同步live owner驗證雜湊，要求使用者明確授權此精確驗證鏈同步及守衛例外。已提出確認，尚未取得回覆；未執行被拒絕的同步，也未正式合併。工作區保留具體待審核補修；PR仍為草稿。
+歷史阻擋：自動核准審查曾要求使用者明確授權精確驗證鏈同步及守衛例外。使用者於2026-10-22（臺灣時間）回覆「是」後，已執行原equipment-formal-fixture-history.py生成器：只更新現役combat-events.js摘要與衍生驗證常數，歷史fixture原文及beforeSHA256完全保留。精確守衛比較整份開工main檔案，只允許calamityId／higherDimensionalBossId兩欄位擴充；同步、發布產物與核心安全守衛已通過，完整回歸及最新head Actions待續。
 
 最終main SHA：尚無第17批合併SHA。Runtime／正式main／Pages第17批發布驗收：未完成；不得以目前main的舊版已上線或新增Gate成功宣稱本批封箱。
 
@@ -113,7 +113,7 @@ PR編號與連結、最新head、各測試實測結果、合併main SHA、Runtim
 - 完整Batch6原始套件已實際執行；本機第一輪19／32（36個不同原始測試，同次執行、無前輪重用），其中12個原始測試因環境未安裝預設Playwright瀏覽器而失敗。改用環境既有system Chromium及本機SDK適配後，該12項全部重測通過，沒有變更斷言；這份環境恢復結果不混算成同次32／32。
 - ca1b0e79的GitHub Batch6為28／32，四個失敗項為Renderer／GM fixture及其歷史彙整，根因均為上述被阻擋的live owner SHA驗證鏈；其餘跨模式、背景、極簡、離線、存檔、轉生與音訊回歸通過。仍不可宣稱完整Batch6已通過。
 
-[180筆完整倍率表](../development/combat-animation/batch17/height-results.md)；[待授權的精確守衛補修差異](../development/combat-animation/batch17/proposed-fixture-guard.patch)。後者僅是待審核patch，尚未提交至PR的實際守衛，也未用它更新fixture驗證鏈。
+[180筆完整倍率表](../development/combat-animation/batch17/height-results.md)；[經使用者授權的精確守衛補修差異](../development/combat-animation/batch17/proposed-fixture-guard.patch)。後者保留本次授權的具體差異；實際守衛與fixture驗證鏈已依此精確更新。
 
 ### 正式候選與視覺跨模式
 
@@ -121,4 +121,4 @@ PR編號與連結、最新head、各測試實測結果、合併main SHA、Runtim
 
 另於現役正式Renderer完成260次既有跨模式切換（地圖、懸賞、競技場、虛空、鏡像、18特殊怪紀元組合及排除情境），背景清快取、特效降級、重入及最終lease歸零皆通過。合法第17批Boss及投影另由180版面案例與五真實入口驗證，不以原排除情境冒充新Boss正式驗收。
 
-整體仍停在精確fixture驗證鏈同步／守衛例外的自動核准阻擋；未宣稱全部Actions、main合併、Runtime或正式Pages已成功。真實iPhone人工清單維持：長時間FPS／卡頓、溫度、耗電、記憶體、快速切換與清資源後重入、OS背景掛起／恢復及真帳號雲端。
+精確fixture同步已獲使用者授權並完成；目前等待最新head完整回歸、Actions、main合併及正式發布驗收。真實iPhone人工清單維持：長時間FPS／卡頓、溫度、耗電、記憶體、快速切換與清資源後重入、OS背景掛起／恢復及真帳號雲端。

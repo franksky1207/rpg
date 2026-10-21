@@ -33,7 +33,14 @@ const approvedBatch14=new Set([...approvedBatch13,'3d-test/monster-formal-resolv
 const batch14Authorized=approvedBatch14;
 assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).formalBattleEnabled,true,'Batch14 must explicitly authorize map-monster visuals');
 assert.equal(JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).formalBattleEnabled,true,'Batch14 identity registry must be approved');
-const unexpected=changed.filter(p=>p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
+// Batch17 permits only the exact source-ID projection, with every other byte locked.
+require('./pr48-presentation-baseline.cjs').original('combat-events.js');
+const history=JSON.parse(fs.readFileSync('3d-test/fixture-owner-history.json','utf8'));
+const sealedHistory=JSON.parse(run('show','f2d37f4c382248e3130f66d400246dc5e42e3639:3d-test/fixture-owner-history.json'));
+sealedHistory.sources['combat-events.js'].afterSHA256=crypto.createHash('sha256').update(fs.readFileSync('combat-events.js')).digest('hex');
+assert.deepEqual(history,sealedHistory,'only live owner digest changes; historical fixture sources remain immutable');
+const approvedBatch17=new Set(['combat-events.js','3d-test/fixture-owner-history.json']);
+const unexpected=changed.filter(p=>!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
