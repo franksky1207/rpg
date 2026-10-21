@@ -248,9 +248,7 @@ async function createSuit(options,bundle){
    monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
    host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
-   const w=host.clientWidth,h=host.clientHeight;const mobile=global.matchMedia('(max-width:760px)').matches;const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44));
-   actor.canvas.style.width=size+'px';actor.canvas.style.height=size+'px';
-   actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
+   layoutKey='';layoutSprites();
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
   }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
  }
@@ -291,9 +289,36 @@ async function createSuit(options,bundle){
   const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
   const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
-  for(const canvas of [actor.canvas,enemyCanvas,monsterActor?.canvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
+  for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
-  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';if(monsterActor)monsterActor.canvas.style.left=enemyCanvas.style.left;
+  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
+  // Batch 15-1: compare actual alpha heights, not equal-sized transparent canvases.
+  // Cap at the available enemy lane; the 90% floor is verified by monster-scale.mjs.
+  if(monsterActor&&monsterMapping){
+   const visual=monsterMapping.visual||{},bounds=monsterActor.entry.visualBounds;
+   const playerVisibleHeight=(bundle.entry.asset.alphaBounds[3]-bundle.entry.asset.alphaBounds[1])/512;
+   const kindScale={
+    'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
+    'mech-01':1.38,'mech-02':1.53,'mech-03':1.78,'veh-02':1.3,
+    'ship-01':1.38,'ship-04':1.78,'fort-01':1.72,'fort-03':1.85,
+    'beast-01':1.16,'beast-03':1.65,'bio-02':1.54,'core-01':1.25,'core-03':1.74,'energy-01':1.34
+   };
+   const targetRatio=Math.max(.9,Math.min(2.3,(kindScale[monsterActor.entry.assetId]||1)*(Number(visual.scale)||1)));
+   const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
+   const drawnWidthRatio=Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]));
+   const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
+   // Screen-space scaling uses the actual clipped-alpha dimensions, not the square bitmap.
+   // Preserve a 90% visible-height minimum even in narrow portrait stages.
+   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,drawnWidthRatio));
+   // If the narrow enemy lane cannot fit the requested visual ratio, keep the 90% floor:
+   // width containment is preferred but must never silently shrink enemies below it.
+   const floorSize=size*playerVisibleHeight*.9/Math.max(.01,drawnHeightRatio);
+   const monsterSize=Math.max(floorSize,Math.min(requiredSize,maxSize));
+   monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
+   monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
+   monsterActor.canvas.style.left=(w/2+halfApproach+size*.32-monsterSize*.5)+'px';
+   monsterActor.canvas.dataset.actualRatio=(monsterSize*drawnHeightRatio/(size*playerVisibleHeight)).toFixed(3);
+  }
  }
  layoutSprites();
  let lastEnemyRenderKey=null;
