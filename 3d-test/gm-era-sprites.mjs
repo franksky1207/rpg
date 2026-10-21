@@ -1,5 +1,5 @@
 import {registry,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261020-twenty-gm1';
-import {MonsterActor,visualPlacement,monsterPlacement} from './monster-actor.mjs?v=20261020-twenty-gm1';
+import {MonsterActor,visualPlacement} from './monster-actor.mjs?v=20261020-twenty-gm1';
 import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261020-twenty-gm1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
@@ -61,19 +61,29 @@ export async function mount({host,signal,quality='medium'}={}){
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
   if(monster){
-   const v=selectedMapping()?.visual||{},entry=registry.assets.find(a=>a.assetId===$('[data-monster]').value);
-   const [l,t,r,b]=entry?.visualBounds||[0,0,512,512];
-   // Actor.draw() makes the alpha body occupy ~68% of its canvas. Match the visible
-   // body height against the player's alpha-bounds placement, not raw canvas sizes.
-   const playerBounds=release.entries.find(e=>e.id===era.value)?.asset.alphaBounds;
-   const playerCanvas=actor?.canvas;
-   const playerVisibleHeight=playerBounds&&playerCanvas?(playerBounds[3]-playerBounds[1])/512*playerCanvas.getBoundingClientRect().height:h*.62;
-   const bodyFraction=Math.min(.68, .68*(b-t)/Math.max(r-l,b-t));
-   const nominal=monsterPlacement(half,h,v).size;
-   const minimum=playerVisibleHeight*.92/Math.max(.12,bodyFraction);
-   const size=Math.max(nominal,minimum);
-   const x=half+(half-size)/2+(v.offsetX||0),y=(h-size)/2+(v.offsetY||0);
+   // Mirror the formal renderer's Batch 15-1 visual size policy, including asset
+   // class scale and 90% minimum. The selected identity modifies color and ratio,
+   // but the prototype and identity preview share the same placement algorithm.
+   const visual=selectedMapping()?.visual||{},entry=monster.entry;
+   const bounds=entry.visualBounds,playerBounds=release.entries.find(e=>e.id===era.value)?.asset.alphaBounds;
+   const playerSize=actor?.canvas.getBoundingClientRect().width||Math.min(h*.87,w*.44);
+   const playerAlpha=(playerBounds[3]-playerBounds[1])/512;
+   const kindScale={
+    'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
+    'mech-01':1.38,'mech-02':1.53,'mech-03':1.78,'veh-02':1.3,
+    'ship-01':1.38,'ship-04':1.78,'fort-01':1.72,'fort-03':1.85,
+    'beast-01':1.16,'beast-03':1.65,'bio-02':1.54,'core-01':1.25,'core-03':1.74,'energy-01':1.34
+   };
+   const targetRatio=Math.max(.9,Math.min(2.3,(kindScale[entry.assetId]||1)*(Number(visual.scale)||1)));
+   const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
+   const drawnWidthRatio=Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]));
+   const requiredSize=playerSize*playerAlpha*targetRatio/Math.max(.01,drawnHeightRatio);
+   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,drawnWidthRatio));
+   const floorSize=playerSize*playerAlpha*.9/Math.max(.01,drawnHeightRatio);
+   const size=Math.max(floorSize,Math.min(requiredSize,maxSize));
+   const x=half+(half-size)/2+(visual.offsetX||0),y=(h-size)/2+(visual.offsetY||0);
    monster.canvas.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${size}px;height:${size}px;max-width:none`;
+   monster.canvas.dataset.actualRatio=(size*drawnHeightRatio/(playerSize*playerAlpha)).toFixed(3);
   }
  }
  async function showMonster(){
