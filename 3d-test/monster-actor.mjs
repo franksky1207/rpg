@@ -28,6 +28,19 @@ export function monsterPlacement(width,height,visual={},scale=visual.scale||1){
  const pivot=visual.pivot||[.5,.5];
  return {size,x:(width-size)/2+size*.68*(.5-pivot[0])+(visual.offsetX||0),y:(height-size)/2+size*.68*(.5-pivot[1])+(visual.offsetY||0)};
 }
+
+// Baseline sizes are expressed against the player's visible 430/512 sprite height.
+// Apply each monster's official scale without ever dropping below 90% of the player.
+export const PLAYER_VISIBLE_FRACTION=430/512;
+export function monsterVisibleSize(entry,visual={}){
+ const [l,t,r,b]=entry.visualBounds;
+ const subjectHeight=b-t,subjectWidth=r-l;
+ const requested=Number.isFinite(visual.scale)?visual.scale:1;
+ const visibleFraction=Math.max(PLAYER_VISIBLE_FRACTION*.90,Math.min(PLAYER_VISIBLE_FRACTION*1.80,PLAYER_VISIBLE_FRACTION*requested));
+ const containment=Math.min(.94/(subjectWidth/subjectHeight),.94);
+ const naturalHeight=Math.min(visibleFraction,containment);
+ return {visibleFraction:naturalHeight,relativeToPlayer:naturalHeight/PLAYER_VISIBLE_FRACTION,scale:requested};
+}
 export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
   this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
@@ -35,8 +48,9 @@ export class MonsterActor{
  async init(){try{this.lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed)throw Error('monster-aborted');if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
   if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
-  // Center the actual alpha region; contain the full subject with pose margins.
-  const size=Math.min(n*.68/(r-l),n*.68/(b-t))*512;
+  // Subject size is driven by approved per-identity scale, with a 90%-of-player minimum.
+  const target=monsterVisibleSize(a,this.mapping?.visual||{});
+  const size=n*target.visibleFraction*512/(b-t);
   c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
   c.drawImage(this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
   if(p.flash){c.globalCompositeOperation='source-atop';c.globalAlpha=p.flash;c.fillStyle='#fff';c.fillRect(-n,-n,n*2,n*2);}c.restore();
