@@ -13,7 +13,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   const frame=page.frames()[1];await frame.waitForLoadState();
   await frame.addScriptTag({url:new URL('3d-test/t3b-formal-renderer.js',base).href});
   await page.exposeFunction('captureBatch16',async id=>{if(['galaxy-bounty-15','universe-arena-03','void-regular-02','void-regular-04','void-regular-05','void-regular-09','void-boss-10'].includes(id))await frame.locator('#formal').screenshot({path:'/tmp/batch16-'+viewport.width+'-'+id+'.png'});});
-  const result=await frame.evaluate(async()=>{
+  const result=await frame.evaluate(async specialRows=>{
    window.requestAnimationFrame=()=>0; // Freeze both consumers at the same canonical idle frame.
    const {mount}=await import('./gm-era-sprites.mjs');
    const {mappings,registry}=await import('./monster-sprites.mjs');
@@ -25,10 +25,10 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    function read(c){const n=c.width,d=c.getContext('2d').getImageData(0,0,n,n).data,box=c.getBoundingClientRect();let l=n,t=n,r=-1,b=-1;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}return {height:(b-t+1)/n*box.height,left:box.left+l/n*box.width,right:box.left+(r+1)/n*box.width,top:box.top+t/n*box.height,bottom:box.top+(b+1)/n*box.height};}
    function pair(host,p,m){const player=read(p),monster=read(m),stage=host.getBoundingClientRect();return {playerHeight:player.height,monsterHeight:monster.height,ratio:monster.height/player.height,contained:[player,monster].every(b=>b.left>=stage.left-.01&&b.right<=stage.right+.01&&b.top>=stage.top-.01&&b.bottom<=stage.bottom+.01),separated:player.right<monster.left};}
    async function select(selector,value){const e=gm.querySelector(selector);e.value=value;e.dispatchEvent(new Event('change'));}
-   for(const row of Object.values(mappings).filter(r=>r.mode)){
+   for(const row of [...Object.values(mappings).filter(r=>r.mode),...specialRows]){
     const errors=[];let view=null,battle=null,formalSupported=false;
     const world=row.world==='universe'?2:1;
-    const identity={mode:row.mode,world,name:row.name,kind:row.kind,id:row.id,location:row.mode==='arena'?String(row.arenaStage):row.mode==='void'?String(row.isBossFloor?(row.bossCycle+1)*10:1):null};
+    const identity={mode:row.mode,world,name:row.name,kind:row.kind,id:row.id,location:row.mode==='special'?row.specialId:row.mode==='arena'?String(row.arenaStage):row.mode==='void'?String(row.isBossFloor?(row.bossCycle+1)*10:1):null};
     const ac=new AbortController();let renderer;
     try{
      const era='era-'+(world===1?'galaxy':'universe');
@@ -39,7 +39,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      view=pair(gm.querySelector('.gm-suit-preview'),gm.querySelector('canvas[data-suit]'),enemy);
      const expected=document.createElement('canvas');applyDungeonEffects(expected,row.visual);
      if(enemy.style.filter!==expected.style.filter)errors.push('palette');
-     if(!view.contained||!view.separated||view.ratio<1||view.ratio>1.5)errors.push('gm-layout');
+     if(!view.contained||!view.separated||view.ratio<(row.mode==='special'?.9:1)||view.ratio>(row.mode==='special'?2.3:1.5))errors.push('gm-layout');
      const approved=resolveFormalMonster(identity);formalSupported=!!approved;
      if(!approved)errors.push('formal-resolution');
      if(approved){
@@ -50,7 +50,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
       const sample=()=>renderer.sample({player:{clip:'idle',elapsedMs:0},enemy:{clip:'idle',elapsedMs:0}});sample();
       await wait(()=>{sample();return formal.querySelector('.formal-b-verified-monster');});
       battle=pair(formal,formal.querySelector('[data-suit]'),formal.querySelector('[data-monster]'));
-      if(!battle.contained||!battle.separated||battle.ratio<1||battle.ratio>1.5)errors.push('formal-layout');
+      if(!battle.contained||!battle.separated||battle.ratio<(row.mode==='special'?.9:1)||battle.ratio>(row.mode==='special'?2.3:1.5))errors.push('formal-layout');
       if(Math.abs(battle.ratio-view.ratio)>(1+Math.max(battle.ratio,view.ratio))/64/Math.min(battle.playerHeight,view.playerHeight))errors.push('ratio-mismatch');
       if(formal.querySelector('[data-monster]').style.filter!==enemy.style.filter)errors.push('formal-palette');
       await window.captureBatch16(row.id);
@@ -68,7 +68,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    }
    mounted.dispose();window.CivilizationFormalBRenderer.clearSpriteCache();
    return {rows,stats:window.CivilizationFormalBRenderer.monsterStats(),total:Object.keys(mappings).length,assets:registry.assets.length};
-  });
+  },require('./batch16-special-fixtures.cjs'));
   for(const row of result.rows){report.rows.push({viewport,...row});if(row.errors.length)report.failures.push({viewport,id:row.id,errors:row.errors});}
   console.log('identities',viewport.width,result.total,'failures',result.rows.filter(r=>r.errors.length).length,result.rows.filter(r=>r.errors.length).slice(0,2));await page.close();
  }

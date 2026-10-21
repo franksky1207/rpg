@@ -16413,7 +16413,7 @@
       "tier": "low",
       "assetId": "energy-01",
       "variantId": "special-gold_slime",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.96,
@@ -16438,7 +16438,7 @@
       "tier": "high",
       "assetId": "fort-01",
       "variantId": "special-mimic",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 1.11,
@@ -16463,7 +16463,7 @@
       "tier": "high",
       "assetId": "mech-02",
       "variantId": "special-reaper",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "crimson",
         "scale": 1.11,
@@ -16488,7 +16488,7 @@
       "tier": "low",
       "assetId": "energy-01",
       "variantId": "special-lucky_rabbit",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 0.96,
@@ -16513,7 +16513,7 @@
       "tier": "low",
       "assetId": "dr-02",
       "variantId": "special-ancient_guardian",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "ancient",
         "scale": 0.85,
@@ -16538,7 +16538,7 @@
       "tier": "mid",
       "assetId": "mech-01",
       "variantId": "special-relic_guardian",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "gold",
         "scale": 1.11,
@@ -16563,7 +16563,7 @@
       "tier": "mid",
       "assetId": "cmd-01",
       "variantId": "special-bandit_king",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "rust",
         "scale": 1.05,
@@ -16588,7 +16588,7 @@
       "tier": "mid",
       "assetId": "hm-02",
       "variantId": "special-collector",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "steel",
         "scale": 0.91,
@@ -16613,7 +16613,7 @@
       "tier": "high",
       "assetId": "hm-02",
       "variantId": "special-mysterious_traveler",
-      "status": "gm-integrated-formal-disabled",
+      "status": "special-formal-enabled",
       "visual": {
         "palette": "violet",
         "scale": 0.91,

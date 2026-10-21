@@ -1,6 +1,6 @@
 // Shared visual adapter, no battle state or owned timers. Formal activation is separate.
 import {pose} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
-import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-batch16-dungeons2';
+import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-special-formal1';
 export {palettes};
 export function monsterPose(type,clip,ms){
  const p={...pose(clip,ms,{rootMotion:true})},t=Math.min(1,ms/700),s=Math.sin(Math.PI*t);
@@ -65,7 +65,7 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
   ratio=Math.max(min,Math.min(max,Number(visual.visibleRatio)||1.1));
  }
  // Unit = the player's painted idle height. Offsets retain their 512px design units.
- const ps=1/p.h,ms=ratio/m.h,gap=visual.sizePolicy==='dungeon'?.65:.22;
+ const ps=1/p.h,ms=ratio/m.h,boundedApproach=visual.sizePolicy==='dungeon'||monster.mapping?.kind==='special',gap=boundedApproach?.65:.22;
  const ox=(visual.offsetX||0)/512,oy=(visual.offsetY||0)/512;
  const px=-(p.l+p.r)/2*ps-p.w*ps/2-gap/2;
  const mx=-(m.l+m.r)/2*ms+m.w*ms/2+gap/2+ox;
@@ -76,7 +76,7 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
  const scale=Math.min(width/(right-left),height/(bottom-top));
  const x=(width-(right-left)*scale)/2-left*scale,y=(height-(bottom-top)*scale)/2-top*scale;
  const box=(a,b,size)=>({x:x+a*scale,y:y+b*scale,size:size*scale});
- return {player:box(px,py,ps),monster:box(mx,my,ms),ratio,approachLimit:visual.sizePolicy==='dungeon'?gap*.15*scale:Infinity};
+ return {player:box(px,py,ps),monster:box(mx,my,ms),ratio,approachLimit:boundedApproach?gap*.15*scale:Infinity};
 }
 export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
  const layout=battleSpriteLayout(player,monster,width,height,visual);
