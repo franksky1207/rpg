@@ -1,7 +1,7 @@
-import {resolveFormalMirror} from './monster-formal-resolver.mjs?v=20261021-batch16-dungeons1';
-import {registry,mappings,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261021-batch16-dungeons1';
-import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects} from './monster-actor.mjs?v=20261021-batch16-dungeons1';
-import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261021-batch16-dungeons1';
+import {resolveFormalMirror} from './monster-formal-resolver.mjs?v=20261021-batch16-dungeons2';
+import {registry,mappings,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261021-batch16-dungeons2';
+import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects} from './monster-actor.mjs?v=20261021-batch16-dungeons2';
+import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261021-batch16-dungeons2';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1';
 import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1';

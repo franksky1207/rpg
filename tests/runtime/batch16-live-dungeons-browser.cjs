@@ -8,7 +8,8 @@ try{for(const world of [1,2])for(const mode of ['bounty','arena','void','mirror'
  await page.goto(base);await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
  await page.evaluate(({world,mode})=>{
   state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='第16批測試者';state.level=world===2?600:50;state.secondWorld.entered=world===2;state.hp=1000;
-  window.playerCombatStats=()=>({hp:1000,atk:50,def:5,crit:0,dodge:0});Math.random=()=>.5;window.effectiveCombatSpeed=()=>1;
+  window.playerCombatStats=()=>({hp:1000,atk:50,def:5,crit:0,dodge:0});// W2 arena must last long enough to observe a genuine cold-load frame.
+  if(world===2&&mode==='arena')window.playerCombatStats=()=>({hp:10000,atk:1000,def:500,crit:0,dodge:0});Math.random=()=>.5;window.effectiveCombatSpeed=()=>1;
   if(mode==='bounty'){enterBountyDungeon();startBountyFight(false);}
   if(mode==='arena'){openArenaDungeon();startArenaDungeon('normal');startArenaStageFight(false);}
   if(mode==='void'){enterVoidMirageDungeon();startVoidMirageChallengeUI();}

@@ -1,5 +1,5 @@
 // Explicit map/dungeon presentation whitelist. No fuzzy identity matching or gameplay writes.
-import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch16-dungeons1';
+import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch16-dungeons2';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  if(!registry.formalBattleEnabled||![1,2].includes(world))return null;
  if(['bounty','arena','void'].includes(mode)){

@@ -6,6 +6,12 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
  // Read exact declarations from actual gameplay owners without running gameplay.
  function constants(file,names){const source=fs.readFileSync(file,'utf8'),ctx=vm.createContext({Object});for(const name of names){const start=source.indexOf(' const '+name+'=');assert.ok(start>=0);const end=source.indexOf(';',start);vm.runInContext(source.slice(start,end+1).replace(' const ','var '),ctx);}return ctx;}
  const bounty=constants('dungeonbounty.js',['BOUNTY_NAMES','UNIVERSE_BOUNTY_NAMES']),arena=constants('dungeonarena.js',['ARENA_ENEMY_NAMES_BY_WORLD']),voids=constants('dungeonvoid.js',['VOID_MIRAGE_REGULAR_NAMES','VOID_MIRAGE_BOSS_NAMES']);
+ const reviewed={
+  '暗物質武裝艇':'ship-01','萬域私戰艦':'ship-04','跨域劫掠主機':'core-01',
+  '深空封鎖母艦':'ship-04','跨域掠奪母艦':'ship-04','戰爭失控核心':'core-01'
+ };
+ for(const [name,id] of Object.entries(reviewed))assert.equal(rows.find(r=>r.name===name)?.assetId,id,'reviewed silhouette: '+name);
+ assert.notEqual(rows.find(r=>r.name==='幻域支配者').visual.palette,rows.find(r=>r.name==='虛境帝皇').visual.palette,'shared ruler silhouettes have distinct palettes');
  assert.equal(rows.length,56);assert.equal(new Set(rows.map(r=>r.id)).size,56);
  for(const [world,key] of [['galaxy','BOUNTY_NAMES'],['universe','UNIVERSE_BOUNTY_NAMES']])assert.deepEqual(rows.filter(r=>r.world===world&&r.mode==='bounty').map(r=>r.name),Array.from(Object.values(bounty[key]).flat()));
  for(const [world,w] of [['galaxy',1],['universe',2]])assert.deepEqual(rows.filter(r=>r.world===world&&r.mode==='arena').map(r=>r.name),Array.from(arena.ARENA_ENEMY_NAMES_BY_WORLD[w]));
@@ -15,6 +21,9 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
   assert.equal(resolveFormalMonster(input)?.mapping.id,row.id);
   for(const mode of ['calamity','alternate','special','thirdworld-arena','mirror'])assert.equal(resolveFormalMonster({...input,mode}),null);
   assert.equal(resolveFormalMonster({...input,world:3}),null);assert.equal(resolveFormalMonster({...input,name:row.name+'偽'}),null);assert.equal(resolveFormalMonster({...input,kind:'boss'}),null);
+  const silhouette=assets.find(a=>a.assetId===row.assetId);
+  if(/(?:艦|艇)$/.test(row.name))assert.ok(silhouette.path.includes('/starship/'),'ship-name must use a ship silhouette: '+row.name);
+  if(/(?:核心|主機)$/.test(row.name))assert.ok(silhouette.path.includes('/core/'),'core-name must use a core silhouette: '+row.name);
   assert.equal(row.visual.sizePolicy,'dungeon');assert.ok(row.visual.visibleRatio>=1&&row.visual.visibleRatio<=1.5);
  }
  assert.deepEqual(rows.filter(r=>r.assetId==='void-phantom-v01').map(r=>r.name),['幻境遊魂','異相戰影','迷界殘像','空間殘響']);
