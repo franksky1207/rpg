@@ -1,0 +1,63 @@
+name: Batch17 Boss Sprite Acceptance
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  boss-sprites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python3 -m pip install Pillow==11.3.0
+          npm install --prefix /tmp/batch17-browser --no-save playwright@1.55.0
+          /tmp/batch17-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify exact owner identities, protected data and cache recovery
+        run: |
+          set -euo pipefail
+          python3 tests/runtime/batch13-monster-assets.py
+          python3 tests/runtime/batch17-boss-assets.py
+          python3 scripts/generate-monster-trial-registry.py --check
+          node tests/runtime/batch17-boss-contract.cjs
+          node tests/runtime/batch17-cache.cjs
+          node --test tests/runtime/batch13-monster-pool.test.mjs
+          node scripts/build-publish-dry-run.cjs
+      - name: Verify actual boss and projection Canvas, GM, failure recovery and native cache
+        env:
+          NODE_PATH: /tmp/batch17-browser/node_modules
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/batch17-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/runtime/batch17-all-identities-browser.cjs
+          node tests/runtime/batch17-monster-recovery-browser.cjs
+          node tests/runtime/batch17-live-bosses-browser.cjs
+          node tests/runtime/batch17-fast-switch-browser.cjs
+          node tests/runtime/batch17-native-cache-browser.cjs
+          node tests/runtime/publish-candidate-browser.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: batch17-boss-evidence
+          path: |
+            /tmp/batch17-*.json
+            /tmp/batch17-*.png
+            /tmp/batch16-native-cache.json
+            /tmp/publish-candidate*.json

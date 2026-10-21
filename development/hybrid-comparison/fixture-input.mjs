@@ -3,7 +3,7 @@ export const FIXTURE_SHA='7b551e35c24ac6e9ec676d9d9534f6bd30ebcde026ac945826d979
 export const CONTROLS_SHA='0a5f25b26f3e9500125fe406a358c53da6d722680c03ac33ffd85dc9d4dd6e27';
 export const SOURCE_PATHS=Object.freeze(['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json']);
 export const CASE_IDS=Object.freeze(['normal-baseline','elite-baseline','boss-baseline','boss-player-defeat','elite-effects-owner-input']);
-export const PHASE5_SOURCES_SHA='f1d12a63e7ce9f9afa16d8695dace1dbbebca485b2406d6f35ea52fc478f1cfd';
+export const PHASE5_SOURCES_SHA='b291647208228606d62c3cf53651647719eeee13a4682a1e7c6aaf0f13215d07';
 const verified=new WeakSet(),inputs=new WeakSet();
 export const isVerifiedInput=value=>inputs.has(value);
 const requireValue=(ok,message)=>{if(!ok)throw Error(message);};

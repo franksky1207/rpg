@@ -8,11 +8,11 @@ mappings=read('data/monsters/monster-mappings.json')
 variants=read('data/monsters/monster-variants.json')
 assert m['formalBattleEnabled'] is mappings['formalBattleEnabled'] is True
 assert all(a['formalBattleAllowed'] is True for a in m['assets'])
-assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==21
-assert len(mappings['records'])==len({x['id'] for x in mappings['records']})==665
+assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==33
+assert len(mappings['records'])==len({x['id'] for x in mappings['records']})==695
 assert {x['assetId'] for x in mappings['records']}=={a['assetId'] for a in m['assets']}
 encode=lambda x:json.dumps(x,ensure_ascii=False,separators=(',',':'))
-code='// Approved map and dungeon presentation data; formal consumers enforce explicit scope.\nconst data='+encode(m)+';\n'
+code='// Approved map, dungeon and boss presentation data; formal consumers enforce explicit scope.\nconst data='+encode(m)+';\n'
 code+='const planned='+encode({x['id']:x['assetId'] for x in d['records']})+';\n'
 code+='const identities='+encode({x['id']:x for x in mappings['records']})+';\n'
 code+='const colors='+encode(variants['palettes'])+';\n'

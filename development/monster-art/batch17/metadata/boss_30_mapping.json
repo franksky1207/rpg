@@ -1,0 +1,302 @@
+[
+  {
+    "era": "galaxy",
+    "index": 1,
+    "boss_name": "灰潮母巢",
+    "art_code_or_existing_asset": "bio-02",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.75,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 2,
+    "boss_name": "日蝕王座",
+    "art_code_or_existing_asset": "C-01",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.75,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 3,
+    "boss_name": "星骸迴廊",
+    "art_code_or_existing_asset": "fort-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.8,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 4,
+    "boss_name": "黑域牧者",
+    "art_code_or_existing_asset": "cmd-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.65,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 5,
+    "boss_name": "滅世天環",
+    "art_code_or_existing_asset": "C-02",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.9,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 6,
+    "boss_name": "寂滅方舟",
+    "art_code_or_existing_asset": "ship-04",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 7,
+    "boss_name": "萬域蝕潮",
+    "art_code_or_existing_asset": "energy-01",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.75,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 8,
+    "boss_name": "深核奇點",
+    "art_code_or_existing_asset": "core-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 9,
+    "boss_name": "無聲裁決",
+    "art_code_or_existing_asset": "cmd-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.7,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "galaxy",
+    "index": 10,
+    "boss_name": "終末之眼",
+    "art_code_or_existing_asset": "C-03",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.9,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 1,
+    "boss_name": "彼岸黑潮",
+    "art_code_or_existing_asset": "energy-01",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.7,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 2,
+    "boss_name": "群星焚爐",
+    "art_code_or_existing_asset": "core-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.8,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 3,
+    "boss_name": "邊星獵皇",
+    "art_code_or_existing_asset": "cmd-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.75,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 4,
+    "boss_name": "萬軍葬艦",
+    "art_code_or_existing_asset": "ship-04",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.9,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 5,
+    "boss_name": "超域蝕核",
+    "art_code_or_existing_asset": "core-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 6,
+    "boss_name": "無盡兵災",
+    "art_code_or_existing_asset": "mech-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 7,
+    "boss_name": "星脈噬巢",
+    "art_code_or_existing_asset": "bio-02",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 8,
+    "boss_name": "巨牆戰堡",
+    "art_code_or_existing_asset": "fort-01",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.95,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 9,
+    "boss_name": "深域吞星",
+    "art_code_or_existing_asset": "beast-03",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.9,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "universe",
+    "index": 10,
+    "boss_name": "終戰天穹",
+    "art_code_or_existing_asset": "U-01",
+    "new_art": true,
+    "suggested_visible_height_to_player": 2.0,
+    "specialization": null,
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 1,
+    "boss_name": "破界天裁",
+    "art_code_or_existing_asset": "H-01",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.75,
+    "specialization": "attack",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 2,
+    "boss_name": "永劫重垣",
+    "art_code_or_existing_asset": "H-02",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.95,
+    "specialization": "defense",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 3,
+    "boss_name": "宿因天秤",
+    "art_code_or_existing_asset": "H-03",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.8,
+    "specialization": "critical",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 4,
+    "boss_name": "無相彼岸",
+    "art_code_or_existing_asset": "void-phantom-v01",
+    "new_art": false,
+    "suggested_visible_height_to_player": 1.65,
+    "specialization": "dodge",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 5,
+    "boss_name": "萬象迴演",
+    "art_code_or_existing_asset": "H-05",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.8,
+    "specialization": "combo",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 6,
+    "boss_name": "維隙之刃",
+    "art_code_or_existing_asset": "H-06",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.75,
+    "specialization": "penetration",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 7,
+    "boss_name": "逆因輪轉",
+    "art_code_or_existing_asset": "H-07",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": "counter",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 8,
+    "boss_name": "噬界深淵",
+    "art_code_or_existing_asset": "H-08",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.95,
+    "specialization": "drain",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 9,
+    "boss_name": "先驗之瞳",
+    "art_code_or_existing_asset": "C-03",
+    "new_art": true,
+    "suggested_visible_height_to_player": 1.85,
+    "specialization": "initiative",
+    "status": "planning_only_not_formal_enabled"
+  },
+  {
+    "era": "higher",
+    "index": 10,
+    "boss_name": "高維原點",
+    "art_code_or_existing_asset": "H-10",
+    "new_art": true,
+    "suggested_visible_height_to_player": 2.0,
+    "specialization": "origin",
+    "status": "planning_only_not_formal_enabled"
+  }
+]

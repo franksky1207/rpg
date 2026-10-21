@@ -2,7 +2,7 @@
 const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
 (async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']}),report={passed:false,rows:[]};
-const dungeonRows=JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).records.filter(r=>r.mode).concat(require('./batch16-special-fixtures.cjs'));
+const dungeonRows=JSON.parse(fs.readFileSync('data/monsters/monster-mappings.json')).records.filter(r=>r.visual.sizePolicy==='dungeon').concat(require('./batch16-special-fixtures.cjs'));
 try{for(const row of dungeonRows)for(const fault of ['http','integrity','decode','leave-download']){
  const page=await browser.newPage();await page.route('**/batch15-recovery.html',r=>r.fulfill({contentType:'text/html',body:'<div id="stage" style="position:relative;width:390px;height:240px"></div>'}));
  let broken=true,held,requests=0;

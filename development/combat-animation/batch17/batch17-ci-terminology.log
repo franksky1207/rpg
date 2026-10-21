@@ -1,0 +1,139 @@
+gm-terminology	Exact visible text, syntax and protected runtime contracts	﻿2026-10-21T17:04:25.8455718Z ##[group]Run node --check gm3dprototype.js
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8456180Z [36;1mnode --check gm3dprototype.js[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8456514Z [36;1mnode --check 3d-test/test-center.js[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8456878Z [36;1mnode --check 3d-test/gm-battle-simulation.js[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8457242Z [36;1mnode --check 3d-test/gm-battle-published.mjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8457582Z [36;1mnode --check 3d-test/gm-whole-suit.mjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8457958Z [36;1mnode tests/runtime/gm-animation-center-terminology.cjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8458378Z [36;1mnode tests/runtime/batch12-presentation-safety.cjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8458788Z [36;1mnode tests/runtime/cleanup-batch4-4-final-guard.cjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8459184Z [36;1mnode tests/runtime/cleanup-batch2-4-integration.cjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8459552Z [36;1mnode tests/runtime/t4-preview-retirement.cjs[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8459925Z [36;1mnode tests/runtime/resource-manifest-integrity.js[0m
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8762826Z shell: /usr/bin/bash -e {0}
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:25.8763178Z ##[endgroup]
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.0332183Z PASS GM animation center user-facing terminology and asset cache; two existing tests retained
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1089125Z node:assert:152
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1089962Z   throw new AssertionError(obj);
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1091638Z   ^
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1092097Z
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1092516Z AssertionError [ERR_ASSERTION]: protected formal owner changed: combat-events.js
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1092988Z + actual - expected
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1093235Z ... Skipped lines
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1093365Z
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1093536Z + Buffer(19719) [Uint8Array] [
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1093841Z - Buffer(19658) [Uint8Array] [
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1094122Z     47,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1094310Z     42,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1094488Z     32,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1094663Z     84,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1094838Z     49,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1095020Z ...
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1095196Z     41,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1095373Z +   124,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1095950Z +   124,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1096130Z +   116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1096306Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1096478Z +   120,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1096711Z +   116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1096886Z +   40,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1097063Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1097238Z +   110,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1097412Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1097620Z +   109,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1097794Z +   121,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1097970Z +   46,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1098145Z +   99,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1098317Z +   97,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1098489Z +   108,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1098669Z +   97,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1098846Z +   109,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1099019Z +   105,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1099191Z +   116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1099361Z +   121,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1099535Z +   73,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1099703Z +   100,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1099876Z +   41,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1100051Z +   124,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1100222Z +   124,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1100394Z +   116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1100568Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1100744Z +   120,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1101207Z +   116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1101644Z +   40,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1101977Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1102357Z +   110,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1102653Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1102941Z +   109,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1103219Z +   121,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1103497Z +   46,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1103763Z +   104,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1104040Z +   105,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1104332Z +   103,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1104607Z +   104,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1104889Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1105159Z +   114,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1105435Z +   68,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1105715Z +   105,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1106005Z +   109,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1106305Z +   101,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1106571Z +   110,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1106820Z +   115,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1107086Z +   105,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1107375Z +   111,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1107661Z +   110,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1107938Z +   97,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1108220Z +   108,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1108488Z +   66,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1108758Z +   111,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1109367Z +   115,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1109646Z +   115,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1109922Z +   73,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1110197Z +   100,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1110477Z +   41,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1110770Z     44,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1111281Z     107,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1111586Z     105,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1111880Z     110,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1112194Z     100,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1112369Z
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1113072Z     at Object.<anonymous> (/home/runner/work/rpg/rpg/tests/runtime/batch12-presentation-safety.cjs:5:31)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1114149Z     at Module._compile (node:internal/modules/cjs/loader:1929:14)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1114917Z     at Object..js (node:internal/modules/cjs/loader:2060:10)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1115654Z     at Module.load (node:internal/modules/cjs/loader:1651:32)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1116383Z     at Module._load (node:internal/modules/cjs/loader:1443:12)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1117135Z     at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1118093Z     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1118961Z     at node:internal/main/run_main_module:33:47 {
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1119489Z   generatedMessage: false,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1119903Z   code: 'ERR_ASSERTION',
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1120350Z   actual: Buffer(19719) [Uint8Array] [
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1121372Z      47,  42,  32,  84,  49,  45,  67,  58,  32, 111,  98, 115,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1122066Z     101, 114, 118,  97, 116, 105, 111, 110,  32, 111, 110, 108,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1122699Z     121,  46,  32,  78, 111,  32,  99, 111, 109,  98,  97, 116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1123329Z      32, 109,  97, 116, 104,  44,  32, 115, 116, 111, 114,  97,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1123956Z     103, 101,  44,  32,  97, 117, 100, 105, 111,  44,  32, 114,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1124588Z     101, 110, 100, 101, 114, 105, 110, 103,  32, 111, 114,  32,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1125222Z     116, 105, 109, 101, 114, 115,  46,  32,  42,  47,  10,  40,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1126121Z     102, 117, 110,  99, 116, 105, 111, 110,  40, 103, 108, 111,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1126633Z      98,  97, 108,  41,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1127007Z     ... 19619 more items
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1127373Z   ],
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1127766Z   expected: Buffer(19658) [Uint8Array] [
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1128394Z      47,  42,  32,  84,  49,  45,  67,  58,  32, 111,  98, 115,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1129045Z     101, 114, 118,  97, 116, 105, 111, 110,  32, 111, 110, 108,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1129665Z     121,  46,  32,  78, 111,  32,  99, 111, 109,  98,  97, 116,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1130281Z      32, 109,  97, 116, 104,  44,  32, 115, 116, 111, 114,  97,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1131085Z     103, 101,  44,  32,  97, 117, 100, 105, 111,  44,  32, 114,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1131699Z     101, 110, 100, 101, 114, 105, 110, 103,  32, 111, 114,  32,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1132328Z     116, 105, 109, 101, 114, 115,  46,  32,  42,  47,  10,  40,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1132940Z     102, 117, 110,  99, 116, 105, 111, 110,  40, 103, 108, 111,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1133435Z      98,  97, 108,  41,
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1133788Z     ... 19558 more items
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1134133Z   ],
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1134504Z   operator: 'deepStrictEqual',
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1134904Z   diff: 'simple'
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1135223Z }
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1135385Z
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1135525Z Node.js v24.21.0
+gm-terminology	Exact visible text, syntax and protected runtime contracts	2026-10-21T17:04:26.1177523Z ##[error]Process completed with exit code 1.

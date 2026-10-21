@@ -1,3 +1,5 @@
+> **第17批Boss Sprite施工中（2026-10-21）**：PR #71分支已整合12張新WebP、30個Boss與高維競技投影；180版面、120故障、1827舊身份、222副本／特殊怪及88媒體候選通過。fixture精確同步與兩欄位守衛例外已於2026-10-22獲使用者明確授權並完成，完整回歸及最新head Actions驗證中，尚未合併／發布；正式驗收、同SHA Actions及Pages狀態見 [第17批報告](docs/BATCH17_BOSS_SPRITES_2026-10-21.md)。尚未正式封箱；真實iPhone待人工。
+
 > **第16批副本Sprite整合（2026-10-21）**：56個副本固定身份與銀河／宇宙鏡像沿現役Actor／Renderer／Pool整合；V-01獨立登錄、共用真實Alpha版面owner。範圍、逐身份三視窗、故障恢復與最新發布狀態見 [第16批驗收報告](docs/BATCH16_DUNGEON_SPRITES_2026-10-21.md)。本機168／1827尺寸、224故障、6鏡像、8正式入口、80視覺切換與Batch6 32/32均通過；最新PR head、正式main與Pages封箱證據以PR #66最新紀錄為準，真實iPhone仍待人工。
 
 > **怪物製圖與整合正式SOP（2026-10-21）**：後續所有怪物原型、身份配色、GM預覽、正式Sprite、資源與發布批次，開工前必讀 [docs/MONSTER_ART_PRODUCTION_SOP.md](docs/MONSTER_ART_PRODUCTION_SOP.md)。沿用第13批20圖與第15-4批609身份驗收成功方法；真實Alpha、正式／GM共用Actor尺寸、逐身份三視窗、故障恢復及同SHA Actions／main／Pages為強制門檻。最新main為唯一真實來源。

@@ -1,0 +1,30 @@
+{
+  "head": "ca1b0e79c00c2d2c317df6cc7853144e1987d83c",
+  "pr": "https://github.com/franksky1207/rpg/pull/71",
+  "bossWorkflow": {
+    "run": 39640446114,
+    "job": 119362237930,
+    "conclusion": "success",
+    "url": "https://github.com/franksky1207/rpg/actions/runs/39640446114"
+  },
+  "mainMerged": false,
+  "pagesBatch17Deployed": false,
+  "blocked": "Auto-review requires explicit user authorization for exact fixture live digest sync and identity projection guard exception. Awaiting response; no update or merge performed.",
+  "dungeonWorkflow": {
+    "run": 39640445971,
+    "conclusion": "success",
+    "url": "https://github.com/franksky1207/rpg/actions/runs/39640445971"
+  },
+  "initialHeadChecks": {
+    "success": 3,
+    "failure": 7,
+    "pending": 0
+  },
+  "batch6CI": {
+    "total": 32,
+    "passed": 28,
+    "failed": 4,
+    "sameRun": true,
+    "reason": "Renderer/GM fixture SHA chain blocks four entries; full original suite executed"
+  }
+}

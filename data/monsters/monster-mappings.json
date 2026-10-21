@@ -18271,6 +18271,846 @@
       },
       "isBossFloor": true,
       "bossCycle": 9
+    },
+    {
+      "id": "galaxy-calamity-01",
+      "bossId": "earth",
+      "bossIndex": 0,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "灰潮母巢",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "bio-02",
+      "status": "batch17-formal-enabled",
+      "artCode": "bio-02",
+      "visual": {
+        "palette": "earth",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.75
+      }
+    },
+    {
+      "id": "galaxy-calamity-02",
+      "bossId": "solar",
+      "bossIndex": 1,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "日蝕王座",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "boss-c-01-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "C-01",
+      "visual": {
+        "palette": "original",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.75
+      }
+    },
+    {
+      "id": "galaxy-calamity-03",
+      "bossId": "nearstar",
+      "bossIndex": 2,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "星骸迴廊",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "fort-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "fort-03",
+      "visual": {
+        "palette": "steel",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.8
+      }
+    },
+    {
+      "id": "galaxy-calamity-04",
+      "bossId": "frontier",
+      "bossIndex": 3,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "黑域牧者",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "cmd-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "cmd-03",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.65
+      }
+    },
+    {
+      "id": "galaxy-calamity-05",
+      "bossId": "orion",
+      "bossIndex": 4,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "滅世天環",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "boss-c-02-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "C-02",
+      "visual": {
+        "palette": "original",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.9
+      }
+    },
+    {
+      "id": "galaxy-calamity-06",
+      "bossId": "galactic-frontier",
+      "bossIndex": 5,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "寂滅方舟",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "ship-04",
+      "status": "batch17-formal-enabled",
+      "artCode": "ship-04",
+      "visual": {
+        "palette": "deep-space",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "ranged-shot",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "galaxy-calamity-07",
+      "bossId": "galactic-mid",
+      "bossIndex": 6,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "萬域蝕潮",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "energy-01",
+      "status": "batch17-formal-enabled",
+      "artCode": "energy-01",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.75
+      }
+    },
+    {
+      "id": "galaxy-calamity-08",
+      "bossId": "core-outer",
+      "bossIndex": 7,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "深核奇點",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "core-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "core-03",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "galaxy-calamity-09",
+      "bossId": "core-war",
+      "bossIndex": 8,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "無聲裁決",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "cmd-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "cmd-03",
+      "visual": {
+        "palette": "white",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.7
+      }
+    },
+    {
+      "id": "galaxy-calamity-10",
+      "bossId": "galactic-unification",
+      "bossIndex": 9,
+      "mode": "calamity",
+      "world": "galaxy",
+      "name": "終末之眼",
+      "kind": "civilization-calamity",
+      "source": "calamityconfig.js",
+      "assetId": "boss-c-03-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "C-03",
+      "visual": {
+        "palette": "boss-eye-red",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.9
+      }
+    },
+    {
+      "id": "universe-calamity-01",
+      "bossId": "universe-calamity-01",
+      "bossIndex": 0,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "彼岸黑潮",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "energy-01",
+      "status": "batch17-formal-enabled",
+      "artCode": "energy-01",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.7
+      }
+    },
+    {
+      "id": "universe-calamity-02",
+      "bossId": "universe-calamity-02",
+      "bossIndex": 1,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "群星焚爐",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "core-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "core-03",
+      "visual": {
+        "palette": "rust",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.8
+      }
+    },
+    {
+      "id": "universe-calamity-03",
+      "bossId": "universe-calamity-03",
+      "bossIndex": 2,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "邊星獵皇",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "cmd-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "cmd-03",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.75
+      }
+    },
+    {
+      "id": "universe-calamity-04",
+      "bossId": "universe-calamity-04",
+      "bossIndex": 3,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "萬軍葬艦",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "ship-04",
+      "status": "batch17-formal-enabled",
+      "artCode": "ship-04",
+      "visual": {
+        "palette": "steel",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "ranged-shot",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.9
+      }
+    },
+    {
+      "id": "universe-calamity-05",
+      "bossId": "universe-calamity-05",
+      "bossIndex": 4,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "超域蝕核",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "core-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "core-03",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "universe-calamity-06",
+      "bossId": "universe-calamity-06",
+      "bossIndex": 5,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "無盡兵災",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "mech-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "mech-03",
+      "visual": {
+        "palette": "crimson",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "mechanical-strike",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "universe-calamity-07",
+      "bossId": "universe-calamity-07",
+      "bossIndex": 6,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "星脈噬巢",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "bio-02",
+      "status": "batch17-formal-enabled",
+      "artCode": "bio-02",
+      "visual": {
+        "palette": "earth",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "universe-calamity-08",
+      "bossId": "universe-calamity-08",
+      "bossIndex": 7,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "巨牆戰堡",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "fort-01",
+      "status": "batch17-formal-enabled",
+      "artCode": "fort-01",
+      "visual": {
+        "palette": "sand",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "stationary-shot",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.95
+      }
+    },
+    {
+      "id": "universe-calamity-09",
+      "bossId": "universe-calamity-09",
+      "bossIndex": 8,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "深域吞星",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "beast-03",
+      "status": "batch17-formal-enabled",
+      "artCode": "beast-03",
+      "visual": {
+        "palette": "deep-space",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pounce",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.9
+      }
+    },
+    {
+      "id": "universe-calamity-10",
+      "bossId": "universe-calamity-10",
+      "bossIndex": 9,
+      "mode": "calamity",
+      "world": "universe",
+      "name": "終戰天穹",
+      "kind": "civilization-calamity",
+      "source": "secondworldcalamity.js",
+      "assetId": "boss-u-01-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "U-01",
+      "visual": {
+        "palette": "original",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "ranged-shot",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 2.0
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-01",
+      "bossId": "higher-dimensional-boss-01",
+      "bossIndex": 0,
+      "mode": "main",
+      "world": "higher",
+      "name": "破界天裁",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-01-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-01",
+      "visual": {
+        "palette": "ice",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.75
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-02",
+      "bossId": "higher-dimensional-boss-02",
+      "bossIndex": 1,
+      "mode": "main",
+      "world": "higher",
+      "name": "永劫重垣",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-02-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-02",
+      "visual": {
+        "palette": "gold",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.95
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-03",
+      "bossId": "higher-dimensional-boss-03",
+      "bossIndex": 2,
+      "mode": "main",
+      "world": "higher",
+      "name": "宿因天秤",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-03-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-03",
+      "visual": {
+        "palette": "original",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.8
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-04",
+      "bossId": "higher-dimensional-boss-04",
+      "bossIndex": 3,
+      "mode": "main",
+      "world": "higher",
+      "name": "無相彼岸",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "void-phantom-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "void-phantom-v01",
+      "visual": {
+        "palette": "spectral-blue",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.65
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-05",
+      "bossId": "higher-dimensional-boss-05",
+      "bossIndex": 4,
+      "mode": "main",
+      "world": "higher",
+      "name": "萬象迴演",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-05-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-05",
+      "visual": {
+        "palette": "violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.8
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-06",
+      "bossId": "higher-dimensional-boss-06",
+      "bossIndex": 5,
+      "mode": "main",
+      "world": "higher",
+      "name": "維隙之刃",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-06-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-06",
+      "visual": {
+        "palette": "cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "short-thrust",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.75
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-07",
+      "bossId": "higher-dimensional-boss-07",
+      "bossIndex": 6,
+      "mode": "main",
+      "world": "higher",
+      "name": "逆因輪轉",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-07-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-07",
+      "visual": {
+        "palette": "original",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-08",
+      "bossId": "higher-dimensional-boss-08",
+      "bossIndex": 7,
+      "mode": "main",
+      "world": "higher",
+      "name": "噬界深淵",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-08-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-08",
+      "visual": {
+        "palette": "deep-violet",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pounce",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.95
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-09",
+      "bossId": "higher-dimensional-boss-09",
+      "bossIndex": 8,
+      "mode": "main",
+      "world": "higher",
+      "name": "先驗之瞳",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-c-03-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "C-03",
+      "visual": {
+        "palette": "boss-eye-cyan",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 1.85
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-10",
+      "bossId": "higher-dimensional-boss-10",
+      "bossIndex": 9,
+      "mode": "main",
+      "world": "higher",
+      "name": "高維原點",
+      "kind": "boss",
+      "source": "thirdworlddata.js",
+      "assetId": "boss-h-10-v01",
+      "status": "batch17-formal-enabled",
+      "artCode": "H-10",
+      "visual": {
+        "palette": "original",
+        "scale": 1,
+        "pivot": [
+          0.5,
+          0.5
+        ],
+        "offsetX": 0,
+        "offsetY": 0,
+        "facing": "left-3/4",
+        "animationType": "pulse",
+        "maxStageFraction": 0.47,
+        "sizePolicy": "boss",
+        "visibleRatio": 2.0
+      }
     }
   ]
 }

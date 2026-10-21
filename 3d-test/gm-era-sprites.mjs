@@ -1,7 +1,7 @@
-import {resolveFormalMirror} from './monster-formal-resolver.mjs?v=20261021-special-formal1';
-import {registry,mappings,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261021-special-formal1';
-import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects} from './monster-actor.mjs?v=20261021-special-formal1';
-import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261021-special-formal1';
+import {resolveFormalMirror} from './monster-formal-resolver.mjs?v=20261021-batch17-boss1';
+import {registry,mappings,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261021-batch17-boss1';
+import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects} from './monster-actor.mjs?v=20261021-batch17-boss1';
+import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261021-batch17-boss1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1';
 import {createSpritePool} from './equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1';
@@ -13,7 +13,7 @@ export async function mount({host,signal,quality='medium'}={}){
  let monster=null,monsterLoading=null,monsterSerial=0,monsterClip='idle',lastFrame=-1;
  let visualNow=0,lastTick=null,lastClip="idle",mirrorPlayerName='預覽角色';
  let closed=false,authorized=false,actor=null,loading=null,serial=0,raf=0,lastAuth=-Infinity,authPending=false,lastStats=0;
- host.innerHTML='<section class="gm-suit"><p>三紀元完整角色 · 隔離預覽，不修改角色、裝備或存檔。</p><label>副本預覽 <select data-dungeon><option value="">地圖／原型</option><option value="galaxy/bounty">銀河懸賞</option><option value="universe/bounty">宇宙懸賞</option><option value="galaxy/arena">銀河競技場</option><option value="universe/arena">宇宙競技場</option><option value="both/void">虛空幻境</option><option value="galaxy/mirror">銀河鏡像</option><option value="universe/mirror">宇宙鏡像</option></select></label> <label>怪物原型 <select data-monster><option value="">關閉（角色測試）</option></select></label> <label>使用此原型的怪物 <select data-monster-identity><option value="">選擇怪物身份</option></select></label> <label>紀元 <select data-era><option value="era-galaxy">銀河</option><option value="era-universe">宇宙</option><option value="era-higher">高維</option></select></label><label>速度 <select data-speed><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label> <button type="button" data-replay>重播動作</button><p>正式攻擊：短距離上挑斬。沿用原身體、獨立武器與肘甲遮擋；蓄力、上挑、命中停頓、收回。</p><p data-monster-description role="status">選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。</p><div class="gm-suit-preview" style="position:relative;height:240px;overflow:hidden;margin-inline:auto;max-width:100%"><span data-target role="img" aria-label="攻擊距離參考目標" style="position:absolute;top:96px;width:24px;height:40px;border:2px solid #9cb8cc;display:flex;align-items:center;font-size:11px;pointer-events:none">目標</span><span data-placeholder>確認 GM 權限中</span></div><div class="gm-b-hud" data-monster-hud hidden><div><span>玩家</span><progress max="100" value="100" aria-label="玩家測試血條"></progress></div><div><span data-monster-name>怪物</span><progress max="100" value="100" aria-label="怪物測試血條"></progress></div></div><div class="gm-monster-actions" hidden>怪物：<button data-monster-action="idle">待機</button> <button data-monster-action="attack">攻擊</button> <button data-monster-action="hit">受擊</button> <button data-monster-action="dodge">閃避</button> <button data-monster-action="return">回位</button> <button data-monster-action="defeat">死亡</button> <button data-duel>怪物攻擊玩家</button> <button data-player-duel>玩家攻擊怪物</button></div><p data-monster-status role="status"></p><details data-monster-shared hidden><summary>共用身份與外觀參數</summary><pre data-monster-identities style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto"></pre></details><p class="gm-suit-status" role="status" data-status></p><div class="gm-suit-actions"></div><button type="button" data-missing>測試缺圖回退</button> <button type="button" data-reload>重新載入</button><pre data-diagnostics style="white-space:pre-wrap"></pre></section>';
+ host.innerHTML='<section class="gm-suit"><p>三紀元完整角色 · 隔離預覽，不修改角色、裝備或存檔。</p><label>副本預覽 <select data-dungeon><option value="">地圖／原型</option><option value="galaxy/calamity">銀河災厄</option><option value="universe/calamity">宇宙災厄</option><option value="higher/main">高維十王</option><option value="galaxy/bounty">銀河懸賞</option><option value="universe/bounty">宇宙懸賞</option><option value="galaxy/arena">銀河競技場</option><option value="universe/arena">宇宙競技場</option><option value="both/void">虛空幻境</option><option value="galaxy/mirror">銀河鏡像</option><option value="universe/mirror">宇宙鏡像</option></select></label> <button type="button" data-boss-compare>第17批30隻並排比較</button><div data-boss-gallery hidden style="display:none;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px"></div> <label>怪物原型 <select data-monster><option value="">關閉（角色測試）</option></select></label> <label>使用此原型的怪物 <select data-monster-identity><option value="">選擇怪物身份</option></select></label> <label>紀元 <select data-era><option value="era-galaxy">銀河</option><option value="era-universe">宇宙</option><option value="era-higher">高維</option></select></label><label>速度 <select data-speed><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label> <button type="button" data-replay>重播動作</button><p>正式攻擊：短距離上挑斬。沿用原身體、獨立武器與肘甲遮擋；蓄力、上挑、命中停頓、收回。</p><p data-monster-description role="status">選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。</p><div class="gm-suit-preview" style="position:relative;height:240px;overflow:hidden;margin-inline:auto;max-width:100%"><span data-target role="img" aria-label="攻擊距離參考目標" style="position:absolute;top:96px;width:24px;height:40px;border:2px solid #9cb8cc;display:flex;align-items:center;font-size:11px;pointer-events:none">目標</span><span data-placeholder>確認 GM 權限中</span></div><div class="gm-b-hud" data-monster-hud hidden><div><span>玩家</span><progress max="100" value="100" aria-label="玩家測試血條"></progress></div><div><span data-monster-name>怪物</span><progress max="100" value="100" aria-label="怪物測試血條"></progress></div></div><div class="gm-monster-actions" hidden>怪物：<button data-monster-action="idle">待機</button> <button data-monster-action="attack">攻擊</button> <button data-monster-action="hit">受擊</button> <button data-monster-action="dodge">閃避</button> <button data-monster-action="return">回位</button> <button data-monster-action="defeat">死亡</button> <button data-duel>怪物攻擊玩家</button> <button data-player-duel>玩家攻擊怪物</button></div><p data-monster-status role="status"></p><details data-monster-shared hidden><summary>共用身份與外觀參數</summary><pre data-monster-identities style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto"></pre></details><p class="gm-suit-status" role="status" data-status></p><div class="gm-suit-actions"></div><button type="button" data-missing>測試缺圖回退</button> <button type="button" data-reload>重新載入</button><pre data-diagnostics style="white-space:pre-wrap"></pre></section>';
  const ui=host.firstElementChild,$=s=>ui.querySelector(s),preview=$('.gm-suit-preview'),placeholder=$('[data-placeholder]'),status=$('[data-status]'),era=$('[data-era]');
  for(const a of registry.assets){const option=document.createElement('option');option.value=a.assetId;option.textContent=a.name+' · '+a.assetId;$('[data-monster]').append(option);}
  function selectedMapping(){
@@ -21,10 +21,29 @@ export async function mount({host,signal,quality='medium'}={}){
   return findMapping($('[data-monster-identity]').value);
  }
  $('[data-monster]').append(new Option('鏡像角色（正式玩家外觀）','mirror'));
+ let gallerySerial=0;
+ $('[data-boss-compare]').addEventListener('click',async()=>{
+  const gallery=$('[data-boss-gallery]'),ticket=++gallerySerial;
+  gallery.hidden=!gallery.hidden;gallery.style.display=gallery.hidden?'none':'grid';
+  if(gallery.hidden){gallery.replaceChildren();return;}
+  gallery.replaceChildren();
+  // Sequential one-shot snapshots: no gallery RAF, no persistent battle Actors.
+  for(const row of Object.values(mappings).filter(r=>r.status==='batch17-formal-enabled')){
+   if(closed||!authorized||ticket!==gallerySerial)break;
+   const thumb=new MonsterActor(monsterPool,row.assetId,{identity:row.id,signal:own.signal,tier:'low'});
+   try{await thumb.init();thumb.draw({clip:'idle',elapsedMs:0});
+    if(closed||!authorized||ticket!==gallerySerial)break;
+    const fig=document.createElement('figure'),img=document.createElement('img'),label=document.createElement('figcaption');
+    img.src=thumb.canvas.toDataURL();img.width=img.height=112;img.alt=row.name;img.style.filter=thumb.canvas.style.filter;
+    label.textContent=row.name+' · '+row.artCode+' · '+row.visual.palette+' · '+row.visual.visibleRatio+'×';
+    fig.style.margin='0';fig.append(img,label);gallery.append(fig);
+   }catch{if(!closed)gallery.append(document.createTextNode(row.name+'：載入失敗，可重試'));}finally{thumb.dispose();}
+  }
+ },{signal:own.signal});
  $('[data-dungeon]').addEventListener('change',async()=>{
   const value=$('[data-dungeon]').value;
   if(!value){$('[data-monster]').value='';sharedIdentities();await showMonster();return;}
-  const [world,mode]=value.split('/');era.value=world==='universe'?'era-universe':'era-galaxy';await show();
+  const [world,mode]=value.split('/');era.value='era-'+(world==='both'?'galaxy':world);await show();
   if(mode==='mirror'){$('[data-monster]').value='mirror';sharedIdentities();await showMonster();return;}
   const rows=Object.values(mappings).filter(r=>r.mode===mode&&r.world===world),select=$('[data-monster-identity]');
   select.replaceChildren(...rows.map(r=>new Option(r.name,r.id)));
