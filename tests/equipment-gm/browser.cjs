@@ -21,8 +21,8 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
    await frame.locator(`[data-action="${action}"]`).click();
    await frame.locator('canvas').evaluate((c,action)=>new Promise((resolve,reject)=>{const end=performance.now()+5000;function poll(){let n=0;const a=c.getContext('2d').getImageData(0,0,c.width,c.height).data;for(let i=3;i<a.length;i+=4)if(a[i]>16)n++;if(c.dataset.clip===action&&(action==='defeat'?n===0:n>500))return resolve();if(performance.now()>end)return reject(Error('raster '+action));requestAnimationFrame(poll);}poll();}),action);
   }
-  await frame.locator('[data-action="idle"]').click();await frame.locator('[data-scale]').selectOption('1');await frame.locator('[data-direction]').selectOption('-1');assert.ok((await frame.locator('canvas').getAttribute('style')).includes('scale(-1'));
-  await frame.locator('[data-direction]').selectOption('1');await frame.locator('[data-viewport]').selectOption('mobile');await frame.locator('[data-scale]').selectOption('0.8');
+  await frame.locator('[data-action="idle"]').click();
+  assert.equal(await frame.locator('[data-scale],[data-direction],[data-viewport]').count(),0,'retired GM presentation controls stay removed');
   const box=await frame.locator('canvas').boundingBox();assert.ok(box.width>100&&box.width<viewport.width);
  }
  await frame.locator('[data-missing]').click();await frame.locator('[data-status]').filter({hasText:'安全回退'}).waitFor();assert.equal(await frame.locator('canvas').count(),0);
