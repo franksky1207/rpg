@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "rows": [
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "appearance": "galaxy",
+      "gmRatio": 1.060041407867495,
+      "ratio": 1.0600901812827828,
+      "reflectedError": 15653,
+      "unflippedError": 3192385,
+      "reflectedRaster": true,
+      "sixActions": true
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "appearance": "universe",
+      "gmRatio": 1.060041407867495,
+      "ratio": 1.0600901812827828,
+      "reflectedError": 20955,
+      "unflippedError": 3238975,
+      "reflectedRaster": true,
+      "sixActions": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "appearance": "galaxy",
+      "gmRatio": 1.059983007646559,
+      "ratio": 1.0600901812827828,
+      "reflectedError": 15653,
+      "unflippedError": 3192385,
+      "reflectedRaster": true,
+      "sixActions": true
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "appearance": "universe",
+      "gmRatio": 1.0600554909156001,
+      "ratio": 1.0600901812827828,
+      "reflectedError": 20955,
+      "unflippedError": 3238975,
+      "reflectedRaster": true,
+      "sixActions": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "appearance": "galaxy",
+      "gmRatio": 1.060041407867495,
+      "ratio": 1.0600901812827828,
+      "reflectedError": 15653,
+      "unflippedError": 3192385,
+      "reflectedRaster": true,
+      "sixActions": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "appearance": "universe",
+      "gmRatio": 1.060041407867495,
+      "ratio": 1.0600901812827828,
+      "reflectedError": 20955,
+      "unflippedError": 3238975,
+      "reflectedRaster": true,
+      "sixActions": true
+    }
+  ]
+}

@@ -74,7 +74,7 @@ export async function mount({host,signal,quality='medium'}={}){
    const p=visualPlacement(b,half,h,1);
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
-  if(actor&&monster){const layout=applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});$('[data-monster-description]').dataset.actualRatio=String(layout.ratio);}
+  if(actor&&monster){const layout=applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});$('[data-monster-description]').dataset.actualRatio=String(layout.ratio);const label=$('[data-monster-description]');label.textContent=label.textContent.replace(/｜實測可見倍率.*$/,'')+'｜實測可見倍率 '+layout.ratio.toFixed(3)+'×';}
  }
  async function showMonster(){
   clearMonster();duelLayout();const id=$('[data-monster]').value,ticket=monsterSerial;

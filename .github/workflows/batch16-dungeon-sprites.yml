@@ -45,6 +45,7 @@ jobs:
           done
           node tests/runtime/batch16-all-identities-browser.cjs
           node tests/runtime/batch16-mirror-browser.cjs
+          node tests/runtime/batch16-live-dungeons-browser.cjs
           node tests/runtime/batch16-monster-recovery-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
