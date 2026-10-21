@@ -305,8 +305,11 @@ async function createSuit(options,bundle){
    };
    const targetRatio=Math.max(.9,Math.min(2.3,(kindScale[monsterActor.entry.assetId]||1)*(Number(visual.scale)||1)));
    const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
+   const drawnWidthRatio=Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]));
    const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
-   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]))));
+   // Screen-space scaling uses the actual clipped-alpha dimensions, not the square bitmap.
+   // Preserve a 90% visible-height minimum even in narrow portrait stages.
+   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,drawnWidthRatio));
    // If the narrow enemy lane cannot fit the requested visual ratio, keep the 90% floor:
    // width containment is preferred but must never silently shrink enemies below it.
    const floorSize=size*playerVisibleHeight*.9/Math.max(.01,drawnHeightRatio);
