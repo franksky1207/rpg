@@ -60,10 +60,21 @@ export async function mount({host,signal,quality='medium'}={}){
    const p=visualPlacement(b,half,h,1);
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
-  if(monster){const v=selectedMapping()?.visual,size=Math.min(half*(v?.maxStageFraction||.47)*2,h*.90)*(v?.scale||1);
-   monster.canvas.style.cssText=`position:absolute;left:${half+(half-size)/2}px;top:${(h-size)/2}px;width:${size}px;height:${size}px;max-width:none`;
-  }
- }
+  if(monster){
+   const v=selectedMapping()?.visual||{},entry=registry.assets.find(a=>a.assetId===$('[data-monster]').value);
+   const [l,t,r,b]=entry?.visualBounds||[0,0,512,512];
+   // Actor.draw() makes the alpha body occupy ~68% of its canvas. Match the visible
+   // body height against the player's alpha-bounds placement, not raw canvas sizes.
+   const playerBounds=release.entries.find(e=>e.id===era.value)?.asset.alphaBounds;
+   const playerCanvas=actor?.canvas;
+   const playerVisibleHeight=playerBounds&&playerCanvas?(playerBounds[3]-playerBounds[1])/512*playerCanvas.getBoundingClientRect().height:h*.62;
+   const bodyFraction=Math.min(.68, .68*(b-t)/Math.max(r-l,b-t));
+   const nominal=monsterPlacement(half,h,v).size;
+   const minimum=playerVisibleHeight*.90/Math.max(.12,bodyFraction);
+   const size=Math.max(nominal,minimum);
+   const x=half+(half-size)/2+(v.offsetX||0),y=(h-size)/2+(v.offsetY||0);
+   monster.canvas.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:${size}px;height:${size}px;max-width:none`;
+  } }
  async function showMonster(){
   clearMonster();duelLayout();const id=$('[data-monster]').value,ticket=monsterSerial;
   if(!id){$('[data-monster-status]').textContent='';diagnostics();return;}
