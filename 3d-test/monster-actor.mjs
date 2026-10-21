@@ -36,10 +36,12 @@ export function monsterVisibleSize(entry,visual={}){
  const [l,t,r,b]=entry.visualBounds;
  const subjectHeight=b-t,subjectWidth=r-l;
  const requested=Number.isFinite(visual.scale)?visual.scale:1;
- const visibleFraction=Math.max(PLAYER_VISIBLE_FRACTION*.90,Math.min(PLAYER_VISIBLE_FRACTION*1.80,PLAYER_VISIBLE_FRACTION*requested));
- const containment=Math.min(.94/(subjectWidth/subjectHeight),.94);
- const naturalHeight=Math.min(visibleFraction,containment);
- return {visibleFraction:naturalHeight,relativeToPlayer:naturalHeight/PLAYER_VISIBLE_FRACTION,scale:requested};
+ // Fit to the physical square viewport; avoid clipped wide monsters and allow
+ // large units to remain larger when the stage gives enough horizontal room.
+ const ratio=subjectWidth/subjectHeight;
+ const requestedHeight=Math.max(PLAYER_VISIBLE_FRACTION*.90,Math.min(PLAYER_VISIBLE_FRACTION*1.80,PLAYER_VISIBLE_FRACTION*requested));
+ const fitHeight=Math.min(requestedHeight,.96/ratio);
+ return {visibleFraction:fitHeight,relativeToPlayer:fitHeight/PLAYER_VISIBLE_FRACTION,scale:requested,clippedByAspect:fitHeight<PLAYER_VISIBLE_FRACTION*.90};
 }
 export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
