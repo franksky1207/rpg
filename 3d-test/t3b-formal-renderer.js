@@ -141,7 +141,7 @@ async function create(options){
  }catch(error){dispose();throw error;}
 }
 async function prepareSuit(options){
- const {release}=await import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1');
+ const [{release},{monsterVisibleSize}]=await Promise.all([import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),import('./monster-visible-size.mjs?v=20261021-gm-formal-size1')]);
  if(release.schema!=="cw.era-player-sprites.v1")throw Error("unapproved-formal-sprites");
  const identity=['galaxy','universe','higher'].includes(options.eraVisualId)?{ready:true,visualId:options.eraVisualId}:global.CivilizationEraAppearanceContract?.resolve({world:options.world??options.appearance?.world});
  const entry=release.entries.find(e=>e.id==='era-'+identity?.visualId);
@@ -297,27 +297,11 @@ async function createSuit(options,bundle){
   if(monsterActor&&monsterMapping){
    const visual=monsterMapping.visual||{},bounds=monsterActor.entry.visualBounds;
    const playerVisibleHeight=(bundle.entry.asset.alphaBounds[3]-bundle.entry.asset.alphaBounds[1])/512;
-   const kindScale={
-    'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
-    'mech-01':1.38,'mech-02':1.53,'mech-03':1.78,'veh-02':1.3,
-    'ship-01':1.38,'ship-04':1.78,'fort-01':1.72,'fort-03':1.85,
-    'beast-01':1.16,'beast-03':1.65,'bio-02':1.54,'core-01':1.25,'core-03':1.74,'energy-01':1.34
-   };
-   const targetRatio=Math.max(.9,Math.min(2.3,(kindScale[monsterActor.entry.assetId]||1)*(Number(visual.scale)||1)));
-   const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
-   const drawnWidthRatio=Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]));
-   const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
-   // Screen-space scaling uses the actual clipped-alpha dimensions, not the square bitmap.
-   // Preserve a 90% visible-height minimum even in narrow portrait stages.
-   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,drawnWidthRatio));
-   // If the narrow enemy lane cannot fit the requested visual ratio, keep the 90% floor:
-   // width containment is preferred but must never silently shrink enemies below it.
-   const floorSize=size*playerVisibleHeight*.9/Math.max(.01,drawnHeightRatio);
-   const monsterSize=Math.max(floorSize,Math.min(requiredSize,maxSize));
+   const {size:monsterSize,actualRatio}=monsterVisibleSize({assetId:monsterActor.entry.assetId,bounds,visual,playerVisibleHeight:size*playerVisibleHeight,stageWidth:w,stageHeight:h});
    monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
    monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
    monsterActor.canvas.style.left=(w/2+halfApproach+size*.32-monsterSize*.5)+'px';
-   monsterActor.canvas.dataset.actualRatio=(monsterSize*drawnHeightRatio/(size*playerVisibleHeight)).toFixed(3);
+   monsterActor.canvas.dataset.actualRatio=actualRatio.toFixed(3);
   }
  }
  layoutSprites();
