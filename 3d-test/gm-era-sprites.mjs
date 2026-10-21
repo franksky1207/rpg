@@ -66,7 +66,13 @@ export async function mount({host,signal,quality='medium'}={}){
    // but the prototype and identity preview share the same placement algorithm.
    const visual=selectedMapping()?.visual||{},entry=monster.entry;
    const bounds=entry.visualBounds,playerBounds=release.entries.find(e=>e.id===era.value)?.asset.alphaBounds;
-   const playerSize=actor?.canvas.getBoundingClientRect().width||Math.min(h*.87,w*.44);
+   // The formal renderer compares the displayed 512px alpha rectangle, while GM
+   // fits the player's transparent canvas to the alpha bounds via visualPlacement.
+   // Measuring  the alpha pixels directly avoids treating that differently sized
+   // square canvas as if it were the formal renderer's fixed-size actor canvas.
+   const playerCanvas=actor?.canvas;
+   const playerBox=playerCanvas?.getBoundingClientRect();
+   const playerSize=playerBox?.height||Math.min(h*.87,w*.44);
    const playerAlpha=(playerBounds[3]-playerBounds[1])/512;
    const kindScale={
     'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
