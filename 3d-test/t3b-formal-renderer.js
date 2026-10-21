@@ -251,6 +251,7 @@ async function createSuit(options,bundle){
    const w=host.clientWidth,h=host.clientHeight;const mobile=global.matchMedia('(max-width:760px)').matches;const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44));
    actor.canvas.style.width=size+'px';actor.canvas.style.height=size+'px';
    actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
+   layoutKey='';layoutSprites();
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
   }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
  }
@@ -291,9 +292,26 @@ async function createSuit(options,bundle){
   const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
   const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
-  for(const canvas of [actor.canvas,enemyCanvas,monsterActor?.canvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
+  for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
-  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';if(monsterActor)monsterActor.canvas.style.left=enemyCanvas.style.left;
+  enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
+  // Batch 15-1: compare actual alpha heights, not equal-sized transparent canvases.
+  // Cap at the available enemy lane; the 90% floor is verified by monster-scale.mjs.
+  if(monsterActor&&monsterMapping){
+   const visual=monsterMapping.visual||{},bounds=monsterActor.entry.visualBounds;
+   const visibleHeight=(bounds[3]-bounds[1])/512;
+   const visibleWidth=(bounds[2]-bounds[0])/512;
+   const playerVisibleHeight=(bundle.entry.asset.alphaBounds[3]-bundle.entry.asset.alphaBounds[1])/512;
+   const targetRatio=global.CivilizationMonsterScale?.targetRatio(monsterActor.entry.assetId,visual.scale)||Math.max(.9,Number(visual.scale)||1);
+   const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
+   const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
+   const maxSize=Math.min(h*.98,w*.54/Math.max(.01,visibleWidth));
+   const monsterSize=Math.min(requiredSize,maxSize);
+   monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
+   monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
+   monsterActor.canvas.style.left=(w/2+halfApproach+size*.32-monsterSize*.5)+'px';
+   monsterActor.canvas.dataset.actualRatio=(monsterSize*drawnHeightRatio/(size*playerVisibleHeight)).toFixed(3);
+  }
  }
  layoutSprites();
  let lastEnemyRenderKey=null;
