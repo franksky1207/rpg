@@ -11,7 +11,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   for(const row of cases){
    const world=row.world==='galaxy'?1:2;
    await page.evaluate(({row,world})=>{
-    CivilizationFormalBEntry.dispose();CivilizationFormalBRenderer.clearSpriteCache();CivilizationFormalBEntry.boot();
+    closeBattleResultModal();CivilizationFormalBEntry.dispose();CivilizationFormalBRenderer.clearSpriteCache();CivilizationFormalBEntry.boot();
     state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='特殊怪驗收';state.level=world===2?600:1;state.secondWorld.entered=world===2;state.hp=1000;
     // Deterministic encounter selection only: actual enemy construction, combat, events,
     // presentation, reward, save and settlement functions remain production code.
@@ -25,7 +25,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    const proof=await page.waitForFunction(({world,row})=>{
     if(window.__specialError)throw Error(window.__specialError);
     const s=CivilizationCombatEvents.snapshot(),c=document.querySelector('.formal-b-verified-monster');
-    if(!c||s?.mode!=='special'||s.world!==world||getComputedStyle(c).visibility==='hidden')return false;
+    if(document.querySelector('#battleResultModal.show')||!c||s?.mode!=='special'||s.world!==world||getComputedStyle(c).visibility==='hidden')return false;
     const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
     if(!d.some((v,i)=>i%4===3&&v>16))return false;
     return {world,id:row.specialId,name:s.actors.enemy.name,kind:s.actors.enemy.kind,location:s.actors.enemy.location,assetId:c.dataset.monster,ratio:Number(c.dataset.actualRatio),fallbackHidden:document.querySelector('.formal-b-enemy-sprite')?.style.visibility==='hidden'};
