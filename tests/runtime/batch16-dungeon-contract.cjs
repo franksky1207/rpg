@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),cp=require('node:child_process');
 (async()=>{
- const read=p=>JSON.parse(fs.readFileSync(p));const rows=read('data/monsters/monster-mappings.json').records.filter(r=>r.mode),assets=read('data/monsters/monster-assets.json').assets;
+ const read=p=>JSON.parse(fs.readFileSync(p));const rows=read('data/monsters/monster-mappings.json').records.filter(r=>r.visual.sizePolicy==='dungeon'),assets=read('data/monsters/monster-assets.json').assets;
  const {resolveFormalMonster,resolveFormalMirror}=await import('../../3d-test/monster-formal-resolver.mjs');
  // Read exact declarations from actual gameplay owners without running gameplay.
  function constants(file,names){const source=fs.readFileSync(file,'utf8'),ctx=vm.createContext({Object});for(const name of names){const start=source.indexOf(' const '+name+'=');assert.ok(start>=0);const end=source.indexOf(';',start);vm.runInContext(source.slice(start,end+1).replace(' const ','var '),ctx);}return ctx;}
@@ -12,6 +12,8 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
  };
  for(const [name,id] of Object.entries(reviewed))assert.equal(rows.find(r=>r.name===name)?.assetId,id,'reviewed silhouette: '+name);
  assert.notEqual(rows.find(r=>r.name==='幻域支配者').visual.palette,rows.find(r=>r.name==='虛境帝皇').visual.palette,'shared ruler silhouettes have distinct palettes');
+ const sealed=JSON.parse(cp.execFileSync('git',['show','f2d37f4c382248e3130f66d400246dc5e42e3639:data/monsters/monster-mappings.json'],{encoding:'utf8'})).records.filter(r=>r.mode);
+ assert.deepEqual(rows,sealed,'all 56 sealed dungeon identities and visual data remain byte-equivalent');
  assert.equal(rows.length,56);assert.equal(new Set(rows.map(r=>r.id)).size,56);
  for(const [world,key] of [['galaxy','BOUNTY_NAMES'],['universe','UNIVERSE_BOUNTY_NAMES']])assert.deepEqual(rows.filter(r=>r.world===world&&r.mode==='bounty').map(r=>r.name),Array.from(Object.values(bounty[key]).flat()));
  for(const [world,w] of [['galaxy',1],['universe',2]])assert.deepEqual(rows.filter(r=>r.world===world&&r.mode==='arena').map(r=>r.name),Array.from(arena.ARENA_ENEMY_NAMES_BY_WORLD[w]));

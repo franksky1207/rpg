@@ -19,7 +19,9 @@
     "spectral-blue": "sepia(1) saturate(1.7) hue-rotate(165deg) contrast(1.08) brightness(.98)",
     "dark-crimson-violet": "sepia(1) saturate(2) hue-rotate(285deg) contrast(1.12) brightness(.85)",
     "cyan-violet": "sepia(1) saturate(1.8) hue-rotate(185deg) contrast(1.08)",
-    "deep-violet": "sepia(1) saturate(1.8) hue-rotate(225deg) contrast(1.1) brightness(.86)"
+    "deep-violet": "sepia(1) saturate(1.8) hue-rotate(225deg) contrast(1.1) brightness(.86)",
+    "boss-eye-red": "sepia(1) saturate(3) hue-rotate(310deg) contrast(1.12) brightness(.95)",
+    "boss-eye-cyan": "sepia(1) saturate(1.8) hue-rotate(145deg) brightness(1.25)"
   },
   "scaleRange": [
     0.6,

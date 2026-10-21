@@ -1,6 +1,6 @@
 // Shared visual adapter, no battle state or owned timers. Formal activation is separate.
 import {pose} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
-import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-special-formal1';
+import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261021-batch17-boss1';
 export {palettes};
 export function monsterPose(type,clip,ms){
  const p={...pose(clip,ms,{rootMotion:true})},t=Math.min(1,ms/700),s=Math.sin(Math.PI*t);
@@ -58,6 +58,12 @@ export function visibleFootprint(actor){
 export function battleSpriteLayout(player,monster,width,height,visual={}){
  const p=visibleFootprint(player),m=visibleFootprint(monster);
  let ratio=Math.max(.9*p.maxH/p.h*m.h/m.minH,Math.min(2.3,(kindScale[monster.entry.assetId]||1)*(Number(visual.scale)||1)));
+ if(visual.sizePolicy==='boss'){
+  // Reserve 0.2% for CSS subpixel quantization while respecting the measured idle envelope.
+  const min=1.502*p.maxH/p.h*m.h/m.minH,max=1.998*p.minH/p.h*m.h/m.maxH;
+  if(min>max)throw Error('boss-size-envelope');
+  ratio=Math.max(min,Math.min(max,Number(visual.visibleRatio)||1.75));
+ }
  if(visual.sizePolicy==='dungeon'){
   // Measured cycle extrema, excluding CSS glow, bound every idle sample to [1,1.5].
   const min=p.maxH/p.h*m.h/m.minH,max=1.5*p.minH/p.h*m.h/m.maxH;
@@ -65,7 +71,7 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
   ratio=Math.max(min,Math.min(max,Number(visual.visibleRatio)||1.1));
  }
  // Unit = the player's painted idle height. Offsets retain their 512px design units.
- const ps=1/p.h,ms=ratio/m.h,boundedApproach=visual.sizePolicy==='dungeon'||monster.mapping?.kind==='special',gap=boundedApproach?.65:.22;
+ const ps=1/p.h,ms=ratio/m.h,boundedApproach=visual.sizePolicy==='boss'||visual.sizePolicy==='dungeon'||monster.mapping?.kind==='special',gap=boundedApproach?.65:.22;
  const ox=(visual.offsetX||0)/512,oy=(visual.offsetY||0)/512;
  const px=-(p.l+p.r)/2*ps-p.w*ps/2-gap/2;
  const mx=-(m.l+m.r)/2*ms+m.w*ms/2+gap/2+ox;

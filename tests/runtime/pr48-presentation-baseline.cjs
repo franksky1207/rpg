@@ -16,6 +16,8 @@ function original(p){
   // Batch13 authorizes exactly one GM cache-token replacement; every other byte stays locked.
   let bytes=fs.readFileSync(p);
   if(p==='index.html')bytes=Buffer.from(bytes.toString()
+   .replace('combat-events.js?v=20261021-batch17-boss1','combat-events.js?v=20261015-phase5')
+   .replace('t3b-formal-renderer.js?v=20261021-batch17-boss1','t3b-formal-renderer.js?v=20261021-special-formal2')
    .replace('specialcore.js?v=20261021-special-formal2','specialcore.js?v=20260926-gm-mainline-hp-owner-converge1')
    .replace('t3b-formal-renderer.js?v=20261021-special-formal2','t3b-formal-renderer.js?v=20261021-batch16-dungeons2')
    .replace('gm3dprototype.js?v=20261021-batch16-dungeons2','gm3dprototype.js?v=20261021-batch16-dungeons1')
@@ -46,7 +48,7 @@ function original(p){
  assert.equal(crypto.createHash('sha256').update(before).digest('hex'),row.beforeSha256);
  const lines=before.toString().split('\n');for(const [start,end,text] of [...row.edits].reverse())lines.splice(start,end-start,...text);const expected=lines.join('\n');
  const source=fs.readFileSync(p,'utf8');
- const reviewed=p==='3d-test/index.html'?source.replace('test-center.js?v=20261021-special-formal1','test-center.js?v=20261021-batch16-dungeons2').replace('test-center.js?v=20261021-batch16-dungeons2','test-center.js?v=20261021-batch16-dungeons1').replace('test-center.js?v=20261021-batch16-dungeons1','test-center.js?v=20261021-batch15-pair1').replace('test-center.js?v=20261021-batch15-pair1','test-center.js?v=20261020-twenty-gm1').replace('test-center.js?v=20261020-twenty-gm1','test-center.js?v=20261019-batch12-rising-cut1'):source;
+ const reviewed=p==='3d-test/index.html'?source.replace('test-center.js?v=20261021-batch17-boss1','test-center.js?v=20261021-special-formal1').replace('test-center.js?v=20261021-special-formal1','test-center.js?v=20261021-batch16-dungeons2').replace('test-center.js?v=20261021-batch16-dungeons2','test-center.js?v=20261021-batch16-dungeons1').replace('test-center.js?v=20261021-batch16-dungeons1','test-center.js?v=20261021-batch15-pair1').replace('test-center.js?v=20261021-batch15-pair1','test-center.js?v=20261020-twenty-gm1').replace('test-center.js?v=20261020-twenty-gm1','test-center.js?v=20261019-batch12-rising-cut1'):source;
  assert.equal(reviewed,expected,'source differs from exact approved PR48 presentation patch: '+p);
  return before;
 }

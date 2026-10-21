@@ -86,7 +86,7 @@ const policy=require("../../scripts/publish-assets.cjs");
    "assets/era-player/v1/era-"+era+"-attack-atlas.webp"
   ]);
   const formalMonsterSprites=JSON.parse(fs.readFileSync("data/monsters/monster-assets.json","utf8")).assets.map(a=>a.path);
-  assert.equal(formalMonsterSprites.length,21,"twenty sealed map prototypes plus V-01");
+  assert.equal(formalMonsterSprites.length,33,"21 sealed prototypes plus 12 approved Batch17 prototypes");
   assert.ok(formalMonsterSprites.includes("assets/monsters/v1/void/void-phantom-v01.webp"));
   for(const asset of formalMonsterSprites)assert.ok(manifest.files[asset],"missing formal monster asset: "+asset);
   const expectedCachedMedia=49+formalPlayerSprites.length+formalMonsterSprites.length;

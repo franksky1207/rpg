@@ -1,0 +1,10 @@
+{
+  "sourceZip": "1-batch17_boss_complete_handoff.zip",
+  "sha256": "522016b9f73e4f9aa936738d4514844ef7073f099955abe8cc498d00ec987742",
+  "bytes": 7141931,
+  "crcPassed": true,
+  "safePathsPassed": true,
+  "imageCount": 24,
+  "newFormalWebP": 12,
+  "startMain": "f2d37f4c382248e3130f66d400246dc5e42e3639"
+}

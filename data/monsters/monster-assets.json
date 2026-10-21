@@ -736,6 +736,438 @@
       ],
       "gmPreviewAllowed": true,
       "formalBattleAllowed": true
+    },
+    {
+      "assetId": "boss-c-03-v01",
+      "description": "巨型機械單眼，朝左；銀河／高維共用，需分別配置暗紅金與冷白青藍",
+      "path": "assets/monsters/v1/boss/boss-c-03-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 72172,
+      "sha256": "3ff6ddbcb85286251fa6bc916b21009dffc0141f4c958a35f0b24d291fadcbb2",
+      "alphaBounds": [
+        36,
+        36,
+        476,
+        476
+      ],
+      "name": "終末之眼／先驗之瞳",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        36,
+        476,
+        476
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "C-03"
+    },
+    {
+      "assetId": "boss-c-02-v01",
+      "description": "大型環狀毀滅兵器，左向武裝",
+      "path": "assets/monsters/v1/boss/boss-c-02-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 235982,
+      "sha256": "dd7ef08b6812efa58b2a4c49c19f73e59ecd56ae300efd565a00ae4bd0880514",
+      "alphaBounds": [
+        31,
+        38,
+        481,
+        474
+      ],
+      "name": "滅世天環",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        31,
+        38,
+        481,
+        474
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "C-02"
+    },
+    {
+      "assetId": "boss-u-01-v01",
+      "description": "朝左的大型天穹級戰爭平台",
+      "path": "assets/monsters/v1/boss/boss-u-01-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 70734,
+      "sha256": "d08377240a9b980a04082a3aa4323f3a1e91030ee8f58cd6c204e318524901e8",
+      "alphaBounds": [
+        36,
+        63,
+        476,
+        448
+      ],
+      "name": "終戰天穹",
+      "animationType": "ranged-shot",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        63,
+        476,
+        448
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "U-01"
+    },
+    {
+      "assetId": "boss-c-01-v01",
+      "description": "日蝕王座要塞，主要攻擊方向朝左",
+      "path": "assets/monsters/v1/boss/boss-c-01-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 86402,
+      "sha256": "4e7f57536f8d1de03efae8a0b8c4c93551cee843fe28c73092a5f512330ee5cc",
+      "alphaBounds": [
+        32,
+        41,
+        480,
+        470
+      ],
+      "name": "日蝕王座",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        32,
+        41,
+        480,
+        470
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "C-01"
+    },
+    {
+      "assetId": "boss-h-01-v01",
+      "description": "持巨大破界刃的攻擊型審判者，朝左",
+      "path": "assets/monsters/v1/boss/boss-h-01-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 224668,
+      "sha256": "cb8b54c688304d2b74999da3c1a05cc3ed28be64fe924bd514709f3dad243a71",
+      "alphaBounds": [
+        34,
+        34,
+        478,
+        478
+      ],
+      "name": "破界天裁",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        34,
+        34,
+        478,
+        478
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-01"
+    },
+    {
+      "assetId": "boss-h-02-v01",
+      "description": "巨型盾牆與重甲防禦守護者，朝左",
+      "path": "assets/monsters/v1/boss/boss-h-02-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 316152,
+      "sha256": "a126d7dfa3968cbb5d296fad447077a6ad58c7799652b83467897813b4624ddc",
+      "alphaBounds": [
+        38,
+        36,
+        474,
+        476
+      ],
+      "name": "永劫重垣",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        38,
+        36,
+        474,
+        476
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-02"
+    },
+    {
+      "assetId": "boss-h-03-v01",
+      "description": "持不平衡雙秤盤的高維審判者，暴擊象徵",
+      "path": "assets/monsters/v1/boss/boss-h-03-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 263766,
+      "sha256": "8829a03f1f9376c4d85ef1850b18a2b06327e5a6f6ae89db2c7ea8178e1e2eb9",
+      "alphaBounds": [
+        35,
+        38,
+        477,
+        474
+      ],
+      "name": "宿因天秤",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        35,
+        38,
+        477,
+        474
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-03"
+    },
+    {
+      "assetId": "boss-h-10-v01",
+      "description": "幾何對稱源核；核心型允許正面",
+      "path": "assets/monsters/v1/boss/boss-h-10-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 115804,
+      "sha256": "1958c30ff60b0daf1c67e741cb12c5ec76195336ecc00128e209076ae851df2b",
+      "alphaBounds": [
+        36,
+        36,
+        476,
+        475
+      ],
+      "name": "高維原點",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        36,
+        476,
+        475
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-10"
+    },
+    {
+      "assetId": "boss-h-06-v01",
+      "description": "細長穿透槍刃、空間裂隙，朝左",
+      "path": "assets/monsters/v1/boss/boss-h-06-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 114110,
+      "sha256": "8ad12a2400b606c50e54c19b205fd8f94ca80a30c8ad30377baa631007245bd8",
+      "alphaBounds": [
+        36,
+        38,
+        476,
+        474
+      ],
+      "name": "維隙之刃",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        38,
+        476,
+        474
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-06"
+    },
+    {
+      "assetId": "boss-h-07-v01",
+      "description": "金橘與藍紫雙輪盤，反擊象徵",
+      "path": "assets/monsters/v1/boss/boss-h-07-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 320138,
+      "sha256": "d7712eeb98710f7e2a2d50875cc457dc72f3c483b21f418a6e2a0118ac3cddb2",
+      "alphaBounds": [
+        36,
+        39,
+        476,
+        473
+      ],
+      "name": "逆因輪轉",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        39,
+        476,
+        473
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-07"
+    },
+    {
+      "assetId": "boss-h-05-v01",
+      "description": "多重錯位殘像與連續攻擊，朝左",
+      "path": "assets/monsters/v1/boss/boss-h-05-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 310582,
+      "sha256": "f26afd315cab5b3bf00628bbbc683989b136ea12ff70b4bbfe1eb02ee10bd445",
+      "alphaBounds": [
+        36,
+        36,
+        475,
+        476
+      ],
+      "name": "萬象迴演",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        36,
+        475,
+        476
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-05"
+    },
+    {
+      "assetId": "boss-h-08-v01",
+      "description": "朝左的深淵生物與巨型吞噬口",
+      "path": "assets/monsters/v1/boss/boss-h-08-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 127376,
+      "sha256": "e4af3ba99ebb64d6b5abe3c5704e93f09a1f37642357ecc88264d1fa669d68f0",
+      "alphaBounds": [
+        38,
+        36,
+        473,
+        476
+      ],
+      "name": "噬界深淵",
+      "animationType": "pounce",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        38,
+        36,
+        473,
+        476
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "artCode": "H-08"
     }
   ],
   "version": "20261021-batch16-dungeons2",

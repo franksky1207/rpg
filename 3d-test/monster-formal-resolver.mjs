@@ -1,7 +1,23 @@
 // Explicit map/dungeon presentation whitelist. No fuzzy identity matching or gameplay writes.
-import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-special-formal1';
+import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch17-boss1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
- if(!registry.formalBattleEnabled||![1,2].includes(world))return null;
+ if(!registry.formalBattleEnabled)return null;
+ if(mode==='calamity'||world===3){
+  let row=null,projection=false;
+  if(mode==='calamity'&&[1,2].includes(world)&&kind==='civilization-calamity'){
+   row=Object.values(mappings).find(r=>r.status==='batch17-formal-enabled'&&r.world===(world===1?'galaxy':'universe')&&r.mode===mode&&r.bossId===location);
+   if(id!==row?.bossId)return null;
+  }else if(world===3&&mode==='main'&&kind==='boss'){
+   row=findMapping(id);if(row?.world!=='higher'||row.status!=='batch17-formal-enabled'||location!==String(row.bossIndex))return null;
+  }else if(world===3&&mode==='arena'&&kind==='dungeon-arena-third-world'){
+   row=findMapping(id);projection=true;
+   if(row?.world!=='higher'||row.status!=='batch17-formal-enabled'||!['0','1','2'].includes(location))return null;
+  }
+  if(!row||name!==(projection?'高維投影·'+row.name:row.name))return null;
+  const asset=findAsset(row.assetId);
+  return asset?.formalBattleAllowed===true&&asset.gmPreviewAllowed===true&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
+ }
+ if(![1,2].includes(world))return null;
  if(mode==='special'){
   if(kind!=='special'||typeof location!=='string')return null;
   const approvedIds=['gold_slime','mimic','reaper','lucky_rabbit','ancient_guardian','relic_guardian','bandit_king','collector','mysterious_traveler'];
