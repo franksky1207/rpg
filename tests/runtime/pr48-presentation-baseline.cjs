@@ -15,7 +15,9 @@ function original(p){
   const bytes=fs.readFileSync(p);
   const reviewed=p==='index.html'?bytes.toString()
    .replace('gm3dprototype.js?v=20261020-twenty-gm1','gm3dprototype.js?v=20261019-batch12-rising-cut1')
-   .replace('&batch14=20261021-formal1','').replace('&batch14=20261021-map-monsters1',''):bytes;
+   .replace('&batch14=20261021-formal1','').replace('&batch14=20261021-map-monsters1','')
+   // Batch15-1: exact reviewed cache-only renderer revision; preserve all other bytes.
+   .replace('&batch15=20261021-monster-scale1',''):bytes;
   const gitBlob=cp.execFileSync('git',['hash-object','--stdin'],{input:reviewed,encoding:'utf8'}).trim();
   assert.equal(gitBlob,approvedFollowup[p],'unauthorized followup edit: '+p);
   // Controller remains subject to the older immutable-owner baseline;
