@@ -56,3 +56,9 @@ PR #66中間head 203492b0的10項Actions全成功。追加的V-01 SW白名單、
 ## 原生SW與完整效果降級
 
 另以真正Chromium Service Worker／CacheStorage實測76個選定媒體：首次預載saved76／failed0；warm再預載saved0；V-01磁碟毀損重新驗SHA並修復；清除後重新預載saved76／failed0；開發PNG不入快取。測試已納入batch16-native-cache-browser.cjs，仍不代表iPhone OS背景或耗電測試。效果關閉策略由同一Actor helper共用，除了CSS輪廓光，亦停用本批新增的漂浮與脈動；四個V-01身份在效果關閉時Canvas像素與無特效原型逐位元一致，保留基本配色與原有動作。這些追加檢查須以最終PR head的Actions確認。
+
+## 合併後發布Gate補修（仍屬第16批）
+
+PR #66最終head 66ef32b8的10項Actions全成功後合併為dddb4c81。合併後僅在main執行的Pages／Stage4 Gate讀log確認，失敗來自publish-candidate-browser.js舊預載斷言仍為49＋6＋20＝75，而新V-01使實際總數為76。遊戲／候選建置與素材校驗成功，但Pages部署被正確擋下，沒有誤稱發布。
+
+必要補修：預載數量改為49＋6＋正式21原型，並新增21原型數量、V-01正式路徑與逐資產manifest存在性斷言；保留failed0、精確entries、Range206、清除後0及存檔隔離斷言。此完整publish-candidate-browser.js測試亦納入第16批PR Gate，避免再次只在main才發現。最終發布main SHA與全部Actions，仍以第16批PR最新說明核對。
