@@ -248,9 +248,6 @@ async function createSuit(options,bundle){
    monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
    host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
-   const w=host.clientWidth,h=host.clientHeight;const mobile=global.matchMedia('(max-width:760px)').matches;const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44));
-   actor.canvas.style.width=size+'px';actor.canvas.style.height=size+'px';
-   actor.canvas.style.left=(w/2-size*.18+.42*140/2)+'px';
    layoutKey='';layoutSprites();
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
   }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
