@@ -259,7 +259,8 @@ async function createSuit(options,bundle){
   const clip=e.clip==='return'?'idle':e.clip==='dodge'?'hit':e.clip||'idle';
   const tick=Math.floor(elapsed/(clip==='idle'?50:35)),key=clip+':'+tick;
   if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),palette:monsterMapping.visual.palette});monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';return;}}
-  if(monsterActor.canvas.style.width!==(monsterActor.canvas.width/monsterActor.canvas.height*parseFloat(monsterActor.canvas.style.height))+'px'){layoutKey='';layoutSprites();}
+  const actualWidth=monsterActor.canvas.width/monsterActor.canvas.height*parseFloat(monsterActor.canvas.style.height);
+  if(Math.abs(parseFloat(monsterActor.canvas.style.width)-actualWidth)>.5){layoutKey='';layoutSprites();}
   const shift=Number.isFinite(e.approach)?Math.min(.42,Math.max(0,e.approach))*140:0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
