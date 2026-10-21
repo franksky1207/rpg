@@ -39,11 +39,14 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   const shared=await frame.locator('[data-monster-identity] option').evaluateAll(options=>options.slice(1).map(o=>o.value));assert.ok(shared.length>0);await frame.locator('[data-monster-identity]').selectOption(shared[0]);await frame.locator('[data-monster-status]').filter({hasText:'SHA-256 已驗證'}).waitFor();
   assert.equal(await frame.locator('[data-monster-scale],[data-monster-palette],[data-monster-next]').count(),0,'retired GM overrides stay removed');
   const selectedLabel=await frame.locator('[data-monster-description]').innerText();assert.ok(selectedLabel.includes('配色')&&selectedLabel.includes('尺寸'),'identity appearance is read-only text');
+  const sharedRatio=await frame.locator('canvas[data-monster]').getAttribute('data-actual-ratio');
+  assert.ok(Number(sharedRatio)>=.9,'shared formal/GM ratio contract: '+JSON.stringify({viewport,id,sharedRatio}));
   const layout=await frame.locator('.gm-suit-preview').evaluate(e=>{
    function visual(c){const box=c.getBoundingClientRect(),n=c.width,d=c.getContext('2d').getImageData(0,0,n,n).data;let l=n,r=0,t=n,b=0;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}return {left:box.left+l/n*box.width,right:box.left+r/n*box.width,top:box.top+t/n*box.height,bottom:box.top+b/n*box.height};}
    const box=e.getBoundingClientRect();return {stage:{left:box.left,right:box.right,top:box.top,bottom:box.bottom},player:visual(e.querySelector('[data-suit]')),enemy:visual(e.querySelector('[data-monster]'))};
   });
-  assert.ok(layout.player.right<layout.enemy.left,'player left, monster right');for(const box of [layout.player,layout.enemy]){assert.ok(box.left>=layout.stage.left&&box.right<=layout.stage.right);assert.ok(box.top>=layout.stage.top&&box.bottom<=layout.stage.bottom);}
+  assert.ok(layout.player.right<layout.enemy.left,'player left, monster right');
+  assert.ok(layout.enemy.bottom-layout.enemy.top>=.90*(layout.player.bottom-layout.player.top),'GM monster visible height at least 90% of player: '+JSON.stringify({viewport,id,playerHeight:layout.player.bottom-layout.player.top,enemyHeight:layout.enemy.bottom-layout.enemy.top}));for(const box of [layout.player,layout.enemy]){assert.ok(box.left>=layout.stage.left&&box.right<=layout.stage.right);assert.ok(box.top>=layout.stage.top&&box.bottom<=layout.stage.bottom);}
   for(const action of ['idle','attack','hit','defeat']){
    await frame.locator(`[data-monster-action="${action}"]`).click();
    await frame.locator(`canvas[data-monster="${id}"]`).evaluate((c,clip)=>new Promise((resolve,reject)=>{const end=performance.now()+3000;function poll(){const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let count=0;for(let i=3;i<d.length;i+=4)if(d[i]>16)count++;if(c.dataset.clip===clip&&(clip==='defeat'?count===0:count>500))return resolve();if(performance.now()>end)return reject(Error('UI animation '+clip));requestAnimationFrame(poll);}poll();}),action);

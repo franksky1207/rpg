@@ -1,0 +1,360 @@
+[
+  {
+    "run": 39559397053,
+    "sha": "b9c9d3fa8d201df16f105ce559303ba4ab1776a4",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119086754527,
+    "errors": [
+      "2026-10-21T07:04:42.5195926Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T07:04:42.6334400Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T07:04:47.2617452Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T07:04:47.3666919Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T07:04:47.6817229Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T07:04:47.7899665Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T07:06:07.2231264Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"beast-01\",\"playerHeight\":150.41153971354169,\"enemyHeight\":106.8585205078125}",
+      "2026-10-21T07:06:07.2234711Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T07:06:07.2235675Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558593531,
+    "sha": "574cc20957643d7737696f2bbfc01d622a255c26",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119084162874,
+    "errors": [
+      "2026-10-21T06:57:51.1333772Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:57:51.2437430Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:57:55.7608279Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:57:55.8720589Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:57:56.1944889Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:57:56.3008043Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:58:30.3894329Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":150.41153971354174,\"enemyHeight\":128.92578125}",
+      "2026-10-21T06:58:30.3907269Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:58:30.3907747Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558523338,
+    "sha": "363912b9f6274cef5c85463f99c303a72150a05a",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119083932171,
+    "errors": [
+      "2026-10-21T06:56:27.6899566Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:56:27.7845970Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:56:31.2618271Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:56:31.3501296Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:56:31.5794355Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:56:31.6611472Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:56:54.7066141Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":150.41153971354174,\"enemyHeight\":126.767578125}",
+      "2026-10-21T06:56:54.7068346Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:56:54.7068689Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558403243,
+    "sha": "7c82f7256044b5d56310fd922fb0daa059816977",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119083552256,
+    "errors": [
+      "2026-10-21T06:55:18.8508972Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:55:18.9716496Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:55:22.3070392Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:55:22.3969291Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:55:22.6252322Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:55:22.7129153Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:55:46.7631617Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":148.56599934895837,\"enemyHeight\":126.767578125}",
+      "2026-10-21T06:55:46.7633240Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:55:46.7633455Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558251647,
+    "sha": "4d4fb90c93ccc5bdcf690b8f6f8b133fcc2abe46",
+    "name": "GM Animation Center Terminology Gate",
+    "job": 119083057591,
+    "errors": [
+      "2026-10-21T06:53:52.7317166Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:52.7318561Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:52.7325650Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:52.7326178Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558251437,
+    "sha": "4d4fb90c93ccc5bdcf690b8f6f8b133fcc2abe46",
+    "name": "Batch 5 Era Appearance and Animation Settings",
+    "job": 119083056593,
+    "errors": [
+      "2026-10-21T06:53:42.2872423Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:42.2873766Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:42.2883854Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:42.2884344Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558251520,
+    "sha": "4d4fb90c93ccc5bdcf690b8f6f8b133fcc2abe46",
+    "name": "Batch 7 Candidate Safety and Appearance",
+    "job": 119083057563,
+    "errors": [
+      "2026-10-21T06:54:19.7583050Z   throw new AssertionError(obj);",
+      "2026-10-21T06:54:19.7585705Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:54:19.7595578Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:54:19.7596016Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558251505,
+    "sha": "4d4fb90c93ccc5bdcf690b8f6f8b133fcc2abe46",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119083056969,
+    "errors": [
+      "2026-10-21T06:53:59.3655805Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:59.4789222Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:04.2289227Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:04.3513369Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:04.6819040Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:04.7944927Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:34.2992228Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":149.4887695312499,\"enemyHeight\":126.767578125}",
+      "2026-10-21T06:54:34.2995089Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:54:34.2995464Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558212148,
+    "sha": "658dad472c1cbf71bdc702bf5003b1a774b06081",
+    "name": "GM Animation Center Terminology Gate",
+    "job": 119082931719,
+    "errors": [
+      "2026-10-21T06:53:19.4564494Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:19.4565557Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:19.4573001Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:19.4573749Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558212178,
+    "sha": "658dad472c1cbf71bdc702bf5003b1a774b06081",
+    "name": "Batch 5 Era Appearance and Animation Settings",
+    "job": 119082931811,
+    "errors": [
+      "2026-10-21T06:53:18.6124073Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:18.6124577Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:18.6127722Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:18.6127882Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558212170,
+    "sha": "658dad472c1cbf71bdc702bf5003b1a774b06081",
+    "name": "Batch 7 Candidate Safety and Appearance",
+    "job": 119082932315,
+    "errors": [
+      "2026-10-21T06:53:30.4545382Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:30.4547443Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:30.4559219Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:30.4559604Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558212157,
+    "sha": "658dad472c1cbf71bdc702bf5003b1a774b06081",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119082931579,
+    "errors": [
+      "2026-10-21T06:53:45.7369913Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:45.8520632Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:50.1609803Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:50.2783178Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:50.6052433Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:50.7248900Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:26.7867581Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":149.4887695312499,\"enemyHeight\":126.767578125}",
+      "2026-10-21T06:54:26.7872281Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:54:26.7872915Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558203307,
+    "sha": "18bb4129206027c9abe0136667987f45a34f4527",
+    "name": "Batch 7 Candidate Safety and Appearance",
+    "job": 119082903540,
+    "errors": [
+      "2026-10-21T06:53:22.6142333Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:22.6143949Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:22.6149846Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:22.6150150Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558203406,
+    "sha": "18bb4129206027c9abe0136667987f45a34f4527",
+    "name": "Batch 5 Era Appearance and Animation Settings",
+    "job": 119082904158,
+    "errors": [
+      "2026-10-21T06:53:14.5446457Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:14.5447176Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:14.5450726Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:14.5450911Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558203394,
+    "sha": "18bb4129206027c9abe0136667987f45a34f4527",
+    "name": "GM Animation Center Terminology Gate",
+    "job": 119082904129,
+    "errors": [
+      "2026-10-21T06:53:17.5759349Z   throw new AssertionError(obj);",
+      "2026-10-21T06:53:17.5760986Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:53:17.5768290Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:17.5768545Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558203330,
+    "sha": "18bb4129206027c9abe0136667987f45a34f4527",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119082903878,
+    "errors": [
+      "2026-10-21T06:53:40.5599696Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:40.6849007Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:45.4493038Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:45.5738047Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:45.9081998Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:46.0167372Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:54:18.1752272Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":149.4887695312499,\"enemyHeight\":126.767578125}",
+      "2026-10-21T06:54:18.1755381Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:54:18.1755635Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39558154772,
+    "sha": "6d72bc2b5f4414cc138ce179c850482fa1bf47bb",
+    "name": "GM Animation Center Terminology Gate",
+    "job": 119082746077,
+    "errors": [
+      "2026-10-21T06:52:53.0418159Z   throw new AssertionError(obj);",
+      "2026-10-21T06:52:53.0420112Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:52:53.0427545Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:52:53.0428057Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558154539,
+    "sha": "6d72bc2b5f4414cc138ce179c850482fa1bf47bb",
+    "name": "Batch 7 Candidate Safety and Appearance",
+    "job": 119082746659,
+    "errors": [
+      "2026-10-21T06:52:54.5922207Z   throw new AssertionError(obj);",
+      "2026-10-21T06:52:54.5922917Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:52:54.5928004Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:52:54.5928175Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558154533,
+    "sha": "6d72bc2b5f4414cc138ce179c850482fa1bf47bb",
+    "name": "Equipment 2.5D Formal Battle",
+    "job": 119082745436,
+    "errors": [
+      "2026-10-21T06:52:48.1060489Z   throw new AssertionError(obj);",
+      "2026-10-21T06:52:48.1062951Z AssertionError [ERR_ASSERTION]: Unexpected unclassified published modules; investigate before removing sources",
+      "2026-10-21T06:52:48.1068889Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:52:48.1069698Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558154562,
+    "sha": "6d72bc2b5f4414cc138ce179c850482fa1bf47bb",
+    "name": "Batch 5 Era Appearance and Animation Settings",
+    "job": 119082745578,
+    "errors": [
+      "2026-10-21T06:52:50.5575612Z   throw new AssertionError(obj);",
+      "2026-10-21T06:52:50.5576370Z AssertionError [ERR_ASSERTION]: Batch4-4 protected live runtime or assets changed unexpectedly",
+      "2026-10-21T06:52:50.5581449Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:52:50.5581704Z   actual: [ '3d-test/monster-visible-size.mjs' ],"
+    ]
+  },
+  {
+    "run": 39558154589,
+    "sha": "6d72bc2b5f4414cc138ce179c850482fa1bf47bb",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119082745571,
+    "errors": [
+      "2026-10-21T06:53:07.7329558Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:07.8279228Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:11.2550254Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:11.3458783Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:11.6179476Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:11.7188050Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:53:40.7556179Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":147.64322916666663,\"enemyHeight\":126.767578125}",
+      "2026-10-21T06:53:40.7558378Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:53:40.7558655Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39557453067,
+    "sha": "6caeee3246d9b7860764d9d0f5d3830096966a5f",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119080443924,
+    "errors": [
+      "2026-10-21T06:46:25.9227976Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:26.0343833Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:29.2298077Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:29.3337213Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:29.6010493Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:29.6896717Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:52.6887828Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player: {\"viewport\":{\"width\":1365,\"height\":900},\"id\":\"hm-01\",\"playerHeight\":148.56599934895837,\"enemyHeight\":127.55987548828125}",
+      "2026-10-21T06:46:52.6888895Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:46:52.6889056Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39557431170,
+    "sha": "c01694ef1aa98531ca2b4e6ea3cd7d3bdfbab31c",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119080372254,
+    "errors": [
+      "2026-10-21T06:46:21.3845487Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:21.4723475Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:26.5423680Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:26.6313998Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:26.9025509Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:26.9952927Z Error: getaddrinfo ENOTFOUND playwright.download.prss.microsoft.com",
+      "2026-10-21T06:46:53.5936910Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player",
+      "2026-10-21T06:46:53.5938439Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T06:46:53.5938641Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39549780524,
+    "sha": "c4240797b2d985225db0149b899c4effc8eabe2f",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119056088949,
+    "errors": [
+      "2026-10-21T05:29:56.2602900Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player",
+      "2026-10-21T05:29:56.2604123Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T05:29:56.2604339Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39546560871,
+    "sha": "eb62760ddc352e94ad7a6495624e2937eb932f67",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119045936651,
+    "errors": [
+      "2026-10-21T04:55:03.5489841Z AssertionError [ERR_ASSERTION]: GM monster visible height at least 90% of player",
+      "2026-10-21T04:55:03.5491034Z   code: 'ERR_ASSERTION',",
+      "2026-10-21T04:55:03.5491178Z   actual: false,"
+    ]
+  },
+  {
+    "run": 39546370363,
+    "sha": "6714b8c4f373745abd17eedfe70d3cb547be124d",
+    "name": "Batch13 Twenty Monster GM Integration",
+    "job": 119045354460,
+    "errors": [
+      "2026-10-21T04:53:42.2579301Z locator.waitFor: Timeout 30000ms exceeded.",
+      "2026-10-21T04:53:42.2580774Z waiting for GM monster status SHA-256 已驗證; tests/runtime/batch13-monster-browser.cjs:37:141"
+    ]
+  }
+]

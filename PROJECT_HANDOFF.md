@@ -1,3 +1,5 @@
+> **第15-4批施工**：正式／GM改共用既有Actor版面來源，609身份×3畫面逐筆結果及正式Sprite適用範圍見 [驗收報告](docs/BATCH15_4_FORMAL_GM_ACCEPTANCE_2026-10-21.md)。同SHA Actions、合併與Pages完成前不封箱。
+
 > **第13批20圖整合（2026-10-20）**：14張新圖加PR #58既有六張，609正式身份對應與63筆外型修正，沿用GM／Actor／Pool；正式戰鬥維持關閉。驗收、來源核對與剩餘真機項目見 [docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md](docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md)；最終是否完成以本批PR與最新main同SHA Actions／Pages成功為準。
 
 > **PR #48 接手結果與驗收索引（2026-10-19）**：修正已沿原分支合併，程式 main SHA `7b8138bff0fa414037ffe72ab864848cc7a05f79`；合併前 head `a9407dc27b7aacd3bd418ef2e137c620832422dd` 九項 Actions 全成功。停止原鈕採功能標記並保留行為；Ready 舞台中心對準 visualViewport，保留連戰空間與手動操作；Sprite 沿用六圖 pool／智慧下載。指定高維異相案例另加嚴為完整六戰全勝、兩輪全通才可通過。最新驗收、SHA、Pages 與工程封箱狀態以 `docs/COMBAT_CENTER_STOP_FIX_2026-10-19.md` 最新紀錄及 PR #48 說明為準；不得以舊 SHA 或僅啟動 workflow 代替最終成功。iPhone Safari 實際畫面、溫度、耗電與流暢度仍待真機。

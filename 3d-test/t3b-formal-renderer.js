@@ -203,7 +203,7 @@ else scheduleWarm();
 
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [{WholeSuitActor},{createSpritePool}]=await runtime();
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261021-batch15-pair1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -235,7 +235,7 @@ async function createSuit(options,bundle){
   try{
    const [{resolveFormalMonster},{MonsterActor}]=await Promise.all([
     import('./monster-formal-resolver.mjs?v=20261021-batch14-formal1'),
-    import('./monster-actor.mjs?v=20261021-batch14-formal1')
+    import('./monster-actor.mjs?v=20261021-batch15-pair1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const approved=resolveFormalMonster({mode:bundle.enemyMode,world:bundle.enemyWorld,kind:bundle.enemyKind,name:bundle.enemyName,location:bundle.enemyLocation,id:bundle.enemyId});
@@ -292,33 +292,7 @@ async function createSuit(options,bundle){
   for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
   enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
-  // Batch 15-1: compare actual alpha heights, not equal-sized transparent canvases.
-  // Cap at the available enemy lane; the 90% floor is verified by monster-scale.mjs.
-  if(monsterActor&&monsterMapping){
-   const visual=monsterMapping.visual||{},bounds=monsterActor.entry.visualBounds;
-   const playerVisibleHeight=(bundle.entry.asset.alphaBounds[3]-bundle.entry.asset.alphaBounds[1])/512;
-   const kindScale={
-    'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
-    'mech-01':1.38,'mech-02':1.53,'mech-03':1.78,'veh-02':1.3,
-    'ship-01':1.38,'ship-04':1.78,'fort-01':1.72,'fort-03':1.85,
-    'beast-01':1.16,'beast-03':1.65,'bio-02':1.54,'core-01':1.25,'core-03':1.74,'energy-01':1.34
-   };
-   const targetRatio=Math.max(.9,Math.min(2.3,(kindScale[monsterActor.entry.assetId]||1)*(Number(visual.scale)||1)));
-   const drawnHeightRatio=Math.min(.68,.68*(bounds[3]-bounds[1])/(bounds[2]-bounds[0]));
-   const drawnWidthRatio=Math.min(.68,.68*(bounds[2]-bounds[0])/(bounds[3]-bounds[1]));
-   const requiredSize=size*playerVisibleHeight*targetRatio/Math.max(.01,drawnHeightRatio);
-   // Screen-space scaling uses the actual clipped-alpha dimensions, not the square bitmap.
-   // Preserve a 90% visible-height minimum even in narrow portrait stages.
-   const maxSize=Math.min(h*.98/Math.max(.01,drawnHeightRatio),w*.48/Math.max(.01,drawnWidthRatio));
-   // If the narrow enemy lane cannot fit the requested visual ratio, keep the 90% floor:
-   // width containment is preferred but must never silently shrink enemies below it.
-   const floorSize=size*playerVisibleHeight*.9/Math.max(.01,drawnHeightRatio);
-   const monsterSize=Math.max(floorSize,Math.min(requiredSize,maxSize));
-   monsterActor.canvas.style.width=monsterSize+'px';monsterActor.canvas.style.height=monsterSize+'px';
-   monsterActor.canvas.style.maxWidth='none';monsterActor.canvas.style.right='auto';
-   monsterActor.canvas.style.left=(w/2+halfApproach+size*.32-monsterSize*.5)+'px';
-   monsterActor.canvas.dataset.actualRatio=(monsterSize*drawnHeightRatio/(size*playerVisibleHeight)).toFixed(3);
-  }
+  if(monsterActor&&monsterMapping)applyBattleSpriteLayout(actor,monsterActor,w,h,monsterMapping.visual);
  }
  layoutSprites();
  let lastEnemyRenderKey=null;

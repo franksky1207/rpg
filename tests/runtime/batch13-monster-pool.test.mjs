@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {createMonsterPool} from '../../3d-test/monster-sprite-pool.mjs';
 import {registry,plannedAssetId,mappings,findMapping} from '../../3d-test/monster-sprites.mjs';
-import {monsterPose,monsterPlacement} from '../../3d-test/monster-actor.mjs';
+import {MonsterActor,monsterPose,monsterPlacement} from '../../3d-test/monster-actor.mjs';
 const rows=registry.assets;
 function fixture(options={}){let fetched=0,decoded=0,closed=0;const pool=createMonsterPool({fetcher:async url=>{fetched++;return new Response(await fs.readFile(new URL('../../'+rows.find(a=>url.pathname.endsWith(a.path)).path,import.meta.url)));},decode:async()=>{decoded++;return {width:512,height:512,close(){closed++;}};},...options});return {pool,counts:()=>({fetched,decoded,closed})};}
 test('same image shares in-flight decode; LRU bounded; all bitmaps close',async()=>{const f=fixture();const [a,b]=await Promise.all([f.pool.acquire('hm-01'),f.pool.acquire('hm-01')]);assert.equal(a.bitmap,b.bitmap);assert.equal(f.counts().decoded,1);a.release();b.release();
@@ -20,4 +20,26 @@ test('all 609 visual variants share bounded stage placement; fixed structures do
  }
  for(let ms=0;ms<=700;ms+=7){const p=monsterPose('stationary-shot','attack',ms);assert.equal(p.x,0);assert.equal(p.y,0);assert.equal(p.rotation,0);}
  assert.equal(findMapping('__proto__'),null);assert.equal(findMapping('galaxy-map-041').assetId,'hm-02');
+});
+
+test('HTTP, decode, integrity and cleared storage recover on the same pool',async()=>{
+ for(const fault of ['http','decode','sha','bytes']){
+  let broken=true,closed=0,decoded=0;
+  const f=fixture({fetcher:async()=>{if(broken&&fault==='http')return new Response(null,{status:503});let bytes=await fs.readFile(new URL('../../'+rows[0].path,import.meta.url));if(broken&&fault==='bytes')bytes=bytes.subarray(0,50);if(broken&&fault==='sha'){bytes=Buffer.from(bytes);bytes[100]^=1;}return new Response(bytes);},decode:async()=>{if(broken&&fault==='decode')throw Error('injected decode');decoded++;return {width:512,height:512,close(){closed++;}};}});
+  await assert.rejects(f.pool.acquire(rows[0].assetId));assert.equal(f.pool.stats().pending,0);assert.equal(f.pool.stats().refs,0);assert.equal(f.pool.stats().bytes,0);
+  broken=false;const a=await f.pool.acquire(rows[0].assetId);a.release();f.pool.clear();assert.equal(f.pool.stats().bytes,0);
+  const b=await f.pool.acquire(rows[0].assetId);b.release();f.pool.dispose();assert.equal(closed,decoded,fault+' leaks no bitmap');
+ }
+});
+test('leave during download then reenter; active lease survives clear until release',async()=>{
+ let complete;const f=fixture({fetcher:()=>new Promise(r=>complete=async()=>r(new Response(await fs.readFile(new URL('../../'+rows[0].path,import.meta.url))))) });
+ const ac=new AbortController(),pending=f.pool.acquire(rows[0].assetId,{signal:ac.signal});while(!complete)await new Promise(r=>setImmediate(r));ac.abort();await assert.rejects(pending,/aborted/);await complete();await new Promise(r=>setImmediate(r));assert.equal(f.pool.stats().refs,0);f.pool.dispose();
+ const next=fixture(),lease=await next.pool.acquire(rows[0].assetId);next.pool.clear();assert.equal(next.pool.stats().refs,1);lease.release();next.pool.clear();assert.equal(next.pool.stats().bytes,0);next.pool.dispose();assert.equal(next.counts().closed,next.counts().decoded);
+});
+
+test('actor disposed during initialization releases a late lease without an external abort',async()=>{
+ let finish,released=0;const pool={acquire:()=>new Promise(r=>finish=()=>r({bitmap:{},release(){released++;}}))};
+ const canvas={width:0,height:0,getContext:()=>({}),remove(){},dataset:{}};
+ const actor=new MonsterActor(pool,'hm-01',{canvasFactory:()=>canvas}),pending=actor.init();actor.dispose();finish();
+ await assert.rejects(pending,/monster-aborted/);assert.equal(released,1);
 });

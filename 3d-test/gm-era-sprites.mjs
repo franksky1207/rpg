@@ -1,5 +1,5 @@
 import {registry,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261020-twenty-gm1';
-import {MonsterActor,visualPlacement} from './monster-actor.mjs?v=20261020-twenty-gm1';
+import {MonsterActor,visualPlacement,applyBattleSpriteLayout} from './monster-actor.mjs?v=20261021-batch15-pair1';
 import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261020-twenty-gm1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
@@ -39,7 +39,7 @@ export async function mount({host,signal,quality='medium'}={}){
   const entry=missing?{...row,asset:{...row.asset,sha256:'0'.repeat(64)},weaponAnimation:{...row.weaponAnimation,body:{...row.weaponAnimation.body,sha256:'0'.repeat(64)}}}:row;
   try{const next=await new WholeSuitActor(pool,entry,{tier:quality,signal:loading.signal}).init();
    if(closed||!authorized||ticket!==serial){next.dispose();return;}
-   actor=next;actor.canvas.dataset.suit=row.id;actor.canvas.style.cssText='position:absolute;left:calc(50% - 90px);top:20px;height:180px;width:180px;max-width:100%;object-fit:contain';preview.append(actor.canvas);placeholder.hidden=true;transform();animation.play('idle',visualNow);status.textContent='已載入，可檢查六種動作。';
+   actor=next;actor.draw({clip:'idle',elapsedMs:0});actor.canvas.dataset.suit=row.id;actor.canvas.style.cssText='position:absolute;left:calc(50% - 90px);top:20px;height:180px;width:180px;max-width:100%;object-fit:contain';preview.append(actor.canvas);placeholder.hidden=true;transform();animation.play('idle',visualNow);status.textContent='已載入，可檢查六種動作。';
   }catch{if(!closed&&ticket===serial){status.textContent='缺圖或驗證失敗：已安全回退文字，未修改正式資料。';placeholder.textContent='角色暫時無法顯示';}}
   diagnostics();
  }
@@ -60,9 +60,7 @@ export async function mount({host,signal,quality='medium'}={}){
    const p=visualPlacement(b,half,h,1);
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
-  if(monster){const v=selectedMapping()?.visual,size=Math.min(half*(v?.maxStageFraction||.47)*2,h*.90)*(v?.scale||1);
-   monster.canvas.style.cssText=`position:absolute;left:${half+(half-size)/2}px;top:${(h-size)/2}px;width:${size}px;height:${size}px;max-width:none`;
-  }
+  if(actor&&monster)applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});
  }
  async function showMonster(){
   clearMonster();duelLayout();const id=$('[data-monster]').value,ticket=monsterSerial;
