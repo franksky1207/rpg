@@ -1,7 +1,7 @@
 'use strict';
 const {chromium}=require('playwright'),fs=require('node:fs'),assert=require('node:assert/strict');
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
-(async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']}),report={passed:false,realDevice:false,rows:[]};
+(async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']}),report={passed:false,realDevice:false,rows:[]};
 try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width:844,height:390}]){
  const page=await browser.newPage({viewport});await page.route('**/batch16-mirror.html',r=>r.fulfill({contentType:'text/html',body:'<iframe style="border:0;width:100%;height:95vh" src="batch16-mirror-frame.html?embedded=1"></iframe>'}));
  await page.route('**/batch16-mirror-frame.html?embedded=1',r=>r.fulfill({contentType:'text/html',body:'<base href="./3d-test/"><link rel="stylesheet" href="formal-player-sprites.css"><div id="gm"></div><div id="formal" style="height:180px;position:relative;overflow:hidden"></div>'}));

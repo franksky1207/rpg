@@ -1,0 +1,21 @@
+startup 1365
+intro 1365
+run 1365 era-galaxy 1
+run 1365 era-universe 1.5
+run 1365 era-higher 2
+run 1365 era-universe 2
+run 1365 era-galaxy 2
+PASS formal battle UI 1365
+startup 390
+intro 390
+run 390 era-galaxy 1
+run 390 era-universe 1.5
+run 390 era-higher 2
+PASS formal battle UI 390
+startup 844
+intro 844
+run 844 era-galaxy 1
+run 844 era-universe 1.5
+run 844 era-higher 2
+PASS formal battle UI 844
+

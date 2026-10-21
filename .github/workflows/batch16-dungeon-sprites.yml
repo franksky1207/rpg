@@ -29,6 +29,7 @@ jobs:
           python3 tests/runtime/batch13-monster-assets.py
           python3 scripts/generate-monster-trial-registry.py --check
           node tests/runtime/batch16-dungeon-contract.cjs
+          node tests/runtime/batch16-cache.cjs
           node --test tests/runtime/batch13-monster-pool.test.mjs
           node scripts/build-publish-dry-run.cjs
       - name: All dungeon identities, mirror and fault recovery on published candidate
@@ -46,7 +47,9 @@ jobs:
           node tests/runtime/batch16-all-identities-browser.cjs
           node tests/runtime/batch16-mirror-browser.cjs
           node tests/runtime/batch16-live-dungeons-browser.cjs
+          node tests/runtime/batch16-cross-mode-browser.cjs
           node tests/runtime/batch16-monster-recovery-browser.cjs
+          node tests/runtime/batch16-resource-timeout-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

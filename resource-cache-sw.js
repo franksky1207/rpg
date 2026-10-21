@@ -5,7 +5,7 @@ const MANIFEST="resource-manifest.json";
 const MEDIA=/\.(?:ogg|mp3|wav|png|jpe?g|webp|avif|glb|gltf|bin|ktx2|basis)$/i;
 let known=null, refreshJob=null, manifestTag=null;
 const verifiedSpriteCache=new Set();
-const isFormalSprite=path=>/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path)||/^assets\/monsters\/v1\/(?:humanoid|mechanical|starship|creature|biological|structure|core|energy)\/[a-z0-9-]+\.webp$/.test(path);
+const isFormalSprite=path=>path==='assets/monsters/v1/void/void-phantom-v01.webp'||/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path)||/^assets\/monsters\/v1\/(?:humanoid|mechanical|starship|creature|biological|structure|core|energy)\/[a-z0-9-]+\.webp$/.test(path);
 async function verifiedSprite(response,digest){const bytes=await response.clone().arrayBuffer();const hash=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('').slice(0,24)===digest;}
 const asPath=url=>{const u=new URL(url);const scope=new URL(self.registration.scope);if(u.origin!==scope.origin||!u.pathname.startsWith(scope.pathname))return null;return decodeURIComponent(u.pathname.slice(scope.pathname.length));};
 const hex=s=>typeof s==="string"&&/^[a-f0-9]{24}$/.test(s);
@@ -91,7 +91,8 @@ function shouldPreload(p){
  // Six released player sprites (three eras x standing/attack atlas) are part of formal combat.
  // Exact whitelist excludes GM previews, old equipment models, and unpublished assets.
  if(/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(p))return true;
- // Only twenty already-approved map-monster images. Disk cache only; never decode en masse.
+ if(p==='assets/monsters/v1/void/void-phantom-v01.webp')return true;
+ // The twenty already-approved map-monster images. Disk cache only; never decode en masse.
  if(/^assets\/monsters\/v1\/(?:humanoid|mechanical|starship|creature|biological|structure|core|energy)\/[a-z0-9-]+\.webp$/.test(p))return true;
  if(p.startsWith("assets/backgrounds/"))return MEDIA.test(p);
  if(p.startsWith("audio/assets/era-themes/"))return p.endsWith("-theme-loop.ogg");
