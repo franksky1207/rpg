@@ -1,5 +1,5 @@
-import {registry,identitiesForAsset,findMapping,palettes} from './monster-sprites.mjs?v=20261020-twenty-gm1';
-import {MonsterActor,visualPlacement,monsterPlacement} from './monster-actor.mjs?v=20261020-twenty-gm1';
+import {registry,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261020-twenty-gm1';
+import {MonsterActor,visualPlacement} from './monster-actor.mjs?v=20261020-twenty-gm1';
 import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261020-twenty-gm1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1';
@@ -16,9 +16,9 @@ export async function mount({host,signal,quality='medium'}={}){
  const ui=host.firstElementChild,$=s=>ui.querySelector(s),preview=$('.gm-suit-preview'),placeholder=$('[data-placeholder]'),status=$('[data-status]'),era=$('[data-era]');
  for(const a of registry.assets){const option=document.createElement('option');option.value=a.assetId;option.textContent=a.name+' · '+a.assetId;$('[data-monster]').append(option);}
  function selectedMapping(){return findMapping($('[data-monster-identity]').value);}
- function sharedIdentities(){const rows=identitiesForAsset($('[data-monster]').value),select=$('[data-monster-identity]');select.replaceChildren(new Option('選擇怪物身份',''));for(const row of rows)select.append(new Option(row.name+' · '+row.id,row.id));$('[data-monster-shared]').hidden=!rows.length;$('[data-monster-shared] summary').textContent='此原型的怪物（'+rows.length+'）';$('[data-monster-identities]').textContent=rows.map(row=>row.id+' · '+row.name+' · '+row.visual.palette+' · '+Math.round(row.visual.scale*100)+'%').join('\\n');describeMonster();}
+ function sharedIdentities(){const rows=identitiesForAsset($('[data-monster]').value),select=$('[data-monster-identity]');select.replaceChildren(new Option('選擇怪物身份',''));for(const row of rows)select.append(new Option(row.name+' · '+row.id,row.id));$('[data-monster-shared]').hidden=!rows.length;$('[data-monster-shared] summary').textContent='此原型的怪物（'+rows.length+'）';$('[data-monster-identities]').textContent=rows.map(row=>row.id+' · '+row.name+' · '+row.visual.palette+' · '+Math.round(row.visual.scale*100)+'%').join('\n');describeMonster();}
  function describeMonster(){const asset=registry.assets.find(a=>a.assetId===$('[data-monster]').value),row=selectedMapping();$('[data-monster-description]').textContent=asset?(asset.name+' · '+asset.assetId+'｜使用身份 '+identitiesForAsset(asset.assetId).length+' 種｜'+(row?'選取：'+row.name+' · 配色 '+row.visual.palette+' · 尺寸 '+Math.round(row.visual.scale*100)+'% · 動作 '+row.visual.animationType:'請選擇使用此原型的怪物，查看正式配色、大小與動作')):'選擇原型後，再選擇怪物身份，檢視其正式顏色、大小與動作。';}
- const controls=[...ui.querySelectorAll('select,button')];
+ 
  const setEnabled=ok=>{ui.querySelectorAll('select,button').forEach(b=>b.disabled=!ok);};
  function clear(){serial++;loading?.abort();loading=null;actor?.canvas.remove();actor?.dispose();actor=null;animation.cancel();placeholder.hidden=false;}
  function diagnostics(){const s=pool.stats();$('[data-diagnostics]').textContent=JSON.stringify({...s,canvases:actor?1:0,rafs:raf?1:0,canCommit:false,monster:{...monsterPool.stats(),id:$('[data-monster]').value,canvases:monster?1:0,animation:monsterAnimation.snapshot(),cache:'SHA-256 / 智慧磁碟快取；解碼上限 2 張'}},null,2);}
