@@ -80,3 +80,4 @@
 - 自動化證據：PR #70 最新提交的 **Batch16 Dungeon Sprite Acceptance** artifact `batch16-dungeon-evidence`（`/tmp/batch16-*.json` 與畫面）；第15批／GM證據由 **Batch13 Twenty Monster GM Integration** 保存。最新提交全部必要 Actions 完成 success 後才可合併，合併後另核對 main Runtime／Pages；queued／in_progress／skipped／cancelled 皆不代表通過。
 - 此處記錄測試範圍與重現方式，實際發布結論以對應 SHA 的 Actions／部署為準。Chromium桌機與手機視窗模擬不等同 iPhone Safari 真機；GPU、溫度、電池、長時間背景恢復須玩家真機確認。
 - Actions 揭露舊 presentation baseline 鎖住首頁舊快取 URL、GM terminology 鎖住舊測試中心 URL；本次僅精確正規化／更新三個已核准版本字串，其餘完整檔案 blob 比對與可見文案門檻保留，未改成任意版本或放寬內容。
+- 本地實際結果與18種名稱／原型對照見 [特殊怪驗收證據](BATCH16_SPECIAL_SPRITE_ACCEPTANCE_2026-10-21.md)：222版面動畫、260切換、296故障復原、19逾時、1827既有身份回歸皆通過；18次正式遭遇在同頁不手動重啟Renderer／事件橋即可連續結算再戰。遠端以最新SHA工作結果判定。

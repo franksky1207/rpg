@@ -11,7 +11,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   for(const row of cases){
    const world=row.world==='galaxy'?1:2;
    await page.evaluate(({row,world})=>{
-    closeBattleResultModal();CivilizationFormalBEntry.dispose();CivilizationFormalBRenderer.clearSpriteCache();CivilizationFormalBEntry.boot();
+    closeBattleResultModal();CivilizationFormalBRenderer.clearSpriteCache();
     state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='特殊怪驗收';state.level=world===2?600:1;state.secondWorld.entered=world===2;state.hp=1000;
     // Deterministic encounter selection only: actual enemy construction, combat, events,
     // presentation, reward, save and settlement functions remain production code.
@@ -35,7 +35,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    await page.waitForFunction(()=>window.__specialDone,null,{timeout:60000});
    const settlement=await page.evaluate(()=>({error:__specialError,triggered:__specialResult?.triggered,world:__specialResult?.result?.world,win:__specialResult?.win,encounters:__specialContext.specialEncounters?.length,hp:state.hp}));
    assert.equal(settlement.error,null);assert.equal(settlement.triggered,true);assert.equal(settlement.world,world);assert.equal(settlement.encounters,1);
-   await page.evaluate(()=>{CivilizationFormalBEntry.dispose();CivilizationFormalBRenderer.clearSpriteCache();CivilizationFormalBEntry.boot();});
+   await page.evaluate(async()=>{await new Promise(requestAnimationFrame);CivilizationFormalBRenderer.clearSpriteCache();});
    const stats=await page.evaluate(()=>CivilizationFormalBRenderer.monsterStats());assert.equal(stats.refs,0);assert.equal(stats.pending,0);assert.equal(stats.bytes,0);
    const suppressed=await page.evaluate(async({row,world})=>{
     const expected=__specialResult.result,summary=r=>({win:r.win,world:r.world,xp:r.xp,gold:r.gold,darkMatter:r.darkMatter,darkEnergy:r.darkEnergy,convertedGold:r.convertedGold,blackMarketIntelGranted:r.blackMarketIntelGranted,drops:r.drops.length});
