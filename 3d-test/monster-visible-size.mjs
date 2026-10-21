@@ -9,6 +9,8 @@ export const MONSTER_KIND_SCALE=Object.freeze({
 });
 export function monsterVisibleSize({assetId,bounds,visual={},playerVisibleHeight,stageWidth,stageHeight}){
  const [l,t,r,b]=bounds;
+ // Reserve a small rasterization margin: the measured alpha footprint is sometimes
+ // narrower than the registry rectangle after animation/downsampling.
  const paintedHeight=Math.min(.68,.68*(b-t)/Math.max(1,r-l));
  const paintedWidth=Math.min(.68,.68*(r-l)/Math.max(1,b-t));
  const kind=MONSTER_KIND_SCALE[assetId]||1;
