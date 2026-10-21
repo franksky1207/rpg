@@ -85,14 +85,18 @@ const policy=require("../../scripts/publish-assets.cjs");
    "assets/era-player/v1/era-"+era+".webp",
    "assets/era-player/v1/era-"+era+"-attack-atlas.webp"
   ]);
-  const expectedCachedMedia=49+formalPlayerSprites.length+20;
+  const formalMonsterSprites=JSON.parse(fs.readFileSync("data/monsters/monster-assets.json","utf8")).assets.map(a=>a.path);
+  assert.equal(formalMonsterSprites.length,21,"twenty sealed map prototypes plus V-01");
+  assert.ok(formalMonsterSprites.includes("assets/monsters/v1/void/void-phantom-v01.webp"));
+  for(const asset of formalMonsterSprites)assert.ok(manifest.files[asset],"missing formal monster asset: "+asset);
+  const expectedCachedMedia=49+formalPlayerSprites.length+formalMonsterSprites.length;
   for(const asset of formalPlayerSprites)assert.ok(manifest.files[asset],"missing formal player asset: "+asset);
   assert.equal(cache.preload.failed,0);assert.equal(cache.preload.total,expectedCachedMedia);
   assert.equal(cache.status.entries,expectedCachedMedia);assert.ok(cache.status.bytes>0);
   assert.equal(cache.range.status,206);assert.equal(cache.range.bytes,4);assert.match(cache.range.header,/^bytes 2-5\/\d+$/);
   assert.equal(cache.clear.ok,true);assert.equal(cache.after.entries,0);assert.equal(cache.preserved,true);
   metrics.cache=cache;assert.deepEqual(metrics.missing,[]);assert.deepEqual(metrics.pageErrors,[]);
-  metrics.passed=true;console.log("PASS isolated candidate: all HTTP bytes/digests, 17 audio decodes, desktop/mobile settings, 75 cached media (49 existing + six formal player sprites + 20 formal monster sprites), Range, clear/save isolation");
+  metrics.passed=true;console.log("PASS isolated candidate: all HTTP bytes/digests, 17 audio decodes, desktop/mobile settings, 76 cached media (49 existing + six formal player sprites + 21 formal monster sprites), Range, clear/save isolation");
  }catch(error){metrics.passed=false;metrics.error=String(error.stack||error);throw error;}
  finally{fs.writeFileSync("publish-stage4-browser-report.json",JSON.stringify(metrics,null,2)+"\n");await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
