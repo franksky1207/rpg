@@ -7,7 +7,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width:844,height:390}]){
   const page=await browser.newPage({viewport});
   await page.route('**/batch15-harness.html',r=>r.fulfill({contentType:'text/html',body:'<iframe style="border:0;width:100%;height:100vh" src="batch15-frame.html?embedded=1"></iframe>'}));
-  await page.route('**/batch15-frame.html?embedded=1',r=>r.fulfill({contentType:'text/html',body:`<base href="./3d-test/"><div id="gm"></div><div id="formal" style="position:relative;height:${viewport.width>viewport.height?180:320}px;overflow:hidden"></div>`}));
+  await page.route('**/batch15-frame.html?embedded=1',r=>r.fulfill({contentType:'text/html',body:`<base href="./3d-test/"><link rel="stylesheet" href="formal-player-sprites.css"><div id="gm"></div><div id="formal" class="formal-b-shared-stage" style="position:relative;height:${viewport.width>viewport.height?180:320}px;overflow:hidden"></div>`}));
   await page.goto(new URL('batch15-harness.html',base).href);
   await page.evaluate(()=>addEventListener('message',e=>{if(e.data?.type==='civilization3d:sprite-auth')e.source.postMessage({type:'civilization3d:sprite-auth-response',requestId:e.data.requestId,authorized:true},location.origin);}));
   const frame=page.frames()[1];await frame.waitForLoadState();

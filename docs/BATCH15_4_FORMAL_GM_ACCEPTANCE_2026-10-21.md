@@ -8,20 +8,20 @@
 - 15-2已合併：14組CSS配色、來源JSON與產生器一致；本批保留資料與生成registry原位元。
 - 15-3已合併：原型→身份唯讀選單、動作測試與身份摘要；本批保留，沒有恢復手動倍率／配色覆寫。
 - 基準main同SHA有12項成功Actions（含正式、GM、Batch6、Batch12、Batch13、發布Gate及Pages）。這些是前置證據，不能代替本次結果。
-- 原PR共有15提交，104個workflow紀錄涵蓋13個觸發SHA；快速相鄰提交沒有各自觸發紀錄，取消不視為通過。26個失敗工作逐一讀取：13個Batch13、12個歷史範圍保護、1個發布未分類模組。完整失敗索引及實際錯誤見 `development/combat-animation/batch15/pr65-failure-audit.json`；最早一個失敗日誌未取得有效錯誤行，保留空列不推測。
+- 原PR共有15提交，104個workflow紀錄涵蓋13個觸發SHA；快速相鄰提交沒有各自觸發紀錄，取消不視為通過。26個失敗工作逐一讀取：13個Batch13、12個歷史範圍保護、1個發布未分類模組。完整失敗索引及實際錯誤見 `development/combat-animation/batch15/pr65-failure-audit.json`；最早一次為GM怪物狀態等待30秒逾時，不將其推測為尺寸斷言。
 - 最新PR實際失敗是beast-01的106.86/150.41px，約71%；下載DNS失敗後已fallback下載成功，不是阻擋根因。
 
 ## 修改
 
 刪除新建的monster-visible-size.mjs、所有執行引用及其歷史白名單。保留monster-actor.mjs既有版面owner，將正式Renderer原型體型表移入此模組；正式與GM直接呼叫同一個applyBattleSpriteLayout，不再各算怪物尺寸。
 
-以真實Actor的256px待機畫面量測alpha>16的可見範圍，並量測1600ms待機週期極值；只有90%共同下限與原15-1的體型／身份倍率，沒有92%、99%或人工安全係數。測量數字依素材entry與tier快取，不保留影像資源、不逐動畫幀讀回。兩個角色作為同一組等比例容納；保留正式配色、左向、身份偏移與動作。GM首幀明確繪製，避免命中版面快取時空白。所有玩法owner、數值、獎勵、存檔與資源池邏輯不變。
+以真實Actor的256px待機畫面量測alpha>16的可見範圍，並量測1600ms待機週期極值；只有90%共同下限與原15-1的體型／身份倍率，沒有92%、99%或人工安全係數。測量數字依素材entry與tier快取，不保留影像資源、不逐動畫幀讀回。兩個角色作為同一組等比例容納；保留正式配色、左向、身份偏移與動作。GM首幀明確繪製，避免命中版面快取時空白。補修Actor初始化完成前dispose時，晚到lease必須release；加入不依賴外部abort的競態測試。所有玩法owner、數值、獎勵、存檔與資源池邏輯不變。
 
 更新正式與GM整條懶載入快取入口。歷史HTML保護只精確接受本次cache token，仍逐位元檢查其餘內容。原PR新增的尺寸檔白名單已完全還原。
 
 ## 全身份實際瀏覽器結果
 
-完整每筆結果：`development/combat-animation/batch15/all-identities.json`。桌機1365×900、手機390×844及844×390；GM舞台240px，正式舞台桌機／橫向180px、直向320px，驗證不同舞台共同縮放。
+正式樣式表與舞台class一併載入，包含手機媒體查詢。完整每筆結果：`development/combat-animation/batch15/all-identities.json`。桌機1365×900、手機390×844及844×390；GM舞台240px，正式舞台桌機／橫向180px、直向320px，驗證不同舞台共同縮放。
 
 609身份，1827案例，1827成功，0失敗。可見高度比例91.3588%～230.0441%；GM／正式最大比例絕對誤差0.00041807（0.041807個百分點），由CSS 1/64像素座標量化造成。斷言使用同一CSS像素量化上界，沒有放寬90%可見高度下限。
 
@@ -41,8 +41,10 @@
 
 正式Sprite範圍仍僅銀河／宇宙main：高維、異宇宙、懸賞、競技、文明災厄、十王、虛空／鏡像沿用原正式替代輪廓／文字模式，禁止杜撰新Sprite啟用結果。完整既有Batch6的16類回歸與cross-combat-stale-continuous、unified-combat-runtime、cross-mode-late-settlement另行驗收背景、離線、Fast Catch-up、三紀元連戰與晚到結算。
 
+本機完整Batch6結果為32/32、16類、36個不同原始測試，同次執行且未使用舊證據；逐項結果與完整原始輸出存於本批cross-mode.json及batch6-final16-logs。文明災厄一般／Fast終端、共享UI、跨模式互斥與晚到結算專用測試另通過。
+
 真實iPhone溫度、耗電、OS背景掛起及真帳號雲端未測；不得稱為真機通過。
 
 ## 發布門檻
 
-施工中：待最新提交Actions、合併後Runtime Integrity與Pages實際檔案指紋確認。不得據本文件提前宣告封箱。
+本文件記錄施工及本機驗收證據。最終候選Actions、合併後main SHA、Runtime Integrity與Pages實際檔案指紋，以PR #65最新說明及對應Actions成功紀錄核對；不能僅依本機結果宣告封箱。

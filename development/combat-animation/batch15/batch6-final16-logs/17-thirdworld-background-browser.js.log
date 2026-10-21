@@ -1,0 +1,3 @@
+PASS W3 actual background/HUD/minimal chromium { width: 1280, height: 800 }
+PASS W3 actual background/HUD/minimal chromium { width: 390, height: 844 }
+

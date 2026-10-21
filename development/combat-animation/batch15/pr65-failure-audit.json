@@ -352,6 +352,9 @@
     "sha": "6714b8c4f373745abd17eedfe70d3cb547be124d",
     "name": "Batch13 Twenty Monster GM Integration",
     "job": 119045354460,
-    "errors": []
+    "errors": [
+      "2026-10-21T04:53:42.2579301Z locator.waitFor: Timeout 30000ms exceeded.",
+      "2026-10-21T04:53:42.2580774Z waiting for GM monster status SHA-256 已驗證; tests/runtime/batch13-monster-browser.cjs:37:141"
+    ]
   }
 ]
