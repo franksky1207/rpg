@@ -18,7 +18,9 @@ export function monsterVisibleSize({assetId,bounds,visual={},playerVisibleHeight
  const targetRatio=Math.max(.9,Math.min(2.3,kind*identityScale));
  const required=playerVisibleHeight*targetRatio/Math.max(.01,paintedHeight);
  const fit=Math.min(stageHeight*.98/Math.max(.01,paintedHeight),stageWidth*.48/Math.max(.01,paintedWidth));
- const minimum=playerVisibleHeight*.9/Math.max(.01,paintedHeight);
+ // Idle pose and alpha threshold reduce actual painted height by about 5%;
+ // reserve a 10% safety margin so measured pixels still exceed the 90% floor.
+ const minimum=playerVisibleHeight*.99/Math.max(.01,paintedHeight);
  const size=Math.max(minimum,Math.min(required,fit));
  return {size,targetRatio,actualRatio:size*paintedHeight/Math.max(.01,playerVisibleHeight),paintedWidth,paintedHeight};
 }
