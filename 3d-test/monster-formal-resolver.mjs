@@ -1,7 +1,28 @@
 // Explicit map/dungeon presentation whitelist. No fuzzy identity matching or gameplay writes.
-import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch16-dungeons2';
+import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-special-formal1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  if(!registry.formalBattleEnabled||![1,2].includes(world))return null;
+ if(mode==='special'){
+  if(kind!=='special'||typeof location!=='string')return null;
+  const approvedIds=['gold_slime','mimic','reaper','lucky_rabbit','ancient_guardian','relic_guardian','bandit_king','collector','mysterious_traveler'];
+  if(!approvedIds.includes(location))return null;
+  const row=findMapping('special-'+location);
+  if(!row||row.world!=='both'||row.kind!=='special'||row.specialId!==location)return null;
+  const universeNames={
+   gold_slime: '星源聚合體',
+   mimic: '虛空誘餌艙',
+   reaper: '終焉協議體',
+   lucky_rabbit: '星運增幅信標',
+   ancient_guardian: '古域警戒機',
+   relic_guardian: '星藏保全體',
+   bandit_king: '暗域黑市王',
+   collector: '星骸回收者',
+   mysterious_traveler: '界域交易使'
+  };
+  if(name!==(world===2?universeNames[location]:row.name))return null;
+  const asset=findAsset(row.assetId);
+  return asset?.formalBattleAllowed===true&&asset.gmPreviewAllowed===true&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
+ }
  if(['bounty','arena','void'].includes(mode)){
   // Names are exact canonical owner identities, never substring/fuzzy matches.
   const row=Object.values(mappings).find(r=>r.mode===mode&&r.name===name&&r.kind===kind&&(r.world==='both'||r.world===(world===1?'galaxy':'universe')));
