@@ -52,7 +52,12 @@ export class MonsterActor{
   // Subject size is driven by approved per-identity scale, with a 90%-of-player minimum.
   const target=monsterVisibleSize(a,this.mapping?.visual||{});
   const size=n*target.visibleFraction*512/(b-t);
-  c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
+  // Wide designs may overflow the square bitmap; render to a wider backing
+  // surface while maintaining the same visible height and center anchor.
+  const requiredWidth=Math.ceil((r-l)/512*size*1.08);
+  const width=Math.max(n,requiredWidth),center=width/2;
+  if(this.canvas.width!==width){this.canvas.width=width;this.ctx=this.canvas.getContext('2d');}
+  c.clearRect(0,0,width,n);c.save();c.translate(center+n*p.x,n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
   c.drawImage(this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
   if(p.flash){c.globalCompositeOperation='source-atop';c.globalAlpha=p.flash;c.fillStyle='#fff';c.fillRect(-n,-n,n*2,n*2);}c.restore();
   // A compact bolt or pulse, never a crescent or a broad blade swing.
