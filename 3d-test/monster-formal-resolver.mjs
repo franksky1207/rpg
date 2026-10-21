@@ -1,7 +1,21 @@
 // Formal presentation resolver: only main galaxy/universe, no fuzzy matching or gameplay writes.
-import {registry,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch14-formal1';
+import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch16-dungeons1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
- if(mode!=='main'||!registry.formalBattleEnabled||![1,2].includes(world))return null;
+ if(!registry.formalBattleEnabled||![1,2].includes(world))return null;
+ if(['bounty','arena','void'].includes(mode)){
+  // Names are exact canonical owner identities, never substring/fuzzy matches.
+  const row=Object.values(mappings).find(r=>r.mode===mode&&r.name===name&&r.kind===kind&&(r.world==='both'||r.world===(world===1?'galaxy':'universe')));
+  if(!row)return null;
+  if(mode==='arena'&&location!==String(row.arenaStage))return null;
+  if(mode==='void'){
+   if(typeof location!=='string'||! /^[1-9]\d*$/.test(location)||!Number.isSafeInteger(Number(location)))return null;
+   const floor=Number(location),boss=floor%10===0;
+   if(row.isBossFloor!==boss||boss&&row.bossCycle!==Math.floor(((floor-1)%100)/10))return null;
+  }
+  const asset=findAsset(row.assetId);
+  return asset?.formalBattleAllowed&&asset.gmPreviewAllowed&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
+ }
+ if(mode!=='main')return null;
  let key=null;
  if(world===1){
   // Official W1 combat owner uses zero-based map index and enemy index in location.
@@ -22,4 +36,10 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  const asset=findAsset(mapping.assetId);
  if(!asset||asset.formalBattleAllowed!==true||asset.gmPreviewAllowed!==true||asset.facing!=='left-3/4')return null;
  return Object.freeze({mapping,asset});
+}
+
+// Mirror has no monster prototype: the same approved player appearance/Actor is reused.
+export function resolveFormalMirror({mode,world,name,playerName}={},entry){
+ if(mode!=='mirror'||![1,2].includes(world)||typeof playerName!=='string'||name!=='鏡像・'+playerName||entry?.formalBattleAllowed!==true)return null;
+ return Object.freeze({id:'mirror-'+world,name,visual:{sizePolicy:'dungeon',visibleRatio:1.06,palette:'cyan-violet',effect:'rim',energy:1,mirror:true}});
 }

@@ -148,10 +148,10 @@ async function prepareSuit(options){
  if(!identity?.ready||!entry||entry.formalBattleAllowed!==true)throw Error("unavailable-formal-armor");
  options.signal.throwIfAborted();
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
- verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null,enemyId:options.identity?.id||null,enemyMode:options.identity?.mode||null,enemyWorld:options.identity?.world||null,enemyLocation:options.identity?.location||null});return token;
+ verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyPlayerName:options.identity?.playerName||null,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null,enemyId:options.identity?.id||null,enemyMode:options.identity?.mode||null,enemyWorld:options.identity?.world||null,enemyLocation:options.identity?.location||null});return token;
 }
 let spriteRuntime=null,spritePool=null,spriteMonsterPool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
-const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261019-batch12-rising-cut1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
+const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
 const warmAllowed=()=>!global.document?.querySelector?.('#main .combat-screen')&&!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
 function cancelWarmup(){
  clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);warmIdle=null;
@@ -203,7 +203,7 @@ else scheduleWarm();
 
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261021-batch15-pair1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261021-batch16-dungeons1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -227,23 +227,39 @@ async function createSuit(options,bundle){
  let monsterActor=null,monsterAttempt=0,monsterMapping=null,monsterReady=false,monsterLastKey=null,monsterError='';
  let lastEnemyFrame=null;
  let monsterPoolPromise=null;
- const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261021-batch14-formal1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
+ const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261021-batch16-dungeons1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
  // Monster optional: keep the existing known-good silhouette until verified sprite is ready.
  async function activateMonster(){
-  if(monsterAttempt||closed||signal.aborted||!isCurrent()||bundle.enemyMode!=='main'||![1,2].includes(bundle.enemyWorld))return;
+  if(monsterAttempt||closed||signal.aborted||!isCurrent()||!['main','bounty','arena','void','mirror'].includes(bundle.enemyMode)||![1,2].includes(bundle.enemyWorld))return;
   monsterAttempt=1;
+  // Reserve the stage while optional assets load. Reveal one completed pair, so
+  // decode never visibly moves the player. This deadline governs resources only.
+  actor.canvas.style.visibility='hidden';enemyCanvas.style.visibility='hidden';
+  const loading=new AbortController(),cancelLoad=()=>loading.abort();
+  signal.addEventListener('abort',cancelLoad,{once:true});
+  const loadDeadline=setTimeout(cancelLoad,2500);
   try{
-   const [{resolveFormalMonster},{MonsterActor}]=await Promise.all([
-    import('./monster-formal-resolver.mjs?v=20261021-batch14-formal1'),
-    import('./monster-actor.mjs?v=20261021-batch15-pair1')
+   const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
+    import('./monster-formal-resolver.mjs?v=20261021-batch16-dungeons1'),
+    import('./monster-actor.mjs?v=20261021-batch16-dungeons1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
+   const mirror=resolveFormalMirror({mode:bundle.enemyMode,world:bundle.enemyWorld,name:bundle.enemyName,playerName:bundle.enemyPlayerName},bundle.entry);
+   if(mirror){
+    monsterMapping=mirror;
+    const next=await new WholeSuitActor(spritePool,bundle.entry,{signal:loading.signal,tier:'medium'}).init();
+    if(closed||signal.aborted||!isCurrent()){next.dispose();return;}
+    next.mirrored=true;next.canvas.dataset.mirror=bundle.entry.id;monsterActor=next;
+    next.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';host.append(next.canvas);
+    monsterReady=true;enemyCanvas.style.visibility='hidden';layoutKey='';layoutSprites();
+    if(lastEnemyFrame)drawMonster(lastEnemyFrame);return;
+   }
    const approved=resolveFormalMonster({mode:bundle.enemyMode,world:bundle.enemyWorld,kind:bundle.enemyKind,name:bundle.enemyName,location:bundle.enemyLocation,id:bundle.enemyId});
    if(!approved)return;
    monsterMapping=approved.mapping;
    const pool=await loadMonsterPool();
    if(closed||signal.aborted||!isCurrent())return;
-   const actor=await new MonsterActor(pool,approved.asset.assetId,{signal,identity:approved.mapping.id,usage:'formal',tier:'medium'}).init();
+   const actor=await new MonsterActor(pool,approved.asset.assetId,{signal:loading.signal,identity:approved.mapping.id,usage:'formal',tier:'medium'}).init();
    if(closed||signal.aborted||!isCurrent()){actor.dispose();return;}
    monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
@@ -251,15 +267,16 @@ async function createSuit(options,bundle){
    layoutKey='';layoutSprites();
    if(lastEnemyFrame)drawMonster(lastEnemyFrame);
   }catch(error){monsterError=String(error?.message||error);if(monsterActor){monsterActor.dispose();monsterActor=null;}monsterReady=false;enemyCanvas.style.visibility='';}
+  finally{clearTimeout(loadDeadline);signal.removeEventListener('abort',cancelLoad);if(!closed){actor.canvas.style.visibility='';enemyCanvas.style.visibility=monsterReady?'hidden':'';}}
  }
 
  function drawMonster(frame){
   if(!monsterActor||!monsterReady)return;
   const e=frame.enemy||frame,elapsed=Number.isFinite(e.elapsedMs)?Math.max(0,e.elapsedMs):0;
-  const clip=e.clip==='return'?'idle':e.clip==='dodge'?'hit':e.clip||'idle';
+  const clip=e.clip||'idle';
   const tick=Math.floor(elapsed/(clip==='idle'?50:35)),key=clip+':'+tick;
-  if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),palette:monsterMapping.visual.palette});monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';return;}}
-  const shift=Number.isFinite(e.approach)?Math.min(.42,Math.max(0,e.approach))*140:0;
+  if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),rootMotion:false,palette:monsterMapping.visual.palette});if(monsterMapping.visual.mirror)applyDungeonEffects(monsterActor.canvas,monsterMapping.visual);monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';return;}}
+  const shift=Number.isFinite(e.approach)?Math.min(approachLimit,Math.min(.42,Math.max(0,e.approach))*140):0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
  const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();monsterActor?.dispose();monsterActor=null;host.querySelectorAll('.formal-b-enemy-sprite').forEach(node=>node.remove());actor.dispose();};
@@ -284,7 +301,7 @@ async function createSuit(options,bundle){
  // Visual docking follows the existing owner approach (max 58.8px). Keep both
  // sprites square and near the shared centre even in a wide, short landscape stage.
  // This changes presentation coordinates only, never event timing or collision rules.
- let layoutKey='';
+ let layoutKey='',approachLimit=Infinity;
  function layoutSprites(){
   const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
@@ -292,7 +309,7 @@ async function createSuit(options,bundle){
   for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
   enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
-  if(monsterActor&&monsterMapping)applyBattleSpriteLayout(actor,monsterActor,w,h,monsterMapping.visual);
+  if(monsterActor&&monsterMapping)approachLimit=applyBattleSpriteLayout(actor,monsterActor,w,h,monsterMapping.visual).approachLimit;
  }
  layoutSprites();
  let lastEnemyRenderKey=null;
@@ -342,7 +359,7 @@ async function createSuit(options,bundle){
    actor.draw({clip:p.clip,elapsedMs:actorTick*step,attackElapsedMs:weapon?Math.max(0,frame.weaponAttack.elapsedMs||0):undefined,rootMotion:bundle.entry.singleLayer===true&&["hit","dodge"].includes(p.clip)});
    lastActorRenderKey=actorKey;
   }
-  const shift=Number.isFinite(p.approach)?Math.min(.42,Math.max(0,p.approach))*140:0;
+  const shift=Number.isFinite(p.approach)?Math.min(approachLimit,Math.min(.42,Math.max(0,p.approach))*140):0;
   const shiftKey=Math.round(shift*10)/10;
   if(lastActorShift!==shiftKey){actor.canvas.style.transform=`translateX(${shiftKey}px)`;lastActorShift=shiftKey;}
   if(actor.canvas.dataset.clip!==p.clip)actor.canvas.dataset.clip=p.clip;

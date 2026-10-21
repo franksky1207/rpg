@@ -49,3 +49,12 @@
 - 全身份證據：development/combat-animation/batch15/all-identities.json
 
 本SOP適用後續怪物製圖與整合；如現役main實作更新，須先稽核差異、經確認後同步修訂SOP，不能依舊文件覆寫新程式。
+
+## 6. 第16批副本擴充（施工候選）
+- 固定56身份：銀河／宇宙懸賞各15、競技場各3，虛空一般10／Boss10；精確mode、world、kind及正式名稱匹配。競技場校驗stage，虛空校驗floor及Boss循環。高維、災厄、異宇宙及special仍排除。
+- 新原型void-phantom-v01沿用既有資料生成流程，僅四個正式虛空身份共用；20個既有原型WebP不可重壓。
+- 副本visual.sizePolicy=dungeon使用原monster-actor.mjs版面owner，以實際待機Alpha週期極值限制1.00～1.50；地圖原90%下限與原身份資料不變。CSS局部光效不計入本體高度。
+- 鏡像使用同一WholeSuitActor的水平反射選項與正式appearance entry；不新增玩家動畫、資源池或計時器。GM與正式同版面、同配色、同朝向。
+- 光效採局部drop-shadow與現有sample驅動的微漂浮／低強度脈動；reduced-motion、低核心裝置、data-effects=off停非必要光效。極簡／背景仍由既有正式policy回退。
+- 新驗收入口：batch16-dungeon-contract.cjs、batch16-all-identities-browser.cjs、batch16-mirror-browser.cjs、batch16-monster-recovery-browser.cjs。原609身份1827案例與既有Batch13／Batch6測試須保持通過。
+- 最終候選是否封箱，以第16批報告、最新PR head及合併後main的Actions／Pages實際結果為準。

@@ -30,7 +30,7 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   const stress=pool.stats(),transfers=performance.getEntriesByType('resource').filter(e=>e.name.includes('/assets/monsters/v1/')).map(e=>({url:e.name,bytes:e.transferSize}));pool.dispose();return {results,stress,transfers,disposed:pool.stats(),lookup:plannedAssetId('galaxy-map-001')};
  });
  assert.equal(poses.lookup,'hm-01');for(const a of poses.results){const s=a.samples;assert.equal(new Set(Object.values(s).map(v=>v.hash)).size,5);assert.equal(s.dead.count,0);assert.ok(s.idle.count>1000);}
- assert.ok(poses.transfers.filter(e=>e.bytes>0).length<=20,'LRU re-decode must reuse disk cache, not download again');assert.ok(poses.transfers.filter(e=>e.bytes===0).length>=150,'warm image requests served without network bytes');
+ assert.ok(poses.transfers.filter(e=>e.bytes>0).length<=21,'LRU re-decode must reuse disk cache, not download again');assert.ok(poses.transfers.filter(e=>e.bytes===0).length>=150,'warm image requests served without network bytes');
  assert.equal(poses.stress.refs,0);assert.equal(poses.stress.pending,0);assert.ok(poses.stress.entries<=2);assert.equal(poses.disposed.bytes,0);
  for(const id of ids){
   const before=await frame.locator('.gm-suit-preview').boundingBox();
@@ -62,7 +62,7 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  await page.unroute('**/assets/monsters/v1/mechanical/mech-02.webp*');
  await frame.locator('[data-reload]').click();await frame.locator('canvas[data-monster="mech-02"]').waitFor();
  await frame.locator('[data-player-duel]').click();
- for(let i=0;i<60;i++)await frame.locator('select[data-monster]').selectOption(ids[i%ids.length]);
+ for(let i=0;i<60;i++)await frame.locator('select[data-monster]').selectOption(ids[i%20]);
  await frame.locator('canvas[data-monster="energy-01"]').waitFor();
  const diag=JSON.parse(await frame.locator('[data-diagnostics]').innerText());assert.ok(diag.monster.bytes<=diag.monster.limit);assert.equal(diag.monster.refs,1);assert.equal(diag.monster.pending,0);
  await frame.locator('select[data-monster]').selectOption('');assert.equal(await frame.locator('canvas[data-monster]').count(),0);assert.equal(await frame.locator('[data-action]').count(),6);

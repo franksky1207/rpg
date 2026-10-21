@@ -1,0 +1,109 @@
+{
+  "schema": "cw.monster-art-handoff.v1",
+  "project": "franksky1207/rpg",
+  "assetId": "void-phantom-v01",
+  "displayName": "虛空幻影",
+  "batch": "第二大批／第16批（規劃）",
+  "status": "art-asset-only-not-integrated",
+  "sourceScope": "虛空幻境普通怪；不含高維",
+  "deploymentPathProposal": "assets/monsters/v1/void/void-phantom-v01.webp",
+  "dimensions": [
+    512,
+    512
+  ],
+  "facing": "left-3/4",
+  "assetType": "2.5D transparent WebP",
+  "usedBy": [
+    {
+      "name": "幻境遊魂",
+      "palette": "spectral-blue",
+      "effect": "slow-float",
+      "notes": "幽藍，緩慢漂浮"
+    },
+    {
+      "name": "異相戰影",
+      "palette": "dark-crimson-violet",
+      "effect": "rim-glow",
+      "notes": "暗紅紫，較強輪廓光"
+    },
+    {
+      "name": "迷界殘像",
+      "palette": "cyan-violet",
+      "effect": "subtle-afterimage",
+      "notes": "青紫，輕微殘影"
+    },
+    {
+      "name": "空間殘響",
+      "palette": "deep-violet",
+      "effect": "brief-pulse",
+      "notes": "深紫，短暫能量脈動"
+    }
+  ],
+  "relativeVisibleHeight": {
+    "min": 1.0,
+    "max": 1.5,
+    "unit": "actual painted alpha height / player actual painted alpha height",
+    "scope": "dungeon only"
+  },
+  "integration": {
+    "reuse": [
+      "MonsterActor",
+      "MonsterPool",
+      "applyBattleSpriteLayout",
+      "existing formal renderer and combat cues"
+    ],
+    "doNotChange": [
+      "battle math",
+      "turn timing",
+      "rewards",
+      "saves",
+      "background battle",
+      "first-batch main-map >=0.9 sizing"
+    ],
+    "highDimension": "deferred",
+    "requiresUserApprovalBeforeRepoWrite": true
+  },
+  "validation": "image asset validated locally; formal runtime/GM/phone not yet validated",
+  "files": {
+    "assets/monsters/v1/void/void-phantom-v01.webp": {
+      "bytes": 213902,
+      "sha256": "6b52b6a956847f0ce77c0043187dbc3a85b6e87e12f2026476246187ff8c133d",
+      "format": "WEBP",
+      "mode": "RGBA",
+      "size": [
+        512,
+        512
+      ],
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        67,
+        31,
+        444,
+        481
+      ]
+    },
+    "reference/void-phantom-v01-preview.png": {
+      "bytes": 273635,
+      "sha256": "e1dd22fcf95e12fbc7246afd82a00ca02c9b46ec9df6870392d728741a205b45",
+      "format": "PNG",
+      "mode": "RGBA",
+      "size": [
+        512,
+        512
+      ],
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "alphaBBox": [
+        67,
+        31,
+        444,
+        481
+      ]
+    }
+  }
+}

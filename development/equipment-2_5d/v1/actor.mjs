@@ -22,7 +22,7 @@ export class WholeSuitActor{
   if(rig&&['attack','return'].includes(plan.clip))p=Object.freeze({...p,rotation:0,scaleX:1,scaleY:1});
   if(this.entry.singleLayer&&plan.clip==='hit')p=Object.freeze({...p,rotation:-p.rotation});
   if(this.entry.singleLayer&&plan.clip==='defeat'){const t=Math.min(1,(plan.elapsedMs??plan.ms??0)/700);p=Object.freeze({...p,rotation:.65*t,x:-.10*t,y:-.05*t,scaleX:1-.5*t,scaleY:1-.5*t});}
-  c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.9+p.y));c.rotate(plan.clip==='attack'&&!this.entry.singleLayer?0:p.rotation);c.scale(p.scaleX,p.scaleY);
+  c.clearRect(0,0,n,n);c.save();if(this.mirrored){c.translate(n,0);c.scale(-1,1);}c.translate(n*(.5+p.x),n*(.9+p.y));c.rotate(plan.clip==='attack'&&!this.entry.singleLayer?0:p.rotation);c.scale(p.scaleX,p.scaleY);
   if(p.trail&&!rig){c.globalAlpha=p.trail;c.drawImage(this.lease.bitmap,-n*.5-n*.035,-n*.9,n,n);}
   c.globalAlpha=p.alpha;
   const attack=plan.clip==='attack'||plan.clip==='return'&&Number.isFinite(plan.attackElapsedMs),attackMs=plan.attackElapsedMs??plan.elapsedMs??plan.ms??0;

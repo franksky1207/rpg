@@ -15,7 +15,11 @@
     "white": "grayscale(.88) brightness(1.34) contrast(1.10)",
     "cyan": "sepia(.38) saturate(2.25) hue-rotate(157deg) brightness(1.09)",
     "gold": "sepia(.9) saturate(2.4) hue-rotate(352deg) brightness(1.12) contrast(1.10)",
-    "crimson": "sepia(.72) saturate(2.65) hue-rotate(315deg) contrast(1.14) brightness(.96)"
+    "crimson": "sepia(.72) saturate(2.65) hue-rotate(315deg) contrast(1.14) brightness(.96)",
+    "spectral-blue": "sepia(1) saturate(1.7) hue-rotate(165deg) contrast(1.08) brightness(.98)",
+    "dark-crimson-violet": "sepia(1) saturate(2) hue-rotate(285deg) contrast(1.12) brightness(.85)",
+    "cyan-violet": "sepia(1) saturate(1.8) hue-rotate(185deg) contrast(1.08)",
+    "deep-violet": "sepia(1) saturate(1.8) hue-rotate(225deg) contrast(1.1) brightness(.86)"
   },
   "scaleRange": [
     0.6,

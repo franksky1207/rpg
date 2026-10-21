@@ -1,6 +1,6 @@
 {
   "schema": "cw.monster-sprites.v1",
-  "status": "twenty-gm-integrated-main-formal-enabled",
+  "status": "map-and-whitelisted-dungeon-formal-enabled",
   "assets": [
     {
       "assetId": "hm-01",
@@ -701,8 +701,43 @@
       ],
       "gmPreviewAllowed": true,
       "formalBattleAllowed": true
+    },
+    {
+      "assetId": "void-phantom-v01",
+      "description": "虛空幻影 V-01",
+      "path": "assets/monsters/v1/void/void-phantom-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 213902,
+      "sha256": "6b52b6a956847f0ce77c0043187dbc3a85b6e87e12f2026476246187ff8c133d",
+      "alphaBounds": [
+        67,
+        31,
+        444,
+        481
+      ],
+      "name": "虛空幻影",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        67,
+        31,
+        444,
+        481
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true
     }
   ],
-  "version": "20261020-twenty-gm1",
+  "version": "20261021-batch16-dungeons1",
   "formalBattleEnabled": true
 }
