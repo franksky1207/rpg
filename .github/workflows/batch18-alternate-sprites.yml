@@ -49,6 +49,7 @@ jobs:
           node tests/runtime/batch18-all-identities-browser.cjs
           node tests/runtime/batch18-monster-recovery-browser.cjs
           node tests/runtime/batch18-native-live-browser.cjs
+          node tests/runtime/batch18-repeat-native-browser.cjs
           node tests/runtime/batch18-fast-switch-browser.cjs
           node tests/runtime/batch18-native-cache-browser.cjs
           node tests/runtime/batch18-pressure-browser.cjs

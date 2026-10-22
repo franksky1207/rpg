@@ -11,7 +11,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  for(const viewport of viewports){const context=await browser.newContext({viewport,hasTouch:viewport.width!==1365,isMobile:viewport.width!==1365});for(const row of selected){const item={world:3,mode:row.mode,bossId:row.bossId,bossIndex:row.bossIndex,assetId:row.assetId,name:row.name,depth:row.depth,culture:row.culture,viewport};
   const page=await context.newPage(),errors=[];await page.setViewportSize(item.viewport);await page.addInitScript(()=>localStorage.clear());page.on('pageerror',e=>errors.push(String(e)));page.on('requestfailed',r=>console.error('HTTP request failed',r.url(),r.failure()));page.on('response',r=>{if(r.status()>=400)console.error('HTTP response',r.status(),r.url());});page.on('dialog',d=>d.dismiss());
   await page.route('**/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
-  await page.goto(base);await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
+  const nativeUrl=new URL(base);nativeUrl.searchParams.set('production','1');await page.goto(nativeUrl.href);await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
   await page.evaluate(async item=>{
    state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='第18批驗收';state.level=item.world===1?500:item.world===2?1000:1100;
    state.bossKilled=state.bossKilled.map(()=>true);state.unlockedMap=100;state.mapProgress.forEach(r=>r.fill(10));

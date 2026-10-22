@@ -1,6 +1,6 @@
 import {resolveFormalMirror} from './monster-formal-resolver.mjs?v=20261022-batch18-alternate1';
 import {registry,mappings,identitiesForAsset,findMapping} from './monster-sprites.mjs?v=20261022-batch18-alternate1';
-import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects} from './monster-actor.mjs?v=20261022-batch18-alternate1';
+import {MonsterActor,visualPlacement,applyBattleSpriteLayout,applyDungeonEffects,visibleFootprint} from './monster-actor.mjs?v=20261022-batch18-alternate1';
 import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261022-batch18-alternate1';
 // Isolated GM inspection. Shares the formal Actor/Pool, never reads or writes player state.
 import {WholeSuitActor} from './equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1';
@@ -111,14 +111,14 @@ export async function mount({host,signal,quality='medium'}={}){
    const p=visualPlacement(b,half,h,1);
    actor.canvas.style.cssText=`position:absolute;left:${p.x}px;top:${p.y}px;width:${p.size}px;height:${p.size}px;max-width:none;transform:none`;
   }
-  if(actor&&monster){const layout=applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});$('[data-monster-description]').dataset.actualRatio=String(layout.ratio);const label=$('[data-monster-description]');label.textContent=label.textContent.replace(/｜實測可見倍率.*$/,'')+'｜實測可見倍率 '+layout.ratio.toFixed(3)+'×';}
+  if(actor&&monster){const layout=applyBattleSpriteLayout(actor,monster,w,h,selectedMapping()?.visual||{});$('[data-monster-description]').dataset.actualRatio=String(layout.ratio);const label=$('[data-monster-description]');label.textContent=label.textContent.replace(/｜實測可見倍率.*$/,'')+'｜實測可見倍率 '+layout.ratio.toFixed(3)+'× · 可見高度 玩家 '+(visibleFootprint(actor).h*layout.player.size).toFixed(1)+'px／怪物 '+(visibleFootprint(monster).h*layout.monster.size).toFixed(1)+'px';}
  }
  async function showMonster(){
   clearMonster();duelLayout();const id=$('[data-monster]').value,ticket=monsterSerial;
   if(!id){$('[data-monster-status]').textContent='';diagnostics();return;}
   if(!authorized||closed)return;const entry=id==='mirror'?{name:'鏡像・'+mirrorPlayerName}:registry.assets.find(a=>a.assetId===id);
   $('[data-monster-status]').textContent=`${entry.name} · ${id}：載入及 SHA-256 驗證中…`;
-  $('[data-monster-name]').textContent=entry.name+' · '+id;
+  $('[data-monster-name]').textContent=(selectedMapping()?.name||entry.name)+' · '+id;
   monsterLoading=new AbortController();
   try{const next=await (id==='mirror'?new WholeSuitActor(pool,release.entries.find(e=>e.id===era.value),{signal:monsterLoading.signal,tier:quality}):new MonsterActor(monsterPool,id,{signal:monsterLoading.signal,tier:quality,identity:$('[data-monster-identity]').value||null})).init();if(id==='mirror'){next.mirrored=true;next.canvas.dataset.mirror=era.value;}
    if(closed||!authorized||ticket!==monsterSerial){next.dispose();return;}
