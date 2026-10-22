@@ -19,7 +19,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    const wait=async fn=>{const end=performance.now()+10000;while(!fn()){if(performance.now()>end)throw Error('rapid-switch-timeout');await new Promise(r=>setTimeout(r,2));}};
    for(const final of [bosses[0],bosses[1],bosses[2]]){
     for(const row of [...bosses,final]){change('[data-monster]',row.assetId);change('[data-monster-identity]',row.id);}
-    await wait(()=>host.querySelector('canvas[data-monster]')?.dataset.monster===final.assetId&&host.querySelector('[data-monster-status]').textContent.includes('SHA-256 已驗證'));
+    await wait(()=>host.querySelector('canvas[data-monster]')?.dataset.monster===final.assetId&&host.querySelector('[data-monster-status]').dataset.ready==='true');
     await new Promise(r=>setTimeout(r,0));
     const canvas=host.querySelector('canvas[data-monster]'),expected=document.createElement('canvas');expected.style.filter=palettes[final.visual.palette];
     if(canvas.style.filter!==expected.style.filter)throw Error('late-palette-overwrite');

@@ -10,7 +10,7 @@ const $=id=>document.getElementById(id);
 const host=$("prototypeHost"),status=$("status"),fallback=$("fallback"),fallbackReason=$("fallbackReason");
 const quality=$("quality"),toggle=$("toggle"),maximizeButton=$("maximizePreview");
 const embedded=new URLSearchParams(location.search).get("embedded")==="1";
-if(embedded){const back=$("backToGame");if(back){back.hidden=true;back.style.display="none";}}
+if(embedded){document.body.classList.add("is-embedded");const back=$("backToGame");if(back){back.hidden=true;back.style.display="none";}}
 let selected="C-08-CHARACTER",runtime=null,serial=0,disabled=false,maximized=false,maximumScroll=null;
 const entry=()=>cases.find(c=>c.id===selected)||cases[0];
 function release(){
@@ -26,7 +26,7 @@ function showFailure(reason){
 }
 function setMaximized(value){
  const next=!!value;if(next===maximized)return;
- if(next)maximumScroll={left:window.scrollX,top:window.scrollY};
+ if(next)maximumScroll={left:window.scrollX,top:window.scrollY,focus:document.activeElement};
  maximized=next;
  document.body.classList.toggle("gm-3d-maximized",maximized);
  $("centerWorkspace").classList.toggle("center-maximized",maximized);
@@ -35,13 +35,13 @@ function setMaximized(value){
  maximizeButton.textContent=maximized?"⛶ 還原預覽":"⛶ 最大化預覽";
  runtime?.resize?.();
  requestAnimationFrame(()=>{
-  if(!maximized){if(maximumScroll)window.scrollTo({...maximumScroll,behavior:"instant"});maximumScroll=null;}
+  if(!maximized){if(maximumScroll)window.scrollTo({...maximumScroll,behavior:"instant"});maximumScroll?.focus?.focus({preventScroll:true});maximumScroll=null;}
   runtime?.resize?.();
  });
 }
 maximizeButton.addEventListener("click",()=>setMaximized(!maximized));
 function renderInfo(){
- $("caseTitle").textContent=entry().title;$("caseDetail").textContent=entry().detail;
+ $("caseTitle").textContent=entry().title;$("caseDetail").textContent="";
  const legacy=$("fixturePanel");if(legacy)legacy.hidden=true;
 }
 async function start(){
@@ -55,13 +55,14 @@ async function start(){
   let mod;
   if(entry().kind==="character"){
    status.textContent="GM 角色預覽：使用三紀元正式角色素材，不修改存檔。";
-   mod=await import("./gm-era-sprites.mjs?v=20261022-batch19-frame1");
+   mod=await import("./gm-era-sprites.mjs?v=20261022-batch19-2-center1");
   }else{
    status.textContent="GM 戰鬥動畫測試：不影響正式戰鬥或音效。";
    mod=await import("./gm-battle-simulation.js?v=20261019-batch12-rising-cut1");
   }
   if(ticket!==serial||abort.signal.aborted)return;
   viewer=await mod.mount({host,signal:abort.signal,quality:quality.value});
+  if(ticket===serial)status.hidden=true;
   if(ticket!==serial||abort.signal.aborted)viewer?.dispose?.();
  }catch(error){if(ticket===serial)showFailure("視覺測試無法載入："+String(error?.message||error));}
 }

@@ -1,0 +1,174 @@
+select 1365 era-galaxy main
+identity 500 galaxy-map-500
+怪物載入中… core-03
+select 1365 era-galaxy special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 1365 era-galaxy bounty
+identity 15 galaxy-bounty-15
+怪物載入中… ship-04
+select 1365 era-galaxy arena
+identity 3 galaxy-arena-03
+怪物載入中… mech-03
+select 1365 era-galaxy void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 1365 era-galaxy calamity
+identity 10 galaxy-calamity-10
+怪物載入中… boss-c-03-v01
+select 1365 era-galaxy alternate
+select 1365 era-galaxy mirror
+identity 1 mirror
+ mirror
+select 1365 era-universe main
+identity 100 universe-boss-100
+怪物載入中… core-03
+select 1365 era-universe special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 1365 era-universe bounty
+identity 15 universe-bounty-15
+怪物載入中… ship-04
+select 1365 era-universe arena
+identity 3 universe-arena-03
+怪物載入中… mech-03
+select 1365 era-universe void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 1365 era-universe calamity
+identity 10 universe-calamity-10
+怪物載入中… boss-u-01-v01
+select 1365 era-universe alternate
+select 1365 era-universe mirror
+identity 1 mirror
+ mirror
+select 1365 era-higher special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 1365 era-higher void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 1365 era-higher main
+identity 10 higher-dimensional-boss-10
+怪物載入中… boss-h-10-v01
+select 1365 era-higher alternate
+select 1365 era-higher arena
+identity 10 higher-dimensional-boss-10
+怪物載入中… boss-h-10-v01
+PASS batch19-2 { width: 1365, height: 900 }
+select 390 era-galaxy main
+identity 500 galaxy-map-500
+怪物載入中… core-03
+select 390 era-galaxy special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 390 era-galaxy bounty
+identity 15 galaxy-bounty-15
+怪物載入中… ship-04
+select 390 era-galaxy arena
+identity 3 galaxy-arena-03
+怪物載入中… mech-03
+select 390 era-galaxy void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 390 era-galaxy calamity
+identity 10 galaxy-calamity-10
+怪物載入中… boss-c-03-v01
+select 390 era-galaxy alternate
+select 390 era-galaxy mirror
+identity 1 mirror
+ mirror
+select 390 era-universe main
+identity 100 universe-boss-100
+怪物載入中… core-03
+select 390 era-universe special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 390 era-universe bounty
+identity 15 universe-bounty-15
+怪物載入中… ship-04
+select 390 era-universe arena
+identity 3 universe-arena-03
+怪物載入中… mech-03
+select 390 era-universe void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 390 era-universe calamity
+identity 10 universe-calamity-10
+怪物載入中… boss-u-01-v01
+select 390 era-universe alternate
+select 390 era-universe mirror
+identity 1 mirror
+ mirror
+select 390 era-higher special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 390 era-higher void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 390 era-higher main
+identity 10 higher-dimensional-boss-10
+怪物載入中… boss-h-10-v01
+select 390 era-higher alternate
+select 390 era-higher arena
+identity 10 higher-dimensional-boss-10
+怪物載入中… boss-h-10-v01
+PASS batch19-2 { width: 390, height: 844 }
+select 844 era-galaxy main
+identity 500 galaxy-map-500
+怪物載入中… core-03
+select 844 era-galaxy special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 844 era-galaxy bounty
+identity 15 galaxy-bounty-15
+ ship-04
+select 844 era-galaxy arena
+identity 3 galaxy-arena-03
+怪物載入中… mech-03
+select 844 era-galaxy void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 844 era-galaxy calamity
+identity 10 galaxy-calamity-10
+怪物載入中… boss-c-03-v01
+select 844 era-galaxy alternate
+select 844 era-galaxy mirror
+identity 1 mirror
+ mirror
+select 844 era-universe main
+identity 100 universe-boss-100
+怪物載入中… core-03
+select 844 era-universe special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 844 era-universe bounty
+identity 15 universe-bounty-15
+怪物載入中… ship-04
+select 844 era-universe arena
+identity 3 universe-arena-03
+怪物載入中… mech-03
+select 844 era-universe void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 844 era-universe calamity
+identity 10 universe-calamity-10
+怪物載入中… boss-u-01-v01
+select 844 era-universe alternate
+select 844 era-universe mirror
+identity 1 mirror
+ mirror
+select 844 era-higher special
+identity 9 special-mysterious_traveler
+怪物載入中… hm-02
+select 844 era-higher void
+identity 20 void-boss-10
+怪物載入中… core-03
+select 844 era-higher main
+identity 10 higher-dimensional-boss-10
+怪物載入中… boss-h-10-v01
+select 844 era-higher alternate
+select 844 era-higher arena
+identity 10 higher-dimensional-boss-10
+怪物載入中… boss-h-10-v01
+PASS batch19-2 { width: 844, height: 390 }

@@ -75,7 +75,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     const names=[...gm.querySelector('[data-monster-identity]').options].map(o=>o.value);
     if(names.some(id=>mappings[id].world!==group.split('/')[0]))throw Error('gm-boss-group');
    }
-   gm.querySelector('[data-boss-compare]').click();
+   gm.querySelector('[data-advanced]').open=true;gm.querySelector('[data-boss-compare]').click();
    await wait(()=>gm.querySelectorAll('[data-boss-gallery] figure').length===30);
    if(gm.querySelectorAll('.gm-suit-preview canvas').length!==2)throw Error('gallery-persistent-actors');
    const diagnostics=JSON.parse(gm.querySelector('[data-diagnostics]').textContent);

@@ -14,7 +14,9 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  // after startup so force-cache is measured under real browser cache semantics.
  await page.unroute('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
  await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');
- await frame.locator('[data-status]').filter({hasText:'已載入'}).waitFor();
+ await frame.locator('canvas[data-suit]').waitFor();
+ await frame.locator('[data-preview-mode]').selectOption('duel');
+ await frame.locator('[data-advanced] summary').first().click();
  await page.waitForTimeout(1200);const truth=await page.evaluate(()=>JSON.stringify(state)),storage=await page.evaluate(()=>JSON.stringify(localStorage));
  const poses=await frame.locator('body').evaluate(async()=>{
   const {registry,plannedAssetId,mappings,findMapping,identitiesForAsset}=await import('./monster-sprites.mjs?v=20261020-twenty-gm1');
@@ -35,9 +37,9 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  assert.equal(poses.stress.refs,0);assert.equal(poses.stress.pending,0);assert.ok(poses.stress.entries<=2);assert.equal(poses.disposed.bytes,0);
  for(const id of ids){
   const before=await frame.locator('.gm-suit-preview').boundingBox();
-  await frame.locator('select[data-monster]').selectOption(id);await frame.locator(`[data-monster-status]`).filter({hasText:'SHA-256 已驗證'}).waitFor();
+  await frame.locator('select[data-monster]').selectOption(id);await frame.locator('[data-monster-status][data-ready="true"]').waitFor({state:'attached'});
   const after=await frame.locator('.gm-suit-preview').boundingBox();assert.equal(before.width,after.width);assert.equal(before.height,after.height,'no decode layout jump');
-  const shared=await frame.locator('[data-monster-identity] option').evaluateAll(options=>options.slice(1).map(o=>o.value));assert.ok(shared.length>0);await frame.locator('[data-monster-identity]').selectOption(shared[0]);await frame.locator('[data-monster-status]').filter({hasText:'SHA-256 已驗證'}).waitFor();
+  const shared=await frame.locator('[data-monster-identity] option').evaluateAll(options=>options.slice(1).map(o=>o.value));assert.ok(shared.length>0,id+" "+await frame.locator('[data-monster-identity]').innerHTML());await frame.locator('[data-monster-identity]').selectOption(shared[0]);await frame.locator('[data-monster-status][data-ready="true"]').waitFor({state:'attached'});
   assert.equal(await frame.locator('[data-monster-scale],[data-monster-palette],[data-monster-next]').count(),0,'retired GM overrides stay removed');
   const selectedLabel=await frame.locator('[data-monster-description]').innerText();assert.ok(selectedLabel.includes('配色')&&selectedLabel.includes('尺寸'),'identity appearance is read-only text');
   const sharedRatio=await frame.locator('canvas[data-monster]').getAttribute('data-actual-ratio');
@@ -49,10 +51,10 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   assert.ok(layout.player.right<layout.enemy.left,'player left, monster right');
   assert.ok(layout.enemy.bottom-layout.enemy.top>=.90*(layout.player.bottom-layout.player.top),'GM monster visible height at least 90% of player: '+JSON.stringify({viewport,id,playerHeight:layout.player.bottom-layout.player.top,enemyHeight:layout.enemy.bottom-layout.enemy.top}));for(const box of [layout.player,layout.enemy]){assert.ok(box.left>=layout.stage.left&&box.right<=layout.stage.right);assert.ok(box.top>=layout.stage.top&&box.bottom<=layout.stage.bottom);}
   for(const action of ['idle','attack','hit','defeat']){
-   await frame.locator(`[data-monster-action="${action}"]`).click();
+   await frame.locator(`[data-monster-action="${action}"]`).dispatchEvent('click');
    await frame.locator(`canvas[data-monster="${id}"]`).evaluate((c,clip)=>new Promise((resolve,reject)=>{const end=performance.now()+3000;function poll(){const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let count=0;for(let i=3;i<d.length;i+=4)if(d[i]>16)count++;if(c.dataset.clip===clip&&(clip==='defeat'?count===0:count>500))return resolve();if(performance.now()>end)return reject(Error('UI animation '+clip));requestAnimationFrame(poll);}poll();}),action);
   }
-  await frame.locator('[data-monster-action="idle"]').click();await frame.locator('[data-duel]').click();await frame.locator('[data-monster-action="idle"]').click();
+  await frame.locator('[data-monster-action="idle"]').dispatchEvent('click');await frame.locator('[data-duel]').click();await frame.locator('[data-monster-action="idle"]').dispatchEvent('click');
   await frame.locator('[data-action="idle"]').click();
   await frame.locator('.gm-suit-preview').screenshot({path:`/tmp/batch13-${viewport.width}-${id}.png`});
  }
