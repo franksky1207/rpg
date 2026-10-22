@@ -16,7 +16,8 @@ function geometry(screen,stage){
   const title=card.querySelector("h2"),hp=card.querySelector(".big-hp,.hp-bar,.hp-fill,[class*=hp]");
   for(const el of [title,hp])if(el){const r=el.getBoundingClientRect();if(r.height>0&&r.width>0)rects.push(r);}
  }
- const stop=typeof screen.querySelector==="function"?screen.querySelector(".combat-viewport-stop"):null;
+ const owner=screen.closest?.(".calamity-battle-shell,.void-shell,.arena-shell,.dungeon-page-shell")||screen;
+ const stop=cards.length?(screen.querySelector?.(".combat-viewport-stop")||owner.querySelector?.(".combat-viewport-stop")):null;
  if(stop&&!stop.hidden){const r=stop.getBoundingClientRect();if(r.height>0)rects.push(r);}
  return {stage:stageRect,top:Math.min(...rects.map(r=>r.top)),bottom:Math.max(...rects.map(r=>r.bottom)),signature:rects.flatMap(r=>[r.top,r.bottom,r.width])};
 }
