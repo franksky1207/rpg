@@ -18,7 +18,12 @@ jobs:
         with:
           node-version: '24'
       - run: npm install --no-save playwright@1.55.0
-      - run: npx playwright install --with-deps chromium
+      - name: Install Chromium through the official Ubuntu HTTPS mirror
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/apt-mirrors.txt
+          fi
+          npx playwright install --with-deps chromium
       - name: Syntax, readonly owners and sealed sprite size policy
         run: |
           node --check 3d-test/gm-era-sprites.mjs
