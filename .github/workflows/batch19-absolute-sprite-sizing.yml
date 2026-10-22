@@ -23,6 +23,7 @@ jobs:
       - run: |
           npm install --prefix /tmp/batch19-browser --no-save playwright@1.55.0
           /tmp/batch19-browser/node_modules/.bin/playwright install --with-deps chromium
+          node tests/runtime/batch19-absolute-sizing-contract.cjs
           node scripts/build-publish-dry-run.cjs
       - name: Measure actual native battle Alpha against compact combat frame
         env:

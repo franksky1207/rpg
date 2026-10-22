@@ -93,3 +93,7 @@
 - 沿三份JSON/原生成器/MonsterActor/Pool/Renderer/GM單一中心，sizePolicy=boss使用第17批原共用版面，三視窗真正Alpha1.5～2.0倍；無新動畫時鐘/尺寸補丁。decoded Pool至多2張，按需載入；SW白名單從同資產登錄生成，六PNG/開發預覽不進Pages/智慧下載。
 - 全遊戲39正式原型/1695映射；開工33張素材位元與695身份完整等值守衛。數值、隨機特性、挑戰/失敗/轉生/稱號/獎勵/存檔及背景/極簡/離線/Fast Catch-up owner不變。
 - batch18-all-identities-browser驗3000逐筆真Canvas/GM/正式；native-live驗60原生入口，repeat-native驗15真實同頁征服，recovery/cache/native-cache/pressure/fast-switch驗故障、毀損修復、重下載、快速切換與資源歸零。第15～17批、Batch6與Runtime原Gate保留，完整發布證據見第18批報告及PR #73。真實iPhone仍待人工。
+
+## 第19-1批尺寸政策修訂（驗收中）
+
+使用者授權以特殊怪真實Alpha、動畫＋雙方名稱／HP的精簡戰鬥框為基準。共用Actor先定玩家絕對可見高度，保留原怪物倍率；只有完整動畫包絡確實無法容納才共同安全退讓並逐筆記錄。不得恢復以完整透明Canvas整組最大化縮放作為主要尺寸政策。正式與故障輪廓共享對已核准素材SHA鎖定的實測動作包絡；原型變更必須重測。完整基準、公式、狀態與例外見第19-1批報告；未封箱前不宣稱正式發布完成。

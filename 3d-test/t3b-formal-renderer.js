@@ -201,9 +201,11 @@ global.addEventListener?.('civilization-combat-animation-change',()=>{clearSprit
 if(global.document?.readyState==='loading')global.document.addEventListener('DOMContentLoaded',()=>scheduleWarm(),{once:true});
 else scheduleWarm();
 
+// Geometry caches are shared by rank; a new battle must not rescan 190 outline poses.
+const fallbackEntries={normal:{assetId:'fallback'},elite:{assetId:'fallback'},boss:{assetId:'fallback'}};
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261022-batch19-frame1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261022-batch19-frame1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -256,7 +258,7 @@ async function createSuit(options,bundle){
    }
    const approved=resolveFormalMonster({mode:bundle.enemyMode,world:bundle.enemyWorld,kind:bundle.enemyKind,name:bundle.enemyName,location:bundle.enemyLocation,id:bundle.enemyId});
    if(!approved)return;
-   monsterMapping=approved.mapping;fallbackActor.mapping=monsterMapping;fallbackActor.entry.assetId=approved.asset.assetId;layoutKey='';layoutSprites();
+   monsterMapping=approved.mapping;fallbackActor.mapping=monsterMapping;fallbackActor.sizingAssetId=approved.asset.assetId;layoutKey='';layoutSprites();
    const pool=await loadMonsterPool();
    if(closed||signal.aborted||!isCurrent())return;
    const actor=await new MonsterActor(pool,approved.asset.assetId,{signal:loading.signal,identity:approved.mapping.id,usage:'formal',tier:'medium'}).init();
@@ -302,11 +304,11 @@ async function createSuit(options,bundle){
  // sprites square and near the shared centre even in a wide, short landscape stage.
  // This changes presentation coordinates only, never event timing or collision rules.
  let layoutKey='',approachLimit=Infinity,lastEnemyRenderKey=null;
- const fallbackActor={canvas:enemyCanvas,entry:{assetId:'fallback'},draw:plan=>drawFallback({enemy:plan})};
+ const fallbackActor={isFallback:true,canvas:enemyCanvas,entry:fallbackEntries[rank],draw:plan=>drawFallback({enemy:plan})};
  function layoutSprites(){
-  const w=host.clientWidth,h=host.clientHeight,frameHeight=combatSizingFrame(host),key=`${w}:${h}:${frameHeight}`;
+  const w=host.clientWidth,h=host.clientHeight,key=`${w}:${h}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
-  const visual={...(monsterMapping?.visual||{}),frameHeight};
+  const visual={...(monsterMapping?.visual||{}),frameHeight:combatSizingFrame(host),fallbackProfile:{idle:visibleFootprint(fallbackActor),motion:motionFootprint(fallbackActor)}};
   approachLimit=applyBattleSpriteLayout(actor,monsterActor||fallbackActor,w,h,visual).approachLimit;
  }
  layoutSprites();
