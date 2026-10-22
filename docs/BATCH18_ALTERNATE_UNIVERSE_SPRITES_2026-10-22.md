@@ -68,3 +68,5 @@
 真實iPhone Safari長時間FPS/卡頓、溫度、耗電、記憶體與OS回收、背景掛起/恢復、清資源後重入仍待人工。自動化Chromium/WebKit不代表真機通過。
 
 原生正式設定下同一頁連續15層征服通過；每戰保留真正attempt、兩個不同隨機特性、戰鬥core、presentation與settlement；深度逐層1→15、attempt清空、Player/Monster refs歸零，沒有重啟Renderer/Entry/event bridge。最後清快取bytes/pending歸零。失敗診斷中的mode=calamity/world=1證明來源是localhost自動完整性測試，不是異宇宙身份解析；production=1僅選用現有正式載入政策。
+
+20原型最後視覺覆核修正：黑暗血月依規劃「暗紅邪異巨眼」，50身份使用現役boss-eye-red配色；其餘19文化使用original。20張原圖互異不變，未增加或修改圖片。新增1000身份動作=原型既有動作、固定配色的精確守衛；完整驗收須以此次新head重跑結果為準。

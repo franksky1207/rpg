@@ -12,7 +12,7 @@ const fs=require('node:fs'),vm=require('node:vm'),cp=require('node:child_process
  assert.equal(rows.length,1000);assert.equal(a.assets.length,39);assert.equal(m.records.length,1695);assert.equal(new Set(plan.map(r=>r.assetId)).size,20);
  const text=fs.readFileSync('docs/ALTERNATE_UNIVERSE_MONSTER_ART_PLAN_2026-10-22.md','utf8');
  for(const p of plan){const asset=a.assets.find(a=>a.assetId===p.assetId);assert.ok(text.includes('| '+p.culture+' | `'+(asset.alternateArtCode||asset.assetId)+'`'));const group=rows.filter(r=>r.culture===p.culture);assert.equal(group.length,50);assert.deepEqual([...new Set(group.map(r=>r.assetId))],[p.assetId]);assert.equal(new Set(group.map(r=>r.universeIndex)).size,10);}
- for(const row of rows){const info=ctx.window.alternateUniverseDepthInfo(row.depth);for(const k of ['culture','universeIndex','universeNumber','universeName','stageIndex','stageNumber','stageName'])assert.equal(row[k],info[k]);assert.equal(row.name,info.displayName);
+ for(const row of rows){const info=ctx.window.alternateUniverseDepthInfo(row.depth);for(const k of ['culture','universeIndex','universeNumber','universeName','stageIndex','stageNumber','stageName'])assert.equal(row[k],info[k]);assert.equal(row.name,info.displayName);const proto=a.assets.find(a=>a.assetId===row.assetId);assert.equal(row.visual.animationType,proto.animationType);assert.equal(row.visual.palette,plan.find(p=>p.culture===row.culture).palette);
   const identity={mode:'alternate',world:3,location:String(row.depth)};
   assert.equal(resolveFormalMonster(identity)?.mapping.id,row.id);
   for(const world of [1,2,3])assert.equal(resolveFormalMonster({...identity,world,name:row.name,id:row.id,kind:row.kind})?.asset.assetId,row.assetId);
