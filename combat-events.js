@@ -95,8 +95,8 @@ function capture(result,context,mirror=false){
   const calamity=actor.kind==="civilization-calamity";
   if(context.world===1&&calamity&&actor.location){actor.id=actor.location;actor.identityAvailability="owner-name-and-context";}
   if(context.world===2&&calamity&&actor.location){actor.id=actor.location;actor.identityAvailability="owner-name-and-context";}
-  if(context.world===2&&!calamity&&actor.location&&/^\\d+$/.test(actor.location)){actor.id="universe-boss-"+String(Number(actor.location)+1).padStart(3,"0");actor.identityAvailability="owner-name-and-context";}
-  if(context.world===3&&!calamity&&actor.location&&/^\\d+$/.test(actor.location)){actor.id="higher-dimensional-boss-"+String(Number(actor.location)+1).padStart(2,"0");actor.identityAvailability="owner-name-and-context";}
+  if(context.world===2&&!calamity&&actor.location&&/^\d+$/.test(actor.location)){actor.id="universe-boss-"+String(Number(actor.location)+1).padStart(3,"0");actor.identityAvailability="owner-name-and-context";}
+  if(context.world===3&&!calamity&&actor.location&&/^\d+$/.test(actor.location)){actor.id="higher-dimensional-boss-"+String(Number(actor.location)+1).padStart(2,"0");actor.identityAvailability="owner-name-and-context";}
  }
  session.appearance=lane==="formal"?copy(global.Civilization3DAppearance?.equipmentSnapshot?.()||null):null;
  lanes[lane]=session;references.set(result,session);if(Array.isArray(result.events))references.set(result.events,session);stats.sessions++;
