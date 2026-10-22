@@ -11,6 +11,13 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
   const asset=findAsset(row.assetId);
   return asset?.formalBattleAllowed===true&&asset.gmPreviewAllowed===true&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
  }
+ // Review is a presentation alias only: the combat event remains mode=review.
+ // Reuse strict canonical monster mappings; never relax name, id or location validation.
+ if(mode==='review'){
+  if([1,2].includes(world)&&kind==='civilization-calamity')return resolveFormalMonster({world,mode:'calamity',kind,name,location,id});
+  if([1,2,3].includes(world))return resolveFormalMonster({world,mode:'main',kind,name,location,id});
+  return null;
+ }
  if(mode==='calamity'||world===3){
   let row=null,projection=false;
   if(mode==='calamity'&&[1,2].includes(world)&&kind==='civilization-calamity'){
