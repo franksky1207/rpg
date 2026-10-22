@@ -1,7 +1,7 @@
 {
   "schema": "cw.batch19.absolute-height-minima.v1",
   "realDevice": false,
-  "method": "57 native entry measurements; minimum canonical painted height = measured selection minus one CSS pixel. Actual Alpha is checked independently against the selection.",
+  "method": "57 native entry measurements. Lock stage width/height; minimum canonical painted height = min(measured selection, current measured frame target) minus one CSS pixel. Actual Alpha is checked independently. This preserves the frame policy across font metrics.",
   "sourceHashes": {
     "3d-test/monster-actor.mjs": "83f353a55ee0ad9dc81c23da3ff1fc0ca809ab06005a176d2cbf4f511a63adf1",
     "3d-test/t3b-formal-renderer.js": "425cda65797538e48a93bc818e61137025fc7933b10ee47b3626485496996bd7",
@@ -20,7 +20,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -33,7 +36,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -46,7 +52,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -59,7 +68,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26991121533890844,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -72,7 +84,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26991121533890844,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1086,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -85,7 +100,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26661961515184857,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1086,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -98,7 +116,10 @@
       "paintedHeight": 155.59807800747387,
       "minPaintedHeight": 154.59807800747387,
       "playerFrameFraction": 0.2699193494073276,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1086,
+      "stageHeight": 432,
+      "frameHeight": 580
     },
     {
       "viewport": {
@@ -111,7 +132,10 @@
       "paintedHeight": 155.59807800747387,
       "minPaintedHeight": 154.59807800747387,
       "playerFrameFraction": 0.2699193494073276,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1086,
+      "stageHeight": 432,
+      "frameHeight": 580
     },
     {
       "viewport": {
@@ -124,7 +148,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26661961515184857,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -137,7 +164,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -150,7 +180,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1162,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -163,7 +196,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26991121533890844,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1162,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -176,7 +212,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1036,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -189,7 +228,10 @@
       "paintedHeight": 174.1088838393975,
       "minPaintedHeight": 173.1088838393975,
       "playerFrameFraction": 0.26826314823285824,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 649
     },
     {
       "viewport": {
@@ -202,7 +244,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26992353699017024,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1162,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -215,7 +260,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26992353699017024,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1162,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -228,7 +276,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.26992353699017024,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1036,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -241,7 +292,10 @@
       "paintedHeight": 174.1088838393975,
       "minPaintedHeight": 173.1088838393975,
       "playerFrameFraction": 0.2699187150905239,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 649
     },
     {
       "viewport": {
@@ -254,7 +308,10 @@
       "paintedHeight": 152.3788074280089,
       "minPaintedHeight": 151.3788074280089,
       "playerFrameFraction": 0.2682654152453785,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 1164,
+      "stageHeight": 432,
+      "frameHeight": 568
     },
     {
       "viewport": {
@@ -267,7 +324,10 @@
       "paintedHeight": 107.57375249057223,
       "minPaintedHeight": 106.57375249057223,
       "playerFrameFraction": 0.17987570874268394,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -280,7 +340,10 @@
       "paintedHeight": 128.08824372112358,
       "minPaintedHeight": 127.08824372112358,
       "playerFrameFraction": 0.2141916196348941,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -293,7 +356,10 @@
       "paintedHeight": 158.84922031030226,
       "minPaintedHeight": 157.84922031030226,
       "playerFrameFraction": 0.26563221262716,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -306,7 +372,10 @@
       "paintedHeight": 160.42698387667136,
       "minPaintedHeight": 159.42698387667136,
       "playerFrameFraction": 0.2699177379459309,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -319,7 +388,10 @@
       "paintedHeight": 75.6850604906432,
       "minPaintedHeight": 74.6850604906432,
       "playerFrameFraction": 0.12732600421544035,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -332,7 +404,10 @@
       "paintedHeight": 95.19810819613643,
       "minPaintedHeight": 94.19810819613643,
       "playerFrameFraction": 0.16015625,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -345,7 +420,10 @@
       "paintedHeight": 80.9310484183011,
       "minPaintedHeight": 79.9310484183011,
       "playerFrameFraction": 0.13347608222336066,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 610
     },
     {
       "viewport": {
@@ -358,7 +436,10 @@
       "paintedHeight": 85.80808033409977,
       "minPaintedHeight": 84.80808033409977,
       "playerFrameFraction": 0.14152205003415302,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 610
     },
     {
       "viewport": {
@@ -371,7 +452,10 @@
       "paintedHeight": 107.77475504512527,
       "minPaintedHeight": 106.77475504512527,
       "playerFrameFraction": 0.18020844220317725,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -384,7 +468,10 @@
       "paintedHeight": 99.38127000104903,
       "minPaintedHeight": 98.38127000104903,
       "playerFrameFraction": 0.1661892724010591,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -397,7 +484,10 @@
       "paintedHeight": 118.00058529531593,
       "minPaintedHeight": 117.00058529531593,
       "playerFrameFraction": 0.21351766243255396,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 556
     },
     {
       "viewport": {
@@ -410,7 +500,10 @@
       "paintedHeight": 122.58692943708233,
       "minPaintedHeight": 121.58692943708233,
       "playerFrameFraction": 0.22047054739021285,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 556
     },
     {
       "viewport": {
@@ -423,7 +516,10 @@
       "paintedHeight": 123.58295173966619,
       "minPaintedHeight": 122.58295173966619,
       "playerFrameFraction": 0.23493630683618505,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 334,
+      "stageHeight": 340,
+      "frameHeight": 526
     },
     {
       "viewport": {
@@ -436,7 +532,10 @@
       "paintedHeight": 152.06155259200443,
       "minPaintedHeight": 151.06155259200443,
       "playerFrameFraction": 0.2542749105089883,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 364,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -449,7 +548,10 @@
       "paintedHeight": 90.29451483990286,
       "minPaintedHeight": 89.29451483990286,
       "playerFrameFraction": 0.16340252992918167,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 556
     },
     {
       "viewport": {
@@ -462,7 +564,10 @@
       "paintedHeight": 119.70620965947029,
       "minPaintedHeight": 118.70620965947029,
       "playerFrameFraction": 0.21527670441771582,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 340,
+      "stageHeight": 340,
+      "frameHeight": 556
     },
     {
       "viewport": {
@@ -475,7 +580,10 @@
       "paintedHeight": 120.60321362893278,
       "minPaintedHeight": 119.60321362893278,
       "playerFrameFraction": 0.23067436653398288,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 334,
+      "stageHeight": 340,
+      "frameHeight": 526
     },
     {
       "viewport": {
@@ -488,7 +596,10 @@
       "paintedHeight": 147.94302326103391,
       "minPaintedHeight": 146.94302326103391,
       "playerFrameFraction": 0.24737977503135453,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 364,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -501,7 +612,10 @@
       "paintedHeight": 112.01470805899753,
       "minPaintedHeight": 111.01470805899753,
       "playerFrameFraction": 0.1884558772296544,
-      "safetyRetreat": "animation-width"
+      "safetyRetreat": "animation-width",
+      "stageWidth": 366,
+      "stageHeight": 340,
+      "frameHeight": 598
     },
     {
       "viewport": {
@@ -514,7 +628,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2683950272102569,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -527,7 +644,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2683950272102569,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -540,7 +660,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2683950272102569,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -553,7 +676,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.27004162246921554,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -566,7 +692,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.27004162246921554,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 762,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -579,7 +708,10 @@
       "paintedHeight": 90.82894736842104,
       "minPaintedHeight": 89.82894736842104,
       "playerFrameFraction": 0.26972647542621714,
-      "safetyRetreat": "animation-height"
+      "safetyRetreat": "animation-height",
+      "stageWidth": 762,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -592,7 +724,10 @@
       "paintedHeight": 94.16366444935058,
       "minPaintedHeight": 93.16366444935058,
       "playerFrameFraction": 0.2700663853132006,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 762,
+      "stageHeight": 202.796875,
+      "frameHeight": 350.796875
     },
     {
       "viewport": {
@@ -605,7 +740,10 @@
       "paintedHeight": 87.48213623070603,
       "minPaintedHeight": 86.48213623070603,
       "playerFrameFraction": 0.25089477269015487,
-      "safetyRetreat": "animation-height"
+      "safetyRetreat": "animation-height",
+      "stageWidth": 762,
+      "stageHeight": 202.796875,
+      "frameHeight": 350.796875
     },
     {
       "viewport": {
@@ -618,7 +756,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2683950272102569,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -631,7 +772,10 @@
       "paintedHeight": 87.94940930435683,
       "minPaintedHeight": 86.94940930435683,
       "playerFrameFraction": 0.25958556242217407,
-      "safetyRetreat": "animation-height"
+      "safetyRetreat": "animation-height",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -644,7 +788,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.27004162246921554,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 794,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -657,7 +804,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.27004162246921554,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 794,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -670,7 +820,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2683950272102569,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 712,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -683,7 +836,10 @@
       "paintedHeight": 112.6744702812742,
       "minPaintedHeight": 111.6744702812742,
       "playerFrameFraction": 0.26839811230629895,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 419.796875
     },
     {
       "viewport": {
@@ -696,7 +852,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2700786138142016,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 794,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -709,7 +868,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2700786138142016,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 794,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -722,7 +884,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2700786138142016,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 712,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     },
     {
       "viewport": {
@@ -735,7 +900,10 @@
       "paintedHeight": 112.6744702812742,
       "minPaintedHeight": 111.6744702812742,
       "playerFrameFraction": 0.26838454237540477,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 419.796875
     },
     {
       "viewport": {
@@ -748,7 +916,10 @@
       "paintedHeight": 90.9443938698856,
       "minPaintedHeight": 89.9443938698856,
       "playerFrameFraction": 0.2683950272102569,
-      "safetyRetreat": ""
+      "safetyRetreat": "",
+      "stageWidth": 796,
+      "stageHeight": 202.796875,
+      "frameHeight": 338.796875
     }
   ]
 }

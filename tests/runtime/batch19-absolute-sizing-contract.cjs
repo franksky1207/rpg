@@ -3,7 +3,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict'),crypto=require(
 (async()=>{
  const {PLAYER_FRAME_HEIGHT,measuredMonsterProfiles,monsterProfileSourceSHA}=await import('../../3d-test/monster-actor.mjs');
  const floors=JSON.parse(fs.readFileSync('development/combat-animation/batch19-1/absolute-height-baseline.json')).rows;
- assert.equal(floors.length,57);assert.equal(new Set(floors.map(r=>JSON.stringify([r.viewport,r.world,r.mode,r.identity]))).size,57);for(const r of floors)assert.equal(r.minPaintedHeight,r.paintedHeight-1);
+ assert.equal(floors.length,57);assert.equal(new Set(floors.map(r=>JSON.stringify([r.viewport,r.world,r.mode,r.identity]))).size,57);for(const r of floors){assert.equal(r.minPaintedHeight,r.paintedHeight-1);assert.ok(r.stageWidth>0&&r.stageHeight>0&&r.frameHeight>=r.stageHeight);}
  const profiles=JSON.parse(fs.readFileSync('development/combat-animation/batch19-1/measured-prototypes.json'));
  assert.deepEqual(measuredMonsterProfiles,profiles,'failed-load layout must use the actual measured prototype envelopes');
  const assets=JSON.parse(fs.readFileSync('data/monsters/monster-assets.json')).assets;
