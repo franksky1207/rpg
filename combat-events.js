@@ -88,6 +88,16 @@ function capture(result,context,mirror=false){
  const previous=lanes[lane];if(previous)previous.status="superseded";
  const enemy=result.e||{},id=++serial;
  const session={id:"combat-v1-"+realm+"-"+id,lane,context:{mode:context.mode,world:context.world,owner:context.owner,variant:text(context.variant),location:text(context.location)},seq:0,status:"computed",computed:{start,final},presentation:null,presentationToken:null,result:{win:result.win,winner:mirror?role(result.winner):null,winnerAvailability:mirror?"authoritative":"unavailable",turns:finite(result.turns)?result.turns:null,actionBudgetReached:result.actionBudgetReached===true,settlementAvailability:"unavailable"},settlement:null,sourceEventCount:Array.isArray(result.events)?result.events.length:0,omitted:0,actors:{player:{role:"player",name:text(context.playerName),identityAvailability:text(context.playerName)?"name-only":"unavailable"},enemy:{role:"enemy",name:text(context.enemyName)||text(enemy.name),id:text(enemy.id)||text(enemy.bossId)||text(enemy.calamityId)||text(enemy.higherDimensionalBossId),kind:text(enemy.kind),location:text(context.location),identityAvailability:text(context.enemyName)||text(enemy.name)?"owner-name-and-context":"unavailable"}}};
+ // Review events remain review events for settlement and state isolation.
+// Only presentation metadata is canonicalized, without fuzzy identity matching.
+ if(context.mode==="review"){
+  const actor=session.actors.enemy;
+  const calamity=actor.kind==="civilization-calamity";
+  if(context.world===1&&calamity&&actor.location){actor.id=actor.location;actor.identityAvailability="owner-name-and-context";}
+  if(context.world===2&&calamity&&actor.location){actor.id=actor.location;actor.identityAvailability="owner-name-and-context";}
+  if(context.world===2&&!calamity&&actor.location&&/^\\d+$/.test(actor.location)){actor.id="universe-boss-"+String(Number(actor.location)+1).padStart(3,"0");actor.identityAvailability="owner-name-and-context";}
+  if(context.world===3&&!calamity&&actor.location&&/^\\d+$/.test(actor.location)){actor.id="higher-dimensional-boss-"+String(Number(actor.location)+1).padStart(2,"0");actor.identityAvailability="owner-name-and-context";}
+ }
  session.appearance=lane==="formal"?copy(global.Civilization3DAppearance?.equipmentSnapshot?.()||null):null;
  lanes[lane]=session;references.set(result,session);if(Array.isArray(result.events))references.set(result.events,session);stats.sessions++;
  event(session,"battle-start",{state:start,context:session.context,appearance:session.appearance});
