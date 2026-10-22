@@ -7,7 +7,7 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  // publish their canonical owner locators while keeping the review event mode.
  if(mode==='review'){
   if(![1,2,3].includes(world))return null;
-  return resolveFormalMonster({world,mode:'main',kind,name,location,id});
+  return resolveFormalMonster({world,mode:kind==='civilization-calamity'?'calamity':'main',kind,name,location,id});
  }
  if(mode==='alternate'){
   // The native owner carries the fixed depth, not a guessed display-name/culture.
