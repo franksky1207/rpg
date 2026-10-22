@@ -223,35 +223,37 @@ html{scroll-behavior:auto!important}
 .shell>header{margin-bottom:8px}.shell>header h1{font-size:20px}
 .center-description{margin:0;padding:4px 12px}.center-description h2{font-size:16px;margin:4px 0}
 .center-description p:empty,.gm-suit p:empty{display:none}
-.stage:has(.gm-suit){height:auto;min-height:0;overflow:visible}
-#prototypeHost:has(.gm-suit){height:auto;overflow:visible}
-.gm-suit{padding:48px 12px 12px;max-height:none;overflow:visible}
-.gm-suit-selects{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.gm-suit-selects label{min-width:0;display:grid;gap:4px;font-size:13px}
-.gm-suit-selects select{width:100%;min-width:0}
+body .stage:has(.gm-suit){height:auto;min-height:0;overflow:visible}
+body #prototypeHost:has(.gm-suit){height:auto;overflow:visible}
+body .gm-suit{padding:48px 12px 12px;max-height:none;overflow:visible}
+body .gm-suit-selects{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+body .gm-suit-selects label{min-width:0;display:grid;gap:4px;font-size:13px}
+body .gm-suit-selects select{width:100%;min-width:0}
 .gm-suit [data-alternate]{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .gm-suit [data-alternate] label{flex:1;min-width:0;display:grid}
 .gm-suit [data-alternate] select{min-width:0;width:100%}
 .gm-suit .gm-suit-preview{height:240px!important;margin:8px auto}
-.gm-suit-actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:8px 0}
-.gm-suit-actions button{padding:6px;min-width:0}
+body .gm-suit-actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:8px 0}
+body .gm-suit-actions button{padding:6px;min-width:0}
 .gm-monster-actions{display:flex;gap:8px;justify-content:center;margin:8px 0}
 .gm-suit details{margin-top:12px;border-top:1px solid #527a9166;padding-top:10px}
 .gm-suit summary{cursor:pointer;min-height:44px;display:list-item}
 .gm-suit pre{max-height:200px;overflow:auto;overflow-wrap:anywhere;white-space:pre-wrap}
-.center-maximized .stage:has(.gm-suit){height:100dvh;overflow:auto}
-.center-maximized #prototypeHost:has(.gm-suit){height:auto;overflow:visible}
+body .center-maximized .stage:has(.gm-suit){height:100dvh;overflow:auto}
+body .center-maximized #prototypeHost:has(.gm-suit){height:auto;overflow:visible}
 .shell>footer{margin-top:8px}.shell>footer>p{font-size:12px;margin:4px 0}
 @media(max-width:600px){
- .shell{padding:8px}.gm-suit{padding-inline:8px}
- .gm-suit-selects{grid-template-columns:repeat(2,minmax(0,1fr))}
- .gm-suit-actions{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .shell{padding:8px}body .gm-suit{padding-inline:8px}
+ body .gm-suit-selects{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body .gm-suit-actions{grid-template-columns:repeat(3,minmax(0,1fr))}
  .shell>header small{display:none}
 }
 @media(max-height:500px) and (min-width:601px){
  .shell>header,.center-description,.shell>footer>p{display:none}
- .gm-suit{padding-top:44px}
+ body .gm-suit{padding-top:44px}
  .gm-suit .gm-suit-preview{height:240px!important}
 }
 
 .gm-suit[data-mode="monster"] canvas[data-suit]{visibility:hidden}
+
+.is-embedded .shell>header,.center-workspace:has(.gm-suit) .center-description{display:none}

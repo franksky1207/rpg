@@ -14,7 +14,7 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  // after startup so force-cache is measured under real browser cache semantics.
  await page.unroute('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js');
  await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');
- await frame.locator('[data-status]').filter({hasText:'已載入'}).waitFor();
+ await frame.locator('canvas[data-suit]').waitFor();
  await frame.locator('[data-preview-mode]').selectOption('duel');
  await frame.locator('[data-advanced] summary').first().click();
  await page.waitForTimeout(1200);const truth=await page.evaluate(()=>JSON.stringify(state)),storage=await page.evaluate(()=>JSON.stringify(localStorage));

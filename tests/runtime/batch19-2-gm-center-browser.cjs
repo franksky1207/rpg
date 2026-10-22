@@ -59,7 +59,7 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   assert.equal(layout.overflow,false);assert.ok(layout.buttons.every(b=>b.h>=44&&b.left>=0&&b.right<=viewport.width));assert.doesNotMatch(layout.text,/SHA-256|512×512|實測可見倍率|解碼上限|第17批/);
   await frame.locator('[data-action="idle"]').click();
   const painted=await frame.locator('.gm-suit-preview').evaluate(el=>[...el.querySelectorAll('canvas')].filter(c=>getComputedStyle(c).visibility!=='hidden').map(c=>({clip:c.dataset.clip,painted:c.getContext('2d').getImageData(0,0,c.width,c.height).data.some((a,i)=>i%4===3&&a>16)})));assert.ok(painted.length&&painted.every(c=>c.painted),'visible actors must be painted '+JSON.stringify(painted));
-  await frame.locator('body').screenshot({path:`/tmp/batch19-2-${viewport.width}-${mode}.png`,fullPage:true});
+  await page.evaluate(()=>window.scrollTo(0,0));await frame.locator('body').evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:`/tmp/batch19-2-${viewport.width}-${mode}.png`,fullPage:false});
  }
  await frame.locator('[data-advanced] summary').first().click();await frame.locator('[data-clear-cache]').click();await frame.locator('canvas[data-suit]').waitFor();
  await frame.locator('[data-missing]').click();await frame.locator('[data-status]').filter({hasText:'缺圖或驗證失敗'}).waitFor();await frame.locator('[data-reload]').click();await frame.locator('canvas[data-suit]').waitFor();
