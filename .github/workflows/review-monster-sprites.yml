@@ -1,0 +1,21 @@
+name: Review Monster Sprite Integration
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review-monster-sprites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Strict identity and review mode mapping
+        run: node tests/runtime/review-sprites-contract.mjs
+      - name: Check publication and required assets
+        run: node scripts/build-publish-dry-run.cjs

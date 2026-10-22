@@ -303,7 +303,7 @@
   reviewSelectedId=def.id;reviewBattle={phase:"combat",enemy,enemyHp:enemy.hp,playerHp:p.hp};state.hp=p.hp;render();
   const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:"calamity"});
   try{
-   const combat=window.runCombatCore(p,enemy,p.hp,{mainlineLogs:true,preparePresentation:true,visualContext:{mode:"review",world:1,owner:"secondworldcalamityui.js",variant:"calamity",enemyName:enemy.name,playerName:state.playerName}});
+   const combat=window.runCombatCore(p,enemy,p.hp,{mainlineLogs:true,preparePresentation:true,visualContext:{mode:"review",world:1,owner:"secondworldcalamityui.js",variant:"calamity",location:def.id,enemyName:enemy.name,playerName:state.playerName}});
    reviewBattle.enemyHp=combat.enemyHp;reviewBattle.playerHp=combat.hp;
    if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation(combat,{mode:"calamity",clearAfter:true,clearReason:"galaxy-calamity-review-end"});
    state.hp=p.hp;reviewBattle={phase:"result",enemy,enemyHp:combat.enemyHp,playerHp:p.hp,win:combat.win};
@@ -319,7 +319,7 @@
   universeReviewSelectedId=def.id;universeReviewBattle={phase:"combat",enemy,enemyHp:enemy.hp,playerHp:p.hp};state.hp=p.hp;render();
   const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"universe",mode:"calamity"});
   try{
-   const combat=window.runCombatCore(p,enemy,p.hp,{mainlineLogs:true,preparePresentation:true,playerFinalDamageMultiplier:multiplier,visualContext:{mode:"review",world:2,owner:"secondworldcalamityui.js",variant:"calamity",enemyName:enemy.name,playerName:state.playerName}});
+   const combat=window.runCombatCore(p,enemy,p.hp,{mainlineLogs:true,preparePresentation:true,playerFinalDamageMultiplier:multiplier,visualContext:{mode:"review",world:2,owner:"secondworldcalamityui.js",variant:"calamity",location:def.id,enemyName:enemy.name,playerName:state.playerName}});
    universeReviewBattle.enemyHp=combat.enemyHp;universeReviewBattle.playerHp=combat.hp;
    if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation(combat,{mode:"calamity",clearAfter:true,clearReason:"universe-calamity-review-end"});
    state.hp=p.hp;universeReviewBattle={phase:"result",enemy,enemyHp:combat.enemyHp,playerHp:p.hp,win:combat.win};
