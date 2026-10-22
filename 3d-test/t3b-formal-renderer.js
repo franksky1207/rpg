@@ -242,7 +242,7 @@ async function createSuit(options,bundle){
   const loadDeadline=setTimeout(cancelLoad,2500);
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
-    import('./monster-formal-resolver.mjs?v=20261022-batch18-alternate1'),
+    import('./monster-formal-resolver.mjs?v=20261022-review-sprites1'),
     import('./monster-actor.mjs?v=20261022-batch19-frame1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
