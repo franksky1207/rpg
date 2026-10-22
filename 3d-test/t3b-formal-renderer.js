@@ -305,8 +305,8 @@ async function createSuit(options,bundle){
  function layoutSprites(){
   const w=host.clientWidth,h=host.clientHeight,mobile=global.matchMedia('(max-width:760px)').matches,key=`${w}:${h}:${mobile}`;
   if(key===layoutKey||!w||!h)return;layoutKey=key;
-  // Fallback silhouette follows the same viewport-relative player target as verified sprites.
-  const size=Math.min(h*.82,w*(mobile?.47:.44)),halfApproach=.42*140/2;
+  // Preserve the established fallback until painted Alpha calibration is measured.
+  const size=Math.min(h*(mobile?.82:.87),w*(mobile?.47:.44)),halfApproach=.42*140/2;
   for(const canvas of [actor.canvas,enemyCanvas].filter(Boolean)){canvas.style.width=size+'px';canvas.style.height=size+'px';canvas.style.maxWidth='none';canvas.style.right='auto';}
   actor.canvas.style.left=(w/2-size*.70-halfApproach)+'px';
   enemyCanvas.style.left=(w/2-size*.18+halfApproach)+'px';
