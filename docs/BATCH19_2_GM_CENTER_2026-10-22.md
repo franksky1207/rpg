@@ -26,7 +26,7 @@
 
 已通過：JavaScript結構完整性、GM用語／版本、C-08／C-15相容入口與手機最大化還原、279次Boss快速切換／快照回收、19-1封箱尺寸與39原型雜湊契約、正式唯讀快照、舊美術／正式owner完整性守衛。
 
-最新版完整本機 Browser 已於三視窗全部通過，逐筆資料見 development/combat-animation/batch19-2/local-browser.json；每視窗覆蓋695固定映射可選性、1000異宇宙細項與26個紀元／來源組合、三玩家六動作、怪物六動作、雙向攻擊、快取／缺圖回復、授權與正式資料隔離。畫面覆核確認直向選單為兩欄、桌機四欄，橫向短螢幕保留垂直捲動以完整查看動畫及下方操作，不宣稱所有控制與動畫均可同屏。PR head Actions、合併 main、同SHA Runtime及Pages仍必須逐一成功，不能以歷史成功輪代替。真實iPhone Safari畫面、效能、溫度、耗電、OS背景恢復仍待人工。
+最新版完整本機 Browser 已於三視窗全部通過，逐筆資料見 development/combat-animation/batch19-2/local-browser.json；每視窗覆蓋695固定映射可選性、1000異宇宙細項與21個紀元／來源組合、三玩家六動作、怪物六動作、雙向攻擊、快取／缺圖回復、授權與正式資料隔離。畫面覆核確認直向選單為兩欄、桌機四欄，橫向短螢幕保留垂直捲動以完整查看動畫及下方操作，不宣稱所有控制與動畫均可同屏。PR head Actions、合併 main、同SHA Runtime及Pages仍必須逐一成功，不能以歷史成功輪代替。真實iPhone Safari畫面、效能、溫度、耗電、OS背景恢復仍待人工。
 
 主要 PR：[ #79](https://github.com/franksky1207/rpg/pull/79)。功能候選、最新head、完整Actions、正式main及Pages最終發布證據集中記於該PR的最終驗收紀錄，避免文件自我引用尚未產生的commit。未全部成功不得宣告封箱。
 

@@ -254,6 +254,6 @@ body .center-maximized #prototypeHost:has(.gm-suit){height:auto;overflow:visible
  .gm-suit .gm-suit-preview{height:240px!important}
 }
 
-.gm-suit[data-mode="monster"] canvas[data-suit]{visibility:hidden}
+.gm-suit[data-view="monster"] canvas[data-suit]{visibility:hidden}
 
 .is-embedded .shell>header,.center-workspace:has(.gm-suit) .center-description{display:none}

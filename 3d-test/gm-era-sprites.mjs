@@ -51,7 +51,7 @@ export async function mount({host,signal,quality='medium'}={}){
  }
  async function changeMode(){
   previewMode=$('[data-preview-mode]').value;lastDirection=null;lastClip=monsterClip='idle';animation.play('idle',visualNow);monsterAnimation.play('idle',visualNow);
-  ui.dataset.mode=previewMode;
+  ui.dataset.view=previewMode;
   $('[data-source-label]').hidden=previewMode==='player';
   if(previewMode==='player'){$('[data-alternate]').hidden=true;$('[data-identity-label]').hidden=true;$('[data-monster]').value='';await showMonster();}
   else{updateSources();await selectSource();}
@@ -131,7 +131,7 @@ export async function mount({host,signal,quality='medium'}={}){
   try{const next=await new WholeSuitActor(pool,entry,{tier:quality,signal:loading.signal}).init();
    if(closed||!authorized||ticket!==serial){next.dispose();return;}
    actor=next;actor.draw({clip:'idle',elapsedMs:0});actor.canvas.dataset.suit=row.id;actor.canvas.style.cssText='position:absolute;left:calc(50% - 90px);top:20px;height:180px;width:180px;max-width:100%;object-fit:contain';preview.append(actor.canvas);placeholder.hidden=true;transform();animation.play('idle',visualNow);status.textContent='';$('[data-reload]').hidden=true;
-  }catch{if(!closed&&ticket===serial){status.textContent='缺圖或驗證失敗，請重新載入。';$('[data-reload]').hidden=false;placeholder.textContent='角色暫時無法顯示';}}
+  }catch{if(!closed&&ticket===serial){status.textContent='缺圖或驗證失敗，已安全回退；請重新載入。';$('[data-reload]').hidden=false;placeholder.textContent='角色暫時無法顯示';}}
   diagnostics();
  }
  for(const [clip,label] of [['idle','待機'],['attack','攻擊'],['hit','受擊'],['dodge','閃避'],['return','回位'],['defeat','死亡']]){const b=document.createElement('button');b.type='button';b.dataset.action=clip;b.textContent=label;b.title=clip==='attack'?'攻擊（短距離上挑斬）':label;b.addEventListener('click',()=>{if(authorized&&actor){lastDirection=null;lastClip=clip;if(previewMode==='monster'&&monster){monsterClip=clip;monsterAnimation.play(clip,visualNow);}else animation.play(clip,visualNow);}},{signal:own.signal});$('.gm-suit-actions').append(b);}
@@ -178,6 +178,6 @@ export async function mount({host,signal,quality='medium'}={}){
  const dispose=()=>{if(closed)return;closed=true;clearMonster();monsterAnimation.dispose();monsterPool.dispose();cancelAnimationFrame(raf);raf=0;clear();animation.dispose();pool.dispose();own.abort();for(const p of pending.values()){clearTimeout(p.timer);p.reject(Error('disposed'));}pending.clear();signal?.removeEventListener('abort',dispose);ui.remove();};
  signal?.addEventListener('abort',dispose,{once:true});if(signal?.aborted){dispose();return {dispose};}
  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;lastTick=null;animation.cancel();monsterAnimation.cancel();clearMonster();monsterPool.clear();}else{void authorize().then(ok=>{if(ok&&$('[data-monster]').value)void showMonster();});start();}},{signal:own.signal});
- ui.dataset.mode='player';updateSources();setEnabled(false);if(await authorize())await show();start();
+ ui.dataset.view='player';updateSources();setEnabled(false);if(await authorize())await show();start();
  return {dispose,resize:transform,stats:()=>pool.stats()};
 }
