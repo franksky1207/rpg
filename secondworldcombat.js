@@ -90,7 +90,7 @@
   const reviewStateBefore=reviewMode&&targetState?JSON.stringify(targetState):null;
   const resolved=window.runWorldCombatCore(player,enemy,startHp,{
    world:2,
-   visualContext:{mode:reviewMode?"review":"main",world:2,owner:"secondworldcombat.js",variant:"boss",location:String(index),playerName:targetState?.playerName,fixture:options.useTestSpecializations===true||options.ignoreUnlock===true},
+   visualContext:{mode:reviewMode?"review":"main",world:2,owner:"secondworldcombat.js",variant:"boss",location:String(index),enemyName:enemy.name,playerName:targetState?.playerName,fixture:options.useTestSpecializations===true||options.ignoreUnlock===true},
    state:targetState,
    civilizationLevel:options.civilizationLevel,
    logs:options.logs!==false,
