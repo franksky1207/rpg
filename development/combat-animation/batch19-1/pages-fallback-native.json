@@ -1,0 +1,1674 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "world": 1,
+      "mode": "calamity",
+      "bossId": "earth",
+      "bossIndex": 0,
+      "name": "灰潮母巢",
+      "fallback": true,
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "灰潮母巢",
+        "id": "earth",
+        "kind": "civilization-calamity",
+        "location": "earth",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.75,
+      "stage": {
+        "x": 139.5,
+        "y": 269,
+        "width": 1086,
+        "height": 432,
+        "top": 269,
+        "right": 1225.5,
+        "bottom": 701,
+        "left": 139.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 361.373291015625,
+            "right": 433.35400390625,
+            "top": 405.61376953125,
+            "bottom": 557.988525390625,
+            "height": 152.374755859375
+          },
+          {
+            "left": 612.6907958984375,
+            "right": 894.4120483398438,
+            "top": 349.3916015625,
+            "bottom": 616.0475463867188,
+            "height": 266.65594482421875
+          }
+        ],
+        "bars": [
+          {
+            "x": 153.5,
+            "y": 857,
+            "width": 509,
+            "height": 18,
+            "top": 857,
+            "right": 662.5,
+            "bottom": 875,
+            "left": 153.5
+          },
+          {
+            "x": 702.5,
+            "y": 871,
+            "width": 509,
+            "height": 18,
+            "top": 871,
+            "right": 1211.5,
+            "bottom": 889,
+            "left": 702.5
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 1365,
+          "height": 900
+        },
+        "safeDistances": {
+          "left": 221.873291015625,
+          "right": 331.08795166015625,
+          "gap": 179.3367919921875,
+          "top": 80.3916015625,
+          "bottom": 84.95245361328125
+        },
+        "extraInformationInvariant": {
+          "before": 568,
+          "after": 568,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 152.3788074280089,
+        "paintedHeight": 152.3788074280089,
+        "safetyRetreat": "",
+        "frameHeight": 568,
+        "hud": [
+          136,
+          136
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.2682654152453785,
+        "stageHeight": 432,
+        "playerStageFraction": 0.35271934226707174,
+        "playerViewportFraction": 0.16930528428819444,
+        "monsterViewportFraction": 0.29628438313802086,
+        "ratio": 1.750000801119003,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 1,
+      "mode": "calamity",
+      "bossId": "galactic-unification",
+      "bossIndex": 9,
+      "name": "終末之眼",
+      "fallback": true,
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "終末之眼",
+        "id": "galactic-unification",
+        "kind": "civilization-calamity",
+        "location": "galactic-unification",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.9,
+      "stage": {
+        "x": 139.5,
+        "y": 269,
+        "width": 1086,
+        "height": 432,
+        "top": 269,
+        "right": 1225.5,
+        "bottom": 701,
+        "left": 139.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 429.873291015625,
+            "right": 501.85400390625,
+            "top": 406.345458984375,
+            "bottom": 557.785400390625,
+            "height": 151.43994140625
+          },
+          {
+            "left": 608.9100341796875,
+            "right": 914.7824096679688,
+            "top": 337.7939453125,
+            "bottom": 627.3095092773438,
+            "height": 289.51556396484375
+          }
+        ],
+        "bars": [
+          {
+            "x": 153.5,
+            "y": 857,
+            "width": 509,
+            "height": 18,
+            "top": 857,
+            "right": 662.5,
+            "bottom": 875,
+            "left": 153.5
+          },
+          {
+            "x": 702.5,
+            "y": 871,
+            "width": 509,
+            "height": 18,
+            "top": 871,
+            "right": 1211.5,
+            "bottom": 889,
+            "left": 702.5
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 1365,
+          "height": 900
+        },
+        "safeDistances": {
+          "left": 290.373291015625,
+          "right": 310.71759033203125,
+          "gap": 107.0560302734375,
+          "top": 68.7939453125,
+          "bottom": 73.69049072265625
+        },
+        "extraInformationInvariant": {
+          "before": 568,
+          "after": 568,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 152.3788074280089,
+        "paintedHeight": 152.3788074280089,
+        "safetyRetreat": "",
+        "frameHeight": 568,
+        "hud": [
+          136,
+          136
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.26661961515184857,
+        "stageHeight": 432,
+        "playerStageFraction": 0.350555419921875,
+        "playerViewportFraction": 0.1682666015625,
+        "monsterViewportFraction": 0.3216839599609375,
+        "ratio": 1.9117516903165899,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 2,
+      "mode": "calamity",
+      "bossId": "universe-calamity-01",
+      "bossIndex": 0,
+      "name": "彼岸黑潮",
+      "fallback": true,
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "彼岸黑潮",
+        "id": "universe-calamity-01",
+        "kind": "civilization-calamity",
+        "location": "universe-calamity-01",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.7,
+      "stage": {
+        "x": 139.5,
+        "y": 153,
+        "width": 1086,
+        "height": 432,
+        "top": 153,
+        "right": 1225.5,
+        "bottom": 585,
+        "left": 139.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 377.7392578125,
+            "right": 460.337890625,
+            "top": 288.95556640625,
+            "bottom": 444.54833984375,
+            "height": 155.5927734375
+          },
+          {
+            "left": 616.29345703125,
+            "right": 895.743408203125,
+            "top": 234.49609375,
+            "bottom": 499.002197265625,
+            "height": 264.506103515625
+          }
+        ],
+        "bars": [
+          {
+            "x": 153.5,
+            "y": 747,
+            "width": 509,
+            "height": 18,
+            "top": 747,
+            "right": 662.5,
+            "bottom": 765,
+            "left": 153.5
+          },
+          {
+            "x": 702.5,
+            "y": 755,
+            "width": 509,
+            "height": 18,
+            "top": 755,
+            "right": 1211.5,
+            "bottom": 773,
+            "left": 702.5
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 1365,
+          "height": 900
+        },
+        "safeDistances": {
+          "left": 238.2392578125,
+          "right": 329.756591796875,
+          "gap": 155.95556640625,
+          "top": 81.49609375,
+          "bottom": 85.997802734375
+        },
+        "extraInformationInvariant": {
+          "before": 580,
+          "after": 580,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 155.59807800747387,
+        "paintedHeight": 155.59807800747387,
+        "safetyRetreat": "",
+        "frameHeight": 580,
+        "hud": [
+          136,
+          148
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.26826340247844827,
+        "stageHeight": 432,
+        "playerStageFraction": 0.36016845703125,
+        "playerViewportFraction": 0.172880859375,
+        "monsterViewportFraction": 0.29389567057291666,
+        "ratio": 1.6999896439398219,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 2,
+      "mode": "calamity",
+      "bossId": "universe-calamity-10",
+      "bossIndex": 9,
+      "name": "終戰天穹",
+      "fallback": true,
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "終戰天穹",
+        "id": "universe-calamity-10",
+        "kind": "civilization-calamity",
+        "location": "universe-calamity-10",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.9726884531590412,
+      "stage": {
+        "x": 139.5,
+        "y": 153,
+        "width": 1086,
+        "height": 432,
+        "top": 153,
+        "right": 1225.5,
+        "bottom": 585,
+        "left": 139.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 395.8798828125,
+            "right": 478.478515625,
+            "top": 287.6357421875,
+            "bottom": 444.18896484375,
+            "height": 156.55322265625
+          },
+          {
+            "left": 593.16357421875,
+            "right": 917.446044921875,
+            "top": 212.92578125,
+            "bottom": 519.866943359375,
+            "height": 306.941162109375
+          }
+        ],
+        "bars": [
+          {
+            "x": 153.5,
+            "y": 747,
+            "width": 509,
+            "height": 18,
+            "top": 747,
+            "right": 662.5,
+            "bottom": 765,
+            "left": 153.5
+          },
+          {
+            "x": 702.5,
+            "y": 755,
+            "width": 509,
+            "height": 18,
+            "top": 755,
+            "right": 1211.5,
+            "bottom": 773,
+            "left": 702.5
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 1365,
+          "height": 900
+        },
+        "safeDistances": {
+          "left": 256.3798828125,
+          "right": 308.053955078125,
+          "gap": 114.68505859375,
+          "top": 59.92578125,
+          "bottom": 65.133056640625
+        },
+        "extraInformationInvariant": {
+          "before": 580,
+          "after": 580,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 155.59807800747387,
+        "paintedHeight": 155.59807800747387,
+        "safetyRetreat": "",
+        "frameHeight": 580,
+        "hud": [
+          136,
+          148
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.2699193494073276,
+        "stageHeight": 432,
+        "playerStageFraction": 0.3623917191116898,
+        "playerViewportFraction": 0.1739480251736111,
+        "monsterViewportFraction": 0.34104573567708335,
+        "ratio": 1.9606186120060758,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 1,
+      "mode": "calamity",
+      "bossId": "earth",
+      "bossIndex": 0,
+      "name": "灰潮母巢",
+      "fallback": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "灰潮母巢",
+        "id": "earth",
+        "kind": "civilization-calamity",
+        "location": "earth",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.75,
+      "stage": {
+        "x": 25,
+        "y": 252,
+        "width": 340,
+        "height": 340,
+        "top": 252,
+        "right": 365,
+        "bottom": 592,
+        "left": 25
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 35.512776692708336,
+            "right": 71.26188151041667,
+            "top": 382.100341796875,
+            "bottom": 458.2412923177083,
+            "height": 76.14095052083333
+          },
+          {
+            "left": 160.31689453125,
+            "right": 300.247314453125,
+            "top": 354.65234375,
+            "bottom": 487.099853515625,
+            "height": 132.447509765625
+          }
+        ],
+        "bars": [
+          {
+            "x": 37,
+            "y": 732,
+            "width": 316,
+            "height": 15,
+            "top": 732,
+            "right": 353,
+            "bottom": 747,
+            "left": 37
+          },
+          {
+            "x": 37,
+            "y": 225,
+            "width": 316,
+            "height": 15,
+            "top": 225,
+            "right": 353,
+            "bottom": 240,
+            "left": 37
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 390,
+          "height": 844
+        },
+        "safeDistances": {
+          "left": 10.512776692708336,
+          "right": 64.752685546875,
+          "gap": 89.05501302083333,
+          "top": 102.65234375,
+          "bottom": 104.900146484375
+        },
+        "extraInformationInvariant": {
+          "before": 598,
+          "after": 598,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 160.42698387667136,
+        "paintedHeight": 75.6850604906432,
+        "safetyRetreat": "animation-width",
+        "frameHeight": 598,
+        "hud": [
+          129,
+          129
+        ],
+        "stacked": true,
+        "playerFrameFraction": 0.12732600421544035,
+        "stageHeight": 340,
+        "playerStageFraction": 0.22394397212009803,
+        "playerViewportFraction": 0.09021439635169826,
+        "monsterViewportFraction": 0.15692832910619076,
+        "ratio": 1.7395042859280478,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "calamity",
+      "bossId": "galactic-unification",
+      "bossIndex": 9,
+      "name": "終末之眼",
+      "fallback": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "終末之眼",
+        "id": "galactic-unification",
+        "kind": "civilization-calamity",
+        "location": "galactic-unification",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.9,
+      "stage": {
+        "x": 25,
+        "y": 252,
+        "width": 340,
+        "height": 340,
+        "top": 252,
+        "right": 365,
+        "bottom": 592,
+        "left": 25
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 37.185546875,
+            "right": 82.15234375,
+            "top": 371.693359375,
+            "bottom": 467.466796875,
+            "height": 95.7734375
+          },
+          {
+            "left": 149.024169921875,
+            "right": 340.1102294921875,
+            "top": 330.017578125,
+            "bottom": 510.8851318359375,
+            "height": 180.8675537109375
+          }
+        ],
+        "bars": [
+          {
+            "x": 37,
+            "y": 732,
+            "width": 316,
+            "height": 15,
+            "top": 732,
+            "right": 353,
+            "bottom": 747,
+            "left": 37
+          },
+          {
+            "x": 37,
+            "y": 225,
+            "width": 316,
+            "height": 15,
+            "top": 225,
+            "right": 353,
+            "bottom": 240,
+            "left": 37
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 390,
+          "height": 844
+        },
+        "safeDistances": {
+          "left": 12.185546875,
+          "right": 24.8897705078125,
+          "gap": 66.871826171875,
+          "top": 78.017578125,
+          "bottom": 81.1148681640625
+        },
+        "extraInformationInvariant": {
+          "before": 598,
+          "after": 598,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 160.42698387667136,
+        "paintedHeight": 95.19810819613643,
+        "safetyRetreat": "animation-width",
+        "frameHeight": 598,
+        "hud": [
+          129,
+          129
+        ],
+        "stacked": true,
+        "playerFrameFraction": 0.16015625,
+        "stageHeight": 340,
+        "playerStageFraction": 0.28168658088235293,
+        "playerViewportFraction": 0.11347563684834124,
+        "monsterViewportFraction": 0.21429804942054206,
+        "ratio": 1.8884939126356146,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 2,
+      "mode": "calamity",
+      "bossId": "universe-calamity-01",
+      "bossIndex": 0,
+      "name": "彼岸黑潮",
+      "fallback": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "彼岸黑潮",
+        "id": "universe-calamity-01",
+        "kind": "civilization-calamity",
+        "location": "universe-calamity-01",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.7,
+      "stage": {
+        "x": 25,
+        "y": 252,
+        "width": 340,
+        "height": 340,
+        "top": 252,
+        "right": 365,
+        "bottom": 592,
+        "left": 25
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 36.5048828125,
+            "right": 79.462890625,
+            "top": 380.35400390625,
+            "bottom": 461.27490234375,
+            "height": 80.9208984375
+          },
+          {
+            "left": 160.5526123046875,
+            "right": 305.90447998046875,
+            "top": 352.0283203125,
+            "bottom": 489.60736083984375,
+            "height": 137.57904052734375
+          }
+        ],
+        "bars": [
+          {
+            "x": 37,
+            "y": 732,
+            "width": 316,
+            "height": 15,
+            "top": 732,
+            "right": 353,
+            "bottom": 747,
+            "left": 37
+          },
+          {
+            "x": 37,
+            "y": 213,
+            "width": 316,
+            "height": 15,
+            "top": 213,
+            "right": 353,
+            "bottom": 228,
+            "left": 37
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 390,
+          "height": 844
+        },
+        "safeDistances": {
+          "left": 11.5048828125,
+          "right": 59.09552001953125,
+          "gap": 81.0897216796875,
+          "top": 100.0283203125,
+          "bottom": 102.39263916015625
+        },
+        "extraInformationInvariant": {
+          "before": 610,
+          "after": 610,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 163.64625445613632,
+        "paintedHeight": 80.9310484183011,
+        "safetyRetreat": "animation-width",
+        "frameHeight": 610,
+        "hud": [
+          129,
+          141
+        ],
+        "stacked": true,
+        "playerFrameFraction": 0.1326572105532787,
+        "stageHeight": 340,
+        "playerStageFraction": 0.2380026424632353,
+        "playerViewportFraction": 0.09587784175059241,
+        "monsterViewportFraction": 0.16300834185704235,
+        "ratio": 1.7001669925057021,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 2,
+      "mode": "calamity",
+      "bossId": "universe-calamity-10",
+      "bossIndex": 9,
+      "name": "終戰天穹",
+      "fallback": true,
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "終戰天穹",
+        "id": "universe-calamity-10",
+        "kind": "civilization-calamity",
+        "location": "universe-calamity-10",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.9726884531590412,
+      "stage": {
+        "x": 25,
+        "y": 252,
+        "width": 340,
+        "height": 340,
+        "top": 252,
+        "right": 365,
+        "bottom": 592,
+        "left": 25
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 36.943359375,
+            "right": 82.49088541666666,
+            "top": 377.1243489583333,
+            "bottom": 463.45279947916663,
+            "height": 86.32845052083334
+          },
+          {
+            "left": 145.73291015625,
+            "right": 324.560791015625,
+            "top": 335.91796875,
+            "bottom": 505.182861328125,
+            "height": 169.264892578125
+          }
+        ],
+        "bars": [
+          {
+            "x": 37,
+            "y": 732,
+            "width": 316,
+            "height": 15,
+            "top": 732,
+            "right": 353,
+            "bottom": 747,
+            "left": 37
+          },
+          {
+            "x": 37,
+            "y": 213,
+            "width": 316,
+            "height": 15,
+            "top": 213,
+            "right": 353,
+            "bottom": 228,
+            "left": 37
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 390,
+          "height": 844
+        },
+        "safeDistances": {
+          "left": 11.943359375,
+          "right": 40.439208984375,
+          "gap": 63.24202473958334,
+          "top": 83.91796875,
+          "bottom": 86.817138671875
+        },
+        "extraInformationInvariant": {
+          "before": 610,
+          "after": 610,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 163.64625445613632,
+        "paintedHeight": 85.80808033409977,
+        "safetyRetreat": "animation-width",
+        "frameHeight": 610,
+        "hud": [
+          129,
+          141
+        ],
+        "stacked": true,
+        "playerFrameFraction": 0.14152205003415302,
+        "stageHeight": 340,
+        "playerStageFraction": 0.25390720741421574,
+        "playerViewportFraction": 0.10228489398203003,
+        "monsterViewportFraction": 0.2005508205901955,
+        "ratio": 1.9607081044189123,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "calamity",
+      "bossId": "earth",
+      "bossIndex": 0,
+      "name": "灰潮母巢",
+      "fallback": true,
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "灰潮母巢",
+        "id": "earth",
+        "kind": "civilization-calamity",
+        "location": "earth",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.75,
+      "stage": {
+        "x": 41,
+        "y": 94,
+        "width": 762,
+        "height": 202.796875,
+        "top": 94,
+        "right": 803,
+        "bottom": 296.796875,
+        "left": 41
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 230.332275390625,
+            "right": 273.28759765625,
+            "top": 148.10986328125,
+            "bottom": 239.041259765625,
+            "height": 90.931396484375
+          },
+          {
+            "left": 380.3353271484375,
+            "right": 548.4686889648438,
+            "top": 114.5791015625,
+            "bottom": 273.72137451171875,
+            "height": 159.14227294921875
+          }
+        ],
+        "bars": [
+          {
+            "x": 55,
+            "y": 488.796875,
+            "width": 347,
+            "height": 18,
+            "top": 488.796875,
+            "right": 402,
+            "bottom": 506.796875,
+            "left": 55
+          },
+          {
+            "x": 442,
+            "y": 502.796875,
+            "width": 347,
+            "height": 18,
+            "top": 502.796875,
+            "right": 789,
+            "bottom": 520.796875,
+            "left": 442
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 844,
+          "height": 390
+        },
+        "safeDistances": {
+          "left": 189.332275390625,
+          "right": 254.53131103515625,
+          "gap": 107.0477294921875,
+          "top": 20.5791015625,
+          "bottom": 23.07550048828125
+        },
+        "extraInformationInvariant": {
+          "before": 339,
+          "after": 339,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 90.9443938698856,
+        "paintedHeight": 90.9443938698856,
+        "safetyRetreat": "",
+        "frameHeight": 338.796875,
+        "hud": [
+          136,
+          136
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.2683950272102569,
+        "stageHeight": 202.796875,
+        "playerStageFraction": 0.44838657639263424,
+        "playerViewportFraction": 0.23315742688301283,
+        "monsterViewportFraction": 0.40805711012620194,
+        "ratio": 1.750135586849418,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "calamity",
+      "bossId": "galactic-unification",
+      "bossIndex": 9,
+      "name": "終末之眼",
+      "fallback": true,
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "終末之眼",
+        "id": "galactic-unification",
+        "kind": "civilization-calamity",
+        "location": "galactic-unification",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.9,
+      "stage": {
+        "x": 41,
+        "y": 94,
+        "width": 762,
+        "height": 202.796875,
+        "top": 94,
+        "right": 803,
+        "bottom": 296.796875,
+        "left": 41
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 271.4071451822917,
+            "right": 314.31233723958337,
+            "top": 148.05647786458334,
+            "bottom": 238.88175455729166,
+            "height": 90.82527669270834
+          },
+          {
+            "left": 378.133544921875,
+            "right": 560.4539794921875,
+            "top": 107.751953125,
+            "bottom": 280.3226318359375,
+            "height": 172.5706787109375
+          }
+        ],
+        "bars": [
+          {
+            "x": 55,
+            "y": 488.796875,
+            "width": 347,
+            "height": 18,
+            "top": 488.796875,
+            "right": 402,
+            "bottom": 506.796875,
+            "left": 55
+          },
+          {
+            "x": 442,
+            "y": 502.796875,
+            "width": 347,
+            "height": 18,
+            "top": 502.796875,
+            "right": 789,
+            "bottom": 520.796875,
+            "left": 442
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 844,
+          "height": 390
+        },
+        "safeDistances": {
+          "left": 230.40714518229169,
+          "right": 242.5460205078125,
+          "gap": 63.82120768229163,
+          "top": 13.751953125,
+          "bottom": 16.4742431640625
+        },
+        "extraInformationInvariant": {
+          "before": 339,
+          "after": 339,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 90.9443938698856,
+        "paintedHeight": 90.82894736842104,
+        "safetyRetreat": "animation-height",
+        "frameHeight": 338.796875,
+        "hud": [
+          136,
+          136
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.2680818017955695,
+        "stageHeight": 202.796875,
+        "playerStageFraction": 0.4478632951948019,
+        "playerViewportFraction": 0.23288532485309832,
+        "monsterViewportFraction": 0.4424889197716346,
+        "ratio": 1.9000292098729368,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 2,
+      "mode": "calamity",
+      "bossId": "universe-calamity-01",
+      "bossIndex": 0,
+      "name": "彼岸黑潮",
+      "fallback": true,
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "彼岸黑潮",
+        "id": "universe-calamity-01",
+        "kind": "civilization-calamity",
+        "location": "universe-calamity-01",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.7,
+      "stage": {
+        "x": 41,
+        "y": 94,
+        "width": 762,
+        "height": 202.796875,
+        "top": 94,
+        "right": 803,
+        "bottom": 296.796875,
+        "left": 41
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 237.5732421875,
+            "right": 287.5579427083333,
+            "top": 146.46842447916666,
+            "bottom": 241.20686848958331,
+            "height": 94.73844401041667
+          },
+          {
+            "left": 381.9200439453125,
+            "right": 551.0349731445312,
+            "top": 114.1123046875,
+            "bottom": 274.18365478515625,
+            "height": 160.07135009765625
+          }
+        ],
+        "bars": [
+          {
+            "x": 55,
+            "y": 458.796875,
+            "width": 347,
+            "height": 18,
+            "top": 458.796875,
+            "right": 402,
+            "bottom": 476.796875,
+            "left": 55
+          },
+          {
+            "x": 442,
+            "y": 466.796875,
+            "width": 347,
+            "height": 18,
+            "top": 466.796875,
+            "right": 789,
+            "bottom": 484.796875,
+            "left": 442
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 844,
+          "height": 390
+        },
+        "safeDistances": {
+          "left": 196.5732421875,
+          "right": 251.96502685546875,
+          "gap": 94.36210123697919,
+          "top": 20.1123046875,
+          "bottom": 22.61322021484375
+        },
+        "extraInformationInvariant": {
+          "before": 351,
+          "after": 351,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 94.16366444935058,
+        "paintedHeight": 94.16366444935058,
+        "safetyRetreat": "",
+        "frameHeight": 350.796875,
+        "hud": [
+          136,
+          148
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.2700663853132006,
+        "stageHeight": 202.796875,
+        "playerStageFraction": 0.4671592893648715,
+        "playerViewportFraction": 0.2429190872061966,
+        "monsterViewportFraction": 0.4104393592247596,
+        "ratio": 1.6896134591365688,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 2,
+      "mode": "calamity",
+      "bossId": "universe-calamity-10",
+      "bossIndex": 9,
+      "name": "終戰天穹",
+      "fallback": true,
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "終戰天穹",
+        "id": "universe-calamity-10",
+        "kind": "civilization-calamity",
+        "location": "universe-calamity-10",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.9726884531590412,
+      "stage": {
+        "x": 41,
+        "y": 94,
+        "width": 762,
+        "height": 202.796875,
+        "top": 94,
+        "right": 803,
+        "bottom": 296.796875,
+        "left": 41
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 260.84521484375,
+            "right": 307.2815755208333,
+            "top": 149.74332682291666,
+            "bottom": 237.75642903645831,
+            "height": 88.01310221354167
+          },
+          {
+            "left": 371.774169921875,
+            "right": 554.0946044921875,
+            "top": 107.751953125,
+            "bottom": 280.3226318359375,
+            "height": 172.5706787109375
+          }
+        ],
+        "bars": [
+          {
+            "x": 55,
+            "y": 458.796875,
+            "width": 347,
+            "height": 18,
+            "top": 458.796875,
+            "right": 402,
+            "bottom": 476.796875,
+            "left": 55
+          },
+          {
+            "x": 442,
+            "y": 466.796875,
+            "width": 347,
+            "height": 18,
+            "top": 466.796875,
+            "right": 789,
+            "bottom": 484.796875,
+            "left": 442
+          }
+        ],
+        "stops": [],
+        "viewport": {
+          "left": 0,
+          "top": 0,
+          "width": 844,
+          "height": 390
+        },
+        "safeDistances": {
+          "left": 219.84521484375,
+          "right": 248.9053955078125,
+          "gap": 64.49259440104169,
+          "top": 13.751953125,
+          "bottom": 16.4742431640625
+        },
+        "extraInformationInvariant": {
+          "before": 351,
+          "after": 351,
+          "addedHeight": 200
+        },
+        "stopButtonsUncovered": true,
+        "targetHeight": 94.16366444935058,
+        "paintedHeight": 87.48213623070603,
+        "safetyRetreat": "animation-height",
+        "frameHeight": 350.796875,
+        "hud": [
+          136,
+          148
+        ],
+        "stacked": false,
+        "playerFrameFraction": 0.25089477269015487,
+        "stageHeight": 202.796875,
+        "playerStageFraction": 0.4339963434522434,
+        "playerViewportFraction": 0.22567462106036326,
+        "monsterViewportFraction": 0.4424889197716346,
+        "ratio": 1.9607385079125847,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true,
+        "stageUnobscured": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 0,
+          "loads": 1,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "injectedHTTPFailure": 503,
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    }
+  ],
+  "realDevice": false
+}
