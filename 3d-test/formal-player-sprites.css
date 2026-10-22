@@ -29,3 +29,10 @@
 
 /* Landscape wins for both reserved and ready stages. */
 @media(max-height:500px){.formal-b-stage-pending>.formal-b-shared-stage,.formal-b-shared-stage,.formal-b-shared-layout>.formal-b-shared-stage{height:clamp(170px,52dvh,250px)}}
+
+/* Formal HUD has two peers: the retired VS column must not squeeze Void's
+   enemy into the desktop polish stylesheet's 72px centre track. */
+@media(min-width:761px){
+ html body #main .void-shell .void-combat.formal-b-shared-layout .combat-arena{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+ html body #main .void-shell .void-combat.formal-b-shared-layout .combatant{min-height:0!important}
+}

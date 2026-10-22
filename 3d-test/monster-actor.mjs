@@ -88,7 +88,7 @@ export function combatSizingFrame(host){
  const cards=[...screen.querySelectorAll('.combatant')];
  const outer=e=>{if(!e)return 0;const c=getComputedStyle(e);return e.getBoundingClientRect().height+parseFloat(c.marginTop)+parseFloat(c.marginBottom);};
  const hud=cards.map(e=>{const c=getComputedStyle(e);return outer(e.querySelector('h2'))+outer(e.querySelector('.big-hp'))+parseFloat(c.paddingTop)+parseFloat(c.paddingBottom)+parseFloat(c.borderTopWidth)+parseFloat(c.borderBottomWidth);});
- const stacked=cards.length===2&&Math.abs(cards[0].getBoundingClientRect().top-cards[1].getBoundingClientRect().top)>Math.min(...cards.map(e=>e.getBoundingClientRect().height))/2;
+ const stacked=cards.length===2&&Math.abs(cards[0].getBoundingClientRect().left-cards[1].getBoundingClientRect().left)<Math.min(...cards.map(e=>e.getBoundingClientRect().width))/2;
  return stageHeight+(stacked?hud.reduce((a,b)=>a+b,0):Math.max(0,...hud));
 }
 // Actual 256px Alpha measurements for all 39 unchanged approved prototypes.

@@ -1,6 +1,7 @@
 'use strict';
 const {chromium}=require('playwright'),fs=require('node:fs'),assert=require('node:assert/strict');
 const {sdk,finishIntro}=require('../../../tests/equipment-formal/helpers.cjs');
+const absoluteBaseline=require('./absolute-height-baseline.json').rows;
 const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']}),report={passed:false,rows:[],realDevice:false};
@@ -11,11 +12,11 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  ...[1,2].flatMap(world=>['bounty','arena','void','mirror'].map(mode=>({world:world===1?'galaxy':'universe',mode}))),
  all.find(r=>r.status==='batch18-formal-enabled')];
  const viewports=[{width:1365,height:900},{width:390,height:844},{width:844,height:390}];
- for(const viewport of viewports.filter(v=>!process.env.B19_VIEWPORT||v.width===Number(process.env.B19_VIEWPORT))){const context=await browser.newContext({viewport,hasTouch:viewport.width!==1365,isMobile:viewport.width!==1365});for(const row of records.filter(r=>(!process.env.B19_SPECIAL_ONLY||r.specialId)&&(!process.env.B19_MODE||(r.specialId?'special':r.mode||'main')===process.env.B19_MODE))){const item={world:row.world==='higher'?3:row.world==='universe'?2:1,mode:row.specialId?'special':(row.mode||'main'),bossId:row.bossId,bossIndex:row.bossIndex,assetId:row.assetId,name:row.name,specialId:row.specialId,depth:row.depth,fallback:!!process.env.B19_FALLBACK,viewport};
-  const page=await context.newPage(),errors=[];await page.setViewportSize(item.viewport);await page.addInitScript(()=>localStorage.clear());page.on('pageerror',e=>errors.push(String(e)));page.on('requestfailed',r=>console.error('HTTP request failed',r.url(),r.failure()));page.on('response',r=>{if(r.status()>=400)console.error('HTTP response',r.status(),r.url());});page.on('dialog',d=>d.dismiss());
+ for(const viewport of viewports.filter(v=>!process.env.B19_VIEWPORT||v.width===Number(process.env.B19_VIEWPORT))){const context=await browser.newContext({viewport,hasTouch:viewport.width!==1365,isMobile:viewport.width!==1365});let cleanStorage=null;for(const row of records.filter(r=>(!process.env.B19_SPECIAL_ONLY||r.specialId)&&(!process.env.B19_MODE||(r.specialId?'special':r.mode||'main')===process.env.B19_MODE))){const item={world:row.mode==='alternate'?3:row.world==='higher'?3:row.world==='universe'?2:1,mode:row.specialId?'special':(row.mode||'main'),bossId:row.bossId,bossIndex:row.bossIndex,assetId:row.assetId,name:row.name,specialId:row.specialId,depth:row.depth,fallback:!!process.env.B19_FALLBACK,viewport};
+  const page=await context.newPage(),errors=[];await page.setViewportSize(item.viewport);await page.addInitScript(seed=>{localStorage.clear();for(const [k,v] of seed||[])localStorage.setItem(k,v);},cleanStorage);page.on('pageerror',e=>errors.push(String(e)));page.on('requestfailed',r=>console.error('HTTP request failed',r.url(),r.failure()));page.on('response',r=>{if(r.status()>=400)console.error('HTTP response',r.status(),r.url());});page.on('dialog',d=>d.dismiss());
   await page.route('**/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
   if(process.env.B19_FALLBACK)await page.route('**/assets/monsters/**',r=>r.fulfill({status:503,body:'injected resource failure'}));
-  await page.goto(base+'?production=1',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
+  await page.goto(base+'?production=1',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});if(!cleanStorage){await finishIntro(page);cleanStorage=await page.evaluate(()=>Object.entries(localStorage));}
   await page.evaluate(async item=>{
    state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='第17批驗收';state.level=item.world===1?500:item.world===2?1000:1100;
    state.bossKilled=state.bossKilled.map(()=>true);state.unlockedMap=100;state.mapProgress.forEach(r=>r.fill(10));
@@ -52,30 +53,45 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    return {enemy:snap.actors.enemy,world:snap.world,mode:snap.mode,assetId:c.dataset.monster,ratio:Number(c.dataset.actualRatio),stage:c.closest('.formal-b-shared-stage').getBoundingClientRect().toJSON()};
   },item,{timeout:30000}).catch(async e=>{console.log('FAIL',item,errors,await page.evaluate(()=>({snap:CivilizationCombatEvents.snapshot(),diag:CivilizationFormalBEntry.diagnostics(),body:document.body.innerText.slice(-1500),view,adventureScreen,stage:document.querySelector('.formal-b-shared-stage')?.outerHTML})));throw e;});
   await page.waitForFunction(()=>{const vp=window.CivilizationCombatViewport?.snapshot();return !!vp&&(!vp.mobile||vp.focused);},null,{timeout:10000});assert.equal(await page.evaluate(()=>matchMedia('(pointer:coarse)').matches),item.viewport.width!==1365,'correct device profile');const proofRow=await proof.jsonValue();
-  const layout=await page.evaluate(fallback=>{
+  const layout=await page.evaluate(async({fallback,reference})=>{
    const stage=document.querySelector('.formal-b-shared-stage'),mon=stage.querySelector(fallback?'.formal-b-enemy-sprite:not(.formal-b-verified-monster)':'[data-monster],[data-mirror]'),player=stage.querySelector('[data-suit]');
    const outer=e=>{if(!e)return 0;const c=getComputedStyle(e);return e.getBoundingClientRect().height+parseFloat(c.marginTop)+parseFloat(c.marginBottom);};
    const cards=[...stage.closest('.combat-screen').querySelectorAll('.combatant')];
    const hud=cards.map(e=>{const c=getComputedStyle(e);return outer(e.querySelector('h2'))+outer(e.querySelector('.big-hp'))+parseFloat(c.paddingTop)+parseFloat(c.paddingBottom)+parseFloat(c.borderTopWidth)+parseFloat(c.borderBottomWidth);});
-   const stacked=cards.length===2&&Math.abs(cards[0].getBoundingClientRect().top-cards[1].getBoundingClientRect().top)>Math.min(...cards.map(e=>e.getBoundingClientRect().height))/2;
+   const stacked=cards.length===2&&Math.abs(cards[0].getBoundingClientRect().left-cards[1].getBoundingClientRect().left)<Math.min(...cards.map(e=>e.getBoundingClientRect().width))/2;
    const frameHeight=stage.getBoundingClientRect().height+(stacked?hud.reduce((a,b)=>a+b,0):Math.max(0,...hud));
    const alpha=c=>{const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,b=c.getBoundingClientRect();let l=c.width,t=c.height,r=-1,bt=-1;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%c.width,y=Math.floor((i-3)/4/c.width);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);bt=Math.max(bt,y);}return {left:b.left+l/c.width*b.width,right:b.left+(r+1)/c.width*b.width,top:b.top+t/c.height*b.height,bottom:b.top+(bt+1)/c.height*b.height,height:(bt-t+1)/c.height*b.height};};
    const boxes=[alpha(player),alpha(mon)],bars=[...stage.closest('.combat-screen').querySelectorAll('.combatant .big-hp .bar')].map(e=>e.getBoundingClientRect().toJSON());
    const overlap=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
-   return {boxes,bars,targetHeight:Number(player.dataset.targetHeight),paintedHeight:Number(player.dataset.paintedHeight),safetyRetreat:player.dataset.safetyRetreat,frameHeight,hud,stacked,playerFrameFraction:boxes[0].height/frameHeight,stageHeight:stage.getBoundingClientRect().height,playerStageFraction:boxes[0].height/stage.getBoundingClientRect().height,playerViewportFraction:boxes[0].height/(visualViewport?.height||innerHeight),monsterViewportFraction:boxes[1].height/(visualViewport?.height||innerHeight),ratio:boxes[1].height/boxes[0].height,separated:boxes[0].right<boxes[1].left,bloodBarsUncovered:bars.length===2&&bars.every(b=>b&&boxes.every(a=>!overlap(a,b))),insideViewport:boxes.every(b=>b.left>=-.5&&b.right<=innerWidth+.5&&b.top>=-.5&&b.bottom<=innerHeight+.5)};
-  },item.fallback);
-  assert.ok(layout.separated,'actual page left/right');assert.ok(layout.bloodBarsUncovered,'actual page HP bars');assert.ok(layout.insideViewport,'actual page viewport');
+   const stops=[...document.querySelectorAll('[data-combat-action="stop-continuous"]')].filter(e=>e.getClientRects().length).map(e=>e.getBoundingClientRect().toJSON());
+   const vv=window.visualViewport,viewport={left:vv?.offsetLeft||0,top:vv?.offsetTop||0,width:vv?.width||innerWidth,height:vv?.height||innerHeight},sr=stage.getBoundingClientRect();
+   let extraInformationInvariant=null;
+   if(!reference){
+    const {combatSizingFrame}=await import(new URL('3d-test/monster-actor.mjs?v=20261022-batch19-frame1',location.href));
+    const before=combatSizingFrame(stage),probe=document.createElement('div');probe.style.cssText='height:200px;flex:none';probe.textContent='不納入尺寸的額外資訊';cards[0].append(probe);
+    try{extraInformationInvariant={before,after:combatSizingFrame(stage),addedHeight:200};}finally{probe.remove();}
+   }
+   const safeDistances={left:boxes[0].left-sr.left,right:sr.right-boxes[1].right,gap:boxes[1].left-boxes[0].right,top:Math.min(...boxes.map(b=>b.top))-sr.top,bottom:sr.bottom-Math.max(...boxes.map(b=>b.bottom))};
+   return {boxes,bars,stops,viewport,safeDistances,extraInformationInvariant,stopButtonsUncovered:stops.every(b=>boxes.every(a=>!overlap(a,b))),targetHeight:Number(player.dataset.targetHeight),paintedHeight:Number(player.dataset.paintedHeight),safetyRetreat:player.dataset.safetyRetreat,frameHeight,hud,stacked,playerFrameFraction:boxes[0].height/frameHeight,stageHeight:stage.getBoundingClientRect().height,playerStageFraction:boxes[0].height/stage.getBoundingClientRect().height,playerViewportFraction:boxes[0].height/(visualViewport?.height||innerHeight),monsterViewportFraction:boxes[1].height/(visualViewport?.height||innerHeight),ratio:boxes[1].height/boxes[0].height,separated:boxes[0].right<boxes[1].left,bloodBarsUncovered:bars.length===2&&bars.every(b=>b&&boxes.every(a=>!overlap(a,b))),insideViewport:boxes.every(b=>b.left>=viewport.left-.5&&b.right<=viewport.left+viewport.width+.5&&b.top>=viewport.top-.5&&b.bottom<=viewport.top+viewport.height+.5)};
+  },{fallback:item.fallback,reference:!!process.env.B19_REFERENCE});
+  assert.ok(layout.separated,'actual page left/right');assert.ok(layout.bloodBarsUncovered,'actual page HP bars');assert.ok(layout.stopButtonsUncovered,'actual page stop buttons');assert.ok(layout.insideViewport,'actual page viewport');
   
   if(!process.env.B19_REFERENCE){
+   assert.ok(Math.abs(layout.extraInformationInvariant.before-layout.extraInformationInvariant.after)<.01,'extra description must not affect the sizing frame');
+   const identity=item.specialId||item.bossId||(item.depth!=null?String(item.depth):'');
+   const baseline=absoluteBaseline.find(r=>r.viewport.width===viewport.width&&r.viewport.height===viewport.height&&r.world===item.world&&r.mode===item.mode&&r.identity===identity);
+   assert.ok(baseline,'native case must have a measured absolute-height floor');
+   assert.ok(layout.paintedHeight>=baseline.minPaintedHeight,'absolute painted height regressed, including safety retreat: '+JSON.stringify({item,layout,baseline}));
    assert.ok(Math.abs(layout.targetHeight-layout.frameHeight*0.2682725482887481)<1,'measured compact combat frame target');
    assert.ok(Math.abs(layout.boxes[0].height-layout.paintedHeight)<Math.max(2,layout.paintedHeight*.016),'actual Alpha meets selected painted height');
    if(!layout.safetyRetreat)assert.ok(layout.playerFrameFraction>=.264,'absolute player height must meet the measured frame reference');
    else assert.ok(layout.paintedHeight<layout.targetHeight,'explicit animation safety retreat');
   }
-  await page.screenshot({path:`/tmp/batch19-${viewport.width}-${item.specialId||item.bossId||item.mode+'-'+item.world}.png`});
+  await page.screenshot({path:`/tmp/batch19-${viewport.width}-${item.specialId||item.bossId||item.mode+'-'+item.world}-${item.fallback?'outline':'sprite'}.png`});
   await page.evaluate(()=>{CivilizationFormalBEntry.dispose();CivilizationFormalBRenderer.clearSpriteCache();});
   const stats=await page.evaluate(()=>({monster:CivilizationFormalBRenderer.monsterStats(),player:CivilizationFormalBRenderer.spriteStats()}));assert.equal(stats.monster.refs,0);assert.equal(stats.player.refs,0);assert.deepEqual(errors,[]);
   report.rows.push({...item,...proofRow,layout,stats,errors,deviceProfile:{hasTouch:viewport.width!==1365,isMobile:viewport.width!==1365}});fs.writeFileSync(process.env.B19_REPORT||'/tmp/batch19-baseline.json',JSON.stringify(report,null,2));console.log('PASS live entry',item);await page.close();
- }await context.close();}report.passed=report.rows.length===(process.env.B19_SPECIAL_ONLY?9:process.env.B19_MODE?records.filter(r=>(r.specialId?'special':r.mode||'main')===process.env.B19_MODE).length*3:records.length*3);
+ }await context.close();}const viewportCount=viewports.filter(v=>!process.env.B19_VIEWPORT||v.width===Number(process.env.B19_VIEWPORT)).length;
+ report.passed=report.rows.length===(process.env.B19_SPECIAL_ONLY?3:process.env.B19_MODE?records.filter(r=>(r.specialId?'special':r.mode||'main')===process.env.B19_MODE).length:records.length)*viewportCount;
  }finally{fs.writeFileSync(process.env.B19_REPORT||'/tmp/batch19-baseline.json',JSON.stringify(report,null,2));await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

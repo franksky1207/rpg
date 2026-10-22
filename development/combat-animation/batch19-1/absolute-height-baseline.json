@@ -1,0 +1,754 @@
+{
+  "schema": "cw.batch19.absolute-height-minima.v1",
+  "realDevice": false,
+  "method": "57 native entry measurements; minimum canonical painted height = measured selection minus one CSS pixel. Actual Alpha is checked independently against the selection.",
+  "sourceHashes": {
+    "3d-test/monster-actor.mjs": "83f353a55ee0ad9dc81c23da3ff1fc0ca809ab06005a176d2cbf4f511a63adf1",
+    "3d-test/t3b-formal-renderer.js": "425cda65797538e48a93bc818e61137025fc7933b10ee47b3626485496996bd7",
+    "3d-test/formal-player-sprites.css": "df7613950211b4b1c26ac74883ba2f8f468b0e9b243f61e9c952868082a80320",
+    "combat-viewport-coordinator.js": "e0c74592bbc3e1a777413f303979e52e70dcc0882762de75bfd7c0556f463f93"
+  },
+  "rows": [
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "gold_slime",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "ancient_guardian",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "mysterious_traveler",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "main",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26991121533890844,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "calamity",
+      "identity": "earth",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26991121533890844,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "calamity",
+      "identity": "galactic-unification",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26661961515184857,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "mode": "calamity",
+      "identity": "universe-calamity-01",
+      "paintedHeight": 155.59807800747387,
+      "minPaintedHeight": 154.59807800747387,
+      "playerFrameFraction": 0.2699193494073276,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "mode": "calamity",
+      "identity": "universe-calamity-10",
+      "paintedHeight": 155.59807800747387,
+      "minPaintedHeight": 154.59807800747387,
+      "playerFrameFraction": 0.2699193494073276,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 3,
+      "mode": "main",
+      "identity": "higher-dimensional-boss-01",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26661961515184857,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 3,
+      "mode": "main",
+      "identity": "higher-dimensional-boss-10",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "bounty",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "arena",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26991121533890844,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "void",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "mode": "mirror",
+      "identity": "",
+      "paintedHeight": 174.1088838393975,
+      "minPaintedHeight": 173.1088838393975,
+      "playerFrameFraction": 0.26826314823285824,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "mode": "bounty",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26992353699017024,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "mode": "arena",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26992353699017024,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "mode": "void",
+      "identity": "",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.26992353699017024,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "mode": "mirror",
+      "identity": "",
+      "paintedHeight": 174.1088838393975,
+      "minPaintedHeight": 173.1088838393975,
+      "playerFrameFraction": 0.2699187150905239,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 3,
+      "mode": "alternate",
+      "identity": "1",
+      "paintedHeight": 152.3788074280089,
+      "minPaintedHeight": 151.3788074280089,
+      "playerFrameFraction": 0.2682654152453785,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "gold_slime",
+      "paintedHeight": 107.57375249057223,
+      "minPaintedHeight": 106.57375249057223,
+      "playerFrameFraction": 0.17987570874268394,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "ancient_guardian",
+      "paintedHeight": 128.08824372112358,
+      "minPaintedHeight": 127.08824372112358,
+      "playerFrameFraction": 0.2141916196348941,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "mysterious_traveler",
+      "paintedHeight": 158.84922031030226,
+      "minPaintedHeight": 157.84922031030226,
+      "playerFrameFraction": 0.26563221262716,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "main",
+      "identity": "",
+      "paintedHeight": 160.42698387667136,
+      "minPaintedHeight": 159.42698387667136,
+      "playerFrameFraction": 0.2699177379459309,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "calamity",
+      "identity": "earth",
+      "paintedHeight": 75.6850604906432,
+      "minPaintedHeight": 74.6850604906432,
+      "playerFrameFraction": 0.12732600421544035,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "calamity",
+      "identity": "galactic-unification",
+      "paintedHeight": 95.19810819613643,
+      "minPaintedHeight": 94.19810819613643,
+      "playerFrameFraction": 0.16015625,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "mode": "calamity",
+      "identity": "universe-calamity-01",
+      "paintedHeight": 80.9310484183011,
+      "minPaintedHeight": 79.9310484183011,
+      "playerFrameFraction": 0.13347608222336066,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "mode": "calamity",
+      "identity": "universe-calamity-10",
+      "paintedHeight": 85.80808033409977,
+      "minPaintedHeight": 84.80808033409977,
+      "playerFrameFraction": 0.14152205003415302,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 3,
+      "mode": "main",
+      "identity": "higher-dimensional-boss-01",
+      "paintedHeight": 107.77475504512527,
+      "minPaintedHeight": 106.77475504512527,
+      "playerFrameFraction": 0.18020844220317725,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 3,
+      "mode": "main",
+      "identity": "higher-dimensional-boss-10",
+      "paintedHeight": 99.38127000104903,
+      "minPaintedHeight": 98.38127000104903,
+      "playerFrameFraction": 0.1661892724010591,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "bounty",
+      "identity": "",
+      "paintedHeight": 118.00058529531593,
+      "minPaintedHeight": 117.00058529531593,
+      "playerFrameFraction": 0.21351766243255396,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "arena",
+      "identity": "",
+      "paintedHeight": 122.58692943708233,
+      "minPaintedHeight": 121.58692943708233,
+      "playerFrameFraction": 0.22047054739021285,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "void",
+      "identity": "",
+      "paintedHeight": 123.58295173966619,
+      "minPaintedHeight": 122.58295173966619,
+      "playerFrameFraction": 0.23493630683618505,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "mode": "mirror",
+      "identity": "",
+      "paintedHeight": 152.06155259200443,
+      "minPaintedHeight": 151.06155259200443,
+      "playerFrameFraction": 0.2542749105089883,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "mode": "bounty",
+      "identity": "",
+      "paintedHeight": 90.29451483990286,
+      "minPaintedHeight": 89.29451483990286,
+      "playerFrameFraction": 0.16340252992918167,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "mode": "arena",
+      "identity": "",
+      "paintedHeight": 119.70620965947029,
+      "minPaintedHeight": 118.70620965947029,
+      "playerFrameFraction": 0.21527670441771582,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "mode": "void",
+      "identity": "",
+      "paintedHeight": 120.60321362893278,
+      "minPaintedHeight": 119.60321362893278,
+      "playerFrameFraction": 0.23067436653398288,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "mode": "mirror",
+      "identity": "",
+      "paintedHeight": 147.94302326103391,
+      "minPaintedHeight": 146.94302326103391,
+      "playerFrameFraction": 0.24737977503135453,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 3,
+      "mode": "alternate",
+      "identity": "1",
+      "paintedHeight": 112.01470805899753,
+      "minPaintedHeight": 111.01470805899753,
+      "playerFrameFraction": 0.1884558772296544,
+      "safetyRetreat": "animation-width"
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "gold_slime",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2683950272102569,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "ancient_guardian",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2683950272102569,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "special",
+      "identity": "mysterious_traveler",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2683950272102569,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "main",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.27004162246921554,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "calamity",
+      "identity": "earth",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.27004162246921554,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "calamity",
+      "identity": "galactic-unification",
+      "paintedHeight": 90.82894736842104,
+      "minPaintedHeight": 89.82894736842104,
+      "playerFrameFraction": 0.26972647542621714,
+      "safetyRetreat": "animation-height"
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "mode": "calamity",
+      "identity": "universe-calamity-01",
+      "paintedHeight": 94.16366444935058,
+      "minPaintedHeight": 93.16366444935058,
+      "playerFrameFraction": 0.2700663853132006,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "mode": "calamity",
+      "identity": "universe-calamity-10",
+      "paintedHeight": 87.48213623070603,
+      "minPaintedHeight": 86.48213623070603,
+      "playerFrameFraction": 0.25089477269015487,
+      "safetyRetreat": "animation-height"
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 3,
+      "mode": "main",
+      "identity": "higher-dimensional-boss-01",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2683950272102569,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 3,
+      "mode": "main",
+      "identity": "higher-dimensional-boss-10",
+      "paintedHeight": 87.94940930435683,
+      "minPaintedHeight": 86.94940930435683,
+      "playerFrameFraction": 0.25958556242217407,
+      "safetyRetreat": "animation-height"
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "bounty",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.27004162246921554,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "arena",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.27004162246921554,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "void",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2683950272102569,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "mode": "mirror",
+      "identity": "",
+      "paintedHeight": 112.6744702812742,
+      "minPaintedHeight": 111.6744702812742,
+      "playerFrameFraction": 0.26839811230629895,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "mode": "bounty",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2700786138142016,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "mode": "arena",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2700786138142016,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "mode": "void",
+      "identity": "",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2700786138142016,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "mode": "mirror",
+      "identity": "",
+      "paintedHeight": 112.6744702812742,
+      "minPaintedHeight": 111.6744702812742,
+      "playerFrameFraction": 0.26838454237540477,
+      "safetyRetreat": ""
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 3,
+      "mode": "alternate",
+      "identity": "1",
+      "paintedHeight": 90.9443938698856,
+      "minPaintedHeight": 89.9443938698856,
+      "playerFrameFraction": 0.2683950272102569,
+      "safetyRetreat": ""
+    }
+  ]
+}
