@@ -8,8 +8,8 @@ mappings=read('data/monsters/monster-mappings.json')
 variants=read('data/monsters/monster-variants.json')
 assert m['formalBattleEnabled'] is mappings['formalBattleEnabled'] is True
 assert all(a['formalBattleAllowed'] is True for a in m['assets'])
-assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==33
-assert len(mappings['records'])==len({x['id'] for x in mappings['records']})==695
+assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==39
+assert len(mappings['records'])==len({x['id'] for x in mappings['records']})==1695
 assert {x['assetId'] for x in mappings['records']}=={a['assetId'] for a in m['assets']}
 encode=lambda x:json.dumps(x,ensure_ascii=False,separators=(',',':'))
 code='// Approved map, dungeon and boss presentation data; formal consumers enforce explicit scope.\nconst data='+encode(m)+';\n'
@@ -29,3 +29,14 @@ p=r/'3d-test/monster-sprites.mjs'
 if '--check' in sys.argv:
  assert p.read_text()==code,'monster registry differs from verified assets/mappings/variants'
 else:p.write_text(code)
+
+# Worker exact whitelist is generated from this same approved asset owner.
+p=r/'resource-cache-sw.js'
+s=p.read_text()
+import re
+line='const BATCH18_SPRITES=new Set('+encode([a['path'] for a in m['assets'] if a.get('alternateArtCode')])+');'
+if '--check' in sys.argv:
+ assert line in s,'worker alternate whitelist differs from approved assets'
+else:
+ s=re.sub(r'const BATCH18_SPRITES=new Set\([^\n]*\);',lambda _:line,s)
+ p.write_text(s)

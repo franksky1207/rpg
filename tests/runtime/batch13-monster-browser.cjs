@@ -30,8 +30,8 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   const stress=pool.stats(),transfers=performance.getEntriesByType('resource').filter(e=>e.name.includes('/assets/monsters/v1/')).map(e=>({url:e.name,bytes:e.transferSize}));pool.dispose();return {results,stress,transfers,disposed:pool.stats(),lookup:plannedAssetId('galaxy-map-001')};
  });
  assert.equal(poses.lookup,'hm-01');for(const a of poses.results){const s=a.samples;assert.equal(new Set(Object.values(s).map(v=>v.hash)).size,5);assert.equal(s.dead.count,0);assert.ok(s.idle.count>1000);}
- assert.equal(poses.results.length,33,'all 21 sealed and 12 new prototypes tested');
- assert.ok(poses.transfers.filter(e=>e.bytes>0).length<=33,'LRU re-decode must reuse disk cache, not download again');assert.ok(poses.transfers.filter(e=>e.bytes===0).length>=150,'warm image requests served without network bytes');
+ assert.equal(poses.results.length,39,'all 21 sealed and 12 new prototypes tested');
+ assert.ok(poses.transfers.filter(e=>e.bytes>0).length<=39,'LRU re-decode must reuse disk cache, not download again');assert.ok(poses.transfers.filter(e=>e.bytes===0).length>=150,'warm image requests served without network bytes');
  assert.equal(poses.stress.refs,0);assert.equal(poses.stress.pending,0);assert.ok(poses.stress.entries<=2);assert.equal(poses.disposed.bytes,0);
  for(const id of ids){
   const before=await frame.locator('.gm-suit-preview').boundingBox();

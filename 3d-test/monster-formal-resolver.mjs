@@ -1,7 +1,16 @@
 // Explicit map/dungeon presentation whitelist. No fuzzy identity matching or gameplay writes.
-import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261021-batch17-boss1';
+import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261022-batch18-alternate1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  if(!registry.formalBattleEnabled)return null;
+ if(mode==='alternate'){
+  // The native owner carries the fixed depth, not a guessed display-name/culture.
+  if(![1,2,3].includes(world)||typeof location!=='string'||! /^(?:[1-9]\d{0,2}|1000)$/.test(location))return null;
+  const row=findMapping('alternate-depth-'+location.padStart(4,'0'));
+  if(!row||row.status!=='batch18-formal-enabled'||row.depth!==Number(location))return null;
+  if(name!=null&&name!==row.name||kind!=null&&kind!==row.kind||id!=null&&id!==row.id)return null;
+  const asset=findAsset(row.assetId);
+  return asset?.formalBattleAllowed===true&&asset.gmPreviewAllowed===true&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
+ }
  if(mode==='calamity'||world===3){
   let row=null,projection=false;
   if(mode==='calamity'&&[1,2].includes(world)&&kind==='civilization-calamity'){

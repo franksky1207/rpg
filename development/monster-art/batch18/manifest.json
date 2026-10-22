@@ -1,0 +1,294 @@
+{
+  "project": "文明戰線",
+  "package": "異宇宙六張新增Boss原型素材",
+  "status": "正式整合候選，尚未註冊至遊戲",
+  "date": "2026-10-22",
+  "rules": {
+    "size": [
+      512,
+      512
+    ],
+    "format": "RGBA transparent WebP; PNG backup",
+    "facing": "left",
+    "mapping": "每文明類型一張原型，10個宇宙各5階段，共50層",
+    "visible_height_ratio": "1.5–2.0 × player; Runtime/GM integration verification pending"
+  },
+  "assets": [
+    {
+      "code": "AU-01",
+      "culture": "冰霜神系",
+      "working_title": "冰晶神王",
+      "animation": "short-thrust",
+      "files": [
+        {
+          "path": "webp/AU-01_ice-god_candidate_512.webp",
+          "bytes": 208562,
+          "sha256": "c5c217d299b702c336a7d0f790886aa62718dea6e61fe29dec3104948aca7435",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            68,
+            29,
+            480,
+            471
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "png_backup/AU-01_ice-god_candidate_512.png",
+          "bytes": 279575,
+          "sha256": "5f683e41e87b1aefd19aab602a0d64a9fcba7981c5b82c6a7d0095ba024b697b",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            68,
+            29,
+            480,
+            471
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ]
+    },
+    {
+      "code": "AU-02",
+      "culture": "雷霆天穹",
+      "working_title": "雷霆天神",
+      "animation": "ranged-shot",
+      "files": [
+        {
+          "path": "webp/AU-02_thunder-sky_candidate_512.webp",
+          "bytes": 203258,
+          "sha256": "60967b4b112ab6f4a4f7b2bd84140eca0b6800757d606a9bd6c89b1642043721",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            36,
+            36,
+            472,
+            476
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "png_backup/AU-02_thunder-sky_candidate_512.png",
+          "bytes": 263664,
+          "sha256": "6b02ae141ac5f82d3470f23ad4cdb4ec1914dc2cc3e28f86789b7cbe3894b9d8",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            36,
+            36,
+            472,
+            476
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ]
+    },
+    {
+      "code": "AU-03",
+      "culture": "海洋深淵",
+      "working_title": "深淵海皇",
+      "animation": "pounce",
+      "files": [
+        {
+          "path": "webp/AU-03_deep-sea_candidate_512.webp",
+          "bytes": 194208,
+          "sha256": "51224c9ed2894864e01892b051965738b387d923cef1410ee990c4d2001d10aa",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            42,
+            51,
+            474,
+            478
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "png_backup/AU-03_deep-sea_candidate_512.png",
+          "bytes": 267445,
+          "sha256": "ab4e8c99195ff8fa4d502a19171d79f2ba57a5ea552f8e0b3ddad5d57ae97857",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            42,
+            51,
+            474,
+            478
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ]
+    },
+    {
+      "code": "AU-04",
+      "culture": "自然生命",
+      "working_title": "原初樹靈",
+      "animation": "pulse",
+      "files": [
+        {
+          "path": "webp/AU-04_nature-life_candidate_512.webp",
+          "bytes": 277622,
+          "sha256": "c3717b9ff9ab7ef34eef90d61d0ed142fe0c11d9370a33f4635f6f6f9a34c0f4",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            36,
+            37,
+            476,
+            470
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "png_backup/AU-04_nature-life_candidate_512.png",
+          "bytes": 364941,
+          "sha256": "6d3e78db4f2c496627855f212d035f0bd8f263f5070696045068921863735fe8",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            36,
+            37,
+            476,
+            470
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ]
+    },
+    {
+      "code": "AU-05",
+      "culture": "龍族神權",
+      "working_title": "龍皇神體",
+      "animation": "pounce",
+      "files": [
+        {
+          "path": "webp/AU-05_dragon-sovereign_candidate_512.webp",
+          "bytes": 244246,
+          "sha256": "c2b606601cc3a1698a52d24279bb59bd814e699bf36357dfa60eafcbc23f7fdf",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            32,
+            45,
+            480,
+            475
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "png_backup/AU-05_dragon-sovereign_candidate_512.png",
+          "bytes": 335950,
+          "sha256": "62f13903d160322e0b14c59f09835a46d77007d1f427002b8ad41fe8185815be",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            32,
+            45,
+            480,
+            475
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ]
+    },
+    {
+      "code": "AU-06",
+      "culture": "沙漠古文明",
+      "working_title": "黃沙古皇",
+      "animation": "pulse",
+      "files": [
+        {
+          "path": "webp/AU-06_desert-ancient_candidate_512.webp",
+          "bytes": 267950,
+          "sha256": "bc9ebaad63ef95782c772f72f8bdd2db56e2a15521927f6b0b0ebdc9e0e60ff7",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            43,
+            40,
+            475,
+            475
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        },
+        {
+          "path": "png_backup/AU-06_desert-ancient_candidate_512.png",
+          "bytes": 379786,
+          "sha256": "36a7c6e0d1428695e4607586b8efafb29068079011db9ba7f4f18e9cb6976adf",
+          "alpha_range": [
+            0,
+            255
+          ],
+          "visible_bbox_xyxy_exclusive": [
+            43,
+            40,
+            475,
+            475
+          ],
+          "dimensions": [
+            512,
+            512
+          ]
+        }
+      ]
+    }
+  ]
+}

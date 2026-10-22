@@ -1168,8 +1168,224 @@
       "gmPreviewAllowed": true,
       "formalBattleAllowed": true,
       "artCode": "H-08"
+    },
+    {
+      "assetId": "boss-au-01-v01",
+      "description": "冰晶神王",
+      "path": "assets/monsters/v1/alternate/boss-au-01-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 208562,
+      "sha256": "c5c217d299b702c336a7d0f790886aa62718dea6e61fe29dec3104948aca7435",
+      "alphaBounds": [
+        68,
+        29,
+        480,
+        471
+      ],
+      "name": "冰晶神王",
+      "animationType": "short-thrust",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        68,
+        29,
+        480,
+        471
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "alternateArtCode": "AU-01"
+    },
+    {
+      "assetId": "boss-au-02-v01",
+      "description": "雷霆天神",
+      "path": "assets/monsters/v1/alternate/boss-au-02-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 203258,
+      "sha256": "60967b4b112ab6f4a4f7b2bd84140eca0b6800757d606a9bd6c89b1642043721",
+      "alphaBounds": [
+        36,
+        36,
+        472,
+        476
+      ],
+      "name": "雷霆天神",
+      "animationType": "ranged-shot",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        36,
+        472,
+        476
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "alternateArtCode": "AU-02"
+    },
+    {
+      "assetId": "boss-au-03-v01",
+      "description": "深淵海皇",
+      "path": "assets/monsters/v1/alternate/boss-au-03-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 194208,
+      "sha256": "51224c9ed2894864e01892b051965738b387d923cef1410ee990c4d2001d10aa",
+      "alphaBounds": [
+        42,
+        51,
+        474,
+        478
+      ],
+      "name": "深淵海皇",
+      "animationType": "pounce",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        42,
+        51,
+        474,
+        478
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "alternateArtCode": "AU-03"
+    },
+    {
+      "assetId": "boss-au-04-v01",
+      "description": "原初樹靈",
+      "path": "assets/monsters/v1/alternate/boss-au-04-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 277622,
+      "sha256": "c3717b9ff9ab7ef34eef90d61d0ed142fe0c11d9370a33f4635f6f6f9a34c0f4",
+      "alphaBounds": [
+        36,
+        37,
+        476,
+        470
+      ],
+      "name": "原初樹靈",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        36,
+        37,
+        476,
+        470
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "alternateArtCode": "AU-04"
+    },
+    {
+      "assetId": "boss-au-05-v01",
+      "description": "龍皇神體",
+      "path": "assets/monsters/v1/alternate/boss-au-05-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 244246,
+      "sha256": "c2b606601cc3a1698a52d24279bb59bd814e699bf36357dfa60eafcbc23f7fdf",
+      "alphaBounds": [
+        32,
+        45,
+        480,
+        475
+      ],
+      "name": "龍皇神體",
+      "animationType": "pounce",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        32,
+        45,
+        480,
+        475
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "alternateArtCode": "AU-05"
+    },
+    {
+      "assetId": "boss-au-06-v01",
+      "description": "黃沙古皇",
+      "path": "assets/monsters/v1/alternate/boss-au-06-v01.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 267950,
+      "sha256": "bc9ebaad63ef95782c772f72f8bdd2db56e2a15521927f6b0b0ebdc9e0e60ff7",
+      "alphaBounds": [
+        43,
+        40,
+        475,
+        475
+      ],
+      "name": "黃沙古皇",
+      "animationType": "pulse",
+      "facing": "left-3/4",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "scale": 1,
+      "offset": [
+        0,
+        0
+      ],
+      "visualBounds": [
+        43,
+        40,
+        475,
+        475
+      ],
+      "gmPreviewAllowed": true,
+      "formalBattleAllowed": true,
+      "alternateArtCode": "AU-06"
     }
   ],
-  "version": "20261021-batch16-dungeons2",
+  "version": "20261022-batch18-alternate1",
   "formalBattleEnabled": true
 }
