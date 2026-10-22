@@ -1,28 +1,46 @@
-# 第19-1批｜全戰鬥角色絕對可見大小統一（候選施工，未封箱）
+# 第19-1批｜全戰鬥角色絕對可見大小統一（施工驗收中，未封箱）
 
-基準 main：`9f9f1668445850e1c73b72a79a5e20ccbd25d1b9`；分支：`batch19-1-absolute-sprite-sizing-20261022`。
+基準 main：`9f9f1668445850e1c73b72a79a5e20ccbd25d1b9`；沿用 PR #74、分支 `batch19-1-absolute-sprite-sizing-20261022`，接手 head `291fed4651233c5acf0c9b36ce2a8ae348ed85a0`。
 
-## 目標
-以特殊怪物戰鬥手機直向的舒適顯示大小為視覺參照，手機直向、橫向、桌機保持接近的螢幕高度占比；怪物相對玩家既有政策全數不變。玩家左、怪物右；不得裁切、重疊、遮擋血條，保持原停止按鈕及視窗中心定位。不修改戰鬥數值、存檔、獎勵、資產與身份映射。
+## 尺寸基準與真實量測
 
-## 已知原始碼因素
-- `3d-test/monster-actor.mjs` 先量測待機 Alpha，再以包含整張 Canvas 的 pair envelope `Math.min(width/(right-left),height/(bottom-top))` 等比縮放。
-- `3d-test/formal-player-sprites.css` 原舞台高度桌機 `clamp(230px,38dvh,390px)`、直向 `clamp(205px,34dvh,300px)`、低高度 `clamp(135px,38dvh,210px)`。
-- `3d-test/t3b-formal-renderer.js` 既有 silhouette 與 verified MonsterActor 走不同佈局路徑。
-- `combat-viewport-coordinator.js` 既有 visualViewport 置中保留，不重製。
+2026-10-22 使用者補充：以「戰鬥動畫＋雙方名稱、血量的框」為比例基準，排除其他過多資訊。故最終算法不以整個 visualViewport 作角色尺寸分母；visualViewport 僅用於邊界／置中驗收。保留 HUD、停止、透明背景和全部玩法 owner。
 
-## 候選修改（需實測決定是否保留）
-- 共用 Actor 設定玩家 painted-height 候選目標 `0.34 × stageHeight`，仍使用完整 Canvas envelope 作安全上界；此值**未經特殊怪物真實基準校準**，不能宣稱已符合使用者要求。
-- CSS 舞台增高為桌機 `clamp(270px,48dvh,470px)`、直向 `clamp(265px,43dvh,370px)`、低高度 `clamp(170px,52dvh,250px)`。須檢查 CSS cascade，包含 mobile pending 高度、max-height 條件與血條/停止鈕。
-- fallback silhouette 高度上限統一為 `0.82 × stageHeight`，但 silhouette 本身實際 Alpha 比例不同，仍需實測視覺一致性。
+以未修改 main 的正式遊戲入口、真實 Chromium、桌機 fine／手機 touch + coarse，經 maybeHandleSpecialEncounter → specialFightCore → 正式事件與 Renderer 量測 Alpha > 16，不是靜態 Canvas 測試架。隔離玩家輸入、固定特殊怪選取，呈現 sleep 僅保留觀測畫面；未替換戰鬥計算或 Renderer。原始結果見 `development/combat-animation/batch19-1/main-special-frame-reference.json`。早期測試架預期總數仍為15，故其頂層 passed=false；實際九筆逐筆斷言均通過，該歷史旗標保留、不冒充全測通過。
 
-## 強制待辦：提交前量測及回歸
-1. 在 1365×900、390×844、844×390 及真實 iPhone 直橫方向量測 stage.getBoundingClientRect、visualViewport、玩家及怪物六動作 Alpha footprint。
-2. 量測特殊怪物舒適基準（至少三種原型）、一般地圖、懸賞、競技、文明災厄、高維十王、異宇宙、虛空、鏡像；記錄 `playerPaintedHeight/stageHeight`、`playerPaintedHeight/visualViewport.height`、相對比值、左右安全距離。
-3. 驗證大型 Boss 無法容納時的縮放與明確失敗紀錄，不許僅以不裁切取代絕對尺寸驗收。
-4. 39 張原型、1695 身份全面回歸；三視窗、六動作、資源載入/失敗回退、跨模式切換、載入前後無跳位、快取、GM/正式一致。
-5. 須實際執行對應 Browser/Runtime/Actions，不得用靜態推算冒充真瀏覽器實測。
-6. PR head 各必要 Actions 全成功後方可合併 main，再驗證同 SHA Runtime/Pages；正式 iPhone 長時間效能留人工驗收。
+「精簡戰鬥框高」＝實際舞台高度＋名稱 h2／big-hp 的實際高度、margin、卡片 padding/border；兩個 HUD 並排取最大、上下排列相加。不計資源、EXP、怪物介紹、暴擊閃避文字、導航、停止鈕與周圍面板；不以整張 combat-screen 的含多餘資訊高度估算。
 
-## 目前狀態
-**僅為候選程式與調查紀錄。尚無瀏覽器實測、CI 或 Pages 驗收證據；不得宣告第19-1批已完成。**
+| 視窗 | 特殊怪 | 玩家 Alpha 高 px | 精簡戰鬥框高 px | 占戰鬥框 |
+|---|---|---:|---:|---:|
+|1365×900|稀有資源聚合體|124.33|478|26.01%|
+|1365×900|封存警戒機|167.72|478|35.09%|
+|1365×900|流動交易代理人|239.67|478|50.14%|
+|390×844|稀有資源聚合體|98.44|544.953125|18.06%|
+|390×844|封存警戒機|116.43|544.953125|21.37%|
+|390×844|流動交易代理人|146.20|544.953125|26.82725483%|
+|844×390|稀有資源聚合體|53.80|284.1875|18.93%|
+|844×390|封存警戒機|72.58|284.1875|25.54%|
+|844×390|流動交易代理人|103.71|284.1875|36.50%|
+
+選用手機直向三個真實原型中最高的舒適參考：146.19596354 / 544.953125＝`0.2682725482887481`。這不是任意34%或1.5倍。對桌機與橫向用相同精簡戰鬥框比例，避免其他資訊縮小角色。
+
+## 共用實作與安全退讓
+
+- `monster-actor.mjs` 保留素材／身份、90%下限、副本1.00～1.50、Boss1.50～2.00等原政策。先固定玩家可見高度目標＝精簡戰鬥框高×上述實測比例，再依原比例決定怪物高度。
+- 原先整組完整 Canvas envelope 的最大化縮放已移除；改量測六動作、每35ms的 Alpha 包絡，按素材／tier快取，沒有逐RAF像素讀回或新增時鐘。保留碰撞前的動作空間，測量時包含 root motion。
+- 實際選用高度為 target、動畫橫向安全上限、動畫縱向安全上限三者最小。透明 Canvas 可互相覆蓋，可見動畫不得越界／嚴重重疊。原接近距離上限取剩餘動作間距，雙方共享退讓，倍率不變。
+- 每個玩家 Canvas 顯示 `data-target-height`、`data-painted-height`、`data-safety-retreat`；受限案例會在原生驗收 JSON 明列 animation-width／animation-height，不能以相對倍率通過冒充絕對目標全達標。
+- 舞台桌機 `clamp(270px,48dvh,470px)`、直向 `clamp(265px,43dvh,340px)`、橫向 `clamp(170px,52dvh,250px)`；直向上限依寬扁特殊怪約108px的安全寬度及原最小18.06%戰鬥框比例校準，避免純加高空白使比例反而退化。橫向規則置於 pending 規則後，預留與 Ready 同高。
+- Renderer 的替代輪廓改走同一 applyBattleSpriteLayout，保留正式資產載入驗證、原顏色和生命週期。正式／替代尺寸差與故障恢復仍須完整瀏覽器驗收。
+
+## 自動絕對高度驗收
+
+`development/combat-animation/batch19-1/measure-live.cjs` 由正式入口測三特殊原型、一般地圖、三紀元大型Boss、銀河／宇宙懸賞／競技／虛空／鏡像與異宇宙，三視窗實際讀取 Alpha；檢查目標高等於精簡戰鬥框×實測常數、實際Alpha符合選用高度、未退讓時占框至少26.4%（0.4百分點容許idle呼吸與CSS量化）、受限時明列安全原因。另檢查左右分離、血條、視窗邊界及資源回收。新 Actions `Batch19 Absolute Sprite Sizing` 保存逐筆資料。
+
+第15～18批原逐身份、原型、六動作、故障、跨模式、快取、GM、背景／連戰及完整Runtime／Browser Gates照常保留。不得降低既有斷言，失敗需追查修正。
+
+## 發布狀態
+
+施工驗收中，尚未合併，不宣稱封箱。須候選最新 head 必要Actions全成功、所有本批視覺與故障項目通過，再 Ready／合併，核對 main 同SHA Runtime／Pages與正式入口實測，才補記最終封箱。
+
+真實iPhone Safari FPS、長時間溫度／耗電／記憶體、系統背景掛起／恢復與真帳號雲端寫入仍待人工；Chromium手機視窗不等於真機驗收。

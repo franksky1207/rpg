@@ -29,7 +29,7 @@ export function monsterPlacement(width,height,visual={},scale=visual.scale||1){
  return {size,x:(width-size)/2+size*.68*(.5-pivot[0])+(visual.offsetX||0),y:(height-size)/2+size*.68*(.5-pivot[1])+(visual.offsetY||0)};
 }
 
-// Formal combat owns the pair's scale. Both consumers fit this same pair uniformly.
+// One measured player-height target for formal combat and GM; identity ratios remain unchanged.
 const kindScale={
     'dr-02':.92,'hm-01':1,'hm-02':1.06,'hm-04':1.24,'cmd-01':1.24,'cmd-03':1.72,
     'mech-01':1.38,'mech-02':1.53,'mech-03':1.78,'veh-02':1.3,
@@ -55,6 +55,35 @@ export function visibleFootprint(actor){
  const result={minH,maxH,l:l/n,t:t/n,r:(r+1)/n,b:(b+1)/n,w:(r-l+1)/n,h:(b-t+1)/n};
  if(!footprints.has(key))footprints.set(key,new Map());footprints.get(key).set(tier,result);return result;
 }
+// Measured on main 9f9f1668 through three native special encounters, 390x844.
+// Upper observed comfortable reference: 146.19596354px / 544.953125px compact combat frame.
+// The complete measurement and selection rationale live in the Batch19-1 report.
+export const PLAYER_FRAME_HEIGHT=0.2682725482887481;
+const motionFootprints=new WeakMap();
+export function motionFootprint(actor){
+ const key=actor.entry,tier=actor.canvas.width+':'+!!actor.mirrored;
+ if(motionFootprints.get(key)?.has(tier))return motionFootprints.get(key).get(tier);
+ const c=actor.canvas,n=c.width;let l=n,t=n,r=-1,b=-1;
+ for(const clip of ['idle','attack','hit','dodge','return','defeat'])for(let ms=0;ms<=700;ms+=35){
+  actor.draw({clip,elapsedMs:ms,attackElapsedMs:ms,rootMotion:true});
+  const data=c.getContext('2d').getImageData(0,0,n,n).data;
+  for(let i=3;i<data.length;i+=4)if(data[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}
+ }
+ actor.draw({clip:'idle',elapsedMs:0});
+ const result={l:l/n,t:t/n,r:(r+1)/n,b:(b+1)/n};
+ if(!motionFootprints.has(key))motionFootprints.set(key,new Map());motionFootprints.get(key).set(tier,result);return result;
+}
+// Only the animation stage, names and HP belong to this sizing frame.
+// Resource/EXP rows, enemy descriptions, navigation and surrounding panels do not.
+export function combatSizingFrame(host){
+ const stageHeight=host.clientHeight,screen=host.closest?.('.combat-screen');
+ if(!screen)return stageHeight;
+ const cards=[...screen.querySelectorAll('.combatant')];
+ const outer=e=>{if(!e)return 0;const c=getComputedStyle(e);return e.getBoundingClientRect().height+parseFloat(c.marginTop)+parseFloat(c.marginBottom);};
+ const hud=cards.map(e=>{const c=getComputedStyle(e);return outer(e.querySelector('h2'))+outer(e.querySelector('.big-hp'))+parseFloat(c.paddingTop)+parseFloat(c.paddingBottom)+parseFloat(c.borderTopWidth)+parseFloat(c.borderBottomWidth);});
+ const stacked=cards.length===2&&Math.abs(cards[0].getBoundingClientRect().top-cards[1].getBoundingClientRect().top)>Math.min(...cards.map(e=>e.getBoundingClientRect().height))/2;
+ return stageHeight+(stacked?hud.reduce((a,b)=>a+b,0):Math.max(0,...hud));
+}
 export function battleSpriteLayout(player,monster,width,height,visual={}){
  const p=visibleFootprint(player),m=visibleFootprint(monster);
  let ratio=Math.max(.9*p.maxH/p.h*m.h/m.minH,Math.min(2.3,(kindScale[monster.entry.assetId]||1)*(Number(visual.scale)||1)));
@@ -70,21 +99,27 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
   if(min>max)throw Error('dungeon-size-envelope');
   ratio=Math.max(min,Math.min(max,Number(visual.visibleRatio)||1.1));
  }
- // Unit = the player's painted idle height. Offsets retain their 512px design units.
- const ps=1/p.h,ms=ratio/m.h,boundedApproach=visual.sizePolicy==='boss'||visual.sizePolicy==='dungeon'||monster.mapping?.kind==='special',gap=boundedApproach?.65:.22;
+ // Fit the measured six-action painted envelopes, never the transparent square
+ // Canvas borders. Reserve the existing approach gap for both actors in every mode.
+ const ps=1/p.h,ms=ratio/m.h,pa=motionFootprint(player),ma=motionFootprint(monster);
+ const boundedApproach=visual.sizePolicy==='boss'||visual.sizePolicy==='dungeon'||monster.mapping?.kind==='special',gap=boundedApproach?.65:.22;
  const ox=(visual.offsetX||0)/512,oy=(visual.offsetY||0)/512;
- const px=-(p.l+p.r)/2*ps-p.w*ps/2-gap/2;
- const mx=-(m.l+m.r)/2*ms+m.w*ms/2+gap/2+ox;
+ const px=-p.r*ps-gap/2;
+ let mx=-m.l*ms+gap/2+ox;
+ const motionGap=mx+ma.l*ms-(px+pa.r*ps);
+ if(motionGap<.04)mx+=.04-motionGap;
+ const safeGap=mx+ma.l*ms-(px+pa.r*ps);
  const py=-(p.t+p.b)/2*ps,my=-(m.t+m.b)/2*ms+oy;
- // Fit canvas envelopes as well as alpha: animated poses stay within the stage.
- const left=Math.min(px,mx),right=Math.max(px+ps,mx+ms);
- const top=Math.min(py,my),bottom=Math.max(py+ps,my+ms);
- // Until the reference Alpha ratio is measured, preserve maximum safe fit;
- // an arbitrary painted-height cap could shrink the already-comfortable special fight.
- const scale=Math.min((width-8)/(right-left),(height-8)/(bottom-top));
+ const left=px+pa.l*ps,right=mx+ma.r*ms;
+ const top=Math.min(py+pa.t*ps,my+ma.t*ms),bottom=Math.max(py+pa.b*ps,my+ma.b*ms);
+ const frameHeight=Number(visual.frameHeight)||height;
+ const target=frameHeight*PLAYER_FRAME_HEIGHT;
+ const widthLimit=Math.max(1,width-8)/(right-left),heightLimit=Math.max(1,height-8)/(bottom-top);
+ const scale=Math.min(target,widthLimit,heightLimit);
  const x=(width-(right-left)*scale)/2-left*scale,y=(height-(bottom-top)*scale)/2-top*scale;
  const box=(a,b,size)=>({x:x+a*scale,y:y+b*scale,size:size*scale});
- return {player:box(px,py,ps),monster:box(mx,my,ms),ratio,approachLimit:boundedApproach?gap*.15*scale:Infinity};
+ return {player:box(px,py,ps),monster:box(mx,my,ms),ratio,approachLimit:safeGap*.15*scale,
+  targetPlayerHeight:target,playerHeight:scale,safetyRetreat:scale<target?(widthLimit<heightLimit?'animation-width':'animation-height'):null};
 }
 export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
  const layout=battleSpriteLayout(player,monster,width,height,visual);
@@ -92,7 +127,11 @@ export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
   const b=layout[key],s=actor.canvas.style;
   Object.assign(s,{position:'absolute',left:b.x+'px',top:b.y+'px',width:b.size+'px',height:b.size+'px',maxWidth:'none',right:'auto'});
  }
- monster.canvas.dataset.actualRatio=String(layout.ratio);return layout;
+ monster.canvas.dataset.actualRatio=String(layout.ratio);
+ player.canvas.dataset.targetHeight=String(layout.targetPlayerHeight);
+ player.canvas.dataset.paintedHeight=String(layout.playerHeight);
+ player.canvas.dataset.safetyRetreat=layout.safetyRetreat||'';
+ return layout;
 }
 
 export class MonsterActor{

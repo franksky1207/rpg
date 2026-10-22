@@ -1,0 +1,960 @@
+{
+  "passed": false,
+  "rows": [
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "energy-01",
+      "name": "稀有資源聚合體",
+      "specialId": "gold_slime",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "稀有資源聚合體",
+        "id": null,
+        "kind": "special",
+        "location": "gold_slime",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.2864,
+      "stage": {
+        "x": 100.5,
+        "y": 140,
+        "width": 1164,
+        "height": 342,
+        "top": 140,
+        "right": 1264.5,
+        "bottom": 482,
+        "left": 100.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 492.9469401041667,
+            "right": 551.3235677083334,
+            "top": 247.0107421875,
+            "bottom": 371.34537760416663,
+            "height": 124.33463541666666
+          },
+          {
+            "left": 631.671875,
+            "right": 857.4453125,
+            "top": 229.5078125,
+            "bottom": 389.8203125,
+            "height": 160.3125
+          }
+        ],
+        "bars": [
+          {
+            "x": 114.5,
+            "y": 617.5,
+            "width": 548,
+            "height": 18,
+            "top": 617.5,
+            "right": 662.5,
+            "bottom": 635.5,
+            "left": 114.5
+          },
+          {
+            "x": 702.5,
+            "y": 649,
+            "width": 548,
+            "height": 18,
+            "top": 649,
+            "right": 1250.5,
+            "bottom": 667,
+            "left": 702.5
+          }
+        ],
+        "stageHeight": 342,
+        "playerStageFraction": 0.3635515655458089,
+        "playerViewportFraction": 0.13814959490740739,
+        "monsterViewportFraction": 0.178125,
+        "ratio": 1.2893631727214654,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "dr-02",
+      "name": "封存警戒機",
+      "specialId": "ancient_guardian",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "封存警戒機",
+        "id": null,
+        "kind": "special",
+        "location": "ancient_guardian",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 0.9135349367500949,
+      "stage": {
+        "x": 100.5,
+        "y": 140,
+        "width": 1164,
+        "height": 342,
+        "top": 140,
+        "right": 1264.5,
+        "bottom": 482,
+        "left": 100.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 473.093994140625,
+            "right": 551.84228515625,
+            "top": 225.594970703125,
+            "bottom": 393.318603515625,
+            "height": 167.7236328125
+          },
+          {
+            "left": 660.203125,
+            "right": 891.3203125,
+            "top": 233.515625,
+            "bottom": 387.1484375,
+            "height": 153.6328125
+          }
+        ],
+        "bars": [
+          {
+            "x": 114.5,
+            "y": 617.5,
+            "width": 548,
+            "height": 18,
+            "top": 617.5,
+            "right": 662.5,
+            "bottom": 635.5,
+            "left": 114.5
+          },
+          {
+            "x": 702.5,
+            "y": 649,
+            "width": 548,
+            "height": 18,
+            "top": 649,
+            "right": 1250.5,
+            "bottom": 667,
+            "left": 702.5
+          }
+        ],
+        "stageHeight": 342,
+        "playerStageFraction": 0.49041997898391815,
+        "playerViewportFraction": 0.18635959201388888,
+        "monsterViewportFraction": 0.170703125,
+        "ratio": 0.9159878660137759,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "hm-02",
+      "name": "流動交易代理人",
+      "specialId": "mysterious_traveler",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "流動交易代理人",
+        "id": null,
+        "kind": "special",
+        "location": "mysterious_traveler",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 0.9646000000000001,
+      "stage": {
+        "x": 100.5,
+        "y": 140,
+        "width": 1164,
+        "height": 342,
+        "top": 140,
+        "right": 1264.5,
+        "bottom": 482,
+        "left": 100.5
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 459.95556640625,
+            "right": 572.4853515625,
+            "top": 190.4267578125,
+            "bottom": 428.63916015625,
+            "height": 238.21240234375
+          },
+          {
+            "left": 727.3203125,
+            "right": 905,
+            "top": 194.7734375,
+            "bottom": 425.890625,
+            "height": 231.1171875
+          }
+        ],
+        "bars": [
+          {
+            "x": 114.5,
+            "y": 617.5,
+            "width": 548,
+            "height": 18,
+            "top": 617.5,
+            "right": 662.5,
+            "bottom": 635.5,
+            "left": 114.5
+          },
+          {
+            "x": 702.5,
+            "y": 649,
+            "width": 548,
+            "height": 18,
+            "top": 649,
+            "right": 1250.5,
+            "bottom": 667,
+            "left": 702.5
+          }
+        ],
+        "stageHeight": 342,
+        "playerStageFraction": 0.6965274922331871,
+        "playerViewportFraction": 0.2646804470486111,
+        "monsterViewportFraction": 0.256796875,
+        "ratio": 0.970214754672969,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": false,
+        "isMobile": false
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "energy-01",
+      "name": "稀有資源聚合體",
+      "specialId": "gold_slime",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "稀有資源聚合體",
+        "id": null,
+        "kind": "special",
+        "location": "gold_slime",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.2864,
+      "stage": {
+        "x": 12,
+        "y": 319,
+        "width": 366,
+        "height": 286.953125,
+        "top": 319,
+        "right": 378,
+        "bottom": 605.953125,
+        "left": 12
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 44.007893880208336,
+            "right": 90.50992838541667,
+            "top": 372.1329752604167,
+            "bottom": 470.5723470052083,
+            "height": 98.43937174479167
+          },
+          {
+            "left": 154.50048828125,
+            "right": 334.351806640625,
+            "top": 358.6318359375,
+            "bottom": 485.272705078125,
+            "height": 126.640869140625
+          }
+        ],
+        "bars": [
+          {
+            "x": 24,
+            "y": 667.953125,
+            "width": 342,
+            "height": 15,
+            "top": 667.953125,
+            "right": 366,
+            "bottom": 682.953125,
+            "left": 24
+          },
+          {
+            "x": 24,
+            "y": 252,
+            "width": 342,
+            "height": 15,
+            "top": 252,
+            "right": 366,
+            "bottom": 267,
+            "left": 24
+          }
+        ],
+        "stageHeight": 286.953125,
+        "playerStageFraction": 0.34305035620292224,
+        "playerViewportFraction": 0.11663432671183847,
+        "monsterViewportFraction": 0.1500484231523993,
+        "ratio": 1.286485954714816,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "dr-02",
+      "name": "封存警戒機",
+      "specialId": "ancient_guardian",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "封存警戒機",
+        "id": null,
+        "kind": "special",
+        "location": "ancient_guardian",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 0.9135349367500949,
+      "stage": {
+        "x": 12,
+        "y": 319,
+        "width": 366,
+        "height": 286.953125,
+        "top": 319,
+        "right": 378,
+        "bottom": 605.953125,
+        "left": 12
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 49.6279296875,
+            "right": 104.294921875,
+            "top": 363.2021484375,
+            "bottom": 479.6357421875,
+            "height": 116.43359375
+          },
+          {
+            "left": 179.5145263671875,
+            "right": 339.95977783203125,
+            "top": 368.7012939453125,
+            "bottom": 475.35565185546875,
+            "height": 106.65435791015625
+          }
+        ],
+        "bars": [
+          {
+            "x": 24,
+            "y": 667.953125,
+            "width": 342,
+            "height": 15,
+            "top": 667.953125,
+            "right": 366,
+            "bottom": 682.953125,
+            "left": 24
+          },
+          {
+            "x": 24,
+            "y": 252,
+            "width": 342,
+            "height": 15,
+            "top": 252,
+            "right": 366,
+            "bottom": 267,
+            "left": 24
+          }
+        ],
+        "stageHeight": 286.953125,
+        "playerStageFraction": 0.4057582357745712,
+        "playerViewportFraction": 0.13795449496445497,
+        "monsterViewportFraction": 0.12636772264236523,
+        "ratio": 0.9160101863656188,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "hm-02",
+      "name": "流動交易代理人",
+      "specialId": "mysterious_traveler",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "流動交易代理人",
+        "id": null,
+        "kind": "special",
+        "location": "mysterious_traveler",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 0.9646000000000001,
+      "stage": {
+        "x": 12,
+        "y": 279,
+        "width": 366,
+        "height": 286.953125,
+        "top": 279,
+        "right": 378,
+        "bottom": 565.953125,
+        "left": 12
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 59.24625651041667,
+            "right": 127.88704427083334,
+            "top": 348.05419921875,
+            "bottom": 494.25016276041663,
+            "height": 146.19596354166666
+          },
+          {
+            "left": 222.34222412109375,
+            "right": 330.7213134765625,
+            "top": 350.78271484375,
+            "bottom": 492.5718994140625,
+            "height": 141.7891845703125
+          }
+        ],
+        "bars": [
+          {
+            "x": 24,
+            "y": 667.953125,
+            "width": 342,
+            "height": 15,
+            "top": 667.953125,
+            "right": 366,
+            "bottom": 682.953125,
+            "left": 24
+          },
+          {
+            "x": 24,
+            "y": 252,
+            "width": 342,
+            "height": 15,
+            "top": 252,
+            "right": 366,
+            "bottom": 267,
+            "left": 24
+          }
+        ],
+        "stageHeight": 286.953125,
+        "playerStageFraction": 0.509476812777929,
+        "playerViewportFraction": 0.17321796628159555,
+        "monsterViewportFraction": 0.1679966641828347,
+        "ratio": 0.969857040751346,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "energy-01",
+      "name": "稀有資源聚合體",
+      "specialId": "gold_slime",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "稀有資源聚合體",
+        "id": null,
+        "kind": "special",
+        "location": "gold_slime",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 1.2864,
+      "stage": {
+        "x": 24,
+        "y": 104,
+        "width": 796,
+        "height": 148.1875,
+        "top": 104,
+        "right": 820,
+        "bottom": 252.1875,
+        "left": 24
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 339.9644368489583,
+            "right": 365.2237955729167,
+            "top": 150.311767578125,
+            "bottom": 204.11092122395831,
+            "height": 53.79915364583333
+          },
+          {
+            "left": 400,
+            "right": 497.703125,
+            "top": 142.734375,
+            "bottom": 212.109375,
+            "height": 69.375
+          }
+        ],
+        "bars": [
+          {
+            "x": 38,
+            "y": 433.1875,
+            "width": 364,
+            "height": 18,
+            "top": 433.1875,
+            "right": 402,
+            "bottom": 451.1875,
+            "left": 38
+          },
+          {
+            "x": 442,
+            "y": 474.1875,
+            "width": 364,
+            "height": 18,
+            "top": 474.1875,
+            "right": 806,
+            "bottom": 492.1875,
+            "left": 442
+          }
+        ],
+        "stageHeight": 148.1875,
+        "playerStageFraction": 0.3630478525235484,
+        "playerViewportFraction": 0.13794654780982904,
+        "monsterViewportFraction": 0.1778846153846154,
+        "ratio": 1.2895184273102966,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "dr-02",
+      "name": "封存警戒機",
+      "specialId": "ancient_guardian",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "封存警戒機",
+        "id": null,
+        "kind": "special",
+        "location": "ancient_guardian",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 0.9135349367500949,
+      "stage": {
+        "x": 24,
+        "y": 104,
+        "width": 796,
+        "height": 148.1875,
+        "top": 104,
+        "right": 820,
+        "bottom": 252.1875,
+        "left": 24
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 331.3767903645833,
+            "right": 365.4527994791667,
+            "top": 141.02978515625,
+            "bottom": 213.60725911458331,
+            "height": 72.57747395833333
+          },
+          {
+            "left": 412.34375,
+            "right": 512.359375,
+            "top": 144.46875,
+            "bottom": 210.953125,
+            "height": 66.484375
+          }
+        ],
+        "bars": [
+          {
+            "x": 38,
+            "y": 433.1875,
+            "width": 364,
+            "height": 18,
+            "top": 433.1875,
+            "right": 402,
+            "bottom": 451.1875,
+            "left": 38
+          },
+          {
+            "x": 442,
+            "y": 474.1875,
+            "width": 364,
+            "height": 18,
+            "top": 474.1875,
+            "right": 806,
+            "bottom": 492.1875,
+            "left": 442
+          }
+        ],
+        "stageHeight": 148.1875,
+        "playerStageFraction": 0.4897678546323632,
+        "playerViewportFraction": 0.18609608707264957,
+        "monsterViewportFraction": 0.17047275641025642,
+        "ratio": 0.9160469684873385,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    },
+    {
+      "world": 1,
+      "mode": "special",
+      "assetId": "hm-02",
+      "name": "流動交易代理人",
+      "specialId": "mysterious_traveler",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "enemy": {
+        "role": "enemy",
+        "name": "流動交易代理人",
+        "id": null,
+        "kind": "special",
+        "location": "mysterious_traveler",
+        "identityAvailability": "owner-name-and-context"
+      },
+      "ratio": 0.9646000000000001,
+      "stage": {
+        "x": 24,
+        "y": 104,
+        "width": 796,
+        "height": 148.1875,
+        "top": 104,
+        "right": 820,
+        "bottom": 252.1875,
+        "left": 24
+      },
+      "layout": {
+        "boxes": [
+          {
+            "left": 325.6893717447917,
+            "right": 374.38460286458337,
+            "top": 125.176025390625,
+            "bottom": 228.89054361979166,
+            "height": 103.71451822916666
+          },
+          {
+            "left": 441.390625,
+            "right": 518.28125,
+            "top": 127.125,
+            "bottom": 227.71875,
+            "height": 100.59375
+          }
+        ],
+        "bars": [
+          {
+            "x": 38,
+            "y": 433.1875,
+            "width": 364,
+            "height": 18,
+            "top": 433.1875,
+            "right": 402,
+            "bottom": 451.1875,
+            "left": 38
+          },
+          {
+            "x": 442,
+            "y": 474.1875,
+            "width": 364,
+            "height": 18,
+            "top": 474.1875,
+            "right": 806,
+            "bottom": 492.1875,
+            "left": 442
+          }
+        ],
+        "stageHeight": 148.1875,
+        "playerStageFraction": 0.6998870905384507,
+        "playerViewportFraction": 0.26593466212606837,
+        "monsterViewportFraction": 0.25793269230769234,
+        "ratio": 0.9699100156617317,
+        "separated": true,
+        "bloodBarsUncovered": true,
+        "insideViewport": true
+      },
+      "stats": {
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      },
+      "errors": [],
+      "deviceProfile": {
+        "hasTouch": true,
+        "isMobile": true
+      }
+    }
+  ],
+  "realDevice": false
+}
