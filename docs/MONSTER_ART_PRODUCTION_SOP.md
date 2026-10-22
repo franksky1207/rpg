@@ -85,3 +85,11 @@
 ## 4. 異宇宙專用補充（2026-10-22；僅規劃）
 
 後續異宇宙製圖必須先讀 [異宇宙20類型、6張新增圖與整合SOP](ALTERNATE_UNIVERSE_MONSTER_ART_PLAN_2026-10-22.md)。正式資料為20文化各10個固定宇宙、每宇宙五固定階段（外環、神庭、聖域、天座、主宰），總1000層；沒有個體怪物專名。每類50層用同一原型，**不同文化不准重用同一原型，換色不算另一原型**。目前規劃14張既有原型加6張新圖（AU-01～AU-06；美術代號並非正式assetId）。製圖逐張驗收；整合前須做20原型唯一性、200宇宙文化對應、1000深度三視窗3000案例（每例實際Canvas Alpha可見高度均為玩家1.5～2.0倍，正式／GM一致）、故障／快取／既有全部回歸。這次只保留規劃，未授權製圖、程式施工、變更正式資產或Runtime。
+
+
+## 第18批異宇宙正式整合（2026-10-22）
+
+- 依alternateuniversedata.js固定深度→宇宙/階段/文化，正式mode=alternate的location為唯一深度來源；禁止顯示名稱模糊匹配或新造敵人名字。20文化各50身份、200宇宙各5階段，20張圖片SHA互異（14沿用＋AU-01～AU-06），同文化同圖/動作/配色；黑暗血月沿現役boss-eye-red，其餘original。
+- 沿三份JSON/原生成器/MonsterActor/Pool/Renderer/GM單一中心，sizePolicy=boss使用第17批原共用版面，三視窗真正Alpha1.5～2.0倍；無新動畫時鐘/尺寸補丁。decoded Pool至多2張，按需載入；SW白名單從同資產登錄生成，六PNG/開發預覽不進Pages/智慧下載。
+- 全遊戲39正式原型/1695映射；開工33張素材位元與695身份完整等值守衛。數值、隨機特性、挑戰/失敗/轉生/稱號/獎勵/存檔及背景/極簡/離線/Fast Catch-up owner不變。
+- batch18-all-identities-browser驗3000逐筆真Canvas/GM/正式；native-live驗60原生入口，repeat-native驗15真實同頁征服，recovery/cache/native-cache/pressure/fast-switch驗故障、毀損修復、重下載、快速切換與資源歸零。第15～17批、Batch6與Runtime原Gate保留，完整發布證據見第18批報告及PR #73。真實iPhone仍待人工。

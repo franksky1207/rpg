@@ -1,0 +1,188 @@
+{
+  "passed": true,
+  "distinctImageSHA256": 20,
+  "cultureRows": [
+    {
+      "culture": "冰霜神系",
+      "assetId": "boss-au-01-v01",
+      "palette": "original",
+      "sha256": "c5c217d299b702c336a7d0f790886aa62718dea6e61fe29dec3104948aca7435"
+    },
+    {
+      "culture": "太陽火焰",
+      "assetId": "boss-c-01-v01",
+      "palette": "original",
+      "sha256": "4e7f57536f8d1de03efae8a0b8c4c93551cee843fe28c73092a5f512330ee5cc"
+    },
+    {
+      "culture": "雷霆天穹",
+      "assetId": "boss-au-02-v01",
+      "palette": "original",
+      "sha256": "60967b4b112ab6f4a4f7b2bd84140eca0b6800757d606a9bd6c89b1642043721"
+    },
+    {
+      "culture": "冥界死亡",
+      "assetId": "void-phantom-v01",
+      "palette": "original",
+      "sha256": "6b52b6a956847f0ce77c0043187dbc3a85b6e87e12f2026476246187ff8c133d"
+    },
+    {
+      "culture": "海洋深淵",
+      "assetId": "boss-au-03-v01",
+      "palette": "original",
+      "sha256": "51224c9ed2894864e01892b051965738b387d923cef1410ee990c4d2001d10aa"
+    },
+    {
+      "culture": "自然生命",
+      "assetId": "boss-au-04-v01",
+      "palette": "original",
+      "sha256": "c3717b9ff9ab7ef34eef90d61d0ed142fe0c11d9370a33f4635f6f6f9a34c0f4"
+    },
+    {
+      "culture": "龍族神權",
+      "assetId": "boss-au-05-v01",
+      "palette": "original",
+      "sha256": "c2b606601cc3a1698a52d24279bb59bd814e699bf36357dfa60eafcbc23f7fdf"
+    },
+    {
+      "culture": "機械神性",
+      "assetId": "mech-03",
+      "palette": "original",
+      "sha256": "3064d8f3c79d1f38340a37204b98581769c9b238cc713b20f73fe41a74b9ce32"
+    },
+    {
+      "culture": "命運時間",
+      "assetId": "boss-h-07-v01",
+      "palette": "original",
+      "sha256": "d7712eeb98710f7e2a2d50875cc457dc72f3c483b21f418a6e2a0118ac3cddb2"
+    },
+    {
+      "culture": "星辰宇宙",
+      "assetId": "core-03",
+      "palette": "original",
+      "sha256": "dee77c6332340ade3f2c265b32e065d4ea81f0b63fba1e95ec3227431fa7da97"
+    },
+    {
+      "culture": "戰爭兵器",
+      "assetId": "ship-04",
+      "palette": "original",
+      "sha256": "250600278e6d3f1924b7dd96b0d5e97402f35c2199d7bdc0ca4b65ac790c14a0"
+    },
+    {
+      "culture": "秩序審判",
+      "assetId": "boss-h-03-v01",
+      "palette": "original",
+      "sha256": "8829a03f1f9376c4d85ef1850b18a2b06327e5a6f6ae89db2c7ea8178e1e2eb9"
+    },
+    {
+      "culture": "混沌虛無",
+      "assetId": "boss-h-08-v01",
+      "palette": "original",
+      "sha256": "e4af3ba99ebb64d6b5abe3c5704e93f09a1f37642357ecc88264d1fa669d68f0"
+    },
+    {
+      "culture": "夢境心靈",
+      "assetId": "boss-h-05-v01",
+      "palette": "original",
+      "sha256": "f26afd315cab5b3bf00628bbbc683989b136ea12ff70b4bbfe1eb02ee10bd445"
+    },
+    {
+      "culture": "光明聖界",
+      "assetId": "boss-h-01-v01",
+      "palette": "original",
+      "sha256": "cb8b54c688304d2b74999da3c1a05cc3ed28be64fe924bd514709f3dad243a71"
+    },
+    {
+      "culture": "黑暗血月",
+      "assetId": "boss-c-03-v01",
+      "palette": "boss-eye-red",
+      "sha256": "3ff6ddbcb85286251fa6bc916b21009dffc0141f4c958a35f0b24d291fadcbb2"
+    },
+    {
+      "culture": "巨人泰坦",
+      "assetId": "boss-h-02-v01",
+      "palette": "original",
+      "sha256": "a126d7dfa3968cbb5d296fad447077a6ad58c7799652b83467897813b4624ddc"
+    },
+    {
+      "culture": "沙漠古文明",
+      "assetId": "boss-au-06-v01",
+      "palette": "original",
+      "sha256": "bc9ebaad63ef95782c772f72f8bdd2db56e2a15521927f6b0b0ebdc9e0e60ff7"
+    },
+    {
+      "culture": "蟲群生體",
+      "assetId": "bio-02",
+      "palette": "original",
+      "sha256": "2315c417eb6e14ddeefcb7f2e80eacede6e7a0334d40d5d5f0fd0e2ecad699ce"
+    },
+    {
+      "culture": "超維法則",
+      "assetId": "boss-h-10-v01",
+      "palette": "original",
+      "sha256": "1958c30ff60b0daf1c67e741cb12c5ec76195336ecc00128e209076ae851df2b"
+    }
+  ],
+  "formats": [
+    {
+      "path": "development/monster-art/batch18/webp/AU-03_deep-sea_candidate_512.webp",
+      "format": "WEBP",
+      "sha256": "51224c9ed2894864e01892b051965738b387d923cef1410ee990c4d2001d10aa"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-05_dragon-sovereign_candidate_512.webp",
+      "format": "WEBP",
+      "sha256": "c2b606601cc3a1698a52d24279bb59bd814e699bf36357dfa60eafcbc23f7fdf"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-06_desert-ancient_candidate_512.webp",
+      "format": "WEBP",
+      "sha256": "bc9ebaad63ef95782c772f72f8bdd2db56e2a15521927f6b0b0ebdc9e0e60ff7"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-02_thunder-sky_candidate_512.webp",
+      "format": "WEBP",
+      "sha256": "60967b4b112ab6f4a4f7b2bd84140eca0b6800757d606a9bd6c89b1642043721"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-01_ice-god_candidate_512.webp",
+      "format": "WEBP",
+      "sha256": "c5c217d299b702c336a7d0f790886aa62718dea6e61fe29dec3104948aca7435"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-04_nature-life_candidate_512.webp",
+      "format": "WEBP",
+      "sha256": "c3717b9ff9ab7ef34eef90d61d0ed142fe0c11d9370a33f4635f6f6f9a34c0f4"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-01_ice-god_candidate_512.png",
+      "format": "PNG",
+      "sha256": "5f683e41e87b1aefd19aab602a0d64a9fcba7981c5b82c6a7d0095ba024b697b"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-05_dragon-sovereign_candidate_512.png",
+      "format": "PNG",
+      "sha256": "62f13903d160322e0b14c59f09835a46d77007d1f427002b8ad41fe8185815be"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-06_desert-ancient_candidate_512.png",
+      "format": "PNG",
+      "sha256": "36a7c6e0d1428695e4607586b8efafb29068079011db9ba7f4f18e9cb6976adf"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-03_deep-sea_candidate_512.png",
+      "format": "PNG",
+      "sha256": "ab4e8c99195ff8fa4d502a19171d79f2ba57a5ea552f8e0b3ddad5d57ae97857"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-04_nature-life_candidate_512.png",
+      "format": "PNG",
+      "sha256": "6d3e78db4f2c496627855f212d035f0bd8f263f5070696045068921863735fe8"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-02_thunder-sky_candidate_512.png",
+      "format": "PNG",
+      "sha256": "6b02ae141ac5f82d3470f23ad4cdb4ec1914dc2cc3e28f86789b7cbe3894b9d8"
+    }
+  ]
+}
