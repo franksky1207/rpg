@@ -6,14 +6,14 @@ const fs=require('node:fs'),vm=require('node:vm'),cp=require('node:child_process
  const old=JSON.parse(cp.execFileSync('git',['show',baseline+':data/monsters/monster-mappings.json']));
  assert.deepEqual(m.records.slice(0,665),old.records,'all prior 665 identities unchanged');
  assert.deepEqual(a.assets.slice(0,21),JSON.parse(cp.execFileSync('git',['show',baseline+':data/monsters/monster-assets.json'])).assets);
- assert.equal(a.assets.length,33);assert.equal(m.records.length,695);
+ assert.equal(a.assets.length,39);assert.equal(m.records.length,1695);
  for(const file of ['calamityconfig.js','calamitycore.js','secondworldcalamity.js','secondworldcalamityrun.js','thirdworlddata.js','thirdworldcombat.js','thirdworldarena.js','combatcore.js','offlineprogress.js'])assert.equal(fs.readFileSync(file,'utf8'),cp.execFileSync('git',['show',baseline+':'+file],{encoding:'utf8'}),file+' gameplay unchanged');
  const ctx=vm.createContext({console});ctx.window=ctx;
  vm.runInContext(fs.readFileSync('engine.js','utf8').split('\n').find(line=>line.startsWith('function round1(')),ctx);
  const data=fs.readFileSync('data.js','utf8'),start=data.indexOf('const WORLD_REGIONS=');vm.runInContext(data.slice(start,data.indexOf(';',start)+1),ctx);
  for(const file of ['calamityconfig.js','secondworlddata.js','secondworldcalamity.js','thirdworldphase.js','thirdworlddata.js','specialmonsters.js','thirdworldarena.js'])vm.runInContext(fs.readFileSync(file,'utf8'),ctx,{filename:file});
  const {resolveFormalMonster}=await import('../../3d-test/monster-formal-resolver.mjs');
- const bosses=m.records.slice(665);assert.equal(bosses.length,30);let projections=0;
+ const bosses=m.records.filter(r=>r.status==='batch17-formal-enabled');assert.equal(bosses.length,30);let projections=0;
  for(const [i,row] of bosses.entries()){
   const world=['galaxy','universe','higher'].indexOf(row.world)+1,n=row.bossIndex;
   const source=world===1?ctx.window.CIVILIZATION_CALAMITY_CONFIG[n]:world===2?ctx.window.SECOND_WORLD_CALAMITY_DEFINITIONS[n]:ctx.window.thirdWorldBoss(n);

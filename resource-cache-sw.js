@@ -6,7 +6,8 @@ const MEDIA=/\.(?:ogg|mp3|wav|png|jpe?g|webp|avif|glb|gltf|bin|ktx2|basis)$/i;
 let known=null, refreshJob=null, manifestTag=null;
 const verifiedSpriteCache=new Set();
 const BATCH17_SPRITES=new Set(["assets/monsters/v1/boss/boss-c-03-v01.webp","assets/monsters/v1/boss/boss-c-02-v01.webp","assets/monsters/v1/boss/boss-u-01-v01.webp","assets/monsters/v1/boss/boss-c-01-v01.webp","assets/monsters/v1/boss/boss-h-01-v01.webp","assets/monsters/v1/boss/boss-h-02-v01.webp","assets/monsters/v1/boss/boss-h-03-v01.webp","assets/monsters/v1/boss/boss-h-10-v01.webp","assets/monsters/v1/boss/boss-h-06-v01.webp","assets/monsters/v1/boss/boss-h-07-v01.webp","assets/monsters/v1/boss/boss-h-05-v01.webp","assets/monsters/v1/boss/boss-h-08-v01.webp"]);
-const isFormalSprite=path=>BATCH17_SPRITES.has(path)||path==='assets/monsters/v1/void/void-phantom-v01.webp'||/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path)||/^assets\/monsters\/v1\/(?:humanoid|mechanical|starship|creature|biological|structure|core|energy)\/[a-z0-9-]+\.webp$/.test(path);
+const BATCH18_SPRITES=new Set(["assets/monsters/v1/alternate/boss-au-01-v01.webp","assets/monsters/v1/alternate/boss-au-02-v01.webp","assets/monsters/v1/alternate/boss-au-03-v01.webp","assets/monsters/v1/alternate/boss-au-04-v01.webp","assets/monsters/v1/alternate/boss-au-05-v01.webp","assets/monsters/v1/alternate/boss-au-06-v01.webp"]);
+const isFormalSprite=path=>BATCH18_SPRITES.has(path)||BATCH17_SPRITES.has(path)||path==='assets/monsters/v1/void/void-phantom-v01.webp'||/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(path)||/^assets\/monsters\/v1\/(?:humanoid|mechanical|starship|creature|biological|structure|core|energy)\/[a-z0-9-]+\.webp$/.test(path);
 async function verifiedSprite(response,digest){const bytes=await response.clone().arrayBuffer();const hash=await crypto.subtle.digest('SHA-256',bytes);return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('').slice(0,24)===digest;}
 const asPath=url=>{const u=new URL(url);const scope=new URL(self.registration.scope);if(u.origin!==scope.origin||!u.pathname.startsWith(scope.pathname))return null;return decodeURIComponent(u.pathname.slice(scope.pathname.length));};
 const hex=s=>typeof s==="string"&&/^[a-f0-9]{24}$/.test(s);
@@ -89,7 +90,7 @@ async function media(request){
 // Background preload is deliberately limited to shipped gameplay media, not raw source/audio libraries.
 let preloadJob=null,preloadGeneration=0;
 function shouldPreload(p){
- if(BATCH17_SPRITES.has(p))return true;
+ if(BATCH18_SPRITES.has(p)||BATCH17_SPRITES.has(p))return true;
  // Six released player sprites (three eras x standing/attack atlas) are part of formal combat.
  // Exact whitelist excludes GM previews, old equipment models, and unpublished assets.
  if(/^assets\/era-player\/v1\/era-(?:galaxy|universe|higher)(?:-attack-atlas)?\.webp$/.test(p))return true;

@@ -1,0 +1,10 @@
+{
+  "passed": false,
+  "status": "incomplete",
+  "reason": "test progress stalled before first result; original input could permit regenerative combat stalemate; diagnostic rerun uses decisive isolated player stats",
+  "originalStats": {
+    "hp": 100000000,
+    "atk": 50000,
+    "def": 100000
+  }
+}

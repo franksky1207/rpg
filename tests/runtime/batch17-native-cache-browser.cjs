@@ -20,7 +20,7 @@ const report=await page.evaluate(async()=>{
   if(await hash(await fetch(assetKey))!==asset.sha256||await hash(await cache.match(assetKey))!==asset.sha256)throw Error('boss-disk-repair '+asset.assetId);
   bossRows.push({id:asset.assetId,sha256:asset.sha256,redownload:true,corruptDiskRepaired:true});
  }
- if(cold.at(-1).total!==88||redownload.at(-1).total!==88)throw Error('88 exact formal media');
+ if(cold.at(-1).total!==94||redownload.at(-1).total!==94)throw Error('94 exact formal media');
  const entries=(await cache.keys()).map(x=>x.url);if(entries.some(x=>x.includes('/development/')||x.includes('preview.png')))throw Error('native-source-preload');
  await msg('CIV_CACHE_CLEAR');await reg.unregister();return {passed:true,nativeChromium:true,realDevice:false,bossRows,sha256:expected,cold:cold.at(-1),warm:warm.at(-1),corruptDiskRepaired:true,redownload:redownload.at(-1),sourceExcluded:true};
 });assert.equal(report.passed,true);fs.writeFileSync('/tmp/batch17-native-cache.json',JSON.stringify(report,null,2));console.log(report);}finally{await context.close();await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

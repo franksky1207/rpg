@@ -1,0 +1,218 @@
+{
+  "passed": false,
+  "realDevice": false,
+  "rows": [
+    {
+      "depth": 1,
+      "identity": {
+        "depth": "1",
+        "assetId": "void-phantom-v01",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [
+            {
+              "id": "void-phantom-v01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false
+        },
+        "traits": [
+          "swift",
+          "deadly"
+        ]
+      },
+      "end": {
+        "depth": 1,
+        "attempt": null,
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 1,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      }
+    },
+    {
+      "depth": 2,
+      "identity": {
+        "depth": "2",
+        "assetId": "void-phantom-v01",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 2,
+          "images": [
+            {
+              "id": "void-phantom-v01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false
+        },
+        "traits": [
+          "swift",
+          "deadly"
+        ]
+      },
+      "end": {
+        "depth": 2,
+        "attempt": null,
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 2,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 3,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      }
+    },
+    {
+      "depth": 3,
+      "identity": {
+        "depth": "3",
+        "assetId": "void-phantom-v01",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 3,
+          "images": [
+            {
+              "id": "void-phantom-v01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false
+        },
+        "traits": [
+          "swift",
+          "deadly"
+        ]
+      },
+      "end": {
+        "depth": 3,
+        "attempt": null,
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      }
+    },
+    {
+      "depth": 4,
+      "identity": {
+        "depth": "4",
+        "assetId": "void-phantom-v01",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 4,
+          "images": [
+            {
+              "id": "void-phantom-v01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false
+        },
+        "traits": [
+          "swift",
+          "deadly"
+        ]
+      },
+      "end": {
+        "depth": 4,
+        "attempt": null,
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 4,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 1,
+          "loads": 5,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        }
+      }
+    }
+  ]
+}

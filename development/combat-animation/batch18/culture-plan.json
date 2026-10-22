@@ -1,0 +1,102 @@
+[
+  {
+    "culture": "冰霜神系",
+    "assetId": "boss-au-01-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "太陽火焰",
+    "assetId": "boss-c-01-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "雷霆天穹",
+    "assetId": "boss-au-02-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "冥界死亡",
+    "assetId": "void-phantom-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "海洋深淵",
+    "assetId": "boss-au-03-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "自然生命",
+    "assetId": "boss-au-04-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "龍族神權",
+    "assetId": "boss-au-05-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "機械神性",
+    "assetId": "mech-03",
+    "palette": "original"
+  },
+  {
+    "culture": "命運時間",
+    "assetId": "boss-h-07-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "星辰宇宙",
+    "assetId": "core-03",
+    "palette": "original"
+  },
+  {
+    "culture": "戰爭兵器",
+    "assetId": "ship-04",
+    "palette": "original"
+  },
+  {
+    "culture": "秩序審判",
+    "assetId": "boss-h-03-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "混沌虛無",
+    "assetId": "boss-h-08-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "夢境心靈",
+    "assetId": "boss-h-05-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "光明聖界",
+    "assetId": "boss-h-01-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "黑暗血月",
+    "assetId": "boss-c-03-v01",
+    "palette": "boss-eye-red"
+  },
+  {
+    "culture": "巨人泰坦",
+    "assetId": "boss-h-02-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "沙漠古文明",
+    "assetId": "boss-au-06-v01",
+    "palette": "original"
+  },
+  {
+    "culture": "蟲群生體",
+    "assetId": "bio-02",
+    "palette": "original"
+  },
+  {
+    "culture": "超維法則",
+    "assetId": "boss-h-10-v01",
+    "palette": "original"
+  }
+]
