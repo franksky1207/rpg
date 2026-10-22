@@ -79,7 +79,12 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
  // Fit canvas envelopes as well as alpha: animated poses stay within the stage.
  const left=Math.min(px,mx),right=Math.max(px+ps,mx+ms);
  const top=Math.min(py,my),bottom=Math.max(py+ps,my+ms);
- const scale=Math.min(width/(right-left),height/(bottom-top));
+ // Prioritize a stable painted player height across modes. Keep the full Canvas
+ // envelope inside the stage, and retain the existing monster/player ratio.
+ const safeWidth=Math.max(1,width-8),safeHeight=Math.max(1,height-8);
+ const fullFit=Math.min(safeWidth/(right-left),safeHeight/(bottom-top));
+ const targetPlayerHeight=height*.34;
+ const scale=Math.min(targetPlayerHeight,fullFit);
  const x=(width-(right-left)*scale)/2-left*scale,y=(height-(bottom-top)*scale)/2-top*scale;
  const box=(a,b,size)=>({x:x+a*scale,y:y+b*scale,size:size*scale});
  return {player:box(px,py,ps),monster:box(mx,my,ms),ratio,approachLimit:boundedApproach?gap*.15*scale:Infinity};
