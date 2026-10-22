@@ -2,6 +2,13 @@
 import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261022-batch18-alternate1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  if(!registry.formalBattleEnabled)return null;
+ // Review reuses the original encounter's approved identity; never resolve by fuzzy name.
+ // Galaxy maps, universe mainline bosses and higher-dimensional ten kings all
+ // publish their canonical owner locators while keeping the review event mode.
+ if(mode==='review'){
+  if(![1,2,3].includes(world))return null;
+  return resolveFormalMonster({world,mode:'main',kind,name,location,id});
+ }
  if(mode==='alternate'){
   // The native owner carries the fixed depth, not a guessed display-name/culture.
   if(![1,2,3].includes(world)||typeof location!=='string'||! /^(?:[1-9]\d{0,2}|1000)$/.test(location))return null;
