@@ -266,7 +266,7 @@ window.startGalaxyReviewBattle=async function(){
  battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:e?.kind==="boss"?"boss":"normal"});
  try{
   render();
-  const result=combatOwner(ps,e,startHp,{mainlineLogs:true,visualContext:{mode:"review",world:1,owner:"ui.js",variant:e.kind,location:mapIdx+":"+reviewEnemy,playerName:state.playerName}});
+  const result=combatOwner(ps,e,startHp,{mainlineLogs:true,visualContext:{mode:"review",world:1,owner:"ui.js",variant:e.kind,location:mapIdx+":"+reviewEnemy,enemyName:e.name,playerName:state.playerName}});
   if(!result||typeof result.win!=="boolean")throw new Error("銀河回顧戰鬥結果無效。");
   if(JSON.stringify(state)!==before)throw new Error("銀河紀元回顧戰不應修改正式 state。");
   const presentation={ok:true,win:result.win,logs:result.logs,events:result.events,e,combatEndHp:result.hp,turns:result.turns};
