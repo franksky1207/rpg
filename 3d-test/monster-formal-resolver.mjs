@@ -2,6 +2,18 @@
 import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261022-batch18-alternate1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  if(!registry.formalBattleEnabled)return null;
+ // Review is presentation-only. Normalize to the original owner-approved identity;
+ // never select a sprite by display-name similarity or a separate review asset.
+ if(mode==='review'){
+  if(![1,2,3].includes(world))return null;
+  if(kind==='civilization-calamity'){
+   if(world===3||typeof id!=='string'||location!==id)return null;
+   mode='calamity';
+  }else{
+   if(world===1?!['normal','elite','boss'].includes(kind):kind!=='boss')return null;
+   mode='main';
+  }
+ }
  if(mode==='alternate'){
   // The native owner carries the fixed depth, not a guessed display-name/culture.
   if(![1,2,3].includes(world)||typeof location!=='string'||! /^(?:[1-9]\d{0,2}|1000)$/.test(location))return null;

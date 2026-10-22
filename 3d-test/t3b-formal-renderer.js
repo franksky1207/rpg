@@ -232,7 +232,7 @@ async function createSuit(options,bundle){
  const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261022-batch18-alternate1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
  // Monster optional: keep the existing known-good silhouette until verified sprite is ready.
  async function activateMonster(){
-  if(monsterAttempt||closed||signal.aborted||!isCurrent()||!['main','bounty','arena','void','mirror','special','calamity','alternate'].includes(bundle.enemyMode)||![1,2,3].includes(bundle.enemyWorld))return;
+  if(monsterAttempt||closed||signal.aborted||!isCurrent()||!['main','bounty','arena','void','mirror','special','calamity','alternate','review'].includes(bundle.enemyMode)||![1,2,3].includes(bundle.enemyWorld))return;
   monsterAttempt=1;
   // Reserve the stage while optional assets load. Reveal one completed pair, so
   // decode never visibly moves the player. This deadline governs resources only.
