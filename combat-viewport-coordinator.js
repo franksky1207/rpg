@@ -10,11 +10,13 @@ const raf=f=>(g.requestAnimationFrame||((cb)=>setTimeout(cb,16)))(f);
 function cancel(){token++;queued=false;}
 function geometry(screen,stage){
  const stageRect=stage.getBoundingClientRect(),rects=[stageRect];
- for(const card of screen.querySelectorAll(".combat-arena .combatant.player,.combat-arena .combatant.enemy")){
+ // Lightweight Runtime fixtures omit querySelectorAll; browsers supply it.
+ const cards=typeof screen.querySelectorAll==="function"?screen.querySelectorAll(".combat-arena .combatant.player,.combat-arena .combatant.enemy"):[];
+ for(const card of cards){
   const title=card.querySelector("h2"),hp=card.querySelector(".big-hp,.hp-bar,.hp-fill,[class*=hp]");
   for(const el of [title,hp])if(el){const r=el.getBoundingClientRect();if(r.height>0&&r.width>0)rects.push(r);}
  }
- const stop=screen.querySelector(".combat-viewport-stop");
+ const stop=typeof screen.querySelector==="function"?screen.querySelector(".combat-viewport-stop"):null;
  if(stop&&!stop.hidden){const r=stop.getBoundingClientRect();if(r.height>0)rects.push(r);}
  return {stage:stageRect,top:Math.min(...rects.map(r=>r.top)),bottom:Math.max(...rects.map(r=>r.bottom)),signature:rects.flatMap(r=>[r.top,r.bottom,r.width])};
 }
@@ -43,7 +45,7 @@ function inspect(){
  const screen=root.querySelector(".combat-screen");
  if(!screen){if(lastScreen){cancel();lastStage=null;lastScreen=null;manual=false;focused=false;}return;}
  const stage=stageOf(screen);
- if(stage!==lastStage||screen!==lastScreen){cancel();lastStage=stage;lastScreen=screen;focused=false;}
+ if(stage!==lastStage||screen!==lastScreen){cancel();lastStage=stage;lastScreen=screen;}
  if(!stage||!live()||manual||focused||queued)return;
  queued=true;const ticket=++token;raf(()=>center(screen,stage,ticket));
 }
