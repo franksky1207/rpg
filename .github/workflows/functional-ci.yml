@@ -68,7 +68,7 @@ jobs:
           node tests/runtime/unified-combat-runtime-contract.cjs
           node tests/runtime/unified-mobile-combat-viewport.cjs
           node tests/runtime/batch5-era-animation-contract.cjs
-          node tests/runtime/batch12-presentation-safety.cjs
+          node --test tests/runtime/batch7-layer-boundary.test.mjs
           node tests/runtime/pr48-stop-contract.cjs
           node --test tests/equipment-gm/no-attack-aura.test.mjs
   monster:
@@ -162,6 +162,10 @@ jobs:
       - run: |
           node tests/runtime/batch2-background-sleeper-lifecycle.cjs
           node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/background-functional-http.log 2>&1 &
+          sleep 2
           node tests/runtime/special-fast-catchup-integrity.js
           node tests/runtime/newstate-save-owner-integrity.js
           node tests/runtime/alternate-universe-old-save-integrity.js
