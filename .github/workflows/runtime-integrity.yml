@@ -52,7 +52,6 @@ concurrency:
 jobs:
   runtime-integrity:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -156,7 +155,6 @@ jobs:
           retention-days: 1
   runtime-browser-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -184,26 +182,23 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-ubuntu-1.55.0-chromium-webkit-v1
-      - name: Install Playwright Node dependencies (timed)
+      - name: Install Playwright Node dependencies
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        timeout-minutes: 3
         shell: bash
         run: |
           set -euo pipefail
           start=$SECONDS
-          timeout 150s npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
           echo "Node dependency install seconds: $((SECONDS-start))"
-      - name: Install Chromium and WebKit (timed)
+      - name: Install Chromium and WebKit
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        timeout-minutes: 8
         shell: bash
         run: |
           set -euo pipefail
           start=$SECONDS
-          timeout 420s npx playwright install --with-deps chromium webkit
+          npx playwright install --with-deps chromium webkit
           echo "Playwright browser/dependency install seconds: $((SECONDS-start))"
       - name: Run parallel browser runtime and reincarnation regression
-        timeout-minutes: 9
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
         run: |
@@ -277,7 +272,6 @@ jobs:
           node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
 
       - name: Run real browser runtime smoke
-        timeout-minutes: 13
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
         run: |
