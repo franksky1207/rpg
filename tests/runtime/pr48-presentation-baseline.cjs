@@ -24,6 +24,9 @@ function original(p){
   // Batch13 authorizes exactly one GM cache-token replacement; every other byte stays locked.
   let bytes=fs.readFileSync(p);
   if(p==='index.html')bytes=Buffer.from(bytes.toString()
+   // Batch19-3: authorize precisely the two necessary HTML cache-token bumps.
+   .replace('battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4&batch19=20261023-3','battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4')
+   .replace('combat-viewport-coordinator.js?v=20261019-unified1&pr48=20261019-center3&batch19=20261023-3','combat-viewport-coordinator.js?v=20261019-unified1&pr48=20261019-center3')
    .replace('gm3dprototype.js?v=20261022-batch19-2-center1','gm3dprototype.js?v=20261021-batch16-dungeons2')
    .replace('&batch19=20261022-frame1','')
    .replace('t3b-formal-renderer.js?v=20261022-batch19-frame1','t3b-formal-renderer.js?v=20261022-batch18-alternate1')
