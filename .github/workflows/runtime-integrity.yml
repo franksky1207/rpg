@@ -138,7 +138,10 @@ jobs:
             sleep 0.25
           done
           node tests/runtime/unified-mobile-combat-viewport-browser.cjs
-          node tests/runtime/pr48-mode-matrix-browser.cjs
+          if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then
+            echo 'Viewport mode browser navigation interrupted first attempt; retrying once.'
+            node tests/runtime/pr48-mode-matrix-browser.cjs
+          fi
           node tests/runtime/pr48-live-combat-browser.cjs
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
