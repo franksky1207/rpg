@@ -149,7 +149,8 @@
    visible:unlock.visible,
    discovered:unlock.visible,
    unlocked:unlock.unlocked,
-   challengeable:canChallenge(def,target),
+   // Appearance notices keep their original unlock snapshot; battle authorization uses canChallenge.
+   challengeable:unlock.challengeable,
    unlock,
    trueKills:kills,
    recordedTrueKills:kills,

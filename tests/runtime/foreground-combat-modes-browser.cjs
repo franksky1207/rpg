@@ -35,7 +35,7 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
   else if(mode==='alternate'){state.thirdWorld.bosses.forEach(b=>b.currentHp=0);state.reincarnation.alternateUniverse.unlocked=true;void challengeAlternateUniverseFormal();}
   else {window.playerCombatStats=()=>({hp:1000,atk:100,def:0,dodge:0,crit:0});state.hp=1000;if(phase===1){const d=getCivilizationCalamityDefinitions()[0];state.bossKilled[d.mapIndex]=true;startCivilizationCalamityUI(d.id,'continuous');}else{const d=getSecondWorldCalamityDefinitions()[1];state.secondWorld.mainline.bossKilled[d.bossIndex]=true;view='calamity';startSecondWorldCalamityUI(d.id,'continuous');}}
  },item);
- if(availability.retired){assert.equal(availability.era,item.phase);assert.equal(availability.absent,true);assert.equal(availability.idle,true);assert.equal(availability.unchanged,true);reports.push({item,reviewRetirement:availability});console.log('PASS retired mode cannot create runtime',item);continue;}
+ if(availability?.retired){assert.equal(availability.era,item.phase);assert.equal(availability.absent,true);assert.equal(availability.idle,true);assert.equal(availability.unchanged,true);reports.push({item,reviewRetirement:availability});console.log('PASS retired mode cannot create runtime',item);continue;}
  if(item.phase===3&&item.mode==='bounty'){assert.equal(availability.blocked,true,'formal high-era bounty remains unavailable');assert.equal(availability.stops,0,'no invented high-era bounty stop');reports.push({item,size,availability});console.log('PASS existing unavailable mode',item,size);continue;}
 
  await page.waitForFunction(()=>CivilizationCombatLifecycle.snapshot()&&!CivilizationCombatLifecycle.snapshot().done,null,{timeout:20000});

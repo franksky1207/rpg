@@ -48,7 +48,7 @@
     },
     "secondworldcalamity.js": {
       "beforeSha256": "3a036b7ff879a5a4ce4143319869a3f64516e991ee38ea76f02d028633a81ba6",
-      "afterSha256": "87cd0470a79e8d9d64df35ef706e6f759ad1bbf3e8dea09942534652b63bab59"
+      "afterSha256": "d59d1047a30c0f4adb2053bd69ca8dd094f87f0e00fcc7c54968ef2bd79d66ef"
     },
     "secondworldcalamityrun.js": {
       "beforeSha256": "53645c835ba87cfa40395d9741d2793d23489d0317be6dc9c47c6a98e498b54d",
@@ -112,7 +112,7 @@
     },
     "index.html": {
       "beforeSha256": "e525618ddaf6b8fbd9f9a637c5299373de13791097f4f930e141aa668edcae54",
-      "afterSha256": "567f6e0654341ee0fecf37e14eec8d0364518957c055ddf0726b357211cfc980"
+      "afterSha256": "451e5848a0dc30534ca834e7401691438ec42fb616123f487846c080d832026f"
     }
   }
 }

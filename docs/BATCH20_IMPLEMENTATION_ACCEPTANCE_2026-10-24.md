@@ -45,7 +45,7 @@
 
 - JavaScript structural integrity、newState／save owner、共用災厄 terminal Fast Catch-up 契約通過。
 - `batch20-codex-browser.cjs`：1735 檢查通過；1705逐身份、fixture排除、headless戰敗解鎖、去重、舊檔不虛構、完成後兩紀元UI／battle拒絕、三紀元首頁10格；另驗證真實靜態圖片 alpha、失敗回退／恢復與讀圖不新增登錄。
-- `batch20-save-guide-browser.cjs`：16檢查通過；local save、canonical migration、正式轉生 reset、實際印記清除、optional schema policy、future schema拒絕、三紀元最終 guide、初獲Lv.0／下次Lv.1。
+- `batch20-save-guide-browser.cjs`：22檢查通過；local save、canonical migration、正式轉生 reset、實際印記清除、optional schema policy、future schema拒絕、三紀元最終 guide、初獲Lv.0／下次Lv.1；另驗文明Lv.0／1／10的原現身提示內容及確認關閉保持原樣。
 - `batch20-cloud-browser.cjs`：以原 `civilizationCloudSave` owner 加記憶體 transport，upload、GM合法 import validation、download 保留圖鑑均通過。**未以真帳號寫入雲端**。
 - 既有 native live bosses 5入口、live dungeons 兩紀元8入口通過；宇宙災厄測試 fixture 由「已完成Lv.1」改成「未完成Lv.0」，保留原正常挑戰及渲染斷言。
 - Browser runtime smoke 通過。現有舊版診斷 warning 不等於正式 hard gate；未改動無關舊診斷以消音。
@@ -59,6 +59,8 @@ PR [#90](https://github.com/franksky1207/rpg/pull/90) 首輪 `0a08a3c0` 的 Func
 熱路徑用 WeakMap 管理每份合法圖鑑 root 的去重 Set，避免 Fast Catch-up 每場重新排序／複製全部已遭遇身份。合成 state／測試 RNG／GM mark overrides 會標記 fixture，避免診斷測試補登正式圖鑑。
 
 本機原生音訊回歸另通過46案例（隔離登入SDK替身、原生media playing事件、單一音軌及雲端阻擋）；正常三紀元音訊 owner 檢查改為實際的 battlepipeline／secondworldmainline／thirdworldrun，避免誤把已刪除的 UI 回顧音訊當成正式主線 owner。音訊實作本身完全未修改。必要 Runtime 現在直接執行第20批來源及提示保護回歸。
+
+補強提示相依保護：status 的原 unlock 快照維持不變供現身提示使用；正式 canChallenge／啟動／結果UI各自阻擋已完成階段，避免完成後阻擋改變任何舊提示的判定輸入。
 
 ## 發布紀錄（待補）
 
