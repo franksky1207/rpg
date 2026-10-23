@@ -71,8 +71,8 @@ for(const external of [false,true]){
    await page.evaluate(()=>{const active=document.querySelector('.formal-b-stage-pending');active.classList.remove('formal-b-stage-pending');active.querySelector('.formal-b-shared-stage').hidden=false;});
    // The stage belongs to the non-stale combat screen, even when preference is on.
    await settle(page);
-   const state=await page.evaluate(()=>CivilizationCombatViewport.snapshot());
-   assert(state.focused&&scrollY>0,'visible foreground combat should focus with background battle preference enabled');
+   const state=await page.evaluate(()=>({...CivilizationCombatViewport.snapshot(),scrollY}));
+   assert(state.focused&&state.scrollY>0,'visible foreground combat should focus with background battle preference enabled');
    evidence.push({name:'ios-background-preference-foreground-focus',state});
   }finally{await page.close();}
  }
