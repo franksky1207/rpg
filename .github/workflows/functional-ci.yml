@@ -95,6 +95,7 @@ jobs:
           python3 tests/runtime/batch17-boss-assets.py
           python3 tests/runtime/batch18-alternate-assets.py
           python3 scripts/generate-monster-trial-registry.py --check
+          python3 scripts/generate-monster-codex.py --check
           node --test tests/runtime/batch13-monster-pool.test.mjs
           node tests/runtime/batch16-special-contract.cjs
           node tests/runtime/batch16-cache.cjs
@@ -107,6 +108,10 @@ jobs:
           node scripts/build-publish-dry-run.cjs
           python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/monster-ci-http.log 2>&1 &
           sleep 2
+          node tests/runtime/batch20-notice-protection.cjs
+          node tests/runtime/batch20-codex-browser.cjs
+          node tests/runtime/batch20-save-guide-browser.cjs
+          node tests/runtime/batch20-cloud-browser.cjs
           node tests/runtime/batch16-mirror-browser.cjs
           node tests/runtime/batch16-live-dungeons-browser.cjs
           node tests/runtime/batch17-live-bosses-browser.cjs

@@ -11,7 +11,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   await page.evaluate(async item=>{
    state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='第17批驗收';state.level=item.world===1?500:item.world===2?1000:1100;
    state.bossKilled=state.bossKilled.map(()=>true);state.unlockedMap=100;state.mapProgress.forEach(r=>r.fill(10));
-   if(item.world>=2){state.secondWorld.entered=true;state.secondWorld.civilizationLevel=item.world===3?10:1;state.secondWorld.mainline.bossKilled.fill(true);}
+   if(item.world>=2){state.secondWorld.entered=true;state.secondWorld.civilizationLevel=item.world===3?10:0;state.secondWorld.mainline.bossKilled.fill(true);}
    if(item.world===3){state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.story.unlockedStage=2;state.reincarnation.count=1;}
    window.playerCombatStats=()=>({hp:1000000,atk:1000,def:500,crit:0,dodge:0});state.hp=1000000;Math.random=()=>.5;window.effectiveCombatSpeed=()=>1;
    view='home';render();await CivilizationFormalBRenderer.warmSprites();

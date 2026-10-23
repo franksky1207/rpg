@@ -9,6 +9,8 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
  await page.route('**/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));await page.addInitScript(()=>localStorage.setItem('civilization-war-combat-animation-v1:device','on'));
  await page.goto(base+'?production=1');await page.waitForFunction(()=>CivilizationStartupCoordinator.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
  const availability=await page.evaluate(async({phase,mode})=>{
+  const retiredOwners={review1:"startGalaxyReviewBattle",review2:"startSecondWorldBossReview",review3:"startThirdWorldBossReviewFromPlayerUi",calreview1:"startGalaxyCalamityReview",calreview2:"startUniverseCalamityReview"};
+  if(retiredOwners[mode]){const before=JSON.stringify(state);return {retired:true,absent:typeof window[retiredOwners[mode]]==="undefined",idle:!CivilizationCombatLifecycle.snapshot(),unchanged:JSON.stringify(state)===before};}
   gmSetBackgroundBattlePreference(false);gmSetMainlineHpLockPreference(false);closeBattleResultModal();state=newState();state.introSeen=true;state.level=phase===1?500:phase===2?600:1000;state.unlockedMap=100;state.mapProgress.forEach(r=>r.fill(10));state.bossKilled=state.bossKilled.map(()=>true);
   if(phase>=2){state.secondWorld.entered=true;state.secondWorld.civilizationLevel=phase===3?10:1;state.secondWorld.mainline.bossKilled[0]=true;}
   if(phase===3){state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.story.unlockedStage=2;state.reincarnation.count=1;}
@@ -31,13 +33,9 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
   else if(mode==='void'){window.playerCombatStats=()=>({hp:1000,atk:1,def:0,crit:0,dodge:0});state.specializations.combo=0;state.specializations.drain=0;enterVoidMirageDungeon();startVoidMirageChallengeUI();}
   else if(mode==='mirror'){window.playerCombatStats=()=>({hp:1000,atk:100,def:0,crit:0,dodge:0});state.hp=1000;state.specializations.combo=0;state.specializations.drain=0;startMirrorCombatRun();}
   else if(mode==='alternate'){state.thirdWorld.bosses.forEach(b=>b.currentHp=0);state.reincarnation.alternateUniverse.unlocked=true;void challengeAlternateUniverseFormal();}
-  else if(mode==='review1'){void startGalaxyReviewBattle();}
-  else if(mode==='review2'){void startSecondWorldBossReview(0);}
-  else if(mode==='review3'){state.thirdWorld.bosses[0].currentHp=0;void startThirdWorldBossReviewFromPlayerUi(0);}
-  else if(mode==='calreview1'){void startGalaxyCalamityReview(getCivilizationCalamityDefinitions()[0].id);}
-  else if(mode==='calreview2'){void startUniverseCalamityReview(getSecondWorldCalamityDefinitions()[0].id);}
   else {window.playerCombatStats=()=>({hp:1000,atk:100,def:0,dodge:0,crit:0});state.hp=1000;if(phase===1){const d=getCivilizationCalamityDefinitions()[0];state.bossKilled[d.mapIndex]=true;startCivilizationCalamityUI(d.id,'continuous');}else{const d=getSecondWorldCalamityDefinitions()[1];state.secondWorld.mainline.bossKilled[d.bossIndex]=true;view='calamity';startSecondWorldCalamityUI(d.id,'continuous');}}
  },item);
+ if(availability.retired){assert.equal(availability.absent,true);assert.equal(availability.idle,true);assert.equal(availability.unchanged,true);reports.push({item,reviewRetirement:availability});console.log('PASS retired mode cannot create runtime',item);continue;}
  if(item.phase===3&&item.mode==='bounty'){assert.equal(availability.blocked,true,'formal high-era bounty remains unavailable');assert.equal(availability.stops,0,'no invented high-era bounty stop');reports.push({item,size,availability});console.log('PASS existing unavailable mode',item,size);continue;}
 
  await page.waitForFunction(()=>CivilizationCombatLifecycle.snapshot()&&!CivilizationCombatLifecycle.snapshot().done,null,{timeout:20000});

@@ -51,7 +51,7 @@
  }
 
  function calamityCardsHtml(){
-  const list=unlockedDefs();
+  const list=unlockedDefs().filter(d=>(status(d.id)?.mark?.level||0)<10);
   if(!list.length)return '<div class="card calamity-empty"><h3>尚無已解鎖的文明災厄</h3><div class="muted">擊敗各區域最終 Boss 後，對應文明災厄才會出現。</div></div>';
   return list.map(def=>{
    const st=status(def.id),m=st?.mark||{},pct=hpPercent(st?.currentHp||0,st?.maxHp||1);
@@ -60,17 +60,18 @@
     <div class="calamity-hp-row"><span>HP</span><strong>${fmt(st?.currentHp)} / ${fmt(st?.maxHp)}</strong></div>
     <div class="bar calamity-hp-bar"><span class="hp" style="width:${pct}%"></span></div>
     <div class="calamity-mark-summary"><span>${esc(def.markName)}</span><strong>${markLine(st)}</strong></div>
-    <div class="calamity-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${def.id}','single')">${m.level>=10?"單場重打":"單場挑戰"}</button>${m.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${def.id}','continuous')">連續討伐</button>`}</div>
+    <div class="calamity-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${def.id}','single')">單場挑戰</button><button class="btn danger" onclick="startCivilizationCalamityUI('${def.id}','continuous')">連續討伐</button></div>
    </article>`;
   }).join("");
  }
 
  function markCardsHtml(){
-  const list=unlockedDefs();
+  const list=defs();
   if(!list.length)return '<div class="muted">尚無可顯示的印記。</div>';
   return list.map(def=>{
    const st=status(def.id),m=st?.mark||{};
-   const stateText=!m.acquired?"未取得":m.level>=10?"Lv.10 MAX":`Lv.${m.level}　${m.progress||0} / ${Math.max(1,m.requiredForNext||1)}`;
+   const stateText=!st?.unlocked?`未解鎖：擊敗 Lv.${def.unlockLevel} 區域最終 Boss`:!m.acquired?"未取得":m.level>=10?"Lv.10 MAX":`Lv.${m.level}　${m.progress||0} / ${Math.max(1,m.requiredForNext||1)}`;
+   if(m.level>=10)return "";
    return `<article class="card calamity-mark-card"><div class="calamity-mark-source">${esc(def.name)}</div><h3>${esc(def.markName)}</h3><div class="calamity-mark-level">${stateText}</div>${markEffectBlock(def,m)}</article>`;
   }).join("");
  }
@@ -80,8 +81,8 @@
    <div class="back-home"><button class="btn back-btn" onclick="leaveCivilizationCalamityUI()">← 返回主頁</button></div>
    <div class="calamity-title card"><h2>文明災厄</h2><div class="muted">擊敗各區域最終 Boss 後逐步解鎖。災厄剩餘 HP 會跨挑戰保留，擊敗後可取得並提升對應印記。</div></div>
    ${ui.message?`<div class="notice calamity-notice">${esc(ui.message)}</div>`:""}
-   <div class="calamity-section-head"><h3>災厄討伐</h3></div><div class="calamity-grid">${calamityCardsHtml()}</div>
-   <div class="calamity-section-head"><h3>印記</h3></div><div class="calamity-mark-grid">${markCardsHtml()}</div>
+   <div class="card"><h3>十種印記養成總覽</h3><p>已滿級 ${defs().filter(d=>status(d.id)?.mark?.level>=10).length} / 10；尚可養成 ${defs().filter(d=>(status(d.id)?.mark?.level||0)<10).length}</p></div><div class="calamity-mark-grid">${markCardsHtml()}</div><div class="calamity-section-head"><h3>災厄討伐</h3></div><div class="calamity-grid">${calamityCardsHtml()}</div>
+   <details class="card"><summary>已完成印記・查看成果</summary>${defs().filter(d=>status(d.id)?.mark?.level>=10).map(d=>`<h3>${esc(d.markName)} Lv.10 MAX</h3>${markEffectBlock(d,status(d.id).mark)}`).join("")}</details>
   </section>`;
  }
 
@@ -112,7 +113,7 @@
    <div class="calamity-result-kicker">文明災厄</div><h2>${title}</h2><div class="muted">${resultLine}</div>
    <div class="calamity-result-grid"><div><span>完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>勝 / 敗</span><strong>${fmt(run?.wins||0)} / ${fmt(run?.losses||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div><div><span>災厄目前 HP</span><strong>${fmt(st?.currentHp)} / ${fmt(st?.maxHp)}</strong></div><div><span>目前印記</span><strong>${esc(def?.markName||"—")}</strong></div><div><span>印記狀態</span><strong>${markLine(st)}</strong></div></div>
    <div class="muted calamity-no-reward">文明災厄不提供 EXP、金幣、裝備或其他一般獎勵。</div>
-   <div class="calamity-result-actions"><button class="btn primary" onclick="startCivilizationCalamityUI('${ui.selectedId}','single')">${st?.mark?.level>=10?"單場重打":"單場挑戰"}</button>${st?.mark?.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${ui.selectedId}','continuous')">連續討伐</button>`}<button class="btn" onclick="returnToCivilizationCalamityList()">返回文明災厄</button></div>
+   <div class="calamity-result-actions">${st?.mark?.level>=10?"已完成／印記已滿級":`<button class="btn primary" onclick="startCivilizationCalamityUI('${ui.selectedId}','single')">單場挑戰</button>`}${st?.mark?.level>=10?"":`<button class="btn danger" onclick="startCivilizationCalamityUI('${ui.selectedId}','continuous')">連續討伐</button>`}<button class="btn" onclick="returnToCivilizationCalamityList()">返回文明災厄</button></div>
   </div></section>`;
  }
 
@@ -257,7 +258,7 @@
  window.startCivilizationCalamityUI=function(id,mode="single"){
   if(ui.running)return false;
   const def=window.getCivilizationCalamityDefinition?.(id);
-  if(!def||!window.isCivilizationCalamityUnlocked?.(id))return false;
+  if(!def||!window.isCivilizationCalamityUnlocked?.(id)||status(id)?.mark?.level>=10)return false;
   ui={phase:"combat",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
   view="calamity";render();if(typeof window.resetBattleEntryViewport!=="function")throw new Error("Battle Entry Viewport Reset owner 未載入。");window.resetBattleEntryViewport();
   if(ui.mode==="continuous"){setTimeout(runContinuousUi,80);return true;}

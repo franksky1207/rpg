@@ -14,9 +14,6 @@
  const required=[
   "prepareSecondWorldCivilizationCalamityEntry",
   "secondWorldCivilizationCalamityPageHtml",
-  "setCivilizationCalamityEraView",
-  "startUniverseCalamityReview",
-  "startGalaxyCalamityReview",
   "startSecondWorldCalamityUI",
   "stopSecondWorldCalamityContinuousUI",
   "returnToSecondWorldCalamityList",
@@ -33,15 +30,14 @@
   if(page.formalRenderer&&(!/injectEntry/.test(decoratorSource)||!/originalPage\.apply/.test(decoratorSource)))fail("PAGE_DECORATOR_OWNER","極簡按鈕不得更換正式renderer");
   const pageSource=Function.prototype.toString.call(page.formalRenderer||page);
   const startSource=Function.prototype.toString.call(window.startSecondWorldCalamityUI);
-  const reviewSource=Function.prototype.toString.call(window.startUniverseCalamityReview);
+  if(typeof window.startUniverseCalamityReview!=="undefined"||typeof window.startGalaxyCalamityReview!=="undefined")fail("REVIEW_RETIRED","災厄回顧 API 不得存在");
   const prepareSource=Function.prototype.toString.call(window.prepareSecondWorldCivilizationCalamityEntry);
   const flushSource=Function.prototype.toString.call(window.flushSecondWorldCalamityAppearanceNotice);
-  if(!/completed/.test(startSource)||!/continuous/.test(startSource)||!/single/.test(startSource))fail("COMPLETED_SINGLE_ONLY_WIRING","完成災厄必須強制單場重打",startSource);
+  if(!/completed/.test(startSource)||!/continuous/.test(startSource)||!/single/.test(startSource))fail("COMPLETED_COMBAT_BLOCKED","完成災厄必須阻擋所有無收益重打",startSource);
   if(!/challengeable/.test(startSource))fail("CHALLENGE_GATE_WIRING","第二紀元正式入口必須使用正式 challengeable 判定",startSource);
   if(!/thirdWorldReviewOnly/.test(startSource))fail("THIRD_WORLD_FORMAL_GATE","高維紀元必須阻擋第二紀元正式文明災厄入口",startSource);
   if(!/resetBattleEntryViewport/.test(startSource)||/resetSecondWorldCalamityBattleViewport/.test(startSource))fail("BATTLE_ENTRY_SCROLL_WIRING","第二世界文明災厄單場／連續戰鬥入口必須使用共用 viewport reset owner",startSource);
-  if(!/universeReview/.test(pageSource)||!/thirdWorldReviewOnly/.test(pageSource))fail("THIRD_WORLD_REVIEW_RENDERER","高維紀元文明災厄頁必須改走宇宙回顧 renderer",pageSource);
-  if(!/thirdWorldReviewOnly/.test(reviewSource)||!/runCombatCore/.test(reviewSource)||!/civilizationCombatDamageMultiplier/.test(reviewSource))fail("UNIVERSE_REVIEW_SANDBOX","宇宙災厄回顧必須使用無正式結算的戰鬥 sandbox，並沿用宇宙文明傷害層",reviewSource);
+  if(!/civilizationHeritagePageHtml/.test(pageSource))fail("HERITAGE_RENDERER","高維必須顯示只讀文明傳承");
   if(!/AppearanceRequirement/.test(flushSource)||!/challengeable/.test(flushSource)||!/thirdWorldReviewOnly/.test(flushSource))fail("NOTICE_REQUIREMENT_WIRING","現身通知必須顯示當下是否可挑戰，且高維紀元不得再跳第二紀元現身通知",flushSource);
   if(!/notifyTitlePostFlow/.test(prepareSource))fail("TITLE_POST_FLOW_ENTRY_FALLBACK","第二世界文明災厄入口必須補檢 pending 稱號通知",prepareSource);
   if(!pageSource)fail("PAGE_RENDERER","第二世界文明災厄頁 renderer 不可為空");

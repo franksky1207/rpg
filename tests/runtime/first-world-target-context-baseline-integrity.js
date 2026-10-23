@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION===1&&window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION===1&&window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION===8&&window.GALAXY_REVIEW_FORMAL_STATE_GUARD_VERSION===2&&Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)===4&&window.MAINLINE_BOSS_STORY_PIPELINE_VERSION===2&&window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===2,{timeout:30000});
+  await page.waitForFunction(()=>window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION===1&&window.FIRST_WORLD_REINCARNATION_TARGET_CONTEXT_VERSION===1&&window.REVIEW_RETIREMENT_VERSION===1&&Number(window.OFFLINE_BATTLE_SAMPLE_VERSION)===4&&window.MAINLINE_BOSS_STORY_PIPELINE_VERSION===2&&window.REINCARNATION_RERUN_MAINLINE_BACKFILL_VERSION===2,{timeout:30000});
   const report=await page.evaluate(async()=>{
    const deep=value=>JSON.parse(JSON.stringify(value));
    const originalState=deep(state),originalSelections={selectedMap,selectedEnemy,selectedBattleCount,adventureScreen,battleBusy,currentCombatEncounter};
@@ -59,17 +59,8 @@ const assert=require("assert");
     const arenaCoverage=window.firstWorldRerunKeyBossCoverage(arenaState);
     scenarios.rerunProgress={rerunMultiplier,firstRunMultiplier,conquestOk,conquest,arenaCoverage};
 
-    state=firstWorldClone(0);selectedMap=55;selectedEnemy=2;battleBusy=false;
-    window.runCombatCore=(ps,e,startHp)=>({win:true,logs:[],events:[],hp:startHp,enemyHp:0,turns:1});
-    render=()=>{};animateFight=async()=>{};window.alert=()=>{};
-    const reviewBefore=JSON.stringify(state),formalSelectionBefore={selectedMap,selectedEnemy};
-    window.openGalaxyReviewMap(0);window.setGalaxyReviewSelectedEnemy(0);
-    const reviewNormalOk=await window.startGalaxyReviewBattle();window.setGalaxyReviewBattleActive(false);
-    const reviewAfterNormal=JSON.stringify(state),formalAfterNormal={selectedMap,selectedEnemy};
-    window.openGalaxyReviewMap(0);window.setGalaxyReviewSelectedEnemy(4);
-    const reviewBossOk=await window.startGalaxyReviewBattle();window.setGalaxyReviewBattleActive(false);
-    const reviewAfterBoss=JSON.stringify(state),formalAfterBoss={selectedMap,selectedEnemy};
-    scenarios.review={reviewNormalOk,reviewBossOk,formalStateStable:reviewBefore===reviewAfterNormal&&reviewBefore===reviewAfterBoss,formalSelectionStable:JSON.stringify(formalSelectionBefore)===JSON.stringify(formalAfterNormal)&&JSON.stringify(formalSelectionBefore)===JSON.stringify(formalAfterBoss),runtimeVersion:window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION,stateGuardVersion:window.GALAXY_REVIEW_FORMAL_STATE_GUARD_VERSION};
+    const reviewBefore=JSON.stringify(state);
+    scenarios.review={retired:typeof window.startGalaxyReviewBattle==="undefined"&&typeof window.openGalaxyReviewMap==="undefined",stateStable:JSON.stringify(state)===reviewBefore};
 
     scenarios.runtimeContracts={
      continuous:window.MAIN_BOSS_CONTINUOUS_VERSION,
@@ -112,7 +103,7 @@ const assert=require("assert");
   assert.equal(report.rerunTarget.valid.authorized,true);assert.equal(report.rerunTarget.valid.mapIndex,99);assert.equal(report.rerunTarget.valid.enemyIndex,4);
   assert.equal(report.rerunTarget.invalid.valid,false);assert.equal(report.rerunTarget.invalid.authorized,false);
   assert.equal(report.rerunProgress.rerunMultiplier,13);assert.equal(report.rerunProgress.firstRunMultiplier,1);assert.equal(report.rerunProgress.conquestOk,true);assert.equal(report.rerunProgress.arenaCoverage,2);
-  assert.equal(report.review.reviewNormalOk,true);assert.equal(report.review.reviewBossOk,true);assert.equal(report.review.formalStateStable,true);assert.equal(report.review.formalSelectionStable,true);assert.equal(report.review.runtimeVersion,8);assert.equal(report.review.stateGuardVersion,2);
+  assert.equal(report.review.retired,true);assert.equal(report.review.stateStable,true);
   assert.deepEqual(report.runtimeContracts,{continuous:1,minimal:1,fastCatchUp:1,specialPacing:1,specialWorldGuard:1,offlineSample:4,mainRealSample:4,bossStoryPipeline:2,rerunBackfill:2});
   Object.entries(report.sourceContracts).forEach(([name,value])=>assert.equal(value,true,`Baseline source contract failed: ${name}`));
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));

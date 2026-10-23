@@ -85,13 +85,9 @@
   return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>高維正式玩家介面尚未載入。</b></div></section>`;
  }
  function phaseAwareAdventurePage(){
-  // Galaxy review owns its prepare/combat screens even when the current phase is Higher Dimensional.
-  // The epoch tabs select the map view only; they must not replace an active review battle screen.
-  if(typeof adventureScreen!=="undefined"&&(adventureScreen==="review-prepare"||adventureScreen==="review-combat")&&baseAdventurePage)return baseAdventurePage();
   if(phase()===3){
    if(typeof window.cancelSecondWorldAdventureProgressFocus==="function")window.cancelSecondWorldAdventureProgressFocus();
    const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():"higher-dimensional";
-   if((era==="universe-review"||era==="galaxy-review")&&typeof window.secondWorldAdventurePageHtml==="function")return window.secondWorldAdventurePageHtml();
    return typeof window.thirdWorldAdventurePageHtml==="function"?window.thirdWorldAdventurePageHtml():thirdWorldAdventureFallback();
   }
   return baseAdventurePage?baseAdventurePage():`<section class="map-screen"><div class="notice"><b>冒險介面尚未載入。</b></div></section>`;
@@ -164,16 +160,12 @@
   if(copy)copy.textContent="高維紀元沿用已解鎖的 1.5× 戰鬥速度；可隨時切回標準速度。";
   return true;
  }
- function applyThirdWorldUniverseReviewSemantics(){
-  if(typeof document==="undefined"||phase()!==3||window.getAdventureEraView?.()!=="universe-review")return false;
-  return !!document.querySelector(".universe-review-adventure-screen");
- }
+
  function apply(){
   applyHomeSemantics();
   applyCharacterSemantics();
   applySettingsSemantics();
   if(phase()===2&&typeof window.applySecondWorldAdventureProgressFocus==="function")window.applySecondWorldAdventureProgressFocus();
-  if(phase()===3)applyThirdWorldUniverseReviewSemantics();
  }
  const base=typeof window.render==="function"?window.render:null;
  if(base){
@@ -194,5 +186,4 @@
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
  window.applyCharacterWorldPhaseSemantics=applyCharacterSemantics;
  window.applyThirdWorldCompletedSystemSemantics=function(){applySettingsSemantics();};
- window.applyThirdWorldUniverseReviewSemantics=applyThirdWorldUniverseReviewSemantics;
 })();

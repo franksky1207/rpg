@@ -132,6 +132,7 @@
  }
  function runHeadlessCombat(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
+  if(markMaxed(def,state))return {ok:false,reason:"mark-maxed",calamityId:def.id};
   const e=enemy(id);if(!e)return {ok:false,reason:"enemy-missing",calamityId:def.id};
   const player=options.player&&typeof options.player==="object"?{...options.player}:playerCombatStats();
   const startEnemyHp=options.enemyStartHp==null?currentHp(id):Math.max(1,Math.min(e.hp,Math.floor(Number(options.enemyStartHp)||e.hp)));
@@ -150,6 +151,7 @@
  }
  function battle(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
+  if(markMaxed(def,state))return {ok:false,reason:"mark-maxed",calamityId:def.id};
   if(!unlocked(id))return {ok:false,reason:"locked",calamityId:def.id};
   ensureState();
   const player=playerCombatStats();

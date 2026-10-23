@@ -76,6 +76,7 @@
   const def=definition(id);
   if(!def)return {ok:false,reason:"unknown-calamity",run:runStatus()};
   if(typeof window.isCivilizationCalamityUnlocked!=="function"||!window.isCivilizationCalamityUnlocked(def.id))return {ok:false,reason:"locked",calamityId:def.id,run:runStatus()};
+  if(window.getCivilizationCalamityStatus?.(def.id)?.mark?.level>=10)return {ok:false,reason:"mark-maxed",run:runStatus()};
   if(activeRun?.active)return {ok:false,reason:"already-active",run:runStatus()};
   const conflict=runtimeConflictStatus();
   if(conflict.blocked)return {ok:false,reason:"active-runtime",runtime:conflict,run:runStatus()};

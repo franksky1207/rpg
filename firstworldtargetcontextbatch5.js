@@ -84,34 +84,6 @@
   };
  }
 
- const baseReviewStart=window.startGalaxyReviewBattle;
- if(typeof baseReviewStart==="function"){
-  window.startGalaxyReviewBattle=async function(){
-   let context=typeof window.getPreparedFirstWorldTargetContext==="function"?window.getPreparedFirstWorldTargetContext():null;
-   if(!(context?.mode==="review"&&context.valid===true&&context.authorized===true&&currentCheck(context,state))&&typeof window.prepareFirstWorldTargetContextFromSelection==="function")context=window.prepareFirstWorldTargetContextFromSelection({mode:"review",source:"review-battle-start"},state);
-   const validReview=ctx=>ctx?.mode==="review"&&ctx.valid===true&&ctx.authorized===true&&currentCheck(ctx,state)&&policyAllows(ctx,{formalRewardsAllowed:false,formalProgressAllowed:false});
-   if(!validReview(context)&&typeof window.prepareFirstWorldTargetContext==="function"){
-    context=window.prepareFirstWorldTargetContext({mode:"review",mapIndex:window.getGalaxyReviewSelectedMap?.(),enemyIndex:window.getGalaxyReviewSelectedEnemy?.(),source:"review-battle-revalidate"},state);
-   }
-   if(!validReview(context)){
-    console.warn("[文明戰線] 銀河紀元回顧目標驗證未通過",window.validateCurrentFirstWorldTargetContext?.(context,state)?.errors||[],{valid:context?.valid,authorized:context?.authorized,mode:context?.mode});
-    // Pure review uses runCombatCore without settlement or formal progression.
-    // An unavailable legacy target context must not silently disable this read-only challenge.
-    return await baseReviewStart.apply(this,arguments);
-   }
-   const originalGetMap=window.getGalaxyReviewSelectedMap;
-   const originalGetEnemy=window.getGalaxyReviewSelectedEnemy;
-   try{
-    window.getGalaxyReviewSelectedMap=()=>context.mapIndex;
-    window.getGalaxyReviewSelectedEnemy=()=>context.enemyIndex;
-    return await baseReviewStart.apply(this,arguments);
-   }finally{
-    window.getGalaxyReviewSelectedMap=originalGetMap;
-    window.getGalaxyReviewSelectedEnemy=originalGetEnemy;
-   }
-  };
- }
-
  window.resolveFirstWorldOfflineTargetContext=offlineContext;
  window.resolveCanonicalFirstWorldOfflineEnemy=canonicalOfflineEnemy;
  window.FIRST_WORLD_TARGET_CONTEXT_BATCH5_VERSION=VERSION;
