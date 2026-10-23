@@ -1,6 +1,6 @@
 name: Runtime Integrity
 
-# Batch19-4 final integrated foreground/earned-income acceptance.
+# Batch19-4 final integrated foreground/earned-income and GM fixture acceptance.
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
 # W1 target-context optimization 4 exact-head retrigger. 2026-10-09 deferred GM title regression follow-up.

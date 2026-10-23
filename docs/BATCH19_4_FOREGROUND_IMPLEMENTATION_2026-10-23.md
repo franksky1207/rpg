@@ -85,6 +85,8 @@ Browser hidden／pagehide／pageshow／blur是可控制事件注入；並非所�
 
 共用：combatlifecycle、combatfx／integrity、combatcore／battlepipeline、levelcap／levelcapresult／reincarnationrerunprogress；長血：thirdworldphase／progress／run／playerflow／ui／combatsaveguard／offlineworld3adapter、calamitycore／run／ui、secondworldcalamityrun／ui；模式：secondworldmainline、dungeoncore／bounty／arena／void／voidui、thirdworldarena／arenaui、specialcore／encounter、alternateuniverseui、mirrordungeonstate／run／ui／guide、reincarnationdungeonaccess、worldtransitionsafety、ui。
 
-存檔與發布：savemigration、saveversionguard、savebackupretention、compatibilityowners、index.html、resource-manifest.json。交接／README／pending及對應current-schema、cache token測試同步。完整清單以 PR diff 為準。
+存檔與發布：savemigration、saveversionguard、savebackupretention、compatibilityowners、index.html、resource-manifest.json。交接／README／pending及對應current-schema、cache token測試同步。GM開發工具相容：development/hybrid-comparison/fixture-input.mjs；完整清單以 PR diff 為準。
 
-整合 commit `ee47693921d917adbd91f50d9a7bd08049e36681`；後續同PR補上精確來源登記與測試隔離。歷史呈現守衛以 `foreground-approved-runtime.json` 的42個正式檔案 before/after SHA256驗證本批必要修改，再返回原不可變main bytes繼續全部舊斷言，非萬用例外；整段戰鬥計算核心另逐位元比對未變，停止按鈕仍比較歷史原文。回顧 Browser 在production模式執行，避免獨立開發診斷關閉modal的測試污染。特殊怪 frozen補算策略源碼斷言同步要求新epoch參數，原行為斷言保留。最新Actions尚待核對。PR維持Draft；未滿足真機證據且待Actions時不建議直接合併。合併必須由使用者確認；之後同main SHA Runtime、Functional CI、Pages全成功才能封箱。
+整合 commit `ee47693921d917adbd91f50d9a7bd08049e36681`；後續同PR補上精確來源登記與測試隔離。歷史呈現守衛以 `foreground-approved-runtime.json` 的42個正式檔案 before/after SHA256驗證本批必要修改，再返回原不可變main bytes繼續全部舊斷言，非萬用例外；整段戰鬥計算核心另逐位元比對未變，停止按鈕仍比較歷史原文。回顧 Browser 在production模式執行，避免獨立開發診斷關閉modal的測試污染。特殊怪 frozen補算策略源碼斷言同步要求新epoch參數，原行為斷言保留。另同步target-context／post-optimization測試的目前Schema18及stale CAS源碼斷言；context隔離測試原本mock計算／動畫，現在配對mock提交owner並新增四場恰好四次commit，真實提交由新Browser驗證。既有GM開發fixture只新增精確combatcore新舊SHA接受分支，16項fixture／篡改拒絕測試保留，fixture事件不重新產生。最新Actions尚待核對。PR維持Draft；未滿足真機證據且待Actions時不建議直接合併。合併必須由使用者確認；之後同main SHA Runtime、Functional CI、Pages全成功才能封箱。
+
+最終檢查以 [PR #89 Checks](https://github.com/franksky1207/rpg/pull/89/checks) 的最新head為準；提交後會在PR說明列出實際驗收SHA與各run，避免將先前綠燈誤作最新版通過。
