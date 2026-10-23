@@ -24,7 +24,20 @@ function classify(files){
   }
   return result;
 }
+function enforceFunctionalWorkflowNames(){
+ const dir='.github/workflows';
+ const names=fs.readdirSync(dir).filter(n=>/\.ya?ml$/i.test(n));
+ const invalid=names.filter(n=>/^(?:batch\d|cleanup-batch|hybrid-comparison)/i.test(n));
+ if(invalid.length)throw Error('Historical Batch workflows must be retired: '+invalid.join(', '));
+ for(const name of names){
+  const source=fs.readFileSync(dir+'/'+name,'utf8');
+  if(/^name:\s*(?:Batch\s*\d|Cleanup\s*Batch\s*\d|Hybrid Comparison\s*T\d)/im.test(source))
+   throw Error('Function-based workflow name required: '+name);
+ }
+ return names.length;
+}
 function selfTest(){
+ const workflows=enforceFunctionalWorkflowNames();
  const cases=[
   [['docs/NOTES.md'],[]],
   [['resource-cache-sw.js'],['resource']],
@@ -45,7 +58,7 @@ function selfTest(){
  if(files[0]==='docs/NOTES.md'&&actual.length)throw Error('Docs triggered jobs');
  if(files[0]==='resource-cache-sw.js'&&actual.some(k=>k!=='resource'))throw Error('Cache-only fanout');
  }
- process.stdout.write('PASS: '+cases.length+' CI impact route cases (necessary + unrelated checks)\n');
+ process.stdout.write('PASS: '+cases.length+' CI impact cases; '+workflows+' permanent workflow names have no Batch identifiers\n');
 }
 if(require.main===module){
  if(process.argv.includes('--self-test'))selfTest();
