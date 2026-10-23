@@ -1,4 +1,4 @@
-> **最新Actions統一與正式封箱紀錄**：請以 [Actions／正式發布驗收](BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md) 為準。使用者於本輪已授權必要驗收通過後正式PR合併，取代下方歷史「另待使用者確認」；不得跳過最新SHA必要Actions。iPhone真機未驗收。
+> **正式工程封箱完成**：PR #89 最終HEAD `4be3c6bff2ada776be6d42d933c2921e4d87953f` 八支Actions全成功後正式合併；功能main `44c1e33066559d323201f4e468cd49b162c4e63f` 十五支Actions全成功、Pages實際deploy成功，Manifest無後續提交。完整run URL、並行規則、main與文件補記SHA界線見[正式封箱與驗收紀錄](BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md)。以下施工時待Actions／另待確認等文字保留歷史，不代表現況。iPhone切App／鎖屏／OS終止／原生bfcache及裝置效能尚未真機驗收。
 
 # 第19-4批：全戰鬥前景中斷與永久削血收益
 
