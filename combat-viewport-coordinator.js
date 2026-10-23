@@ -4,7 +4,9 @@ if(g.CivilizationCombatViewport)return;
 let root,observer,lastStage=null,lastScreen=null,manual=false,focused=false,queued=false,token=0,lastWidth=0,lastRoute=null;
 const mobile=()=>!!g.matchMedia?.("(max-width:820px), (max-height:500px) and (pointer:coarse)")?.matches;
 const animationExpected=()=>g.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false;
-const live=()=>mobile()&&animationExpected()&&d.visibilityState!=="hidden"&&!d.body?.classList.contains("main-minimal-mode-open")&&g.gmBackgroundBattleEnabled?.()!==true;
+// Background battle preference is a user setting, not proof that the foreground combat UI is hidden.
+// Suppress only when the actual minimal/background-only presentation is visible.
+const live=()=>mobile()&&animationExpected()&&d.visibilityState!=="hidden"&&!d.body?.classList.contains("main-minimal-mode-open");
 const stageOf=s=>s?.querySelector(".formal-b-shared-stage:not([hidden]),.formal-b-battle-stage:not([hidden])");
 const raf=f=>(g.requestAnimationFrame||((cb)=>setTimeout(cb,16)))(f);
 function cancel(){token++;queued=false;}
@@ -43,7 +45,9 @@ function inspect(){
  if(!root?.isConnected)return;
  const route=typeof view!=="undefined"?view:null;
  if(route!==lastRoute){cancel();manual=false;focused=false;lastStage=null;lastScreen=null;lastRoute=route;}
- const screen=root.querySelector(".combat-screen");
+ // The page may retain earlier combat cards; choose the active visible stage, not the first stale screen.
+ const screens=typeof root.querySelectorAll==="function"?Array.from(root.querySelectorAll(".combat-screen")):[];
+ const screen=screens.find(s=>stageOf(s))||root.querySelector(".combat-screen");
  if(!screen){if(lastScreen){cancel();lastStage=null;lastScreen=null;manual=false;focused=false;}return;}
  const stage=stageOf(screen);
  if(stage!==lastStage||screen!==lastScreen){cancel();lastStage=stage;lastScreen=screen;}
