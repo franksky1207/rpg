@@ -119,56 +119,6 @@ jobs:
           node tests/audio-lifecycle.test.cjs
           node tests/audio-regression.test.cjs
           node tests/runtime/3d-asset-registry-integrity.cjs
-      - name: Install browser smoke dependency
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: |
-          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
-          npx playwright install --with-deps chromium webkit
-      - name: Run real browser runtime smoke
-        timeout-minutes: 13
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-          for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
-            sleep 0.25
-          done
-          node tests/runtime/unified-mobile-combat-viewport-browser.cjs
-          if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then
-            echo 'Viewport mode browser navigation interrupted first attempt; retrying once.'
-            node tests/runtime/pr48-mode-matrix-browser.cjs
-          fi
-          node tests/runtime/pr48-live-combat-browser.cjs
-          node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/combat-events-browser.js
-          node tests/runtime/combat-events-owner-browser.js
-          node tests/runtime/cross-era-background-browser.js
-          BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js
-          node tests/runtime/thirdworld-background-browser.js
-          BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js
-          W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js
-          node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-battle-simulation-browser.js
-          node tests/runtime/gm-atlas-review-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t4-preview-retirement-browser.js
-          node tests/equipment-formal/browser.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/equipment-gm/browser.cjs 2>&1 | tee -a runtime-integrity-report.txt 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-gm-loader-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-mode-browser-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-glb-validation.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-equipment-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          BATCH28_BASE_URL=http://127.0.0.1:4173/ node tests/runtime/batch28-consolidated-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Run unlimited VIP integrity
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -202,7 +152,7 @@ jobs:
           retention-days: 1
   runtime-browser-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -224,11 +174,30 @@ jobs:
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         with:
           node-version: '24'
-      - name: Install browser smoke dependency
+      - name: Restore Playwright browser cache
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-ubuntu-1.55.0-chromium-webkit-v1
+      - name: Install Playwright Node dependencies (timed)
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        timeout-minutes: 3
+        shell: bash
         run: |
-          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
-          npx playwright install --with-deps chromium webkit
+          set -euo pipefail
+          start=$SECONDS
+          timeout 150s npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+          echo "Node dependency install seconds: $((SECONDS-start))"
+      - name: Install Chromium and WebKit (timed)
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        timeout-minutes: 8
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$SECONDS
+          timeout 420s npx playwright install --with-deps chromium webkit
+          echo "Playwright browser/dependency install seconds: $((SECONDS-start))"
       - name: Run parallel browser runtime and reincarnation regression
         timeout-minutes: 9
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
@@ -303,6 +272,51 @@ jobs:
           node tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
 
+      - name: Run real browser runtime smoke
+        timeout-minutes: 13
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node tests/runtime/unified-mobile-combat-viewport-browser.cjs
+          if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then
+            echo 'Viewport mode browser navigation interrupted first attempt; retrying once.'
+            node tests/runtime/pr48-mode-matrix-browser.cjs
+          fi
+          node tests/runtime/pr48-live-combat-browser.cjs
+          node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/combat-events-browser.js
+          node tests/runtime/combat-events-owner-browser.js
+          node tests/runtime/cross-era-background-browser.js
+          BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js
+          node tests/runtime/thirdworld-background-browser.js
+          BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js
+          W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js
+          node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-battle-simulation-browser.js
+          node tests/runtime/gm-atlas-review-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/t4-preview-retirement-browser.js
+          node tests/equipment-formal/browser.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/equipment-gm/browser.cjs 2>&1 | tee -a runtime-integrity-report.txt 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/3d-gm-loader-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/3d-mode-browser-regression.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/3d-glb-validation.cjs 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/3d-equipment-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          BATCH28_BASE_URL=http://127.0.0.1:4173/ node tests/runtime/batch28-consolidated-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
+          node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
       - name: Upload runtime browser regression diagnostics
         if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
         uses: actions/upload-artifact@v4
@@ -310,5 +324,15 @@ jobs:
           name: runtime-browser-regression
           path: |
             runtime-integrity-report.txt
+            3d-player-browser-report.json
+            3d-equipment-browser-report.json
+            audio-lifecycle-browser-report.json
+            combat-events-browser-report.json
+            combat-events-owner-browser-report.json
+            /tmp/pr48-viewport-browser.json
+            /tmp/pr48-live-combat.json
+            /tmp/pr48-mode-matrix.json
+            /tmp/t3b-formal-renderer-browser.json
+            /tmp/batch28-consolidated
           if-no-files-found: ignore
           retention-days: 1
