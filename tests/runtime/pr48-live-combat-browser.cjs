@@ -19,8 +19,26 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   else {Math.random=()=>0;window.playerCombatStats=()=>({hp:1000,atk:100000,def:0,crit:0,dodge:0});state.hp=1000;state.specializations.combo=60;state.specializations.drain=60;if(!startThirdWorldArenaUi('varied',5))throw Error('varied arena did not start');}
  },item);
  await page.waitForFunction(()=>document.querySelector('.formal-b-shared-stage:not([hidden])')&&CivilizationCombatViewport.snapshot().focused,null,{timeout:20000}).catch(async e=>{console.log(await page.evaluate(()=>({view,viewport:CivilizationCombatViewport.snapshot(),entry:CivilizationFormalBEntry.diagnostics(),html:document.querySelector('#main').innerHTML.slice(0,2200),run:getCivilizationCalamityRunSnapshot()})));throw e;});
- const geometry=await page.evaluate(()=>{const r=document.querySelector('.formal-b-shared-stage').getBoundingClientRect(),b=document.querySelector('[data-combat-action="stop-continuous"]');return {count:document.querySelectorAll('[data-combat-action="stop-continuous"]').length,above:b.getBoundingClientRect().bottom<=r.top+1,delta:r.top+r.height/2-visualViewport.offsetTop-visualViewport.height/2,handler:b.getAttribute('onclick'),y:scrollY};});
- assert.equal(geometry.count,1);assert(geometry.above,JSON.stringify(geometry));assert(Math.abs(geometry.delta)<4,JSON.stringify(geometry));
+ // Batch19-3 places the complete stage/HUD/stop region, rather than the stage alone.
+ // Preserve the original stop, visible stage and all-essential visibility where it fits.
+ const geometry=await page.evaluate(()=>{
+  const stage=document.querySelector('.formal-b-shared-stage'),r=stage.getBoundingClientRect();
+  const btn=document.querySelector('[data-combat-action="stop-continuous"]');
+  const vp=visualViewport,top=vp.offsetTop,bottom=top+vp.height;
+  const essential=[r];
+  for(const card of document.querySelectorAll('.combat-arena .combatant.player,.combat-arena .combatant.enemy')){
+   for(const el of [card.querySelector('h2'),card.querySelector('.big-hp')])if(el){const box=el.getBoundingClientRect();if(box.height>0)essential.push(box);}
+  }
+  const stop=btn?.closest('.combat-viewport-stop');if(stop){const box=stop.getBoundingClientRect();if(box.height>0)essential.push(box);}
+  const areaTop=Math.min(...essential.map(x=>x.top)),areaBottom=Math.max(...essential.map(x=>x.bottom));
+  return {count:document.querySelectorAll('[data-combat-action="stop-continuous"]').length,
+   above:btn.getBoundingClientRect().bottom<=r.top+1,stageVisible:r.top<bottom&&r.bottom>top,
+   fits:areaBottom-areaTop<=vp.height-24,areaTop,areaBottom,top,bottom,
+   delta:r.top+r.height/2-top-vp.height/2,handler:btn.getAttribute('onclick'),y:scrollY};
+ });
+ assert.equal(geometry.count,1);assert(geometry.above,JSON.stringify(geometry));
+ assert(geometry.stageVisible,'combat stage must remain visible: '+JSON.stringify(geometry));
+ if(geometry.fits)assert(geometry.areaTop>=geometry.top-3&&geometry.areaBottom<=geometry.bottom+3,'all essential combat HUD must be visible when it fits: '+JSON.stringify(geometry));
  if(item.mode==='varied'){
   await page.evaluate(()=>{document.dispatchEvent(new Event('touchmove'));scrollTo(0,0);});
   await page.waitForFunction(()=>getThirdWorldArenaRuntimeState().startedRuns>=2&&getThirdWorldArenaRuntimeState().status==='combat'&&__pr48Battles.length>=4,null,{timeout:60000});
