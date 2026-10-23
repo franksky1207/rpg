@@ -1,3 +1,5 @@
+> **最新Actions統一與正式封箱紀錄**：請以 [Actions／正式發布驗收](BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md) 為準。使用者於本輪已授權必要驗收通過後正式PR合併，取代下方歷史「另待使用者確認」；不得跳過最新SHA必要Actions。iPhone真機未驗收。
+
 # 第19-4批：全戰鬥前景中斷與永久削血收益
 
 狀態：整合施工與本機驗證完成，PR #89 維持 Draft；尚待本 PR 最新 SHA 的 Actions。未合併、未封箱、未取得 iPhone 真機驗收。

@@ -1,3 +1,5 @@
+> **第19-4批 Actions／合併驗收最新入口**：[並行規則與正式驗收紀錄](docs/BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md)。main原22支、PR精簡為17支；八支PR workflow統一workflow／event／PR隔離並僅取消同PR舊版，Pages／Manifest保留不取消的資源鎖。已核對原86320c8六項成功；本次新HEAD必須重新全綠才合併，正式main／Pages成功後才能封箱。iPhone真機仍待驗收。
+
 > **新版第19-4批整合施工（2026-10-23）**：同一 [Draft PR #89](https://github.com/franksky1207/rpg/pull/89)，基準 main `b6d254c2dc9d4fb6b5d3d97ae48bd5db0263348f`。已完成全戰鬥前景取消、長 Boss 已播放 HP 與對應收益原子 checkpoint／去重、Schema18 備份保護及鏡像已完成場次恢復。保留 GM 實際開關、一次計算及既有補算。詳見[施工與驗收報告](docs/BATCH19_4_FOREGROUND_IMPLEMENTATION_2026-10-23.md)與[歷史唯讀盤點](docs/BATCH19_4_FOREGROUND_INTERRUPTION_AUDIT_2026-10-23.md)。本機 Chromium 回歸通過；最新SHA Actions待核對、iPhone實機未驗收。未合併、不可封箱。此段取代下方歷史19-4進度描述。
 
 > **第19-2批施工與驗收入口**：[PR #79](https://github.com/franksky1207/rpg/pull/79)、[完整範圍與驗收報告](docs/BATCH19_2_GM_CENTER_2026-10-22.md)。玩家／怪物／對戰共用六動作，完整正式身份與工程API保留；本機三視窗整合已通過。是否正式封箱須核對PR最新head全Actions、合併main及同SHA Runtime／Pages最終驗收紀錄；本段不以啟動工作流代替完成。第19-3／19-4／20批未施工。

@@ -7,8 +7,9 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: functional-ci-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   classify:
     runs-on: ubuntu-latest
