@@ -5,7 +5,9 @@ const assert=require("node:assert/strict");
  const page=await browser.newPage();
  const errors=[];page.on("pageerror",e=>errors.push(String(e)));
  try{
-  await page.goto(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html",{waitUntil:"domcontentloaded",timeout:30000});
+  // Formal UI regression must not race the independent development diagnostics.
+  const url=new URL(process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html");url.searchParams.set("production","1");
+  await page.goto(url.href,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>typeof window.startGalaxyReviewBattle==="function"&&typeof window.openGalaxyReviewMap==="function"&&typeof window.runCombatCore==="function",{timeout:30000});
   await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==="ready",null,{timeout:45000});
   const setup=await page.evaluate(()=>{
