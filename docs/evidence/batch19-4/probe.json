@@ -1,0 +1,1927 @@
+{
+  "result": {
+    "metrics": [
+      {
+        "turns": 10,
+        "events": 20,
+        "coreMs": 0.19999999995343387,
+        "eventBytes": 6901,
+        "logBytes": 1001,
+        "indexBytes": 160,
+        "indexMs": 0.2000000000698492,
+        "enemyHp": 1099999980,
+        "reconstructedHp": 1099999980,
+        "actionBudgetReached": false
+      },
+      {
+        "turns": 1000,
+        "events": 2000,
+        "coreMs": 2.300000000046566,
+        "eventBytes": 690001,
+        "logBytes": 100001,
+        "indexBytes": 16000,
+        "indexMs": 0.2999999999301508,
+        "enemyHp": 1099998000,
+        "reconstructedHp": 1099998000,
+        "actionBudgetReached": false
+      },
+      {
+        "turns": 10000,
+        "events": 20000,
+        "coreMs": 11.79999999993015,
+        "eventBytes": 6900001,
+        "logBytes": 1000001,
+        "indexBytes": 160000,
+        "indexMs": 0.2000000000698492,
+        "enemyHp": 1099980000,
+        "reconstructedHp": 1099980000,
+        "actionBudgetReached": false
+      }
+    ],
+    "replayChecks": [
+      {
+        "seed": 1,
+        "actual": 1099,
+        "rebuilt": 1099,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 2,
+        "actual": 1202,
+        "rebuilt": 1202,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 3,
+        "actual": 2060,
+        "rebuilt": 2060,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 4,
+        "actual": 133,
+        "rebuilt": 133,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 5,
+        "actual": 1203,
+        "rebuilt": 1203,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 6,
+        "actual": 1160,
+        "rebuilt": 1160,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 7,
+        "actual": 1842,
+        "rebuilt": 1842,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 8,
+        "actual": 677,
+        "rebuilt": 677,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 9,
+        "actual": 133,
+        "rebuilt": 133,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 10,
+        "actual": 1613,
+        "rebuilt": 1613,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 11,
+        "actual": 1845,
+        "rebuilt": 1845,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 12,
+        "actual": 881,
+        "rebuilt": 881,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 13,
+        "actual": 2232,
+        "rebuilt": 2232,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 14,
+        "actual": 1156,
+        "rebuilt": 1156,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 15,
+        "actual": 1901,
+        "rebuilt": 1901,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 16,
+        "actual": 657,
+        "rebuilt": 657,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 17,
+        "actual": 1161,
+        "rebuilt": 1161,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 18,
+        "actual": 666,
+        "rebuilt": 666,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 19,
+        "actual": 1803,
+        "rebuilt": 1803,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 20,
+        "actual": 645,
+        "rebuilt": 645,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 21,
+        "actual": 347,
+        "rebuilt": 347,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 22,
+        "actual": 557,
+        "rebuilt": 557,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 23,
+        "actual": 194,
+        "rebuilt": 194,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 24,
+        "actual": 857,
+        "rebuilt": 857,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 25,
+        "actual": 866,
+        "rebuilt": 866,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 26,
+        "actual": 139,
+        "rebuilt": 139,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 27,
+        "actual": 726,
+        "rebuilt": 726,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 28,
+        "actual": 466,
+        "rebuilt": 466,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 29,
+        "actual": 1503,
+        "rebuilt": 1503,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 30,
+        "actual": 1971,
+        "rebuilt": 1971,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 31,
+        "actual": 870,
+        "rebuilt": 870,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 32,
+        "actual": 1720,
+        "rebuilt": 1720,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 33,
+        "actual": 841,
+        "rebuilt": 841,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 34,
+        "actual": 1237,
+        "rebuilt": 1237,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 35,
+        "actual": 2441,
+        "rebuilt": 2441,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 36,
+        "actual": 719,
+        "rebuilt": 719,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 37,
+        "actual": 1310,
+        "rebuilt": 1310,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 38,
+        "actual": 788,
+        "rebuilt": 788,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 39,
+        "actual": 1426,
+        "rebuilt": 1426,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 40,
+        "actual": 24,
+        "rebuilt": 24,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 41,
+        "actual": 443,
+        "rebuilt": 443,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 42,
+        "actual": 1808,
+        "rebuilt": 1808,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 43,
+        "actual": 361,
+        "rebuilt": 361,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 44,
+        "actual": 1083,
+        "rebuilt": 1083,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 45,
+        "actual": 1388,
+        "rebuilt": 1388,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 46,
+        "actual": 207,
+        "rebuilt": 207,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 47,
+        "actual": 953,
+        "rebuilt": 953,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 48,
+        "actual": 1309,
+        "rebuilt": 1309,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 49,
+        "actual": 843,
+        "rebuilt": 843,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 50,
+        "actual": 1431,
+        "rebuilt": 1431,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 51,
+        "actual": 1626,
+        "rebuilt": 1626,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 52,
+        "actual": 1118,
+        "rebuilt": 1118,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 53,
+        "actual": 229,
+        "rebuilt": 229,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 54,
+        "actual": 1569,
+        "rebuilt": 1569,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 55,
+        "actual": 1253,
+        "rebuilt": 1253,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 56,
+        "actual": 1361,
+        "rebuilt": 1361,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 57,
+        "actual": 1330,
+        "rebuilt": 1330,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 58,
+        "actual": 767,
+        "rebuilt": 767,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 59,
+        "actual": 2194,
+        "rebuilt": 2194,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 60,
+        "actual": 1057,
+        "rebuilt": 1057,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 61,
+        "actual": 1562,
+        "rebuilt": 1562,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 62,
+        "actual": 1841,
+        "rebuilt": 1841,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 63,
+        "actual": 1827,
+        "rebuilt": 1827,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 64,
+        "actual": 1093,
+        "rebuilt": 1093,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 65,
+        "actual": 1793,
+        "rebuilt": 1793,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 66,
+        "actual": 520,
+        "rebuilt": 520,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 67,
+        "actual": 968,
+        "rebuilt": 968,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 68,
+        "actual": 1224,
+        "rebuilt": 1224,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 69,
+        "actual": 1318,
+        "rebuilt": 1318,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 70,
+        "actual": 1467,
+        "rebuilt": 1467,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 71,
+        "actual": 389,
+        "rebuilt": 389,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 72,
+        "actual": 1693,
+        "rebuilt": 1693,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 73,
+        "actual": 1786,
+        "rebuilt": 1786,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 74,
+        "actual": 1070,
+        "rebuilt": 1070,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 75,
+        "actual": 592,
+        "rebuilt": 592,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 76,
+        "actual": 967,
+        "rebuilt": 967,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 77,
+        "actual": 388,
+        "rebuilt": 388,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 78,
+        "actual": 2180,
+        "rebuilt": 2180,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 79,
+        "actual": 835,
+        "rebuilt": 835,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 80,
+        "actual": 147,
+        "rebuilt": 147,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 81,
+        "actual": 554,
+        "rebuilt": 554,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 82,
+        "actual": 1223,
+        "rebuilt": 1223,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 83,
+        "actual": 1269,
+        "rebuilt": 1269,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 84,
+        "actual": 0,
+        "rebuilt": 0,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 85,
+        "actual": 1144,
+        "rebuilt": 1144,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 86,
+        "actual": 183,
+        "rebuilt": 183,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 87,
+        "actual": 1310,
+        "rebuilt": 1310,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 88,
+        "actual": 558,
+        "rebuilt": 558,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 89,
+        "actual": 1407,
+        "rebuilt": 1407,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 90,
+        "actual": 1268,
+        "rebuilt": 1268,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 91,
+        "actual": 1206,
+        "rebuilt": 1206,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 92,
+        "actual": 1199,
+        "rebuilt": 1199,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 93,
+        "actual": 1189,
+        "rebuilt": 1189,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 94,
+        "actual": 1074,
+        "rebuilt": 1074,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 95,
+        "actual": 1040,
+        "rebuilt": 1040,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 96,
+        "actual": 740,
+        "rebuilt": 740,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 97,
+        "actual": 1205,
+        "rebuilt": 1205,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 98,
+        "actual": 573,
+        "rebuilt": 573,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 99,
+        "actual": 1281,
+        "rebuilt": 1281,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      },
+      {
+        "seed": 100,
+        "actual": 1412,
+        "rebuilt": 1412,
+        "effects": [
+          "ward",
+          "indomitable",
+          "absorption",
+          "backlash"
+        ],
+        "drain": true
+      }
+    ],
+    "saves": [
+      {
+        "ok": true,
+        "ms": 4.800000000046566
+      },
+      {
+        "ok": true,
+        "ms": 2.5
+      },
+      {
+        "ok": true,
+        "ms": 2.5
+      },
+      {
+        "ok": true,
+        "ms": 2.799999999930151
+      },
+      {
+        "ok": true,
+        "ms": 2.800000000046566
+      },
+      {
+        "ok": true,
+        "ms": 2.5
+      },
+      {
+        "ok": true,
+        "ms": 2.400000000023283
+      },
+      {
+        "ok": true,
+        "ms": 2.5
+      },
+      {
+        "ok": true,
+        "ms": 2.799999999930151
+      },
+      {
+        "ok": true,
+        "ms": 2.800000000046566
+      }
+    ],
+    "cursorDuringWait": [
+      {
+        "ms": 140,
+        "index": 0,
+        "hp": 100
+      },
+      {
+        "ms": 70,
+        "index": 1,
+        "hp": 100
+      }
+    ],
+    "clearResolvedNormally": true,
+    "staleAfterHpCheckpoint": {
+      "ok": false,
+      "world": 3,
+      "code": "stale-settlement",
+      "reason": "此戰鬥結果已過期或已經結算，Boss 永久 HP 與場初正式 HP 不一致。",
+      "data": {
+        "bossIndex": 0,
+        "currentHp": 1099999900,
+        "formalStartHp": 1100000000
+      }
+    },
+    "actualCombatMetrics": {
+      "ms": 894.1999999999534,
+      "turns": 85,
+      "eventCount": 516517,
+      "eventBytes": 86261025,
+      "logBytes": 8778392,
+      "candidateDenseIndexBytes": 4132136,
+      "playerDrains": 83,
+      "enemyDrains": 172032,
+      "completed": true,
+      "actionSafetyReached": false
+    },
+    "heap": {
+      "used": 342660181,
+      "total": 407663425,
+      "limit": 4395630592
+    },
+    "reproduction": {
+      "before": {
+        "index": 0,
+        "id": "higher-dimensional-boss-01",
+        "name": "破界天裁",
+        "maxHp": 1100000000,
+        "currentHp": 1100000000,
+        "remainingRatio": 1,
+        "remainingPercent": 100,
+        "remainingBasisPoints": 10000,
+        "alive": true,
+        "defeated": false,
+        "stage": 0,
+        "stats": {
+          "index": 0,
+          "id": "higher-dimensional-boss-01",
+          "name": "破界天裁",
+          "maxHp": 1100000000,
+          "stage": 0,
+          "atk": 17250,
+          "def": 10000,
+          "crit": 10,
+          "dodge": 10,
+          "initiativeBonusPercent": 60,
+          "comboRate": 30,
+          "penetrationRate": 30,
+          "counterRate": 30,
+          "drainRate": 30
+        },
+        "abilities": {
+          "composure": {
+            "id": "composure",
+            "name": "鎮心",
+            "unlockRemainingPercent": 70,
+            "unlockStage": 3,
+            "active": false
+          },
+          "suppression": {
+            "id": "suppression",
+            "name": "壓制",
+            "unlockRemainingPercent": 60,
+            "unlockStage": 4,
+            "active": false
+          },
+          "resilience": {
+            "id": "resilience",
+            "name": "韌性",
+            "unlockRemainingPercent": 50,
+            "unlockStage": 5,
+            "active": false
+          },
+          "revenge": {
+            "id": "revenge",
+            "name": "復仇",
+            "unlockRemainingPercent": 40,
+            "unlockStage": 6,
+            "active": false
+          },
+          "backlash": {
+            "id": "backlash",
+            "name": "反噬",
+            "unlockRemainingPercent": 30,
+            "unlockStage": 7,
+            "active": false
+          },
+          "ignore": {
+            "id": "ignore",
+            "name": "無視",
+            "unlockRemainingPercent": 20,
+            "unlockStage": 8,
+            "active": false
+          },
+          "battleSpirit": {
+            "id": "battleSpirit",
+            "name": "戰意",
+            "unlockRemainingPercent": 10,
+            "unlockStage": 9,
+            "active": false
+          }
+        },
+        "challengeAllowed": true,
+        "challengeStatus": {
+          "allowed": true,
+          "challengeable": true,
+          "reason": "",
+          "targetIndex": 0,
+          "target": {
+            "index": 0,
+            "id": "higher-dimensional-boss-01",
+            "name": "破界天裁",
+            "maxHp": 1100000000,
+            "currentHp": 1100000000,
+            "remainingRatio": 1,
+            "remainingPercent": 100,
+            "remainingBasisPoints": 10000,
+            "alive": true,
+            "defeated": false,
+            "stage": 0,
+            "stats": {
+              "index": 0,
+              "id": "higher-dimensional-boss-01",
+              "name": "破界天裁",
+              "maxHp": 1100000000,
+              "stage": 0,
+              "atk": 17250,
+              "def": 10000,
+              "crit": 10,
+              "dodge": 10,
+              "initiativeBonusPercent": 60,
+              "comboRate": 30,
+              "penetrationRate": 30,
+              "counterRate": 30,
+              "drainRate": 30
+            },
+            "abilities": {
+              "composure": {
+                "id": "composure",
+                "name": "鎮心",
+                "unlockRemainingPercent": 70,
+                "unlockStage": 3,
+                "active": false
+              },
+              "suppression": {
+                "id": "suppression",
+                "name": "壓制",
+                "unlockRemainingPercent": 60,
+                "unlockStage": 4,
+                "active": false
+              },
+              "resilience": {
+                "id": "resilience",
+                "name": "韌性",
+                "unlockRemainingPercent": 50,
+                "unlockStage": 5,
+                "active": false
+              },
+              "revenge": {
+                "id": "revenge",
+                "name": "復仇",
+                "unlockRemainingPercent": 40,
+                "unlockStage": 6,
+                "active": false
+              },
+              "backlash": {
+                "id": "backlash",
+                "name": "反噬",
+                "unlockRemainingPercent": 30,
+                "unlockStage": 7,
+                "active": false
+              },
+              "ignore": {
+                "id": "ignore",
+                "name": "無視",
+                "unlockRemainingPercent": 20,
+                "unlockStage": 8,
+                "active": false
+              },
+              "battleSpirit": {
+                "id": "battleSpirit",
+                "name": "戰意",
+                "unlockRemainingPercent": 10,
+                "unlockStage": 9,
+                "active": false
+              }
+            }
+          },
+          "aliveCount": 10,
+          "targetRemainingPercent": 100,
+          "highestAliveRemainingPercent": 100,
+          "gapHp": 0,
+          "gapPoints": 0,
+          "highestAliveBossIndexes": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "blockingBossIndexes": [],
+          "fivePointThreshold": 5,
+          "fivePointHpGap": 55000000,
+          "authority": {
+            "decisionField": "allowed",
+            "gapField": "gapHp",
+            "thresholdField": "fivePointHpGap",
+            "displayOnlyFields": [
+              "targetRemainingPercent",
+              "highestAliveRemainingPercent",
+              "gapPoints"
+            ]
+          }
+        }
+      },
+      "after": {
+        "index": 0,
+        "id": "higher-dimensional-boss-01",
+        "name": "破界天裁",
+        "maxHp": 1100000000,
+        "currentHp": 0,
+        "remainingRatio": 0,
+        "remainingPercent": 0,
+        "remainingBasisPoints": 0,
+        "alive": false,
+        "defeated": true,
+        "stage": 9,
+        "stats": {
+          "index": 0,
+          "id": "higher-dimensional-boss-01",
+          "name": "破界天裁",
+          "maxHp": 1100000000,
+          "stage": 9,
+          "atk": 23460,
+          "def": 20800,
+          "crit": 28,
+          "dodge": 28,
+          "initiativeBonusPercent": 60,
+          "comboRate": 30,
+          "penetrationRate": 30,
+          "counterRate": 30,
+          "drainRate": 30
+        },
+        "abilities": {
+          "composure": {
+            "id": "composure",
+            "name": "鎮心",
+            "unlockRemainingPercent": 70,
+            "unlockStage": 3,
+            "active": true
+          },
+          "suppression": {
+            "id": "suppression",
+            "name": "壓制",
+            "unlockRemainingPercent": 60,
+            "unlockStage": 4,
+            "active": true
+          },
+          "resilience": {
+            "id": "resilience",
+            "name": "韌性",
+            "unlockRemainingPercent": 50,
+            "unlockStage": 5,
+            "active": true
+          },
+          "revenge": {
+            "id": "revenge",
+            "name": "復仇",
+            "unlockRemainingPercent": 40,
+            "unlockStage": 6,
+            "active": true
+          },
+          "backlash": {
+            "id": "backlash",
+            "name": "反噬",
+            "unlockRemainingPercent": 30,
+            "unlockStage": 7,
+            "active": true
+          },
+          "ignore": {
+            "id": "ignore",
+            "name": "無視",
+            "unlockRemainingPercent": 20,
+            "unlockStage": 8,
+            "active": true
+          },
+          "battleSpirit": {
+            "id": "battleSpirit",
+            "name": "戰意",
+            "unlockRemainingPercent": 10,
+            "unlockStage": 9,
+            "active": true
+          }
+        },
+        "challengeAllowed": false,
+        "challengeStatus": {
+          "allowed": false,
+          "challengeable": false,
+          "reason": "defeated",
+          "targetIndex": 0,
+          "target": {
+            "index": 0,
+            "id": "higher-dimensional-boss-01",
+            "name": "破界天裁",
+            "maxHp": 1100000000,
+            "currentHp": 0,
+            "remainingRatio": 0,
+            "remainingPercent": 0,
+            "remainingBasisPoints": 0,
+            "alive": false,
+            "defeated": true,
+            "stage": 9,
+            "stats": {
+              "index": 0,
+              "id": "higher-dimensional-boss-01",
+              "name": "破界天裁",
+              "maxHp": 1100000000,
+              "stage": 9,
+              "atk": 23460,
+              "def": 20800,
+              "crit": 28,
+              "dodge": 28,
+              "initiativeBonusPercent": 60,
+              "comboRate": 30,
+              "penetrationRate": 30,
+              "counterRate": 30,
+              "drainRate": 30
+            },
+            "abilities": {
+              "composure": {
+                "id": "composure",
+                "name": "鎮心",
+                "unlockRemainingPercent": 70,
+                "unlockStage": 3,
+                "active": true
+              },
+              "suppression": {
+                "id": "suppression",
+                "name": "壓制",
+                "unlockRemainingPercent": 60,
+                "unlockStage": 4,
+                "active": true
+              },
+              "resilience": {
+                "id": "resilience",
+                "name": "韌性",
+                "unlockRemainingPercent": 50,
+                "unlockStage": 5,
+                "active": true
+              },
+              "revenge": {
+                "id": "revenge",
+                "name": "復仇",
+                "unlockRemainingPercent": 40,
+                "unlockStage": 6,
+                "active": true
+              },
+              "backlash": {
+                "id": "backlash",
+                "name": "反噬",
+                "unlockRemainingPercent": 30,
+                "unlockStage": 7,
+                "active": true
+              },
+              "ignore": {
+                "id": "ignore",
+                "name": "無視",
+                "unlockRemainingPercent": 20,
+                "unlockStage": 8,
+                "active": true
+              },
+              "battleSpirit": {
+                "id": "battleSpirit",
+                "name": "戰意",
+                "unlockRemainingPercent": 10,
+                "unlockStage": 9,
+                "active": true
+              }
+            }
+          },
+          "aliveCount": 9,
+          "authority": {
+            "decisionField": "allowed",
+            "gapField": "gapHp",
+            "thresholdField": "fivePointHpGap",
+            "displayOnlyFields": [
+              "targetRemainingPercent",
+              "highestAliveRemainingPercent",
+              "gapPoints"
+            ]
+          }
+        }
+      },
+      "presentation": {
+        "token": 5,
+        "mode": "standard",
+        "playerHp": 1000000000000,
+        "playerMaxHp": 1000000000000,
+        "enemyHp": 1100000000,
+        "enemyMaxHp": 1100000000,
+        "playerShield": 0,
+        "playerShieldMax": 0,
+        "enemyShield": 0,
+        "enemyShieldMax": 0,
+        "actionStartedAt": null,
+        "action": null,
+        "index": 0,
+        "eventCount": 516517,
+        "lockPlayerFullHp": false
+      },
+      "run": {
+        "version": 4,
+        "runId": null,
+        "active": false,
+        "paused": false,
+        "looping": false,
+        "bossIndex": -1,
+        "deaths": 0,
+        "battles": 0,
+        "vip20Protections": 0,
+        "coreLevelAtStart": null,
+        "perDeathSuppressionPointsAtStart": null,
+        "pendingEvents": [],
+        "stopReason": "",
+        "stopMeta": null,
+        "recentBattleLimit": 20,
+        "recentBattles": [],
+        "lastBattleSummary": null
+      },
+      "hiddenProgress": {
+        "index": 0,
+        "id": "higher-dimensional-boss-01",
+        "name": "破界天裁",
+        "maxHp": 1100000000,
+        "currentHp": 0,
+        "remainingRatio": 0,
+        "remainingPercent": 0,
+        "remainingBasisPoints": 0,
+        "alive": false,
+        "defeated": true,
+        "stage": 9,
+        "stats": {
+          "index": 0,
+          "id": "higher-dimensional-boss-01",
+          "name": "破界天裁",
+          "maxHp": 1100000000,
+          "stage": 9,
+          "atk": 23460,
+          "def": 20800,
+          "crit": 28,
+          "dodge": 28,
+          "initiativeBonusPercent": 60,
+          "comboRate": 30,
+          "penetrationRate": 30,
+          "counterRate": 30,
+          "drainRate": 30
+        },
+        "abilities": {
+          "composure": {
+            "id": "composure",
+            "name": "鎮心",
+            "unlockRemainingPercent": 70,
+            "unlockStage": 3,
+            "active": true
+          },
+          "suppression": {
+            "id": "suppression",
+            "name": "壓制",
+            "unlockRemainingPercent": 60,
+            "unlockStage": 4,
+            "active": true
+          },
+          "resilience": {
+            "id": "resilience",
+            "name": "韌性",
+            "unlockRemainingPercent": 50,
+            "unlockStage": 5,
+            "active": true
+          },
+          "revenge": {
+            "id": "revenge",
+            "name": "復仇",
+            "unlockRemainingPercent": 40,
+            "unlockStage": 6,
+            "active": true
+          },
+          "backlash": {
+            "id": "backlash",
+            "name": "反噬",
+            "unlockRemainingPercent": 30,
+            "unlockStage": 7,
+            "active": true
+          },
+          "ignore": {
+            "id": "ignore",
+            "name": "無視",
+            "unlockRemainingPercent": 20,
+            "unlockStage": 8,
+            "active": true
+          },
+          "battleSpirit": {
+            "id": "battleSpirit",
+            "name": "戰意",
+            "unlockRemainingPercent": 10,
+            "unlockStage": 9,
+            "active": true
+          }
+        },
+        "challengeAllowed": false,
+        "challengeStatus": {
+          "allowed": false,
+          "challengeable": false,
+          "reason": "defeated",
+          "targetIndex": 0,
+          "target": {
+            "index": 0,
+            "id": "higher-dimensional-boss-01",
+            "name": "破界天裁",
+            "maxHp": 1100000000,
+            "currentHp": 0,
+            "remainingRatio": 0,
+            "remainingPercent": 0,
+            "remainingBasisPoints": 0,
+            "alive": false,
+            "defeated": true,
+            "stage": 9,
+            "stats": {
+              "index": 0,
+              "id": "higher-dimensional-boss-01",
+              "name": "破界天裁",
+              "maxHp": 1100000000,
+              "stage": 9,
+              "atk": 23460,
+              "def": 20800,
+              "crit": 28,
+              "dodge": 28,
+              "initiativeBonusPercent": 60,
+              "comboRate": 30,
+              "penetrationRate": 30,
+              "counterRate": 30,
+              "drainRate": 30
+            },
+            "abilities": {
+              "composure": {
+                "id": "composure",
+                "name": "鎮心",
+                "unlockRemainingPercent": 70,
+                "unlockStage": 3,
+                "active": true
+              },
+              "suppression": {
+                "id": "suppression",
+                "name": "壓制",
+                "unlockRemainingPercent": 60,
+                "unlockStage": 4,
+                "active": true
+              },
+              "resilience": {
+                "id": "resilience",
+                "name": "韌性",
+                "unlockRemainingPercent": 50,
+                "unlockStage": 5,
+                "active": true
+              },
+              "revenge": {
+                "id": "revenge",
+                "name": "復仇",
+                "unlockRemainingPercent": 40,
+                "unlockStage": 6,
+                "active": true
+              },
+              "backlash": {
+                "id": "backlash",
+                "name": "反噬",
+                "unlockRemainingPercent": 30,
+                "unlockStage": 7,
+                "active": true
+              },
+              "ignore": {
+                "id": "ignore",
+                "name": "無視",
+                "unlockRemainingPercent": 20,
+                "unlockStage": 8,
+                "active": true
+              },
+              "battleSpirit": {
+                "id": "battleSpirit",
+                "name": "戰意",
+                "unlockRemainingPercent": 10,
+                "unlockStage": 9,
+                "active": true
+              }
+            }
+          },
+          "aliveCount": 9,
+          "authority": {
+            "decisionField": "allowed",
+            "gapField": "gapHp",
+            "thresholdField": "fivePointHpGap",
+            "displayOnlyFields": [
+              "targetRemainingPercent",
+              "highestAliveRemainingPercent",
+              "gapPoints"
+            ]
+          }
+        }
+      },
+      "hiddenPresentation": null
+    },
+    "fixture": {
+      "disposableAuth": true,
+      "viewport": "390x844",
+      "realIPhone": false,
+      "gmBackground": false,
+      "hpLock": false
+    }
+  },
+  "errors": []
+}
