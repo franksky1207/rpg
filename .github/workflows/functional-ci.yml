@@ -69,7 +69,7 @@ jobs:
           node tests/runtime/unified-mobile-combat-viewport.cjs
           node tests/runtime/batch5-era-animation-contract.cjs
           node --test tests/runtime/batch7-layer-boundary.test.mjs
-          node tests/runtime/pr48-stop-contract.cjs
+          node tests/runtime/combat-events-contract.cjs
           node --test tests/equipment-gm/no-attack-aura.test.mjs
   monster:
     needs: classify
