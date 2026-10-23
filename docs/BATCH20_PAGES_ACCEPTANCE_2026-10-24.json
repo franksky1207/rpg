@@ -1,0 +1,462 @@
+{
+  "passed": true,
+  "mainSha": "4ee52cbb405ee16aed59f3ea67c130e2d607f772",
+  "site": "https://franksky1207.github.io/rpg/",
+  "observedAtUTC": "2026-10-23T18:21:41.831953+00:00",
+  "manifestEntries": 461,
+  "verifiedFiles": 75,
+  "catalogueIdentities": 1705,
+  "tlsVerified": true,
+  "rows": [
+    {
+      "path": "3d-test/monster-sprite-pool.mjs",
+      "http": 200,
+      "sha256": "123efb712fe574596841db77f7d91c14907511c904263327f1f3ebcd6d7b9808",
+      "bytes": 3348
+    },
+    {
+      "path": "3d-test/monster-sprites.mjs",
+      "http": 200,
+      "sha256": "60cf2011ee5e52be6151750826ab4a0cb118daa881ff5ebf7e2c3b852a57e541",
+      "bytes": 951899
+    },
+    {
+      "path": "assets/monsters/v1/alternate/boss-au-01-v01.webp",
+      "http": 200,
+      "sha256": "c5c217d299b702c336a7d0f790886aa62718dea6e61fe29dec3104948aca7435",
+      "bytes": 208562
+    },
+    {
+      "path": "assets/monsters/v1/alternate/boss-au-02-v01.webp",
+      "http": 200,
+      "sha256": "60967b4b112ab6f4a4f7b2bd84140eca0b6800757d606a9bd6c89b1642043721",
+      "bytes": 203258
+    },
+    {
+      "path": "assets/monsters/v1/alternate/boss-au-03-v01.webp",
+      "http": 200,
+      "sha256": "51224c9ed2894864e01892b051965738b387d923cef1410ee990c4d2001d10aa",
+      "bytes": 194208
+    },
+    {
+      "path": "assets/monsters/v1/alternate/boss-au-04-v01.webp",
+      "http": 200,
+      "sha256": "c3717b9ff9ab7ef34eef90d61d0ed142fe0c11d9370a33f4635f6f6f9a34c0f4",
+      "bytes": 277622
+    },
+    {
+      "path": "assets/monsters/v1/alternate/boss-au-05-v01.webp",
+      "http": 200,
+      "sha256": "c2b606601cc3a1698a52d24279bb59bd814e699bf36357dfa60eafcbc23f7fdf",
+      "bytes": 244246
+    },
+    {
+      "path": "assets/monsters/v1/alternate/boss-au-06-v01.webp",
+      "http": 200,
+      "sha256": "bc9ebaad63ef95782c772f72f8bdd2db56e2a15521927f6b0b0ebdc9e0e60ff7",
+      "bytes": 267950
+    },
+    {
+      "path": "assets/monsters/v1/biological/beast-01.webp",
+      "http": 200,
+      "sha256": "25f799509743011aaa4d0514e9de07981d87276051a04a5b4bd5178e8c167b4b",
+      "bytes": 102738
+    },
+    {
+      "path": "assets/monsters/v1/biological/bio-02.webp",
+      "http": 200,
+      "sha256": "2315c417eb6e14ddeefcb7f2e80eacede6e7a0334d40d5d5f0fd0e2ecad699ce",
+      "bytes": 191300
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-c-01-v01.webp",
+      "http": 200,
+      "sha256": "4e7f57536f8d1de03efae8a0b8c4c93551cee843fe28c73092a5f512330ee5cc",
+      "bytes": 86402
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-c-02-v01.webp",
+      "http": 200,
+      "sha256": "dd7ef08b6812efa58b2a4c49c19f73e59ecd56ae300efd565a00ae4bd0880514",
+      "bytes": 235982
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-c-03-v01.webp",
+      "http": 200,
+      "sha256": "3ff6ddbcb85286251fa6bc916b21009dffc0141f4c958a35f0b24d291fadcbb2",
+      "bytes": 72172
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-01-v01.webp",
+      "http": 200,
+      "sha256": "cb8b54c688304d2b74999da3c1a05cc3ed28be64fe924bd514709f3dad243a71",
+      "bytes": 224668
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-02-v01.webp",
+      "http": 200,
+      "sha256": "a126d7dfa3968cbb5d296fad447077a6ad58c7799652b83467897813b4624ddc",
+      "bytes": 316152
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-03-v01.webp",
+      "http": 200,
+      "sha256": "8829a03f1f9376c4d85ef1850b18a2b06327e5a6f6ae89db2c7ea8178e1e2eb9",
+      "bytes": 263766
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-05-v01.webp",
+      "http": 200,
+      "sha256": "f26afd315cab5b3bf00628bbbc683989b136ea12ff70b4bbfe1eb02ee10bd445",
+      "bytes": 310582
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-06-v01.webp",
+      "http": 200,
+      "sha256": "8ad12a2400b606c50e54c19b205fd8f94ca80a30c8ad30377baa631007245bd8",
+      "bytes": 114110
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-07-v01.webp",
+      "http": 200,
+      "sha256": "d7712eeb98710f7e2a2d50875cc457dc72f3c483b21f418a6e2a0118ac3cddb2",
+      "bytes": 320138
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-08-v01.webp",
+      "http": 200,
+      "sha256": "e4af3ba99ebb64d6b5abe3c5704e93f09a1f37642357ecc88264d1fa669d68f0",
+      "bytes": 127376
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-h-10-v01.webp",
+      "http": 200,
+      "sha256": "1958c30ff60b0daf1c67e741cb12c5ec76195336ecc00128e209076ae851df2b",
+      "bytes": 115804
+    },
+    {
+      "path": "assets/monsters/v1/boss/boss-u-01-v01.webp",
+      "http": 200,
+      "sha256": "d08377240a9b980a04082a3aa4323f3a1e91030ee8f58cd6c204e318524901e8",
+      "bytes": 70734
+    },
+    {
+      "path": "assets/monsters/v1/core/core-01.webp",
+      "http": 200,
+      "sha256": "f6aa423e3b5a6e07deda2705698427b1a018c1acd7b9bc7d14649e5554ad1d38",
+      "bytes": 241636
+    },
+    {
+      "path": "assets/monsters/v1/core/core-03.webp",
+      "http": 200,
+      "sha256": "dee77c6332340ade3f2c265b32e065d4ea81f0b63fba1e95ec3227431fa7da97",
+      "bytes": 305476
+    },
+    {
+      "path": "assets/monsters/v1/creature/beast-03.webp",
+      "http": 200,
+      "sha256": "21e21590aeb7037e57985e7100ef5e3f1a5237113ef519694f6d84963b982bb9",
+      "bytes": 246048
+    },
+    {
+      "path": "assets/monsters/v1/energy/energy-01.webp",
+      "http": 200,
+      "sha256": "9b90dddd04eb58af93868b03be2c2b48bffbf550789adf55529451183fe4b477",
+      "bytes": 168438
+    },
+    {
+      "path": "assets/monsters/v1/humanoid/cmd-01.webp",
+      "http": 200,
+      "sha256": "c9e919910bc80bdd0a51c72e3e6576027506db09a615c4db044d1deab8524d35",
+      "bytes": 181120
+    },
+    {
+      "path": "assets/monsters/v1/humanoid/cmd-03.webp",
+      "http": 200,
+      "sha256": "95725d758dceed5c47c37366324853953ca3d5a3c128857d0dbada499428d096",
+      "bytes": 277890
+    },
+    {
+      "path": "assets/monsters/v1/humanoid/hm-01.webp",
+      "http": 200,
+      "sha256": "8cf609169310d0e81a244675fe9e1612b6932285a31d3fd138d229cf7bf91b28",
+      "bytes": 75458
+    },
+    {
+      "path": "assets/monsters/v1/humanoid/hm-02.webp",
+      "http": 200,
+      "sha256": "222faefcec6533414e10f52dab148340d71d3fab2633875fc60942a15dd2278d",
+      "bytes": 108680
+    },
+    {
+      "path": "assets/monsters/v1/humanoid/hm-04.webp",
+      "http": 200,
+      "sha256": "e92605f9c04f611108a2c6bcff6dbeff73f937b5d39c4b5ca1f0e97dc2234c91",
+      "bytes": 129048
+    },
+    {
+      "path": "assets/monsters/v1/mechanical/dr-02.webp",
+      "http": 200,
+      "sha256": "3b17ac4bfd878daa2ddd535a034865031f94bf0e4cc960947ade556d1f41ee2e",
+      "bytes": 144238
+    },
+    {
+      "path": "assets/monsters/v1/mechanical/mech-01.webp",
+      "http": 200,
+      "sha256": "5cc137aad2ead71073aedc567ae13a56dae00d458c7560e3ce31642579f8b166",
+      "bytes": 238054
+    },
+    {
+      "path": "assets/monsters/v1/mechanical/mech-02.webp",
+      "http": 200,
+      "sha256": "9bb4cc17c794bfd53b7d8384132fa687ca952721e71d18f23ea3f988528e734c",
+      "bytes": 192414
+    },
+    {
+      "path": "assets/monsters/v1/mechanical/mech-03.webp",
+      "http": 200,
+      "sha256": "3064d8f3c79d1f38340a37204b98581769c9b238cc713b20f73fe41a74b9ce32",
+      "bytes": 271572
+    },
+    {
+      "path": "assets/monsters/v1/mechanical/veh-02.webp",
+      "http": 200,
+      "sha256": "e1d15a044c5af2a8e87ee1c278725d361204501902926dfedee3c8281ff6887a",
+      "bytes": 233024
+    },
+    {
+      "path": "assets/monsters/v1/starship/ship-01.webp",
+      "http": 200,
+      "sha256": "d9e44757158ec1b87a8bae5acd4467c6564d0573935e3059ce7d3fe66effac6b",
+      "bytes": 111612
+    },
+    {
+      "path": "assets/monsters/v1/starship/ship-04.webp",
+      "http": 200,
+      "sha256": "250600278e6d3f1924b7dd96b0d5e97402f35c2199d7bdc0ca4b65ac790c14a0",
+      "bytes": 156170
+    },
+    {
+      "path": "assets/monsters/v1/structure/fort-01.webp",
+      "http": 200,
+      "sha256": "f58b4e47af146c2e3deaa400cb401dd99781a7a2157cc47a61f2022a8f390b1b",
+      "bytes": 175996
+    },
+    {
+      "path": "assets/monsters/v1/structure/fort-03.webp",
+      "http": 200,
+      "sha256": "ea98eca12e63e0b7d4b1b418342ae9c08be7b1663b459672e5c7579a0c57f68e",
+      "bytes": 198470
+    },
+    {
+      "path": "assets/monsters/v1/void/void-phantom-v01.webp",
+      "http": 200,
+      "sha256": "6b52b6a956847f0ce77c0043187dbc3a85b6e87e12f2026476246187ff8c133d",
+      "bytes": 213902
+    },
+    {
+      "path": "calamitycore.js",
+      "http": 200,
+      "sha256": "349e087a69f2a50d3b4987344468feb785cdcb06ab616134e79e4a4a1fe8905c",
+      "bytes": 9725
+    },
+    {
+      "path": "calamityrun.js",
+      "http": 200,
+      "sha256": "34f73aeeb3df720b837090681ca0779d66e9c5a78e34946ceff9dce61d62bd18",
+      "bytes": 14781
+    },
+    {
+      "path": "calamityui.js",
+      "http": 200,
+      "sha256": "7f8bbcd88e41ee0e3ee9500a41fe405cc4577b48cbdd652f994bc4167bd871c1",
+      "bytes": 25375
+    },
+    {
+      "path": "calamityuiintegrity.js",
+      "http": 200,
+      "sha256": "f22df5b6a2d78ed153b32abc533a1ad528f4a9375a7ed1424a28c8148f9d74fc",
+      "bytes": 8115
+    },
+    {
+      "path": "civilizationcore.js",
+      "http": 200,
+      "sha256": "a830c5150ad52972b5229b44bf9b1f04a14022ded53acb5b847263612ee50cac",
+      "bytes": 4436
+    },
+    {
+      "path": "civilizationheritage.js",
+      "http": 200,
+      "sha256": "c336f82f0e846849596fc6c6ff2dfbb072e57b3328009d319b692a8953da4dc5",
+      "bytes": 1329
+    },
+    {
+      "path": "combatcore.js",
+      "http": 200,
+      "sha256": "dd5344db15e9b01ea480935efc90c278168d595a64f63aedb4c3020caf38bfdc",
+      "bytes": 24734
+    },
+    {
+      "path": "firstworldtargetcontext.js",
+      "http": 200,
+      "sha256": "87e32e7aaf12374a608ee38f7abe4220ec4887f7b5b8e566d9176c14785bc1d9",
+      "bytes": 20093
+    },
+    {
+      "path": "firstworldtargetcontextbatch5.js",
+      "http": 200,
+      "sha256": "ddd455c8a734d1a114f81ed25906737aa5ad90cbc9a3cee322b24daa6a0d5ae1",
+      "bytes": 5628
+    },
+    {
+      "path": "galaxyreviewintegrity.js",
+      "http": 200,
+      "sha256": "2c65a5d5ff31e38531880c61d67663d6d2451bcdd3dd5dc5e5dd829c624cd08a",
+      "bytes": 738
+    },
+    {
+      "path": "gameguide.js",
+      "http": 200,
+      "sha256": "aeac64f4b6cecd61ce0439be21e3cb8ec4cdec590e1305593a434551ee9e3ee3",
+      "bytes": 38295
+    },
+    {
+      "path": "index.html",
+      "http": 200,
+      "sha256": "451e5848a0dc30534ca834e7401691438ec42fb616123f487846c080d832026f",
+      "bytes": 48037
+    },
+    {
+      "path": "markcore.js",
+      "http": 200,
+      "sha256": "d8b8d4252411c99528a2b49da27b4c42fcaf24a2427dd61d5dbc390a6c249be8",
+      "bytes": 9621
+    },
+    {
+      "path": "monstercodex.js",
+      "http": 200,
+      "sha256": "7c48cd2e818bd4990a3e21ef703eb242591d55035ae7128f1b2055169a8e7393",
+      "bytes": 7091
+    },
+    {
+      "path": "monstercodexdata.js",
+      "http": 200,
+      "sha256": "17f583a6c650b0541ebd794f0ecc7c5d69349db236664e204941c4ca02f63496",
+      "bytes": 622881
+    },
+    {
+      "path": "monstercodeximage.mjs",
+      "http": 200,
+      "sha256": "3a95af6e3a9595b0755a8a8ffa4554f454249c471b133a6f7f14748bd45aa723",
+      "bytes": 579
+    },
+    {
+      "path": "playersemanticsui.js",
+      "http": 200,
+      "sha256": "97e1701d0adb6e319b54e09c8eefd5749e01c5fc34825386e38fa8540042afaa",
+      "bytes": 12952
+    },
+    {
+      "path": "savemigration.js",
+      "http": 200,
+      "sha256": "4405016d45147aac4e9af9cf63363bc72dccaaf19d5d9a3f79ec98e1deb1a38b",
+      "bytes": 22699
+    },
+    {
+      "path": "secondworldcalamity.js",
+      "http": 200,
+      "sha256": "d59d1047a30c0f4adb2053bd69ca8dd094f87f0e00fcc7c54968ef2bd79d66ef",
+      "bytes": 11006
+    },
+    {
+      "path": "secondworldcalamityrun.js",
+      "http": 200,
+      "sha256": "c251742c592fd16851b06964378d828f225ed325dc3804a922937889b36e20d9",
+      "bytes": 17888
+    },
+    {
+      "path": "secondworldcalamityui.js",
+      "http": 200,
+      "sha256": "7167d14a541afba3031f58bc8c46f3c524aefd91f285869ad25fd576dba25adf",
+      "bytes": 22056
+    },
+    {
+      "path": "secondworldcalamityuiintegrity.js",
+      "http": 200,
+      "sha256": "824d7ead6a1ce55f483dccd86b089cdbeaa21d8edea827fb3a1240ec096466f3",
+      "bytes": 6936
+    },
+    {
+      "path": "secondworldcombat.js",
+      "http": 200,
+      "sha256": "6fe736e69df499fb85076b17d10c18c0ebee1bdaaeba5959ab3fa8e122fdc1ae",
+      "bytes": 8573
+    },
+    {
+      "path": "secondworldmainline.js",
+      "http": 200,
+      "sha256": "107c2dca6142ad1bbeae612363944bec6403a69dc18b5fc211ac121a336113d0",
+      "bytes": 19745
+    },
+    {
+      "path": "specialcore.js",
+      "http": 200,
+      "sha256": "4d32a64fe30ce86878f02ea8547406a94e57648a9df29bfce0fc43d5fb2f3fd9",
+      "bytes": 3742
+    },
+    {
+      "path": "storyrecordtabs.js",
+      "http": 200,
+      "sha256": "69c5f98f5f326e0b619aeed01e158406563f2db8722f674cd7995dc0794c6a97",
+      "bytes": 8787
+    },
+    {
+      "path": "thirdworldcombat.js",
+      "http": 200,
+      "sha256": "aea3e8d609db9f64609b9b333b7b1dd7cd528dad228adc8b2edc1f1b9cf14583",
+      "bytes": 20938
+    },
+    {
+      "path": "thirdworldcombatintegrity.js",
+      "http": 200,
+      "sha256": "0955960211db5c4648e1f65e5d6f912b1699204e40cd9d932ba3ecca93acb1dd",
+      "bytes": 25315
+    },
+    {
+      "path": "thirdworldguidecopy.js",
+      "http": 200,
+      "sha256": "c92554aa899f2c15d152c6154e58d8ad88c013e6117d1ac23fab636a9b0c1bbb",
+      "bytes": 8377
+    },
+    {
+      "path": "thirdworldintegritycontract.js",
+      "http": 200,
+      "sha256": "d96e1e03eed8b65ce9bead1a9c14414e45dc73e2afc33629977abf3b1d4560d4",
+      "bytes": 16902
+    },
+    {
+      "path": "thirdworldui.js",
+      "http": 200,
+      "sha256": "9a755cf438a4be3e761076b28bdf7fab1dc3f80128b22e64626f4c5a431b6be0",
+      "bytes": 27311
+    },
+    {
+      "path": "ui.js",
+      "http": 200,
+      "sha256": "600c07e6cf01861b0491b980a8830d43bf75bd26d25ad4b9edde1cf4c2eca916",
+      "bytes": 50812
+    },
+    {
+      "path": "worldmapui.css",
+      "http": 200,
+      "sha256": "d10c8fa97b89ba6426763630fde16d00a90b21aefe9bc3c126b467c1d1a6e630",
+      "bytes": 3869
+    },
+    {
+      "path": "worldmapui.js",
+      "http": 200,
+      "sha256": "d0fa892aa5a4fff824e427dca938ae7ac63e70ec837bc080ce08289c3dc0da73",
+      "bytes": 20226
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # 第20批整合施工與驗收
 
-狀態：功能已整合於 `batch20/integration`；尚待必要 Actions、單一 PR 合併及正式 Pages 驗收，**尚未封箱／上線**。
+狀態：第20批已完成整合、必要自動化驗收及正式發布。PR [#90](https://github.com/franksky1207/rpg/pull/90) 已合併；功能 main `4ee52cbb405ee16aed59f3ea67c130e2d607f772`，最終 PR HEAD `1c6a778a226af00a611cfc2f43e40f96ff62a374`。iPhone 真機與真帳號雲端往返仍待人工，不列為已驗收。
 
 基準：GitHub `main` `f0990025`。規格以正式規劃末尾「第20批補充定案｜2026-10-24」及本次使用者完整施工授權為準。第19-4批未納入本次工作。
 
@@ -50,7 +50,7 @@
 - 既有 native live bosses 5入口、live dungeons 兩紀元8入口通過；宇宙災厄測試 fixture 由「已完成Lv.1」改成「未完成Lv.0」，保留原正常挑戰及渲染斷言。
 - Browser runtime smoke 通過。現有舊版診斷 warning 不等於正式 hard gate；未改動無關舊診斷以消音。
 - `batch20-notice-protection.cjs` 對基準 SHA 逐位元比較災厄解鎖／現身提示、核心確認、通知 owner、音訊／樣式及正式數值／轉生 owner；formal combat core 除登錄呼叫外逐位元一致。
-- Publish dry-run：新模組及靜態圖片依賴可發布，missingRefs=0；正式 Pages 尚待合併後驗收。
+- Publish dry-run：新模組及靜態圖片依賴可發布，missingRefs=0；正式 Pages 已於功能 main 發布後逐檔核對，證據見下方。
 
 ## CI 契約相容修復
 
@@ -62,9 +62,42 @@ PR [#90](https://github.com/franksky1207/rpg/pull/90) 首輪 `0a08a3c0` 的 Func
 
 補強提示相依保護：status 的原 unlock 快照維持不變供現身提示使用；正式 canChallenge／啟動／結果UI各自阻擋已完成階段，避免完成後阻擋改變任何舊提示的判定輸入。
 
-## 發布紀錄（待補）
+## 正式發布與封箱紀錄（2026-10-24）
 
-PR、功能提交 SHA、合併 SHA、必要 Actions URL 與 Pages 結果在實際完成後補記，不能把本機測試當作正式上線。
+- 單一 PR：[#90](https://github.com/franksky1207/rpg/pull/90)，2026-10-23 18:14:56 UTC 合併。
+- 最終 PR HEAD：`1c6a778a226af00a611cfc2f43e40f96ff62a374`；14 項檢查全部成功。Runtime 最後瀏覽器 job 的實際日誌亦核對無測試失敗；22項存檔／說明及46項原生音訊案例通過。
+- squash 合併／功能 main：`4ee52cbb405ee16aed59f3ea67c130e2d607f772`；git diff 確認與通過驗收的 PR tree 完全相同。下列同 SHA main Actions 全部成功；文件封箱提交不冒充另跑完整 Runtime。
+
+PR 必要 Actions：
+
+- [Fast Preflight](https://github.com/franksky1207/rpg/actions/runs/39998164943)：成功。
+- [Runtime Integrity](https://github.com/franksky1207/rpg/actions/runs/39998164850)：成功。
+- [Functional CI](https://github.com/franksky1207/rpg/actions/runs/39998164898)：成功。
+- [Equipment Formal](https://github.com/franksky1207/rpg/actions/runs/39998164895)：成功。
+- [GM Integration](https://github.com/franksky1207/rpg/actions/runs/39998164860)：成功。
+- [GM Terminology](https://github.com/franksky1207/rpg/actions/runs/39998164839)：成功。
+
+同 SHA main Actions：
+
+- [Asset Version Manifest](https://github.com/franksky1207/rpg/actions/runs/40001740977)：成功。
+- [Equipment 2.5D Formal Battle](https://github.com/franksky1207/rpg/actions/runs/40001740630)：成功。
+- [Publish Optimized GitHub Pages](https://github.com/franksky1207/rpg/actions/runs/40001740722)：成功。
+- [Runtime Integrity](https://github.com/franksky1207/rpg/actions/runs/40001740883)：成功。
+- [Publish Asset Audit (Stage 2)](https://github.com/franksky1207/rpg/actions/runs/40001740881)：成功。
+- [Story Integrity](https://github.com/franksky1207/rpg/actions/runs/40001740853)：成功。
+- [HTML JS CSS Cache Version Guard](https://github.com/franksky1207/rpg/actions/runs/40001740849)：成功。
+- [Publication Dry Run (Stage 3)](https://github.com/franksky1207/rpg/actions/runs/40001740755)：成功。
+- [Galaxy 3D Button Browser Smoke](https://github.com/franksky1207/rpg/actions/runs/40001740832)：成功。
+- [Equipment 2.5D GM Integration](https://github.com/franksky1207/rpg/actions/runs/40001740771)：成功。
+- [Publish Release Gate (Stage 4)](https://github.com/franksky1207/rpg/actions/runs/40001740748)：成功。
+- [Functional CI](https://github.com/franksky1207/rpg/actions/runs/40001740774)：成功。
+
+正式 Pages：[文明戰線](https://franksky1207.github.io/rpg/)。build／deploy 成功後，於 `2026-10-23T18:21:41.831953+00:00` 經驗證 TLS 的 HTTPS GET 比對完整 resource manifest（461 筆）及 75 個實際發布檔案的完整位元組與 SHA-256，涵蓋本批變更的發布檔、1705身份資料、靜態圖模組、既有正式數值 owner 與全部 registry 圖片；全部 HTTP 200、與同 SHA publish bundle 一致。逐檔證據見 [Pages SHA驗收清單](BATCH20_PAGES_ACCEPTANCE_2026-10-24.json)。不是只驗 URL 可開啟。正式 Pages 瀏覽器驗收由上列發布 workflow 對實際 staged artifact 執行；本機外部 origin 瀏覽器受網路代理憑證限制，未冒稱為正式 origin 人工點擊。
+
+本機另以原生 Service Worker 與未修改的 resource-cache-client，使用 localhost HTTPS eligibility fixture 驗證清空資源再開圖鑑後靜態圖片恢復、完整角色 JSON 保持一致；此為本機替身，不等同 iPhone 真機清快取驗收。手機390px三紀元畫面實測無水平溢出、首頁維持10格。
+
+工程項目封箱；以下人工待驗項目保留。沒有未解決的自動化／發布阻斷。
+
 
 ## 人工待驗證
 
