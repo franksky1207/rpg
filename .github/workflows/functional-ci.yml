@@ -1,0 +1,204 @@
+name: Functional CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: functional-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      combat: ${{ steps.impact.outputs.combat }}
+      monster: ${{ steps.impact.outputs.monster }}
+      gm: ${{ steps.impact.outputs.gm }}
+      equipment: ${{ steps.impact.outputs.equipment }}
+      background: ${{ steps.impact.outputs.background }}
+      resource: ${{ steps.impact.outputs.resource }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify change-impact decisions and HTML asset versions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/ci-impact.cjs --self-test
+          node tests/runtime/html-cache-version-guard.js --self-test
+          BASE="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE="HEAD^"; fi
+          node tests/runtime/html-cache-version-guard.js "$BASE" HEAD
+      - id: impact
+        name: Classify changed functionality
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE="HEAD^"; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            node scripts/ci-impact.cjs "$BASE" HEAD --all >> "$GITHUB_OUTPUT"
+          else
+            node scripts/ci-impact.cjs "$BASE" HEAD >> "$GITHUB_OUTPUT"
+          fi
+  combat:
+    needs: classify
+    if: needs.classify.outputs.combat == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Battle lifecycle, positioning, and transition contracts
+        run: |
+          node tests/runtime/combat-events-integration.cjs
+          node tests/runtime/cross-combat-stale-continuous-regression.cjs
+          node tests/runtime/cross-mode-late-settlement-regression.cjs
+          node tests/runtime/unified-combat-runtime-contract.cjs
+          node tests/runtime/unified-mobile-combat-viewport.cjs
+          node tests/runtime/batch5-era-animation-contract.cjs
+          node tests/runtime/batch12-presentation-safety.cjs
+          node tests/runtime/pr48-stop-contract.cjs
+          node --test tests/equipment-gm/no-attack-aura.test.mjs
+  monster:
+    needs: classify
+    if: needs.classify.outputs.monster == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0
+      - name: Live monster identity, assets, dungeons, bosses and alternate world contracts
+        run: |
+          python3 tests/runtime/batch13-monster-assets.py
+          python3 tests/runtime/batch17-boss-assets.py
+          python3 tests/runtime/batch18-alternate-assets.py
+          python3 scripts/generate-monster-trial-registry.py --check
+          node --test tests/runtime/batch13-monster-pool.test.mjs
+          node tests/runtime/batch16-special-contract.cjs
+          node tests/runtime/batch16-cache.cjs
+          node tests/runtime/batch17-cache.cjs
+          node tests/runtime/batch18-cache.cjs
+      - name: Chromium browser functional samples
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          node scripts/build-publish-dry-run.cjs
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/monster-ci-http.log 2>&1 &
+          sleep 2
+          node tests/runtime/batch16-mirror-browser.cjs
+          node tests/runtime/batch16-live-dungeons-browser.cjs
+          node tests/runtime/batch17-live-bosses-browser.cjs
+          node tests/runtime/batch18-native-live-browser.cjs
+          node tests/runtime/batch18-monster-recovery-browser.cjs
+  gm:
+    needs: classify
+    if: needs.classify.outputs.gm == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          node tests/runtime/gm-animation-center-terminology.cjs
+          node tests/runtime/3d-player-snapshot-contract.js
+          node tests/runtime/gm-runtime-early-restore-integrity.js
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-functional-http.log 2>&1 &
+          sleep 2
+          node tests/runtime/batch19-2-gm-center-browser.cjs
+          node tests/runtime/gm-3d-test-center-browser.js
+  equipment:
+    needs: classify
+    if: needs.classify.outputs.equipment == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install Pillow==11.3.0
+      - run: |
+          python3 scripts/formal-equipment-identities.py
+          python3 scripts/equipment-sprites.py validate
+          python3 scripts/equipment-gm-publication.py --check
+          node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
+  background:
+    needs: classify
+    if: needs.classify.outputs.background == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          node tests/runtime/batch2-background-sleeper-lifecycle.cjs
+          node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
+          node tests/runtime/special-fast-catchup-integrity.js
+          node tests/runtime/newstate-save-owner-integrity.js
+          node tests/runtime/alternate-universe-old-save-integrity.js
+          node tests/runtime/reincarnation-transaction-integrity.js
+  resource:
+    needs: classify
+    if: needs.classify.outputs.resource == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: |
+          node tests/runtime/resource-manifest-integrity.js
+          node tests/runtime/resource-cache-integrity.js
+          node tests/runtime/resource-cache-behavior.js
+          node tests/runtime/resource-cache-prefetch-integrity.js
+          node scripts/publish-asset-audit.cjs
+  gate:
+    name: functional-ci-gate
+    needs: [classify, combat, monster, gm, equipment, background, resource]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Require all selected domains to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import os,json,sys
+          jobs=json.loads(os.environ['NEEDS_JSON'])
+          for name,item in jobs.items():
+              outcome=item['result']
+              print(name, outcome)
+              if name=='classify' and outcome!='success':sys.exit(1)
+              if outcome not in ('success','skipped'):sys.exit(1)
+          PY
