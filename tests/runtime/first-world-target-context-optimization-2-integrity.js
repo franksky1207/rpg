@@ -53,7 +53,7 @@ const assert=require("assert");
   assert.equal(report.first.sessionContextId,report.first.contextId);assert.equal(report.repeat.sameContext,true);assert.equal(report.repeat.sameSession,true);
   assert.equal(report.battle.targetId,report.first.contextId);assert.equal(report.battle.targetSessionId,report.first.sessionId);assert.equal(report.battle.immutable,true);
   assert.equal(report.second.newContext,true);assert.equal(report.second.newSession,true);assert.equal(report.fallbackNull,true);
-  assert.equal(report.formalStable,true);assert.equal(report.runtimeOnly,true);assert.equal(report.saveSchema,17);
+  assert.equal(report.formalStable,true);assert.equal(report.runtimeOnly,true);assert.equal(report.saveSchema,18);
   Object.entries(report.source).forEach(([name,value])=>assert.equal(value,true,`Optimization 2 source contract failed: ${name}`));
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
   console.log("First-world Target Context optimization 2 integrity passed:",JSON.stringify(report));

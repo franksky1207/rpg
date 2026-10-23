@@ -62,7 +62,21 @@ const testUrl=new URL(process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/inde
   else{assert.ok(outcome.race);assert.equal(outcome.race.calculatedWin,type==='near-win');assert.equal(outcome.progress,0);assert.equal(outcome.gold,777);assert.equal(outcome.weapon,seeded.weapon);assert.equal(outcome.lost,0);}
   raceCases.push({type,...outcome});
  }
+ const alternate=[];
+ await restored.evaluate(()=>{
+  Object.defineProperty(document,'visibilityState',{configurable:true,get:()=>'visible'});Object.defineProperty(document,'hidden',{configurable:true,get:()=>false});document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('focus'));closeBattleResultModal();
+  window.animateStructuredCombatPresentation=window.__raceOriginalPlay;state=newState();state.introSeen=true;state.level=1000;state.secondWorld.entered=true;state.secondWorld.civilizationLevel=10;state.thirdWorld=createBlankThirdWorldState();state.thirdWorld.entered=true;state.thirdWorld.entryVersion=2;state.thirdWorld.bosses.forEach(b=>b.currentHp=0);state.reincarnation.alternateUniverse.unlocked=true;
+  window.playerCombatStats=()=>({hp:50000,atk:300,def:1000,crit:0,dodge:0});state.hp=50000;Math.random=()=>.5;view='home';render();
+ });
+ for(let retry=0;retry<2;retry++){
+  await restored.evaluate(()=>{void challengeAlternateUniverseFormal();});await restored.waitForFunction(()=>!!CivilizationCombatLifecycle.snapshot());
+  const active=await restored.evaluate(()=>({attempt:alternateUniverseActiveAttempt(),formal:JSON.stringify(state.reincarnation.alternateUniverse)}));
+  await restored.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});Object.defineProperty(document,'visibilityState',{configurable:true,get:()=>'hidden'});document.dispatchEvent(new Event('visibilitychange'));});await restored.waitForFunction(()=>!CivilizationCombatLifecycle.snapshot());
+  assert.equal(await restored.evaluate(()=>JSON.stringify(state.reincarnation.alternateUniverse)),active.formal,'interruption does not settle or abandon the persistent attempt');alternate.push(active.attempt);
+  await restored.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>false});Object.defineProperty(document,'visibilityState',{configurable:true,get:()=>'visible'});document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('focus'));});
+ }
+ assert.equal(alternate[0].attemptId,alternate[1].attemptId,'retry reuses the same legal attempt');
  assert.deepEqual(errors,[]);
- fs.writeFileSync(process.env.FOREGROUND_REPORT||'/tmp/foreground-combat-recovery.json',JSON.stringify({rendererCrash:{committed,loaded},mirror:{first,mirrorRecovery},schema,raceCases,realIPhone:false},null,2));console.log('PASS crash recovery, mirror completed-battle isolation, and Schema18 exact backup');
+ fs.writeFileSync(process.env.FOREGROUND_REPORT||'/tmp/foreground-combat-recovery.json',JSON.stringify({rendererCrash:{committed,loaded},mirror:{first,mirrorRecovery},schema,raceCases,alternate,realIPhone:false},null,2));console.log('PASS crash recovery, mirror completed-battle isolation, and Schema18 exact backup');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

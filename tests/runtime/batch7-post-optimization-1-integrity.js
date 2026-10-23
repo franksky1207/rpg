@@ -51,7 +51,7 @@ const fs=require("fs");
    return {schema:window.SAVE_SCHEMA_VERSION,breakthroughCore:window.BREAKTHROUGH_CORE_INTEGRITY,gmBreakthrough:window.GM_BREAKTHROUGH_MANAGEMENT_INTEGRITY,formalTx:window.GM_FORMAL_TRANSACTION_INTEGRITY,plans,rebuilt,rebuildSnapshot,sameLifeResult,sameLifeAttempt,sameLifeAfter,firstResult,firstStable,gmPlan,enhancement:{slots,success,successState,successSaveCalls,failed,failedStable,failedSaveCalls,exception,exceptionStable,exceptionSaveCalls,uiTransactionVersion:window.gmApplyEnhancementLevels?.__gmFormalTransactionVersion||0}};
   });
 
-  assert.equal(report.schema,17,"Optimization must not bump save schema.");
+  assert.equal(report.schema,18,"Optimization must preserve the current foreground-income Schema18 baseline.");
   assert.equal(report.breakthroughCore.passed,true,"Breakthrough core self-integrity failed: "+JSON.stringify(report.breakthroughCore.errors||null));
   assert.equal(report.gmBreakthrough.passed,true,"GM breakthrough self-integrity failed: "+JSON.stringify(report.gmBreakthrough.errors||null));
   assert.equal(report.formalTx.passed,true,"GM formal transaction self-integrity failed: "+JSON.stringify(report.formalTx.errors||null));

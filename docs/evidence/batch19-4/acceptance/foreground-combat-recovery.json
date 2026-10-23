@@ -19,13 +19,13 @@
     "first": {
       "wins": 0,
       "losses": 1,
-      "startedAt": 1792760947524,
+      "startedAt": 1792761903983,
       "vip": 0
     },
     "mirrorRecovery": {
       "wins": 0,
       "losses": 1,
-      "startedAt": 1792760947524,
+      "startedAt": 1792761903983,
       "vip": 0,
       "resumable": true,
       "resumed": true
@@ -50,7 +50,7 @@
       },
       "gold": 777,
       "progress": 0,
-      "weapon": "mvkzl0kxzn1fu8n1fub",
+      "weapon": "mvl05hprzn1fu8n1fub",
       "lost": 0,
       "exp": 0,
       "level": 1
@@ -66,7 +66,7 @@
       },
       "gold": 777,
       "progress": 0,
-      "weapon": "mvkzl0wl3lllllllllm",
+      "weapon": "mvl05i153lllllllllm",
       "lost": 0,
       "exp": 0,
       "level": 1
@@ -76,10 +76,30 @@
       "race": null,
       "gold": 787,
       "progress": 1,
-      "weapon": "mvkzl179zn1fu8n1fub",
+      "weapon": "mvl05ijszn1fu8n1fub",
       "lost": 0,
       "exp": 29,
       "level": 1
+    }
+  ],
+  "alternate": [
+    {
+      "lifeId": 0,
+      "depth": 1,
+      "attemptId": "au-0-1-1918a9b6-cdfa-4e08-a270-67a8bcc39953",
+      "traits": [
+        "swift",
+        "deadly"
+      ]
+    },
+    {
+      "lifeId": 0,
+      "depth": 1,
+      "attemptId": "au-0-1-1918a9b6-cdfa-4e08-a270-67a8bcc39953",
+      "traits": [
+        "swift",
+        "deadly"
+      ]
     }
   ],
   "realIPhone": false
