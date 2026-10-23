@@ -31,10 +31,6 @@ on:
       - 'adventureuipolish.css'
       - 'thirdworldarena.css'
       - 'assets/**'
-      - 'docs/archive/**'
-      - 'README.md'
-      - 'PROJECT_HANDOFF.md'
-      - 'PROJECT_PENDING_STATUS.md'
       - '.github/workflows/runtime-integrity.yml'
   pull_request:
     paths:
@@ -163,6 +159,77 @@ jobs:
           node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+      - name: Run unlimited VIP integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+      - name: Run GM mainline HP lock integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: set -o pipefail; node tests/runtime/gm-mainline-hp-lock-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+      - name: Run background asset integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: set -o pipefail; node tests/runtime/asset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+      - name: Run project documentation integrity
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: set -o pipefail; node tests/runtime/docs-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+      - name: Upload runtime integrity diagnostics
+        if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-integrity-report
+          path: |
+            runtime-integrity-report.txt
+            3d-player-browser-report.json
+            3d-equipment-browser-report.json
+            audio-lifecycle-browser-report.json
+            combat-events-browser-report.json
+            combat-events-owner-browser-report.json
+            /tmp/pr48-viewport-browser.json
+            /tmp/pr48-live-combat.json
+            /tmp/pr48-mode-matrix.json
+            /tmp/t3b-formal-renderer-browser.json
+            /tmp/batch28-consolidated
+          if-no-files-found: ignore
+          retention-days: 1
+  runtime-browser-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check whether this push is still main head
+        id: freshness
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          sleep 5
+          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
+          if [ "$latest" = "$GITHUB_SHA" ]; then
+            echo "current=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "current=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping stale intermediate commit $GITHUB_SHA; current main is $latest."
+          fi
+      - uses: actions/setup-node@v4
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        with:
+          node-version: '24'
+      - name: Install browser smoke dependency
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        run: |
+          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+          npx playwright install --with-deps chromium webkit
+      - name: Run parallel browser runtime and reincarnation regression
+        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
           node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
@@ -220,34 +287,13 @@ jobs:
           node tests/runtime/special-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run unlimited VIP integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run GM mainline HP lock integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/gm-mainline-hp-lock-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run background asset integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/asset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run project documentation integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/docs-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Upload runtime integrity diagnostics
+
+      - name: Upload runtime browser regression diagnostics
         if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-integrity-report
+          name: runtime-browser-regression
           path: |
             runtime-integrity-report.txt
-            3d-player-browser-report.json
-            3d-equipment-browser-report.json
-            audio-lifecycle-browser-report.json
-            combat-events-browser-report.json
-            combat-events-owner-browser-report.json
-            /tmp/pr48-viewport-browser.json
-            /tmp/pr48-live-combat.json
-            /tmp/pr48-mode-matrix.json
-            /tmp/t3b-formal-renderer-browser.json
-            /tmp/batch28-consolidated
           if-no-files-found: ignore
           retention-days: 1
