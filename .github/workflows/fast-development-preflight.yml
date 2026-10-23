@@ -1,0 +1,36 @@
+name: Fast Development Preflight
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fast-preflight-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Analyze change impact, versioned assets and historical guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$BASE" ]; then BASE="HEAD^"; fi
+          node scripts/dev-fast-preflight.cjs "$BASE"
+      - name: Collect preflight evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-preflight-${{ github.run_id }}
+          path: |
+            index.html
+            tests/runtime/pr48-presentation-baseline.cjs
+          retention-days: 7
