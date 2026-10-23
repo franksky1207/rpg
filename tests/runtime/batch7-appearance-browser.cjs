@@ -51,7 +51,7 @@ const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
   for(const [i,id,label] of [[0,"galaxy","銀河戰甲"],[1,"universe","宇宙戰甲"],[2,"higher","高維戰甲"]]){assert.equal(report.worlds[i].id,id);assert.ok(report.worlds[i].html.includes("目前依所在紀元顯示："+label));}
   assert.equal(report.firstDefault,"higher");assert.equal(report.selected.ok,true);assert.ok(report.noStateWrites);assert.deepEqual(report.gear,["universe","universe","universe"]);assert.equal(report.repeat,"universe");
   assert.deepEqual(report.mismatch,{locked:true,selected:false,choice:null});assert.equal(report.otherDefault,"higher");assert.equal(report.otherChoice,"galaxy");assert.ok(report.signoutLocked);assert.equal(report.restored,"universe");
-  assert.deepEqual(report.imported,{count:4,choice:"universe",version:17});assert.ok(report.legacyLocked&&report.noPreferenceInSave&&report.selectorFits&&report.releasedArt);
+  assert.deepEqual(report.imported,{count:4,choice:"universe",version:18});assert.ok(report.legacyLocked&&report.noPreferenceInSave&&report.selectorFits&&report.releasedArt);
   await page.selectOption("#civilizationEraAppearanceChoice","galaxy");assert.equal(await page.evaluate(()=>CivilizationEraAppearanceContract.choice()),"galaxy");
   const cloudUpload=await page.evaluate(async()=>{
    const before=CivilizationEraAppearanceContract.choice();let payload=null;
@@ -61,7 +61,7 @@ const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
    try{await civilizationCloudSave.upload();}finally{civilizationAuth.getClient=oldClient;window.confirm=oldConfirm;}
    return {called:!!payload,version:payload?.save_data?.saveVersion,preferenceUnchanged:before===CivilizationEraAppearanceContract.choice(),containsAppearance:JSON.stringify(payload).includes("civilization-war-era-appearance")};
   });
-  assert.deepEqual(cloudUpload,{called:true,version:17,preferenceUnchanged:true,containsAppearance:false});
+  assert.deepEqual(cloudUpload,{called:true,version:18,preferenceUnchanged:true,containsAppearance:false});
   await page.reload({waitUntil:"load"});await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==="ready");
   assert.equal(await page.evaluate(()=>{state.reincarnation.count=2;return CivilizationEraAppearanceContract.choice();}),"galaxy");
   // Execute the actual download/migrate/save/reload owner with a local service
@@ -74,7 +74,7 @@ const base=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
   });
   await reloaded;await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==="ready");
   const cloudDownload=await page.evaluate(()=>({count:CivilizationEraAppearanceContract.reincarnationCount(),choice:CivilizationEraAppearanceContract.choice(),version:state.saveVersion}));
-  assert.deepEqual(cloudDownload,{count:5,choice:"galaxy",version:17});
+  assert.deepEqual(cloudDownload,{count:5,choice:"galaxy",version:18});
   assert.deepEqual(errors,[]);reports.push({viewport,...report,cloudUpload,cloudDownload,errors});await page.close();
  }}finally{await browser.close();}
  fs.writeFileSync("/tmp/batch7-appearance-browser.json",JSON.stringify({realDevice:false,realCloudAccount:false,reports},null,2)+"\n");console.log("PASS Batch7 real-page lexical state, epochs, historical/current import, account owner isolation, signout, reload and mobile settings");
