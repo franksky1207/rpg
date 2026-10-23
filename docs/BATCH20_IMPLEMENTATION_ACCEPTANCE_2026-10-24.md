@@ -58,6 +58,8 @@ PR [#90](https://github.com/franksky1207/rpg/pull/90) 首輪 `0a08a3c0` 的 Func
 
 熱路徑用 WeakMap 管理每份合法圖鑑 root 的去重 Set，避免 Fast Catch-up 每場重新排序／複製全部已遭遇身份。合成 state／測試 RNG／GM mark overrides 會標記 fixture，避免診斷測試補登正式圖鑑。
 
+本機原生音訊回歸另通過46案例（隔離登入SDK替身、原生media playing事件、單一音軌及雲端阻擋）；正常三紀元音訊 owner 檢查改為實際的 battlepipeline／secondworldmainline／thirdworldrun，避免誤把已刪除的 UI 回顧音訊當成正式主線 owner。音訊實作本身完全未修改。必要 Runtime 現在直接執行第20批來源及提示保護回歸。
+
 ## 發布紀錄（待補）
 
 PR、功能提交 SHA、合併 SHA、必要 Actions URL 與 Pages 結果在實際完成後補記，不能把本機測試當作正式上線。
