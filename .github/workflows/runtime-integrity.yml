@@ -42,9 +42,14 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
+concurrency:
+  group: runtime-integrity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   runtime-integrity:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -120,6 +125,7 @@ jobs:
           npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
           npx playwright install --with-deps chromium webkit
       - name: Run real browser runtime smoke
+        timeout-minutes: 13
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
         run: |
@@ -193,6 +199,7 @@ jobs:
           retention-days: 1
   runtime-browser-regression:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -220,6 +227,7 @@ jobs:
           npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
           npx playwright install --with-deps chromium webkit
       - name: Run parallel browser runtime and reincarnation regression
+        timeout-minutes: 9
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
         run: |
