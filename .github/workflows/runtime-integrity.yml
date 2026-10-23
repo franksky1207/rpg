@@ -36,6 +36,13 @@ on:
       - 'PROJECT_HANDOFF.md'
       - 'PROJECT_PENDING_STATUS.md'
       - '.github/workflows/runtime-integrity.yml'
+  pull_request:
+    paths:
+      - 'tests/runtime/pr48-*.cjs'
+      - 'tests/runtime/unified-mobile-combat-viewport*.cjs'
+      - 'combat-viewport-coordinator.js'
+      - 'battle-mobile-viewport.css'
+      - '.github/workflows/runtime-integrity.yml'
   workflow_dispatch:
 
 jobs:
