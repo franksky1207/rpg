@@ -9,7 +9,7 @@
   const resolved=window.runWorldCombatCore(playerCombatStats(),enemy,state.hp,{world,state,visualContext:{mode:"bounty",world,owner:"dungeoncore.js",variant:"bounty",playerName:state.playerName}});
   const combat=resolved.combat;
   const combatEndHp=combat.hp;
-  state.hp=combatEndHp;
+  if(options.deferState!==true)state.hp=combatEndHp;
   return {
    win:combat.win,
    logs:combat.logs,

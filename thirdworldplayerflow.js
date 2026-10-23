@@ -208,7 +208,7 @@
  function presentRunSummary(result,finalSnapshot){
   const final=finalSnapshot||null;if(!final)return Promise.resolve(false);
   const reason=String(final.stopReason||result?.lastResult?.terminalReason||result?.reason||"");
-  if(["pagehide","reload"].includes(reason))return Promise.resolve(false);
+  if(["pagehide","reload","interrupted"].includes(reason))return Promise.resolve(false);
   const bossIndex=whole(final.bossIndex??result?.lastResult?.summary?.bossIndex),boss=bossDefinition(bossIndex),progress=bossProgress(bossIndex),totals=summaryTotals(result),stop=stopReasonPresentation(reason),battles=Math.max(0,whole(result?.battles??final.battles)),deaths=whole(final.deaths),vip20Protections=whole(final.vip20Protections),remainingHp=Math.max(0,whole(progress?.currentHp)),remainingPercent=Number.isFinite(Number(progress?.remainingPercent))?Number(progress.remainingPercent):null;
   closeRunSummaryModal();const modal=ensureRunSummaryModal();if(!modal)return Promise.resolve(false);
   const remainingText=remainingPercent==null?fmt(remainingHp):`${fmt(remainingHp)}（${pct(remainingPercent)}）`,totalsNotice=totals.complete===true?"":`<div class="muted" style="margin-top:10px">本輪完整 totals 不可用，且最近戰鬥摘要已截斷；為避免顯示錯誤總量，本輪收益欄位不進行推算。</div>`,vip20Notice=deaths>0?`<div class="notice" style="margin-top:12px"><b>VIP20｜裝備保護</b><div class="muted" style="margin-top:6px;line-height:1.55">本輪死亡 ${fmt(deaths)} 次；原本的 30% 死亡裝備遺失判定仍照常進行。${vip20Protections>0?`其中 ${fmt(vip20Protections)} 次判定原本會遺失裝備，已由 VIP20 全部阻止。`:`本輪沒有抽中裝備遺失，但 VIP20 保護仍持續生效。`}第三紀元的死亡裝備保護來自 VIP20 特權。</div></div>`:"";
@@ -258,7 +258,7 @@
    if(isBackground){
     // The core has already settled this step. Retire only its presentation;
     // returning to the page must not replay old hits or sound cues.
-    if(activeContext.presenting===true)window.clearCombatPresentation?.("third-world-background-skip");
+    if(window.gmBackgroundBattleEnabled?.()===true&&activeContext.presenting===true)window.clearCombatPresentation?.("third-world-background-skip");
     return;
    }
    if(typeof window.backgroundProgressHasCatchUpCredit==="function"&&window.backgroundProgressHasCatchUpCredit("third-world")===true)beginCatchUpUi();
@@ -278,6 +278,8 @@
    if(meta?.catchUpPolicy?.shouldRefreshUi===true&&typeof render==="function")render();
    syncMinimal();
    syncCatchUpNotice();
+  }else if(meta.prePresented===true){
+   refreshContextAfterSettledStep(step);syncMinimal();
   }else{
    activeContext.catchingUp=false;
    activeContext.catchUpCompleted=0;
@@ -312,7 +314,7 @@
   retainedContext=null;
   setTitlePostFlowHold(true);
   let loopPromise;
-  try{loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});}catch(error){setTitlePostFlowHold(false);throw error;}
+  try{loopPromise=window.runThirdWorldContinuousLoop(index,{preparePresentation:false,logs:true,beforeBattle:step=>presentStep(step),onBattle:presentStep,onCatchUpFinal:async payload=>finishCatchUpUi(payload)});}catch(error){setTitlePostFlowHold(false);throw error;}
   const snapshot=runSnapshot();
   if(snapshot?.active!==true||whole(snapshot.bossIndex)!==index){
    try{return await loopPromise;}finally{setTitlePostFlowHold(false);}
@@ -325,7 +327,7 @@
   try{completedResult=await flowPromise;return completedResult;}
   finally{
    finalSnapshot=updateContextFromFinalSnapshot(runId);
-   if(activeContext){activeContext.active=false;activeContext.catchingUp=false;activeContext.catchUpCompleted=0;retainedContext={...activeContext};}
+   if(activeContext){activeContext.active=false;activeContext.catchingUp=false;activeContext.catchUpCompleted=0;retainedContext={...activeContext,currentCombat:null};}
    activeContext=null;
    if(typeof document!=="undefined")document.getElementById("thirdWorldCatchUpStatus")?.remove();
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-player-flow-end");

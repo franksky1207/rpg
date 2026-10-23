@@ -16,6 +16,7 @@
  const POST_SETTLEMENT_FIVE_POINT_VERSION=1;
  const CONTINUATION_DECISION_VERSION=2;
  const settledBasisObjects=new WeakSet();
+ const checkpointSessions=new WeakMap();
  const preparedLootByBasis=new WeakMap();
 
  function currentState(){try{return typeof state!=="undefined"&&state&&typeof state==="object"?state:null;}catch(_){return null;}}
@@ -41,7 +42,8 @@
   const currentHp=Math.max(0,finiteWhole(row.currentHp,boss.maxHp));
   const formalStartHp=Math.max(0,finiteWhole(basis.formalStartHp,0));
   const combatEndHp=Math.max(0,finiteWhole(basis.combatEndHp,formalStartHp));
-  if(currentHp!==formalStartHp)return reject("stale-settlement","此戰鬥結果已過期或已經結算，Boss 永久 HP 與場初正式 HP 不一致。",{bossIndex:index,currentHp,formalStartHp});
+  const checkpoint=checkpointSessions.get(basis);
+  if(currentHp!==(checkpoint?.hp??formalStartHp))return reject("stale-settlement","此戰鬥結果已過期或已經結算，Boss 永久 HP 與場初正式 HP 不一致。",{bossIndex:index,currentHp,formalStartHp});
   if(formalStartHp>finiteWhole(boss.maxHp,0)||combatEndHp>formalStartHp)return reject("hp-range-invalid","高維 Boss 結算 HP 範圍無效。",{bossIndex:index,formalStartHp,combatEndHp,bossMaxHp:boss.maxHp});
   const effectivePermanentDamage=Math.max(0,formalStartHp-combatEndHp);
   if(effectivePermanentDamage!==Math.max(0,finiteWhole(basis.effectivePermanentDamage,0)))return reject("damage-mismatch","永久淨削血與正式 settlement basis 不一致。",{bossIndex:index,effectivePermanentDamage,basisDamage:basis.effectivePermanentDamage});
@@ -171,7 +173,11 @@
     if(!checked.ok)return checked;
     const aggregateBefore=window.thirdWorldBossAggregateSnapshot(liveState);
     liveState.thirdWorld.bosses[checked.bossIndex].currentHp=checked.combatEndHp;
-    const economy=applyEconomyRewards(liveState,checked.effectivePermanentDamage);
+    const row=liveState.thirdWorld.bosses[checked.bossIndex];
+    const rewardStart=Math.min(checked.formalStartHp,Number.isFinite(row.rewardFloorHp)?row.rewardFloorHp:checked.formalStartHp);
+    const unpaidDamage=Math.max(0,rewardStart-checked.combatEndHp);
+    if(Number.isFinite(row.rewardFloorHp))row.rewardFloorHp=Math.min(rewardStart,checked.combatEndHp);
+    const economy=applyEconomyRewards(liveState,unpaidDamage);
     if(!economy.ok)return economy;
     const equipment=applyEquipmentRewards(basis,liveState,options);
     if(!equipment.ok)return equipment;
@@ -189,17 +195,18 @@
   if(!tx.ok)return reject("transaction-failed","高維正式結算失敗，已回復結算前狀態。",{transaction:tx});
   settledBasisObjects.add(basis);
   preparedLootByBasis.delete(basis);
-  const value=tx.value||{},economy=value.economy||{},equipment=value.equipment||{},progression=value.progression||{};
+  const value=tx.value||{},economy=value.economy||{},equipment=value.equipment||{},progression=value.progression||{},checkpointIncome=checkpointSessions.get(basis);
   const equipmentRewards=Array.isArray(equipment.equipmentRewards)?equipment.equipmentRewards.map(row=>freeze({...row})):[],items=Array.isArray(equipment.items)?equipment.items.slice():[];
   const unlockedTitles=Array.isArray(progression.titleGrant?.unlockedTitles)?progression.titleGrant.unlockedTitles.map(row=>freeze({...row})):[];
   const settlement={
    ok:true,world:3,settlementVersion:SETTLEMENT_VERSION,phase:"permanent-hp-exp-strings-equipment-progression",bossIndex:value.bossIndex,bossId:value.bossId,
    formalStartHp:value.formalStartHp,combatEndHp:value.combatEndHp,effectivePermanentDamage:value.effectivePermanentDamage,formalProgressChanged:Number(value.effectivePermanentDamage)>0,
    playerDied:value.playerDied===true,bossDefeated:value.bossDefeated===true,bossDefeatedNow:progression.bossDefeatedNow===true,terminationReason:value.terminationReason,
-   xp:Math.max(0,finiteWhole(economy.xp,0)),dimensionalStrings:Math.max(0,finiteWhole(economy.dimensionalStrings,0)),
-   dimensionalStringsBefore:Math.max(0,finiteWhole(economy.dimensionalStringsBefore,0)),dimensionalStringsAfter:Math.max(0,finiteWhole(economy.dimensionalStringsAfter,0)),
-   levelBefore:Math.max(1,finiteWhole(economy.levelBefore,1)),levelAfter:Math.max(1,finiteWhole(economy.levelAfter,1)),expBefore:Math.max(0,finiteWhole(economy.expBefore,0)),expAfter:Math.max(0,finiteWhole(economy.expAfter,0)),
-   levelUps:Math.max(0,finiteWhole(economy.levelUps,0)),atLevelCapBefore:economy.atLevelCapBefore===true,atLevelCapAfter:economy.atLevelCapAfter===true,
+   xp:Math.max(0,finiteWhole(economy.xp,0))+Math.max(0,finiteWhole(checkpointIncome?.paid,0)),dimensionalStrings:Math.max(0,finiteWhole(economy.dimensionalStrings,0))+Math.max(0,finiteWhole(checkpointIncome?.paid,0)),
+   newlyCreditedXp:Math.max(0,finiteWhole(economy.xp,0)),checkpointCreditedXp:Math.max(0,finiteWhole(checkpointIncome?.paid,0)),
+   dimensionalStringsBefore:Math.max(0,finiteWhole(checkpointIncome?.stringsBefore??economy.dimensionalStringsBefore,0)),dimensionalStringsAfter:Math.max(0,finiteWhole(economy.dimensionalStringsAfter,0)),
+   levelBefore:Math.max(1,finiteWhole(checkpointIncome?.levelBefore??economy.levelBefore,1)),levelAfter:Math.max(1,finiteWhole(economy.levelAfter,1)),expBefore:Math.max(0,finiteWhole(checkpointIncome?.expBefore??economy.expBefore,0)),expAfter:Math.max(0,finiteWhole(economy.expAfter,0)),
+   levelUps:Math.max(0,finiteWhole(economy.levelUps,0))+Math.max(0,finiteWhole(checkpointIncome?.levelUps,0)),atLevelCapBefore:(checkpointIncome?.atLevelCapBefore??economy.atLevelCapBefore)===true,atLevelCapAfter:economy.atLevelCapAfter===true,
    logs:freeze(Array.isArray(economy.logs)?economy.logs.slice():[]),items:freeze(items),equipmentRewards:freeze(equipmentRewards),equipmentDropCount:Math.max(0,finiteWhole(equipment.dropCount,items.length)),
    aggregateBefore:progression.aggregateBefore||null,aggregateAfter:progression.aggregateAfter||null,titleTierBefore:Math.max(0,finiteWhole(progression.titleTierBefore,0)),titleTierAfter:Math.max(0,finiteWhole(progression.titleTierAfter,0)),
    unlockedTitles:freeze(unlockedTitles),titleNoticeId:progression.titleGrant?.noticeTitle?.id||null,storyStageBefore:Math.max(0,finiteWhole(progression.storyBefore,0)),storyStageAfter:Math.max(0,finiteWhole(progression.storyAfter,0)),
@@ -269,6 +276,30 @@
  window.thirdWorldReincarnationStageContinuation=reincarnationStageContinuation;
  window.THIRD_WORLD_POST_SETTLEMENT_FIVE_POINT_VERSION=POST_SETTLEMENT_FIVE_POINT_VERSION;
  window.THIRD_WORLD_CONTINUATION_DECISION_VERSION=CONTINUATION_DECISION_VERSION;
+ window.checkpointThirdWorldCombat=function(result,hp,index){
+  const basis=basisFromResult(result);if(!basis||settledBasisObjects.has(basis))return reject("basis-ineligible","失效的高維戰鬥進度。");
+  hp=Math.floor(Number(hp));index=Math.floor(Number(index));
+  if(!Number.isFinite(hp)||hp<=0||hp>basis.formalStartHp||!Number.isFinite(index)||index<0||index>basis.eventCount)return reject("checkpoint-range","無效的已播放進度。");
+  const previous=checkpointSessions.get(basis);
+  if(previous&&index<previous.index)return reject("checkpoint-order","已播放進度不可倒退。");
+  const checked=validateBasisAgainstState(basis,currentState());if(!checked.ok)return checked;
+  if(hp===checked.currentHp)return {ok:true,unchanged:true};
+  const tx=window.runSettlementTransaction({label:"third-world-played-hp-income",mutate:live=>{
+   const recheck=validateBasisAgainstState(basis,live);if(!recheck.ok)return recheck;
+   const aggregateBefore=window.thirdWorldBossAggregateSnapshot(live),row=live.thirdWorld.bosses[basis.bossIndex];
+   const floor=Number.isFinite(row.rewardFloorHp)?row.rewardFloorHp:basis.formalStartHp;
+   const unpaid=Math.max(0,floor-hp);row.currentHp=hp;row.rewardFloorHp=Math.min(floor,hp);
+   const economy=applyEconomyRewards(live,unpaid);if(!economy.ok)return economy;
+   const progression=applyAggregateProgression(live,{...recheck,formalStartHp:recheck.currentHp,combatEndHp:hp},aggregateBefore);
+   if(!progression.ok)return progression;
+   return {ok:true,economy,progression};
+  }});
+  if(!tx.ok)return reject("checkpoint-save-failed","高維已播放進度保存失敗。",tx);
+  checkpointSessions.set(basis,{hp,index,paid:(previous?.paid||0)+tx.value.economy.xp,levelUps:(previous?.levelUps||0)+tx.value.economy.levelUps,atLevelCapBefore:previous?.atLevelCapBefore??tx.value.economy.atLevelCapBefore,stringsBefore:previous?.stringsBefore??tx.value.economy.dimensionalStringsBefore,levelBefore:previous?.levelBefore??tx.value.economy.levelBefore,expBefore:previous?.expBefore??tx.value.economy.expBefore});
+  const progression=tx.value.progression;
+  window.civilizationStoryProgress?.consumeThirdWorldSettlement?.({ok:true,world:3,storyStageAfter:progression.storyAfter,unlockedStoryStages:progression.unlockedStoryStages,eventSequence:progression.eventSequence,completionReady:false},{queue:true});
+  return {ok:true,hp,xp:tx.value.economy.xp,dimensionalStrings:tx.value.economy.dimensionalStrings};
+ };
  window.settleThirdWorldCombatResult=settleThirdWorldCombatResult;
  window.THIRD_WORLD_PROGRESS_INTEGRITY=validate();
  if(!window.THIRD_WORLD_PROGRESS_INTEGRITY.passed)console.error("[文明戰線] Third-world progress integrity error",window.THIRD_WORLD_PROGRESS_INTEGRITY.errors);

@@ -10,7 +10,7 @@ const assert=require("assert");
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>
-   window.SAVE_SCHEMA_VERSION===17&&
+   window.SAVE_SCHEMA_VERSION===18&&
    window.SAVE_LOAD_PIPELINE_VERSION===3&&
    window.SAVE_NORMALIZATION_PIPELINE_VERSION===3&&
    window.SAVE_MIGRATION_STAIRCASE_VERSION===1&&
@@ -31,9 +31,9 @@ const assert=require("assert");
 
   const report=await page.evaluate(()=>{
    const clone=value=>JSON.parse(JSON.stringify(value));
-   const matrixVersions=[1,9,15,16,17,18];
+   const matrixVersions=[1,9,15,16,17,18,19];
    const compatibility=matrixVersions.map(sourceSchema=>({sourceSchema,...window.saveCompatibilityFor({saveVersion:sourceSchema})}));
-   const migrationPlans=matrixVersions.filter(version=>version<=17).map(version=>({version,stages:window.saveMigrationPlanForVersion(version).map(row=>row.id)}));
+   const migrationPlans=matrixVersions.filter(version=>version<=18).map(version=>({version,stages:window.saveMigrationPlanForVersion(version).map(row=>row.id)}));
    const schemaPolicy={
     additiveOptional:window.saveSchemaChangeRequiresBump("additive-optional-field"),
     normalizationOnly:window.saveSchemaChangeRequiresBump("normalization-only"),
@@ -63,7 +63,7 @@ const assert=require("assert");
 
    const gmTransientKeys=Array.from(window.GM_TEST_TRANSIENT_STATE_KEYS||[]);
    const gmTransientMatrix=[];
-   for(let version=1;version<=17;version++){
+   for(let version=1;version<=18;version++){
     const phase=version>=16?3:version>=10?2:1;
     const source=makeBase(version,phase===3?1500:phase===2?750:100,phase);
     gmTransientKeys.forEach((key,index)=>{source[key]={legacy:true,key,index,version};});
@@ -138,7 +138,7 @@ const assert=require("assert");
    ].map(row=>({phase:row.phase,snapshot:clone(window.characterWorldSnapshot(row.state))}));
 
    let futureAssert={threw:false,code:"",sourceVersion:null,currentVersion:null};
-   try{window.assertSaveVersionSupported({saveVersion:18},{label:"compat-matrix"});}
+   try{window.assertSaveVersionSupported({saveVersion:19},{label:"compat-matrix"});}
    catch(error){futureAssert={threw:true,code:String(error?.code||""),sourceVersion:error?.saveCompatibility?.sourceVersion??null,currentVersion:error?.saveCompatibility?.currentVersion??null};}
 
    const stateBefore=clone(state);
@@ -154,7 +154,7 @@ const assert=require("assert");
   const expectedTransientKeys=["gmTestWorld","gmTestLevel","gmTestEquipment","gmTestEquipmentSource","gmTestVipLevel","gmTestBreakthroughLevel","gmTestEnhancementLevels","gmTestSpecializations","gmTestMarkLevels","gmTestCivilizationLevel","gmTestContext","gmTestContextRevision","gmPowerBenchmark","gmTestResults"];
   assert.equal(report.gmTransientInventoryVersion,3,"GM transient key inventory version drifted.");
   assert.deepEqual(report.gmTransientKeys,expectedTransientKeys,"GM transient key inventory drifted.");
-  assert.equal(report.gmTransientMatrix.length,17,"Schema1-17 GM transient migration matrix incomplete.");
+  assert.equal(report.gmTransientMatrix.length,18,"Schema1-18 GM transient migration matrix incomplete.");
   for(const row of report.gmTransientMatrix){
    assert.deepEqual(row.leftovers,[],`Schema${row.version} leaked historical GM-only transient keys.`);
    assert.equal(row.cleanup?.inventorySize,expectedTransientKeys.length,`Schema${row.version} cleanup inventory size drifted.`);
@@ -178,11 +178,13 @@ const assert=require("assert");
    assert.equal(compatByVersion[version].isFuture,false,`Schema${version} must not be future.`);
   });
   assert.equal(compatByVersion[17].sourceVersion,17,"Schema17 source-version diagnostic drifted.");
-  assert.equal(compatByVersion[17].supported,true,"Schema17 must be supported current schema.");
-  assert.equal(compatByVersion[17].isLegacy,false,"Schema17 must not be legacy.");
+  assert.equal(compatByVersion[17].supported,true,"Schema17 must remain supported after the checkpoint schema upgrade.");
+  assert.equal(compatByVersion[17].isLegacy,true,"Schema17 must retain all progress as a supported legacy schema.");
   assert.equal(compatByVersion[18].sourceVersion,18,"Schema18 source-version diagnostic drifted.");
-  assert.equal(compatByVersion[18].supported,false,"Schema18 must fail closed until explicitly supported.");
-  assert.equal(compatByVersion[18].isFuture,true,"Schema18 must be classified future.");
+  assert.equal(compatByVersion[18].supported,true,"Schema18 must support durable checkpoint income.");
+  assert.equal(compatByVersion[19].supported,false,"Schema19 must fail closed until explicitly supported.");
+  assert.equal(compatByVersion[18].isFuture,false,"Schema18 is current.");
+  assert.equal(compatByVersion[19].isFuture,true,"Schema19 must be classified future.");
 
   const planByVersion=Object.fromEntries(report.migrationPlans.map(row=>[row.version,row.stages]));
   const tail=["canonical-normalization","world-phase-normalization","subsystem-normalization","finalize-current-schema"];
@@ -195,7 +197,7 @@ const assert=require("assert");
   assert.deepEqual(report.schemaPolicy,{additiveOptional:false,normalizationOnly:false,semanticReinterpretation:true,persistentFieldRemoval:true,incompatibleStructure:true,unknown:null},"Schema evolution policy drifted.");
 
   for(const row of report.legacy){
-   assert.equal(row.targetVersion,17,`Schema${row.version} did not migrate to 17.`);
+   assert.equal(row.targetVersion,18,`Schema${row.version} did not migrate to 18.`);
    assert.equal(row.count,0,`Schema${row.version} leaked reincarnation count.`);
    assert.equal(row.permanent,0,`Schema${row.version} leaked permanent breakthrough.`);
    assert.equal(row.auUnlocked,false,`Schema${row.version} leaked AU unlock.`);
@@ -204,13 +206,13 @@ const assert=require("assert");
    assert.equal(row.migration?.preSchema17ReincarnationDiscarded,true,`Schema${row.version} did not report pre17 discard.`);
   }
 
-  assert.equal(report.missing.saveVersion,17,"Missing saveVersion must canonicalize through supported legacy fallback.");
+  assert.equal(report.missing.saveVersion,18,"Missing saveVersion must canonicalize through supported legacy fallback.");
   assert.equal(report.missing.count,0,"Missing saveVersion must not trust injected reincarnation data.");
   assert.equal(report.missing.permanent,0,"Missing saveVersion must not trust injected breakthrough data.");
   assert.equal(report.missing.auUnlocked,false,"Missing saveVersion must not trust injected AU data.");
   assert.equal(report.missing.migration?.sourceVersion,1,"Missing saveVersion fallback must remain minimum supported schema.");
 
-  assert.equal(report.current.first.saveVersion,17,"Current Schema17 must remain Schema17.");
+  assert.equal(report.current.first.saveVersion,18,"Schema17 must upgrade to Schema18 without losing progress.");
   assert.equal(report.current.first.reincarnation.count,3,"Current Schema17 reincarnation count changed.");
   assert.equal(report.current.first.reincarnation.breakthrough.permanent,25,"Current Schema17 permanent breakthrough changed.");
   assert.equal(report.current.first.reincarnation.alternateUniverse.unlocked,true,"Schema17 deepest>0 must salvage AU unlock.");
@@ -256,7 +258,7 @@ const assert=require("assert");
   assert.equal(report.w3Rerun.availability.visible,false);
   assert.equal(report.w3Rerun.availability.enabled,false);
 
-  assert.deepEqual(report.futureAssert,{threw:true,code:"FUTURE_SAVE_VERSION",sourceVersion:18,currentVersion:17},"Future schema guard drifted.");
+  assert.deepEqual(report.futureAssert,{threw:true,code:"FUTURE_SAVE_VERSION",sourceVersion:19,currentVersion:18},"Future schema guard drifted.");
   assert.equal(report.stateStable,true,"Compatibility diagnostics mutated formal runtime state.");
   assert.equal(report.storageStable,true,"Compatibility diagnostics mutated localStorage.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));

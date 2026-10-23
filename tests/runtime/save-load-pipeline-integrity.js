@@ -12,7 +12,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.SAVE_LOAD_PIPELINE_VERSION===3&&window.SAVE_VERSION_BACKUP_DELEGATION_VERSION===1&&typeof newState==="function"&&typeof window.makeThirdWorldEquipment==="function"&&typeof window.createBlankSecondWorldState==="function"&&typeof window.createBlankThirdWorldState==="function"&&typeof window.normalizeOfflineSaveState==="function"&&typeof window.normalizePlayerTitleState==="function"&&typeof window.load==="function"&&typeof window.normalizeOfflinePendingSettlement==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===18&&window.SAVE_LOAD_PIPELINE_VERSION===3&&window.SAVE_VERSION_BACKUP_DELEGATION_VERSION===1&&typeof newState==="function"&&typeof window.makeThirdWorldEquipment==="function"&&typeof window.createBlankSecondWorldState==="function"&&typeof window.createBlankThirdWorldState==="function"&&typeof window.normalizeOfflineSaveState==="function"&&typeof window.normalizePlayerTitleState==="function"&&typeof window.load==="function"&&typeof window.normalizeOfflinePendingSettlement==="function",{timeout:30000});
 
   const first=await page.evaluate(()=>{
    const SAVE_KEY_VALUE=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save";
@@ -109,7 +109,7 @@ const assert=require("assert");
 
   assert.equal(first.loaded,true,"Schema16 realistic fixture failed canonical load.");
   assert.equal(first.backupRaw,first.raw,"Pre-Schema17 backup must be byte-for-byte identical to the original save.");
-  assert.equal(first.currentVersion,17,"Canonical load did not persist Schema17.");
+  assert.equal(first.currentVersion,18,"Canonical load did not persist Schema18.");
   assert.equal(first.currentReincarnation?.count,0,"Legacy Schema16 load must initialize first-run reincarnation state.");
   assert.deepEqual(first.changedKeys,[],"Realistic Schema16 W3 gameplay fields changed during migration/load: "+JSON.stringify(first.differences));
   assert.equal(first.report?.failed,false,"Canonical load report unexpectedly failed.");
@@ -127,12 +127,12 @@ const assert=require("assert");
   assert.ok(rollbackProbe.until>=rollbackProbe.future,"Real rollback lock must not be loosened");
   assert.equal(rollbackProbe.goldUnchanged,true,"Clock guard cannot grant rewards");
   await page.reload({waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.LAST_SAVE_LOAD_REPORT?.targetVersion===17,{timeout:30000});
+  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===18&&window.LAST_SAVE_LOAD_REPORT?.targetVersion===18,{timeout:30000});
   const reloaded=await page.evaluate((backupKey)=>{const SAVE_KEY_VALUE=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save";const current=JSON.parse(localStorage.getItem(SAVE_KEY_VALUE)||"null");return {saveVersion:current?.saveVersion,reincarnationCount:current?.reincarnation?.count,backupRaw:localStorage.getItem(backupKey)||"",report:JSON.parse(JSON.stringify(window.LAST_SAVE_LOAD_REPORT||{}))};},first.backupKey);
-  assert.equal(reloaded.saveVersion,17,"Second page load did not remain on Schema17.");
+  assert.equal(reloaded.saveVersion,18,"Second page load did not remain on Schema18.");
   assert.equal(reloaded.reincarnationCount,0,"Second page load changed first-run reincarnation state.");
   assert.equal(reloaded.backupRaw,first.raw,"Second page load must not overwrite the original Schema16 backup.");
-  assert.equal(reloaded.report?.sourceVersion,17,"Second page load should read the already migrated Schema17 save.");
+  assert.equal(reloaded.report?.sourceVersion,18,"Second page load should read the already migrated Schema18 save.");
 
   const failClosed=await page.evaluate(()=>{
    const SAVE_KEY_VALUE=typeof SAVE_KEY==="string"?SAVE_KEY:"frank_text_rpg_save",fixture=newState();fixture.saveVersion=16;fixture.playerName="Schema16 Backup Failure Probe";fixture.level=1000;fixture.exp=0;delete fixture.reincarnation;

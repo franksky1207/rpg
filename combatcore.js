@@ -176,7 +176,10 @@
  window.COMBAT_OPTIONAL_FULL_HP_LOCK_VERSION=1;
  window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;
 
- fightOnce=function(mapIdx,eIdx,encounter=null){
+ const pendingMainBattles=new WeakMap();
+ window.deferMainBattleTransform=function(result,transform){const pending=pendingMainBattles.get(result);if(!pending)throw new Error("Main battle transform has no pending owner.");pending.transforms.push(transform);return result;};
+ window.settleMainBattleResult=function(result){const pending=pendingMainBattles.get(result);if(!pending)throw new Error("Main battle result is stale or already committed.");pendingMainBattles.delete(result);if(pending.state!==state)throw window.CivilizationCombatLifecycle.interrupted();let settled=pending.commit();for(const transform of pending.transforms)settled=transform(settled)||settled;return settled;};
+ fightOnce=function(mapIdx,eIdx,encounter=null,options={}){
   if(!enemyUnlocked(mapIdx,eIdx)){
    if(eIdx===4&&state.bossLocked?.[mapIdx])return {ok:false,reason:`Boss 挑戰暫時鎖定，請先擊敗本地圖菁英怪 10 隻（${state.bossProgress[mapIdx]||0}/10）。`};
    return {ok:false,reason:"這隻怪物尚未解鎖。"};
@@ -188,8 +191,9 @@
   const ps=playerCombatStats();
   const gmMainlineHpLock=typeof window.gmMainlineHpLockActive==="function"&&window.gmMainlineHpLockActive("world1-mainline")===true;
   const combat=runCombatCore(ps,e,state.hp,{mainlineLogs:true,lockPlayerFullHp:gmMainlineHpLock,visualContext:{mode:"main",world:1,owner:"combatcore.js",variant:e.kind,location:mapIdx+":"+eIdx,playerName:state.playerName}});
+  const combatEndHp=combat.hp;
+  const commit=()=>{
   state.hp=combat.hp;
-  const combatEndHp=state.hp;
   const logs=combat.logs;
 
   if(!combat.win){
@@ -252,6 +256,9 @@
   const bridgeSaved=save(false);
   if(bridgeSaved===true)window.CivilizationCombatEvents?.settlement?.(combat,"combatcore.js",{committed:true,xp:result.xp,gold:result.gold,items:result.items});
   return result;
+  };
+  if(options.deferSettlement===true){const pending={...combat,ok:true,e,combatEndHp,settlementPending:true};pendingMainBattles.set(pending,{commit,transforms:[],state});return pending;}
+  return commit();
  };
  window.fightOnce=fightOnce;
  window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION=2;

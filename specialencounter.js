@@ -41,7 +41,7 @@
   return `<section class="combat-screen"><div class="combat-head">⚠ 特殊遭遇</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):escapePlayerName(currentPlayerName())} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard" style="border-color:#c99b45;box-shadow:0 0 22px rgba(201,155,69,.22)"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">✦ ${special.name} Lv.${enemy.level}</h2><div class="muted" style="margin:8px 0 5px">${special.description}</div><div class="muted" style="margin-bottom:12px">暴擊 ${enemy.crit||0}%　閃避 ${enemy.dodge||0}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${enemy.hp} / ${enemy.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">特殊戰鬥開始</div>${stop}</section>`;
  }
 
- function specialFight(enemy,world=1){return specialFightCore(enemy,{world});}
+ function specialFight(enemy,world=1){return specialFightCore(enemy,{world,deferState:true});}
  function currentSpecialWorld(target=state){
   const holder=target&&typeof target==="object"?target:null;
   if(typeof window.currentWorldPhase==="function"){
@@ -159,6 +159,7 @@
  }
 
  async function fightFormalSpecial(ctx,special,options={}){
+  const foregroundEpoch=options.foregroundEpoch??window.CivilizationCombatLifecycle?.epoch();
   const world=specialWorld(options);
   if(world===3)return blockedSpecialResult("third-world-disabled",3);
   const suppressPresentation=specialPresentationSuppressed(options);
@@ -178,9 +179,11 @@
    document.getElementById("main").innerHTML=specialBattlePage(enemy,special);
    await specialFlowSleep(specialBattleReadyDelay());
   }
+  window.CivilizationCombatLifecycle?.foreground(foregroundEpoch);
   const startHp=state.hp,r=specialFight(enemy,world);
   if(suppressPresentation)window.CivilizationCombatEvents?.presentationSkipped?.(r,"special-fast-catch-up");
   if(!suppressPresentation)await animateSpecialFight(r,startHp,playerSnapshot.hp,enemy.hp);
+  state.hp=r.combatEndHp;
   const result={win:r.win,world,rewardContext:firstRewardCtx,bonusRewardContext:null,vip10Triggered:false,drops:[],xp:0,gold:0,darkMatter:0,darkEnergy:0,convertedGold:0,saleEnhancementStones:normalizeEnhancementStoneReward(null),blackMarketIntelGranted:false,penalty:null,combatEndHp:r.combatEndHp};
   if(r.win){
    const baseXp=world===2&&typeof window.secondWorldBossExpReward==="function"?window.secondWorldBossExpReward(bossIndex,false,state):ceil(sameExp(level)*expLevelFactor(level,state.level));
@@ -252,11 +255,13 @@
 
   const special=rollSpecialMonster(forcedByBlackMarket?["bandit_king"]:null,world);
   if(!special)return false;
+  const foregroundEpoch=window.CivilizationCombatLifecycle?.epoch();
   const suppressPresentation=specialPresentationSuppressed(options);
   if(!suppressPresentation)await showSpecialEncounterAlert(special,forcedByBlackMarket);
+  window.CivilizationCombatLifecycle?.foreground(foregroundEpoch);
   if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});
   else state.hp=playerCombatStats().hp;
-  const result=await fightFormalSpecial(ctx,special,{...options,world,mapIndex:w1Target?.mapIndex,enemyIndex:w1Target?.enemyIndex,bossIndex:options.bossIndex,suppressPresentation});
+  const result=await fightFormalSpecial(ctx,special,{...options,world,mapIndex:w1Target?.mapIndex,enemyIndex:w1Target?.enemyIndex,bossIndex:options.bossIndex,suppressPresentation,foregroundEpoch});
   if(result.blocked===true)return false;
   if(result.win&&world===1&&typeof addBattleEnhancementReward==="function")addBattleEnhancementReward(ctx,"autoSale",result.saleEnhancementStones);
   if(result.win&&world===2&&ctx){

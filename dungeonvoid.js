@@ -99,8 +99,8 @@
    preparePresentation:options.preparePresentation!==false,
    playerFinalDamageMultiplier:civilizationMultiplier
   });
-  state.hp=combat.hp;
-  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:state.hp,turns:combat.turns,world,civilizationDamageMultiplier:civilizationMultiplier};
+  if(options.deferSettlement!==true)state.hp=combat.hp;
+  return {win:combat.win,logs:combat.logs,events:Array.isArray(combat.events)?combat.events:[],e:enemy,combatEndHp:combat.hp,turns:combat.turns,world,civilizationDamageMultiplier:civilizationMultiplier};
  }
  function dailyStatus(){return typeof voidMirageDailyStatus==="function"?voidMirageDailyStatus():{highestFloor:0,claimed:false,baseReward:0,reward:0,canClaim:false};}
  function voidMirageEntryUnlocked(){return typeof window.isDungeonModeEntryUnlocked==="function"?window.isDungeonModeEntryUnlocked("tower",state):Number(state?.level||0)>=VOID_MIRAGE_UNLOCK_LEVEL;}
@@ -180,10 +180,12 @@
    const player=createSpecialPlayerSnapshot(playerCombatStats());
    voidMirageRun.playerSnapshot=player;voidMirageRun.runStarted=true;state.hp=player.hp;
   }
-  const floor=floorNumber(voidMirageRun.currentFloor),playerMaxHp=runPlayerStats().hp,enemy=buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
+  const floor=floorNumber(voidMirageRun.currentFloor),playerMaxHp=runPlayerStats().hp,enemy=options.precomputed?.e||buildEnemy(floor,{previousName:voidMirageRun.previousRegularName});
   if(!enemy.isBossFloor)voidMirageRun.previousRegularName=enemy.name;
   voidMirageRun.phase="fighting";voidMirageRun.lastEnemy=enemy;
-  const result=voidMirageFightCore(enemy,options);
+  const result=options.precomputed||voidMirageFightCore(enemy,options);
+  if(options.deferSettlement===true)return {ok:true,pending:true,floor,enemy,result,playerMaxHp,run:runSnapshot()};
+  state.hp=result.combatEndHp;
   voidMirageRun.lastResult=result;voidMirageRun.totalTurns+=Math.max(0,Math.floor(Number(result.turns)||0));
   if(!result.win){const final=finishRun("defeat",{failedFloor:floor});return {ok:true,win:false,ended:true,reason:"defeat",floor,enemy,result,playerMaxHp,run:final};}
   const clear=recordClear(floor);
@@ -210,18 +212,25 @@
  }
  window.runVoidMirageAuto=async function(options={}){
   if(!voidMirageRun?.active){const started=window.beginVoidMirageRun();if(!started.ok)return started;}
+  const foregroundEpoch=options.foregroundEpoch??window.CivilizationCombatLifecycle?.epoch();
   const onFloor=typeof options.onFloorComplete==="function"?options.onFloorComplete:null,onEnd=typeof options.onEnd==="function"?options.onEnd:null;
   while(voidMirageRun?.active){
    if(voidMirageRun.exitRequested&&voidMirageRun.phase!=="fighting"){const ended=finishRun("exit");if(onEnd)await onEnd(ended);return {ok:true,ended:true,run:ended};}
    const previewPolicy=catchUpPreviewPolicy();
    const fast=!!previewPolicy?.active;
+   try{window.CivilizationCombatLifecycle?.foreground(foregroundEpoch);}catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))throw error;const ended=finishRun("interrupted");if(onEnd)await onEnd(ended);return {ok:false,ended:true,run:ended};}
+   const defer=typeof options.beforeFloor==="function"&&!window.gmBackgroundBattleEnabled?.();
+   const prepared=defer?window.fightNextVoidMirageFloor({deferSettlement:true}):null;
+   if(prepared?.ok){try{await options.beforeFloor(prepared);}catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))throw error;const ended=finishRun("interrupted");if(onEnd)await onEnd(ended);return {ok:false,ended:true,run:ended};}}
    const floorResult=window.fightNextVoidMirageFloor({
+    precomputed:prepared?.result,
     save:fast?previewPolicy?.shouldCheckpoint===true:true,
     logs:fast?previewPolicy?.shouldPresentBattle===true:true,
     preparePresentation:fast?previewPolicy?.shouldPresentBattle===true:true
    });
    if(fast&&floorResult?.ok&&typeof window.backgroundProgressCatchUpStep==="function")floorResult.catchUpPolicy=window.backgroundProgressCatchUpStep("void");
    if(!floorResult.ok){if(onEnd)await onEnd(floorResult.run);return floorResult;}
+   if(floorResult&&prepared)floorResult.prePresented=true;
    if(onFloor)await onFloor(floorResult);
    if(floorResult.ended){if(onEnd)await onEnd(floorResult.run);return {ok:true,ended:true,result:floorResult,run:floorResult.run};}
    if(!fastCatchUp())await yieldControl();

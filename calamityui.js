@@ -192,19 +192,21 @@
  async function runSingleUi(){
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
-  const result=window.runCivilizationCalamitySingle?.(ui.selectedId,{audioRunId});
+  const result=await window.runCivilizationCalamitySingle?.(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,beforeBattle:async battle=>{ui.lastBattle=battle.result;primeDisplay(battle.result);render();await animateBattle(battle);}});
   if(!result?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始文明災厄挑戰。";render();return;}
   ui.lastBattle=result.result;ui.finalRun=result.run;ui.displayBattleNumber=1;
   primeDisplay(result.result);render();
-  await animateBattle(result);
+  if(!result.prePresented)await animateBattle(result);
   ui.running=false;ui.phase="result";resetDisplay();render();window.queuePendingPlayerTitleNotice?.();
-  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
+  }catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))console.error("Calamity battle failed",error);stopMinimalIfOpen();ui.running=false;ui.phase="idle";ui.lastBattle=null;ui.finalRun=null;resetDisplay();render();}
+  finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
 
  async function runContinuousUi(){
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
-   await window.runCivilizationCalamityContinuous(ui.selectedId,{audioRunId,
+   await window.runCivilizationCalamityContinuous(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,
+    beforeBattle:async battle=>{ui.lastBattle=battle.result;ui.displayBattleNumber=battle.battleNumber;primeDisplay(battle.result);render();await animateBattle(battle);},
     async onBattleComplete(battle){
      ui.lastBattle=battle.result;
      ui.finalRun=battle.run;
@@ -216,7 +218,7 @@
      if(fast){
       if(uiDecision.shouldPresentBattle){
        primeDisplay(battle.result);render();
-       await animateBattle(battle);
+       if(!battle.prePresented)await animateBattle(battle);
       }else{
        if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
        if(uiDecision.shouldRefreshUi)refreshCatchUpUi(battle.result);
@@ -224,7 +226,7 @@
       if(uiDecision.shouldYield&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      }else{
       primeDisplay(battle.result);render();
-      await animateBattle(battle);
+      if(!battle.prePresented)await animateBattle(battle);
       if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      }
      if(!battle.ended&&window.getCivilizationCalamityRunSnapshot?.()?.active){
@@ -248,7 +250,7 @@
     }
    });
   }catch(error){
-   stopMinimalIfOpen();ui.running=false;ui.phase="result";ui.message=String(error?.message||error);render();
+   stopMinimalIfOpen();ui.running=false;if(window.CivilizationCombatLifecycle?.isInterrupted(error)){ui.phase="idle";ui.lastBattle=null;ui.finalRun=null;resetDisplay();}else{ui.phase="result";}ui.message=String(error?.message||error);render();
   }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
 
@@ -256,7 +258,7 @@
   if(ui.running)return false;
   const def=window.getCivilizationCalamityDefinition?.(id);
   if(!def||!window.isCivilizationCalamityUnlocked?.(id))return false;
-  ui={phase:"combat",running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
+  ui={phase:"combat",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:true,selectedId:id,mode:mode==="continuous"?"continuous":"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};
   view="calamity";render();if(typeof window.resetBattleEntryViewport!=="function")throw new Error("Battle Entry Viewport Reset owner 未載入。");window.resetBattleEntryViewport();
   if(ui.mode==="continuous"){setTimeout(runContinuousUi,80);return true;}
   setTimeout(runSingleUi,80);return true;

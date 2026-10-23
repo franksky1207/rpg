@@ -15,7 +15,7 @@ const assert=require("assert");
    const originalState=deep(state);
    const originalGlobals={selectedMap,selectedEnemy,selectedBattleCount,adventureScreen,battleBusy,currentCombatEncounter,combatRound,combatTotal,activeMainBattleContext:window.activeMainBattleContext};
    const originals={
-    fightOnce:window.fightOnce,animateFight:window.animateFight,render:window.render,save:window.save,restorePlayerHp:window.restorePlayerHp,
+    settleMainBattleResult:window.settleMainBattleResult,fightOnce:window.fightOnce,animateFight:window.animateFight,render:window.render,save:window.save,restorePlayerHp:window.restorePlayerHp,
     maybeHandleSpecialEncounter:window.maybeHandleSpecialEncounter,clearPreviewEncounter:window.clearPreviewEncounter,showBattleResult:window.showBattleResult,
     minimalResult:window.mainMinimalModeHandleBattleResult,minimalHeader:window.mainMinimalModeEnsureCombatHeader,syncMinimal:window.syncMinimalMode
    };
@@ -39,7 +39,10 @@ const assert=require("assert");
     const expected=monsterObj(7,3);
     selectedMap=1;selectedEnemy=0;
 
-    const calls=[],previewClears=[],saveCalls=[];
+    const calls=[],previewClears=[],saveCalls=[],settlementCommits=new Set();
+    // This context test mocks combat generation and presentation; mock its new
+    // paired commit owner too. Real pending/late commit behavior has separate coverage.
+    window.settleMainBattleResult=result=>{if(settlementCommits.has(result))throw new Error("duplicate mocked settlement");settlementCommits.add(result);return result;};
     window.render=()=>{};
     window.animateFight=async()=>{};
     window.save=(...args)=>{saveCalls.push(args);return true;};
@@ -84,12 +87,12 @@ const assert=require("assert");
     const reviewBound=window.bindFirstWorldBattleTargetContext(review,state);
 
     return {
-     versions:{context:window.FIRST_WORLD_TARGET_CONTEXT_VERSION,binding:window.FIRST_WORLD_TARGET_BATTLE_BINDING_VERSION,pipeline:window.MAIN_BATTLE_TARGET_CONTEXT_VERSION},
+     settlementCommits:settlementCommits.size,versions:{context:window.FIRST_WORLD_TARGET_CONTEXT_VERSION,binding:window.FIRST_WORLD_TARGET_BATTLE_BINDING_VERSION,pipeline:window.MAIN_BATTLE_TARGET_CONTEXT_VERSION},
      integrity:window.FIRST_WORLD_TARGET_CONTEXT_INTEGRITY,
      finite:{ok:finiteOk,target:{contextId:target.contextId,identity:target.identity},expected:{name:expected.name,level:expected.level,kind:expected.kind},calls,previewClears:finitePreviewClears,uiAfter:uiAfterFinite,ctx:{completed:finiteCtx.completed,wins:finiteCtx.wins,targetContextId:finiteCtx.targetContext?.contextId,targetIdentity:finiteCtx.targetIdentity},saveCalls:saveCalls.length},
      continuous:{ok:continuousOk,target:{contextId:continuousTarget.contextId,identity:continuousTarget.identity},calls:continuousCalls,uiAfter:{map:selectedMap,enemy:selectedEnemy}},
      failClosed:{staleValidation,staleBound,reviewBound},
-     source:{noFightSelection:!source.includes("fightOnce(selectedMap,selectedEnemy,encounter)"),noTimingSelection:!source.includes("beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy)"),noRegenerateSelection:!source.includes("createMonsterEncounter(selectedMap,selectedEnemy)"),passesContextToSpecial:source.includes("maybeHandleSpecialEncounter(ctx,r,{mapIndex,enemyIndex,targetContext:boundTarget,parentTargetContext:boundTarget})"),contextSettlement:source.includes("fightOnce(mapIndex,enemyIndex,encounter)")}
+     source:{noFightSelection:!source.includes("fightOnce(selectedMap,selectedEnemy,encounter)"),noTimingSelection:!source.includes("beginRealBattleTiming(encounter,playerLevelBefore,selectedMap,selectedEnemy)"),noRegenerateSelection:!source.includes("createMonsterEncounter(selectedMap,selectedEnemy)"),passesContextToSpecial:source.includes("maybeHandleSpecialEncounter(ctx,r,{mapIndex,enemyIndex,targetContext:boundTarget,parentTargetContext:boundTarget})"),contextSettlement:source.includes("const deferredSettlement=!suppressPresentation;")&&source.includes("fightOnce(mapIndex,enemyIndex,encounter,{deferSettlement:deferredSettlement})")&&source.includes("settleMainBattleResult(r)")}
     };
    }finally{
     state=originalState;selectedMap=originalGlobals.selectedMap;selectedEnemy=originalGlobals.selectedEnemy;selectedBattleCount=originalGlobals.selectedBattleCount;adventureScreen=originalGlobals.adventureScreen;battleBusy=originalGlobals.battleBusy;currentCombatEncounter=originalGlobals.currentCombatEncounter;combatRound=originalGlobals.combatRound;combatTotal=originalGlobals.combatTotal;window.activeMainBattleContext=originalGlobals.activeMainBattleContext;
@@ -97,6 +100,7 @@ const assert=require("assert");
    }
   });
 
+  assert.equal(report.settlementCommits,4,"every completed mocked single commits exactly once");
   assert.deepEqual(report.versions,{context:1,binding:1,pipeline:1});
   assert.equal(report.integrity.passed,true,JSON.stringify(report.integrity.errors||[]));
   assert.equal(report.finite.ok,true);assert.equal(report.finite.calls.length,2);assert.equal(report.finite.ctx.completed,2);assert.equal(report.finite.ctx.wins,2);

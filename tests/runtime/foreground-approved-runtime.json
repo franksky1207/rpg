@@ -1,0 +1,174 @@
+{
+  "baseline": "b6d254c2dc9d4fb6b5d3d97ae48bd5db0263348f",
+  "implementation": "ee47693921d917adbd91f50d9a7bd08049e36681",
+  "files": {
+    "alternateuniverseui.js": {
+      "beforeSha256": "6e3d898800c8e1552c41e0797955007b69d0916faaba9c6d4cb22552f6a8ec83",
+      "afterSha256": "3d0e36c8d4101a831f1c324759af2e25c9a6893667b3a336b57d0da8ecbb1ef7"
+    },
+    "battlepipeline.js": {
+      "beforeSha256": "3fee55f5a509309d115a3b024b6f3cb9393a3e28bdeda9677809daa7a1c23477",
+      "afterSha256": "0ddb54c88310fd21529c4e289ead3391924d8469d7a2eb10a59f42d2e3ed24d7"
+    },
+    "calamitycore.js": {
+      "beforeSha256": "e4bd2386d657433e4a78a76895950cc55b7f19edfa4943587b94528f328790c9",
+      "afterSha256": "f103c015211b550df15f41352f7837b16ae41185e34e2bdc9bb3e9643e2a0283"
+    },
+    "calamityrun.js": {
+      "beforeSha256": "82eb137b6d359468941c5c3959fe8308f386d9bd8e8334fd9bdd35a4acda121f",
+      "afterSha256": "ee233b71d69efeffbb7e595fb00c80e6b6c9d95aeedc731317870644d8405e8e"
+    },
+    "calamityui.js": {
+      "beforeSha256": "6701f0c71fc915d60a31a791008c3d60c3eef9645468c79da8ed1f28373bca3d",
+      "afterSha256": "97739611d9fc3f067283e75e11d1b812c7ad077b07264bdb0f11d1ebd9b87cc2"
+    },
+    "combatcore.js": {
+      "beforeSha256": "f26e8b556618cab2cf3fa65c833b3020b181e6cb60fb5b7d4ea658336689debe",
+      "afterSha256": "3b1e33726b50ae2c70f12eaf914ae501f20d648b03a7dc1d48c9fea6619380c6"
+    },
+    "combatfx.js": {
+      "beforeSha256": "1ed3f8f6aebe100b354c2327b444475039c57359c9866ad65d064142c8705f95",
+      "afterSha256": "66d98dfcf1b1d09cb3d922b7f2ab028d2c6ccc6295d4fa5e834569b76df7b76e"
+    },
+    "combatfxintegrity.js": {
+      "beforeSha256": "9346aeca677e64969d950a56bf6c9690212f91bcfe20960bc90ec61fe62ee1af",
+      "afterSha256": "a35a654c09625e12520a01e56282ad37d2285069f2b2d46f4ce2b349bfdd9917"
+    },
+    "compatibilityowners.js": {
+      "beforeSha256": "8d24643c84fa5623b7fc9ecfbf8b096bd1a4997503399963c528e6b63f12666d",
+      "afterSha256": "a7b85fdf150c5a9511ca49a393028dc0a85464dfadba52463a2dcca3e6190519"
+    },
+    "dungeonarena.js": {
+      "beforeSha256": "e3129675a7d03607598429c61661db9ed9fba7e639f440605934ae73a2d995af",
+      "afterSha256": "1c7486b6954a55e34d0470278beb2225f7947bca1b80f2d0695a15fd4611d1f4"
+    },
+    "dungeonbounty.js": {
+      "beforeSha256": "c183a829df3591a276719292e9a961b32bfd5eeec6a2ab484f242ffa0b432be4",
+      "afterSha256": "e70ee347d6981a44ccb1bc700061beac996f0f3c17c49b8d80b47fdb205bdd54"
+    },
+    "dungeoncore.js": {
+      "beforeSha256": "924827b693904e884e13b9688389966c907b9397fbfe5d65ea82eead959958f5",
+      "afterSha256": "6f0ef460fdef70d4ae2898c184f36a91fe770dcc9f4cf82dace6a78c6b1c77b4"
+    },
+    "dungeonvoid.js": {
+      "beforeSha256": "7cc21e4c0094d11e647bc7aa7b5585553f14e4c98c3b21752016edf059169294",
+      "afterSha256": "edba87762f4765a4e7c46bc6ff9f2457e62057eecb9ee828dee1a4e0383fdc7b"
+    },
+    "dungeonvoidui.js": {
+      "beforeSha256": "6fb52c15c82d4c0fa7ae49f5016b2c6a3a0123aab914f33d7203c48f7c91abd2",
+      "afterSha256": "4029fba98c81aa33fb1329b2725664a42c508e2673dabb37a395a1b1c9679241"
+    },
+    "index.html": {
+      "beforeSha256": "11181f8cc2aeb231c385da2f0c59522bae3898f599d00f8defd4fc4d79abcf9e",
+      "afterSha256": "e525618ddaf6b8fbd9f9a637c5299373de13791097f4f930e141aa668edcae54"
+    },
+    "levelcap.js": {
+      "beforeSha256": "e83e70198693edb212ad82f23252f97d3f6246b27f4956b9fc16f17030c2ff77",
+      "afterSha256": "62317f6d2ab426538d7642cb8a417e7f1846c9d5f0e5b884348499c27a530ab4"
+    },
+    "levelcapresult.js": {
+      "beforeSha256": "2dc715b6885ceb304a0d432b68b2c465676d249e8faed8c3387dc3e32861534b",
+      "afterSha256": "cd883c29d67cc1e4100764d50e6c8fcc486c9a96f1e0532228fe4aaad00861a9"
+    },
+    "mirrordungeonguide.js": {
+      "beforeSha256": "df02785809bb20060579ac5ae87392a50986ca5a9b03cf70a0edc44d3d265956",
+      "afterSha256": "4b3786c82e7c032c6a91d7d9a39183811a342985d8e89ca42e6cdfd0db1514ee"
+    },
+    "mirrordungeonrun.js": {
+      "beforeSha256": "ffd5ad2ecd5ea18e34b58b78525a7a3c1ae6f77f6582332e6c14bb02cc9ac0a9",
+      "afterSha256": "e32e269705968c89d659603ddc5d874c9fceb3fb4c21178bac03272bd2454924"
+    },
+    "mirrordungeonstate.js": {
+      "beforeSha256": "7d082fde782897a28c659e6fd771f6551ed7f5c48be03cd1ff947a958377769f",
+      "afterSha256": "dd5f120224a20db25ed0ef3aa10a5a505063bbdfd16b04cd0ab97b4b71487f79"
+    },
+    "mirrordungeonui.js": {
+      "beforeSha256": "3805aef39ad6b07c2f63e021e1e05f1bf22d79dec70a64b6fc0c0d21c58aed37",
+      "afterSha256": "741a0f41195cef291f71270540c0437579d4671e91c3d07b0af52f6dbe62af4b"
+    },
+    "offlineworld3adapter.js": {
+      "beforeSha256": "d53e041ed2ca9749ef4310ca10888610482e96f95f61d602508c72847e295b67",
+      "afterSha256": "254cba081a0ce798265186ec43fc609115ad7e2c2697f58f1c4fdb66e6c9c276"
+    },
+    "reincarnationdungeonaccess.js": {
+      "beforeSha256": "5515aa9bb297c91a0dc875d750425adf22af8d3ee060e54ea32e51fe1e93da3e",
+      "afterSha256": "ce560567f7e719eda8471a41fcd3f25dda80578c0a5fef2e554cf3c45da88c6e"
+    },
+    "reincarnationrerunprogress.js": {
+      "beforeSha256": "f391686f887e2229ce9f72044f83a7246d6726c78fb574155857501b204af1c8",
+      "afterSha256": "fb8782bc9b47d4796acdc7cc737f2b1a6d3b000981af3400c96391b04f2f2772"
+    },
+    "savebackupretention.js": {
+      "beforeSha256": "be563352c30b18d03b0bde2139501838164063e408d7a46cddaeccb3b9b264a7",
+      "afterSha256": "2ace02cd25b03441d137dbbaf7da1a8e59851a13bec29d5226d229dc99a77bb4"
+    },
+    "savemigration.js": {
+      "beforeSha256": "1949cd1b822acbc5f52143043ee28aa860a16c99beda39deaba9803b7e4383c5",
+      "afterSha256": "8e3c7870ac9a5909a91dd9569a906e7a07907056f171653d810852ae116bd37b"
+    },
+    "saveversionguard.js": {
+      "beforeSha256": "c277b2b0099a3c1abcafb28ab6d4a8fedbbfc4b0a9882c5aade62a1277956153",
+      "afterSha256": "d88a16b9a4b581cb2e524acb3d5df11380d380b44a0e073d81f4bf2e332281af"
+    },
+    "secondworldcalamityrun.js": {
+      "beforeSha256": "f4f7bd8d86ce099e14499ec93b0a3946741ae0eec08a43afe628b60773369c6b",
+      "afterSha256": "53645c835ba87cfa40395d9741d2793d23489d0317be6dc9c47c6a98e498b54d"
+    },
+    "secondworldcalamityui.js": {
+      "beforeSha256": "7b4ee7a6587ca1d6f538c6584a8253e073f0cb4e0fc79faf15ed71a254d8e818",
+      "afterSha256": "2263e735704738daa63ea2a8c0df5b1b64ceb56a4b99041707a24f45c79bb47f"
+    },
+    "secondworldmainline.js": {
+      "beforeSha256": "65f4051232baca753a7ef07658308ffce37698d19437e0b8cde619b2e267ec4f",
+      "afterSha256": "eeef3d560816c6029b2fc4a02adbeaf23ad0d3769d2f0488b48f9b4dee972435"
+    },
+    "specialcore.js": {
+      "beforeSha256": "17851bd823ef429d4ab4ae6103d487bd04c1f0e2559042fb5cde2e817f157dac",
+      "afterSha256": "74d4d0373eb3c5323078a4af57b8fc7e249dd019f74df33d7c9b1e0ce1c4af2f"
+    },
+    "specialencounter.js": {
+      "beforeSha256": "0f6a8bc075d84410b20cbe7420069a48bf43ce9fe68d8cba801ca1790a656714",
+      "afterSha256": "bf2dbb39d5783539756f16e5afc1098d583e173c2d59180119c70abe56de8193"
+    },
+    "thirdworldarena.js": {
+      "beforeSha256": "3f6f7f6d0d0f6fe5ef466959aa16fef779748e3a859068ce2c3b9104d7bbb716",
+      "afterSha256": "7e0267e67c36e6ddc0418992e2db85d0c99cbc6f7fda0c2d9aad0defa4013d0b"
+    },
+    "thirdworldarenaui.js": {
+      "beforeSha256": "b2eee700439fe124cdc91bfb2ba0fe001890cd3ab996fa8aa73dcb3f7655b327",
+      "afterSha256": "a9de1f063a6cc29d978f37a10d8598e2bb972f713d5e62f13e4a213fc038d30a"
+    },
+    "thirdworldcombatsaveguard.js": {
+      "beforeSha256": "e34fb680cfc1cc648e787e436094bd0a7e826ef82477815b337d4577db4cdd25",
+      "afterSha256": "003ab8820994661b59b9ab29dd77cedafb4cd5c30d8c8c753a2345d5333b43a4"
+    },
+    "thirdworldphase.js": {
+      "beforeSha256": "fb4b3ad7169442a80380ce4d236aa329ba3357c4053e07b367b8c097759886f2",
+      "afterSha256": "b83097020c5df347116a76d5c2952c4277cbe4cba786978e015597aa40541f62"
+    },
+    "thirdworldplayerflow.js": {
+      "beforeSha256": "1b13be8ea6f3d55c22fc65b0df79bccc73688802c5f4bb507537d71891c2bc81",
+      "afterSha256": "e63b07856e9859bd628a5397981d2c7bc5348476810769812f29cc67b38acae3"
+    },
+    "thirdworldprogress.js": {
+      "beforeSha256": "c85386065d718c1bf1c59903b5b2b73afa370515580544cddaa43150e44748bb",
+      "afterSha256": "60ca09f05383cbb520c313fa953c2295c64aa6e7d9f176b35418ffa2d891e930"
+    },
+    "thirdworldrun.js": {
+      "beforeSha256": "9aa47bf747dc198d8378b3058681dd1918a30600f66af86fc98a0b974f53a881",
+      "afterSha256": "d431540df8ec068042e229badafce0fa4e640b4fde397ec768c5c7e1d74b0b35"
+    },
+    "thirdworldui.js": {
+      "beforeSha256": "7069c1c20570ff10aa23df4d15c5805277a2afcf5db7dca2c960cf199c4dd2db",
+      "afterSha256": "5446d144544a39cc761f355b292ec4f3a16b2b9003997239376a2baa518582c5"
+    },
+    "ui.js": {
+      "beforeSha256": "118ad786801c6966b97668bf4ece67aefeb1b464484cb1b1d02671fbac7efdbf",
+      "afterSha256": "0f5ad752fd4f9d36bf22690b23275258208b743116f2fc12923c6637657660b1"
+    },
+    "worldtransitionsafety.js": {
+      "beforeSha256": "fc309973bb3f214ea5a273e43fb915b39db764ec1c8379a0a7f25603ad8457e7",
+      "afterSha256": "b9e4a96ee0fef680a331794ee7b195877bed458859d2f6d750116863247bfaaa"
+    }
+  }
+}

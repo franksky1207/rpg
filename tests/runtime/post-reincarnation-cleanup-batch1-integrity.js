@@ -13,12 +13,12 @@ const backupRetention=fs.readFileSync("savebackupretention.js","utf8");
 const workflow=fs.readFileSync(".github/workflows/runtime-integrity.yml","utf8");
 
 assert.ok(index.includes('src="savehookcore.js?v=20261005-code-cleanup-batch1'),"index 必須載入 canonical Save Hook Core");
-assert.ok(index.includes('src="compatibilityowners.js?v=20261005-code-cleanup-batch7"'),"index 必須使用 Batch7 compatibility owner canonical cache token");
+assert.ok(index.includes('src="compatibilityowners.js?v=20261005-code-cleanup-batch7&foreground=20261023-194-v2"'),"index 必須使用 Batch7 compatibility owner canonical cache token");
 assert.ok(index.includes('src="scriptgrouploader.js?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1&v4=20261006-gm-runtime-policy-batch3-final2&v5=20261008-gm-early-runtime-restore1&v6=20261008-gm-auth-pref-sync1&v7=20261008-gm-first-render1&v8=20261008-gm-load-opt2&v9=20261009-gm-dom-ready&v10=20261010-account-gm&v11=20261010-startup-gm-cache4&v12=20261010-gm-filehash4&v13=20261010-manifest-gm5&v14=20261010-gm-3d-warm&v15=20261010-actual-progress&v16=20261010-3d-opt-b3-gm-progress"'),"index 必須使用 Batch3 GM runtime policy Script Group Loader canonical cache token");
 assert.ok(index.indexOf('src="savehookcore.js')<index.indexOf('src="compatibilityowners.js'),"Save Hook Core 必須先於 compatibility owner 載入");
 assert.ok(!index.includes('src="thirdworldmigrationregression.js'),"production index 不應再載入 thirdworld migration regression");
 assert.ok(!index.includes('save-level-migration-regression.js'),"production index 不應載入 level migration CI regression");
-assert.ok(/const EXPECTED_SAVE_SCHEMA_VERSION=17;/.test(compatibility),"Legacy compatibility diagnostic 必須對齊 Schema17");
+assert.ok(/const EXPECTED_SAVE_SCHEMA_VERSION=18;/.test(compatibility),"Legacy compatibility diagnostic 必須對齊 Schema17");
 assert.ok(/legacyReadPath:"migration-only"/.test(compatibility),"舊存檔必須明確走 migration-only 相容路徑");
 assert.ok(/canonicalWriteSchema:current/.test(compatibility),"舊檔讀入後必須回到 current canonical schema");
 assert.ok(/SCRIPT_ON_DEMAND_ACTIVATION_VERSION=1/.test(compatibility),"Batch7 on-demand load policy contract 必須存在");
@@ -32,12 +32,12 @@ assert.ok(workflow.includes("save-level-migration-regression.js"),"Runtime Integ
 assert.ok(workflow.includes("save-schema17-compatibility-matrix.js"),"Schema17 legacy compatibility matrix 必須繼續保留");
 assert.ok(workflow.includes("reincarnation-permanent-gear-carryover-integrity.js"),"Runtime Integrity 必須永久執行轉生永久裝備 carryover regression");
 
-assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2"'),"Batch2 必須載入 backup retention policy");
+assert.ok(index.includes('src="savebackupretention.js?v=20261005-code-cleanup-batch2&foreground=20261023-194-v2"'),"Batch2 必須載入 backup retention policy");
 assert.ok(index.includes('src="reincarnationrerunworld1.js?v=20261005-code-cleanup-batch2-fix1&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch5"'),"W1 rerun 必須更新 Batch5 lifecycle convergence cache token");
 assert.ok(index.includes('src="runtimeapi.js?v=20261005-code-cleanup-batch4'),"Batch4 必須載入 canonical runtime API owner");
 assert.ok(index.includes('src="reincarnationrerunworld2.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4"'),"W2 rerun 必須更新 Batch4 cache token");
 assert.ok(index.includes('src="reincarnationrerunworld3.js?v=20261005-code-cleanup-batch2&v2=20261005-code-cleanup-batch3&v3=20261005-code-cleanup-batch4&v4=20261006-rerun-stage-continuation1&v5=20261006-rerun-continuation-opt1"'),"W3 rerun 必須更新轉生 Stage 不中斷 cache token");
-assert.ok(index.includes('src="savemigration.js?v=20261015-thrust1"'),"原轉生／GM transient／migration diagnostics 及本次舊武器改名共用 savemigration，必須使用確切的新 cache token");
+assert.ok(index.includes('src="savemigration.js?v=20261015-thrust1&foreground=20261023-194-v2"'),"原轉生／GM transient／migration diagnostics 及本次舊武器改名共用 savemigration，必須使用確切的新 cache token");
 assert.ok(index.indexOf('src="reincarnationrerunworld1.js')<index.indexOf('src="runtimeapi.js'),"runtime API owner 必須在 W1 presentation adapter 之後接管 shared legacy alias");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld2.js'),"runtime API owner 必須先於 W2 rerun consumer");
 assert.ok(index.indexOf('src="runtimeapi.js')<index.indexOf('src="reincarnationrerunworld3.js'),"runtime API owner 必須先於 W3 rerun consumer");

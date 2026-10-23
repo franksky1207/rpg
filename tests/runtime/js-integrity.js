@@ -24,7 +24,7 @@ for(const group of ["gm","story","integrity"]){const re=new RegExp(`<script\\s+t
 
 const loaderRef=assetRef("scriptgrouploader.js");
 assert(loaderRef==="?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1&v4=20261006-gm-runtime-policy-batch3-final2&v5=20261008-gm-early-runtime-restore1&v6=20261008-gm-auth-pref-sync1&v7=20261008-gm-first-render1&v8=20261008-gm-load-opt2&v9=20261009-gm-dom-ready&v10=20261010-account-gm&v11=20261010-startup-gm-cache4&v12=20261010-gm-filehash4&v13=20261010-manifest-gm5&v14=20261010-gm-3d-warm&v15=20261010-actual-progress&v16=20261010-3d-opt-b3-gm-progress","Script Group Loader Batch3 canonical cache token 未同步。");
-assert(assetRef("compatibilityowners.js")==="?v=20261005-code-cleanup-batch7","Compatibility owner canonical cache token 漂移。");
+assert(assetRef("compatibilityowners.js")==="?v=20261005-code-cleanup-batch7&foreground=20261023-194-v2","Compatibility owner canonical cache token 漂移。");
 assert(!/<script\s+defer\s+fetchpriority="low"\s+data-load-group="(?:gm|story|integrity)"/.test(index),"舊 defer-only 非核心載入方式必須退休。");
 assert(/GROUP_ORDER=Object\.freeze\(\["story","gm","integrity"\]\)/.test(scriptLoader)&&/AUTO_GROUPS=Object\.freeze\(\["story"\]\)/.test(scriptLoader),"Loader 必須只自動載入 Story。");
 assert(/CivilizationScriptLoader=namespace/.test(scriptLoader)&&/ACTIVATION_POLICY_VERSION=3/.test(scriptLoader)&&/LOAD_BEHAVIOR_VERSION=5/.test(scriptLoader),"Batch3 canonical script-loader namespace／版本契約缺失。");
@@ -38,7 +38,7 @@ assert(workflow.includes("code-cleanup-batch7-lazy-loading.js")&&/production=1/.
 
 assert(/IMPLEMENTATION_OWNER="savehookcore"/.test(saveHook)&&/CORE_VERSION=2/.test(saveHook),"Save Hook Core owner／V2 契約錯誤。");
 assert(/window\.save=hookedSave/.test(saveHook)&&/registerBeforeSaveHook/.test(saveHook)&&/registerAfterSaveHook/.test(saveHook)&&/registerSaveSettlementHook/.test(saveHook),"Save Hook Core API 不完整。");
-assert(/const VERSION=5;/.test(compatibility)&&/SCRIPT_LOAD_POLICY_VERSION=4/.test(compatibility)&&/EXPECTED_SAVE_SCHEMA_VERSION=17/.test(compatibility),"Compatibility owner／Schema17 診斷未同步。");
+assert(/const VERSION=5;/.test(compatibility)&&/SCRIPT_LOAD_POLICY_VERSION=4/.test(compatibility)&&/EXPECTED_SAVE_SCHEMA_VERSION=18/.test(compatibility),"Compatibility owner／Schema17 診斷未同步。");
 assert(/read-compatible-no-duplicate-write/.test(compatibility)&&/legacyGlobalAliasSnapshot/.test(compatibility),"Legacy global alias policy 缺失。");
 assert(!/window\.save\s*=/.test(compatibility)&&!/window\.MAX_LEVEL\s*=\s*LEGACY_MAX_LEVEL_VALUE/.test(compatibility)&&!/window\.scriptLoadGroupFor\s*=/.test(compatibility),"Compatibility owner 不得重新成為正式 writer/global classifier owner。");
 assert(/CivilizationScriptLoader/.test(compatibility)&&/activation:snapshot\?\.activation\|\|null/.test(compatibility),"Compatibility runtime snapshot 必須讀 canonical loader namespace。");
@@ -76,4 +76,4 @@ assert(/GM_BATCH16_FORMAL_POLICY_VERSION=POLICY_VERSION/.test(gmFormalControls)&
 assert(/GM_BATCH16_GLOBAL_RENDERER_COMPAT_ALIAS_VERSION=COMPAT_ALIAS_VERSION/.test(gmFormalControls)&&/gmSpecializationManagementHtml=specializationRenderer/.test(gmFormalControls)&&/gmMarkManagementHtml=markRenderer/.test(gmFormalControls)&&/gmCivilizationManagementHtml=civilizationRenderer/.test(gmFormalControls),"GM Batch16 舊 global renderer 只能保留為 canonical policy compatibility alias。");
 assert(index.includes('gmbatch16formalcontrols.js?v=20260930-gm-late-binding-batch2&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1'),"GM Batch16 Batch3 cache token 未同步。");
 
-console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,normalScripts:normalScripts.length,delayedScripts:delayedScripts.length,saveHook:"savehookcore",schema:17,cleanupBatch:7,runtimeApi:1,migrationRegression:"ci-only",reincarnationPermanentGearSaveGuard:"evidence-gated-fallback-only",gmAuthorization:"account-local-runtime",gmLazyRetry:true,gmFormalPolicy:1,lazyLoading:"story-auto-gm-browser-authorized-or-modal-integrity-explicit"}));
+console.log("JavaScript structural integrity passed:",JSON.stringify({files:files.length,localScripts:localScripts.length,normalScripts:normalScripts.length,delayedScripts:delayedScripts.length,saveHook:"savehookcore",schema:18,cleanupBatch:7,runtimeApi:1,migrationRegression:"ci-only",reincarnationPermanentGearSaveGuard:"evidence-gated-fallback-only",gmAuthorization:"account-local-runtime",gmLazyRetry:true,gmFormalPolicy:1,lazyLoading:"story-auto-gm-browser-authorized-or-modal-integrity-explicit"}));

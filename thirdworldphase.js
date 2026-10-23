@@ -20,7 +20,7 @@
  const THIRD_WORLD_STORY_DEVELOPMENT_RESET_VERSION=1;
  const THIRD_WORLD_STORY_COMPLETION_SOURCE_VERSION=1;
  const THIRD_WORLD_PERSISTENT_KEYS=Object.freeze(["entered","completed","entryVersion","dimensionalStrings","coreLevel","coreProgress","bosses","story"]);
- const THIRD_WORLD_BOSS_PERSISTENT_KEYS=Object.freeze(["currentHp"]);
+ const THIRD_WORLD_BOSS_PERSISTENT_KEYS=Object.freeze(["currentHp","rewardFloorHp"]);
  const THIRD_WORLD_STORY_PERSISTENT_KEYS=Object.freeze(["introSeen","unlockedStage","finalSeen"]);
 
  function isObject(value){return !!value&&typeof value==="object"&&!Array.isArray(value);}
@@ -38,7 +38,7 @@
  }
  function normalizedCoreProgress(value,level){return normalizeThirdWorldCoreInvestment(level,value,0,{preserveOverflow:false}).progress;}
  function createBlankThirdWorldState(){return {entered:false,completed:false,entryVersion:0,dimensionalStrings:0,coreLevel:0,coreProgress:0,bosses:blankBosses(),story:{introSeen:false,unlockedStage:0,finalSeen:false}};}
- function normalizeBosses(value){const source=Array.isArray(value)?value:[];return Array.from({length:THIRD_WORLD_BOSS_COUNT},(_,index)=>{const row=isObject(source[index])?source[index]:{},hp=clamp(finiteWhole(row.currentHp,THIRD_WORLD_BOSS_MAX_HP),0,THIRD_WORLD_BOSS_MAX_HP);return {currentHp:hp};});}
+ function normalizeBosses(value){const source=Array.isArray(value)?value:[];return Array.from({length:THIRD_WORLD_BOSS_COUNT},(_,index)=>{const row=isObject(source[index])?source[index]:{},hp=clamp(finiteWhole(row.currentHp,THIRD_WORLD_BOSS_MAX_HP),0,THIRD_WORLD_BOSS_MAX_HP);return Number.isFinite(row.rewardFloorHp)?{currentHp:hp,rewardFloorHp:clamp(finiteWhole(row.rewardFloorHp,hp),0,hp)}:{currentHp:hp};});}
  function normalizeStory(value){const source=isObject(value)?value:{};return {introSeen:source.introSeen===true,unlockedStage:clamp(finiteWhole(source.unlockedStage,0),0,THIRD_WORLD_STORY_MAX_STAGE),finalSeen:source.finalSeen===true};}
  function canonicalThirdWorldStoryStage(target){
   if(typeof window.thirdWorldTitleTier!=="function")return null;

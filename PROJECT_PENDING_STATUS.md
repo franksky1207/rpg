@@ -1,3 +1,5 @@
+> **第19-4批 Actions／合併驗收最新入口**：[並行規則與正式驗收紀錄](docs/BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md)。main原22支、PR精簡為17支；八支PR workflow統一workflow／event／PR隔離並僅取消同PR舊版，Pages／Manifest保留不取消的資源鎖。已核對原86320c8六項成功；本次新HEAD必須重新全綠才合併，正式main／Pages成功後才能封箱。iPhone真機仍待驗收。
+
 > **第13批20圖整合（2026-10-20）**：14張新圖加PR #58既有六張，609正式身份對應與63筆外型修正，沿用GM／Actor／Pool；正式戰鬥維持關閉。驗收、來源核對與剩餘真機項目見 [docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md](docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md)；最終是否完成以本批PR與最新main同SHA Actions／Pages成功為準。
 
 # 《文明戰線》目前待辦狀態
@@ -64,7 +66,7 @@ Code Cleanup Batch1～8                         ✅ 完成
 ## Save／Migration
 
 ```text
-SAVE_SCHEMA_VERSION = 17
+SAVE_SCHEMA_VERSION = 18
 SAVE_LOAD_PIPELINE_VERSION = 3
 SAVE_NORMALIZATION_PIPELINE_VERSION = 3
 SAVE_MIN_SUPPORTED_VERSION = 1

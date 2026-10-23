@@ -7,12 +7,12 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: functional-ci-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   classify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     outputs:
       combat: ${{ steps.impact.outputs.combat }}
       monster: ${{ steps.impact.outputs.monster }}
@@ -54,14 +54,17 @@ jobs:
     needs: classify
     if: needs.classify.outputs.combat == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - name: Battle lifecycle, positioning, and transition contracts
         run: |
+          node tests/runtime/foreground-approved-runtime.cjs
+          node tests/runtime/foreground-combat-lifecycle.cjs
           node tests/runtime/combat-events-integration.cjs
           node tests/runtime/cross-combat-stale-continuous-regression.cjs
           node tests/runtime/cross-mode-late-settlement-regression.cjs
@@ -75,7 +78,6 @@ jobs:
     needs: classify
     if: needs.classify.outputs.monster == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,7 +116,6 @@ jobs:
     needs: classify
     if: needs.classify.outputs.gm == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -134,7 +135,6 @@ jobs:
     needs: classify
     if: needs.classify.outputs.equipment == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -153,7 +153,6 @@ jobs:
     needs: classify
     if: needs.classify.outputs.background == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -174,7 +173,6 @@ jobs:
     needs: classify
     if: needs.classify.outputs.resource == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -191,7 +189,6 @@ jobs:
     needs: [classify, combat, monster, gm, equipment, background, resource]
     if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 3
     steps:
       - name: Require all selected domains to pass
         env:

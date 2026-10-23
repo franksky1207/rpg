@@ -9,7 +9,7 @@
   extendCategories(categories){
    const dungeon=Array.isArray(categories)?categories.find(category=>category?.id==="dungeon"):null;
    if(!dungeon||!Array.isArray(dungeon.items))return categories;
-   if(!dungeon.items.some(item=>Array.isArray(item)&&item[0]==="鏡像戰"))dungeon.items.push(["鏡像戰",`每日可挑戰 1 次，固定連戰 ${config.runBattles} 場。對手會複製開始挑戰時的角色戰力，每場隨機決定先攻；完成後依勝場取得 VIP 積分並記錄最高成績。`]);
+   if(!dungeon.items.some(item=>Array.isArray(item)&&item[0]==="鏡像戰"))dungeon.items.push(["鏡像戰",`每日可挑戰 1 次，固定連戰 ${config.runBattles} 場。對手會複製開始挑戰時的角色戰力，每場隨機決定先攻；離開前景會中止當前單場，已完成勝負保留，可繼續當日同一輪；全部完成後依勝場取得 VIP 積分並記錄最高成績。`]);
    return categories;
   }
  });

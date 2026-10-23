@@ -3,6 +3,7 @@
 // Historic guards still compare EVERY byte outside this explicit patch set.
 const fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const patch=require('./pr48-approved-presentation.json');
+const preForeground=require('./foreground-approved-runtime.cjs').original;
 // PR #50, 2026-10-20: two exact reviewed post-seal updates. Keep the old
 // baseline return value for historical invariants while rejecting all other edits.
 const approvedFollowup=Object.freeze({
@@ -15,14 +16,14 @@ function original(p){
   const from='id:text(enemy.id)||text(enemy.bossId),';
   const to='id:text(enemy.id)||text(enemy.bossId)||text(enemy.calamityId)||text(enemy.higherDimensionalBossId),';
   assert.equal(before.toString().split(from).length,2,'exact single identity projection');
-  assert.equal(fs.readFileSync(p,'utf8'),before.toString().replace(from,to),'only Batch17 source IDs may extend presentation metadata');
+  assert.equal(preForeground(p,'utf8'),before.toString().replace(from,to),'only Batch17 source IDs may extend presentation metadata');
   return before;
  }
  if(Object.hasOwn(approvedFollowup,p)){
   // Batch16 special: normalize only the two reviewed entrypoint cache revisions.
   // All remaining bytes still pass the immutable blob comparison below.
   // Batch13 authorizes exactly one GM cache-token replacement; every other byte stays locked.
-  let bytes=fs.readFileSync(p);
+  let bytes=preForeground(p);
   if(p==='index.html')bytes=Buffer.from(bytes.toString()
    // Batch19-3: authorize precisely the two necessary HTML cache-token bumps.
    .replace('battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4&batch19=20261023-3','battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4')
@@ -58,11 +59,11 @@ function original(p){
   if(p==='index.html')return cp.execFileSync('git',['show',patch.baseline+':'+p]);
   return cp.execFileSync('git',['show',patch.baseline+':'+p]);
  }
- const row=patch.files[p];if(!row)return fs.readFileSync(p);
+ const row=patch.files[p];if(!row)return preForeground(p);
  const before=cp.execFileSync('git',['show',patch.baseline+':'+p],{maxBuffer:8*1024*1024});
  assert.equal(crypto.createHash('sha256').update(before).digest('hex'),row.beforeSha256);
  const lines=before.toString().split('\n');for(const [start,end,text] of [...row.edits].reverse())lines.splice(start,end-start,...text);const expected=lines.join('\n');
- const source=fs.readFileSync(p,'utf8');
+ const source=preForeground(p,'utf8');
  const reviewed=p==='3d-test/index.html'?source.replace('test-center.css?v=20261022-batch19-2-center1','test-center.css?v=20261019-batch12-rising-cut1').replace('test-center.js?v=20261022-batch19-2-center1','test-center.js?v=20261022-batch19-frame1').replace('test-center.js?v=20261022-batch19-frame1','test-center.js?v=20261022-batch18-alternate1').replace('test-center.js?v=20261022-batch18-alternate1','test-center.js?v=20261021-batch17-boss1').replace('test-center.js?v=20261021-batch17-boss1','test-center.js?v=20261021-special-formal1').replace('test-center.js?v=20261021-special-formal1','test-center.js?v=20261021-batch16-dungeons2').replace('test-center.js?v=20261021-batch16-dungeons2','test-center.js?v=20261021-batch16-dungeons1').replace('test-center.js?v=20261021-batch16-dungeons1','test-center.js?v=20261021-batch15-pair1').replace('test-center.js?v=20261021-batch15-pair1','test-center.js?v=20261020-twenty-gm1').replace('test-center.js?v=20261020-twenty-gm1','test-center.js?v=20261019-batch12-rising-cut1'):source;
  assert.equal(reviewed,expected,'source differs from exact approved PR48 presentation patch: '+p);
  return before;

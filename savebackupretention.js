@@ -4,7 +4,8 @@
   rollingSafety:Object.freeze({suffix:".safety-backup-v1",retain:"latest",automaticDelete:false}),
   rollingSafetyMeta:Object.freeze({suffix:".safety-backup-meta-v1",retain:"with-rolling-safety",automaticDelete:false}),
   preSchema16:Object.freeze({suffix:".pre-schema16-backup-v1",retain:"until-manual-prune-after-canonical-schema17",automaticDelete:false}),
-  preSchema17:Object.freeze({suffix:".pre-schema17-backup-v1",retain:"until-manual-prune-after-canonical-schema17",automaticDelete:false})
+  preSchema17:Object.freeze({suffix:".pre-schema17-backup-v1",retain:"until-manual-prune-after-canonical-schema17",automaticDelete:false}),
+  preSchema18:Object.freeze({suffix:".pre-schema18-backup-v1",retain:"manual-review-after-schema18",automaticDelete:false})
  });
  function bytes(text){const value=String(text??"");try{return typeof Blob==="function"?new Blob([value]).size:value.length*2;}catch(_){return value.length*2;}}
  function safeGet(key){try{return localStorage.getItem(key);}catch(_){return null;}}

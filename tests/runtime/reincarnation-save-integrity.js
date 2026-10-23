@@ -10,7 +10,7 @@ const assert=require("assert");
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>
-   window.SAVE_SCHEMA_VERSION===17&&
+   window.SAVE_SCHEMA_VERSION===18&&
    window.REINCARNATION_STATE_VERSION>=7&&
    window.ALTERNATE_UNIVERSE_STATE_FORMAT_VERSION===2&&
    window.ALTERNATE_UNIVERSE_TRAIT_POLICY_VERSION===1&&
@@ -42,7 +42,7 @@ const assert=require("assert");
     const migrated=window.migrateSave(clone(source),16,null,raw),after=meaningful(migrated),migration=clone(window.LAST_SAVE_MIGRATION_REPORT||{}),lifecycle=window.reincarnationLifecycleSnapshot(migrated);
     const lf=migrated.reincarnation?.alternateUniverse?.lifeFailures;
     record(`SCHEMA16_ZERO_POLLUTION_${id}`,
-     JSON.stringify(before)===JSON.stringify(after)&&migrated.saveVersion===17&&migrated.reincarnation?.count===0&&migrated.reincarnation?.breakthrough?.milestoneLifeId===0&&lifecycle.firstRun===true&&lifecycle.reincarnationRun===false&&lifecycle.lifeId===0&&migration.reincarnationStateInitialized===true&&migration.sourceReincarnationCount===0&&migration.targetReincarnationCount===0&&lf?.lifeId===0&&Object.keys(lf?.failures||{}).length===0,
+     JSON.stringify(before)===JSON.stringify(after)&&migrated.saveVersion===18&&migrated.reincarnation?.count===0&&migrated.reincarnation?.breakthrough?.milestoneLifeId===0&&lifecycle.firstRun===true&&lifecycle.reincarnationRun===false&&lifecycle.lifeId===0&&migration.reincarnationStateInitialized===true&&migration.sourceReincarnationCount===0&&migration.targetReincarnationCount===0&&lf?.lifeId===0&&Object.keys(lf?.failures||{}).length===0,
      {before,after,lifecycle,migration:{sourceVersion:migration.sourceVersion,targetVersion:migration.targetVersion,reincarnationStateInitialized:migration.reincarnationStateInitialized,sourceReincarnationCount:migration.sourceReincarnationCount,targetReincarnationCount:migration.targetReincarnationCount},lifeFailures:clone(lf)});
    });
 
@@ -59,7 +59,7 @@ const assert=require("assert");
     let migrated=null,migration=null,error="";
     try{migrated=window.migrateSave(clone(source),schema,null,clone(source));migration=clone(window.LAST_SAVE_MIGRATION_REPORT||{});}catch(e){error=String(e?.message||e);}
     const lifecycle=migrated?window.reincarnationLifecycleSnapshot(migrated):null;
-    record(id,!error&&migrated?.saveVersion===17&&migrated?.reincarnation?.count===0&&migrated?.reincarnation?.breakthrough?.permanent===0&&migrated?.reincarnation?.alternateUniverse?.unlocked===false&&lifecycle?.firstRun===true&&migration?.sourceVersion===schema&&migration?.sourceHadReincarnationRoot===true&&migration?.preSchema17ReincarnationDiscarded===true,{error,migration,lifecycle});
+    record(id,!error&&migrated?.saveVersion===18&&migrated?.reincarnation?.count===0&&migrated?.reincarnation?.breakthrough?.permanent===0&&migrated?.reincarnation?.alternateUniverse?.unlocked===false&&lifecycle?.firstRun===true&&migration?.sourceVersion===schema&&migration?.sourceHadReincarnationRoot===true&&migration?.preSchema17ReincarnationDiscarded===true,{error,migration,lifecycle});
    });
 
    const invalid={saveVersion:17,reincarnation:{count:-5,breakthrough:{permanent:-20,milestones:{100:true,200:"true",300:1}},alternateUniverse:{unlocked:false,deepestCleared:5000,activeAttempt:{lifeId:9,depth:4,attemptId:"bad",traits:["strong","swift"]},lifeFailures:{lifeId:9,failures:{4:99}}}}};
@@ -116,7 +116,7 @@ const assert=require("assert");
    const serialized=JSON.stringify(original),parsed=JSON.parse(serialized),roundTrip=window.migrateSave(parsed,17,null,clone(parsed));
    const expectedReincarnation=clone(original.reincarnation),actualReincarnation=clone(roundTrip.reincarnation);
    record("SCHEMA17_REINCARNATION_ROUND_TRIP",
-    JSON.stringify(expectedReincarnation)===JSON.stringify(actualReincarnation)&&roundTrip.saveVersion===17&&window.currentLifeId(roundTrip)===4&&window.currentLifeBreakthrough(roundTrip)===2&&roundTrip.reincarnation?.alternateUniverse?.lifeFailures?.lifeId===4&&roundTrip.reincarnation?.alternateUniverse?.lifeFailures?.failures?.["124"]===3,
+    JSON.stringify(expectedReincarnation)===JSON.stringify(actualReincarnation)&&roundTrip.saveVersion===18&&window.currentLifeId(roundTrip)===4&&window.currentLifeBreakthrough(roundTrip)===2&&roundTrip.reincarnation?.alternateUniverse?.lifeFailures?.lifeId===4&&roundTrip.reincarnation?.alternateUniverse?.lifeFailures?.failures?.["124"]===3,
     {expected:expectedReincarnation,actual:actualReincarnation});
 
    const first=window.reincarnationLifecycleSnapshot({reincarnation:{count:0}}),later=window.reincarnationLifecycleSnapshot({reincarnation:{count:5}});

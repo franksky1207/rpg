@@ -241,9 +241,9 @@
   if(conflict.blocked||!backgroundFlowOwned())return freeze({ok:false,reason:"其他正式戰鬥／背景流程已接管，停止高維連戰。",runtime:conflict,snapshot:clearRuntime("active-runtime")});
   if(typeof window.runThirdWorldBossCombat!=="function"||typeof window.settleThirdWorldCombatResult!=="function")return freeze({ok:false,reason:"高維戰鬥／結算 owner 尚未載入。",snapshot:clearRuntime("owner-missing")});
   const target=currentState(),status=typeof window.thirdWorldChallengeStatus==="function"?window.thirdWorldChallengeStatus(runtime.bossIndex,target):null;
-  if(status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:clearRuntime(status?.reason||"challenge-blocked")});
+  if(!options.precomputedCombat&&status?.allowed!==true)return freeze({ok:false,reason:String(status?.reason||"challenge-blocked"),challengeStatus:status||null,snapshot:clearRuntime(status?.reason||"challenge-blocked")});
   const cap=hpCapSnapshot(runtime.deaths,target,null,runtime.coreLevelAtStart);
-  const combat=window.runThirdWorldBossCombat(runtime.bossIndex,battleOptions(options,cap));
+  const combat=options.precomputedCombat||window.runThirdWorldBossCombat(runtime.bossIndex,battleOptions(options,cap));
   if(combat?.ok!==true||combat?.formalSettlementEligible!==true)return freeze({ok:false,reason:String(combat?.reason||combat?.terminationReason||"combat-incomplete"),combat:combat||null,snapshot:clearRuntime("combat-incomplete")});
   const settlement=window.settleThirdWorldCombatResult(combat,{rng:options.rng,vipLevel:options.vipLevel,weakTypesResolver:options.weakTypesResolver});
   if(settlement?.ok!==true)return freeze({ok:false,reason:String(settlement?.reason||settlement?.code||"settlement-failed"),combat,settlement:settlement||null,snapshot:clearRuntime("settlement-failed")});
@@ -262,7 +262,7 @@
   const progressEvent=continuation.requiresEventHandling===true;
   const deathLimitReached=countsDeath&&deathsAfter>=MAX_DEATHS;
   if(progressEvent||Array.isArray(settlement?.eventSequence)&&settlement.eventSequence.length)settlePendingEvents(settlement);
-  const terminalReason=terminalReasonForStep(formalTerminalReason,progressEvent,deathLimitReached);
+  const terminalReason=terminalReasonForStep(formalTerminalReason,progressEvent,deathLimitReached)||(runtime.stopRequested?"manual":"");
   const willContinue=!terminalReason;
   const summary=summaryFromStep(settlement,combat,{battleNumber:runtime.battles,countsDeath,deathPenalty,deathsAfter,deathLimitReached,terminalReason,progressEvent,continuationAllowed:willContinue});
   recordBattleSummary(summary);
@@ -275,15 +275,30 @@
   const started=startRun(value);
   if(!started.ok)return started;
   if(runtime?.looping===true)return freeze({ok:false,reason:"此高維連戰已由另一個 loop 執行中。",snapshot:runtimeSnapshot()});
+  const foregroundEpoch=window.CivilizationCombatLifecycle?.epoch();
   const serial=runSerial,runId=Math.max(1,finiteWhole(runtime?.runId,serial)),recent=[],startedBattleCount=Math.max(0,finiteWhole(runtime?.battles,0)),totals={effectivePermanentDamage:0,xp:0,dimensionalStrings:0,itemCount:0};
   let total=0,lastStep=null,lastSnapshot=started.snapshot,catchUpNeedsFinalSync=false,caughtError=null;
   runtime.looping=true;
   try{
    while(runtime?.active===true&&runSerial===serial){
-    await waitForForegroundIfBackgroundDisabled();
+    if(!gmBackgroundEnabled()&&window.CivilizationCombatLifecycle){window.CivilizationCombatLifecycle.foreground(foregroundEpoch);await Promise.resolve();window.CivilizationCombatLifecycle.foreground(foregroundEpoch);}
+    else await waitForForegroundIfBackgroundDisabled();
     if(runtime?.active!==true||runSerial!==serial)break;
     const fastCatchUp=fastCatchUpActive();
-    const step=runOneBattle(options);
+    let precomputedCombat=null;
+    if(typeof options.beforeBattle==="function"&&!fastCatchUp&&document.visibilityState!=="hidden"){
+     const cap=hpCapSnapshot(runtime.deaths,currentState(),null,runtime.coreLevelAtStart);
+     precomputedCombat=window.runThirdWorldBossCombat(runtime.bossIndex,battleOptions(options,cap));
+     if(precomputedCombat?.formalSettlementEligible===true){
+      window.CivilizationCombatLifecycle.checkpoint(precomputedCombat.combat,(hp,index)=>window.checkpointThirdWorldCombat(precomputedCombat,hp,index));
+      runtime.presentingBattle=true;
+      try{await options.beforeBattle({ok:true,combat:precomputedCombat,snapshot:runtimeSnapshot()});}
+      catch(error){window.cancelThirdWorldOfflineBattleSample?.(precomputedCombat);throw error;}
+      finally{if(runtime&&runSerial===serial)runtime.presentingBattle=false;}
+     }
+     if(runtime?.active!==true||runSerial!==serial){window.cancelThirdWorldOfflineBattleSample?.(precomputedCombat);break;}
+    }
+    const step=runOneBattle({...options,precomputedCombat});
     if(step?.ok===true)total+=1;
     lastStep=step;lastSnapshot=step?.snapshot||runtimeSnapshot();
     if(step?.summary){
@@ -296,7 +311,7 @@
     const policy=fastCatchUp&&runtime?.active===true?catchUpStep():null;
     if(fastCatchUp)catchUpNeedsFinalSync=true;
     const notify=!fastCatchUp||shouldNotifyDuringCatchUp(step,policy);
-    if(notify&&typeof options.onBattle==="function"){try{await options.onBattle(step,{fastCatchUp,catchUpPolicy:policy});}catch(error){console.error(error);}}
+    if(notify&&typeof options.onBattle==="function"){try{await options.onBattle(step,{fastCatchUp,catchUpPolicy:policy,prePresented:!!precomputedCombat});}catch(error){console.error(error);}}
     // A skipped battle consumes its original presentation time as well as
     // the outer gap. Charging only the gap leaves long-lived checkpoint UI
     // and converts background time into far too many settled battles.
@@ -315,6 +330,7 @@
     }
    }
   }catch(error){
+   if(window.CivilizationCombatLifecycle?.isInterrupted(error)){lastSnapshot=lastFinishedRunSnapshot(runId)||clearRuntime("interrupted");return freeze({ok:true,world:3,runId,battles:total,totals:freeze(totals),results:boundedSummaries(recent),lastResult:lastStep,snapshot:lastSnapshot,reason:"interrupted"});}
    caughtError=error;
    if(runtime?.active===true&&runSerial===serial)lastSnapshot=clearRuntime("battle-error");
    else lastSnapshot=lastFinishedRunSnapshot(runId)||lastSnapshot;
@@ -372,11 +388,11 @@
   if(!/continuous-run-infrastructure-missing/.test(conflictSource)||!/normalizeRuntimeConflict/.test(conflictSource))errors.push({code:"STRICT_SHARED_INFRA_WIRING"});
   return freeze({version:INTEGRITY_VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,foregroundWaitVersion:FOREGROUND_WAIT_VERSION,backgroundPolicyVersion:BACKGROUND_POLICY_VERSION,ownMinimalModeGuardVersion:OWN_MINIMAL_MODE_GUARD_VERSION,runTotalsVersion:RUN_TOTALS_VERSION,runIdentityVersion:RUN_IDENTITY_VERSION,exceptionCleanupVersion:EXCEPTION_CLEANUP_VERSION,passed:errors.length===0,errors:freeze(errors.slice())});
  }
- function stopRun(reason="manual"){return clearRuntime(reason);}
+ function stopRun(reason="manual"){if(reason==="manual"&&runtime?.presentingBattle===true){runtime.stopRequested=true;return runtimeSnapshot();}return clearRuntime(reason);}
  // A persisted page is suspended in the page cache, not a manual stop.
  // A discarded document cannot resume this in-memory runtime; real departure
  // still releases it. New documents always start with runtime=null.
- function onPageHide(event){if(event?.persisted===true)return;if(runtime?.active)clearRuntime("pagehide");}
+ function onPageHide(event){if(event?.persisted===true&&gmBackgroundEnabled())return;if(runtime?.active)clearRuntime("pagehide");}
  const sharedInfra=runInfra();
  if(sharedInfra){sharedInfra.onPageHide(onPageHide);pageHideSubscribed=true;blockerRegistered=sharedInfra.registerRuntimeBlocker(BLOCKER_NAME,ownRuntimeBlockerStatus);}
 

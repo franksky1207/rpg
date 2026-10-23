@@ -9,7 +9,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION===1&&window.SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION===2&&typeof window.migrateSave==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===18&&window.SAVE_MIGRATION_REGRESSION_RUNTIME_SEPARATION_VERSION===1&&window.SAVE_MIGRATION_GLOBAL_API_CLEANUP_VERSION===2&&typeof window.migrateSave==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=value=>JSON.parse(JSON.stringify(value));
    const errors=[],cases=[];

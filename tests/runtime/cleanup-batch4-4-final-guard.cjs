@@ -43,7 +43,8 @@ const sealedHistory=JSON.parse(run('show','f2d37f4c382248e3130f66d400246dc5e42e3
 sealedHistory.sources['combat-events.js'].afterSHA256=crypto.createHash('sha256').update(fs.readFileSync('combat-events.js')).digest('hex');
 assert.deepEqual(history,sealedHistory,'only live owner digest changes; historical fixture sources remain immutable');
 const approvedBatch17=new Set(['combat-events.js','3d-test/fixture-owner-history.json']);
-const unexpected=changed.filter(p=>!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
+const foregroundApproved=new Set(require("./foreground-approved-runtime.cjs").verifyAll());
+const unexpected=changed.filter(p=>!foregroundApproved.has(p)&&!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){
@@ -75,5 +76,5 @@ const needs=["assets/3d/asset-registry.json","assets/gm-equipment-2_5d/v1/g005.w
 for(const p of needs)assert.ok(live.has(p),"Protected current dependency missing: "+p);
 const check=JSON.parse(fs.readFileSync("development/hybrid-comparison/t2b3-v1/manifest.json","utf8"));
 assert.equal(Object.keys(check.files).length,174,"Current B-only manifest unexpectedly changed");
-const result={baseline:base,head:run("rev-parse","HEAD"),changedFiles:changed.length,prohibitedTracked:0,protectedFilesChecked:needs.length,manifestEntries:174,formalRuntimeChanges:0};
+const result={baseline:base,head:run("rev-parse","HEAD"),changedFiles:changed.length,prohibitedTracked:0,protectedFilesChecked:needs.length,manifestEntries:174,formalRuntimeChanges:foregroundApproved.size};
 console.log("PASS cleanup batch 4-4 historical assets preserved; Batch14 scoped formal visuals",JSON.stringify(result));

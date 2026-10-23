@@ -59,7 +59,7 @@ const assert=require("assert");
   assert.equal(report.execution.valid,true);assert.equal(report.execution.missingPassed,false);assert.ok(report.execution.missingErrors.includes("current-validator-missing"));
   assert.equal(report.offline.missingValidatorResult,null);
   assert.deepEqual(report.selection.before,{map:99,enemy:4});assert.deepEqual(report.selection.after,report.selection.before);
-  assert.equal(report.closure.executionValidatorRequired,1);assert.equal(report.closure.saveSchemaVersion,17);
+  assert.equal(report.closure.executionValidatorRequired,1);assert.equal(report.closure.saveSchemaVersion,18);
   Object.entries(report.source).forEach(([name,value])=>assert.equal(value,true,`Optimization 1 source contract failed: ${name}`));
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
   console.log("First-world Target Context optimization 1 integrity passed:",JSON.stringify(report));

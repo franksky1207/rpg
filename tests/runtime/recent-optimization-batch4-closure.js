@@ -29,8 +29,8 @@ assert.ok(/GM_ALTERNATE_UNIVERSE_TITLE_THRESHOLD_OWNER_VERSION=TITLE_THRESHOLD_O
 assert.ok(/SAVE_MIGRATION_DIAGNOSTICS_VERSION=1/.test(migration),"Batch3 save migration diagnostics owner missing.");
 for(const key of ["alternateUniverseTitlesBackfilled","alternateUniverseTitlesBackfilledIds","mirrorHistoryRepaired","mirrorMiracleDatesRemoved"])assert.ok(migration.includes(key),`Migration diagnostic missing: ${key}`);
 
-assert.ok(/const SAVE_SCHEMA_VERSION=17;/.test(migration),"Batch4 closure must not bump Schema17.");
+assert.ok(/const SAVE_SCHEMA_VERSION=18;/.test(migration),"Schema18 checkpoint upgrade must retain Batch4 closure behavior.");
 for(const token of ["const old36=","mirror_title_19","mirror_title_20","const auHonor=","const w3Rerun=","alternateUniverseTitlesBackfilled,8","effectiveEnabled,false"])assert.ok(matrix.includes(token),`Batch4 Schema17 closure case missing: ${token}`);
-assert.ok(index.includes('src="savemigration.js?v=20261015-thrust1"'),"Migration diagnostics and legacy blade names must use the exact current cache version.");
+assert.ok(index.includes('src="savemigration.js?v=20261015-thrust1&foreground=20261023-194-v2"'),"Migration diagnostics and legacy blade names must use the exact current cache version.");
 
-console.log("Recent optimization Batch4 closure passed:",JSON.stringify({schema:17,w3AccessOwner:"thirdworlddungeonui",mirrorSettlementOwner:1,auThresholdOwner:1,migrationDiagnostics:1,oldSaveMatrix:"expanded"}));
+console.log("Recent optimization Batch4 closure passed:",JSON.stringify({schema:18,w3AccessOwner:"thirdworlddungeonui",mirrorSettlementOwner:1,auThresholdOwner:1,migrationDiagnostics:1,oldSaveMatrix:"expanded"}));

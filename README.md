@@ -20,7 +20,7 @@
 ## 目前 Save／轉生基準
 
 - 正式 key：`frank_text_rpg_save`
-- **目前 runtime `SAVE_SCHEMA_VERSION = 17`**。
+- **目前 runtime `SAVE_SCHEMA_VERSION = 18`**。
 - Schema17 正式加入 `reincarnation` persistent root。
 - Schema1～16 仍支援 migration；pre-Schema17 即使意外帶有 `reincarnation` root，也會依正式 migration policy 視為首輪並丟棄該污染資料。
 - Future save 維持 fail-closed；舊版網頁不得把新版存檔降版覆寫。

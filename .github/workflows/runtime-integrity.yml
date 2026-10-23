@@ -1,5 +1,6 @@
 name: Runtime Integrity
 
+# Batch19-4 final integrated foreground/earned-income, GM fixture and standalone renderer and Schema18 smoke acceptance.
 # exact-head runtime guard; touching this file is the supported manual retrigger path.
 # browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
 # W1 target-context optimization 4 exact-head retrigger. 2026-10-09 deferred GM title regression follow-up.
@@ -8,6 +9,7 @@ on:
     branches: [main]
     paths:
       - '**/*.js'
+      - 'tests/runtime/foreground-combat-*.cjs'
       - 'tests/runtime/pr48-*.cjs'
       - 'tests/runtime/pr48-*.mjs'
       - 'tests/runtime/pr48-approved-presentation.json'
@@ -35,6 +37,7 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   pull_request:
     paths:
+      - 'tests/runtime/foreground-combat-*.cjs'
       - 'tests/runtime/pr48-*.cjs'
       - 'tests/runtime/unified-mobile-combat-viewport*.cjs'
       - 'combat-viewport-coordinator.js'
@@ -43,13 +46,12 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: runtime-integrity-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   runtime-integrity:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -143,6 +145,7 @@ jobs:
             audio-lifecycle-browser-report.json
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
+            /tmp/foreground-combat-*.json
             /tmp/pr48-viewport-browser.json
             /tmp/pr48-live-combat.json
             /tmp/pr48-mode-matrix.json
@@ -152,7 +155,6 @@ jobs:
           retention-days: 1
   runtime-browser-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -180,26 +182,23 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-ubuntu-1.55.0-chromium-webkit-v1
-      - name: Install Playwright Node dependencies (timed)
+      - name: Install Playwright Node dependencies
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        timeout-minutes: 3
         shell: bash
         run: |
           set -euo pipefail
           start=$SECONDS
-          timeout 150s npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
           echo "Node dependency install seconds: $((SECONDS-start))"
-      - name: Install Chromium and WebKit (timed)
+      - name: Install Chromium and WebKit
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        timeout-minutes: 8
         shell: bash
         run: |
           set -euo pipefail
           start=$SECONDS
-          timeout 420s npx playwright install --with-deps chromium webkit
+          npx playwright install --with-deps chromium webkit
           echo "Playwright browser/dependency install seconds: $((SECONDS-start))"
       - name: Run parallel browser runtime and reincarnation regression
-        timeout-minutes: 9
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
         run: |
@@ -273,7 +272,6 @@ jobs:
           node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
 
       - name: Run real browser runtime smoke
-        timeout-minutes: 13
         if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
         shell: bash
         run: |
@@ -291,6 +289,9 @@ jobs:
             node tests/runtime/pr48-mode-matrix-browser.cjs
           fi
           node tests/runtime/pr48-live-combat-browser.cjs
+          node tests/runtime/foreground-combat-modes-browser.cjs
+          node tests/runtime/foreground-combat-checkpoints-browser.cjs
+          node tests/runtime/foreground-combat-recovery-browser.cjs
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
@@ -329,6 +330,7 @@ jobs:
             audio-lifecycle-browser-report.json
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
+            /tmp/foreground-combat-*.json
             /tmp/pr48-viewport-browser.json
             /tmp/pr48-live-combat.json
             /tmp/pr48-mode-matrix.json

@@ -8,7 +8,7 @@ const assert=require("assert");
  const url=process.env.RUNTIME_SMOKE_URL||"http://127.0.0.1:4173/index.html";
  try{
   await page.goto(url,{waitUntil:"domcontentloaded",timeout:30000});
-  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===17&&window.EQUIPMENT_SAVE_LEVEL_WORLD_OWNER_VERSION===1&&window.SHARED_EQUIPMENT_LEVEL_SEMANTICS_VERSION===2&&window.SHARED_EQUIPMENT_FACTORY_WORLD_LEVEL_GUARD_VERSION===1&&window.REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION===1&&typeof window.normalizeSaveState==="function"&&typeof window.makeEquipmentRewardItem==="function",{timeout:30000});
+  await page.waitForFunction(()=>window.SAVE_SCHEMA_VERSION===18&&window.EQUIPMENT_SAVE_LEVEL_WORLD_OWNER_VERSION===1&&window.SHARED_EQUIPMENT_LEVEL_SEMANTICS_VERSION===2&&window.SHARED_EQUIPMENT_FACTORY_WORLD_LEVEL_GUARD_VERSION===1&&window.REINCARNATION_PERMANENT_GEAR_LOAD_REPAIR_RETIRED_VERSION===1&&typeof window.normalizeSaveState==="function"&&typeof window.makeEquipmentRewardItem==="function",{timeout:30000});
   const report=await page.evaluate(()=>{
    const clone=v=>JSON.parse(JSON.stringify(v));
    const canonical=count=>({count,breakthrough:{permanent:0,milestoneLifeId:count,milestones:Object.fromEntries([100,200,300,400,500,600,700,800,900,1000].map(level=>[String(level),false]))},alternateUniverse:{unlocked:false,deepestCleared:0,activeAttempt:null,lifeFailures:{lifeId:count,failures:{}}}});

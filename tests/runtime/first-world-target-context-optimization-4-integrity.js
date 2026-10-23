@@ -52,7 +52,7 @@ const assert=require("assert");
    }finally{state=originalState;window.clearPreparedFirstWorldTargetContext?.();}
   });
   console.log("Target Context optimization 4 diagnostic:",JSON.stringify(report));
-  assert.deepEqual(report.versions,{metadata:1,persisted:1,bridge:1,delegate:1,sample:4,schema:17});
+  assert.deepEqual(report.versions,{metadata:1,persisted:1,bridge:1,delegate:1,sample:4,schema:18});
   assert.equal(report.metadata.frozen,true);assert.equal(report.metadata.world,1);assert.equal(report.metadata.mapIndex,2);assert.equal(report.metadata.enemyIndex,3);assert.equal(report.metadata.targetType,"elite");assert.ok(report.metadata.enemyLevel>0);assert.ok(report.metadata.mapName);assert.ok(report.metadata.enemyName);
   assert.deepEqual(report.persisted,{ok:true,same:true,alias:true,bossRejected:true,invalidRejected:true});
   assert.equal(report.legacy.sampleVersion,4);assert.equal(report.legacy.provenance,true);assert.equal(report.legacy.context,true);assert.equal(report.legacy.mapIndex,0);assert.equal(report.legacy.enemyIndex,0);assert.equal(report.legacy.targetType,"normal");
