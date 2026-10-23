@@ -7,7 +7,7 @@ const fs=require("fs");
  assert(/SPECIAL_ENCOUNTER_FAST_CATCH_UP_PRESENTATION_VERSION=1/.test(source),"Special fast catch-up presentation contract missing.");
  assert(/if\(!suppressPresentation\)await showSpecialEncounterAlert/.test(source),"Fast catch-up must suppress the special encounter alert.");
  assert(/if\(!suppressPresentation\)await animateSpecialFight/.test(source),"Fast catch-up must suppress the special combat animation.");
- assert(/suppressPresentation\}\);/.test(source),"Frozen presentation policy must be passed into formal special combat.");
+ assert(/suppressPresentation,foregroundEpoch\}\);/.test(source),"Frozen presentation policy must be passed into formal special combat.");
  assert(/forcedByBlackMarket\?\["bandit_king"\]/.test(source)&&/consumePendingBlackMarket/.test(source),"Black-market forced special routing must remain intact.");
 
  const browser=await chromium.launch({headless:true});
