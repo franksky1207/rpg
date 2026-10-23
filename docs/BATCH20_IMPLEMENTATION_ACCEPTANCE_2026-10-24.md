@@ -54,7 +54,7 @@
 
 ## CI 契約相容修復
 
-PR [#90](https://github.com/franksky1207/rpg/pull/90) 首輪 `0a08a3c0` 的 Functional／Runtime／GM terminology 來源鎖拒絕本批合法差異；正式裝備測試仍要求已退場的高維回顧 handler。這些失敗未視為通過。新增獨立 `batch20-approved-runtime.json` 與 reader，逐檔鎖住本批前後 SHA，串接未修改的歷史來源鎖；舊檔及斷言全保留，不使用 wildcard 或無條件放行。必要測試改驗退場 handler／runtime／音訊不可建立；原高維回顧視覺測試改驗正式遭遇後的只讀圖鑑靜態圖片、完整 state／combat token 不變及零額外引擎。正式技能、數值與圖片大小不變。
+PR [#90](https://github.com/franksky1207/rpg/pull/90) 首輪 `0a08a3c0` 的 Functional／Runtime／GM terminology 來源鎖拒絕本批合法差異；正式裝備測試仍要求已退場的高維回顧 handler。這些失敗未視為通過。新增獨立 `batch20-approved-runtime.json` 與 reader，逐檔鎖住本批前後 SHA，串接未修改的歷史來源鎖；舊檔及斷言全保留，不使用 wildcard 或無條件放行。必要測試改驗退場 handler／runtime／音訊不可建立；原高維回顧視覺測試改驗正式遭遇後的只讀圖鑑靜態圖片、完整 state／combat token 不變及零額外引擎。正式技能、數值與圖片大小不變。GM 開發 fixture reader 僅新增精確 live SHA＋移除唯一登錄行後還原原 SHA 的雙重驗證；原樣本、五種測試情境與模擬邏輯不變，桌機原生 GM 五情境重新通過。AU 舊版 HTML query 契約容許本批額外 cache token，但原 token 仍逐項檢查；新的 HTML before/after guard 繼續驗證實際版本變更。
 
 熱路徑用 WeakMap 管理每份合法圖鑑 root 的去重 Set，避免 Fast Catch-up 每場重新排序／複製全部已遭遇身份。合成 state／測試 RNG／GM mark overrides 會標記 fixture，避免診斷測試補登正式圖鑑。
 

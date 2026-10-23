@@ -59,7 +59,7 @@ const assert=require("assert");
   assert.equal(report.rerun.missingAfterClear.valid,false);assert.equal(report.rerun.missingAfterClear.reason,"prepared-target-required");
   assert.equal(report.rerun.staleDrift.passed,false);assert.equal(report.rerun.staleResolved.valid,false);
   assert.equal(report.formal.resolvedId,report.formal.preparedId);
-  assert.equal(report.review.passed,true);assert.equal(report.review.rewards,false);assert.equal(report.review.progress,false);
+  assert.equal(report.review.passed,false,"Retired review contexts must not pass execution validation.");assert.equal(report.review.rewards,false);assert.equal(report.review.progress,false);
   assert.equal(report.readOnly.stateStable,true);assert.equal(report.readOnly.selectionStable,true);assert.equal(report.readOnly.closure.saveSchemaVersion,18);
   Object.entries(report.source).forEach(([k,v])=>assert.equal(v,true,`Batch6 source contract failed: ${k}`));
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));

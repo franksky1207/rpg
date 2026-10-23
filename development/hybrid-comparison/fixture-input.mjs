@@ -35,6 +35,13 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
    requireValue(proof.schema==='cw.phase5.immutable-fixture-owners.v1'&&proof.baselineHEAD==='fbe46d9004eb38afbac55b8de03f832237ca56df'&&row.beforeSHA256===bundle.sources[file]&&row.afterSHA256===digest&&await sha(row.source)===bundle.sources[file],'Source SHA changed: '+file);
    return [file,row.source];
   }
+  if(file==='combatcore.js'&&digest==='dd5344db15e9b01ea480935efc90c278168d595a64f63aedb4c3020caf38bfdc'){
+   // Batch20 adds only an encounter sink. Preserve the immutable GM fixture's
+   // captured source: verify the exact live bytes AND the exact inverse edit.
+   const hook="  if(options.visualContext&&!options.useTestSpecializations&&!options.useTestMarks)window.recordMonsterCodexEncounter?.(options.visualContext,enemy);\n";
+   requireValue(text.split(hook).length===2&&await sha(text.replace(hook,''))==='3b1e33726b50ae2c70f12eaf914ae501f20d648b03a7dc1d48c9fea6619380c6','Batch20 encounter-only source registration mismatch');
+   return [file,text.replace(hook,'')];
+  }
   if(file==='combatcore.js'&&digest!==bundle.sources[file]){
    // Batch19-4 changes only the settlement wrapper, not the captured kernel.
    // Keep the immutable fixture, and accept exactly this parity-tested live owner.
