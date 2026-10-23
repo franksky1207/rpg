@@ -80,7 +80,7 @@
   const lockPlayerFullHp=explicitHpLock||formalMainlineHpLockActive();
   const resolved=window.runWorldCombatCore(player,enemy,startHp,{
    world:2,
-   visualContext:{mode:"main",world:2,owner:"secondworldcombat.js",variant:"boss",location:String(index),playerName:targetState?.playerName,fixture:options.useTestSpecializations===true||options.ignoreUnlock===true},
+   visualContext:{mode:"main",world:2,owner:"secondworldcombat.js",variant:"boss",location:String(index),playerName:targetState?.playerName,fixture:options.fixture===true||options.useTestSpecializations===true||options.ignoreUnlock===true||options.state!=null&&options.state!==state},
    state:targetState,
    civilizationLevel:options.civilizationLevel,
    logs:options.logs!==false,

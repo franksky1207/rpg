@@ -193,7 +193,7 @@
   const requestedMaxTurns=Math.max(0,finiteWhole(options.maxTurns,0));
   const presentationRequested=options.preparePresentation===true;
   const combat=window.runCombatCore(player,snapshot.enemy,startHp,{
-   visualContext:{mode:options.useTestSpecializations===true?"gm-benchmark":"main",world:3,owner:"thirdworldcombat.js",variant:"persistent-hp",location:String(snapshot.bossIndex),playerName:target?.playerName,fixture:options.useTestSpecializations===true||options.ignoreUnlock===true},
+   visualContext:{mode:options.useTestSpecializations===true?"gm-benchmark":"main",world:3,owner:"thirdworldcombat.js",variant:"persistent-hp",location:String(snapshot.bossIndex),playerName:target?.playerName,fixture:options.fixture===true||options.useTestSpecializations===true||options.ignoreUnlock===true||options.state!=null&&options.state!==state},
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
    useTestSpecializations:options.useTestSpecializations===true,

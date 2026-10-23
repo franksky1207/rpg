@@ -87,7 +87,7 @@
  }
  function authorizedFor(mode,valid,target,life){
   if(!valid)return false;
-  if(mode==="review")return true;
+  if(mode==="review")return false;
   if(!life?.available||currentPhase(target)!==1)return false;
   if(mode==="rerun")return life.reincarnationRun===true;
   return life.firstRun===true;
@@ -100,11 +100,7 @@
   return Object.freeze({version:VERSION,contextId:makeContextId(),world:1,mode,source:String(options.source||"explicit"),valid,authorized,identity,mapIndex:identity.mapIndex,enemyIndex:identity.enemyIndex,targetType:meta.targetType,mapName:meta.mapName,enemyName:meta.enemyName,enemyLevel:meta.enemyLevel,count:life.count,lifeId:life.lifeId,reincarnationRun:life.reincarnationRun,policy});
  }
  function selection(mode){
-  if(mode==="review"){
-   const mapIndex=typeof window.getGalaxyReviewSelectedMap==="function"?window.getGalaxyReviewSelectedMap():-1;
-   const enemyIndex=typeof window.getGalaxyReviewSelectedEnemy==="function"?window.getGalaxyReviewSelectedEnemy():-1;
-   return Object.freeze({mapIndex,enemyIndex,source:"review-selection"});
-  }
+  if(mode==="review")return Object.freeze({mapIndex:-1,enemyIndex:-1,source:"retired-review-selection"});
   const mapIndex=typeof selectedMap!=="undefined"?selectedMap:-1;
   const enemyIndex=typeof selectedEnemy!=="undefined"?selectedEnemy:-1;
   return Object.freeze({mapIndex,enemyIndex,source:"ui-selection"});

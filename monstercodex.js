@@ -1,5 +1,6 @@
 (function(){
  'use strict';
+ const knownRoots=new WeakMap();
  const rows=window.MONSTER_CODEX_CATALOGUE,byId=new Map(rows.map(r=>[r.id,r]));
  const owners={main:['combatcore.js','secondworldcombat.js','thirdworldcombat.js'],calamity:['calamitycore.js','secondworldcalamityrun.js'],special:['specialcore.js'],bounty:['dungeoncore.js'],arena:['dungeonarena.js','thirdworldarena.js'],void:['dungeonvoid.js'],alternate:['alternateuniversecombat.js']};
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -8,7 +9,7 @@
  function normalize(target){
   if(!target||typeof target!=='object')return target;
   const raw=target.monsterCodex,ids=raw?.version===1&&Array.isArray(raw.encountered)?raw.encountered:[];
-  target.monsterCodex={version:1,encountered:[...new Set(ids.filter(id=>typeof id==='string'&&byId.has(id)))].sort()};return target;
+  target.monsterCodex={version:1,encountered:[...new Set(ids.filter(id=>typeof id==='string'&&byId.has(id)))].sort()};knownRoots.set(target.monsterCodex,new Set(target.monsterCodex.encountered));return target;
  }
  function resolve(c,e){
   if(!c||c.fixture===true||!owners[c.mode]?.includes(c.owner)||![1,2,3].includes(c.world)||!e)return null;
@@ -32,7 +33,7 @@
  }
  function encounter(c,e){
   const row=resolve(c,e);if(!row||typeof state==='undefined')return false;
-  normalize(state);const ids=state.monsterCodex.encountered;if(ids.includes(row.id))return false;ids.push(row.id);return true;
+  if(!state.monsterCodex||!knownRoots.has(state.monsterCodex))normalize(state);const known=knownRoots.get(state.monsterCodex);if(known.has(row.id))return false;known.add(row.id);state.monsterCodex.encountered.push(row.id);return true;
  }
  window.normalizeMonsterCodex=normalize;window.resolveMonsterCodexEncounter=resolve;window.recordMonsterCodexEncounter=encounter;
  if(typeof registerNewStateNormalizer==='function')registerNewStateNormalizer(normalize);

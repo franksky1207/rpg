@@ -481,7 +481,7 @@ const { chromium } = require("playwright"),
       state = newState();
       state.level = 600;
       state.secondWorld.entered = true;
-      state.secondWorld.civilizationLevel = 1;
+      state.secondWorld.civilizationLevel = 0;
       const d = window.getSecondWorldCalamityDefinitions()[0];
       state.secondWorld.mainline.bossKilled[d.bossIndex] = true;
       view = "calamity";
@@ -784,8 +784,9 @@ const { chromium } = require("playwright"),
     if(process.env.FORMAL_SPRITE_ACCEPTANCE==='1'){
       const proof=await page.evaluate(()=>{clearInterval(__formalSpriteTimer);return __formalSpriteEvidence;});
       fs.writeFileSync('/tmp/equipment-formal-modes.json',JSON.stringify(proof,null,2));
-      for(const mode of ['main:1','main:2','review:1','review:2','void:1','void:2','mirror:1','mirror:2','bounty:1','bounty:2','arena:1','arena:2','arena:3','calamity:1','calamity:2','alternate:3'])assert.ok(proof[mode],'actual sprite missing in '+mode);
+      for(const mode of ['main:1','main:2','void:1','void:2','mirror:1','mirror:2','bounty:1','bounty:2','arena:1','arena:2','arena:3','calamity:1','calamity:2','alternate:3'])assert.ok(proof[mode],'actual sprite missing in '+mode);
     }
+    assert.equal(await page.evaluate(()=>typeof window.startGalaxyReviewBattle==='undefined'&&typeof window.startSecondWorldBossReview==='undefined'),true,'retired reviews have no native audio/sprite owner');
     const traceBeforeReload = await page.evaluate(() => window.__audioTrace);
     const reincarnation = await page.evaluate(() => {
       state = newState();
@@ -901,7 +902,7 @@ const { chromium } = require("playwright"),
      // The old page's collection is saved before the real reload below; no delta replay.
      const proof=await page.evaluate(()=>window.__savedCombatEventEvidence||window.__combatEventEvidence);
      assert.ok(proof,"Combat proof missing");assert.equal(proof.invalid,0);
-     for(const mode of ["main","bounty","arena","mirror","void","calamity","alternate","review"])assert.ok(Object.keys(proof.modes).some(key=>key.startsWith(mode+":")),"Missing actual owner mode "+mode);
+     for(const mode of ["main","bounty","arena","mirror","void","calamity","alternate"])assert.ok(Object.keys(proof.modes).some(key=>key.startsWith(mode+":")),"Missing actual owner mode "+mode);
      assert.equal(new Set(proof.settlements).size,proof.settlements.length,"Settlement event delivered twice");
      assert.ok(proof.queueCapacity<=32*5,"Only the four test consumers plus one shipped B consumer");assert.ok(proof.maxQueue<=proof.queueCapacity,"Every consumer retains the original 32-event queue bound");
      fs.writeFileSync("combat-events-browser-report.json",JSON.stringify({passed:true,actualAudioCases:results.length,proof},null,2)+"\n");

@@ -52,6 +52,12 @@
 - `batch20-notice-protection.cjs` 對基準 SHA 逐位元比較災厄解鎖／現身提示、核心確認、通知 owner、音訊／樣式及正式數值／轉生 owner；formal combat core 除登錄呼叫外逐位元一致。
 - Publish dry-run：新模組及靜態圖片依賴可發布，missingRefs=0；正式 Pages 尚待合併後驗收。
 
+## CI 契約相容修復
+
+PR [#90](https://github.com/franksky1207/rpg/pull/90) 首輪 `0a08a3c0` 的 Functional／Runtime／GM terminology 來源鎖拒絕本批合法差異；正式裝備測試仍要求已退場的高維回顧 handler。這些失敗未視為通過。新增獨立 `batch20-approved-runtime.json` 與 reader，逐檔鎖住本批前後 SHA，串接未修改的歷史來源鎖；舊檔及斷言全保留，不使用 wildcard 或無條件放行。必要測試改驗退場 handler／runtime／音訊不可建立；原高維回顧視覺測試改驗正式遭遇後的只讀圖鑑靜態圖片、完整 state／combat token 不變及零額外引擎。正式技能、數值與圖片大小不變。
+
+熱路徑用 WeakMap 管理每份合法圖鑑 root 的去重 Set，避免 Fast Catch-up 每場重新排序／複製全部已遭遇身份。合成 state／測試 RNG／GM mark overrides 會標記 fixture，避免診斷測試補登正式圖鑑。
+
 ## 發布紀錄（待補）
 
 PR、功能提交 SHA、合併 SHA、必要 Actions URL 與 Pages 結果在實際完成後補記，不能把本機測試當作正式上線。

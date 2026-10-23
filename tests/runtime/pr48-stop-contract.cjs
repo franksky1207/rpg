@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict');
-const preForeground=require('./foreground-approved-runtime.cjs').original;
+const preForeground=require('./batch20-approved-runtime.cjs').original;
 const base='39620ae6599096b3648688508bd80d567fe58e6e';
 const files=['ui.js','worldmapui.js','thirdworldui.js','dungeonbounty.js','dungeonarena.js','thirdworldarenaui.js','calamityui.js','secondworldcalamityui.js','dungeonvoidui.js'];
 const strip=s=>s.replaceAll(' data-combat-action="stop-continuous"','').replaceAll(' combat-viewport-stop','');
