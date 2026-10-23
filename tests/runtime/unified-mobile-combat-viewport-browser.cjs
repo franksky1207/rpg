@@ -53,5 +53,28 @@ for(const external of [false,true]){
   evidence.push({name:external?"batch19-3-external-stop-HUD":"batch19-3-inner-stop-HUD",visible});
  }finally{await page.close();}
 }
+ // iPhone regression: enabling background battle preference must not disable active foreground combat.
+ // A stale combat card before the visible one must never steal the positioning target.
+ {
+  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  try {
+   await page.setContent(fixture('galaxy-main'));
+   await page.addStyleTag({content:css});
+   await page.evaluate(()=>{
+    window.gmBackgroundBattleEnabled=()=>true;
+    const stale=document.createElement('section');
+    stale.className='combat-screen';
+    stale.innerHTML='<div class="formal-b-shared-stage" hidden></div>';
+    document.querySelector('#main').prepend(stale);
+   });
+   await page.addScriptTag({path:'combat-viewport-coordinator.js'});
+   await page.evaluate(()=>{const active=document.querySelector('.formal-b-stage-pending');active.classList.remove('formal-b-stage-pending');active.querySelector('.formal-b-shared-stage').hidden=false;});
+   // The stage belongs to the non-stale combat screen, even when preference is on.
+   await settle(page);
+   const state=await page.evaluate(()=>({...CivilizationCombatViewport.snapshot(),scrollY}));
+   assert(state.focused&&state.scrollY>0,'visible foreground combat should focus with background battle preference enabled');
+   evidence.push({name:'ios-background-preference-foreground-focus',state});
+  }finally{await page.close();}
+ }
  fs.writeFileSync('/tmp/pr48-viewport-browser.json',JSON.stringify({realDevice:false,cases:evidence},null,2));console.log('UNIFIED_MOBILE_COMBAT_VISUAL_PASS',evidence.length);
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
