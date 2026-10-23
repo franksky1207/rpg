@@ -71,7 +71,7 @@ Linux Chromium、390×844，fixture 非玩家存檔，單次數據受 JIT／GC�
 
 ## 可重現測試與尚未覆蓋項目
 
-新增 `tests/runtime/foreground-combat-lifecycle.cjs` 六項：取消競態／applied cursor／5秒／致命保護／失敗save／GM開關／bfcache事件／跨模式owner／場間epoch／blur。新增三支 Browser 測試已接入現有 Runtime Integrity，同時 unit 接入 Functional CI combat，沒有新增 workflow、瀏覽器安裝或矩陣。
+新增 `tests/runtime/foreground-combat-lifecycle.cjs` 七項：取消競態／applied cursor／5秒／致命保護／失敗save／GM開關／bfcache事件／跨模式owner／場間epoch／blur／只有visibility返回而無focus事件的恢復。新增三支 Browser 測試已接入現有 Runtime Integrity，同時 unit 接入 Functional CI combat，沒有新增 workflow、瀏覽器安裝或矩陣。
 
 - `foreground-combat-modes-browser.cjs`：三紀元正式入口、特殊怪、異宇宙及現存回顧；於真實core之前讀正式狀態 fingerprint，開場動畫中斷後無獎勵／進度差異，busy／presentation／轉場owner釋放。高維懸賞維持原本不可進，不創造新入口。
 - `foreground-combat-checkpoints-browser.cjs`：轉生1、滿血、回血技能、背景關、鎖血關的11億十王，實際正回血事件後離頁：保存1,054,625,537 HP、45,374,463收益；未把整場11億先發。回血重削不重發、失敗save回滾、stale／重複結果拒絕、最終11億累計完全對齊。銀河災厄250,000→244,828、宇宙災厄1,200,000→1,175,772，保存值等於已播放HP。
@@ -90,3 +90,5 @@ Browser hidden／pagehide／pageshow／blur是可控制事件注入；並非所�
 整合 commit `ee47693921d917adbd91f50d9a7bd08049e36681`；後續同PR補上精確來源登記與測試隔離。歷史呈現守衛以 `foreground-approved-runtime.json` 的42個正式檔案 before/after SHA256驗證本批必要修改，再返回原不可變main bytes繼續全部舊斷言，非萬用例外；整段戰鬥計算核心另逐位元比對未變，停止按鈕仍比較歷史原文。回顧 Browser 在production模式執行，避免獨立開發診斷關閉modal的測試污染。特殊怪 frozen補算策略源碼斷言同步要求新epoch參數，原行為斷言保留。另同步target-context／post-optimization測試的目前Schema18及stale CAS源碼斷言；context隔離測試原本mock計算／動畫，現在配對mock提交owner並新增四場恰好四次commit，真實提交由新Browser驗證。既有GM開發fixture只新增精確combatcore新舊SHA接受分支，16項fixture／篡改拒絕測試保留，fixture事件不重新產生。最新Actions尚待核對。PR維持Draft；未滿足真機證據且待Actions時不建議直接合併。合併必須由使用者確認；之後同main SHA Runtime、Functional CI、Pages全成功才能封箱。
 
 最終檢查以 [PR #89 Checks](https://github.com/franksky1207/rpg/pull/89/checks) 的最新head為準；提交後會在PR說明列出實際驗收SHA與各run，避免將先前綠燈誤作最新版通過。
+
+App返回補驗：已加入「blur後切App、返回visible且document.hasFocus=true，但無window.focus」測試。修正前新挑戰會被殘留lostFocus擋住；visible handler現在只在確實有焦點時清blur旗標與timer，departure epoch仍使舊場失效。7項unit通過；另有外觀／雲端17版下載→18版輸出與隔離測試通過。Schema18一次性備份增加一份原raw save大小的儲存，非每場／每回合增加。

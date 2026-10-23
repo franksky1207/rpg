@@ -56,7 +56,7 @@
   snapshot:()=>active?{id:active.id,cancelled:active.cancelled,done:active.done,reason:active.reason||""}:null,
   foreground(expectedEpoch=departureEpoch){if(expectedEpoch!==departureEpoch)throw interrupted();if((document.visibilityState==="hidden"||lostFocus||departed)&&!backgroundAllowed())throw interrupted();}
  });
- document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")depart("visibility-hidden");else away=false;});
+ document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")depart("visibility-hidden");else{away=false;if(document.hasFocus?.()===true){lostFocus=false;clearTimeout(blurTimer);}}});
  window.addEventListener("pagehide",()=>{departed=true;depart("pagehide");});
  // Recheck sustained focus loss; a same-page synthetic blur with focus retained
  // is ignored. Short modal focus returns cancel this timer. Hidden/pagehide never wait.

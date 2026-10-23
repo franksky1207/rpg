@@ -45,3 +45,9 @@ test('blur uses a sustained focus recheck and respects the actual GM background 
  h.events.blur();await new Promise(r=>setTimeout(r,220));assert.equal(b.cancelled,true);b.finish();h.events.focus();h.gm(true);
  const gm=h.api.begin({events:[]});h.events.blur();await new Promise(r=>setTimeout(r,220));assert.equal(gm.cancelled,false);h.gm(false);h.events.blur();await new Promise(r=>setTimeout(r,220));assert.equal(gm.cancelled,true);gm.finish();
 });
+test('visible app return with focus restored but no window focus event releases the stale blur flag',async()=>{
+ const h=harness();h.document.hasFocus=()=>false;const oldEpoch=h.api.epoch();h.events.blur();await new Promise(r=>setTimeout(r,220));
+ h.document.visibilityState='hidden';h.events.visibilitychange();h.document.hasFocus=()=>true;h.document.visibilityState='visible';h.events.visibilitychange();
+ assert.throws(()=>h.api.foreground(oldEpoch),e=>e.code==='COMBAT_INTERRUPTED','the interrupted run still cannot revive');
+ h.api.foreground(h.api.epoch());const b=h.api.begin({events:[]});b.complete();b.finish();
+});
