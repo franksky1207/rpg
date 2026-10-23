@@ -1,0 +1,182 @@
+{
+  "result": {
+    "start": 1100000000,
+    "playing": {
+      "token": 1,
+      "mode": "standard",
+      "playerHp": 1000000000000,
+      "playerMaxHp": 1000000000000,
+      "enemyHp": 1054625537,
+      "enemyMaxHp": 1100000000,
+      "playerShield": 0,
+      "playerShieldMax": 0,
+      "enemyShield": 0,
+      "enemyShieldMax": 0,
+      "actionStartedAt": 2985.2999999970198,
+      "action": {
+        "sourceType": "drain",
+        "actor": "player",
+        "target": null,
+        "winner": null,
+        "loser": null,
+        "actualDamage": 15641394,
+        "healed": 111784,
+        "source": "normal"
+      },
+      "index": 22,
+      "eventCount": 355,
+      "lockPlayerFullHp": false
+    },
+    "before": 1100000000,
+    "after": 1054625537,
+    "strings": 45374463,
+    "playedPlayerDrains": 1,
+    "boss": {
+      "currentHp": 1054625537,
+      "rewardFloorHp": 1054625537
+    },
+    "ctx": null,
+    "runtime": {
+      "version": 4,
+      "runId": null,
+      "active": false,
+      "paused": false,
+      "looping": false,
+      "bossIndex": -1,
+      "deaths": 0,
+      "battles": 0,
+      "vip20Protections": 0,
+      "coreLevelAtStart": null,
+      "perDeathSuppressionPointsAtStart": null,
+      "pendingEvents": [],
+      "stopReason": "",
+      "stopMeta": null,
+      "recentBattleLimit": 20,
+      "recentBattles": [],
+      "lastBattleSummary": null
+    }
+  },
+  "ledger": {
+    "checks": [
+      {
+        "hp": 1099999900,
+        "index": 1,
+        "ok": true,
+        "xp": 100,
+        "strings": 100,
+        "stored": 1099999900
+      },
+      {
+        "hp": 1099999950,
+        "index": 2,
+        "ok": true,
+        "xp": 0,
+        "strings": 100,
+        "stored": 1099999950
+      },
+      {
+        "hp": 1099999910,
+        "index": 3,
+        "ok": true,
+        "xp": 0,
+        "strings": 100,
+        "stored": 1099999910
+      },
+      {
+        "hp": 1099999800,
+        "index": 4,
+        "ok": true,
+        "xp": 100,
+        "strings": 200,
+        "stored": 1099999800
+      },
+      {
+        "hp": 1099999700,
+        "index": 5,
+        "ok": false,
+        "strings": 200,
+        "stored": 1099999800
+      }
+    ],
+    "rolledBack": true,
+    "failed": false,
+    "retained": true,
+    "backwards": false,
+    "badHp": false,
+    "stale": "stale-settlement",
+    "final": {
+      "ok": true,
+      "xp": 1100000000,
+      "strings": 1100000000,
+      "newlyCreditedXp": 1099999800,
+      "checkpointCreditedXp": 200
+    },
+    "duplicate": "duplicate-result",
+    "total": 1100000000,
+    "start": 1100000000,
+    "finalHp": 0
+  },
+  "performanceReport": {
+    "battles": [
+      {
+        "turns": 10,
+        "events": 20,
+        "coreMs": 0.19999999925494194,
+        "eventBytes": 6901,
+        "logBytes": 1001,
+        "addedHpIndexBytes": 0
+      },
+      {
+        "turns": 1000,
+        "events": 2000,
+        "coreMs": 3.800000000745058,
+        "eventBytes": 690001,
+        "logBytes": 100001,
+        "addedHpIndexBytes": 0
+      },
+      {
+        "turns": 10000,
+        "events": 20000,
+        "coreMs": 10,
+        "eventBytes": 6900001,
+        "logBytes": 1000001,
+        "addedHpIndexBytes": 0
+      }
+    ],
+    "checkpointMs": [
+      7.5,
+      3.5,
+      3.399999998509884,
+      3.399999998509884,
+      4.400000002235174,
+      3.300000000745058,
+      3.099999997764826,
+      3.199999999254942,
+      2.800000000745058,
+      3.199999999254942
+    ],
+    "addedStateBytes": 307,
+    "frequencyMs": 5000,
+    "heap": {
+      "used": 68825549,
+      "total": 78838353
+    },
+    "realIPhone": false
+  },
+  "calamities": [
+    {
+      "world": 1,
+      "start": 250000,
+      "before": 250000,
+      "played": 244828,
+      "saved": 244828
+    },
+    {
+      "world": 2,
+      "start": 1200000,
+      "before": 1200000,
+      "played": 1175772,
+      "saved": 1175772
+    }
+  ]
+}

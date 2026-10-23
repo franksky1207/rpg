@@ -73,8 +73,10 @@ async function finishIntro(page){
  await page.evaluate(()=>closeMinimalMode());await expectPlayerVisual();await page.evaluate(()=>openThirdWorldMinimalMode());
  const minimal=await page.evaluate(()=>({round:document.querySelector('[data-third-world-minimal-round]').textContent,deaths:document.querySelector('[data-third-world-minimal-deaths]').textContent,cap:document.querySelector('[data-third-world-minimal-cap]').textContent,exp:document.querySelector('[data-third-world-minimal-exp]').textContent,strings:document.querySelector('[data-third-world-minimal-strings]').textContent}));
  await page.evaluate(()=>{gmSetBackgroundBattlePreference(false);backgroundProgressStop('third-world');__environment(true);});
- const disabled=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);await page.waitForTimeout(1500);assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles),disabled,'GM off pauses after current settled battle');
- await page.evaluate(()=>__environment(false));await page.waitForFunction(n=>thirdWorldContinuousRunSnapshot().battles>n,disabled);
+ const disabled=await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles);await page.waitForTimeout(1500);assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().battles),disabled,'GM off cancellation cannot advance any further battle');
+ assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().active),false,'GM off cancels current uncompleted battle');
+ await page.evaluate(()=>__environment(false));await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>thirdWorldContinuousRunSnapshot().active),false,'returning cannot resume a cancelled battle');
+ await page.evaluate(()=>{window.__restartAfterCancel=startThirdWorldPlayerFlow(0);});await page.waitForFunction(()=>thirdWorldContinuousRunSnapshot().active&&thirdWorldContinuousRunSnapshot().battles>0);
  const samples=await page.evaluate(()=>{clearInterval(__sampleTimer);return __hpSamples;});
  assert.ok(samples.some(s=>s.player>0&&s.player<50000),'partial damage observed, not just death');assert.ok(samples.some(s=>s.shield>0),'formal ward activated');assert.ok(samples.some(s=>s.shield===0&&s.shieldMax>0),'formal ward absorbed damage');assert.ok(samples.some(s=>s.shield>0&&Math.abs(parseFloat(s.shieldWidth)-s.shield/s.shieldMax*100)<.01),'shield DOM follows same presentation owner');
  assert.ok(new Set(samples.map(s=>s.enemy)).size>3,'enemy HP changes through actual attacks');

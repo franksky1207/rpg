@@ -1,5 +1,5 @@
 (function(){
- const SAVE_SCHEMA_VERSION=17;
+ const SAVE_SCHEMA_VERSION=18;
  const SAVE_LOAD_PIPELINE_VERSION=3;
  const SAVE_NORMALIZATION_PIPELINE_VERSION=3;
  const SAVE_NORMALIZATION_PIPELINE_ORDER=Object.freeze(["reincarnation","worldPhase.secondWorld","worldPhase.thirdWorld","worldProgress","level","gear","enhancement","vip","specialization","daily","dungeon","calamity","titles","offline","persistentFlags"]);

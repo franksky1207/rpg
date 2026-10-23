@@ -187,7 +187,7 @@
    ctx.presenting=true;try{await presentCombat(combat);}finally{ctx.presenting=false;}
    reviewResultQueued=true;setTimeout(()=>showReviewResult(boss,combat),0);
    return true;
-  }catch(error){console.error("[文明戰線] 宇宙紀元回顧失敗",error);alert("宇宙紀元回顧發生錯誤，正式進度未受影響。");return false;}
+  }catch(error){if(window.CivilizationCombatLifecycle?.isInterrupted(error))return false;console.error("[文明戰線] 宇宙紀元回顧失敗",error);alert("宇宙紀元回顧發生錯誤，正式進度未受影響。");return false;}
   finally{
    window.CivilizationAudioScenes?.endRun?.(audioRunId);
    ctx.currentEncounter=null;ctx.presenting=false;
@@ -207,6 +207,7 @@
   const ctx=createContext(index,boss,continuous);publishContext(ctx);
   busy=true;if(typeof battleBusy!=="undefined")battleBusy=true;
   const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"universe",mode:"boss"});
+  const foregroundEpoch=window.CivilizationCombatLifecycle?.epoch();
   ctx.backgroundStarted=false;
   try{
    ctx.backgroundStarted=startBackgroundFlow(ctx);
@@ -215,6 +216,7 @@
     await waitForForegroundIfBackgroundDisabled(ctx);
     if(ctx.stopRequested){ctx.stopReason="manual";break;}
 
+    window.CivilizationCombatLifecycle?.foreground(foregroundEpoch);
     state.hp=playerCombatStats().hp;
     const fastCatchUp=catchUpActive();
     const previewPolicy=fastCatchUp?catchUpPreviewPolicy():null;
@@ -234,6 +236,7 @@
     if(showPresentation){
      ctx.presenting=true;
      try{await presentCombat(combat);}
+     catch(error){sampleToken?.unsubscribe?.();throw error;}
      finally{ctx.presenting=false;}
     }else if(fastCatchUp)await consumeCatchUpDelay(structuredDuration(combat));
     ctx.completed++;
@@ -293,13 +296,14 @@
     render();
    }
    return true;
+  }catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))throw error;ctx.stopReason="interrupted";return false;
   }finally{
    window.CivilizationAudioScenes?.endRun?.(audioRunId);
    ctx.currentEncounter=null;ctx.presenting=false;
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("second-world-mainline-finalize");
    stopBackgroundFlow(ctx.backgroundStarted);
    busy=false;if(typeof battleBusy!=="undefined")battleBusy=false;
-   clearContext(ctx);
+   clearContext(ctx);if(ctx.stopReason==="interrupted"&&typeof render==="function")render();
   }
  }
 

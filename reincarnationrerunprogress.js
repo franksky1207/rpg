@@ -68,8 +68,8 @@
 
  if(typeof baseFightOnce==="function")window.fightOnce=function(mapIdx,enemyIdx,...args){
   const result=baseFightOnce.call(this,mapIdx,enemyIdx,...args);
-  if(result?.win===true&&result?.e?.kind==="boss"&&w1Active(state))backfillFirstWorld(mapIdx,state);
-  return result;
+  const transform=settled=>{if(settled?.win===true&&settled?.e?.kind==="boss"&&w1Active(state))backfillFirstWorld(mapIdx,state);return settled;};
+  return result?.settlementPending?window.deferMainBattleTransform(result,transform):transform(result);
  };
 
  if(typeof baseSecondWorldSettlement==="function")window.settleSecondWorldBossVictory=function(value,...args){

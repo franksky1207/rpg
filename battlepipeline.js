@@ -76,6 +76,7 @@
   ctx.exitRequested=ctx.exitRequested===true;
   ctx.pendingStoryId=typeof ctx.pendingStoryId==="string"?ctx.pendingStoryId:null;
   window.activeMainBattleContext=ctx;
+  const foregroundEpoch=window.CivilizationCombatLifecycle?.epoch();
   let defeat=null,local=0,catchUpNeedsFinalSync=false;
   const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:boundTarget.targetType==="boss"?"boss":"normal"});
   let mainBackgroundStarted=false;
@@ -90,11 +91,14 @@
     const playerLevelBefore=state.level,realBattleTiming=beginRealBattleTiming(encounter,playerLevelBefore,mapIndex,enemyIndex),fastCatchUp=mainFastCatchUp(),suppressPresentation=fastCatchUp;
     if(!suppressPresentation){adventureScreen="combat";render();if(typeof window.mainMinimalModeEnsureCombatHeader==="function")window.mainMinimalModeEnsureCombatHeader({continuous:ctx.continuous});}
     const psBefore=playerCombatStats(),startPlayerHp=state.hp;
-    const r=fightOnce(mapIndex,enemyIndex,encounter);
+    window.CivilizationCombatLifecycle?.foreground(foregroundEpoch);
+    const deferredSettlement=!suppressPresentation;
+    let r=fightOnce(mapIndex,enemyIndex,encounter,{deferSettlement:deferredSettlement});
     if(suppressPresentation)window.CivilizationCombatEvents?.presentationSkipped?.(r,"fast-catch-up");
     if(!r.ok){if(typeof realBattleTiming?.unsubscribe==="function")realBattleTiming.unsubscribe();alert(r.reason);break;}
     const roundLabel=ctx.continuous?`連續戰鬥・第 ${combatRound} 場`:ctx.originalCount>1?`第 ${combatRound} / ${ctx.originalCount} 場`:"";
-    if(!suppressPresentation)await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);
+    if(!suppressPresentation){try{await animateFight(r,startPlayerHp,psBefore.hp,encounter.hp,roundLabel);}catch(error){realBattleTiming?.unsubscribe?.();throw error;}}
+    if(deferredSettlement)r=window.settleMainBattleResult(r);
     finishRealBattleTiming(realBattleTiming,r);
     if(r.win){ctx.wins++;ctx.totalXp+=r.xp;ctx.totalGold+=r.gold;addContextEnhancementReward(ctx,"battle",r.enhancementStones);addContextEnhancementReward(ctx,"autoSale",r.saleEnhancementStones);if(Array.isArray(r.items)&&r.items.length)ctx.items.push(...r.items);else if(r.item)ctx.items.push({item:r.item,sold:r.sold||0});consumePendingStoryFromResult(ctx,r);}else defeat=r;
     ctx.completed++;if(!ctx.continuous)ctx.remaining=Math.max(0,ctx.originalCount-ctx.completed);
@@ -112,7 +116,8 @@
     if(hasMoreBattles(ctx)){currentCombatEncounter=encounterForContext(ctx,{preview:false});await consumeMainCatchUpDelay(battleGapMs(r.e.kind));if(catchUpNeedsFinalSync&&!mainFastCatchUp()){const finalPolicy=mainCatchUpFinal();if(finalPolicy?.shouldRefreshUi)refreshMainCatchUpUi(ctx);if(finalPolicy?.shouldCheckpoint)save(false);catchUpNeedsFinalSync=false;}}
    }
    currentCombatEncounter=null;clearPreviewForContext(ctx);battleBusy=false;window.activeMainBattleContext=null;save();render();setTimeout(()=>{if(battleBusy||window.activeMainBattleContext||window.activeSecondWorldMainlineContext)return;showBattleResult(ctx,defeat);if(typeof window.mainMinimalModeHandleBattleResult==="function")window.mainMinimalModeHandleBattleResult(ctx,defeat);},0);return true;
-  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);stopMainBackground(mainBackgroundStarted);if(battleBusy&&window.activeMainBattleContext===ctx){battleBusy=false;window.activeMainBattleContext=null;}}
+  }catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))throw error;ctx.exitRequested=true;ctx.interrupted=true;currentCombatEncounter=null;clearPreviewForContext(ctx);return false;
+  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);stopMainBackground(mainBackgroundStarted);if(battleBusy&&window.activeMainBattleContext===ctx){battleBusy=false;window.activeMainBattleContext=null;}if(ctx.interrupted&&!battleBusy){adventureScreen="prepare";if(view==="adventure")render();}}
  };
  window.MAIN_BATTLE_BACKGROUND_LIFECYCLE_VERSION=1;
  window.MAIN_BATTLE_FAST_CATCH_UP_POLICY_VERSION=1;

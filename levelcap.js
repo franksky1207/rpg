@@ -33,10 +33,11 @@
 
  // 第一紀元一般／菁英／Boss：玩家在戰鬥開始時已滿等，該場 EXP 以 1:1 轉為金幣。
  const baseFightOnceForLevelCap=fightOnce;
- fightOnce=function(mapIdx,eIdx,encounter=null){
+ fightOnce=function(mapIdx,eIdx,encounter=null,options={}){
   const cap=currentLevelCap(state);
   const startedAtCap=state.level>=cap;
-  const r=baseFightOnceForLevelCap(mapIdx,eIdx,encounter);
+  const result=baseFightOnceForLevelCap(mapIdx,eIdx,encounter,options);
+  const transform=r=>{
   if(!startedAtCap||!r?.ok||!r.win)return r;
   if(currentLevelWorldPhase(state)!==1)return r;
 
@@ -56,6 +57,8 @@
   }
   save(false);
   return r;
+  };
+  return result?.settlementPending?window.deferMainBattleTransform(result,transform):transform(result);
  };
  window.LEVEL_CAP_LEGACY_FALLBACK_VERSION=1;
  window.LEVEL_CAP_WORLD_PHASE_FALLBACK_VERSION=1;

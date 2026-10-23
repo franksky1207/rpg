@@ -116,7 +116,7 @@
   };
  }
  function battle(value,options={}){
-  const combat=runCombat(value,options);if(!combat.ok)return combat;
+  const combat=options.combatPreview||runCombat(value,options);if(!combat.ok)return combat;
   const settlement=settle(value,combat.combat,{save:options.save!==false});
   if(!settlement.ok)return {ok:false,reason:settlement.reason};
   return {...combat,settlement};
@@ -177,12 +177,14 @@
  }
  async function continuous(value,options={}){
   if(!activeRun?.active){const started=begin(value,"continuous",options);if(!started.ok)return started;}
+  const foregroundEpoch=options.foregroundEpoch??window.CivilizationCombatLifecycle?.epoch();
   const onBattle=typeof options.onBattleComplete==="function"?options.onBattleComplete:null;
   const onEnd=typeof options.onEnd==="function"?options.onEnd:null;
   const runAudioId=audioRunId;
   try{
   startBackground();
   while(activeRun?.active){
+   if(typeof options.beforeBattle==="function")window.CivilizationCombatLifecycle.foreground(foregroundEpoch);
    const infra=runInfra();
    if(!infra||typeof infra.battlePresentationPlan!=="function"){
     const run=finish("owner-missing");
@@ -190,7 +192,15 @@
     return {ok:false,reason:"battle-presentation-owner-missing",run};
    }
    const presentationPlan=infra.battlePresentationPlan(options);
-   const step=fightNext({...options,...presentationPlan.combatOptions});
+   let pending=null;
+   if(typeof options.beforeBattle==="function"&&!fastCatchUp()&&document.visibilityState!=="hidden"){
+    window.CivilizationCombatLifecycle.foreground(options.foregroundEpoch??foregroundEpoch);pending=runCombat(activeRun.calamityId,options);
+    if(!pending.ok)throw new Error(pending.reason);window.CivilizationCombatLifecycle.calamityCheckpoint(pending,2);
+    activeRun.phase="fighting";
+    await options.beforeBattle({ok:true,result:pending,battleNumber:activeRun.battleCount+1,run:runSnapshot()});
+   }
+   const step=fightNext({...options,...presentationPlan.combatOptions,combatPreview:pending});
+   if(pending)step.prePresented=true;
    if(step&&typeof step==="object")step.presentationPolicy=presentationPlan;
    if(!step.ok){if(onEnd)await onEnd(step.run);return step;}
    if(onBattle)await onBattle(step);
@@ -201,7 +211,14 @@
   }catch(error){if(audioRunId===runAudioId)finish("error");else window.CivilizationAudioScenes?.endRun?.(runAudioId);throw error;}
  }
  function single(value,options={}){
+  if(typeof options.beforeBattle==="function")window.CivilizationCombatLifecycle.foreground(options.foregroundEpoch);
   const started=begin(value,"single",options);if(!started.ok)return started;
+  if(typeof options.beforeBattle==="function"&&!fastCatchUp()&&document.visibilityState!=="hidden")return (async()=>{
+   try{window.CivilizationCombatLifecycle.foreground(options.foregroundEpoch);const pending=runCombat(value,options);if(!pending.ok)throw new Error(pending.reason);
+    window.CivilizationCombatLifecycle.calamityCheckpoint(pending,2);activeRun.phase="fighting";await options.beforeBattle({ok:true,result:pending,battleNumber:1,run:runSnapshot()});
+    return {...fightNext({...options,combatPreview:pending}),prePresented:true};
+   }catch(error){finish(window.CivilizationCombatLifecycle.isInterrupted(error)?"interrupted":"error");throw error;}
+  })();
   try{return fightNext(options);}catch(error){finish("error");throw error;}
  }
  function stop(){

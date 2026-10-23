@@ -43,6 +43,7 @@
  window.THIRD_WORLD_OFFLINE_SAMPLE_HOOK_VERSION=SAMPLE_HOOK_VERSION;
  window.THIRD_WORLD_OFFLINE_SAMPLE_PERSISTENCE_VERSION=SAMPLE_PERSISTENCE_VERSION;
  window.THIRD_WORLD_OFFLINE_TARGET_TYPE=TARGET_TYPE;
+ window.cancelThirdWorldOfflineBattleSample=function(result){const token=tokensByCombat.get(result);if(token){tokensByCombat.delete(result);token.interrupted=true;token.unsubscribe?.();}return !!token;};
  window.beginThirdWorldOfflineBattleSample=beginThirdWorldOfflineBattleSample;
  window.finishThirdWorldOfflineBattleSample=finishThirdWorldOfflineBattleSample;
  window.resolveThirdWorldOfflineFarmTarget=resolveThirdWorldTarget;

@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - '**/*.js'
+      - 'tests/runtime/foreground-combat-*.cjs'
       - 'tests/runtime/pr48-*.cjs'
       - 'tests/runtime/pr48-*.mjs'
       - 'tests/runtime/pr48-approved-presentation.json'
@@ -35,6 +36,7 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   pull_request:
     paths:
+      - 'tests/runtime/foreground-combat-*.cjs'
       - 'tests/runtime/pr48-*.cjs'
       - 'tests/runtime/unified-mobile-combat-viewport*.cjs'
       - 'combat-viewport-coordinator.js'
@@ -143,6 +145,7 @@ jobs:
             audio-lifecycle-browser-report.json
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
+            /tmp/foreground-combat-*.json
             /tmp/pr48-viewport-browser.json
             /tmp/pr48-live-combat.json
             /tmp/pr48-mode-matrix.json
@@ -291,6 +294,9 @@ jobs:
             node tests/runtime/pr48-mode-matrix-browser.cjs
           fi
           node tests/runtime/pr48-live-combat-browser.cjs
+          node tests/runtime/foreground-combat-modes-browser.cjs
+          node tests/runtime/foreground-combat-checkpoints-browser.cjs
+          node tests/runtime/foreground-combat-recovery-browser.cjs
           node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
           node tests/runtime/combat-events-browser.js
           node tests/runtime/combat-events-owner-browser.js
@@ -329,6 +335,7 @@ jobs:
             audio-lifecycle-browser-report.json
             combat-events-browser-report.json
             combat-events-owner-browser-report.json
+            /tmp/foreground-combat-*.json
             /tmp/pr48-viewport-browser.json
             /tmp/pr48-live-combat.json
             /tmp/pr48-mode-matrix.json

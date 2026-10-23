@@ -1,0 +1,86 @@
+{
+  "rendererCrash": {
+    "committed": {
+      "hp": 832652101,
+      "floor": 832652101,
+      "strings": 267347899,
+      "level": 1026,
+      "exp": 7347899
+    },
+    "loaded": {
+      "hp": 832652101,
+      "floor": 832652101,
+      "strings": 267347899,
+      "level": 1026,
+      "exp": 7347899
+    }
+  },
+  "mirror": {
+    "first": {
+      "wins": 0,
+      "losses": 1,
+      "startedAt": 1792760947524,
+      "vip": 0
+    },
+    "mirrorRecovery": {
+      "wins": 0,
+      "losses": 1,
+      "startedAt": 1792760947524,
+      "vip": 0,
+      "resumable": true,
+      "resumed": true
+    }
+  },
+  "schema": {
+    "ok": true,
+    "version": 18,
+    "gold": 12345,
+    "backupExact": true,
+    "future": true
+  },
+  "raceCases": [
+    {
+      "type": "near-win",
+      "race": {
+        "index": 1,
+        "eventCount": 1,
+        "calculatedWin": true,
+        "enemyHp": 117,
+        "playerHp": 1000
+      },
+      "gold": 777,
+      "progress": 0,
+      "weapon": "mvkzl0kxzn1fu8n1fub",
+      "lost": 0,
+      "exp": 0,
+      "level": 1
+    },
+    {
+      "type": "near-loss",
+      "race": {
+        "index": 2,
+        "eventCount": 2,
+        "calculatedWin": false,
+        "enemyHp": 116,
+        "playerHp": 1
+      },
+      "gold": 777,
+      "progress": 0,
+      "weapon": "mvkzl0wl3lllllllllm",
+      "lost": 0,
+      "exp": 0,
+      "level": 1
+    },
+    {
+      "type": "complete",
+      "race": null,
+      "gold": 787,
+      "progress": 1,
+      "weapon": "mvkzl179zn1fu8n1fub",
+      "lost": 0,
+      "exp": 29,
+      "level": 1
+    }
+  ],
+  "realIPhone": false
+}

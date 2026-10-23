@@ -40,10 +40,11 @@
   let losses=Math.max(0,Math.min(RUN_BATTLES-wins,finiteInt(daily.losses,0)));
   let startedAt=finiteInt(daily.startedAt,0),completedAt=finiteInt(daily.completedAt,0);
 
+  const resume=Number(daily.resume?.version)===1&&isObject(daily.resume?.snapshot)&&Number(daily.resume.snapshot.stats?.hp)>0&&typeof window.normalizeMirrorCombatSnapshot==="function"?{version:1,snapshot:window.normalizeMirrorCombatSnapshot(daily.resume.snapshot)}:null;
   if(status==="running"){
    challengeDate=challengeDate||dateKey;dateKey=challengeDate;
    if(recoverInterrupted){
-    if(challengeDate===currentKey){status="failed";wins=0;losses=0;completedAt=0;}
+    if(challengeDate===currentKey){if(!resume){status="failed";wins=0;losses=0;completedAt=0;}}
     else return replaceObject(daily,blankMirrorDaily(currentKey));
    }
   }else if(dateKey!==currentKey){
@@ -55,7 +56,7 @@
   if(status==="completed"&&wins+losses!==RUN_BATTLES){status="failed";wins=0;losses=0;completedAt=0;}
   if(status==="failed"){wins=0;losses=0;completedAt=0;}
   if(completedAt&&startedAt&&completedAt<startedAt)completedAt=startedAt;
-  return replaceObject(daily,{dateKey,status,challengeDate,startedAt,wins,losses,completedAt});
+  return replaceObject(daily,{dateKey,status,challengeDate,startedAt,wins,losses,completedAt,...(status==="running"&&resume?{resume}:{})});
  }
  function normalizeMirrorDungeonState(target,timestamp=Date.now(),options={}){
   if(!target||typeof target!=="object")return null;
@@ -74,15 +75,16 @@
  function mirrorDungeonStatus(timestamp=Date.now()){
   const mirror=ensureMirrorDungeonState(timestamp),daily=mirror?.daily||blankMirrorDaily(todayKey(timestamp)),history=mirror?.history||blankMirrorHistory();
   const unlocked=Math.max(1,Math.floor(Number(state?.level)||1))>=CONFIG.unlockLevel;
-  return {unlocked,status:daily.status,dateKey:daily.dateKey,challengeDate:daily.challengeDate,wins:daily.wins,losses:daily.losses,history,canStart:unlocked&&daily.status==="idle",ended:daily.status==="completed"||daily.status==="failed"};
+  return {unlocked,status:daily.status,dateKey:daily.dateKey,challengeDate:daily.challengeDate,wins:daily.wins,losses:daily.losses,history,canStart:unlocked&&(daily.status==="idle"||daily.status==="running"&&!!daily.resume),resumable:daily.status==="running"&&!!daily.resume,ended:daily.status==="completed"||daily.status==="failed"};
  }
- function beginMirrorDungeonState(timestamp=Date.now()){
+ function beginMirrorDungeonState(timestamp=Date.now(),options={}){
   const info=mirrorDungeonStatus(timestamp);
   if(!info.unlocked)return {ok:false,reason:"locked",...info};
+  if(info.resumable)return {ok:true,resumed:true,...info};
   if(info.status!=="idle")return {ok:false,reason:"already_used",...info};
   const mirror=ensureMirrorDungeonState(timestamp),key=todayKey(timestamp),now=Math.max(0,Math.floor(Number(timestamp)||Date.now()));
   const previousDaily={...mirror.daily};
-  replaceObject(mirror.daily,{dateKey:key,status:"running",challengeDate:key,startedAt:now,wins:0,losses:0,completedAt:0});
+  replaceObject(mirror.daily,{dateKey:key,status:"running",challengeDate:key,startedAt:now,wins:0,losses:0,completedAt:0,...(options.snapshot?{resume:{version:1,snapshot:window.normalizeMirrorCombatSnapshot(options.snapshot)}}:{})});
   let persisted=false;
   try{persisted=typeof save==="function"&&save(false)===true;}catch(error){console.error("Mirror dungeon start save failed",error);}
   if(!persisted){replaceObject(mirror.daily,previousDaily);return {ok:false,reason:"save_failed",...mirrorDungeonStatus(timestamp)};}

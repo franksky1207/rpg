@@ -117,7 +117,8 @@
   voidUi.running=true;
   const audioRunId=window.CivilizationAudioScenes?.startRun?.({mode:"void"});
   try{
-   await window.runVoidMirageAuto({
+   await window.runVoidMirageAuto({foregroundEpoch:voidUi.foregroundEpoch,
+    async beforeFloor(fr){voidUi.floorResult=fr;voidUi.phase="combat";render();if(!fr.prePresented)await animateFloor(fr);},
     async onFloorComplete(fr){
      if(!fr?.ok)return;
      voidUi.floorResult=fr;
@@ -127,7 +128,7 @@
      if(fast){
       if(policy?.shouldPresentBattle){
        refreshVoidCatchUpUi(fr);
-       await animateFloor(fr);
+       if(!fr.prePresented)await animateFloor(fr);
       }else{
        await consumeCatchUpDelay(structuredDuration(fr.result));
        if(policy?.shouldRefreshUi)refreshVoidCatchUpUi(fr);
@@ -142,7 +143,7 @@
         if(typeof syncMode==="function")syncMode();
        }
       }
-      await animateFloor(fr);
+      if(!fr.prePresented)await animateFloor(fr);
       if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
      }
      if(!fr.ended){
@@ -185,7 +186,7 @@
   const allowBackground=typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;
   if(allowBackground&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
   else if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
-  voidUi={phase:"combat",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};render();
+  voidUi={phase:"combat",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};render();
   if(allowBackground&&typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(runVoidMirageUiAuto);else setTimeout(runVoidMirageUiAuto,100);
  };
  window.claimVoidMirageRewardUI=function(){

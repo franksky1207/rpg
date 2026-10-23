@@ -51,21 +51,22 @@
  if(typeof base.mirrorDungeonStatus==="function")window.mirrorDungeonStatus=function(...args){
   const info=base.mirrorDungeonStatus.apply(this,args),access=accessSnapshot("mirror",state);
   if(!info||!access.unlocked||info.unlocked===true)return info;
-  return {...info,unlocked:true,canStart:info.status==="idle",access};
+  return {...info,unlocked:true,canStart:info.status==="idle"||info.resumable===true,access};
  };
- if(typeof base.beginMirrorDungeonState==="function")window.beginMirrorDungeonState=function(timestamp=Date.now()){
+ if(typeof base.beginMirrorDungeonState==="function")window.beginMirrorDungeonState=function(timestamp=Date.now(),options={}){
   const access=accessSnapshot("mirror",state);
-  if(!access.unlocked)return base.beginMirrorDungeonState.call(this,timestamp);
+  if(!access.unlocked)return base.beginMirrorDungeonState.call(this,timestamp,options);
   const baseInfo=base.mirrorDungeonStatus(timestamp);
-  if(baseInfo?.unlocked===true)return base.beginMirrorDungeonState.call(this,timestamp);
+  if(baseInfo?.unlocked===true)return base.beginMirrorDungeonState.call(this,timestamp,options);
   const info=window.mirrorDungeonStatus(timestamp);
   if(!info?.unlocked)return {ok:false,reason:"locked",...(info||{})};
+  if(info.resumable)return {ok:true,resumed:true,...info};
   if(info.status!=="idle")return {ok:false,reason:"already_used",...info};
   if(typeof window.ensureMirrorDungeonState!=="function")return {ok:false,reason:"missing_state",...info};
   const mirror=window.ensureMirrorDungeonState(timestamp),key=dateKey(timestamp),now=Math.max(0,Math.floor(Number(timestamp)||Date.now()));
   if(!mirror?.daily)return {ok:false,reason:"missing_state",...info};
   const previous={...mirror.daily};
-  replaceDaily(mirror.daily,{dateKey:key,status:"running",challengeDate:key,startedAt:now,wins:0,losses:0,completedAt:0});
+  replaceDaily(mirror.daily,{dateKey:key,status:"running",challengeDate:key,startedAt:now,wins:0,losses:0,completedAt:0,...(options.snapshot?{resume:{version:1,snapshot:window.normalizeMirrorCombatSnapshot(options.snapshot)}}:{})});
   let persisted=false;
   try{persisted=typeof save==="function"&&save(false)===true;}catch(error){console.error("Reincarnation mirror dungeon start save failed",error);}
   if(!persisted){replaceDaily(mirror.daily,previous);return {ok:false,reason:"save_failed",...window.mirrorDungeonStatus(timestamp)};}

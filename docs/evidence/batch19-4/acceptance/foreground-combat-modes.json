@@ -1,0 +1,235 @@
+{
+  "passed": true,
+  "reports": [
+    {
+      "item": {
+        "phase": 1,
+        "mode": "main"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 1,
+        "mode": "bounty"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 1,
+        "mode": "arena"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "main"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "bounty"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "arena"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "main"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "bounty"
+      },
+      "size": {
+        "width": 390,
+        "height": 844
+      },
+      "availability": {
+        "blocked": true,
+        "stops": 0
+      }
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "arena"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 1,
+        "mode": "special"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "special"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 1,
+        "mode": "calamity"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "calamity"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 1,
+        "mode": "void"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "void"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "void"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 1,
+        "mode": "mirror"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "mirror"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "mirror"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "alternate"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "review1"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "review2"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "review3"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 2,
+        "mode": "calreview1"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    },
+    {
+      "item": {
+        "phase": 3,
+        "mode": "calreview2"
+      },
+      "openingCancelled": true,
+      "busyReleased": true,
+      "ownerReleased": true
+    }
+  ]
+}

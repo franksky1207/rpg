@@ -62,6 +62,7 @@ jobs:
           node-version: '24'
       - name: Battle lifecycle, positioning, and transition contracts
         run: |
+          node tests/runtime/foreground-combat-lifecycle.cjs
           node tests/runtime/combat-events-integration.cjs
           node tests/runtime/cross-combat-stale-continuous-regression.cjs
           node tests/runtime/cross-mode-late-settlement-regression.cjs

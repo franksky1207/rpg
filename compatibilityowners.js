@@ -2,7 +2,7 @@
  const VERSION=5;
  const LEGACY_SAVE_VERSION_VALUE=typeof SAVE_VERSION==="number"?Math.floor(Number(SAVE_VERSION)||0):0;
  const LEGACY_MAX_LEVEL_VALUE=typeof MAX_LEVEL==="number"?Math.floor(Number(MAX_LEVEL)||0):0;
- const EXPECTED_SAVE_SCHEMA_VERSION=17;
+ const EXPECTED_SAVE_SCHEMA_VERSION=18;
  const SAVE_SCHEMA_OWNER="savemigration";
  const LEVEL_CAP_RUNTIME_OWNER="levelprogression";
  const ARENA_RUNTIME_OWNER="arenaByWorld";

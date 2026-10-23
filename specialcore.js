@@ -74,13 +74,13 @@
    playerFinalDamageMultiplier:civilizationMultiplier,
    lockPlayerFullHp
   });
-  state.hp=combat.hp;
+  if(options.deferState!==true)state.hp=combat.hp;
   return {
    win:combat.win,
    logs:combat.logs,
    events:combat.events||[],
    e:enemy,
-   combatEndHp:state.hp,
+   combatEndHp:combat.hp,
    turns:combat.turns
   };
  };

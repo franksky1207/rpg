@@ -1,4 +1,4 @@
-> **新版第19-4批唯讀調查／安全閘門（2026-10-23）**：基準main `b6d254c2dc9d4fb6b5d3d97ae48bd5db0263348f`，單一分支 `fix/batch19-4-foreground-combat`。真Chromium已重現轉生後11億HP十王在動畫尚未完成時永久HP先變0；已驗證播放器index提前與HP checkpoint觸發既有stale-settlement拒絕。正式Runtime尚未修改，未完成全模式Browser及iPhone驗收；維持Draft、不可合併／封箱。永久HP與EXP／維度弦、稱號／劇情及整場裝備目前同交易，須先固定部分提交契約，不能放寬安全斷言。完整逐模式初盤、資源數據、證據及有限範圍替代方案見[本批調查報告](docs/BATCH19_4_FOREGROUND_INTERRUPTION_AUDIT_2026-10-23.md)。此段取代下方歷史「19-4未施工」的進度描述，並不代表修復已施工。
+> **新版第19-4批整合施工（2026-10-23）**：同一 [Draft PR #89](https://github.com/franksky1207/rpg/pull/89)，基準 main `b6d254c2dc9d4fb6b5d3d97ae48bd5db0263348f`。已完成全戰鬥前景取消、長 Boss 已播放 HP 與對應收益原子 checkpoint／去重、Schema18 備份保護及鏡像已完成場次恢復。保留 GM 實際開關、一次計算及既有補算。詳見[施工與驗收報告](docs/BATCH19_4_FOREGROUND_IMPLEMENTATION_2026-10-23.md)與[歷史唯讀盤點](docs/BATCH19_4_FOREGROUND_INTERRUPTION_AUDIT_2026-10-23.md)。本機 Chromium 回歸通過；最新SHA Actions待核對、iPhone實機未驗收。未合併、不可封箱。此段取代下方歷史19-4進度描述。
 
 > **第19-2批施工與驗收入口**：[PR #79](https://github.com/franksky1207/rpg/pull/79)、[完整範圍與驗收報告](docs/BATCH19_2_GM_CENTER_2026-10-22.md)。玩家／怪物／對戰共用六動作，完整正式身份與工程API保留；本機三視窗整合已通過。是否正式封箱須核對PR最新head全Actions、合併main及同SHA Runtime／Pages最終驗收紀錄；本段不以啟動工作流代替完成。第19-3／19-4／20批未施工。
 
@@ -72,7 +72,7 @@
 
 ## 現役資料與版本安全基準
 
-- 正式存檔基準：`SAVE_SCHEMA_VERSION = 17`；存檔、遷移與 Future schema 防護不可因清理變更。
+- 正式存檔基準：`SAVE_SCHEMA_VERSION = 18`；存檔、遷移與 Future schema 防護不可因清理變更。
 - 三紀元 owner：`currentWorldPhase()` 與 `thirdWorld`；`1／2／3 對應銀河／宇宙／高維`（高維 `3 = 高維紀元`）。
 - `reincarnation`、突破與異宇宙的正式行為只能依 `main` runtime 與回歸測試判定。
 - 第5批完成條件：所有必要 GitHub Actions 全綠、完整 Git tree 零殘留與保留例外核對、最終 CI SHA 及報告寫入後才封箱。第6批不得提前開始。

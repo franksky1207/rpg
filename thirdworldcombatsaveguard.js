@@ -33,11 +33,11 @@
   const sample={saveVersion:Number(window.SAVE_SCHEMA_VERSION)||16,level:1000,thirdWorld:{entered:true,completed:false,entryVersion:1,dimensionalStrings:7,coreLevel:2,bosses:[{currentHp:123,revengeReady:true,initiativeUsed:true,combat:{}}],story:{introSeen:true,unlockedStage:2,finalSeen:false,battleSpiritLayer:9},combat:{actorState:{}}},thirdWorldCombatResult:{settlementBasis:{}},thirdWorldCombatRuntime:{revengeReady:true}};
   const result=cleanup(sample),boss=sample.thirdWorld?.bosses?.[0]||{},story=sample.thirdWorld?.story||{};
   const ok=result.changed===true&&sample.thirdWorld?.dimensionalStrings===7&&sample.thirdWorld?.coreLevel===2&&boss.currentHp===123&&story.unlockedStage===2&&!Object.prototype.hasOwnProperty.call(sample,"thirdWorldCombatResult")&&!Object.prototype.hasOwnProperty.call(sample,"thirdWorldCombatRuntime")&&!Object.prototype.hasOwnProperty.call(sample.thirdWorld,"combat")&&!Object.prototype.hasOwnProperty.call(boss,"revengeReady")&&!Object.prototype.hasOwnProperty.call(boss,"initiativeUsed")&&!Object.prototype.hasOwnProperty.call(boss,"combat")&&!Object.prototype.hasOwnProperty.call(story,"battleSpiritLayer");
-  return Object.freeze({version:VERSION,passed:ok,removed:Object.freeze(result.removed.slice()),schemaVersion:Number(window.SAVE_SCHEMA_VERSION)||0,schemaBumpRequired:false,saveHookConvergenceVersion:SAVE_HOOK_CONVERGENCE_VERSION});
+  return Object.freeze({version:VERSION,passed:ok,removed:Object.freeze(result.removed.slice()),schemaVersion:Number(window.SAVE_SCHEMA_VERSION)||0,schemaBumpRequired:true,saveHookConvergenceVersion:SAVE_HOOK_CONVERGENCE_VERSION});
  }
  window.THIRD_WORLD_COMBAT_SAVE_GUARD_VERSION=VERSION;
  window.THIRD_WORLD_COMBAT_SAVE_SCHEMA_POLICY_VERSION=POLICY_VERSION;
- window.THIRD_WORLD_COMBAT_SAVE_SCHEMA_BUMP_REQUIRED=false;
+ window.THIRD_WORLD_COMBAT_SAVE_SCHEMA_BUMP_REQUIRED=true;
  window.THIRD_WORLD_COMBAT_SAVE_HOOK_CONVERGENCE_VERSION=SAVE_HOOK_CONVERGENCE_VERSION;
  window.THIRD_WORLD_COMBAT_TRANSIENT_SAVE_KEYS=Object.freeze([...ROOT_TRANSIENT_KEYS,...RUNTIME_FIELD_NAMES]);
  window.THIRD_WORLD_COMBAT_SAVE_GUARD_REPORT=runIntegrity();

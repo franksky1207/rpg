@@ -30,6 +30,7 @@
  if(typeof window.syncCombatPresentationHp!=="function")fail("MARK_FX_HP_SYNC","syncCombatPresentationHp 未載入");
  if(typeof window.prepareCombatPresentation!=="function"||typeof window.clearCombatPresentation!=="function"||typeof window.isCombatPresentationActive!=="function"||typeof window.getCombatPresentationSnapshot!=="function")fail("COMBAT_PRESENTATION_LIFECYCLE","Combat Presentation V3 lifecycle API 未完整載入");
  if(typeof window.getCombatPresentationPlayerShield!=="function"||typeof window.getCombatPresentationPlayerShieldMax!=="function")fail("COMBAT_PRESENTATION_SHIELD","Combat Presentation shield API 未完整載入");
+ if(typeof window.CivilizationCombatLifecycle?.begin!=="function"||typeof window.CivilizationCombatLifecycle?.foreground!=="function")fail("COMBAT_LIFECYCLE_OWNER","單場生命週期 owner 未載入");
  if(typeof window.animateStructuredCombatPresentation!=="function")fail("COMBAT_STRUCTURED_PRESENTATION","Structured Combat Presentation API 未載入");
  if(typeof window.getStructuredCombatPacing!=="function"||typeof window.getStructuredCombatPacingForSpeed!=="function")fail("STRUCTURED_COMBAT_PACING_API","共用 Structured Combat Speed Pacing API 未完整載入");
  else{

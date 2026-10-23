@@ -35,7 +35,7 @@
  function presentationSleep(){return typeof window.mainBattlePresentationSleep==="function"?window.mainBattlePresentationSleep:undefined;}
  async function presentCombat(combat){if(typeof window.animateStructuredCombatPresentation!=="function")throw new Error("Structured Combat Presentation 未載入。");await window.animateStructuredCombatPresentation(combat,{mode:"main",sleep:presentationSleep(),clearAfter:true,clearReason:"alternate-universe-battle-end"});}
  async function challengeFormal(){
-  if(battleContext)return false;const snap=progress();if(!snap?.nextDepth)return false;
+  if(battleContext)return false;window.CivilizationCombatLifecycle?.foreground();const snap=progress();if(!snap?.nextDepth)return false;
   let attempt=activeAttempt();if(!attempt){const begun=typeof window.beginAlternateUniverseAttempt==="function"?window.beginAlternateUniverseAttempt(snap.nextDepth):{ok:false,reason:"attempt-owner-missing"};if(!begun?.ok){alert(begun?.reason==="depth-locked-for-life"?"本輪此層域已鎖定，完成下一次轉生後可再次挑戰。":"無法建立異宇宙挑戰，請重新整理後再試。");return false;}attempt=activeAttempt();}
   if(!attempt||attempt.depth!==snap.nextDepth)return false;
   const enemy=typeof window.alternateUniverseCurrentAttemptEncounter==="function"?window.alternateUniverseCurrentAttemptEncounter(currentState()):null;const player=typeof window.playerCombatStats==="function"?window.playerCombatStats():null;if(!enemy||!player){alert("異宇宙戰鬥資料尚未完整載入。");return false;}
@@ -47,7 +47,7 @@
    await presentCombat(result.combat);
    let settlement=null;if(result.settlementReady===true){settlement=typeof window.settleAlternateUniverseCombat==="function"?window.settleAlternateUniverseCombat(result):{ok:false};if(!settlement?.ok)throw new Error(settlement?.reason||"settlement-failed");}
    lastBattleReport={depth:attempt.depth,traits:Array.from(attempt.traits||[]),result,settlement};if(settlement?.ok===true&&result?.combat?.win===true)window.CivilizationAudio?.settlementVictory?.("alternate:"+String(attempt.attemptId||attempt.depth),{success:true});return true;
-  }catch(error){console.error("[文明戰線] 異宇宙戰鬥失敗",error);alert("異宇宙戰鬥未能完成，本次挑戰會保留；請重新整理後再試。");return false;}
+  }catch(error){if(window.CivilizationCombatLifecycle?.isInterrupted(error))return false;console.error("[文明戰線] 異宇宙戰鬥失敗",error);alert("異宇宙戰鬥未能完成，本次挑戰會保留；請重新整理後再試。");return false;}
   finally{battleContext=null;window.CivilizationAudioScenes?.endRun?.(audioRunId);renderPage();}
  }
  function abandonFormal(){const attempt=activeAttempt();if(!attempt||battleContext)return false;if(!confirm("放棄尚未結算的異宇宙挑戰會記 1 次失敗。確定放棄？"))return false;const result=typeof window.abandonAlternateUniverseAttempt==="function"?window.abandonAlternateUniverseAttempt({attemptId:attempt.attemptId}):{ok:false};if(!result?.ok){alert("無法放棄本次挑戰，請重新整理後再試。");return false;}lastBattleReport=null;renderPage();return true;}

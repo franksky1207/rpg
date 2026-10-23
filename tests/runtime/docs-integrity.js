@@ -13,7 +13,7 @@ const assets=read("assets/README.md");
 const worldphase=read("worldphase.js");
 
 assert(readme.includes("銀河紀元**：Lv.1～500")&&readme.includes("宇宙紀元**：Lv.501～1000")&&readme.includes("高維紀元**：Lv.1000～2000"),"README 必須描述正式三紀元 Lv.1～2000。");
-assert(readme.includes("SAVE_SCHEMA_VERSION = 17"),"README 的正式 Save Schema 必須是 17。");
+assert(readme.includes("SAVE_SCHEMA_VERSION = 18"),"README 的正式 Save Schema 必須是 18。");
 assert(readme.includes("10 名高維存在")&&readme.includes("永久削血")&&readme.includes("維度之弦")&&readme.includes("界弦核心"),"README 必須同步高維紀元已進 runtime 的正式基準。");
 assert(readme.includes("VIP 等級無上限")&&readme.includes("特殊特權至 VIP20"),"README 必須同步 VIP 無上限／特權至20規則。");
 assert(readme.includes("reincarnation")&&readme.includes("突破等級")&&readme.includes("異宇宙"),"README 必須同步轉生／突破／異宇宙後續主線。");
@@ -22,13 +22,13 @@ assert(!readme.includes("高維紀元目前只有設計規格，尚未實作"),"
 assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Schema15 當 current runtime。");
 
 const handoffHasThirdWorldPhaseMapping=handoff.includes("3 = 高維紀元")||handoff.includes("1／2／3 對應銀河／宇宙／高維")||handoff.includes("1/2/3 對應銀河/宇宙/高維");
-assert(handoff.includes("SAVE_SCHEMA_VERSION = 17")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
+assert(handoff.includes("SAVE_SCHEMA_VERSION = 18")&&handoff.includes("currentWorldPhase()")&&handoffHasThirdWorldPhaseMapping&&handoff.includes("thirdWorld")&&handoff.includes("main` 的實際程式碼是唯一真實來源"),"Handoff 必須同步目前 Schema17／三紀元正式基準與 main 唯一真實來源原則。");
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
 assert(handoff.includes("PR #14")&&handoff.includes("已")&&handoff.includes("第5批")&&handoff.includes("第6批不得提前開始"),"Handoff 必須如實標示 2.5D 清理整合與第5批驗收狀態，不沿用歷史 Batch7 記述。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
 assert(pending.includes("main` 的實際程式碼是唯一真實來源"),"Pending 必須保留 main 唯一真實來源原則。");
-assert(pending.includes("SAVE_SCHEMA_VERSION = 17")&&pending.includes("高維紀元：Lv.1000～2000"),"Pending 必須同步 Schema17 與高維紀元 Lv.1000～2000。");
+assert(pending.includes("SAVE_SCHEMA_VERSION = 18")&&pending.includes("高維紀元：Lv.1000～2000"),"Pending 必須同步 Schema17 與高維紀元 Lv.1000～2000。");
 assert(pending.includes("Batch6：越級收益／批次成長／副本／封箱")&&pending.includes("Batch6 程式碼優化第1～5批")&&pending.includes("✅ 完成"),"Pending 必須同步 Batch6 與其優化已完成。");
 assert(pending.includes("Batch7：GM／測試工具正式收尾 7-1～7-5全部完成")&&pending.includes("Batch7 封箱後程式碼優化第1～4批"),"Pending 必須同步 Batch7 與封箱後優化已完成。");
 assert(pending.includes("第一紀元完整 Target Context 重構 Batch0～6")&&pending.includes("第一紀元 Target Context 重構後優化第1～4批"),"Pending 必須同步 W1 Target Context 重構與優化全部完成。");

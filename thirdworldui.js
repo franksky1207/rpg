@@ -196,11 +196,11 @@
    showReviewResult(result);
    return true;
   }catch(error){
-   console.error("[文明戰線] 高維回顧失敗",error);reviewContext=null;
+   const cancelled=window.CivilizationCombatLifecycle?.isInterrupted(error);if(!cancelled)console.error("[文明戰線] 高維回顧失敗",error);reviewContext=null;
    if(typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
    if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("third-world-review-error");
    if(typeof window.render==="function")window.render();
-   alert("高維回顧發生錯誤，正式進度未受影響。");return false;
+   if(!cancelled)alert("高維回顧發生錯誤，正式進度未受影響。");return false;
   }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  };
  window.closeThirdWorldReviewResultModal=closeReviewResult;

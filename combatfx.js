@@ -310,9 +310,14 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  window.STRUCTURED_COMBAT_HEADLESS_DURATION_VERSION=1;
  const structuredSleep=ms=>new Promise(resolve=>setTimeout(resolve,Math.max(0,Number(ms)||0)));
  window.animateStructuredCombatPresentation=async function(result,options={}){
-  const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
+  const nativeSleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
+  if(!window.CivilizationCombatLifecycle)throw new Error("戰鬥生命週期系統尚未載入，已拒絕結算。");
+  let lifetime=null;
+  const sleep=ms=>lifetime?lifetime.sleep(ms,nativeSleep):nativeSleep(ms);
   const p=presentation;
   if(!p?.active||!Array.isArray(p.events))throw new Error("Combat Presentation 尚未初始化。");
+  lifetime=window.CivilizationCombatLifecycle.begin(result);
+  try{
   p.screen=combatScreen()||p.screen||null;
   const pacing=structuredCombatPacing(Array.isArray(result?.events)?result.events.length:p.events.length);
   const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
@@ -320,8 +325,8 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   structuredPlayback=true;
   ensureCombatExtras();
   syncCombatHpDom();
+  lifetime?.applied(p);
   if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),null);
-  try{
    await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];p.actionStartedAt=performance.now();
@@ -332,6 +337,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
      applyMarkPresentation(evt);
      if(desc)spawnFx(desc.target,desc.kind,desc.text,0);
      syncCombatHpDom();
+  lifetime?.applied(p);
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      if(desc)await sleep(Math.min(stepDelay,85));
      continue;
@@ -351,6 +357,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
      spawnFx(actor,"drain");
      if(healed>0)spawnFx(actor,"heal",`+${healed} HP`,70);
      syncCombatHpDom();
+  lifetime?.applied(p);
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await sleep(stepDelay);
      continue;
@@ -361,6 +368,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
      if(!p.active)break;
      directPulse(target,"閃避");
      syncCombatHpDom();
+  lifetime?.applied(p);
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await sleep(stepDelay);
      continue;
@@ -385,17 +393,22 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
       directPulse(target,evt.crit?`暴擊 -${shown}`:`-${shown}`);
      }
      syncCombatHpDom();
+  lifetime?.applied(p);
      if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),evt);
      await sleep(stepDelay);
      continue;
     }
    }
    syncCombatHpDom();
+  lifetime?.applied(p);
    if(typeof options.onUpdate==="function")options.onUpdate(window.getCombatPresentationSnapshot?.(),{type:"end"});
    if(p.active)await sleep(endDelay);
    
+   if(!p.active&&!window.gmBackgroundBattleEnabled?.())throw window.CivilizationCombatLifecycle.interrupted();
+   lifetime?.complete();
    return window.getCombatPresentationSnapshot();
   }finally{
+   lifetime?.finish();
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
@@ -433,7 +446,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
  window.prepareMirrorCombatPresentation=function(result){
   window.clearCombatPresentation("mirror-replace");
   if(!result)return null;
-  const maxHp=Math.max(1,Math.floor(Number(result.maxHp)||1)),events=Array.isArray(result.events)?result.events.slice():[];
+  const maxHp=Math.max(1,Math.floor(Number(result.maxHp)||1)),events=Array.isArray(result.events)?result.events:[];
   const playerWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="player"&&evt.mark==="ward"&&evt.action==="activate");
   const mirrorWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="mirror"&&evt.mark==="ward"&&evt.action==="activate");
   const playerShield=Math.max(0,Math.floor(Number(playerWard?.shield)||0)),enemyShield=Math.max(0,Math.floor(Number(mirrorWard?.shield)||0));
@@ -443,15 +456,19 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   return window.getCombatPresentationSnapshot();
  };
  window.animateMirrorStructuredCombatPresentation=async function(result,options={}){
-  const sleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
+  const nativeSleep=typeof options.sleep==="function"?options.sleep:structuredSleep;
+  if(!window.CivilizationCombatLifecycle)throw new Error("戰鬥生命週期系統尚未載入，已拒絕結算。");
+  let lifetime=null;
+  const sleep=ms=>lifetime?lifetime.sleep(ms,nativeSleep):nativeSleep(ms);
   if(!presentation?.active||presentation.mode!=="mirror")window.prepareMirrorCombatPresentation(result);
   const p=presentation;if(!p?.active)throw new Error("Mirror Combat Presentation 尚未初始化。");
+  lifetime=window.CivilizationCombatLifecycle.begin(result);
+  try{
   p.screen=combatScreen()||p.screen||null;
   const pacing=structuredCombatPacing(Array.isArray(result?.events)?result.events.length:p.events.length);
   const {impactDelay,stepDelay,openingDelay,endDelay}=pacing;
   window.CivilizationCombatEvents?.setPacing?.(p.token,pacing);
-  structuredPlayback=true;ensureCombatExtras();syncCombatHpDom();
-  try{
+  structuredPlayback=true;ensureCombatExtras();syncCombatHpDom();lifetime?.applied(p);
    await sleep(openingDelay);
    while(p.active&&p.index<p.events.length){
     const evt=p.events[p.index++];p.actionStartedAt=performance.now();
@@ -461,7 +478,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
      const desc=markFxDescriptor(evt),target=mirrorMarkUiTarget(evt);
      applyMirrorMarkPresentation(evt);
      if(desc&&target)spawnFx(target,desc.kind,desc.text,0);
-     syncCombatHpDom();
+     syncCombatHpDom();lifetime?.applied(p);
      if(desc)await sleep(Math.min(stepDelay,70));
      continue;
     }
@@ -471,11 +488,11 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
      const actor=mirrorUiTarget(evt.actor),healed=Math.max(0,Math.floor(Number(evt.healed)||0));
      if(actor==="player")p.playerHp=Math.min(p.playerMaxHp,p.playerHp+healed);else p.enemyHp=Math.min(p.enemyMaxHp,p.enemyHp+healed);
      spawnFx(actor,"drain");if(healed>0)spawnFx(actor,"heal",`+${healed} HP`,60);
-     syncCombatHpDom();await sleep(stepDelay);continue;
+     syncCombatHpDom();lifetime?.applied(p);await sleep(stepDelay);continue;
     }
     if(evt.type==="dodge"){
      const actor=mirrorUiTarget(evt.actor),target=mirrorUiTarget(evt.target);
-     directMotion(actor);await sleep(impactDelay);directPulse(target,"閃避");syncCombatHpDom();await sleep(stepDelay);continue;
+     directMotion(actor);await sleep(impactDelay);directPulse(target,"閃避");syncCombatHpDom();lifetime?.applied(p);await sleep(stepDelay);continue;
     }
     if(evt.type==="attack"){
      const actor=mirrorUiTarget(evt.actor),target=mirrorUiTarget(evt.target);
@@ -486,12 +503,13 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
      if(evt.initiative)spawnFx(target,"initiative");
      if(evt.penetration)spawnFx(target,"penetration",null,60);
      if(evt.absorbed)directPulse(target,"吸收");else directPulse(target,evt.crit?`暴擊 -${Math.max(0,Math.floor(Number(evt.damage)||0))}`:`-${Math.max(0,Math.floor(Number(evt.damage)||0))}`);
-     syncCombatHpDom();await sleep(stepDelay);continue;
+     syncCombatHpDom();lifetime?.applied(p);await sleep(stepDelay);continue;
     }
     if(evt.type==="battleEnd")break;
    }
-   syncCombatHpDom();await sleep(endDelay);return window.getCombatPresentationSnapshot();
+   syncCombatHpDom();lifetime?.applied(p);await sleep(endDelay);if(!p.active&&!window.gmBackgroundBattleEnabled?.())throw window.CivilizationCombatLifecycle.interrupted();lifetime?.complete();return window.getCombatPresentationSnapshot();
   }finally{
+   lifetime?.finish();
    window.CivilizationAudioScenes?.notify?.("presentation-end");
    window.CivilizationCombatEvents?.endPresentation?.(p.token,"structured-playback-finalize");
    structuredPlayback=false;
@@ -508,7 +526,7 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
   const playerStartHp=lockPlayerFullHp?playerMaxHp:Math.max(0,Math.min(playerMaxHp,Math.floor(Number(result?.playerStartHp)||playerMaxHp)));
   const enemyMaxHp=Math.max(1,Math.floor(Number(result?.e?.hp)||1));
   const enemyStartHp=Math.max(0,Math.min(enemyMaxHp,Math.floor(Number(result?.enemyStartHp??enemyMaxHp)||enemyMaxHp)));
-  const events=Array.isArray(result?.events)?result.events.slice():[];
+  const events=Array.isArray(result?.events)?result.events:[];
   const playerWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="player"&&evt.mark==="ward"&&evt.action==="activate");
   const enemyWard=events.find(evt=>evt?.type==="mark"&&evt.owner==="enemy"&&evt.mark==="ward"&&evt.action==="activate");
   const playerShield=Math.max(0,Math.floor(Number(playerWard?.shield)||0)),enemyShield=Math.max(0,Math.floor(Number(enemyWard?.shield)||0));

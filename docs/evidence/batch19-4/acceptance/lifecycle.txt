@@ -1,0 +1,14 @@
+✔ cancel wakes an in-flight hit and only submits applied HP, never the look-ahead index (2.441726ms)
+✔ 5-second checkpoints, lethal tail, failed save, and no full event/index copy (0.87355ms)
+✔ GM actual background switch, completed-before-hide, and bfcache cannot revive cancelled battle (1.262407ms)
+✔ superseded owner may not clear the new mode presentation or commit late (0.496031ms)
+✔ leaving during an inter-battle gap invalidates that run after focus returns (0.472014ms)
+✔ blur uses a sustained focus recheck and respects the actual GM background switch (1102.330946ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1110.958544

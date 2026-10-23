@@ -8,12 +8,15 @@
  };
 
  const baseFightOnceForLevelCapResult=fightOnce;
- fightOnce=function(mapIdx,eIdx,encounter=null){
-  const r=baseFightOnceForLevelCapResult(mapIdx,eIdx,encounter);
+ fightOnce=function(mapIdx,eIdx,encounter=null,options={}){
+  const result=baseFightOnceForLevelCapResult(mapIdx,eIdx,encounter,options);
+  const transform=r=>{
   if(r?.ok&&r.win&&r.convertedExpGold){
    normalConvertedTotal+=Math.max(0,Number(r.convertedExpGold)||0);
   }
   return r;
+  };
+  return result?.settlementPending?window.deferMainBattleTransform(result,transform):transform(result);
  };
 
  function normalResultTitle(){

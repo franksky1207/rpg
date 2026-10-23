@@ -9,6 +9,7 @@
  const SAVE_SAFETY_BACKUP_SUFFIX=".safety-backup-v1";
  const SAVE_SAFETY_META_SUFFIX=".safety-backup-meta-v1";
  const PRE_SCHEMA16_BACKUP_SUFFIX=".pre-schema16-backup-v1";
+ const PRE_SCHEMA18_BACKUP_SUFFIX=".pre-schema18-backup-v1";
  const PRE_SCHEMA17_BACKUP_SUFFIX=".pre-schema17-backup-v1";
  const SAVE_CAPACITY_WARNING_BYTES=2*1024*1024;
  const SAVE_CAPACITY_CRITICAL_BYTES=4*1024*1024;
@@ -16,13 +17,13 @@
   Object.freeze({id:"legacy-exp-progress",label:"Legacy EXP progress",minVersion:1,maxVersion:9,conditional:true}),
   Object.freeze({id:"pre-schema16-compatibility",label:"Pre-Schema16 compatibility",minVersion:1,maxVersion:15,conditional:true}),
   Object.freeze({id:"pre-schema17-reincarnation",label:"Pre-Schema17 reincarnation initialization",minVersion:1,maxVersion:16,conditional:true}),
-  Object.freeze({id:"canonical-normalization",label:"Canonical root normalization",minVersion:1,maxVersion:17,conditional:false}),
-  Object.freeze({id:"world-phase-normalization",label:"World phase and level normalization",minVersion:1,maxVersion:17,conditional:false}),
-  Object.freeze({id:"subsystem-normalization",label:"Subsystem normalization",minVersion:1,maxVersion:17,conditional:false}),
-  Object.freeze({id:"finalize-current-schema",label:"Finalize current schema",minVersion:1,maxVersion:17,conditional:false})
+  Object.freeze({id:"canonical-normalization",label:"Canonical root normalization",minVersion:1,maxVersion:18,conditional:false}),
+  Object.freeze({id:"world-phase-normalization",label:"World phase and level normalization",minVersion:1,maxVersion:18,conditional:false}),
+  Object.freeze({id:"subsystem-normalization",label:"Subsystem normalization",minVersion:1,maxVersion:18,conditional:false}),
+  Object.freeze({id:"finalize-current-schema",label:"Finalize current schema",minVersion:1,maxVersion:18,conditional:false})
  ]);
  const SCHEMA_EVOLUTION_POLICY=Object.freeze({
-  currentSchema:17,
+  currentSchema:18,
   sameSchemaAllowed:Object.freeze(["additive-optional-field","normalization-only"]),
   schemaBumpRequired:Object.freeze(["semantic-reinterpretation","persistent-field-removal","incompatible-structure"]),
   schema16ThirdWorld:Object.freeze({coreProgressOptional:true,missingCoreProgressDefaultsTo:0,preSchema16ThirdWorld:"discard-development-data"}),
@@ -69,6 +70,7 @@
   try{const existing=localStorage.getItem(report.key);if(existing===rawText){report.verified=true;return report;}if(existing==null){writeVerified(report.key,rawText);report.created=true;report.verified=true;return report;}const rolling=createSafetyBackup(reason,rawText);if(rolling.verified===true&&!rolling.failed){report.usedSafetyBackup=true;report.verified=true;return report;}throw new Error(rolling.error||"無法建立目前舊存檔的安全備份。");}catch(error){report.ok=false;report.error=String(error?.message||error);return report;}
  }
  function strictPreSchema16Backup(rawText,parsed){return strictVersionBackup(rawText,parsed,16,PRE_SCHEMA16_BACKUP_SUFFIX,"pre-schema16-current");}
+ function strictPreSchema18Backup(rawText,parsed){return strictVersionBackup(rawText,parsed,18,PRE_SCHEMA18_BACKUP_SUFFIX,"pre-schema18-current");}
  function strictPreSchema17Backup(rawText,parsed){return strictVersionBackup(rawText,parsed,17,PRE_SCHEMA17_BACKUP_SUFFIX,"pre-schema17-current");}
  function protectedLoadFailure(reason,sourceVersionValue,error=""){
   try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}
@@ -123,7 +125,7 @@
  if(typeof baseLoad==="function"){
   window.load=function(){
    let raw=null,parsed=null;
-   try{raw=localStorage.getItem(SAVE_KEY);if(raw){parsed=JSON.parse(raw);const info=compatibility(parsed);if(info.isFuture||info.isTooOld){try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}const status=document.getElementById("saveStatus");if(status)status.textContent=info.isFuture?"本機存檔版本較新・已保護":"本機存檔版本過舊・已保護";const reason=info.isFuture?"future-version":"unsupported-legacy-version";window.LAST_SAVE_LOAD_REPORT={pipelineVersion:Number(window.SAVE_LOAD_PIPELINE_VERSION)||0,hadRaw:true,parseFailed:false,sourceVersion:info.sourceVersion,targetVersion:info.currentVersion,minSupportedVersion:info.minSupportedVersion,failed:true,reason,error:""};console.error(`[文明戰線] Local save v${info.sourceVersion} is outside supported range v${info.minSupportedVersion}–v${info.currentVersion}; original localStorage entry was preserved.`);return false;}if(info.sourceVersion<16){const backup=strictPreSchema16Backup(raw,parsed);window.LAST_PRE_SCHEMA16_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema16-backup-failed",info.sourceVersion,backup.error);}if(info.sourceVersion<17){const backup=strictPreSchema17Backup(raw,parsed);window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema17-backup-failed",info.sourceVersion,backup.error);}}}catch(_){/* parse/shape errors stay owned by the canonical load pipeline */}
+   try{raw=localStorage.getItem(SAVE_KEY);if(raw){parsed=JSON.parse(raw);const info=compatibility(parsed);if(info.isFuture||info.isTooOld){try{state=typeof newState==="function"?newState():{};}catch(_){state={saveVersion:currentVersion()};}const status=document.getElementById("saveStatus");if(status)status.textContent=info.isFuture?"本機存檔版本較新・已保護":"本機存檔版本過舊・已保護";const reason=info.isFuture?"future-version":"unsupported-legacy-version";window.LAST_SAVE_LOAD_REPORT={pipelineVersion:Number(window.SAVE_LOAD_PIPELINE_VERSION)||0,hadRaw:true,parseFailed:false,sourceVersion:info.sourceVersion,targetVersion:info.currentVersion,minSupportedVersion:info.minSupportedVersion,failed:true,reason,error:""};console.error(`[文明戰線] Local save v${info.sourceVersion} is outside supported range v${info.minSupportedVersion}–v${info.currentVersion}; original localStorage entry was preserved.`);return false;}if(info.sourceVersion<16){const backup=strictPreSchema16Backup(raw,parsed);window.LAST_PRE_SCHEMA16_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema16-backup-failed",info.sourceVersion,backup.error);}if(info.sourceVersion<17){const backup=strictPreSchema17Backup(raw,parsed);window.LAST_PRE_SCHEMA17_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema17-backup-failed",info.sourceVersion,backup.error);}if(info.sourceVersion<18){const backup=strictPreSchema18Backup(raw,parsed);window.LAST_PRE_SCHEMA18_SAVE_SAFETY_REPORT=backup;if(!backup.ok||!backup.verified)return protectedLoadFailure("pre-schema18-backup-failed",info.sourceVersion,backup.error);}}}catch(_){/* parse/shape errors stay owned by the canonical load pipeline */}
    return baseLoad();
   };
   try{load=window.load;}catch(_){}

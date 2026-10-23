@@ -154,9 +154,9 @@
   ensureState();
   const player=playerCombatStats();
   state.hp=player.hp;
-  const preview=runHeadlessCombat(id,{...options,player});if(!preview?.ok)return preview;
+  const preview=options.combatPreview||runHeadlessCombat(id,{...options,player});if(!preview?.ok)return preview;
   const {enemy:e,enemyStartHp:startEnemyHp,playerFinalDamageMultiplier,combat}=preview;
-  const settlement=applyBattleResult(id,combat,{save:options.save!==false});
+  const settlement=options.deferSettlement===true?null:applyBattleResult(id,combat,{save:options.save!==false});
   return {
    ok:true,
    win:combat.win===true,
@@ -174,6 +174,7 @@
    combat,
    playerFinalDamageMultiplier,
    settlement,
+   ...(options.deferSettlement===true?{combatPreview:preview}:{}),
    rewards:{exp:0,gold:0,equipment:0,vip:0,basicStones:0,advancedStones:0}
   };
  }

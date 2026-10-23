@@ -218,34 +218,36 @@
    });
    finalDisplay(result);
    if(window.getMinimalModeAdapterId?.()==="second-world-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
-  }catch(e){}
+  }catch(e){throw e;}
  }
  async function single(){
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
-  const res=window.runSecondWorldCalamitySingle?.(ui.selectedId,{audioRunId});
+  const res=await window.runSecondWorldCalamitySingle?.(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,beforeBattle:async battle=>{ui.lastBattle=battle.result;primeDisplay(battle.result);render();if(!battle.prePresented)await animate(battle.result);}});
   if(!res?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始此文明災厄挑戰。";render();return;}
-  ui.lastBattle=res.result;ui.finalRun=res.run;ui.displayBattleNumber=1;primeDisplay(res.result);render();await animate(res.result);ui.running=false;ui.phase="result";ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-single");
-  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
+  ui.lastBattle=res.result;ui.finalRun=res.run;ui.displayBattleNumber=1;primeDisplay(res.result);render();if(!res.prePresented)await animate(res.result);ui.running=false;ui.phase="result";ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-single");
+  }catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))console.error("Universe calamity battle failed",error);ui.running=false;ui.phase="idle";ui.lastBattle=null;ui.finalRun=null;ui.battleView=null;if(window.getMinimalModeAdapterId?.()==="second-world-calamity")window.setMinimalModeState?.("stopped");render();}
+  finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
  async function continuous(){
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
-  const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{audioRunId,
+  const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,
+   beforeBattle:async battle=>{ui.lastBattle=battle.result;ui.displayBattleNumber=battle.battleNumber;primeDisplay(battle.result);render();if(!battle.prePresented)await animate(battle.result);},
    async onBattleComplete(step){
     ui.lastBattle=step.result;ui.finalRun=step.run;ui.displayBattleNumber=Math.max(1,Math.floor(Number(step.battleNumber)||1));ui.phase="combat";
     const policy=step?.presentationPolicy||null;
     const uiDecision=window.calamityContinuousUiDecision(policy,step.ended);
      const fast=uiDecision.fastCatchUp;
     if(fast){
-     if(uiDecision.shouldPresentBattle){primeDisplay(step.result);render();await animate(step.result);}
+     if(uiDecision.shouldPresentBattle){primeDisplay(step.result);render();if(!step.prePresented)await animate(step.result);}
      else{
       if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
       if(uiDecision.shouldRefreshUi)refreshCatchUpUi(step.result);
      }
      if(uiDecision.shouldYield&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }else{
-     primeDisplay(step.result);render();await animate(step.result);
+     primeDisplay(step.result);render();if(!step.prePresented)await animate(step.result);
      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }
     if(!step.ended&&window.getSecondWorldCalamityRunSnapshot?.()?.active){
@@ -261,7 +263,8 @@
    async onEnd(run){ui.finalRun=run;}
   });
   ui.running=false;ui.phase="result";if(res?.result?.result)ui.lastBattle=res.result.result;ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-continuous");
-  }finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
+  }catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))console.error("Universe calamity battle failed",error);ui.running=false;ui.phase="idle";ui.lastBattle=null;ui.finalRun=null;ui.battleView=null;if(window.getMinimalModeAdapterId?.()==="second-world-calamity")window.setMinimalModeState?.("stopped");render();}
+  finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  }
  function ensureNotice(){
   let modal=document.getElementById("secondWorldCalamityAppearanceModal");if(modal)return modal;
@@ -308,7 +311,7 @@
    if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation(combat,{mode:"calamity",clearAfter:true,clearReason:"galaxy-calamity-review-end"});
    state.hp=p.hp;reviewBattle={phase:"result",enemy,enemyHp:combat.enemyHp,playerHp:p.hp,win:combat.win};
    render();showReviewResultModal("銀河紀元",combat);return true;
-  }catch(error){state.hp=p.hp;reviewBattle=null;render();throw error}finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
+  }catch(error){state.hp=p.hp;reviewBattle=null;render();if(window.CivilizationCombatLifecycle?.isInterrupted(error))return false;throw error}finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  };
  window.startUniverseCalamityReview=async function(id){
   if(!thirdWorldReviewOnly()||ui.running||reviewBattle?.phase==="combat"||universeReviewBattle?.phase==="combat")return false;
@@ -324,12 +327,12 @@
    if(typeof window.animateStructuredCombatPresentation==="function")await window.animateStructuredCombatPresentation(combat,{mode:"calamity",clearAfter:true,clearReason:"universe-calamity-review-end"});
    state.hp=p.hp;universeReviewBattle={phase:"result",enemy,enemyHp:combat.enemyHp,playerHp:p.hp,win:combat.win};
    render();showReviewResultModal("宇宙紀元",combat);return true;
-  }catch(error){state.hp=p.hp;universeReviewBattle=null;render();throw error}finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
+  }catch(error){state.hp=p.hp;universeReviewBattle=null;render();if(window.CivilizationCombatLifecycle?.isInterrupted(error))return false;throw error}finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
  };
  window.startSecondWorldCalamityUI=function(id,mode="single"){
   if(thirdWorldReviewOnly())return false;
   const st=status(id);if(!st?.challengeable)return false;
-  ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();if(typeof window.resetBattleEntryViewport!=="function")throw new Error("Battle Entry Viewport Reset owner 未載入。");window.resetBattleEntryViewport();
+  ui.foregroundEpoch=window.CivilizationCombatLifecycle?.epoch();ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();if(typeof window.resetBattleEntryViewport!=="function")throw new Error("Battle Entry Viewport Reset owner 未載入。");window.resetBattleEntryViewport();
   if(ui.mode==="continuous")continuous();else single();return true;
  };
  window.stopSecondWorldCalamityContinuousUI=function(){return window.requestSecondWorldCalamityStop?.();};
