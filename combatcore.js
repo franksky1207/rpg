@@ -166,6 +166,7 @@
    actionCount,maxActions,maxActionsPerChain,actionBudgetReached,chainBudgetReached,
    markState:{useTest:useTestMarks,levels:{...markLevels},shield:Math.max(0,runtime.player.shield),indomitableActivated:runtime.player.indomitableActivated,indomitableUsed:runtime.player.indomitableUsed,battleSpiritActivated:runtime.player.battleSpiritActivated,battleSpiritLayer:runtime.player.battleSpiritLayer,revengeReady:runtime.player.revengeReady},
    actorState:{player:{...runtime.player},enemy:{...runtime.enemy}},playerAbilityProfile:playerAbility,enemyAbilityProfile:enemyAbility,e:enemy};
+  if(options.visualContext&&!options.useTestSpecializations&&!options.useTestMarks)window.recordMonsterCodexEncounter?.(options.visualContext,enemy);
   if(options.visualContext)window.CivilizationCombatEvents?.observeStandard?.(result,options.visualContext);
   if(options.visualContext&&(options.preparePresentation===false||options.logs===false))window.CivilizationCombatEvents?.presentationSkipped?.(result,"owner-headless");
   if(options.preparePresentation!==false&&typeof window.prepareCombatPresentation==="function")window.prepareCombatPresentation(result,options);

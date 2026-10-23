@@ -10,7 +10,7 @@ const title=read("playertitlecore.js");
 const auGm=read("gmalternateuniversemanage.js");
 const migration=read("savemigration.js");
 const matrix=read("tests/runtime/save-schema17-compatibility-matrix.js");
-const index=read("index.html");
+const index=read("index.html").replace(/&batch20=20261024(?:-r2)?/g,"");
 
 assert.ok(/const VERSION=7;/.test(third)&&/THIRD_WORLD_DUNGEON_ERA_POLICY_OWNER="thirdworlddungeonui"/.test(third),"Batch1 W3 era policy owner drifted.");
 assert.ok(/const VERSION=4;/.test(access)&&/ACCESS_SNAPSHOT_VERSION=2/.test(access),"Batch1 reincarnation dungeon access version drifted.");

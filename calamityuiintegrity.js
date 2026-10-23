@@ -55,9 +55,9 @@
    const unlocked=expected.includes(def.id);
    const hasCalamity=html.includes(def.name),hasMark=html.includes(def.markName);
    if(unlocked&&(!hasCalamity||!hasMark))fail("CALAMITY_UNLOCKED_RENDER",`${def.id} 已解鎖但災厄／印記未同時顯示`,{hasCalamity,hasMark});
-   if(!unlocked&&(hasCalamity||hasMark))fail("CALAMITY_LOCKED_LEAK",`${def.id} 尚未解鎖卻出現在災厄頁`,{hasCalamity,hasMark});
+   if(!unlocked&&html.includes(`startCivilizationCalamityUI('${def.id}'`))fail("CALAMITY_LOCKED_ACTION",`${def.id} 尚未解鎖卻有挑戰入口`);
   });
-  if(expected.length>0&&!html.includes("單場"))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場挑戰／重打按鈕");
+  if(defs.some(d=>expected.includes(d.id)&&(window.getCivilizationCalamityStatus?.(d.id)?.mark?.level||0)<10)&&!html.includes("單場"))fail("CALAMITY_BATTLE_ACTIONS","已解鎖災厄缺少單場挑戰／重打按鈕");
   const hasIncomplete=defs.filter(def=>expected.includes(def.id)).some(def=>(window.getCivilizationCalamityStatus?.(def.id)?.mark?.level||0)<10);
   if(hasIncomplete&&!html.includes("連續討伐"))fail("CALAMITY_CONTINUOUS_ACTION","尚未滿印記的災厄應保留連續討伐按鈕");
   if(!hasIncomplete&&expected.length>0&&html.includes("連續討伐"))fail("CALAMITY_MAXED_REPLAY_ACTION","所有可見災厄皆滿印記時不應顯示連續討伐按鈕");

@@ -110,6 +110,7 @@
   const mirrorHistoryAfter=cloneJson(target?.dungeon?.mirror?.history),mirrorHistoryInitialized=!sourceHadMirrorHistory&&isObject(target?.dungeon?.mirror?.history),mirrorHistoryRepaired=sourceHadMirrorHistory&&JSON.stringify(sourceMirrorHistory)!==JSON.stringify(mirrorHistoryAfter);
   const sourceMiracleDates=Array.isArray(sourceMirrorHistory?.miracleDates)?sourceMirrorHistory.miracleDates.filter(value=>typeof value==="string"):[],finalMiracleDates=Array.isArray(mirrorHistoryAfter?.miracleDates)?mirrorHistoryAfter.miracleDates.filter(value=>typeof value==="string"):[],mirrorMiracleDatesRemoved=Math.max(0,sourceMiracleDates.length-finalMiracleDates.length);
   normalizeVoidMirage(target);
+  if(typeof window.normalizeMonsterCodex==="function")window.normalizeMonsterCodex(target);
   if(typeof window.normalizeOfflineSaveState!=="function")throw new Error("Offline save normalization owner unavailable");
   window.normalizeOfflineSaveState(target,{sourceVersion:version});normalizePersistentFlags(target);
   target.introSeen=introValue;target.saveVersion=SAVE_SCHEMA_VERSION;

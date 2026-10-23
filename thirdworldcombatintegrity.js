@@ -148,9 +148,9 @@
 
   const reviewState=fakeState();reviewState.thirdWorld.bosses[4].currentHp=0;
   const reviewBefore=stable(reviewState),reviewSnapshot=window.createThirdWorldBossCombatSnapshot(4,{state:reviewState,review:true});
-  if(!reviewSnapshot||reviewSnapshot.reviewMode!==true||Number(reviewSnapshot.stage)!==9||Number(reviewSnapshot.stageBasisHp)!==Math.floor(maxHp*.1)||Number(reviewSnapshot.enemyStartHp)!==maxHp||Number(reviewSnapshot.enemyHealCap)!==maxHp||Number(reviewSnapshot.formalStartHp)!==0)fail("REVIEW_FINAL_FORM_SNAPSHOT","高維回顧必須固定 Stage 9／10% 最終能力，但以完整 Boss HP 開場",reviewSnapshot||null);
+  if(reviewSnapshot!==null)fail("REVIEW_RETIRED_SNAPSHOT","回顧 snapshot 已退場",reviewSnapshot);
   const reviewResult=window.runThirdWorldBossCombat(4,{review:true,state:reviewState,player:{hp:1000000000,atk:9999999999,def:9999999999,crit:0,dodge:0},startHp:1000000000,playerHealCap:1000000000,civilizationLevel:0,logs:false,useTestSpecializations:true,markLevels:zeroMarks(),rng:constantRng(.99)});
-  if(reviewResult?.ok!==true||reviewResult?.review!==true||reviewResult?.formalSettlementEligible===true||Number(reviewResult?.effectivePermanentDamage)!==0||Number(reviewResult?.xp)!==0||Number(reviewResult?.dimensionalStrings)!==0||stable(reviewState)!==reviewBefore)fail("REVIEW_STATE_ISOLATION","高維回顧不得產生 settlement、永久削血、EXP、維度之弦或任何正式 state 變更",{result:summary(reviewResult),stateChanged:stable(reviewState)!==reviewBefore});
+  if(reviewResult?.ok!==false||reviewResult?.reason!=="review-retired"||stable(reviewState)!==reviewBefore)fail("REVIEW_STATE_ISOLATION","高維回顧不得產生 settlement、永久削血、EXP、維度之弦或任何正式 state 變更",{result:summary(reviewResult),stateChanged:stable(reviewState)!==reviewBefore});
 
   const profile=window.createThirdWorldBossCombatSnapshot(7,{ignoreUnlock:true,formalStartHp:maxHp,state:fakeState()})?.enemyAbilityProfile;
   const expectedProfile={initiativeBonusPercent:60,comboRate:30,penetrationRate:30,counterRate:30,drainRate:40};

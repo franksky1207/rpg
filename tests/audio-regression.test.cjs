@@ -3,7 +3,7 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),vm=require("node:vm"),path=require("node:path");
 const root=path.join(__dirname,"..");
 const files={
- main:"ui.js",bounty:"dungeonbounty.js",arena:"dungeonarena.js",
+ main:"battlepipeline.js",universeMain:"secondworldmainline.js",higherMain:"thirdworldrun.js",bounty:"dungeonbounty.js",arena:"dungeonarena.js",
  void:"dungeonvoidui.js",mirror:"mirrordungeonrun.js",w3arena:"thirdworldarenaui.js",
  alternate:"alternateuniverseui.js",galaxyCalamity:"calamityrun.js",
  universeCalamity:"secondworldcalamityrun.js"
@@ -121,4 +121,4 @@ delayed.isCombatPresentationActive=()=>false;
 d.notify("combat-exit",{runId:"new"});
 assert.equal(d.current().combatLocked,false);
 assert.equal(deferredTracks.at(-1),"era-galaxy-theme");
-console.log("Audio regression PASS: 9 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.");
+console.log("Audio regression PASS: 11 formal owners; UI click disabled (source retained); GM isolation; 50% SFX; scene ownership/settlement.");

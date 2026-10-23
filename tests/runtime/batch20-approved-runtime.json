@@ -1,0 +1,118 @@
+{
+  "baseline": "f0990025782a185ecec9ef04020addaf581b97bc",
+  "evidence": "docs/BATCH20_IMPLEMENTATION_ACCEPTANCE_2026-10-24.md",
+  "files": {
+    "calamitycore.js": {
+      "beforeSha256": "f103c015211b550df15f41352f7837b16ae41185e34e2bdc9bb3e9643e2a0283",
+      "afterSha256": "349e087a69f2a50d3b4987344468feb785cdcb06ab616134e79e4a4a1fe8905c"
+    },
+    "calamityrun.js": {
+      "beforeSha256": "ee233b71d69efeffbb7e595fb00c80e6b6c9d95aeedc731317870644d8405e8e",
+      "afterSha256": "34f73aeeb3df720b837090681ca0779d66e9c5a78e34946ceff9dce61d62bd18"
+    },
+    "calamityui.js": {
+      "beforeSha256": "97739611d9fc3f067283e75e11d1b812c7ad077b07264bdb0f11d1ebd9b87cc2",
+      "afterSha256": "7f8bbcd88e41ee0e3ee9500a41fe405cc4577b48cbdd652f994bc4167bd871c1"
+    },
+    "calamityuiintegrity.js": {
+      "beforeSha256": "c602887911664b8e96e260c6d1c8a9a73dad916dd1905812a8a48de6d1e85820",
+      "afterSha256": "f22df5b6a2d78ed153b32abc533a1ad528f4a9375a7ed1424a28c8148f9d74fc"
+    },
+    "combatcore.js": {
+      "beforeSha256": "3b1e33726b50ae2c70f12eaf914ae501f20d648b03a7dc1d48c9fea6619380c6",
+      "afterSha256": "dd5344db15e9b01ea480935efc90c278168d595a64f63aedb4c3020caf38bfdc"
+    },
+    "firstworldtargetcontext.js": {
+      "beforeSha256": "418c7a0b7a16e60826a85ba4ae891d30f2e516c5ce86af7fdeb0d9415d82d0ec",
+      "afterSha256": "87e32e7aaf12374a608ee38f7abe4220ec4887f7b5b8e566d9176c14785bc1d9"
+    },
+    "firstworldtargetcontextbatch5.js": {
+      "beforeSha256": "5ee6b81366834c8eb086ae65dad3c1f114b4de8e956d9a5e40b074cbdb86b6fb",
+      "afterSha256": "ddd455c8a734d1a114f81ed25906737aa5ad90cbc9a3cee322b24daa6a0d5ae1"
+    },
+    "galaxyreviewintegrity.js": {
+      "beforeSha256": "8a498abd24c16246f682428116e57ad42aafb05cf2e0d50ede57f77dd8c5924a",
+      "afterSha256": "2c65a5d5ff31e38531880c61d67663d6d2451bcdd3dd5dc5e5dd829c624cd08a"
+    },
+    "gameguide.js": {
+      "beforeSha256": "63a694a0bc3120baf700bfd63eaf7e22ecc40d37f09f67905557b7cb6ac34620",
+      "afterSha256": "aeac64f4b6cecd61ce0439be21e3cb8ec4cdec590e1305593a434551ee9e3ee3"
+    },
+    "playersemanticsui.js": {
+      "beforeSha256": "fcae112568301ef893b7dde50909d5a8d3c3facd9210d3551866bb22afd17c0f",
+      "afterSha256": "97e1701d0adb6e319b54e09c8eefd5749e01c5fc34825386e38fa8540042afaa"
+    },
+    "savemigration.js": {
+      "beforeSha256": "8e3c7870ac9a5909a91dd9569a906e7a07907056f171653d810852ae116bd37b",
+      "afterSha256": "4405016d45147aac4e9af9cf63363bc72dccaaf19d5d9a3f79ec98e1deb1a38b"
+    },
+    "secondworldcalamity.js": {
+      "beforeSha256": "3a036b7ff879a5a4ce4143319869a3f64516e991ee38ea76f02d028633a81ba6",
+      "afterSha256": "d59d1047a30c0f4adb2053bd69ca8dd094f87f0e00fcc7c54968ef2bd79d66ef"
+    },
+    "secondworldcalamityrun.js": {
+      "beforeSha256": "53645c835ba87cfa40395d9741d2793d23489d0317be6dc9c47c6a98e498b54d",
+      "afterSha256": "c251742c592fd16851b06964378d828f225ed325dc3804a922937889b36e20d9"
+    },
+    "secondworldcalamityui.js": {
+      "beforeSha256": "2263e735704738daa63ea2a8c0df5b1b64ceb56a4b99041707a24f45c79bb47f",
+      "afterSha256": "7167d14a541afba3031f58bc8c46f3c524aefd91f285869ad25fd576dba25adf"
+    },
+    "secondworldcalamityuiintegrity.js": {
+      "beforeSha256": "3e41adc71ef7b4fd4adb8380b380b21a3cd5bf36d858d7ed326e7b950d861ac5",
+      "afterSha256": "824d7ead6a1ce55f483dccd86b089cdbeaa21d8edea827fb3a1240ec096466f3"
+    },
+    "secondworldcombat.js": {
+      "beforeSha256": "f2ab24be07330430e1359cf654f1840a1bc664f5d151f1584b8ed6b7f31c2f94",
+      "afterSha256": "6fe736e69df499fb85076b17d10c18c0ebee1bdaaeba5959ab3fa8e122fdc1ae"
+    },
+    "secondworldmainline.js": {
+      "beforeSha256": "eeef3d560816c6029b2fc4a02adbeaf23ad0d3769d2f0488b48f9b4dee972435",
+      "afterSha256": "107c2dca6142ad1bbeae612363944bec6403a69dc18b5fc211ac121a336113d0"
+    },
+    "specialcore.js": {
+      "beforeSha256": "74d4d0373eb3c5323078a4af57b8fc7e249dd019f74df33d7c9b1e0ce1c4af2f",
+      "afterSha256": "4d32a64fe30ce86878f02ea8547406a94e57648a9df29bfce0fc43d5fb2f3fd9"
+    },
+    "storyrecordtabs.js": {
+      "beforeSha256": "43cdb80922e04cf0f0bc5d2f48e0bc826b285df160277653aac9d3e8828bc5d4",
+      "afterSha256": "69c5f98f5f326e0b619aeed01e158406563f2db8722f674cd7995dc0794c6a97"
+    },
+    "thirdworldcombat.js": {
+      "beforeSha256": "c2a18935309c030f94294720456c0f8d15d5e0f54d96043dc7d9f13ad3c8e0be",
+      "afterSha256": "aea3e8d609db9f64609b9b333b7b1dd7cd528dad228adc8b2edc1f1b9cf14583"
+    },
+    "thirdworldcombatintegrity.js": {
+      "beforeSha256": "d1784b4f21cd7d81dfcab3deb20f5f6a88e2022c2b00150d9a5e8aa61ea1c999",
+      "afterSha256": "0955960211db5c4648e1f65e5d6f912b1699204e40cd9d932ba3ecca93acb1dd"
+    },
+    "thirdworldguidecopy.js": {
+      "beforeSha256": "e3f26bf0252b9c96844e654e487d207eb911d23e5b025e7d831d4ddf1e728928",
+      "afterSha256": "c92554aa899f2c15d152c6154e58d8ad88c013e6117d1ac23fab636a9b0c1bbb"
+    },
+    "thirdworldintegritycontract.js": {
+      "beforeSha256": "0b3faddef1b6df4d8efe8395b6e1ce06bee2c94660775d73f40f190b50473a55",
+      "afterSha256": "d96e1e03eed8b65ce9bead1a9c14414e45dc73e2afc33629977abf3b1d4560d4"
+    },
+    "thirdworldui.js": {
+      "beforeSha256": "5446d144544a39cc761f355b292ec4f3a16b2b9003997239376a2baa518582c5",
+      "afterSha256": "9a755cf438a4be3e761076b28bdf7fab1dc3f80128b22e64626f4c5a431b6be0"
+    },
+    "ui.js": {
+      "beforeSha256": "0f5ad752fd4f9d36bf22690b23275258208b743116f2fc12923c6637657660b1",
+      "afterSha256": "600c07e6cf01861b0491b980a8830d43bf75bd26d25ad4b9edde1cf4c2eca916"
+    },
+    "worldmapui.css": {
+      "beforeSha256": "c591dd9670a75d45aab48fdc2ace9f13723de6270dddb517579e9c35ac8bb185",
+      "afterSha256": "d10c8fa97b89ba6426763630fde16d00a90b21aefe9bc3c126b467c1d1a6e630"
+    },
+    "worldmapui.js": {
+      "beforeSha256": "cbe0d8816b4fc42dbdb5cea3204151b7c78be2a48c903414e22cae364e689bd2",
+      "afterSha256": "d0fa892aa5a4fff824e427dca938ae7ac63e70ec837bc080ce08289c3dc0da73"
+    },
+    "index.html": {
+      "beforeSha256": "e525618ddaf6b8fbd9f9a637c5299373de13791097f4f930e141aa668edcae54",
+      "afterSha256": "451e5848a0dc30534ca834e7401691438ec42fb616123f487846c080d832026f"
+    }
+  }
+}

@@ -6,7 +6,6 @@ let gmTapCount=0;
 let gmTapTimer=null;
 let inventoryFilter="all";
 let inventoryReturnContext=null;
-let galaxyReviewCombatPlayerHp=null;
 
 const CONTINUOUS_BATTLE_COUNT="continuous";
 window.CONTINUOUS_BATTLE_COUNT=CONTINUOUS_BATTLE_COUNT;
@@ -99,7 +98,7 @@ function go(v){if(v!==view)window.CivilizationCombatEvents?.cancel?.("formal","p
 function storyRecordPage(){return typeof window.storyRecordPageHtml==="function"?window.storyRecordPageHtml():wrapFunctionPage(`<div class="card"><h2>戰線紀錄</h2><div class="muted">劇情資料尚未載入。</div></div>`)}
 function render(){
  renderNav();normalizeHP();ensureSpecializationState();if(typeof normalizeEnhancementState==="function")normalizeEnhancementState(state);
- const fn={home:homePage,adventure:()=>adventureScreen==="review-prepare"?galaxyReviewPreparePage():adventureScreen==="review-combat"?galaxyReviewCombatPage():adventurePage(),storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?(typeof window.secondWorldCivilizationCalamityPageHtml==="function"?window.secondWorldCivilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="muted">宇宙紀元文明災厄介面尚未載入。</div></div>`)):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
+ const fn={home:homePage,adventure:adventurePage,storyrecord:storyRecordPage,character:characterPage,enhancement:enhancementPage,specialization:specializationPage,inventory:inventoryPage,calamity:()=>secondWorldActive()?(typeof window.secondWorldCivilizationCalamityPageHtml==="function"?window.secondWorldCivilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>宇宙紀元・文明災厄</h2><div class="muted">宇宙紀元文明災厄介面尚未載入。</div></div>`)):(typeof window.civilizationCalamityPageHtml==="function"?window.civilizationCalamityPageHtml():wrapFunctionPage(`<div class="card"><h2>文明災厄</h2><div class="muted">文明災厄介面尚未載入。</div></div>`)),guide:gameGuidePage,settings:settingsPage}[view]||homePage;
  document.getElementById("main").innerHTML=fn();window.CivilizationAudioScenes?.syncView?.(view,typeof adventureScreen==="string"?adventureScreen:"");wireSettings();setTimeout(compactMobileDom,0);
 }
 function qualityLegend(){return `<div class="muted quality-legend" style="margin:6px 0 12px">品質：<span class="q-common">普通</span>／<span class="q-uncommon">優良</span>／<span class="q-rare">稀有</span>／<span class="q-epic">史詩</span>／<span class="q-legendary">傳說</span>／<span class="q-mythic">神話</span></div>`}
@@ -119,13 +118,13 @@ function homePage(){
   ${secondWorldEntry}
   <div class="menu-grid">
    <button class="menu-card" onclick="go('adventure')"><b>冒險</b><span>${secondWorldActive()?"進入宇宙主線並挑戰 Boss":"選擇地圖並挑戰怪物"}</span></button>
-   <button class="menu-card" onclick="go('storyrecord')"><b>戰線紀錄</b><span>回顧已完成的正式劇情</span></button>
+   <button class="menu-card" onclick="go('storyrecord')"><b>戰線紀錄</b><span>劇情紀錄與怪物圖鑑</span></button>
    <button class="menu-card" onclick="go('character')"><b>角色</b><span>查看能力與目前裝備</span></button>
    <button class="menu-card" onclick="go('inventory')"><b>背包</b><span>整理、裝備、出售與贖回遺失裝備</span></button>
    <button class="menu-card" onclick="go('enhancement')"><b>強化</b><span>永久提升裝備欄位主能力</span></button>
    <button class="menu-card" onclick="go('specialization')"><b>專精</b><span>${secondWorldActive()?"查看已完成並持續生效的永久專精":"消耗金幣提升永久能力"}</span></button>
    <button class="menu-card" onclick="go('dungeon')"><b>副本</b><span>挑戰懸賞、競技場與虛空幻境</span></button>
-   <button class="menu-card" onclick="go('calamity')"><b>文明災厄</b><span>${secondWorldActive()?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記"}</span></button>
+   <button class="menu-card" onclick="go('calamity')"><b>${state?.thirdWorld?.entered?"文明傳承":"文明災厄"}</b><span>${state?.thirdWorld?.entered?"查看當前文明力量與銀河印記":secondWorldActive()?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記"}</span></button>
    <button class="menu-card" onclick="go('guide')"><b>遊戲說明</b><span>查看玩法與規則</span></button>
    <button class="menu-card" onclick="go('settings')"><b>設定</b><span>${third?"自動處理":"自動出售"}、存檔與遊戲設定</span></button>
   </div>
@@ -182,7 +181,6 @@ function enemyNoteHtml(mapIdx,enemyIdx){
 }
 function adventureInventoryReturnContext(){
  if(secondWorldActive()){
-  if(adventureScreen==="review-prepare")return {mode:"galaxy-review",screen:"review-prepare"};
   return {mode:"universe-main",screen:"maps"};
  }
  return {mode:"galaxy-main",screen:adventureScreen==="prepare"?"prepare":"maps"};
@@ -192,8 +190,7 @@ function backToAdventureFromInventory(){
  const ctx=inventoryReturnContext;
  inventoryReturnContext=null;
  view="adventure";
- if(ctx?.mode==="galaxy-review")adventureScreen="review-prepare";
- else if(ctx?.mode==="galaxy-main")adventureScreen=ctx.screen==="prepare"?"prepare":"maps";
+ if(ctx?.mode==="galaxy-main")adventureScreen=ctx.screen==="prepare"?"prepare":"maps";
  else{
   adventureScreen="maps";
   if(ctx?.mode==="universe-main"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
@@ -232,66 +229,7 @@ function adventureCombatPage(){
  const stop=continuous?`<div class="continuous-stop-wrap combat-viewport-stop"><button data-combat-action="stop-continuous" id="continuousBattleStopBtn" class="btn danger" onclick="requestContinuousBattleStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
  return `<section class="combat-screen"><div class="combat-head">${head}</div>${stop}<div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="muted">${currentWorldResource().label} ${currentWorldResource().amount.toLocaleString()}${currentWorldResource().secondaryLabel?`　${currentWorldResource().secondaryLabel} ${currentWorldResource().secondaryAmount.toLocaleString()}`:""}</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${state.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div><div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+need}</span></div><div class="bar"><span class="xp" style="width:${expPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備戰鬥</div></section>`;
 }
-function galaxyReviewMapIndex(){return Math.max(0,Math.min(MAPS.length-1,Math.floor(Number(window.getGalaxyReviewSelectedMap?.())||0)))}
-function galaxyReviewEnemyIndex(){return Math.max(0,Math.min(4,Math.floor(Number(window.getGalaxyReviewSelectedEnemy?.())||0)))}
-function galaxyReviewPreparePage(){
- const mapIdx=galaxyReviewMapIndex(),reviewEnemy=galaxyReviewEnemyIndex(),map=MAPS[mapIdx];
- const enemies=map.enemies.map((x,enemyIdx)=>{const mo=monsterObj(mapIdx,enemyIdx),badge=mo.kind==="elite"?`<span class="badge elite">菁英</span>`:mo.kind==="boss"?`<span class="badge boss">Boss</span>`:"",traits=typeof traitDetailsHtml==="function"?traitDetailsHtml(mo.traits):"";return `<button class="enemy-card ${enemyIdx===reviewEnemy?"active":""}" onclick="selectGalaxyReviewEnemy(${enemyIdx})"><div class="enemy-card-top"><div class="enemy-card-title"><b>${mo.name} Lv.${mo.level}</b>${badge}</div><div class="enemy-card-progress complete">回顧</div></div>${traits}<div class="enemy-meta">HP ${mo.hp}　ATK ${mo.atk}　DEF ${mo.def}</div></button>`}).join("");
- return `<section class="prepare-screen galaxy-review-prepare"><div class="page-top"><button class="btn back-btn" onclick="backToGalaxyReviewMaps()">← 返回銀河回顧</button><h2 class="page-title">${map.name}</h2><span></span></div><div class="notice"><b>銀河紀元・回顧戰</b><div class="muted" style="margin-top:6px">單場純挑戰・無收益・無損失・不影響正式進度。</div></div><div class="prepare-layout">${playerStatusHtml()}<div class="card prepare-main"><h3>選擇怪物</h3><div class="enemy-grid">${enemies}</div><div class="prepare-actions" data-mobile-prepare-actions="1"><button class="btn primary" onclick="startGalaxyReviewBattle()">開始回顧戰</button><button class="btn blue" onclick="openAdventureInventory()">背包</button></div></div></div></section>`;
-}
-function galaxyReviewCombatPage(){
- const mapIdx=galaxyReviewMapIndex(),reviewEnemy=galaxyReviewEnemyIndex(),e=currentCombatEncounter||monsterObj(mapIdx,reviewEnemy),s=playerCombatStats(),reviewHp=Math.max(0,Math.min(s.hp,Number(galaxyReviewCombatPlayerHp??s.hp)||0)),hpPct=s.hp?reviewHp/s.hp*100:0,traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
- return `<section class="combat-screen galaxy-review-combat"><div class="combat-head">銀河紀元・回顧戰</div><div class="muted" style="text-align:center;margin-bottom:10px">無收益・無損失・不影響正式進度</div><div class="combat-arena"><div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerNameHtml()} Lv.${state.level}</h2><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${reviewHp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div></div><div class="combat-vs">VS</div><div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><h2 id="combatEnemyName">${e.name} Lv.${e.level}</h2>${traits}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message" id="combatMessage">準備回顧戰</div></section>`;
-}
-window.enterGalaxyReviewMap=function(){selectedBattleCount=1;adventureScreen="review-prepare";render()};
-window.selectGalaxyReviewEnemy=function(enemyIdx){window.setGalaxyReviewSelectedEnemy?.(enemyIdx);render()};
-window.backToGalaxyReviewMaps=function(){currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);adventureScreen="maps";render()};
-function reviewResultPresentationHtml(options={}){
- const heading=String(options.heading||"回顧挑戰結束"),extra=String(options.extra||"");
- return `<div class="notice review-result-notice"><b>${heading}</b><div class="muted" style="margin-top:6px">本場為單場純回顧挑戰，不影響目前正式進度。${extra?`<br>${extra}`:""}</div></div>`;
-}
-window.REVIEW_RESULT_PRESENTATION_VERSION=1;
-window.reviewResultPresentationHtml=reviewResultPresentationHtml;
-window.startGalaxyReviewBattle=async function(){
- if(battleBusy){alert("目前仍有其他戰鬥進行中，請先結束後再開始回顧戰。");return false;}
- const mapIdx=galaxyReviewMapIndex(),reviewEnemy=galaxyReviewEnemyIndex();
- const makeEncounter=typeof monsterObj==="function"?monsterObj:(typeof window.monsterObj==="function"?window.monsterObj:null);
- const combatOwner=typeof window.runCombatCore==="function"?window.runCombatCore:null;
- if(!makeEncounter||!combatOwner){alert("銀河紀元回顧戰鬥模組尚未載入，請重新整理後再試。");return false;}
- const preview=makeEncounter(mapIdx,reviewEnemy);
- if(!preview){alert("無法建立回顧戰敵人。");return false;}
- const e={...preview,traits:Array.isArray(preview.traits)?preview.traits.slice():[]};
- const ps=playerCombatStats(),startHp=ps.hp,before=JSON.stringify(state);
- const reviewAudioSettlement={};
- battleBusy=true;window.setGalaxyReviewBattleActive?.(true);currentCombatEncounter=e;galaxyReviewCombatPlayerHp=startHp;adventureScreen="review-combat";const audioRunId=window.CivilizationAudioScenes?.startRun?.({era:"galaxy",mode:e?.kind==="boss"?"boss":"normal"});
- try{
-  render();
-  const result=combatOwner(ps,e,startHp,{mainlineLogs:true,visualContext:{mode:"review",world:1,owner:"ui.js",variant:e.kind,location:mapIdx+":"+reviewEnemy,playerName:state.playerName}});
-  if(!result||typeof result.win!=="boolean")throw new Error("銀河回顧戰鬥結果無效。");
-  if(JSON.stringify(state)!==before)throw new Error("銀河紀元回顧戰不應修改正式 state。");
-  const presentation={ok:true,win:result.win,logs:result.logs,events:result.events,e,combatEndHp:result.hp,turns:result.turns};
-  await animateFight(presentation,startHp,ps.hp,e.hp,"銀河紀元・回顧戰");
-  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.endRun?.(audioRunId);render();
-  const title=document.getElementById("battleResultTitle"),detail=document.getElementById("battleResultDetail"),modal=document.getElementById("battleResultModal");
-  if(title&&detail&&modal){title.textContent=result.win?"回顧戰勝利":"回顧戰戰敗";detail.innerHTML=reviewResultPresentationHtml({heading:"銀河紀元・回顧戰結束",extra:"不獲得 EXP、資源、裝備或任何正式進度；戰敗也不產生任何損失。"});modal.classList.add("show");if(result.win)window.CivilizationAudio?.settlementVictory?.(window.CivilizationAudio?.settlementKey?.("galaxy-review",reviewAudioSettlement),{success:true});}
-  else window.setGalaxyReviewBattleActive?.(false);
-  return true;
- }catch(err){
-  galaxyReviewCombatPlayerHp=null;currentCombatEncounter=null;window.setGalaxyReviewBattleActive?.(false);battleBusy=false;adventureScreen="review-prepare";window.CivilizationAudioScenes?.endRun?.(audioRunId);render();
-  if(window.CivilizationCombatLifecycle?.isInterrupted(err))return false;
-  console.error("[文明戰線] 銀河紀元回顧戰失敗",err);
-  alert("銀河紀元回顧戰啟動失敗，請重新整理後再試。");
-  return false;
- }
-};
-window.GALAXY_REVIEW_BATTLE_RUNTIME_VERSION=8;
-window.GALAXY_REVIEW_SELECTION_ISOLATION_VERSION=1;
-window.GALAXY_REVIEW_SHARED_RUNTIME_LOCK_VERSION=1;
-window.GALAXY_REVIEW_LOCAL_HP_ISOLATION_VERSION=1;
-window.GALAXY_REVIEW_SYNC_STATE_VALIDATION_VERSION=1;
 function adventurePage(){
- if(adventureScreen==="review-prepare")return galaxyReviewPreparePage();
- if(adventureScreen==="review-combat")return galaxyReviewCombatPage();
  if(secondWorldActive()){return typeof window.secondWorldAdventurePageHtml==="function"?window.secondWorldAdventurePageHtml():wrapFunctionPage('<div class="card"><h2>宇宙紀元主線</h2><div class="notice"><b>宇宙紀元主線介面尚未載入。</b></div></div>');}
  if(adventureScreen==="maps")return adventureMapPage();if(adventureScreen==="combat")return adventureCombatPage();return adventurePreparePage()
 }
@@ -338,14 +276,10 @@ function showBattleResult(ctx,defeat=null){
 }
 function closeBattleResultModal(){
  const modal=document.getElementById("battleResultModal");if(modal)modal.classList.remove("show");
- const reviewSource=typeof window.getAdventureReviewBattleSource==="function"?window.getAdventureReviewBattleSource():null;
- adventureScreen=reviewSource==="galaxy"?"review-prepare":"prepare";
- if(reviewSource==="galaxy"&&typeof window.setGalaxyReviewBattleActive==="function")window.setGalaxyReviewBattleActive(false);
- else if(reviewSource&&typeof window.setAdventureReviewBattleActive==="function")window.setAdventureReviewBattleActive(false);
+ adventureScreen="prepare";
  const era=typeof window.getAdventureEraView==="function"?window.getAdventureEraView():null;
- if(!reviewSource&&secondWorldActive()&&era==="universe"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
+ if(secondWorldActive()&&era==="universe"&&typeof window.requestSecondWorldAdventureProgressFocus==="function")window.requestSecondWorldAdventureProgressFocus();
  render();
- if(reviewSource)return;
  const pendingStory=window.civilizationStoryProgress?.get?.().pendingStory;
  if(pendingStory)window.civilizationStoryProgress.resume();
  else if(typeof window.flushSecondWorldCalamityAppearanceNotice==="function")setTimeout(()=>window.flushSecondWorldCalamityAppearanceNotice(),0);
@@ -454,6 +388,7 @@ function normalizeSaveItem(it,forcedType=null,target=null){
  return out;
 }
 function normalizeSaveState(target){
+ if(typeof window.normalizeMonsterCodex==="function")window.normalizeMonsterCodex(target);
  if(!target||typeof target!=="object"||Array.isArray(target))target=newState();
  if(typeof normalizeSecondWorldState==="function")normalizeSecondWorldState(target);
  if(typeof normalizeWorldSaveState==="function")normalizeWorldSaveState(target);

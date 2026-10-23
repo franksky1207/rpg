@@ -43,7 +43,7 @@ const assert=require("assert");
     const canonical=compat.canonicalContext;
 
     render=()=>{};
-    window.openGalaxyReviewMap(6);window.setGalaxyReviewSelectedEnemy(3);
+    if(typeof window.openGalaxyReviewMap!=="undefined"||typeof window.setGalaxyReviewSelectedEnemy!=="undefined")throw Error("Retired review selection API returned");
     const reviewSelection=window.firstWorldTargetContextFromSelection({mode:"review",source:"review-test"},first);
 
     return {
@@ -71,12 +71,12 @@ const assert=require("assert");
   assert.equal(report.invalid.valid,false);assert.equal(report.invalid.authorized,false);assert.equal(report.invalid.policy.formalRewardsAllowed,false);assert.equal(report.invalid.mapIndex,-1);assert.equal(report.invalid.enemyIndex,-1);
   assert.equal(report.rerunBoss.authorized,true);assert.equal(report.rerunBoss.reincarnationRun,true);assert.equal(report.rerunBoss.lifeId,2);
   assert.equal(report.wrongFormalOnRerun.authorized,false,"Formal mode must not authorize a rerun life.");
-  assert.equal(report.review.authorized,true);assert.equal(report.review.mode,"review");Object.entries(report.review.policy).filter(([k])=>k!=="version").forEach(([k,v])=>assert.equal(v,false,`Review policy ${k} must be false.`));
+  assert.equal(report.review.authorized,false);assert.equal(report.review.mode,"review");Object.entries(report.review.policy).filter(([k])=>k!=="version").forEach(([k,v])=>assert.equal(v,false,`Review policy ${k} must be false.`));
   assert.notEqual(report.uniqueIds[0],report.uniqueIds[1],"Every runtime context must have a unique contextId.");
   assert.deepEqual(report.frozen,{context:true,identity:true,policy:true});assert.equal(report.noMutableRefs,true);
   assert.equal(report.validation.formal.passed,true);assert.equal(report.validation.invalid.passed,true,"Fail-closed invalid contexts are still structurally valid contexts.");
   assert.equal(report.compat.authorized,true);assert.equal(report.compat.mapIndex,99);assert.equal(report.compat.enemyIndex,4);assert.equal(report.canonical.mode,"rerun");assert.equal(report.sameIdentity,true);assert.equal(report.rerunDelegates,true);
-  assert.equal(report.reviewSelection.mapIndex,6);assert.equal(report.reviewSelection.enemyIndex,3);assert.equal(report.reviewSelection.mode,"review");assert.equal(report.reviewSelection.source,"review-test");
+  assert.equal(report.reviewSelection.mapIndex,-1);assert.equal(report.reviewSelection.enemyIndex,-1);assert.equal(report.reviewSelection.authorized,false);assert.equal(report.reviewSelection.mode,"review");assert.equal(report.reviewSelection.source,"review-test");
   assert.equal(report.ownerDetachedStateStable,true);assert.equal(report.ownerReadOnlySource,true,"Target Context owner must not write save/localStorage.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
   console.log("First-world target context owner Batch1 integrity passed:",JSON.stringify({versions:report.versions,formal:{normal:report.formalNormal.identity,elite:report.formalElite.identity,boss:report.formalBoss.identity},rerun:report.canonical.identity,review:report.reviewSelection.identity,frozen:report.frozen,uniqueIds:report.uniqueIds,ownerDetachedStateStable:report.ownerDetachedStateStable,ownerReadOnlySource:report.ownerReadOnlySource}));

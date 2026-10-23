@@ -31,8 +31,9 @@ test('actual mirror core output, symmetry and RNG are unchanged by a broken cons
  await Promise.resolve();
 });
 test('mode producer hooks are present in each actual owner, not guessed from DOM',()=>{
- const wires={main:['combatcore.js','secondworldcombat.js','thirdworldcombat.js'],bounty:['dungeoncore.js'],arena:['dungeonarena.js','thirdworldarena.js'],void:['dungeonvoid.js'],calamity:['calamitycore.js','secondworldcalamityrun.js'],alternate:['alternateuniversecombat.js'],special:['specialcore.js'],review:['ui.js','secondworldcalamityui.js'],mirror:['mirrordungeonrun.js'],'gm-benchmark':['gmpowerbenchmark.js','gmalternateuniversebenchmark.js']};
+ const wires={main:['combatcore.js','secondworldcombat.js','thirdworldcombat.js'],bounty:['dungeoncore.js'],arena:['dungeonarena.js','thirdworldarena.js'],void:['dungeonvoid.js'],calamity:['calamitycore.js','secondworldcalamityrun.js'],alternate:['alternateuniversecombat.js'],special:['specialcore.js'],mirror:['mirrordungeonrun.js'],'gm-benchmark':['gmpowerbenchmark.js','gmalternateuniversebenchmark.js']};
  for(const [mode,files] of Object.entries(wires))for(const f of files){assert.ok(read(f).includes('visualContext:'),f);assert.ok(read(f).includes('"'+mode+'"'),f+' mode');}
+ for(const f of ['ui.js','secondworldcalamityui.js'])assert.ok(!read(f).includes('visualContext:{mode:"review"'),'retired review producer '+f);
  assert.ok(read('thirdworldcombat.js').includes('CivilizationCombatEvents?.associate?.(result,combat)'),'frozen W3 result must retain its own computed reference');
  assert.ok(read('alternateuniversecombat.js').includes('CivilizationCombatEvents?.associate?.(output.combat,combat)'),'AU clone must retain correct reference');
  assert.ok(read('combatfx.js').includes('CivilizationCombatEvents?.updatePresentation?.'),'real onUpdate/HP sync source is observed');

@@ -1,3 +1,5 @@
+> **第20批已獲本次使用者明確授權並整合施工（2026-10-24）**：五類無收益回顧戰退場、兩類完成後重打阻擋、1705身份怪物圖鑑、三紀元文明B方案與相關說明已在專用分支整合。尚待必要Actions／單一PR／main／Pages驗收，**未封箱、未宣稱上線**。施工、安全界線與已跑測試見 [第20批施工驗收報告](docs/BATCH20_IMPLEMENTATION_ACCEPTANCE_2026-10-24.md)。本段取代下方第20批歷史「未授權」狀態；第19-4批不在本次範圍。
+
 > **第19-4批正式工程封箱**：[PR #89](https://github.com/franksky1207/rpg/pull/89) 已正式合併；最終PR HEAD `4be3c6bff2ada776be6d42d933c2921e4d87953f` 八支Actions成功，合併／正式功能main `44c1e33066559d323201f4e468cd49b162c4e63f` 十五支Actions全成功、Pages build與deploy成功、Manifest指紋已最新且無bot後續提交。17支workflow／八支PR並行規則、所有run URL、永久HP／收益防重及Schema18證據見[正式封箱紀錄](docs/BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md)。本次只補文件，最終main與文件補記後同SHA Functional／Pages結果以PR最終紀錄核對；不冒充文件SHA另跑完整Runtime。iPhone Safari切App、鎖屏、OS終止、原生bfcache及溫度／耗電／記憶體仍待真機。此段取代下方歷史待核對／Draft描述。
 
 > **第13批20圖整合（2026-10-20）**：14張新圖加PR #58既有六張，609正式身份對應與63筆外型修正，沿用GM／Actor／Pool；正式戰鬥維持關閉。驗收、來源核對與剩餘真機項目見 [docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md](docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md)；最終是否完成以本批PR與最新main同SHA Actions／Pages成功為準。

@@ -59,11 +59,7 @@ const assert=require("assert");
     const rerunHtml=adventurePreparePage();
     const rerunPrepared=window.getPreparedFirstWorldTargetContext();
 
-    window.openGalaxyReviewMap(6);window.setGalaxyReviewSelectedEnemy(3);window.clearPreparedFirstWorldTargetContext();
-    const reviewHtml=galaxyReviewPreparePage();
-    const reviewPrepared=window.getPreparedFirstWorldTargetContext();
-    const reviewHtml2=galaxyReviewPreparePage();
-    const reviewPrepared2=window.getPreparedFirstWorldTargetContext();
+    const review={retired:typeof window.galaxyReviewPreparePage==="undefined"&&typeof window.openGalaxyReviewMap==="undefined"};
 
     const invalid=window.prepareFirstWorldTargetContext({mode:"formal",mapIndex:-1,enemyIndex:99,source:"batch2-invalid"},makeFirstWorldState(0));
     const invalidEncounter=window.firstWorldEncounterFromTargetContext(invalid,{preview:true});
@@ -76,7 +72,7 @@ const assert=require("assert");
      selectionChange:{clearedImmediately:preparedAfterSelect===null,preparedC,htmlHasBoss:htmlC.includes(monsterObj(4,4).name)},
      begin:{beginOk,prepared:explicitPrepared,encounter:beginEncounter,expected:{name:expectedPreparedEncounter.name,level:expectedPreparedEncounter.level,kind:expectedPreparedEncounter.kind},runCall,uiCursorAfter:beginUiCursorAfter},
      rerun:{prepared:rerunPrepared,htmlHasBoss:rerunHtml.includes(monsterObj(99,4).name)},
-     review:{prepared:reviewPrepared,stableId:reviewPrepared?.contextId===reviewPrepared2?.contextId,htmlStable:reviewHtml===reviewHtml2,htmlHasElite:reviewHtml.includes(monsterObj(6,3).name)},
+     review,
      invalid:{context:invalid,encounter:invalidEncounter}
     };
    }finally{
@@ -86,7 +82,7 @@ const assert=require("assert");
 
   assert.deepEqual(report.versions,{context:1,prepared:1,encounter:1,ui:1});
   assert.equal(report.self.passed,true,JSON.stringify(report.self.errors||[]));
-  assert.equal(report.install.prepare,true);assert.equal(report.install.combatPreview,true);assert.equal(report.install.enterMap,true);assert.equal(report.install.selectEnemy,true);assert.equal(report.install.backToMaps,true);assert.equal(report.install.reviewPrepare,true);
+  assert.equal(report.install.prepare,true);assert.equal(report.install.combatPreview,true);assert.equal(report.install.enterMap,true);assert.equal(report.install.selectEnemy,true);assert.equal(report.install.backToMaps,true);assert.equal(report.install.reviewPrepare,false);
   assert.equal(report.formal.preparedA.mode,"formal");assert.equal(report.formal.preparedA.mapIndex,4);assert.equal(report.formal.preparedA.enemyIndex,3);assert.equal(report.formal.preparedA.authorized,true);
   assert.equal(report.formal.samePrepareId,true,"Repeated prepare render must reuse the same canonical prepared context.");
   assert.equal(report.formal.htmlHasTarget,true);assert.equal(report.formal.repeatHtmlStable,true);
@@ -98,9 +94,9 @@ const assert=require("assert");
   assert.equal(report.begin.runCall.count,1,"beginCombat must preserve the existing battle-count contract.");
   assert.deepEqual(report.begin.uiCursorAfter,{map:1,enemy:0},"Batch2 must not convert the UI cursor into combat authority or overwrite it.");
   assert.equal(report.rerun.prepared.mode,"rerun");assert.equal(report.rerun.prepared.mapIndex,99);assert.equal(report.rerun.prepared.enemyIndex,4);assert.equal(report.rerun.prepared.authorized,true);assert.equal(report.rerun.htmlHasBoss,true);
-  assert.equal(report.review.prepared.mode,"review");assert.equal(report.review.prepared.mapIndex,6);assert.equal(report.review.prepared.enemyIndex,3);assert.equal(report.review.prepared.policy.formalRewardsAllowed,false);assert.equal(report.review.stableId,true);assert.equal(report.review.htmlStable,true);assert.equal(report.review.htmlHasElite,true);
+  assert.equal(report.review.retired,true);
   assert.equal(report.invalid.context.valid,false);assert.equal(report.invalid.context.authorized,false);assert.equal(report.invalid.encounter,null,"Invalid prepared targets must fail closed at the encounter bridge.");
   assert.deepEqual(pageErrors,[],"Browser pageerror:\n"+pageErrors.join("\n\n"));
-  console.log("First-world target context UI/prepare/encounter Batch2 integrity passed:",JSON.stringify({versions:report.versions,install:report.install,formal:{identity:report.formal.preparedA.identity,samePrepareId:report.formal.samePrepareId},selectionChange:report.selectionChange.preparedC.identity,begin:{prepared:report.begin.prepared.identity,encounter:report.begin.encounter,uiCursorAfter:report.begin.uiCursorAfter},rerun:report.rerun.prepared.identity,review:{identity:report.review.prepared.identity,stableId:report.review.stableId},invalid:{valid:report.invalid.context.valid,authorized:report.invalid.context.authorized}}));
+  console.log("First-world target context UI/prepare/encounter Batch2 integrity passed:",JSON.stringify({versions:report.versions,install:report.install,formal:{identity:report.formal.preparedA.identity,samePrepareId:report.formal.samePrepareId},selectionChange:report.selectionChange.preparedC.identity,begin:{prepared:report.begin.prepared.identity,encounter:report.begin.encounter,uiCursorAfter:report.begin.uiCursorAfter},rerun:report.rerun.prepared.identity,review:report.review,invalid:{valid:report.invalid.context.valid,authorized:report.invalid.context.authorized}}));
  }finally{await browser.close();}
 })().catch(error=>{console.error(error?.stack||error);process.exit(1);});

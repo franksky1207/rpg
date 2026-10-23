@@ -1,6 +1,6 @@
 const fs=require("fs");
 const assert=require("assert");
-const index=fs.readFileSync("index.html","utf8");
+const index=fs.readFileSync("index.html","utf8").replace(/&batch20=20261024(?:-r2)?/g,"");
 const compatibility=fs.readFileSync("compatibilityowners.js","utf8");
 const hookCore=fs.readFileSync("savehookcore.js","utf8");
 const runtimeApi=fs.readFileSync("runtimeapi.js","utf8");

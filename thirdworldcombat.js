@@ -106,6 +106,7 @@
  }
 
  function createThirdWorldBossCombatSnapshot(value,options={}){
+  if(options.review===true)return null;
   const index=resolveBossIndex(value);
   if(index<0)return null;
   if(typeof window.thirdWorldBoss!=="function"||typeof window.thirdWorldBossStats!=="function"||typeof window.thirdWorldBossAbilities!=="function")return null;
@@ -113,16 +114,15 @@
   if(!boss)return null;
   const target=targetState(options);
   const progress=target&&typeof window.thirdWorldBossProgressSnapshot==="function"?window.thirdWorldBossProgressSnapshot(index,target):null;
-  const reviewMode=options.review===true;
+  const reviewMode=false;
   const bossMaxHp=Math.max(1,finiteWhole(boss.maxHp,1));
-  if(reviewMode&&progress?.defeated!==true)return null;
-  const allowOverride=!reviewMode&&options.ignoreUnlock===true;
+  const allowOverride=options.ignoreUnlock===true;
   const storedHp=progress?finiteWhole(progress.currentHp,bossMaxHp):bossMaxHp;
   const requestedHp=allowOverride&&options.formalStartHp!=null?finiteWhole(options.formalStartHp,storedHp):storedHp;
-  const formalStartHp=reviewMode?0:Math.max(0,Math.min(bossMaxHp,requestedHp));
-  if(!reviewMode&&formalStartHp<=0)return null;
-  const stageBasisHp=reviewMode?Math.max(1,Math.floor(bossMaxHp*.1)):formalStartHp;
-  const enemyStartHp=reviewMode?bossMaxHp:formalStartHp;
+  const formalStartHp=Math.max(0,Math.min(bossMaxHp,requestedHp));
+  if(formalStartHp<=0)return null;
+  const stageBasisHp=formalStartHp;
+  const enemyStartHp=formalStartHp;
   const stats=window.thirdWorldBossStats(index,stageBasisHp);
   const abilities=window.thirdWorldBossAbilities(index,stageBasisHp);
   if(!stats||!abilities)return null;
@@ -171,11 +171,12 @@
   return !!holder&&typeof window.thirdWorldChallengeStatus==="function"&&window.thirdWorldChallengeStatus(index,holder).allowed===true;
  }
  function runThirdWorldBossCombat(value,options={}){
+  if(options.review===true)return {ok:false,reason:"review-retired"};
   const target=targetState(options);
-  const reviewMode=options.review===true;
+  const reviewMode=false;
   const snapshot=createThirdWorldBossCombatSnapshot(value,options);
-  if(!snapshot)return Object.freeze({ok:false,world:3,review:reviewMode,reason:reviewMode?"只有已擊破的高維 Boss 可以進行回顧。":"找不到可戰鬥的高維 Boss，或該 Boss 已被擊破。"});
-  if(!reviewMode&&options.ignoreUnlock!==true){
+  if(!snapshot)return Object.freeze({ok:false,world:3,review:reviewMode,reason:"找不到可戰鬥的高維 Boss，或該 Boss 已被擊破。"});
+  if(options.ignoreUnlock!==true){
    if(!target)return Object.freeze({ok:false,world:3,reason:"無法取得正式角色狀態。"});
    const status=snapshot.challengeStatus;
    if(!status||status.allowed!==true)return Object.freeze({ok:false,reason:challengeReason(status),challengeStatus:status||null,bossIndex:snapshot.bossIndex,world:3});
@@ -184,7 +185,7 @@
   const player=options.player&&typeof options.player==="object"?options.player:(typeof window.playerCombatStats==="function"?window.playerCombatStats():null);
   if(!player)return Object.freeze({ok:false,world:3,reason:"無法取得玩家戰鬥能力。"});
   const playerMaxHp=Math.max(1,numberOr(player.hp,1));
-  const startHp=options.startHp==null?(reviewMode?playerMaxHp:Math.max(0,numberOr(target?.hp,playerMaxHp))):Math.max(0,numberOr(options.startHp,playerMaxHp));
+  const startHp=options.startHp==null?Math.max(0,numberOr(target?.hp,playerMaxHp)):Math.max(0,numberOr(options.startHp,playerMaxHp));
   const playerHealCap=options.playerHealCap==null?playerMaxHp:Math.max(1,Math.min(playerMaxHp,numberOr(options.playerHealCap,playerMaxHp)));
   const civilizationDamageMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"
    ?window.civilizationCombatDamageMultiplier({world:3,state:target,civilizationLevel:options.civilizationLevel})
@@ -192,7 +193,7 @@
   const requestedMaxTurns=Math.max(0,finiteWhole(options.maxTurns,0));
   const presentationRequested=options.preparePresentation===true;
   const combat=window.runCombatCore(player,snapshot.enemy,startHp,{
-   visualContext:{mode:options.useTestSpecializations===true?"gm-benchmark":reviewMode?"review":"main",world:3,owner:"thirdworldcombat.js",variant:"persistent-hp",location:String(snapshot.bossIndex),playerName:target?.playerName,fixture:options.useTestSpecializations===true||options.ignoreUnlock===true},
+   visualContext:{mode:options.useTestSpecializations===true?"gm-benchmark":"main",world:3,owner:"thirdworldcombat.js",variant:"persistent-hp",location:String(snapshot.bossIndex),playerName:target?.playerName,fixture:options.fixture===true||options.useTestSpecializations===true||options.ignoreUnlock===true||options.state!=null&&options.state!==state},
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
    useTestSpecializations:options.useTestSpecializations===true,
@@ -220,13 +221,13 @@
   const endReason=terminationReason(playerDied,bossDefeated,turnLimitReached,actionSafetyReached);
   const events=deepFreezeClone(Array.isArray(combat.events)?combat.events:[]);
   const logs=deepFreezeClone(Array.isArray(combat.logs)?combat.logs:[]);
-  const formalRun=!reviewMode&&options.ignoreUnlock!==true;
-  const challengeAllowedAtStart=!reviewMode&&snapshot.challengeStatus?.allowed===true;
+  const formalRun=options.ignoreUnlock!==true;
+  const challengeAllowedAtStart=snapshot.challengeStatus?.allowed===true;
   const settlementBasis=createSettlementBasis({
    bossIndex:snapshot.bossIndex,
    bossId:snapshot.bossId,
-   formalStartHp:reviewMode?0:snapshot.formalStartHp,
-   combatEndHp:reviewMode?0:combatEndHp,
+   formalStartHp:snapshot.formalStartHp,
+   combatEndHp:combatEndHp,
    bossMaxHp:snapshot.bossMaxHp,
    bossStageAtStart:snapshot.stage,
    playerStartHp:combat.playerStartHp,
@@ -264,9 +265,9 @@
    bossName:snapshot.bossName,
    formalStartHp:settlementBasis.formalStartHp,
    enemyStartHp:snapshot.enemyStartHp,
-   combatEndHp:reviewMode?combatEndHp:settlementBasis.combatEndHp,
-   effectiveDamagePreview:reviewMode?0:settlementBasis.effectivePermanentDamage,
-   effectivePermanentDamage:reviewMode?0:settlementBasis.effectivePermanentDamage,
+   combatEndHp:settlementBasis.combatEndHp,
+   effectiveDamagePreview:settlementBasis.effectivePermanentDamage,
+   effectivePermanentDamage:settlementBasis.effectivePermanentDamage,
    bossMaxHp:settlementBasis.bossMaxHp,
    bossStageAtStart:settlementBasis.bossStageAtStart,
    bossStatsAtStart:snapshot.stats,
@@ -323,7 +324,7 @@
    if(!partial||partial.enemyHealCap!==partial.formalStartHp||partial.enemyHealCap>=partial.bossMaxHp)fail("FORMAL_HP_HEAL_CAP",partial||null);
    const reviewState={secondWorld:{entered:true},thirdWorld:{entered:true,bosses:Array.from({length:Number(window.THIRD_WORLD_BOSS_COUNT)||10},(_,index)=>({currentHp:index===4?0:max}))}};
    const review=createThirdWorldBossCombatSnapshot(4,{state:reviewState,review:true});
-   if(!review||review.reviewMode!==true||review.stage!==9||review.formalStartHp!==0||review.enemyStartHp!==max||review.enemyHealCap!==max||review.stageBasisHp!==Math.floor(max*.1)||markKeys.some(key=>review.enemyEffectProfile?.[key]?.active!==true))fail("REVIEW_FINAL_FORM_FULL_HP",review||null);
+   if(review!==null)fail("REVIEW_RETIRED",review);
    const formalStoredHp=Math.max(1,max-12345),formalProbeState={secondWorld:{entered:true},thirdWorld:{entered:true,bosses:Array.from({length:Number(window.THIRD_WORLD_BOSS_COUNT)||10},(_,index)=>({currentHp:index===0?formalStoredHp:max}))}};
    const guarded=createThirdWorldBossCombatSnapshot(0,{state:formalProbeState,allowFormalHpOverride:true,formalStartHp:1});
    if(!guarded||guarded.formalStartHp!==formalStoredHp)fail("FORMAL_HP_OVERRIDE_GUARD",{expected:formalStoredHp,actual:guarded?.formalStartHp||null});

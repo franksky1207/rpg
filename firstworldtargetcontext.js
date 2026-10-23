@@ -87,7 +87,7 @@
  }
  function authorizedFor(mode,valid,target,life){
   if(!valid)return false;
-  if(mode==="review")return true;
+  if(mode==="review")return false;
   if(!life?.available||currentPhase(target)!==1)return false;
   if(mode==="rerun")return life.reincarnationRun===true;
   return life.firstRun===true;
@@ -100,11 +100,7 @@
   return Object.freeze({version:VERSION,contextId:makeContextId(),world:1,mode,source:String(options.source||"explicit"),valid,authorized,identity,mapIndex:identity.mapIndex,enemyIndex:identity.enemyIndex,targetType:meta.targetType,mapName:meta.mapName,enemyName:meta.enemyName,enemyLevel:meta.enemyLevel,count:life.count,lifeId:life.lifeId,reincarnationRun:life.reincarnationRun,policy});
  }
  function selection(mode){
-  if(mode==="review"){
-   const mapIndex=typeof window.getGalaxyReviewSelectedMap==="function"?window.getGalaxyReviewSelectedMap():-1;
-   const enemyIndex=typeof window.getGalaxyReviewSelectedEnemy==="function"?window.getGalaxyReviewSelectedEnemy():-1;
-   return Object.freeze({mapIndex,enemyIndex,source:"review-selection"});
-  }
+  if(mode==="review")return Object.freeze({mapIndex:-1,enemyIndex:-1,source:"retired-review-selection"});
   const mapIndex=typeof selectedMap!=="undefined"?selectedMap:-1;
   const enemyIndex=typeof selectedEnemy!=="undefined"?selectedEnemy:-1;
   return Object.freeze({mapIndex,enemyIndex,source:"ui-selection"});
@@ -166,9 +162,6 @@
   const baseEnter=window.enterMap;if(typeof baseEnter==="function"){window.enterMap=function(){clearPrepared();return baseEnter.apply(this,arguments);};report.enterMap=true;}
   const baseSelect=window.selectEnemy;if(typeof baseSelect==="function"){window.selectEnemy=function(){clearPrepared();return baseSelect.apply(this,arguments);};report.selectEnemy=true;}
   const baseBack=window.backToMaps;if(typeof baseBack==="function"){window.backToMaps=function(){clearPrepared();return baseBack.apply(this,arguments);};report.backToMaps=true;}
-  const baseReviewPrepare=window.galaxyReviewPreparePage;if(typeof baseReviewPrepare==="function"){window.galaxyReviewPreparePage=function(){const context=prepareFromSelection({mode:"review",source:"review-prepare-render"},targetState());return withContextSelection(context,()=>baseReviewPrepare.apply(this,arguments));};report.reviewPrepare=true;}
-  const baseReviewSelect=window.selectGalaxyReviewEnemy;if(typeof baseReviewSelect==="function"){window.selectGalaxyReviewEnemy=function(){clearPrepared();const out=baseReviewSelect.apply(this,arguments);prepareFromSelection({mode:"review",source:"review-enemy-selection"},targetState());return out;};report.reviewSelection=true;}
-  const baseReviewBack=window.backToGalaxyReviewMaps;if(typeof baseReviewBack==="function"){window.backToGalaxyReviewMaps=function(){clearPrepared();return baseReviewBack.apply(this,arguments);};report.reviewBack=true;}
   return Object.freeze(report);
  }
  function selfIntegrity(){const invalid=create({mode:"formal",mapIndex:-1,enemyIndex:99,source:"self-integrity"},targetState());const errors=[];if(invalid.valid!==false||invalid.authorized!==false)errors.push("invalid-fail-closed");if(Object.isFrozen(invalid)!==true||Object.isFrozen(invalid.identity)!==true||Object.isFrozen(invalid.policy)!==true)errors.push("immutable");if(policyAllows(invalid,{formalRewardsAllowed:false,formalProgressAllowed:false})!==true)errors.push("invalid-policy");if(typeof window.worldReincarnationContext!=="function")errors.push("lifecycle-owner-missing");const metaProbe=create({mode:runtimeMode(targetState())||"formal",mapIndex:0,enemyIndex:0,source:"metadata-integrity"},targetState()),metadata=metadataOf(metaProbe);if(metaProbe.valid===true&&(!metadata||metadata.version!==TARGET_METADATA_VERSION||Object.isFrozen(metadata)!==true))errors.push("target-metadata");return Object.freeze({version:VERSION,identityVersion:IDENTITY_VERSION,policyVersion:POLICY_VERSION,preparedContextVersion:PREPARED_CONTEXT_VERSION,preparedSessionVersion:PREPARED_SESSION_VERSION,encounterBridgeVersion:ENCOUNTER_BRIDGE_VERSION,uiPrepareBridgeVersion:UI_PREPARE_BRIDGE_VERSION,battleBindingVersion:BATTLE_BINDING_VERSION,lifecycleDelegateVersion:LIFECYCLE_DELEGATE_VERSION,policyGateVersion:POLICY_GATE_VERSION,targetMetadataVersion:TARGET_METADATA_VERSION,persistedTargetAdapterVersion:PERSISTED_TARGET_ADAPTER_VERSION,passed:errors.length===0,errors:Object.freeze(errors)});}

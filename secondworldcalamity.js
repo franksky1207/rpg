@@ -124,7 +124,7 @@
    requiredCivilizationLevel:def.previousCivilizationLevel
   };
  }
- function canChallenge(value,target=null){return unlockStatus(value,target).challengeable===true;}
+ function canChallenge(value,target=null){return targetState(target)?.thirdWorld?.entered!==true&&!completed(value,target)&&unlockStatus(value,target).challengeable===true;}
  function forBoss(value){
   const n=int(value,-1);
   return DEFS.find(def=>def.bossIndex===n)||null;
@@ -149,6 +149,7 @@
    visible:unlock.visible,
    discovered:unlock.visible,
    unlocked:unlock.unlocked,
+   // Appearance notices keep their original unlock snapshot; battle authorization uses canChallenge.
    challengeable:unlock.challengeable,
    unlock,
    trueKills:kills,

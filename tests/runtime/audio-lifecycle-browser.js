@@ -481,7 +481,7 @@ const { chromium } = require("playwright"),
       state = newState();
       state.level = 600;
       state.secondWorld.entered = true;
-      state.secondWorld.civilizationLevel = 1;
+      state.secondWorld.civilizationLevel = 0;
       const d = window.getSecondWorldCalamityDefinitions()[0];
       state.secondWorld.mainline.bossKilled[d.bossIndex] = true;
       view = "calamity";
@@ -526,98 +526,14 @@ const { chromium } = require("playwright"),
     assert.equal(await page.evaluate(() => window.__alternateResult), true);
     await playing("era-higher-theme");
     record({ case: "actual alternate universe/formal", passed: true });
-    // Galaxy historical review retains its scene era, then navigation restores higher.
-    await page.evaluate(async () => {
-      view = "adventure";
-      window.setAdventureEraView("galaxy-review");
-      window.openGalaxyReviewMap(0);
-      window.__reviewResult = await startGalaxyReviewBattle();
-    });
-    assert.equal(await page.evaluate(() => window.__reviewResult), true);
-    await playing("era-galaxy-theme");
-    await page.evaluate(() => {
-      closeBattleResultModal();
-      go("home");
-    });
+    // Retired player review handlers cannot create audio runs or alter the current era scene.
+    const reviewRetirement=await page.evaluate(()=>({
+      absent:["startGalaxyReviewBattle","startThirdWorldBossReviewFromPlayerUi","startSecondWorldBossReview","startGalaxyCalamityReview","startUniverseCalamityReview"].every(n=>typeof window[n]==="undefined"),
+      rejectedViews:setAdventureEraView("galaxy-review")===false&&setAdventureEraView("universe-review")===false
+    }));
+    assert.equal(reviewRetirement.absent,true);assert.equal(reviewRetirement.rejectedViews,true);
     await playing("era-higher-theme");
-    record({
-      case: "actual higher player galaxy review/return scene",
-      passed: true,
-    });
-    // Historical universe/higher reviews use their actual combat source and scene.
-    const beforeHigherReview = await page.evaluate(() => JSON.stringify(state));
-    await page.evaluate(async () => {
-      view = "adventure";
-      window.setAdventureEraView("higher-dimensional");
-      window.__higherReview = await startThirdWorldBossReviewFromPlayerUi(0);
-    });
-    assert.equal(await page.evaluate(() => window.__higherReview), true);
-    await playing("era-higher-theme");
-    assert.equal(
-      await page.evaluate(() => JSON.stringify(state)),
-      beforeHigherReview,
-    );
-    await page.evaluate(() => closeThirdWorldReviewResultModal());
-    record({ case: "actual higher review/read-only", passed: true });
-    await page.evaluate(() => {
-      state.secondWorld.mainline.bossKilled[0] = true;
-      view = "adventure";
-      window.setAdventureEraView("universe-review");
-    });
-    const beforeUniverseReview = await page.evaluate(() =>
-      JSON.stringify(state),
-    );
-    await page.evaluate(async () => {
-      window.__universeReview = await startSecondWorldBossReview(0);
-    });
-    assert.equal(await page.evaluate(() => window.__universeReview), true);
-    await playing("era-universe-theme");
-    assert.equal(
-      await page.evaluate(() => JSON.stringify(state)),
-      beforeUniverseReview,
-    );
-    await page.evaluate(() => {
-      closeBattleResultModal();
-      go("home");
-    });
-    await playing("era-higher-theme");
-    record({
-      case: "actual higher player universe review/read-only return scene",
-      passed: true,
-    });
-    await page.evaluate(async () => {
-      view = "calamity";
-      setCivilizationCalamityEraView("galaxy-review");
-      window.__galaxyCalamityReview = await startGalaxyCalamityReview(
-        getCivilizationCalamityDefinitions()[0].id,
-      );
-    });
-    assert.equal(
-      await page.evaluate(() => window.__galaxyCalamityReview),
-      true,
-    );
-    await playing("era-galaxy-theme");
-    record({
-      case: "actual higher player galaxy calamity review/return scene",
-      passed: true,
-    });
-    await page.evaluate(async () => {
-      setCivilizationCalamityEraView("universe");
-      window.__universeCalamityReview = await startUniverseCalamityReview(
-        getSecondWorldCalamityDefinitions()[0].id,
-      );
-    });
-    assert.equal(
-      await page.evaluate(() => window.__universeCalamityReview),
-      true,
-    );
-    await playing("era-universe-theme");
-    await page.evaluate(() => go("home"));
-    await playing("era-higher-theme");
-    record({
-      case: "actual higher player universe calamity review/return scene",
-      passed: true,
-    });
+    record({case:"five retired player reviews cannot start audio",passed:true});
     // Universe uses the same mode owners with actual world-2 stat/reward dependencies.
     await page.evaluate(() => {
       state = newState();
@@ -868,8 +784,9 @@ const { chromium } = require("playwright"),
     if(process.env.FORMAL_SPRITE_ACCEPTANCE==='1'){
       const proof=await page.evaluate(()=>{clearInterval(__formalSpriteTimer);return __formalSpriteEvidence;});
       fs.writeFileSync('/tmp/equipment-formal-modes.json',JSON.stringify(proof,null,2));
-      for(const mode of ['main:1','main:2','review:1','review:2','void:1','void:2','mirror:1','mirror:2','bounty:1','bounty:2','arena:1','arena:2','arena:3','calamity:1','calamity:2','alternate:3'])assert.ok(proof[mode],'actual sprite missing in '+mode);
+      for(const mode of ['main:1','main:2','void:1','void:2','mirror:1','mirror:2','bounty:1','bounty:2','arena:1','arena:2','arena:3','calamity:1','calamity:2','alternate:3'])assert.ok(proof[mode],'actual sprite missing in '+mode);
     }
+    assert.equal(await page.evaluate(()=>typeof window.startGalaxyReviewBattle==='undefined'&&typeof window.startSecondWorldBossReview==='undefined'),true,'retired reviews have no native audio/sprite owner');
     const traceBeforeReload = await page.evaluate(() => window.__audioTrace);
     const reincarnation = await page.evaluate(() => {
       state = newState();
@@ -985,7 +902,7 @@ const { chromium } = require("playwright"),
      // The old page's collection is saved before the real reload below; no delta replay.
      const proof=await page.evaluate(()=>window.__savedCombatEventEvidence||window.__combatEventEvidence);
      assert.ok(proof,"Combat proof missing");assert.equal(proof.invalid,0);
-     for(const mode of ["main","bounty","arena","mirror","void","calamity","alternate","review"])assert.ok(Object.keys(proof.modes).some(key=>key.startsWith(mode+":")),"Missing actual owner mode "+mode);
+     for(const mode of ["main","bounty","arena","mirror","void","calamity","alternate"])assert.ok(Object.keys(proof.modes).some(key=>key.startsWith(mode+":")),"Missing actual owner mode "+mode);
      assert.equal(new Set(proof.settlements).size,proof.settlements.length,"Settlement event delivered twice");
      assert.ok(proof.queueCapacity<=32*5,"Only the four test consumers plus one shipped B consumer");assert.ok(proof.maxQueue<=proof.queueCapacity,"Every consumer retains the original 32-event queue bound");
      fs.writeFileSync("combat-events-browser-report.json",JSON.stringify({passed:true,actualAudioCases:results.length,proof},null,2)+"\n");

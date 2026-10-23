@@ -61,7 +61,7 @@
   const targetState=options.state&&typeof options.state==="object"?options.state:state;
   const civilizationMultiplier=typeof window.civilizationCombatDamageMultiplier==="function"?window.civilizationCombatDamageMultiplier({world:2,state:targetState,civilizationLevel:options.civilizationLevel}):1;
   const combat=window.runCombatCore(p,e,Math.max(1,Number(p.hp)||1),{
-   visualContext:{mode:"calamity",world:2,owner:"secondworldcalamityrun.js",location:d.id,playerName:targetState?.playerName},
+   visualContext:{mode:"calamity",world:2,owner:"secondworldcalamityrun.js",location:d.id,playerName:targetState?.playerName,fixture:options.ignoreUnlock===true||options.useTestSpecializations===true||options.state!=null&&options.state!==state},
    logs:options.logs!==false,
    rng:typeof options.rng==="function"?options.rng:undefined,
    enemyStartHp:startEnemyHp,
@@ -116,6 +116,7 @@
   };
  }
  function battle(value,options={}){
+  if(window.isSecondWorldCalamityCompleted?.(value))return {ok:false,reason:"civilization-complete"};
   const combat=options.combatPreview||runCombat(value,options);if(!combat.ok)return combat;
   const settlement=settle(value,combat.combat,{save:options.save!==false});
   if(!settlement.ok)return {ok:false,reason:settlement.reason};

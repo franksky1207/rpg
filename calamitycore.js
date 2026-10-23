@@ -132,13 +132,14 @@
  }
  function runHeadlessCombat(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
+  if(markMaxed(def,state))return {ok:false,reason:"mark-maxed",calamityId:def.id};
   const e=enemy(id);if(!e)return {ok:false,reason:"enemy-missing",calamityId:def.id};
   const player=options.player&&typeof options.player==="object"?{...options.player}:playerCombatStats();
   const startEnemyHp=options.enemyStartHp==null?currentHp(id):Math.max(1,Math.min(e.hp,Math.floor(Number(options.enemyStartHp)||e.hp)));
   if(typeof window.formalPlayerFinalDamageMultiplier!=="function")throw new Error("Formal player final damage owner is required for Civilization Calamity.");
   const playerFinalDamageMultiplier=window.formalPlayerFinalDamageMultiplier({world:1,state});
   const combat=window.runCombatCore(player,e,player.hp,{
-   visualContext:{mode:"calamity",world:1,owner:"calamitycore.js",location:def.id,playerName:state.playerName},
+   visualContext:{mode:"calamity",world:1,owner:"calamitycore.js",location:def.id,playerName:state.playerName,fixture:options.fixture===true||typeof options.rng==="function"||options.markLevels!=null},
    logs:options.logs===false?false:true,
    rng:typeof options.rng==="function"?options.rng:undefined,
    enemyStartHp:startEnemyHp,
@@ -150,6 +151,7 @@
  }
  function battle(id,options={}){
   const def=definition(id);if(!def)return {ok:false,reason:"unknown-calamity"};
+  if(markMaxed(def,state))return {ok:false,reason:"mark-maxed",calamityId:def.id};
   if(!unlocked(id))return {ok:false,reason:"locked",calamityId:def.id};
   ensureState();
   const player=playerCombatStats();

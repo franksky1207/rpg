@@ -1,0 +1,17 @@
+'use strict';
+// Batch20 adds an exact-source layer without altering the sealed historical registrations.
+// Both links are fail-closed: live -> batch20 base -> historical guard base.
+const fs=require('node:fs'),cp=require('node:child_process'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const current=require('./batch20-approved-runtime.json'),historical=require('./foreground-approved-runtime.json');
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const at=(ref,p)=>cp.execFileSync('git',['show',ref+':'+p],{maxBuffer:8*1024*1024});
+function original(p,encoding){
+ let bytes=fs.readFileSync(p);const row=current.files[p];
+ if(row){assert.equal(sha(bytes),row.afterSha256,'unregistered batch20 source edit: '+p);const before=at(current.baseline,p);assert.equal(sha(before),row.beforeSha256,'batch20 baseline digest: '+p);bytes=before;}
+ const old=historical.files[p];
+ if(old){assert.equal(sha(bytes),old.afterSha256,'historical approved-runtime link: '+p);const before=at(historical.baseline,p);assert.equal(sha(before),old.beforeSha256,'historical baseline digest: '+p);if(p==='combatcore.js')assert.equal(bytes.toString().split('window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;')[0],before.toString().split('window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;')[0],'historical damage kernel remains exact');bytes=before;}
+ return encoding?bytes.toString(encoding):bytes;
+}
+function verifyAll(){const paths=[...new Set([...Object.keys(historical.files),...Object.keys(current.files)])];paths.forEach(p=>original(p));return paths;}
+module.exports={original,verifyAll};
+if(require.main===module){require('./batch20-notice-protection.cjs');console.log('PASS exact-source Batch20 registration, historical locks unchanged:',verifyAll().length);}

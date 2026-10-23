@@ -46,6 +46,7 @@ for directory in ('assets/gm-equipment-2_5d/v1', '3d-test/equipment-sprites-v1',
             paths.add(file.relative_to(root).as_posix())
 for file in (root / '3d-test').glob('monster-*.mjs'):
     paths.add(file.relative_to(root).as_posix())
+paths.add('monstercodeximage.mjs')
 paths.add('3d-test/gm-era-sprites.mjs')
 paths.add('3d-test/era-player-sprites.mjs')
 paths.add('3d-test/fixture-owner-history.json')
