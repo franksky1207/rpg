@@ -23,5 +23,35 @@ for(const size of [{width:390,height:844,mobile:true},{width:844,height:390,mobi
  if(size.mobile){await page.setViewportSize({width:size.height,height:size.width});await settle(page);assert.equal((await measure(page)).y,0,'rotation must respect manual scrolling');}
  evidence.push({name,size,loading,ready});
  }finally{await page.close();}}
+ // Batch19-3: real HUD geometry must change the chosen focus, while legacy stage-only fixtures stay precisely centered.
+for(const external of [false,true]){
+ const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ try{
+  const html=fixture(external?"galaxy-calamity":"galaxy-bounty");
+  await page.setContent(html);
+  await page.addStyleTag({content:css});
+  await page.evaluate(()=>{
+   const arena=document.querySelector(".combat-arena");
+   arena.innerHTML='<div class="combatant enemy"><h2>敵方</h2><div class="big-hp">HP 100</div></div><div class="combatant player"><h2>玩家</h2><div class="big-hp">HP 100</div></div>';
+  });
+  await page.addScriptTag({path:"combat-viewport-coordinator.js"});
+  await settle(page);
+  await page.evaluate(()=>{document.querySelector(".formal-b-stage-pending").classList.remove("formal-b-stage-pending");document.querySelector(".formal-b-shared-stage").hidden=false;});
+  await settle(page);
+  const visible=await page.evaluate(()=>{
+   const vp=visualViewport?.height||innerHeight;
+   const els=[document.querySelector(".formal-b-shared-stage"),...document.querySelectorAll(".combatant h2,.combatant .big-hp")];
+   const rs=els.map(x=>x.getBoundingClientRect());
+   return {top:Math.min(...rs.map(x=>x.top)),bottom:Math.max(...rs.map(x=>x.bottom)),viewport:vp,scrollY,stage:rs[0].top+rs[0].height/2-vp/2};
+  });
+  assert(visible.scrollY>0,"HUD fixture should automatically focus");
+  if(visible.bottom-visible.top<=visible.viewport-24){
+   assert(visible.top>=-13&&visible.bottom<=visible.viewport+13,"essential combat HUD should fit when physically possible "+JSON.stringify(visible));
+  }else{
+   assert(visible.stage<visible.viewport,"short viewport must still keep the stage reachable "+JSON.stringify(visible));
+  }
+  evidence.push({name:external?"batch19-3-external-stop-HUD":"batch19-3-inner-stop-HUD",visible});
+ }finally{await page.close();}
+}
  fs.writeFileSync('/tmp/pr48-viewport-browser.json',JSON.stringify({realDevice:false,cases:evidence},null,2));console.log('UNIFIED_MOBILE_COMBAT_VISUAL_PASS',evidence.length);
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
