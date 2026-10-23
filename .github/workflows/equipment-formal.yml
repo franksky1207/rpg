@@ -2,7 +2,27 @@ name: Equipment 2.5D Formal Battle
 on:
   push:
     branches: [main]
+    paths:
+      - 'assets/era-player/**'
+      - '3d-test/equipment-sprites-v1/**'
+      - '3d-test/era-player-sprites.mjs'
+      - '3d-test/gm-battle-published.mjs'
+      - 'tests/equipment-*/**'
+      - 'scripts/equipment*'
+      - 'scripts/formal-equipment-identities.py'
+      - 'combatcore.js'
+      - 'index.html'
   pull_request:
+    paths:
+      - 'assets/era-player/**'
+      - '3d-test/equipment-sprites-v1/**'
+      - '3d-test/era-player-sprites.mjs'
+      - '3d-test/gm-battle-published.mjs'
+      - 'tests/equipment-*/**'
+      - 'scripts/equipment*'
+      - 'scripts/formal-equipment-identities.py'
+      - 'combatcore.js'
+      - 'index.html'
   workflow_dispatch:
 permissions:
   contents: read
