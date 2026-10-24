@@ -1,5 +1,7 @@
 # 第20批補修：兩階段驗收紀錄
 
+狀態：**工程封箱**。PR [#91](https://github.com/franksky1207/rpg/pull/91) 已合併，最終 PR HEAD `22cbf2fccfeac6122f61c8f3dae8c6147c5f2629` 的14項檢查、功能 main `b6f5a671c50a30003423941e0ba0f9b31e4897eb` 的13個workflow與Pages build／deploy全數成功。正式站55檔HTTPS／SHA及圖鑑／GM／連戰實測通過；iPhone真機未測，不列成功。
+
 基準：遠端 main `3470f9fb273d8646ac5741fe56a95ac47c15fb4d`。本批依使用者完整施工指令，先完成異宇宙正式外觀並獨立提交，再施工圖鑑／GM／視覺共用。第19-4批不在範圍。
 
 ## 第一階段：異宇宙十階外觀
@@ -26,20 +28,58 @@
 - 本機驗收：三視窗分類／圖鑑／GM／117原型尺寸案例通過；14跨模式正式Renderer、8原生副本、5原生高維／災厄、80故障恢復、8既有pool、1共用pool、3玩家暖機、22存檔／轉生說明、1735既有圖鑑檢查及智慧下載／發布預檢通過。固定下一階競技場使用同一bitmap，離場／clear後refs、pending、bytes歸零。
 - 單次本機Chromium冷／暖圖鑑準備：直向13.1／1.0ms、桌機16.2／5.0ms、橫向14.5／1.1ms；第二次無新增fetch/decode。這不是舊版／新版FPS對照、長時間性能基準或iPhone結果。
 
-- CPU×4壓力驗收通過：30次同原型戰鬥只解碼1次、100場重複戰鬥、200次快速切換；6000次sample的p95約0.7ms、最大14.7ms，最終玩家／怪物refs、pending與bytes全部歸零。heap由約0.70MiB至4.06MiB的量測包含首次模組初始化，不能據此宣稱長時間記憶體不增長；真機溫控未測。
+- CPU×4壓力驗收通過：30次同原型戰鬥只解碼1次、100場重複戰鬥、200次快速切換；6000次sample的p95約0.5ms、最大10.2ms，最終玩家／怪物refs、pending與bytes全部歸零。JS heap由約0.67MiB至3.87MiB的量測包含首次模組初始化，不能據此宣稱長時間記憶體不增長；真機溫控未測。
 
 ## 提交與Actions
 
 - PR：[#91](https://github.com/franksky1207/rpg/pull/91)。第一階段提交：`0b3fe8de42b28bb6735b40a8e464625958f0a638`。
 - 第一階段Fast Preflight、Functional CI（六分支）、Equipment GM、GM Terminology、Equipment Formal成功。必要[Runtime](https://github.com/franksky1207/rpg/actions/runs/40054748031)靜態與瀏覽器兩工作皆成功，第一階段六個workflow全數成功。
-- 第二階段獨立提交與最終同SHA Actions／main／Pages待補。
+- 第二階段 `f2f5984d`、連戰補強 `95808ae7`、最終測試修正 `22cbf2fccfeac6122f61c8f3dae8c6147c5f2629`；最終發布證據見下方封箱章節。
 
 ## 發布及真機界線
 
-PR、同SHA Actions、main合併與Pages尚未完成，不得封箱。iPhone長時間流暢度、溫度、耗電與實際記憶體仍需真機；上述2MiB僅為受控decoded bitmap預算，不代表瀏覽器總記憶體。
+PR、同SHA必要Actions、main合併與Pages正式站驗收均已完成。iPhone長時間流暢度、溫度、耗電與實際記憶體仍需真機；上述2MiB僅為受控decoded bitmap預算，不代表瀏覽器總記憶體。
 
 CI相容修正：歷史逐位元守衛僅正規化七個精確入口版本、清除事件橋接、懸賞單一視覺呼叫與高維純視覺快照前綴，其他全檔位元保護不變；新驗收腳本使用Pages子路徑、保留JSON與20×10色階圖artifact。
 
 連戰補強驗收：高維已選陣容之下一原型重用且快照不變；兩紀元實際連續懸賞均在transition準備已選敵人，未改選敵／戰鬥／收益owner。關閉動畫不進行視覺預備。
 
 CI懸賞轉場測試環境修正：95808ae7的怪物工作因無頭瀏覽器失焦觸發正式COMBAT_INTERRUPTED（phase回ready、未結算）而未抵達轉場；此專項明確固定模擬前景／焦點，未改正式生命週期。真實blur／hidden中斷仍由原Runtime專項驗證，失敗紀錄不列成功。
+
+## 最終發布與封箱（2026-10-24）
+
+- PR：[#91](https://github.com/franksky1207/rpg/pull/91)，採merge commit保留兩階段及補強提交；功能main `b6f5a671c50a30003423941e0ba0f9b31e4897eb`。合併tree與通過檢查的PR tree完全相同。
+- 最終PR HEAD：`22cbf2fccfeac6122f61c8f3dae8c6147c5f2629`，14項checks全部success；[Runtime](https://github.com/franksky1207/rpg/actions/runs/40058083329)、[Functional CI](https://github.com/franksky1207/rpg/actions/runs/40058083369)。
+- [視覺證據artifact](https://github.com/franksky1207/rpg/actions/runs/40058083369/artifacts/12546640348)：20×10對照圖、三視窗圖鑑／GM、跨玩法與兩紀元轉場、原生入口及故障恢復JSON。
+- 正式Pages build與deploy均success。55檔（39原型＋16關鍵程式／manifest）HTTPS200、完整SHA與已驗收候選逐檔相同；三視窗圖鑑／GM、14個跨玩法及兩紀元實際連續懸賞在正式網址通過。
+- 本封箱只追加文件與證據，不改正式程式；文件提交不冒充另跑Runtime。其後最新main與Pages發布另按文件SHA核對。
+
+功能main同SHA工作流：
+
+| Workflow | 結果 |
+|---|---|
+| [Publication Dry Run (Stage 3)](https://github.com/franksky1207/rpg/actions/runs/40059110242) | success |
+| [Asset Version Manifest](https://github.com/franksky1207/rpg/actions/runs/40059110224) | success |
+| [Story Integrity](https://github.com/franksky1207/rpg/actions/runs/40059110194) | success |
+| [Publish Asset Audit (Stage 2)](https://github.com/franksky1207/rpg/actions/runs/40059110350) | success |
+| [HTML JS CSS Cache Version Guard](https://github.com/franksky1207/rpg/actions/runs/40059110360) | success |
+| [Galaxy 3D Button Browser Smoke](https://github.com/franksky1207/rpg/actions/runs/40059110271) | success |
+| [Equipment 2.5D GM Integration](https://github.com/franksky1207/rpg/actions/runs/40059110311) | success |
+| [GM 3D Test Center Browser](https://github.com/franksky1207/rpg/actions/runs/40059110250) | success |
+| [Publish Release Gate (Stage 4)](https://github.com/franksky1207/rpg/actions/runs/40059110257) | success |
+| [Equipment 2.5D Formal Battle](https://github.com/franksky1207/rpg/actions/runs/40059110269) | success |
+| [Publish Optimized GitHub Pages](https://github.com/franksky1207/rpg/actions/runs/40059110228) | success |
+| [Functional CI](https://github.com/franksky1207/rpg/actions/runs/40059110281) | success |
+| [Runtime Integrity](https://github.com/franksky1207/rpg/actions/runs/40059110404) | success |
+
+正式Pages單次冷／暖準備（含網路／準備，非FPS比較）：
+
+| 視窗 | 冷／暖 ms | 可見寬／高最大 |
+|---|---|---|
+| 390×844 | 15.0／1.2 | 79.297%／79.297% |
+| 1365×900 | 17.1／0.9 | 79.297%／79.297% |
+| 844×390 | 9.9／1.0 | 79.297%／79.297% |
+
+逐檔SHA、同SHA工作流、三視窗與壓力結果：[完整驗收JSON](BATCH20_REPAIR_RELEASE_ACCEPTANCE_2026-10-24.json)。CPU×4最終版本6000次sample p95=0.5ms，30同原型只解碼1次、100連戰／200快速切換、最終refs／pending／bytes歸零。
+
+iPhone Safari的長時間溫度／耗電／總記憶體、切App／鎖屏／OS終止及真帳號雲端往返仍待人工，不能由Chromium視窗／CPU降速推定通過。2MiB僅為怪物decoded bitmap預算，不是整頁或Safari總記憶體。

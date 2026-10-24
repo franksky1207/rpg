@@ -1,0 +1,1116 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "mainSha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+  "prHead": "22cbf2fccfeac6122f61c8f3dae8c6147c5f2629",
+  "pr": "https://github.com/franksky1207/rpg/pull/91",
+  "site": "https://franksky1207.github.io/rpg/",
+  "observedAtUTC": "2026-10-24T03:52:13.941373+00:00",
+  "prChecks": [
+    {
+      "name": "functional-ci-gate",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120766631476"
+    },
+    {
+      "name": "monster",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765474932"
+    },
+    {
+      "name": "combat",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765474923"
+    },
+    {
+      "name": "resource",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765474871"
+    },
+    {
+      "name": "gm",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765474849"
+    },
+    {
+      "name": "background",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765474843"
+    },
+    {
+      "name": "equipment",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765474837"
+    },
+    {
+      "name": "runtime-integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083329/job/120765409371"
+    },
+    {
+      "name": "gm-terminology",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083320/job/120765409280"
+    },
+    {
+      "name": "gm-published",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083368/job/120765409205"
+    },
+    {
+      "name": "classify",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083369/job/120765409142"
+    },
+    {
+      "name": "preflight",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083328/job/120765409112"
+    },
+    {
+      "name": "formal-player",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083332/job/120765409100"
+    },
+    {
+      "name": "runtime-browser-regression",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40058083329/job/120765409065"
+    }
+  ],
+  "mainWorkflows": [
+    {
+      "id": 40059110242,
+      "name": "Publication Dry Run (Stage 3)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110242"
+    },
+    {
+      "id": 40059110224,
+      "name": "Asset Version Manifest",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110224"
+    },
+    {
+      "id": 40059110194,
+      "name": "Story Integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110194"
+    },
+    {
+      "id": 40059110350,
+      "name": "Publish Asset Audit (Stage 2)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110350"
+    },
+    {
+      "id": 40059110360,
+      "name": "HTML JS CSS Cache Version Guard",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110360"
+    },
+    {
+      "id": 40059110271,
+      "name": "Galaxy 3D Button Browser Smoke",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110271"
+    },
+    {
+      "id": 40059110311,
+      "name": "Equipment 2.5D GM Integration",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110311"
+    },
+    {
+      "id": 40059110250,
+      "name": "GM 3D Test Center Browser",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110250"
+    },
+    {
+      "id": 40059110257,
+      "name": "Publish Release Gate (Stage 4)",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110257"
+    },
+    {
+      "id": 40059110269,
+      "name": "Equipment 2.5D Formal Battle",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110269"
+    },
+    {
+      "id": 40059110228,
+      "name": "Publish Optimized GitHub Pages",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110228"
+    },
+    {
+      "id": 40059110281,
+      "name": "Functional CI",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110281"
+    },
+    {
+      "id": 40059110404,
+      "name": "Runtime Integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+      "html_url": "https://github.com/franksky1207/rpg/actions/runs/40059110404"
+    }
+  ],
+  "pages": {
+    "passed": true,
+    "mainSha": "b6f5a671c50a30003423941e0ba0f9b31e4897eb",
+    "observedAtUTC": "2026-10-24T03:45:42.550533+00:00",
+    "site": "https://franksky1207.github.io/rpg/",
+    "tlsVerified": true,
+    "files": 55,
+    "manifestEntries": 461,
+    "rows": [
+      {
+        "path": "3d-test/gm-era-sprites.mjs",
+        "http": 200,
+        "bytes": 24932,
+        "sha256": "9fcede3549bfa14593e97078d29240509ee9868e75b1af6b036f9fccdd84bb3d",
+        "matches": true
+      },
+      {
+        "path": "3d-test/monster-actor.mjs",
+        "http": 200,
+        "bytes": 22934,
+        "sha256": "33b6400b45713a396dd97732574c492acf1ca9d150575260f4bb068d627ec88c",
+        "matches": true
+      },
+      {
+        "path": "3d-test/monster-formal-resolver.mjs",
+        "http": 200,
+        "bytes": 5845,
+        "sha256": "b3182d61b1fb56ae40a230f18b6e7196ea7828f2e9be2a3224e5709e3a427773",
+        "matches": true
+      },
+      {
+        "path": "3d-test/monster-sprite-pool.mjs",
+        "http": 200,
+        "bytes": 5765,
+        "sha256": "95390fa58183376b6535fdcb19b403fec6e9c00398e78586c4e4f791d9df1526",
+        "matches": true
+      },
+      {
+        "path": "3d-test/monster-sprites.mjs",
+        "http": 200,
+        "bytes": 1048995,
+        "sha256": "cd9fbbca1844ef2ec4f0a35dc6540c996d4565832f187482c92c8295bfacee22",
+        "matches": true
+      },
+      {
+        "path": "3d-test/t3b-formal-renderer.js",
+        "http": 200,
+        "bytes": 36905,
+        "sha256": "7942638060316352ac9a7d24fcdaae382a1872f402f0eba461a2a6e239994f5a",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/alternate/boss-au-01-v01.webp",
+        "http": 200,
+        "bytes": 208562,
+        "sha256": "c5c217d299b702c336a7d0f790886aa62718dea6e61fe29dec3104948aca7435",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/alternate/boss-au-02-v01.webp",
+        "http": 200,
+        "bytes": 203258,
+        "sha256": "60967b4b112ab6f4a4f7b2bd84140eca0b6800757d606a9bd6c89b1642043721",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/alternate/boss-au-03-v01.webp",
+        "http": 200,
+        "bytes": 194208,
+        "sha256": "51224c9ed2894864e01892b051965738b387d923cef1410ee990c4d2001d10aa",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/alternate/boss-au-04-v01.webp",
+        "http": 200,
+        "bytes": 277622,
+        "sha256": "c3717b9ff9ab7ef34eef90d61d0ed142fe0c11d9370a33f4635f6f6f9a34c0f4",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/alternate/boss-au-05-v01.webp",
+        "http": 200,
+        "bytes": 244246,
+        "sha256": "c2b606601cc3a1698a52d24279bb59bd814e699bf36357dfa60eafcbc23f7fdf",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/alternate/boss-au-06-v01.webp",
+        "http": 200,
+        "bytes": 267950,
+        "sha256": "bc9ebaad63ef95782c772f72f8bdd2db56e2a15521927f6b0b0ebdc9e0e60ff7",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/biological/beast-01.webp",
+        "http": 200,
+        "bytes": 102738,
+        "sha256": "25f799509743011aaa4d0514e9de07981d87276051a04a5b4bd5178e8c167b4b",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/biological/bio-02.webp",
+        "http": 200,
+        "bytes": 191300,
+        "sha256": "2315c417eb6e14ddeefcb7f2e80eacede6e7a0334d40d5d5f0fd0e2ecad699ce",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-c-01-v01.webp",
+        "http": 200,
+        "bytes": 86402,
+        "sha256": "4e7f57536f8d1de03efae8a0b8c4c93551cee843fe28c73092a5f512330ee5cc",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-c-02-v01.webp",
+        "http": 200,
+        "bytes": 235982,
+        "sha256": "dd7ef08b6812efa58b2a4c49c19f73e59ecd56ae300efd565a00ae4bd0880514",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-c-03-v01.webp",
+        "http": 200,
+        "bytes": 72172,
+        "sha256": "3ff6ddbcb85286251fa6bc916b21009dffc0141f4c958a35f0b24d291fadcbb2",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-01-v01.webp",
+        "http": 200,
+        "bytes": 224668,
+        "sha256": "cb8b54c688304d2b74999da3c1a05cc3ed28be64fe924bd514709f3dad243a71",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-02-v01.webp",
+        "http": 200,
+        "bytes": 316152,
+        "sha256": "a126d7dfa3968cbb5d296fad447077a6ad58c7799652b83467897813b4624ddc",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-03-v01.webp",
+        "http": 200,
+        "bytes": 263766,
+        "sha256": "8829a03f1f9376c4d85ef1850b18a2b06327e5a6f6ae89db2c7ea8178e1e2eb9",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-05-v01.webp",
+        "http": 200,
+        "bytes": 310582,
+        "sha256": "f26afd315cab5b3bf00628bbbc683989b136ea12ff70b4bbfe1eb02ee10bd445",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-06-v01.webp",
+        "http": 200,
+        "bytes": 114110,
+        "sha256": "8ad12a2400b606c50e54c19b205fd8f94ca80a30c8ad30377baa631007245bd8",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-07-v01.webp",
+        "http": 200,
+        "bytes": 320138,
+        "sha256": "d7712eeb98710f7e2a2d50875cc457dc72f3c483b21f418a6e2a0118ac3cddb2",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-08-v01.webp",
+        "http": 200,
+        "bytes": 127376,
+        "sha256": "e4af3ba99ebb64d6b5abe3c5704e93f09a1f37642357ecc88264d1fa669d68f0",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-h-10-v01.webp",
+        "http": 200,
+        "bytes": 115804,
+        "sha256": "1958c30ff60b0daf1c67e741cb12c5ec76195336ecc00128e209076ae851df2b",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/boss/boss-u-01-v01.webp",
+        "http": 200,
+        "bytes": 70734,
+        "sha256": "d08377240a9b980a04082a3aa4323f3a1e91030ee8f58cd6c204e318524901e8",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/core/core-01.webp",
+        "http": 200,
+        "bytes": 241636,
+        "sha256": "f6aa423e3b5a6e07deda2705698427b1a018c1acd7b9bc7d14649e5554ad1d38",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/core/core-03.webp",
+        "http": 200,
+        "bytes": 305476,
+        "sha256": "dee77c6332340ade3f2c265b32e065d4ea81f0b63fba1e95ec3227431fa7da97",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/creature/beast-03.webp",
+        "http": 200,
+        "bytes": 246048,
+        "sha256": "21e21590aeb7037e57985e7100ef5e3f1a5237113ef519694f6d84963b982bb9",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/energy/energy-01.webp",
+        "http": 200,
+        "bytes": 168438,
+        "sha256": "9b90dddd04eb58af93868b03be2c2b48bffbf550789adf55529451183fe4b477",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/humanoid/cmd-01.webp",
+        "http": 200,
+        "bytes": 181120,
+        "sha256": "c9e919910bc80bdd0a51c72e3e6576027506db09a615c4db044d1deab8524d35",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/humanoid/cmd-03.webp",
+        "http": 200,
+        "bytes": 277890,
+        "sha256": "95725d758dceed5c47c37366324853953ca3d5a3c128857d0dbada499428d096",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/humanoid/hm-01.webp",
+        "http": 200,
+        "bytes": 75458,
+        "sha256": "8cf609169310d0e81a244675fe9e1612b6932285a31d3fd138d229cf7bf91b28",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/humanoid/hm-02.webp",
+        "http": 200,
+        "bytes": 108680,
+        "sha256": "222faefcec6533414e10f52dab148340d71d3fab2633875fc60942a15dd2278d",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/humanoid/hm-04.webp",
+        "http": 200,
+        "bytes": 129048,
+        "sha256": "e92605f9c04f611108a2c6bcff6dbeff73f937b5d39c4b5ca1f0e97dc2234c91",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/mechanical/dr-02.webp",
+        "http": 200,
+        "bytes": 144238,
+        "sha256": "3b17ac4bfd878daa2ddd535a034865031f94bf0e4cc960947ade556d1f41ee2e",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/mechanical/mech-01.webp",
+        "http": 200,
+        "bytes": 238054,
+        "sha256": "5cc137aad2ead71073aedc567ae13a56dae00d458c7560e3ce31642579f8b166",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/mechanical/mech-02.webp",
+        "http": 200,
+        "bytes": 192414,
+        "sha256": "9bb4cc17c794bfd53b7d8384132fa687ca952721e71d18f23ea3f988528e734c",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/mechanical/mech-03.webp",
+        "http": 200,
+        "bytes": 271572,
+        "sha256": "3064d8f3c79d1f38340a37204b98581769c9b238cc713b20f73fe41a74b9ce32",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/mechanical/veh-02.webp",
+        "http": 200,
+        "bytes": 233024,
+        "sha256": "e1d15a044c5af2a8e87ee1c278725d361204501902926dfedee3c8281ff6887a",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/starship/ship-01.webp",
+        "http": 200,
+        "bytes": 111612,
+        "sha256": "d9e44757158ec1b87a8bae5acd4467c6564d0573935e3059ce7d3fe66effac6b",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/starship/ship-04.webp",
+        "http": 200,
+        "bytes": 156170,
+        "sha256": "250600278e6d3f1924b7dd96b0d5e97402f35c2199d7bdc0ca4b65ac790c14a0",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/structure/fort-01.webp",
+        "http": 200,
+        "bytes": 175996,
+        "sha256": "f58b4e47af146c2e3deaa400cb401dd99781a7a2157cc47a61f2022a8f390b1b",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/structure/fort-03.webp",
+        "http": 200,
+        "bytes": 198470,
+        "sha256": "ea98eca12e63e0b7d4b1b418342ae9c08be7b1663b459672e5c7579a0c57f68e",
+        "matches": true
+      },
+      {
+        "path": "assets/monsters/v1/void/void-phantom-v01.webp",
+        "http": 200,
+        "bytes": 213902,
+        "sha256": "6b52b6a956847f0ce77c0043187dbc3a85b6e87e12f2026476246187ff8c133d",
+        "matches": true
+      },
+      {
+        "path": "gmdata.js",
+        "http": 200,
+        "bytes": 7795,
+        "sha256": "ef76b028bbabeca529fafb58fd321268a19b10211e2f19b877b6f2179b390c4f",
+        "matches": true
+      },
+      {
+        "path": "index.html",
+        "http": 200,
+        "bytes": 48205,
+        "sha256": "67939e53bb9d1f1673943a593c23f416339e3bc5716f917dd4df95e4f42357ff",
+        "matches": true
+      },
+      {
+        "path": "monstercodex.js",
+        "http": 200,
+        "bytes": 12277,
+        "sha256": "3f2bd891b1a1cce51eca8d6d501e83b566323f650378e91041fb54fb302b6cba",
+        "matches": true
+      },
+      {
+        "path": "monstercodexdata.js",
+        "http": 200,
+        "bytes": 791206,
+        "sha256": "fb322878f0e14216d03957106b6efda4f1fe13e084a6d30566a4ed0a7e128e7f",
+        "matches": true
+      },
+      {
+        "path": "monstercodeximage.mjs",
+        "http": 200,
+        "bytes": 2230,
+        "sha256": "5bbb4a18b3acd4c7ec9c7621710ffb8c779f9f5223e9fe9d1af522ac3841d8a7",
+        "matches": true
+      },
+      {
+        "path": "resource-cache-client.js",
+        "http": 200,
+        "bytes": 5634,
+        "sha256": "4c24a4913d265e1aab4256c8abb6003e506b1ffb0fd55ca0a358c861168a5fa3",
+        "matches": true
+      },
+      {
+        "path": "resource-cache-sw.js",
+        "http": 200,
+        "bytes": 11504,
+        "sha256": "bd2970f62331d4c2fc84ec5f8cee17e08e85924a2d87eb2510ac40e3817fa271",
+        "matches": true
+      },
+      {
+        "path": "resource-manifest.json",
+        "http": 200,
+        "bytes": 29589,
+        "sha256": "642fc7e03ce32d3003cb9d9d9ab8bf80f681af7c7e5fb188ae234af23ade3a3d",
+        "matches": true
+      },
+      {
+        "path": "dungeonbounty.js",
+        "http": 200,
+        "bytes": 32090,
+        "sha256": "b404cb624bf4914c32a41213ebaf4a2480aa2a48907f258ddbbad6195923435e",
+        "matches": true
+      },
+      {
+        "path": "thirdworldarena.js",
+        "http": 200,
+        "bytes": 30844,
+        "sha256": "5235ba635c9735b56de629f9ebefbb516a637cee4637b46adc02d580961a00fc",
+        "matches": true
+      }
+    ]
+  },
+  "phase1": {
+    "identities": 1000,
+    "cases": 3000,
+    "success": 3000,
+    "failed": 0,
+    "minRatio": 1.750138741579113,
+    "maxRatio": 1.7502676859168762,
+    "maxRatioError": 0.0002643150546097761,
+    "groups": {
+      "both/alternate-universe-boss": {
+        "cases": 3000,
+        "success": 3000,
+        "failed": 0,
+        "formalNA": 0
+      }
+    }
+  },
+  "liveCodex": {
+    "passed": true,
+    "realDevice": false,
+    "views": [
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "progress": {
+          "encountered": 0,
+          "total": 905,
+          "identities": 1705
+        },
+        "processed": 39,
+        "maxWidth": 0.79296875,
+        "maxHeight": 0.79296875,
+        "coldMs": 15,
+        "warmMs": 1.199999999254942,
+        "stats": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 2,
+          "loads": 41,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        },
+        "gmSaveCalls": 2
+      },
+      {
+        "viewport": {
+          "width": 1365,
+          "height": 900
+        },
+        "progress": {
+          "encountered": 0,
+          "total": 905,
+          "identities": 1705
+        },
+        "processed": 39,
+        "maxWidth": 0.79296875,
+        "maxHeight": 0.79296875,
+        "coldMs": 17.09999999962747,
+        "warmMs": 0.8999999994412065,
+        "stats": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 2,
+          "loads": 41,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        },
+        "gmSaveCalls": 2
+      },
+      {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "progress": {
+          "encountered": 0,
+          "total": 905,
+          "identities": 1705
+        },
+        "processed": 39,
+        "maxWidth": 0.79296875,
+        "maxHeight": 0.79296875,
+        "coldMs": 9.899999999441206,
+        "warmMs": 1,
+        "stats": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 2,
+          "loads": 41,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        },
+        "gmSaveCalls": 2
+      }
+    ]
+  },
+  "liveVisualPreparation": {
+    "passed": true,
+    "realDevice": false,
+    "cases": [
+      {
+        "id": "galaxy-map-001",
+        "world": 1,
+        "mode": "main",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 1,
+          "loads": 1,
+          "images": [
+            {
+              "id": "hm-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "universe-boss-001",
+        "world": 2,
+        "mode": "main",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 2,
+          "loads": 2,
+          "images": [
+            {
+              "id": "cmd-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "higher-dimensional-boss-01",
+        "world": 3,
+        "mode": "main",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [
+            {
+              "id": "boss-h-01-v01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "special-gold_slime",
+        "world": 1,
+        "mode": "special",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 4,
+          "loads": 4,
+          "images": [
+            {
+              "id": "energy-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "special-gold_slime",
+        "world": 2,
+        "mode": "special",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 5,
+          "loads": 5,
+          "images": [
+            {
+              "id": "energy-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "galaxy-bounty-01",
+        "world": 1,
+        "mode": "bounty",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 6,
+          "loads": 6,
+          "images": [
+            {
+              "id": "hm-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "universe-bounty-01",
+        "world": 2,
+        "mode": "bounty",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 7,
+          "loads": 7,
+          "images": [
+            {
+              "id": "hm-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "galaxy-arena-01",
+        "world": 1,
+        "mode": "arena",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 8,
+          "loads": 8,
+          "images": [
+            {
+              "id": "mech-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "universe-arena-01",
+        "world": 2,
+        "mode": "arena",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 9,
+          "loads": 9,
+          "images": [
+            {
+              "id": "mech-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 1
+        }
+      },
+      {
+        "id": "void-regular-01",
+        "world": 1,
+        "mode": "void",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 10,
+          "loads": 10,
+          "images": [
+            {
+              "id": "beast-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "galaxy-calamity-01",
+        "world": 1,
+        "mode": "calamity",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 11,
+          "loads": 11,
+          "images": [
+            {
+              "id": "bio-02",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "universe-calamity-01",
+        "world": 2,
+        "mode": "calamity",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 12,
+          "loads": 12,
+          "images": [
+            {
+              "id": "energy-01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "alternate-depth-0001",
+        "world": 3,
+        "mode": "alternate",
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 13,
+          "loads": 13,
+          "images": [
+            {
+              "id": "void-phantom-v01",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      },
+      {
+        "id": "higher-dimensional-boss-01",
+        "world": 3,
+        "mode": "arena",
+        "stats": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 18,
+          "loads": 15,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    ],
+    "knownNextReused": true,
+    "warmLoads": 17,
+    "after": {
+      "entries": 0,
+      "bytes": 0,
+      "limit": 2097152,
+      "hits": 23,
+      "loads": 17,
+      "images": [],
+      "pending": 0,
+      "refs": 0,
+      "closed": false,
+      "queued": 0
+    }
+  },
+  "liveBountyPreparation": {
+    "passed": true,
+    "realDevice": false,
+    "rows": [
+      {
+        "world": 1,
+        "name": "武裝逃逸者",
+        "phase": "transition"
+      },
+      {
+        "world": 2,
+        "name": "界航偷渡者",
+        "phase": "transition"
+      }
+    ]
+  },
+  "pressure": {
+    "passed": true,
+    "realDevice": false,
+    "cpuThrottle": 4,
+    "samePrototypeBattles": 30,
+    "samePrototypeDecodes": 1,
+    "repeatedBattles": 100,
+    "rapidSwitches": 200,
+    "monster": {
+      "entries": 0,
+      "bytes": 0,
+      "limit": 2097152,
+      "hits": 172,
+      "loads": 290,
+      "images": [],
+      "pending": 0,
+      "refs": 0,
+      "closed": false,
+      "queued": 0
+    },
+    "player": {
+      "entries": 0,
+      "bytes": 0,
+      "limit": 16777216,
+      "hits": 330,
+      "loads": 1,
+      "pending": 0,
+      "refs": 0,
+      "closed": false
+    },
+    "samplingCpu": {
+      "samples": 6000,
+      "p50": 0,
+      "p95": 0.5,
+      "max": 10.200000000186265
+    },
+    "hardwareThermalsMeasured": false,
+    "heap": {
+      "before": {
+        "usedSize": 699868,
+        "totalSize": 1310720,
+        "embedderHeapUsedSize": 584160,
+        "backingStorageSize": 6
+      },
+      "after": {
+        "usedSize": 4062748,
+        "totalSize": 4751360,
+        "embedderHeapUsedSize": 532192,
+        "backingStorageSize": 1102511
+      }
+    }
+  },
+  "manualRemaining": [
+    "iPhone Safari long-duration heat, battery and total memory",
+    "iPhone app switching / lock / OS termination",
+    "real-account cloud round-trip was not performed"
+  ]
+}
