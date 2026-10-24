@@ -14,6 +14,7 @@ function original(p,encoding){
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1&storyBackground=20261024','monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1'));
 
  // The codex navigation cache token must be normalized before the Mirror/Void exact HTML digest.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&codexNavVisible=20261024',''));
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&codexNav=20261024',''));
 
  // The independent Mirror/Void repair is exact-registered above the sealed links.
@@ -24,7 +25,7 @@ function original(p,encoding){
  const repair=require('./three-ui-approved-sources.json'),registered=repair.files[p];
  if(p==='monstercodex.js'){
   // Explicitly approved codex navigation addition: fail closed on every other edit.
-  assert.equal(cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim(),'0e5a90a9a5afa3d19df1fd6116e7a38e7cd53207','unregistered codex navigation source edit');
+  assert.equal(cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim(),'0107af3bc334288acaa45fb7fbfc1e4b314b426e','unregistered codex navigation source edit');
   bytes=at('5eb831d7f720d6e89e8c85ca23bfd724c96820f3',p);
  }
  if(p==='civilizationheritage.js')bytes=Buffer.from(bytes.toString().replace('<section class="calamity-shell calamity-home">','<section class="calamity-shell">'));

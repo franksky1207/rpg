@@ -9,7 +9,8 @@
  .codex-list>li{padding:8px 0;border-bottom:1px solid #ffffff18;display:flex;gap:8px;align-items:center;justify-content:space-between}
  .codex-list>li>div{min-width:0;overflow-wrap:anywhere}
  .codex-list .btn{flex-shrink:0}
- .codex-detail-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:18px}
+ .codex-detail-toolbar{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+ .codex-detail-nav{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
  .codex-detail-nav .btn{min-width:104px}
  .codex-detail-nav span{min-width:58px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
  @media(max-width:420px){.codex-detail-nav{gap:6px}.codex-detail-nav .btn{min-width:0;flex:1;padding-inline:6px}}
@@ -117,8 +118,8 @@
   const header=`<section class="function-page story-record-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card"><h2>戰線紀錄</h2>${window.frontlineRecordTabsHtml()}<p>怪物圖鑑・已遭遇 ${progress.encountered} / ${progress.total}。正式遇敵即永久解鎖，無須勝利。</p><label>分類 <select onchange="selectMonsterCodexCategory(this.value)">${categoryNames.map(c=>`<option ${c===category?'selected':''}>${esc(c)}</option>`).join('')}</select></label></div>`;
   if(r&&unlocked(r,known)){
    const siblings=detailSiblings(r,detailWorld,known),position=siblings.findIndex(x=>x.id===r.id);
-   const navigation=`<nav class="codex-detail-nav" aria-label="已解鎖怪物瀏覽"><button type="button" class="btn" onclick="moveMonsterCodexDetail(-1)" ${position<=0?'disabled':''}>← 上一隻</button><span aria-live="polite">${position+1} / ${siblings.length}</span><button type="button" class="btn" onclick="moveMonsterCodexDetail(1)" ${position<0||position>=siblings.length-1?'disabled':''}>下一隻 →</button></nav>`;
-   return header+`<article class="card"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p><div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div>${navigation}</article></section>`;
+   const navigation=`<div class="codex-detail-nav" role="group" aria-label="已解鎖怪物瀏覽"><button type="button" class="btn" onclick="moveMonsterCodexDetail(-1)" ${position<=0?'disabled':''}>← 上一隻</button><span aria-live="polite">${position+1} / ${siblings.length}</span><button type="button" class="btn" onclick="moveMonsterCodexDetail(1)" ${position<0||position>=siblings.length-1?'disabled':''}>下一隻 →</button></div>`;
+   return header+`<article class="card"><div class="codex-detail-toolbar"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button>${navigation}</div><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p><div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div></article></section>`;
   }
   return header+`<div class="card">${groupsHtml(known)}</div></section>`;
  };
