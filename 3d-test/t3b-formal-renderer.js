@@ -207,7 +207,7 @@ else scheduleWarm();
 
 async function prepareMonsterVisual(identity,{signal,priority='next'}={}){
  try{
-  if(signal?.aborted||global.document?.hidden||global.navigator?.connection?.saveData)return false;
+  if(signal?.aborted||global.document?.hidden||global.navigator?.connection?.saveData||global.CivilizationPresentationMode?.combatAnimationEnabled?.()===false||global.document?.body?.classList.contains('main-minimal-mode-open')||global.gmBackgroundBattleEnabled?.()===true)return false;
   const [{resolveFormalMonster},{getSharedMonsterPool}]=await Promise.all([import('./monster-formal-resolver.mjs?v=20261024-au-ten-stages1'),import('./monster-sprite-pool.mjs?v=20261024-repair2')]);
   if(signal?.aborted)return false;
   const approved=resolveFormalMonster(identity);if(!approved)return false;
@@ -215,9 +215,16 @@ async function prepareMonsterVisual(identity,{signal,priority='next'}={}){
   return await spriteMonsterPool.prepare(approved.asset.assetId,{signal,priority});
  }catch(_){return false;}
 }
-async function prepareKnownNext(mapping,signal){
- // Only the two original three-stage arenas have a fixed next visual identity.
- // Bounties, special encounters and high-dimensional projections may be random.
+async function prepareKnownNext(mapping,signal,bundle){
+ if(bundle.enemyMode!=='arena')return false;
+ if(bundle.enemyWorld===3){
+  // The owner already rolled the whole lineup. Read it without rolling/building
+  // enemies or touching a battle, reward, progress or settlement owner.
+  const snapshot=global.getThirdWorldArenaRuntimeState?.({visualOnly:true}),round=snapshot?.round,stage=Number(bundle.enemyLocation);
+  if(snapshot?.status!=='combat'||!Number.isInteger(stage)||stage<0||stage>=2||round?.stageIndex!==stage||round.enemy?.higherDimensionalBossId!==mapping.id||round.lineup?.[stage]?.bossId!==mapping.id)return false;
+  const next=round.lineup[stage+1];if(!next)return false;
+  return prepareMonsterVisual({world:3,mode:'arena',id:next.bossId,name:next.name,kind:'dungeon-arena-third-world',location:String(stage+1)},{signal,priority:'next'});
+ }
  if(mapping?.mode!=='arena'||!['galaxy','universe'].includes(mapping.world)||mapping.arenaStage>=2)return false;
  const {mappings}=await import('./monster-sprites.mjs?v=20261024-au-ten-stages1');
  const next=Object.values(mappings).find(r=>r.mode==='arena'&&r.world===mapping.world&&r.arenaStage===mapping.arenaStage+1);
@@ -286,7 +293,7 @@ async function createSuit(options,bundle){
    if(closed||signal.aborted||!isCurrent())return;
    const actor=await new MonsterActor(pool,approved.asset.assetId,{signal:loading.signal,identity:approved.mapping.id,usage:'formal',tier:'medium'}).init();
    if(closed||signal.aborted||!isCurrent()){actor.dispose();return;}
-   monsterActor=actor;void prepareKnownNext(approved.mapping,signal);actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
+   monsterActor=actor;void prepareKnownNext(approved.mapping,signal,bundle);actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
    host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
    layoutKey='';layoutSprites();

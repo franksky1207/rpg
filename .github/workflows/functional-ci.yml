@@ -114,6 +114,7 @@ jobs:
           node tests/runtime/batch20-codex-browser.cjs
           node tests/runtime/batch20-repair-browser.cjs
           node tests/runtime/batch20-visual-preparation-browser.cjs
+          node tests/runtime/batch20-bounty-preparation-browser.cjs
           node tests/runtime/batch20-save-guide-browser.cjs
           node tests/runtime/batch20-cloud-browser.cjs
           node tests/runtime/batch16-mirror-browser.cjs
@@ -132,6 +133,7 @@ jobs:
             /tmp/batch20-alternate-ten-stages.png
             /tmp/batch20-repair-browser.json
             /tmp/batch20-visual-preparation.json
+            /tmp/batch20-bounty-preparation.json
             /tmp/batch18-native-live.json
             /tmp/batch18-monster-recovery.json
           retention-days: 14
