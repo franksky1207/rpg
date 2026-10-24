@@ -19,7 +19,7 @@ function placement(bitmap,asset){
  scratch.width=scratch.height=1;
  if(placements.size>=39)placements.delete(placements.keys().next().value);placements.set(key,result);return result;
 }
-export async function drawCodexMonster(canvas,row,{signal}={}){
+export async function drawCodexMonster(canvas,row,{signal,bodyOnly=false}={}){
  const mapping=findMapping(row.id)||findMapping(row.id.replace(/^projection-/,''));
  const asset=findAsset(mapping?.assetId);if(!mapping||!asset)throw Error('monster-unavailable');
  let lease;const manager=getMonsterAppearanceManager();
@@ -29,7 +29,7 @@ export async function drawCodexMonster(canvas,row,{signal}={}){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const appearance=lease.spec;canvas.style.filter='none';canvas.dataset.appearance=appearanceFingerprint(appearance);
   const prepared=document.createElement('canvas');prepared.width=prepared.height=512;
-  const source=lease.source;
+  const source=bodyOnly?lease.body:lease.source;
   prepared.getContext('2d').drawImage(source,p.x,p.y,p.size,p.size);
   ctx.drawImage(prepared,p.shiftX,p.shiftY);prepared.width=prepared.height=1;
   canvas.dataset.palette=mapping.visual.palette;

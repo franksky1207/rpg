@@ -26,6 +26,6 @@
 
 完整新外觀冷製作有額外調色、WebP與靜態效果預繪成本；部分首次項目較慢。熱命中圖鑑約1ms、GM重播約1ms，跳過重複製作。快取只保留近期2～4套；低記憶體裝置取消推測預繪。
 
-發布包約48.905→50.205MB，+5正式模組，無新增895張成品圖。持久白名單7模組約1.31MB原始資料／152KiB gzip估算；執行期Canvas快取4～8MiB／window，加原型解碼最多2MiB與活動畫布；不是整個瀏覽器程序記憶體。JS heap與命中／製作次數詳見JSON。
+發布包約48.905→50.202MB，+5正式模組，無新增895張成品圖。持久白名單7模組約1.31MB原始資料／152KiB gzip估算；執行期Canvas快取4～8MiB／window，加原型解碼最多2MiB與活動畫布；不是整個瀏覽器程序記憶體。JS heap與命中／製作次數詳見JSON。
 
 [整合前JSON](performance-before.json) · [整合後JSON](performance-after.json) · [模組成本](module-cost.json) · [真實SW清除／離線／恢復](cache.json)
