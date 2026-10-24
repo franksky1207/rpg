@@ -11,7 +11,7 @@
     },
     "3d-test/monster-actor.mjs": {
       "beforeSha256": "33b6400b45713a396dd97732574c492acf1ca9d150575260f4bb068d627ec88c",
-      "afterSha256": "e3c8326a58ba84e10e1b9a85b5a21907e867ab84b216dd8a5e1edf084622ba51"
+      "afterSha256": "9fca163bb1ed8004c2e74d25cc16ebc1151181e2c4323749ef67a5a86fcea6e6"
     },
     "3d-test/t3b-formal-renderer.js": {
       "beforeSha256": "2cd7f3cc05ee6676aa3d9d40cfd7a6737faa1f5ab67ccb4ff3c4c44659d403de",
@@ -31,16 +31,17 @@
     },
     "monstercodeximage.mjs": {
       "beforeSha256": "5bbb4a18b3acd4c7ec9c7621710ffb8c779f9f5223e9fe9d1af522ac3841d8a7",
-      "afterSha256": "9d82e4c129a124bb39a08b258ac4467349511ce1febc1ceab27dfb45a7dc6830"
+      "afterSha256": "2e4ecd2d912ff6e6b0bdfd998ea37f273b77c2f5f9e2d575cb8fcac6fff5e867"
     }
   },
   "newFiles": {
-    "3d-test/monster-appearance.mjs": "dedb96bcf3485f32bfb0bf6ad4e431a8ab717606da2fdd96fcf55d2001eb3aed",
+    "3d-test/monster-appearance.mjs": "0915e08d228336d49e62f5a8b94ae71b21e284f14ee6183b217868ff29fff5b1",
     "3d-test/monster-appearance-designs.mjs": "bc7ab4cf1a1bcf1f3ecf45f2935de6cdcc14cc375c2c28156fed23efc5b8c000",
     "3d-test/monster-appearance-review.html": "eb2a8bbcd161b70fac172438f163269981f3df48845a7b6ad5167aa0c16807bf",
     "3d-test/monster-appearance-review.mjs": "d3af236c331f489d9ded2b1d4491d0462ff3b0e116dd989ebc35de7c2e5903d6",
     "3d-test/monster-art-samples.mjs": "d7f805f168887f36dd9ef2f05dfd310f4da9d7b5f0ce5b22946f116275965aa5",
-    "3d-test/monster-art-samples-review.mjs": "7cdd2f500c40000e670022aaaf07f69d8b7a279653442c4359bd9e4527ddacf9",
-    "3d-test/monster-art-samples.html": "54eace7421748c2713b29b8feb06fd22387b48db6cc9e7d57b9d8650b340204b"
+    "3d-test/monster-art-samples-review.mjs": "acd33889eaf119bb34b541ebae8a3194025efd04ac715ddba05f2beef71ada6c",
+    "3d-test/monster-art-samples.html": "a1d81b3cb18b006336e54e640a799ac539695a038391432d438d44b2ae2ebc7b",
+    "3d-test/monster-art-samples-v2.mjs": "ed1013923eb59e83eaf90141877303e3d32bc91def2aed430ed6582b2dfa7c00"
   }
 }

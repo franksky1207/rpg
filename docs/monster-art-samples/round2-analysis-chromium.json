@@ -1,0 +1,329 @@
+{
+  "records": [
+    {
+      "id": "galaxy-map-003",
+      "assetId": "hm-01",
+      "retained": true,
+      "total": 38837.313725474414,
+      "eligible": 28515.133333315065,
+      "firstChanged": 0,
+      "secondChanged": 0,
+      "changedVsFirst": 0,
+      "primaryChanged": 0,
+      "opaqueLumaMax": 0,
+      "formulaLumaMax": 0,
+      "groups": {
+        "neutral": 83.01,
+        "warm": 6.43,
+        "red": 0.04,
+        "blue-violet": 10.52,
+        "other": 0
+      }
+    },
+    {
+      "id": "galaxy-map-009",
+      "assetId": "mech-02",
+      "retained": false,
+      "total": 98469.1607844397,
+      "eligible": 59645.12156865828,
+      "firstChanged": 13.28,
+      "secondChanged": 46.15,
+      "changedVsFirst": 50.37,
+      "primaryChanged": 39.92,
+      "opaqueLumaMax": 1.194199999999995,
+      "formulaLumaMax": 0.4843999999999937,
+      "groups": {
+        "neutral": 70.43,
+        "warm": 28.21,
+        "blue-violet": 0.47,
+        "other": 0.03,
+        "red": 0.85
+      }
+    },
+    {
+      "id": "galaxy-map-025",
+      "assetId": "bio-02",
+      "retained": true,
+      "total": 76036.63921572856,
+      "eligible": 74735.88235298119,
+      "firstChanged": 83.73,
+      "secondChanged": 83.73,
+      "changedVsFirst": 0,
+      "primaryChanged": 0,
+      "opaqueLumaMax": 0,
+      "formulaLumaMax": 0,
+      "groups": {
+        "red": 70.43,
+        "neutral": 2.4,
+        "warm": 18.36,
+        "other": 5.33,
+        "blue-violet": 3.48
+      }
+    },
+    {
+      "id": "universe-boss-001",
+      "assetId": "cmd-01",
+      "retained": false,
+      "total": 78045.21568634556,
+      "eligible": 58215.26274512047,
+      "firstChanged": 6.12,
+      "secondChanged": 66.82,
+      "changedVsFirst": 67.73,
+      "primaryChanged": 50.46,
+      "opaqueLumaMax": 1.183400000000006,
+      "formulaLumaMax": 0.49200000000000443,
+      "groups": {
+        "warm": 38.57,
+        "red": 15.31,
+        "neutral": 34.43,
+        "blue-violet": 11.49,
+        "other": 0.2
+      }
+    },
+    {
+      "id": "universe-boss-011",
+      "assetId": "cmd-01",
+      "retained": false,
+      "total": 78045.21568634556,
+      "eligible": 58215.26274512047,
+      "firstChanged": 22.03,
+      "secondChanged": 59.68,
+      "changedVsFirst": 67.55,
+      "primaryChanged": 47.09,
+      "opaqueLumaMax": 1.1625999999999976,
+      "formulaLumaMax": 0.49799999999999045,
+      "groups": {
+        "warm": 38.57,
+        "red": 15.31,
+        "neutral": 34.43,
+        "blue-violet": 11.49,
+        "other": 0.2
+      }
+    },
+    {
+      "id": "galaxy-calamity-01",
+      "assetId": "bio-02",
+      "retained": true,
+      "total": 76036.63921572856,
+      "eligible": 74735.88235298119,
+      "firstChanged": 82.73,
+      "secondChanged": 82.73,
+      "changedVsFirst": 0,
+      "primaryChanged": 0,
+      "opaqueLumaMax": 0,
+      "formulaLumaMax": 0,
+      "groups": {
+        "red": 70.43,
+        "neutral": 2.4,
+        "warm": 18.36,
+        "other": 5.33,
+        "blue-violet": 3.48
+      }
+    },
+    {
+      "id": "universe-calamity-01",
+      "assetId": "energy-01",
+      "retained": true,
+      "total": 52921.88235291855,
+      "eligible": 51421.10588233104,
+      "firstChanged": 94.54,
+      "secondChanged": 94.54,
+      "changedVsFirst": 0,
+      "primaryChanged": 0,
+      "opaqueLumaMax": 0,
+      "formulaLumaMax": 0,
+      "groups": {
+        "blue-violet": 98.17,
+        "warm": 0,
+        "neutral": 1.52,
+        "other": 0.31,
+        "red": 0
+      }
+    },
+    {
+      "id": "higher-dimensional-boss-01",
+      "assetId": "boss-h-01-v01",
+      "retained": false,
+      "total": 77029.89019613435,
+      "eligible": 69526.04705885632,
+      "firstChanged": 23.51,
+      "secondChanged": 79,
+      "changedVsFirst": 78.39,
+      "primaryChanged": 61.12,
+      "opaqueLumaMax": 1.2934000000000054,
+      "formulaLumaMax": 0.49379999999999313,
+      "groups": {
+        "red": 0.9,
+        "warm": 45.69,
+        "neutral": 23.05,
+        "other": 0.1,
+        "blue-violet": 30.26
+      }
+    },
+    {
+      "id": "alternate-depth-0026",
+      "assetId": "core-03",
+      "retained": false,
+      "total": 128231.6078433382,
+      "eligible": 104098.46274523706,
+      "firstChanged": 36.22,
+      "secondChanged": 71.12,
+      "changedVsFirst": 76.46,
+      "primaryChanged": 43.32,
+      "opaqueLumaMax": 1.2189999999999976,
+      "formulaLumaMax": 0.4980000000000011,
+      "groups": {
+        "neutral": 33.13,
+        "blue-violet": 51.37,
+        "warm": 14.51,
+        "red": 0.82,
+        "other": 0.17
+      }
+    },
+    {
+      "id": "alternate-depth-0191",
+      "assetId": "core-03",
+      "retained": false,
+      "total": 128231.6078433382,
+      "eligible": 104098.46274523706,
+      "firstChanged": 39.95,
+      "secondChanged": 71.14,
+      "changedVsFirst": 72.84,
+      "primaryChanged": 42.33,
+      "opaqueLumaMax": 1.2319999999999993,
+      "formulaLumaMax": 0.49620000000001596,
+      "groups": {
+        "neutral": 33.13,
+        "blue-violet": 51.37,
+        "warm": 14.51,
+        "red": 0.82,
+        "other": 0.17
+      }
+    },
+    {
+      "id": "alternate-depth-0201",
+      "assetId": "core-03",
+      "retained": false,
+      "total": 128231.6078433382,
+      "eligible": 104098.46274523706,
+      "firstChanged": 36.65,
+      "secondChanged": 70.91,
+      "changedVsFirst": 73.56,
+      "primaryChanged": 44.38,
+      "opaqueLumaMax": 1.2859999999999978,
+      "formulaLumaMax": 0.4970000000000141,
+      "groups": {
+        "neutral": 33.13,
+        "blue-violet": 51.37,
+        "warm": 14.51,
+        "red": 0.82,
+        "other": 0.17
+      }
+    },
+    {
+      "id": "special-gold_slime",
+      "assetId": "energy-01",
+      "retained": true,
+      "total": 52921.88235291855,
+      "eligible": 51421.10588233104,
+      "firstChanged": 95.22,
+      "secondChanged": 95.22,
+      "changedVsFirst": 0,
+      "primaryChanged": 0,
+      "opaqueLumaMax": 0,
+      "formulaLumaMax": 0,
+      "groups": {
+        "blue-violet": 98.17,
+        "warm": 0,
+        "neutral": 1.52,
+        "other": 0.31,
+        "red": 0
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "a": "galaxy-map-025",
+      "b": "galaxy-calamity-01",
+      "mean": 27.786618316268566,
+      "changedFraction": 0.7491467576791809
+    },
+    {
+      "a": "universe-boss-001",
+      "b": "universe-boss-011",
+      "mean": 22.69313156440022,
+      "changedFraction": 0.6364013266998342
+    },
+    {
+      "a": "universe-calamity-01",
+      "b": "special-gold_slime",
+      "mean": 78.83583959899747,
+      "changedFraction": 0.9805764411027569
+    },
+    {
+      "a": "alternate-depth-0026",
+      "b": "alternate-depth-0191",
+      "mean": 26.53716188098212,
+      "changedFraction": 0.750187265917603
+    },
+    {
+      "a": "alternate-depth-0026",
+      "b": "alternate-depth-0201",
+      "mean": 31.929837702871332,
+      "changedFraction": 0.8082397003745319
+    },
+    {
+      "a": "alternate-depth-0191",
+      "b": "alternate-depth-0201",
+      "mean": 23.618476903870146,
+      "changedFraction": 0.746441947565543
+    }
+  ],
+  "stats": {
+    "entries": 2,
+    "bytes": 2097152,
+    "limit": 2097152,
+    "hits": 28,
+    "loads": 8,
+    "images": [
+      {
+        "id": "core-03",
+        "decoded": true,
+        "refs": 0
+      },
+      {
+        "id": "energy-01",
+        "decoded": true,
+        "refs": 0
+      }
+    ],
+    "pending": 0,
+    "refs": 0,
+    "closed": false
+  },
+  "disposed": {
+    "entries": 0,
+    "bytes": 0,
+    "limit": 2097152,
+    "hits": 28,
+    "loads": 8,
+    "images": [],
+    "pending": 0,
+    "refs": 0,
+    "closed": true
+  },
+  "prepareMs": [
+    1.8000000000465661,
+    40.800000000046566,
+    26.800000000046566,
+    45.89999999990687,
+    43.800000000046566,
+    26.5,
+    20,
+    45.300000000046566,
+    59.800000000046566,
+    63.5999999998603,
+    56.800000000046566,
+    24.399999999906868
+  ]
+}
