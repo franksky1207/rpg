@@ -4,7 +4,9 @@ const cp=require("node:child_process");
 const assert=require("node:assert/strict");
 const crypto=require("node:crypto");
 const base="5bfb00a44fd18263e3fe79581255871024f4396c";
-const decoupled="27ed18bbcb0f1e8d0af5420ecf132fb9fa0e5873";
+// These retained tool/registry paths do not exist at the retired 27ed18bb tree.
+// Seal their exact approved main bytes; earlier gameplay-owner locks stay intact.
+const decoupled="658d5db2c14cd10598e648e2fafdfe3ad75f80dd";
 const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
 const historic=(ref,p)=>cp.execFileSync("git",["show",ref+":"+p]);
 const actual=p=>require("./pr48-presentation-baseline.cjs").original(p);
