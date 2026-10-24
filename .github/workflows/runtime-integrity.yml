@@ -290,6 +290,7 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/runtime/monster-art-samples-browser.cjs
           node tests/runtime/unified-mobile-combat-viewport-browser.cjs
           if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then
             echo 'Viewport mode browser navigation interrupted first attempt; retrying once.'

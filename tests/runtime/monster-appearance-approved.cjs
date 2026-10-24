@@ -9,7 +9,7 @@ function original(p,encoding){
 }
 function verifyNew(){
  const entries=require('./monster-appearance-approved.json').newFiles;
- assert.deepEqual(Object.keys(entries).sort(),['3d-test/monster-appearance-designs.mjs','3d-test/monster-appearance-review.html','3d-test/monster-appearance-review.mjs','3d-test/monster-appearance.mjs']);
+ assert.deepEqual(Object.keys(entries).sort(),['3d-test/monster-appearance-designs.mjs','3d-test/monster-appearance-review.html','3d-test/monster-appearance-review.mjs','3d-test/monster-appearance.mjs','3d-test/monster-art-samples-review.mjs','3d-test/monster-art-samples.html','3d-test/monster-art-samples.mjs']);
  for(const [p,sha] of Object.entries(entries))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),sha,'unregistered new appearance source: '+p);
  return new Set(Object.keys(entries));
 }

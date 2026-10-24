@@ -18,7 +18,7 @@ function placement(bitmap,asset){
  scratch.width=scratch.height=1;
  if(placements.size>=39)placements.delete(placements.keys().next().value);placements.set(key,result);return result;
 }
-export async function drawCodexMonster(canvas,row,{signal}={}){
+export async function drawCodexMonster(canvas,row,{signal,appearanceRoute}={}){
  const mapping=findMapping(row.id)||findMapping(row.id.replace(/^projection-/,''));
  const asset=findAsset(mapping?.assetId);if(!mapping||!asset)throw Error('monster-unavailable');
  let lease;
@@ -26,7 +26,7 @@ export async function drawCodexMonster(canvas,row,{signal}={}){
   lease=await pool.acquire(asset.assetId,{signal});if(!canvas.isConnected)return;
   const ctx=canvas.getContext('2d'),p=placement(lease.bitmap,asset);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const appearance=resolveMonsterAppearance(mapping);canvas.style.filter='none';canvas.dataset.appearance=appearanceFingerprint(appearance);
+  const appearance=resolveMonsterAppearance(mapping,{route:appearanceRoute});canvas.style.filter='none';canvas.dataset.appearance=appearanceFingerprint(appearance);
   const prepared=document.createElement('canvas');prepared.width=prepared.height=512;
   const source=paintMonsterAppearance(lease.bitmap,asset,appearance);
   prepared.getContext('2d').drawImage(source,p.x,p.y,p.size,p.size);source.width=source.height=1;
