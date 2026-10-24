@@ -1,0 +1,28 @@
+{
+  "galaxy": "第 1 / 17 頁 · 500 外觀",
+  "universe": "第 1 / 4 頁 · 100 外觀",
+  "special": "第 1 / 1 頁 · 9 外觀",
+  "bounty": "第 1 / 1 頁 · 30 外觀",
+  "arena": "第 1 / 1 頁 · 6 外觀",
+  "void": "第 1 / 1 頁 · 20 外觀",
+  "galaxy-calamity": "第 1 / 1 頁 · 10 外觀",
+  "universe-calamity": "第 1 / 1 頁 · 10 外觀",
+  "higher": "第 1 / 1 頁 · 10 外觀",
+  "projection": "第 1 / 1 頁 · 10 外觀",
+  "alternate": "第 1 / 7 頁 · 200 外觀",
+  "prototype/hm-01": "第 1 / 2 頁 · 57 外觀",
+  "prototype/cmd-01": "第 1 / 3 頁 · 61 外觀",
+  "prototype/core-03": "第 1 / 1 頁 · 21 外觀",
+  "all": "第 1 / 31 頁 · 905 外觀",
+  "coverage": {
+    "identities": 1705,
+    "appearances": 895,
+    "universes": 200,
+    "originals": [
+      "galaxy-map-003"
+    ],
+    "externalDependencies": 0,
+    "directFile": "environment Chromium policy blocks file://; HTTP local browsing verified",
+    "mobile390": true
+  }
+}
