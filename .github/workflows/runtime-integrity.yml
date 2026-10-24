@@ -37,6 +37,11 @@ on:
       - '.github/workflows/runtime-integrity.yml'
   pull_request:
     paths:
+      - '3d-test/monster-*.mjs'
+      - 'monstercodex*.js'
+      - 'monstercodex*.mjs'
+      - 'gmdata.js'
+      - 'resource-cache-client.js'
       - 'tests/runtime/foreground-combat-*.cjs'
       - 'tests/runtime/pr48-*.cjs'
       - 'tests/runtime/unified-mobile-combat-viewport*.cjs'

@@ -26,13 +26,51 @@ export function createMonsterPool({fetcher=globalThis.fetch,decode=globalThis.cr
     })().catch(error=>{remove(id,e);throw error;});
    }else hits++;
    e.refs++;e.used=++clock;let released=false,rejectAbort;
-   const release=()=>{if(released)return;released=true;signal?.removeEventListener('abort',abort);e.refs--;if(!e.refs&&!e.bitmap)remove(id,e);trim();};
+   const release=()=>{if(released)return;released=true;signal?.removeEventListener('abort',abort);e.refs--;if(!e.refs&&(!e.bitmap||e.stale))remove(id,e);trim();};
    const abort=()=>{release();rejectAbort?.(Error('monster-aborted'));};
    const cancelled=new Promise((_,reject)=>{rejectAbort=reject;});signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
    try{const bitmap=await Promise.race([e.promise,cancelled]);if(released||closed)throw Error('monster-aborted');return {bitmap,release};}catch(error){release();throw error;}
   },
-  clear(){for(const [key,e] of entries)if(!e.refs)remove(key,e);},
+  clear(){for(const [key,e] of entries)if(!e.refs)remove(key,e);else e.stale=true;},
   dispose(){if(closed)return;closed=true;for(const [key,e] of entries)remove(key,e);},
   stats(){return {entries:entries.size,bytes:[...entries.values()].filter(e=>e.bitmap).length*cost,limit:maxEntries*cost,hits,loads,images:[...entries].map(([id,e])=>({id,decoded:!!e.bitmap,refs:e.refs})),pending:[...entries.values()].filter(e=>!e.bitmap).length,refs:[...entries.values()].reduce((n,e)=>n+e.refs,0),closed};}
  });
+}
+
+// Shared across formal modes, codex and versioned module URLs. SHA-owned sources
+// remain in the existing SW; only two decoded prototype bitmaps are retained.
+const SHARED_KEY=Symbol.for('civilization.monster-pool.20261024-repair2');
+export function getSharedMonsterPool(){
+ if(globalThis[SHARED_KEY])return globalThis[SHARED_KEY];
+ const raw=createMonsterPool({usage:'formal'});let pending=null,idle=null;
+ const cancel=()=>{if(idle!==null){if(typeof cancelIdleCallback==='function')cancelIdleCallback(idle);else clearTimeout(idle);idle=null;}pending?.controller.abort();pending=null;};
+ const acquire=(id,options={})=>{
+  if(pending&&pending.id!==id)cancel();
+  return raw.acquire(id,options);
+ };
+ const prepare=(id,{signal,priority='next'}={})=>{
+  if(signal?.aborted||globalThis.document?.hidden||globalThis.navigator?.connection?.saveData)return Promise.resolve(false);
+  if(pending?.id===id)return pending.promise;
+  cancel();const controller=new AbortController(),record={id,controller};pending=record;
+  let finish;record.promise=new Promise(r=>finish=r);
+  const abort=()=>{if(pending===record)cancel();else controller.abort();finish(false);};signal?.addEventListener('abort',abort,{once:true});
+  const run=async()=>{
+   idle=null;let lease;
+   try{if(controller.signal.aborted)return;lease=await raw.acquire(id,{signal:controller.signal});finish(true);}
+   catch(_){finish(false);}
+   finally{lease?.release();signal?.removeEventListener('abort',abort);if(pending===record)pending=null;}
+  };
+  if(priority==='current')void run();
+  else if(typeof requestIdleCallback==='function')idle=requestIdleCallback(run,{timeout:1000});
+  else idle=setTimeout(run,0);
+  // Cancelling a queued request must settle its promise as well.
+  controller.signal.addEventListener('abort',()=>{signal?.removeEventListener('abort',abort);finish(false);},{once:true});
+  return record.promise;
+ };
+ const clear=()=>{cancel();raw.clear();};
+ const shared=Object.freeze({acquire,prepare,clear,stats:()=>({...raw.stats(),queued:pending?1:0}),dispose:()=>{clear();raw.dispose();delete globalThis[SHARED_KEY];}});
+ globalThis[SHARED_KEY]=shared;
+ for(const event of ['pagehide','civilization-auth-signed-out','civilization-resource-cache-cleared'])globalThis.addEventListener?.(event,clear);
+ globalThis.document?.addEventListener('visibilitychange',()=>{if(document.hidden)clear();});
+ return shared;
 }

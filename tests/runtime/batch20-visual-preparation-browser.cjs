@@ -1,0 +1,20 @@
+'use strict';
+const {chromium}=require('playwright'),fs=require('node:fs'),assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']});
+ try{
+  const page=await browser.newPage();await page.route('**/repair-visual.html',r=>r.fulfill({contentType:'text/html',body:'<div id="stage" style="position:relative;width:390px;height:240px"></div>'}));await page.goto(new URL('repair-visual.html',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/').href);await page.addScriptTag({url:'/3d-test/t3b-formal-renderer.js'});
+  const result=await page.evaluate(async()=>{
+   const api=CivilizationFormalBRenderer,{mappings}=await import('./3d-test/monster-sprites.mjs?v=20261024-au-ten-stages1'),{getSharedMonsterPool}=await import('./3d-test/monster-sprite-pool.mjs?v=20261024-repair2');
+   const pool=getSharedMonsterPool(),rows=Object.values(mappings),cases=[],host=document.getElementById('stage');
+   const wait=async fn=>{const end=performance.now()+15000;while(!fn()){if(performance.now()>end)throw Error('visual timeout');await new Promise(r=>setTimeout(r,5));}};
+   function context(row,world){const mode=row.mode||(row.kind==='special'?'special':'main');return {mode,world,name:row.name,kind:row.kind,id:row.bossId||row.id,location:mode==='alternate'?String(row.depth):mode==='calamity'?row.bossId:mode==='special'?row.specialId:mode==='arena'?String(row.arenaStage):mode==='void'?'1':world===1?((row.region-1)*10+row.mapIndex-1)+':'+(row.slot-1):world===2?String(Number(row.id.slice(-3))-1):String(row.bossIndex)};}
+   async function battle(identity){const ac=new AbortController(),bundle=await api.prepare({wholeSuit:true,eraVisualId:['galaxy','universe','higher'][identity.world-1],identity,signal:ac.signal});const renderer=await api.create({bundle,host,signal:ac.signal,isCurrent:()=>!ac.signal.aborted});const sample=()=>renderer.sample({player:{clip:'idle',elapsedMs:0},enemy:{clip:'idle',elapsedMs:0}});sample();await wait(()=>{sample();return host.querySelector('.formal-b-verified-monster');});return {ac,renderer};}
+   const selections=[['galaxy-map-001',1],['universe-boss-001',2],...['higher'].map(w=>[rows.find(r=>r.world===w&&r.mode==='main').id,3]),['special-gold_slime',1],['special-gold_slime',2],['galaxy-bounty-01',1],['universe-bounty-01',2],['galaxy-arena-01',1],['universe-arena-01',2],['void-regular-01',1],[rows.find(r=>r.mode==='calamity'&&r.world==='galaxy').id,1],[rows.find(r=>r.mode==='calamity'&&r.world==='universe').id,2],['alternate-depth-0001',3]];
+   for(const [id,world]of selections){const row=mappings[id],identity=context(row,world);if(id==='special-gold_slime'&&world===2)identity.name='星源聚合體';const b=await battle(identity);cases.push({id,world,mode:identity.mode,stats:pool.stats()});b.ac.abort();api.clearSpriteCache();await wait(()=>pool.stats().pending===0&&pool.stats().refs===0);}
+   const first=await battle(context(mappings['galaxy-arena-01'],1));await wait(()=>pool.stats().images.some(i=>i.id==='mech-02'&&i.decoded));const nextLease=await pool.acquire('mech-02'),bitmap=nextLease.bitmap;nextLease.release();const warmLoads=pool.stats().loads;first.ac.abort();const second=await battle(context(mappings['galaxy-arena-02'],1));const same=await pool.acquire('mech-02');if(same.bitmap!==bitmap)throw Error('known next was decoded twice');same.release();second.ac.abort();api.clearSpriteCache();await wait(()=>pool.stats().pending===0&&pool.stats().refs===0);
+   return {cases,knownNextReused:true,warmLoads,after:pool.stats()};
+  });
+  assert.equal(result.cases.length,13);assert.equal(result.after.bytes,0);for(const c of result.cases)assert.ok(c.stats.bytes<=2*512*512*4);fs.writeFileSync('/tmp/batch20-visual-preparation.json',JSON.stringify({passed:true,realDevice:false,...result},null,2));console.log('PASS 13 cross-mode formal Renderer entries; exact next arena bitmap reused; exit/clear refs pending bytes zero');
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;});

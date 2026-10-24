@@ -97,7 +97,7 @@ async function clearWithConfirmation(){
  await updateSettingsStatus();
  return result.ok===true;
 }
-function clear(){return message("CIV_CACHE_CLEAR");}
+async function clear(){const result=await message("CIV_CACHE_CLEAR");if(result.ok)g.dispatchEvent(new Event("civilization-resource-cache-cleared"));return result;}
 function status(){return readDirectCacheStatus();}
 function refresh(){return message("CIV_CACHE_REFRESH");}
 g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport,finishStartupVersionCheck,startBackgroundPreload});

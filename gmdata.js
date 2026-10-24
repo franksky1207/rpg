@@ -56,9 +56,21 @@
  }
 
  function managementHtml(){
-  return `<div class="muted gm-hub-note">供 GM 測試快速備份與切換本機遊戲進度。只處理《文明戰線》正式存檔，不包含帳號登入、Supabase session 或其他瀏覽器資料。</div><div class="controls"><button class="btn blue" onclick="gmExportSaveJson()">匯出 JSON</button><button class="btn" onclick="gmChooseImportSaveJson()">匯入 JSON</button><input id="gmSaveJsonFile" type="file" accept=".json,application/json" hidden onchange="gmImportSaveJsonFile(this)"></div><div class="muted" style="margin-top:10px">匯入會先驗證並使用正式 migration／normalization；確認後才覆蓋目前本機存檔，並重新整理頁面。匯入後不會把檔案保存期間計入離線收益。</div>`;
+  return `<div class="muted gm-hub-note">供 GM 測試快速備份與切換本機遊戲進度。只處理《文明戰線》正式存檔，不包含帳號登入、Supabase session 或其他瀏覽器資料。</div><div class="controls"><button class="btn blue" onclick="gmExportSaveJson()">匯出 JSON</button><button class="btn" onclick="gmChooseImportSaveJson()">匯入 JSON</button><button class="btn" onclick="gmOpenFullMonsterCodex()">開啟全圖鑑</button><input id="gmSaveJsonFile" type="file" accept=".json,application/json" hidden onchange="gmImportSaveJsonFile(this)"></div><div class="muted" style="margin-top:10px">匯入會先驗證並使用正式 migration／normalization；確認後才覆蓋目前本機存檔，並重新整理頁面。匯入後不會把檔案保存期間計入離線收益。</div>`;
  }
 
+ window.gmOpenFullMonsterCodex=function(){
+  if(!assertGm())return false;
+  const catalogue=window.MONSTER_CODEX_CATALOGUE;
+  if(!Array.isArray(catalogue)||typeof window.normalizeMonsterCodex!=="function")return false;
+  const ids=[...new Set(catalogue.map(row=>row.id))];
+  if(!confirm(`確定開啟全圖鑑？將標記 ${ids.length} 筆正式怪物身份為已遭遇，不會改變進度或發放獎勵。`))return false;
+  if(!assertGm())return false;
+  const previous=state.monsterCodex;
+  state.monsterCodex={version:1,encountered:ids};window.normalizeMonsterCodex(state);
+  if(typeof save!=="function"||save(false)===false){state.monsterCodex=previous;alert("圖鑑無法儲存，已取消操作。");return false;}
+  return true;
+ };
  window.gmExportSaveJson=function(){
   if(!assertGm())return false;
   if(typeof save==="function"&&save(false)===false){alert("目前存檔無法寫入，已取消匯出。");return false;}

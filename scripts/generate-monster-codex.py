@@ -7,7 +7,7 @@ out=[]
 for r in rows:
  mode=r.get('mode') or ('special' if r['kind']=='special' else 'main')
  group={'main':{'galaxy':'銀河主線','universe':'宇宙主線','higher':'高維十王'}.get(r['world']),'calamity':{'galaxy':'銀河文明災厄','universe':'宇宙文明災厄'}.get(r['world']),'alternate':'異宇宙','bounty':'懸賞','arena':'競技場','void':'虛空幻境','special':'特殊怪'}[mode]
- out.append({k:r[k] for k in ['id','name','world','kind','assetId','visual','bossId','bossIndex','specialId','depth','region','mapIndex','slot','arenaStage','isBossFloor','bossCycle'] if k in r}|{'mode':mode,'category':group})
+ out.append({k:r[k] for k in ['id','name','world','kind','assetId','visual','bossId','bossIndex','specialId','depth','region','mapIndex','slot','arenaStage','isBossFloor','bossCycle','universeNumber','universeName','stageIndex','culture'] if k in r}|{'mode':mode,'category':group})
 for r in list(out):
  if r['world']=='higher' and r['mode']=='main':out.append(r|{'id':'projection-'+r['id'],'name':'高維投影·'+r['name'],'mode':'arena','kind':'dungeon-arena-third-world','category':'高維競技場'})
 assert len({r['id'] for r in out})==len(out)

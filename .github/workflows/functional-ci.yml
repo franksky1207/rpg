@@ -97,6 +97,7 @@ jobs:
           node tests/runtime/batch20-alternate-ten-stages.mjs
           python3 scripts/generate-monster-trial-registry.py --check
           python3 scripts/generate-monster-codex.py --check
+          node --test tests/runtime/batch20-shared-monster-pool.test.mjs
           node --test tests/runtime/batch13-monster-pool.test.mjs
           node tests/runtime/batch16-special-contract.cjs
           node tests/runtime/batch16-cache.cjs
@@ -111,6 +112,8 @@ jobs:
           sleep 2
           node tests/runtime/batch20-notice-protection.cjs
           node tests/runtime/batch20-codex-browser.cjs
+          node tests/runtime/batch20-repair-browser.cjs
+          node tests/runtime/batch20-visual-preparation-browser.cjs
           node tests/runtime/batch20-save-guide-browser.cjs
           node tests/runtime/batch20-cloud-browser.cjs
           node tests/runtime/batch16-mirror-browser.cjs

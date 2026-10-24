@@ -29,6 +29,7 @@ const result=await p.evaluate(()=>{
  return {failures,checks:checks.length,errors:[],catalogue:catalogue.length};
 });await p.waitForFunction(()=>{const c=document.getElementById('monsterCodexImage');return c&&c.nextElementSibling.textContent==='';});const image=await p.evaluate(()=>{const c=document.getElementById('monsterCodexImage');return c.getContext('2d').getImageData(0,0,512,512).data.some((v,i)=>i%4===3&&v>16)});assert.equal(image,true,'SHA verified static image has visible pixels');
 const readonlyBefore=await p.evaluate(()=>JSON.stringify(state.monsterCodex));
+await p.evaluate(()=>dispatchEvent(new Event('civilization-resource-cache-cleared')));
 await p.route('**/assets/monsters/**',r=>r.abort());await p.evaluate(()=>openMonsterCodexDetail('galaxy-map-001'));
 await p.waitForFunction(()=>document.getElementById('monsterCodexImageStatus')?.textContent.includes('暫時無法載入'));
 await p.unroute('**/assets/monsters/**');await p.evaluate(()=>openMonsterCodexDetail('galaxy-map-001'));
