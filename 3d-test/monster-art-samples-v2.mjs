@@ -46,7 +46,21 @@ export function recolorRound2Pixels(data,spec){
 }
 export function paintArtSampleV2(bitmap,asset,spec,{canvasFactory=()=>document.createElement('canvas'),bodyOnly=false}={}){
  if(spec.retained)return paintArtSample(bitmap,asset,spec,{canvasFactory,bodyOnly});
- const body=canvasFactory();body.width=body.height=512;const c=body.getContext('2d',{willReadFrequently:true});c.drawImage(bitmap,0,0);const pixels=c.getImageData(0,0,512,512);recolorRound2Pixels(pixels.data,spec);c.putImageData(pixels,0,0);
+ const body=canvasFactory();body.width=body.height=512;const c=body.getContext('2d');c.drawImage(bitmap,0,0);const original=c.getImageData(0,0,512,512),pixels=c.getImageData(0,0,512,512);recolorRound2Pixels(pixels.data,spec);c.putImageData(pixels,0,0);
+ // WebKit can floor premultiplied channels during putImageData. Correct against
+ // the actual raster, without relaxing luma tolerance or changing source alpha.
+ // Two bounded preparation passes only; no per-frame work or retained buffers.
+ for(let pass=0;pass<2;pass++){
+  const actual=c.getImageData(0,0,512,512);let changed=false;
+  for(let i=0;i<actual.data.length;i+=4){if(original.data[i+3]<192)continue;
+   const error=luma(original.data.subarray(i,i+3))-luma(actual.data.subarray(i,i+3));
+   if(Math.abs(error)<=.65)continue;
+   const green=Math.max(0,Math.min(255,actual.data[i+1]+Math.sign(error)*Math.ceil(Math.abs(error)/.7152+.5)));
+   if(green!==actual.data[i+1]){actual.data[i+1]=green;changed=true;}
+  }
+  if(!changed)break;c.putImageData(actual,0,0);
+ }
+
  if(bodyOnly||!spec.power)return body;
  // Reuse the frozen round-1 exterior painter without recoloring the prepared body.
  const full=paintArtSample(body,asset,{...spec,original:true},{canvasFactory});body.width=body.height=1;return full;

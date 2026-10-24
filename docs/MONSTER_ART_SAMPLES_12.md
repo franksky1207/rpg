@@ -121,4 +121,6 @@
 
 下一步仍只收集這 12 隻的人工美術意見；未經確認不擴展、不正式啟用。鏡像與副本等未追加施工。
 
-第二輪本機補充：新舊 Chromium 樣本測試、895 外觀／18,221 配對全量瀏覽器測試、appearance contract、round2 contract、共享池、歷史 SHA guard、publish asset audit 及 workflow concurrency 檢查均通過。[逐樣本分析 JSON](monster-art-samples/round2-analysis-chromium.json) 含色族、覆蓋、luma、配對及池釋放紀錄。離線 HTML 在封鎖所有網路請求下驗證 36 圖及本體切換。開發環境缺少 WebKit 動態函式庫，WebKit 驗證由已安裝對應相依的 GitHub Actions 執行，結果以 PR 最新 HEAD 為準，未冒稱本機通過。
+第二輪本機補充：新舊 Chromium 樣本測試、895 外觀／18,221 配對全量瀏覽器測試、appearance contract、round2 contract、共享池、歷史 SHA guard、publish asset audit 及 workflow concurrency 檢查均通過。[逐樣本分析 JSON](monster-art-samples/round2-analysis-chromium.json) 含色族、覆蓋、luma、配對及池釋放紀錄。離線 HTML 在封鎖所有網路請求下驗證 36 圖及本體切換。開發環境原缺 WebKit 動態函式庫；補齊工作區函式庫後，已實際執行本機 WebKit 全項瀏覽器測試通過，GitHub Actions 仍使用 runner 正常安裝相依並重驗。
+
+WebKit 量化補修：第二輪首個 CI HEAD `dfe13c7b` 在 WebKit 的天裁半透明邊緣抓到 luma 誤差超過 1.8 門檻。原因為來源與輸出 Canvas 的 CPU／GPU 取樣及 Alpha 預乘量化路徑不同。修正為一致的來源取樣路徑，並在預繪時加入最多兩次的實際 raster luma 校正；不改 Alpha、不新增每幀計算。未降低任何門檻。補修後本機 Chromium 與 WebKit 全項通過，兩者近不透明像素最大誤差均約 1.2934／255。補修後比較圖、離線 HTML 與分析 JSON 已重新匯出。[WebKit 分析 JSON](monster-art-samples/round2-analysis-webkit.json) 一併保留。最終 Actions 以 PR 最新 HEAD 為準，不沿用這次失敗提交的結果。
