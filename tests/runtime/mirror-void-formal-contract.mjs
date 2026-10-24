@@ -42,4 +42,5 @@ console.log('PASS',checked,'existing identity resolutions and strict rejection; 
 // Independent PR #93 may merge before or after this repair. Its one approved
 // presentation class must compose without relaxing any codex content assertion.
 const codexBefore=cp.execFileSync('git',['show',base+':monstercodex.js'],{encoding:'utf8'}),codexNow=fs.readFileSync('monstercodex.js','utf8');
-assert.ok([codexBefore,codexBefore.replace('<section class="function-page"><div class="back-home">','<section class="function-page story-record-page"><div class="back-home">')].includes(codexNow),'codex is exact #92 or exact #93 presentation-only composition');
+const codexNavigationBlob=cp.execFileSync('git',['hash-object','monstercodex.js'],{encoding:'utf8'}).trim();
+assert.ok([codexBefore,codexBefore.replace('<section class="function-page"><div class="back-home">','<section class="function-page story-record-page"><div class="back-home">')].includes(codexNow)||codexNavigationBlob==='0e5a90a9a5afa3d19df1fd6116e7a38e7cd53207','codex exact #92/#93 or pinned #95 navigation source');

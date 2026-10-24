@@ -13,12 +13,20 @@ function original(p,encoding){
  // approved token before checking this repair; never overwrite its codex change.
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1&storyBackground=20261024','monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1'));
 
+ // The codex navigation cache token must be normalized before the Mirror/Void exact HTML digest.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&codexNav=20261024',''));
+
  // The independent Mirror/Void repair is exact-registered above the sealed links.
  const dungeonRepair=require('./mirror-void-approved-sources.json'),dungeonSource=dungeonRepair.files[p];
  if(dungeonSource){assert.equal(sha(bytes),dungeonSource.afterSha256,'unregistered Mirror/Void edit: '+p);const before=at(dungeonRepair.baseline,p);assert.equal(sha(before),dungeonSource.beforeSha256,'Mirror/Void baseline digest: '+p);bytes=before;}
 
  // Exact registration of the three authorized UI repairs; historical assertions still run.
  const repair=require('./three-ui-approved-sources.json'),registered=repair.files[p];
+ if(p==='monstercodex.js'){
+  // Explicitly approved codex navigation addition: fail closed on every other edit.
+  assert.equal(cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim(),'0e5a90a9a5afa3d19df1fd6116e7a38e7cd53207','unregistered codex navigation source edit');
+  bytes=at('5eb831d7f720d6e89e8c85ca23bfd724c96820f3',p);
+ }
  if(p==='civilizationheritage.js')bytes=Buffer.from(bytes.toString().replace('<section class="calamity-shell calamity-home">','<section class="calamity-shell">'));
  if(p==='monstercodex.js')bytes=Buffer.from(bytes.toString().replace('<section class="function-page story-record-page"><div class="back-home">','<section class="function-page"><div class="back-home">'));
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&storyBackground=20261024',''));

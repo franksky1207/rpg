@@ -9,6 +9,10 @@
  .codex-list>li{padding:8px 0;border-bottom:1px solid #ffffff18;display:flex;gap:8px;align-items:center;justify-content:space-between}
  .codex-list>li>div{min-width:0;overflow-wrap:anywhere}
  .codex-list .btn{flex-shrink:0}
+ .codex-detail-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:18px}
+ .codex-detail-nav .btn{min-width:104px}
+ .codex-detail-nav span{min-width:58px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+ @media(max-width:420px){.codex-detail-nav{gap:6px}.codex-detail-nav .btn{min-width:0;flex:1;padding-inline:6px}}
  @media(max-width:420px){.codex-branch{margin-left:12px}.codex-list{padding:0 4px}}
  `;document.head.appendChild(style);
  const rows=window.MONSTER_CODEX_CATALOGUE,byId=new Map(rows.map(r=>[r.id,r]));
@@ -72,6 +76,32 @@
  window.toggleMonsterCodexGroup=function(key,value){if(value)opened.add(key);else opened.delete(key);};
  window.openMonsterCodexDetail=function(id,world=1){const r=displayRow(id),known=new Set(state.monsterCodex?.encountered||[]);if(!r||!unlocked(r,known))return false;returnScroll=window.scrollY;selected=r.id;detailWorld=Number(world)===2?2:1;render();window.scrollTo(0,0);return true;};
  window.closeMonsterCodexDetail=function(){selected=null;render();requestAnimationFrame(()=>window.scrollTo(0,returnScroll));};
+ // Navigation uses the same catalogue rows, unlock rules and displayed order as the list.
+ function detailSiblings(r,world,known){
+  const member=displayRows.filter(x=>{
+   if(categoryOf(x)!==category)return false;
+   if(category==='主線')return x.mode==='main'&&x.world===r.world;
+   if(category==='特殊遭遇')return x.mode==='special'&&(x.world==='both'||x.world===r.world)&&world===detailWorld;
+   if(category==='副本')return x.mode===r.mode&&(r.mode==='void'||x.world===r.world);
+   if(category==='文明災厄')return x.mode==='calamity'&&x.world===r.world;
+   if(category==='異宇宙')return x.mode==='alternate'&&Math.floor((x.universeNumber-1)/20)===Math.floor((r.universeNumber-1)/20);
+   return false;
+  });
+  return member.filter(x=>unlocked(x,known));
+ }
+ window.moveMonsterCodexDetail=function(delta){
+  if(delta!==-1&&delta!==1)return false;
+  const current=byId.get(selected),known=new Set(state.monsterCodex?.encountered||[]);
+  if(!current||!unlocked(current,known))return false;
+  const group=detailSiblings(current,detailWorld,known),index=group.findIndex(x=>x.id===selected),next=group[index+delta];
+  if(index<0||!next)return false;
+  const scroll=window.scrollY;
+  imageController?.abort();imageCanvas=null;imageController=null;imageEpoch++;
+  selected=next.id;render();
+  requestAnimationFrame(()=>window.scrollTo(0,scroll));
+  return true;
+ };
+
  function listHtml(list,known,world=1){return list.map(r=>`<li><div><b>${esc(nameOf(r,world))}</b><div class="muted">${esc(kindName(r))}・${unlocked(r,known)?'已遭遇':'未遭遇'}</div></div>${unlocked(r,known)?`<button class="btn" onclick="openMonsterCodexDetail('${r.id}',${world})">查看</button>`:''}</li>`).join('');}
  function group(key,label,body){return `<details data-codex-group="${esc(key)}" ${opened.has(key)?'open':''} ontoggle="toggleMonsterCodexGroup('${key}',this.open)" class="codex-group"><summary>${esc(label)}</summary><div class="codex-branch">${body}</div></details>`;}
  function groupsHtml(known){
@@ -85,7 +115,11 @@
  window.monsterCodexPageHtml=function(){
   const known=new Set(state.monsterCodex?.encountered||[]),progress=window.monsterCodexDisplayProgress(),r=byId.get(selected);
   const header=`<section class="function-page story-record-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card"><h2>戰線紀錄</h2>${window.frontlineRecordTabsHtml()}<p>怪物圖鑑・已遭遇 ${progress.encountered} / ${progress.total}。正式遇敵即永久解鎖，無須勝利。</p><label>分類 <select onchange="selectMonsterCodexCategory(this.value)">${categoryNames.map(c=>`<option ${c===category?'selected':''}>${esc(c)}</option>`).join('')}</select></label></div>`;
-  if(r&&unlocked(r,known))return header+`<article class="card"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p><div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div></article></section>`;
+  if(r&&unlocked(r,known)){
+   const siblings=detailSiblings(r,detailWorld,known),position=siblings.findIndex(x=>x.id===r.id);
+   const navigation=`<nav class="codex-detail-nav" aria-label="已解鎖怪物瀏覽"><button type="button" class="btn" onclick="moveMonsterCodexDetail(-1)" ${position<=0?'disabled':''}>← 上一隻</button><span aria-live="polite">${position+1} / ${siblings.length}</span><button type="button" class="btn" onclick="moveMonsterCodexDetail(1)" ${position<0||position>=siblings.length-1?'disabled':''}>下一隻 →</button></nav>`;
+   return header+`<article class="card"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p><div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div>${navigation}</article></section>`;
+  }
   return header+`<div class="card">${groupsHtml(known)}</div></section>`;
  };
  // One observed detail at a time. The existing SHA-verified bounded pool owns all decoding.
