@@ -78,7 +78,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    gm.querySelector('[data-advanced]').open=true;gm.querySelector('[data-boss-compare]').click();
    await wait(()=>gm.querySelectorAll('[data-boss-gallery] figure').length===30);
    if(gm.querySelectorAll('.gm-suit-preview canvas').length!==2)throw Error('gallery-persistent-actors');
-   const diagnostics=JSON.parse(gm.querySelector('[data-diagnostics]').textContent);
+   const diagnostics=gm.querySelector('.gm-suit').__previewTestApi.diagnostics();
    if(diagnostics.monster.refs>2||diagnostics.monster.entries>2)throw Error('gallery-pool-budget');
    mounted.dispose();window.CivilizationFormalBRenderer.clearSpriteCache();
    return {rows,stats:window.CivilizationFormalBRenderer.monsterStats(),total:Object.keys(mappings).length,assets:registry.assets.length};

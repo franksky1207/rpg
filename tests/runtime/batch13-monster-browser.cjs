@@ -41,7 +41,8 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   const after=await frame.locator('.gm-suit-preview').boundingBox();assert.equal(before.width,after.width);assert.equal(before.height,after.height,'no decode layout jump');
   const shared=await frame.locator('[data-monster-identity] option').evaluateAll(options=>options.slice(1).map(o=>o.value));assert.ok(shared.length>0,id+" "+await frame.locator('[data-monster-identity]').innerHTML());await frame.locator('[data-monster-identity]').selectOption(shared[0]);await frame.locator('[data-monster-status][data-ready="true"]').waitFor({state:'attached'});
   assert.equal(await frame.locator('[data-monster-scale],[data-monster-palette],[data-monster-next]').count(),0,'retired GM overrides stay removed');
-  const selectedLabel=await frame.locator('[data-monster-description]').innerText();assert.ok(selectedLabel.includes('配色')&&selectedLabel.includes('尺寸'),'identity appearance is read-only text');
+  const appearance=await frame.locator('.gm-suit').evaluate(async el=>{const {mappings,registry,palettes}=await import('./monster-sprites.mjs');const row=mappings[el.querySelector('[data-monster-identity]').value],expected=document.createElement('canvas');expected.style.filter=palettes[row.visual.palette];if(row.visual.sizePolicy==='dungeon'){const {applyDungeonEffects}=await import('./monster-actor.mjs');applyDungeonEffects(expected,row.visual);}return {label:el.querySelector('[data-monster-description]').textContent,expectedLabel:registry.assets.find(a=>a.assetId===row.assetId).name+'｜大小：玩家的 '+Math.round((row.visual.visibleRatio||row.visual.scale)*100)+'%',palette:el.querySelector('canvas[data-monster]').style.filter,expectedPalette:expected.style.filter};});
+  assert.equal(appearance.label,appearance.expectedLabel,'identity size is concise read-only text');assert.equal(appearance.palette,appearance.expectedPalette,'formal palette is still applied without a visible engineering code');
   const sharedRatio=await frame.locator('canvas[data-monster]').getAttribute('data-actual-ratio');
   assert.ok(Number(sharedRatio)>=.9,'shared formal/GM ratio contract: '+JSON.stringify({viewport,id,sharedRatio}));
   const layout=await frame.locator('.gm-suit-preview').evaluate(e=>{
@@ -67,11 +68,11 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  await frame.locator('[data-player-duel]').click();
  for(let i=0;i<60;i++)await frame.locator('select[data-monster]').selectOption(ids[i%20]);
  await frame.locator('canvas[data-monster="energy-01"]').waitFor();
- const diag=JSON.parse(await frame.locator('[data-diagnostics]').innerText());assert.ok(diag.monster.bytes<=diag.monster.limit);assert.equal(diag.monster.refs,1);assert.equal(diag.monster.pending,0);
+ const diag=await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.diagnostics());assert.ok(diag.monster.bytes<=diag.monster.limit);assert.equal(diag.monster.refs,1);assert.equal(diag.monster.pending,0);
  await frame.locator('select[data-monster]').selectOption('');assert.equal(await frame.locator('canvas[data-monster]').count(),0);assert.equal(await frame.locator('[data-action]').count(),6);
  assert.equal(await page.evaluate(()=>JSON.stringify(state)),truth,'gameplay isolation');assert.equal(await page.evaluate(()=>JSON.stringify(localStorage)),storage,'save isolation');
  await frame.locator('select[data-monster]').selectOption('hm-01');await frame.locator('canvas[data-monster="hm-01"]').waitFor();
  await page.evaluate(()=>state.gm=false);await frame.locator('[data-status]').filter({hasText:'需要 GM 授權'}).waitFor();
- const revoked=JSON.parse(await frame.locator('[data-diagnostics]').innerText());assert.equal(revoked.monster.bytes,0);assert.equal(revoked.monster.refs,0);assert.equal(await frame.locator('canvas').count(),0);
+ const revoked=await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.diagnostics());assert.equal(revoked.monster.bytes,0);assert.equal(revoked.monster.refs,0);assert.equal(await frame.locator('canvas').count(),0);
  await page.evaluate(()=>closeGm3DPrototype());assert.deepEqual(errors,[]);reports.push({viewport,poses,diag,revoked,errors});await page.close();console.log('PASS twenty monsters, all attack/hit/death rasters, 180 lifecycle, GM left/right layout and isolation',viewport.width);
  }}finally{await browser.close();}fs.writeFileSync('/tmp/batch13-monster-browser.json',JSON.stringify({passed:true,realDevice:false,reports},null,2));})().catch(e=>{console.error(e);process.exitCode=1;});

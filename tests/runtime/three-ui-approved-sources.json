@@ -1,0 +1,21 @@
+{
+  "baseline": "2474c486312578be3308132f69b7800350b6abd0",
+  "files": {
+    "calamityui.js": {
+      "beforeSha256": "7f8bbcd88e41ee0e3ee9500a41fe405cc4577b48cbdd652f994bc4167bd871c1",
+      "afterSha256": "84c4f80617bbf9989a0d44cd993dbd5a23a97538c488922ccc80581033e68fcd"
+    },
+    "secondworldcalamityui.js": {
+      "beforeSha256": "7167d14a541afba3031f58bc8c46f3c524aefd91f285869ad25fd576dba25adf",
+      "afterSha256": "5d8822c9c5e5619d341e1930571ee00af4c20e454d7e77b8cd9fb13c42c8be7c"
+    },
+    "index.html": {
+      "beforeSha256": "67939e53bb9d1f1673943a593c23f416339e3bc5716f917dd4df95e4f42357ff",
+      "afterSha256": "4680bae3fd628f53d47047aff6dee25f35757393f7171d21109a4fc93749a188"
+    },
+    "3d-test/index.html": {
+      "beforeSha256": "df16ff1312cb9a1af29e517d4bca46db1c61136cf2d557c403c7ca69919a922a",
+      "afterSha256": "e49fe147936197dbf68d8c4cc716858c95945d7b4144c7e29588b921a769966c"
+    }
+  }
+}

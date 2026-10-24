@@ -1,0 +1,1174 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "baseline": "2474c486312578be3308132f69b7800350b6abd0",
+  "reports": [
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "rounds": 4,
+      "frames": 147,
+      "maskedFrames": 0,
+      "positions": {
+        "stage": {
+          "minTop": 338,
+          "maxTop": 338,
+          "minHeight": 432
+        },
+        "player": {
+          "minTop": 784,
+          "maxTop": 784,
+          "minHeight": 174
+        },
+        "enemy": {
+          "minTop": 770,
+          "maxTop": 770,
+          "minHeight": 202
+        }
+      },
+      "categories": [
+        {
+          "category": "主線",
+          "groups": 123,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "特殊遭遇",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "副本",
+          "groups": 8,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "文明災厄",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "異宇宙",
+          "groups": 10,
+          "roots": 10,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        }
+      ],
+      "released": {
+        "ready": false,
+        "engines": 0,
+        "rafs": 0,
+        "canvases": 0
+      },
+      "shortEffectsRemaining": 0
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "rounds": 4,
+      "frames": 77,
+      "maskedFrames": 0,
+      "positions": {
+        "stage": {
+          "minTop": 213,
+          "maxTop": 213,
+          "minHeight": 432
+        },
+        "player": {
+          "minTop": 665,
+          "maxTop": 665,
+          "minHeight": 174
+        },
+        "enemy": {
+          "minTop": 645,
+          "maxTop": 645,
+          "minHeight": 214
+        }
+      },
+      "categories": [
+        {
+          "category": "主線",
+          "groups": 123,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "特殊遭遇",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "副本",
+          "groups": 8,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "文明災厄",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "異宇宙",
+          "groups": 10,
+          "roots": 10,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        }
+      ],
+      "released": {
+        "ready": false,
+        "engines": 0,
+        "rafs": 0,
+        "canvases": 0
+      },
+      "shortEffectsRemaining": 0
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "rounds": 4,
+      "frames": 328,
+      "maskedFrames": 0,
+      "positions": {
+        "stage": {
+          "minTop": 568,
+          "maxTop": 568,
+          "minHeight": 340
+        },
+        "player": {
+          "minTop": 908,
+          "maxTop": 908,
+          "minHeight": 163
+        },
+        "enemy": {
+          "minTop": 377,
+          "maxTop": 377,
+          "minHeight": 191
+        }
+      },
+      "categories": [
+        {
+          "category": "主線",
+          "groups": 123,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "特殊遭遇",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "副本",
+          "groups": 8,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "文明災厄",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "異宇宙",
+          "groups": 10,
+          "roots": 10,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        }
+      ],
+      "released": {
+        "ready": false,
+        "engines": 0,
+        "rafs": 0,
+        "canvases": 0
+      },
+      "shortEffectsRemaining": 0
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "rounds": 4,
+      "frames": 155,
+      "maskedFrames": 0,
+      "positions": {
+        "stage": {
+          "minTop": 384,
+          "maxTop": 384,
+          "minHeight": 340
+        },
+        "player": {
+          "minTop": 724,
+          "maxTop": 724,
+          "minHeight": 163
+        },
+        "enemy": {
+          "minTop": 181,
+          "maxTop": 181,
+          "minHeight": 203
+        }
+      },
+      "categories": [
+        {
+          "category": "主線",
+          "groups": 123,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "特殊遭遇",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "副本",
+          "groups": 8,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "文明災厄",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "異宇宙",
+          "groups": 10,
+          "roots": 10,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        }
+      ],
+      "released": {
+        "ready": false,
+        "engines": 0,
+        "rafs": 0,
+        "canvases": 0
+      },
+      "shortEffectsRemaining": 0
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "rounds": 4,
+      "frames": 177,
+      "maskedFrames": 0,
+      "positions": {
+        "stage": {
+          "minTop": 302,
+          "maxTop": 302,
+          "minHeight": 202.796875
+        },
+        "player": {
+          "minTop": 554.796875,
+          "maxTop": 554.796875,
+          "minHeight": 162
+        },
+        "enemy": {
+          "minTop": 540.796875,
+          "maxTop": 540.796875,
+          "minHeight": 190
+        }
+      },
+      "categories": [
+        {
+          "category": "主線",
+          "groups": 123,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "特殊遭遇",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "副本",
+          "groups": 8,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "文明災厄",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "異宇宙",
+          "groups": 10,
+          "roots": 10,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        }
+      ],
+      "released": {
+        "ready": false,
+        "engines": 0,
+        "rafs": 0,
+        "canvases": 0
+      },
+      "shortEffectsRemaining": 0
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "rounds": 4,
+      "frames": 102,
+      "maskedFrames": 0,
+      "positions": {
+        "stage": {
+          "minTop": 213,
+          "maxTop": 213,
+          "minHeight": 202.796875
+        },
+        "player": {
+          "minTop": 435.796875,
+          "maxTop": 435.796875,
+          "minHeight": 162
+        },
+        "enemy": {
+          "minTop": 415.796875,
+          "maxTop": 415.796875,
+          "minHeight": 202
+        }
+      },
+      "categories": [
+        {
+          "category": "主線",
+          "groups": 123,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "特殊遭遇",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "副本",
+          "groups": 8,
+          "roots": 3,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "文明災厄",
+          "groups": 2,
+          "roots": 2,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        },
+        {
+          "category": "異宇宙",
+          "groups": 10,
+          "roots": 10,
+          "bad": 0,
+          "overflow": false,
+          "buttons": true,
+          "progress": {
+            "encountered": 905,
+            "total": 905,
+            "identities": 1705
+          }
+        }
+      ],
+      "released": {
+        "ready": false,
+        "engines": 0,
+        "rafs": 0,
+        "canvases": 0
+      },
+      "shortEffectsRemaining": 0
+    }
+  ],
+  "gm": {
+    "passed": true,
+    "realDevice": false,
+    "reports": [
+      {
+        "viewport": {
+          "width": 1365,
+          "height": 900
+        },
+        "identities": 695,
+        "alternateIdentities": 1000,
+        "selections": [
+          {
+            "era": "era-galaxy",
+            "source": "main"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "special"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "bounty"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "arena"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "void"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "calamity"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "alternate"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "mirror"
+          },
+          {
+            "era": "era-universe",
+            "source": "main"
+          },
+          {
+            "era": "era-universe",
+            "source": "special"
+          },
+          {
+            "era": "era-universe",
+            "source": "bounty"
+          },
+          {
+            "era": "era-universe",
+            "source": "arena"
+          },
+          {
+            "era": "era-universe",
+            "source": "void"
+          },
+          {
+            "era": "era-universe",
+            "source": "calamity"
+          },
+          {
+            "era": "era-universe",
+            "source": "alternate"
+          },
+          {
+            "era": "era-universe",
+            "source": "mirror"
+          },
+          {
+            "era": "era-higher",
+            "source": "special"
+          },
+          {
+            "era": "era-higher",
+            "source": "void"
+          },
+          {
+            "era": "era-higher",
+            "source": "main"
+          },
+          {
+            "era": "era-higher",
+            "source": "alternate"
+          },
+          {
+            "era": "era-higher",
+            "source": "arena"
+          }
+        ],
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "identities": 695,
+        "alternateIdentities": 1000,
+        "selections": [
+          {
+            "era": "era-galaxy",
+            "source": "main"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "special"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "bounty"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "arena"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "void"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "calamity"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "alternate"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "mirror"
+          },
+          {
+            "era": "era-universe",
+            "source": "main"
+          },
+          {
+            "era": "era-universe",
+            "source": "special"
+          },
+          {
+            "era": "era-universe",
+            "source": "bounty"
+          },
+          {
+            "era": "era-universe",
+            "source": "arena"
+          },
+          {
+            "era": "era-universe",
+            "source": "void"
+          },
+          {
+            "era": "era-universe",
+            "source": "calamity"
+          },
+          {
+            "era": "era-universe",
+            "source": "alternate"
+          },
+          {
+            "era": "era-universe",
+            "source": "mirror"
+          },
+          {
+            "era": "era-higher",
+            "source": "special"
+          },
+          {
+            "era": "era-higher",
+            "source": "void"
+          },
+          {
+            "era": "era-higher",
+            "source": "main"
+          },
+          {
+            "era": "era-higher",
+            "source": "alternate"
+          },
+          {
+            "era": "era-higher",
+            "source": "arena"
+          }
+        ],
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "identities": 695,
+        "alternateIdentities": 1000,
+        "selections": [
+          {
+            "era": "era-galaxy",
+            "source": "main"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "special"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "bounty"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "arena"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "void"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "calamity"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "alternate"
+          },
+          {
+            "era": "era-galaxy",
+            "source": "mirror"
+          },
+          {
+            "era": "era-universe",
+            "source": "main"
+          },
+          {
+            "era": "era-universe",
+            "source": "special"
+          },
+          {
+            "era": "era-universe",
+            "source": "bounty"
+          },
+          {
+            "era": "era-universe",
+            "source": "arena"
+          },
+          {
+            "era": "era-universe",
+            "source": "void"
+          },
+          {
+            "era": "era-universe",
+            "source": "calamity"
+          },
+          {
+            "era": "era-universe",
+            "source": "alternate"
+          },
+          {
+            "era": "era-universe",
+            "source": "mirror"
+          },
+          {
+            "era": "era-higher",
+            "source": "special"
+          },
+          {
+            "era": "era-higher",
+            "source": "void"
+          },
+          {
+            "era": "era-higher",
+            "source": "main"
+          },
+          {
+            "era": "era-higher",
+            "source": "alternate"
+          },
+          {
+            "era": "era-higher",
+            "source": "arena"
+          }
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "equipmentGm": {
+    "passed": true,
+    "realDevice": false,
+    "reports": [
+      {
+        "viewport": {
+          "width": 1365,
+          "height": 900
+        },
+        "diag": {
+          "entries": 3,
+          "bytes": 3145728,
+          "limit": 4194304,
+          "hits": 14,
+          "loads": 4,
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "canvases": 1,
+          "rafs": 1,
+          "canCommit": false,
+          "monster": {
+            "entries": 0,
+            "bytes": 0,
+            "limit": 2097152,
+            "hits": 0,
+            "loads": 0,
+            "images": [],
+            "pending": 0,
+            "refs": 0,
+            "closed": false,
+            "id": "",
+            "canvases": 0,
+            "animation": {
+              "state": "idle",
+              "closed": false,
+              "generation": 1,
+              "canCommit": false,
+              "timers": 0
+            }
+          }
+        },
+        "revoked": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 4194304,
+          "hits": 14,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "canvases": 0,
+          "rafs": 1,
+          "canCommit": false,
+          "monster": {
+            "entries": 0,
+            "bytes": 0,
+            "limit": 2097152,
+            "hits": 0,
+            "loads": 0,
+            "images": [],
+            "pending": 0,
+            "refs": 0,
+            "closed": false,
+            "id": "",
+            "canvases": 0,
+            "animation": {
+              "state": "idle",
+              "closed": false,
+              "generation": 2,
+              "canCommit": false,
+              "timers": 0
+            }
+          }
+        },
+        "requests": [
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy.webp?sha=634aee890ff0e86e42956412050ba424d18fc618f28dd37a46955ed1de439e63",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp?sha=29e039f2d91c6613e7cb22ed375fc1917884a2997983ed8419ac09fbc74df57e",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-universe-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-higher-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-higher-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp"
+        ],
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "diag": {
+          "entries": 3,
+          "bytes": 3145728,
+          "limit": 4194304,
+          "hits": 14,
+          "loads": 4,
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "canvases": 1,
+          "rafs": 1,
+          "canCommit": false,
+          "monster": {
+            "entries": 0,
+            "bytes": 0,
+            "limit": 2097152,
+            "hits": 0,
+            "loads": 0,
+            "images": [],
+            "pending": 0,
+            "refs": 0,
+            "closed": false,
+            "id": "",
+            "canvases": 0,
+            "animation": {
+              "state": "idle",
+              "closed": false,
+              "generation": 1,
+              "canCommit": false,
+              "timers": 0
+            }
+          }
+        },
+        "revoked": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 4194304,
+          "hits": 14,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "canvases": 0,
+          "rafs": 1,
+          "canCommit": false,
+          "monster": {
+            "entries": 0,
+            "bytes": 0,
+            "limit": 2097152,
+            "hits": 0,
+            "loads": 0,
+            "images": [],
+            "pending": 0,
+            "refs": 0,
+            "closed": false,
+            "id": "",
+            "canvases": 0,
+            "animation": {
+              "state": "idle",
+              "closed": false,
+              "generation": 2,
+              "canCommit": false,
+              "timers": 0
+            }
+          }
+        },
+        "requests": [
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy.webp?sha=634aee890ff0e86e42956412050ba424d18fc618f28dd37a46955ed1de439e63",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp?sha=29e039f2d91c6613e7cb22ed375fc1917884a2997983ed8419ac09fbc74df57e",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-universe-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-higher-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-higher-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp"
+        ],
+        "errors": []
+      },
+      {
+        "viewport": {
+          "width": 844,
+          "height": 390
+        },
+        "diag": {
+          "entries": 3,
+          "bytes": 3145728,
+          "limit": 4194304,
+          "hits": 14,
+          "loads": 4,
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "canvases": 1,
+          "rafs": 1,
+          "canCommit": false,
+          "monster": {
+            "entries": 0,
+            "bytes": 0,
+            "limit": 2097152,
+            "hits": 0,
+            "loads": 0,
+            "images": [],
+            "pending": 0,
+            "refs": 0,
+            "closed": false,
+            "id": "",
+            "canvases": 0,
+            "animation": {
+              "state": "idle",
+              "closed": false,
+              "generation": 1,
+              "canCommit": false,
+              "timers": 0
+            }
+          }
+        },
+        "revoked": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 4194304,
+          "hits": 14,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "canvases": 0,
+          "rafs": 1,
+          "canCommit": false,
+          "monster": {
+            "entries": 0,
+            "bytes": 0,
+            "limit": 2097152,
+            "hits": 0,
+            "loads": 0,
+            "images": [],
+            "pending": 0,
+            "refs": 0,
+            "closed": false,
+            "id": "",
+            "canvases": 0,
+            "animation": {
+              "state": "idle",
+              "closed": false,
+              "generation": 2,
+              "canCommit": false,
+              "timers": 0
+            }
+          }
+        },
+        "requests": [
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy.webp?sha=634aee890ff0e86e42956412050ba424d18fc618f28dd37a46955ed1de439e63",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp?sha=29e039f2d91c6613e7cb22ed375fc1917884a2997983ed8419ac09fbc74df57e",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-universe-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-higher-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-higher-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp",
+          "http://127.0.0.1:4174/assets/era-player/v1/era-galaxy-attack-atlas.webp"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "foregroundModes": {
+    "passed": true,
+    "cases": 25
+  },
+  "bossFastSwitch": {
+    "passed": true,
+    "viewports": 3
+  },
+  "alternateFastSwitch": {
+    "passed": true,
+    "viewports": 3
+  }
+}

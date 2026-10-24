@@ -1,3 +1,5 @@
+> **三項介面補修（2026-10-24）**：怪物圖鑑共用階層縮排、銀河／宇宙災厄連戰保留舞台 DOM、GM 預覽工程資訊與兩個操作入口移除。範圍、根因、三視窗逐幀驗收與真機界線見 [施工與驗收紀錄](docs/THREE_UI_REPAIRS_2026-10-24.md)；正式發布以同一 PR 最終 HEAD／main／Actions／Pages 紀錄為準。
+
 > **第20批補修正式工程封箱（2026-10-24）**：PR [#91](https://github.com/franksky1207/rpg/pull/91) 已合併；最終PR HEAD `22cbf2fccfeac6122f61c8f3dae8c6147c5f2629` 14項檢查、功能main `b6f5a671c50a30003423941e0ba0f9b31e4897eb` 13個workflow及Pages build／deploy全部成功。20原型各十階、五分類／905展示／1705身份、GM全開圖鑑與共用視覺預備已發布；正式站55檔SHA、圖鑑／GM／連戰通過。iPhone真機與真帳號雲端往返未測，不列成功。完整SHA、Actions、效能與人工界線：[補修封箱報告](docs/BATCH20_REPAIR_ACCEPTANCE_2026-10-24.md)。第19-4批正式行為未修改；本段取代下方補修待驗收狀態。
 
 > **第20批正式工程封箱（2026-10-24）**：第20批已完成整合、必要自動化驗收及正式發布。PR [#90](https://github.com/franksky1207/rpg/pull/90) 已合併；功能 main `4ee52cbb405ee16aed59f3ea67c130e2d607f772`，最終 PR HEAD `1c6a778a226af00a611cfc2f43e40f96ff62a374`。iPhone 真機與真帳號雲端往返仍待人工，不列為已驗收。 五類無收益回顧戰退場、兩類完成後重打阻擋、1705身份永久圖鑑、三紀元文明B方案與說明已上線；原提示／正式數值owner保護通過。PR 14項檢查及功能main全部Actions、Pages build／deploy與HTTPS逐檔驗收成功。完整SHA、Actions及人工界線見 [第20批封箱報告](docs/BATCH20_IMPLEMENTATION_ACCEPTANCE_2026-10-24.md)。本段取代下方第20批歷史待施工／待驗收狀態；第19-4批不在本次範圍。

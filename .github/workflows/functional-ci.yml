@@ -111,6 +111,7 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/monster-ci-http.log 2>&1 &
           sleep 2
           node tests/runtime/batch20-notice-protection.cjs
+          node tests/runtime/three-ui-repairs-browser.cjs
           node tests/runtime/batch20-codex-browser.cjs
           node tests/runtime/batch20-repair-browser.cjs
           node tests/runtime/batch20-visual-preparation-browser.cjs
@@ -132,6 +133,8 @@ jobs:
             /tmp/batch20-alternate-colors.json
             /tmp/batch20-alternate-ten-stages.png
             /tmp/batch20-repair-browser.json
+            /tmp/three-ui-repairs.json
+            /tmp/three-ui-*.png
             /tmp/batch20-visual-preparation.json
             /tmp/batch20-bounty-preparation.json
             /tmp/batch18-native-live.json

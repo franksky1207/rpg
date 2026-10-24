@@ -1,6 +1,16 @@
 (function(){
  'use strict';
  const knownRoots=new WeakMap();
+ const style=document.createElement('style');style.textContent=`
+ .codex-group{margin:8px 0;min-width:0}
+ .codex-group>summary{padding:10px 4px;cursor:pointer;overflow-wrap:anywhere}
+ .codex-branch{margin-left:14px;padding-left:0;border-left:1px solid #ffffff18;min-width:0}
+ .codex-list{list-style:none;padding:0 8px;margin:0;min-width:0}
+ .codex-list>li{padding:8px 0;border-bottom:1px solid #ffffff18;display:flex;gap:8px;align-items:center;justify-content:space-between}
+ .codex-list>li>div{min-width:0;overflow-wrap:anywhere}
+ .codex-list .btn{flex-shrink:0}
+ @media(max-width:420px){.codex-branch{margin-left:12px}.codex-list{padding:0 4px}}
+ `;document.head.appendChild(style);
  const rows=window.MONSTER_CODEX_CATALOGUE,byId=new Map(rows.map(r=>[r.id,r]));
  const owners={main:['combatcore.js','secondworldcombat.js','thirdworldcombat.js'],calamity:['calamitycore.js','secondworldcalamityrun.js'],special:['specialcore.js'],bounty:['dungeoncore.js'],arena:['dungeonarena.js','thirdworldarena.js'],void:['dungeonvoid.js'],alternate:['alternateuniversecombat.js']};
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -62,10 +72,10 @@
  window.toggleMonsterCodexGroup=function(key,value){if(value)opened.add(key);else opened.delete(key);};
  window.openMonsterCodexDetail=function(id,world=1){const r=displayRow(id),known=new Set(state.monsterCodex?.encountered||[]);if(!r||!unlocked(r,known))return false;returnScroll=window.scrollY;selected=r.id;detailWorld=Number(world)===2?2:1;render();window.scrollTo(0,0);return true;};
  window.closeMonsterCodexDetail=function(){selected=null;render();requestAnimationFrame(()=>window.scrollTo(0,returnScroll));};
- function listHtml(list,known,world=1){return list.map(r=>`<li style="padding:8px 0;border-bottom:1px solid #ffffff18;display:flex;gap:8px;align-items:center;justify-content:space-between"><div><b>${esc(nameOf(r,world))}</b><div class="muted">${esc(kindName(r))}・${unlocked(r,known)?'已遭遇':'未遭遇'}</div></div>${unlocked(r,known)?`<button class="btn" onclick="openMonsterCodexDetail('${r.id}',${world})">查看</button>`:''}</li>`).join('');}
- function group(key,label,body){return `<details data-codex-group="${esc(key)}" ${opened.has(key)?'open':''} ontoggle="toggleMonsterCodexGroup('${key}',this.open)" style="margin:8px 0"><summary style="padding:10px;cursor:pointer">${esc(label)}</summary>${body}</details>`;}
+ function listHtml(list,known,world=1){return list.map(r=>`<li><div><b>${esc(nameOf(r,world))}</b><div class="muted">${esc(kindName(r))}・${unlocked(r,known)?'已遭遇':'未遭遇'}</div></div>${unlocked(r,known)?`<button class="btn" onclick="openMonsterCodexDetail('${r.id}',${world})">查看</button>`:''}</li>`).join('');}
+ function group(key,label,body){return `<details data-codex-group="${esc(key)}" ${opened.has(key)?'open':''} ontoggle="toggleMonsterCodexGroup('${key}',this.open)" class="codex-group"><summary>${esc(label)}</summary><div class="codex-branch">${body}</div></details>`;}
  function groupsHtml(known){
-  const members=displayRows.filter(r=>categoryOf(r)===category),list=(items,w=1)=>`<ul style="list-style:none;padding:0 10px;margin:0">${listHtml(items,known,w)}</ul>`;
+  const members=displayRows.filter(r=>categoryOf(r)===category),list=(items,w=1)=>`<ul class="codex-list">${listHtml(items,known,w)}</ul>`;
   if(category==='主線')return group('main-g','銀河紀元',WORLD_REGIONS.map(region=>group('g-'+region.id,region.name,MAPS.slice(region.mapStart,region.mapEnd+1).map((map,i)=>{const index=region.mapStart+i;return group('map-'+index,map.name,list(members.filter(r=>r.world==='galaxy'&&(r.region-1)*10+r.mapIndex-1===index)));}).join(''))).join(''))+group('main-u','宇宙紀元',(window.SECOND_WORLD_REGIONS||[]).map(region=>group('u-'+region.id,region.name,list(members.filter(r=>r.world==='universe'&&Number(r.id.slice(-3))-1>=region.firstBossIndex&&Number(r.id.slice(-3))-1<=region.lastBossIndex),2))).join(''))+group('main-h','高維紀元・高維十王',list(members.filter(r=>r.world==='higher')));
   if(category==='特殊遭遇')return [1,2].map(w=>group('special-'+w,(w===1?'銀河':'宇宙')+'特殊怪',list(members.filter(r=>r.world==='both'||r.world===(w===1?'galaxy':'universe')),w))).join('');
   if(category==='副本')return ['bounty','arena','void'].map(mode=>group('dungeon-'+mode,{bounty:'懸賞',arena:'競技場',void:'虛空幻境'}[mode],mode==='void'?list(members.filter(r=>r.mode===mode)):['galaxy','universe',...(mode==='arena'?['higher']:[])].map(world=>group(mode+'-'+world,epochNames[world],list(members.filter(r=>r.mode===mode&&r.world===world),world==='universe'?2:1))).join(''))).join('');
