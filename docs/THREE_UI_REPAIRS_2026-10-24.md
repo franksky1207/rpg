@@ -23,6 +23,8 @@
 
 首輪 Actions 的 GM terminology 歷史來源鎖拒絕 `3d-test/index.html` 新 cache query；補入同一份精確前後 SHA 登記，原歷史逐位元斷言仍完整執行，未修改產品程式或放寬斷言。
 
+Functional 的既有懸賞準備測試在 CI 兩次停於 ready（尚未開始下一敵人預載），同 SHA 本機可通過；補上真實序章／新手裝備領取完成的前置斷言，及失敗時 clear 原因／stack 診斷，維持原焦點模擬、60秒界線與逐敵預載斷言。懸賞 owner 完全未改。
+
 本機額外嘗試的舊 `batch19-absolute-sizing-contract.cjs` 鎖定第19-1批歷史 mappings，與本次開始前的 main 已有差異；它不是現役 Actions gate，未改寫該斷言。現役尺寸／Renderer與正式owner保護使用現役工作流驗證。
 
 逐筆摘要見 [acceptance.json](evidence/three-ui-repairs/acceptance.json)；本機24場、986個未被新手視窗遮擋的取樣幀，六組舞台／雙方資訊框 top 差值均為0px。完整逐幀資料與畫面由既有 CI artifact 保存。
