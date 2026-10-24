@@ -7,6 +7,10 @@ const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const at=(ref,p)=>cp.execFileSync('git',['show',ref+':'+p],{maxBuffer:8*1024*1024});
 function original(p,encoding){
  let bytes=fs.readFileSync(p);
+ // PR #93 is an independent, exact cache-only HTML composition. Accept that
+ // approved token before checking this repair; never overwrite its codex change.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1&storyBackground=20261024','monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1'));
+
  // The independent Mirror/Void repair is exact-registered above the sealed links.
  const dungeonRepair=require('./mirror-void-approved-sources.json'),dungeonSource=dungeonRepair.files[p];
  if(dungeonSource){assert.equal(sha(bytes),dungeonSource.afterSha256,'unregistered Mirror/Void edit: '+p);const before=at(dungeonRepair.baseline,p);assert.equal(sha(before),dungeonSource.beforeSha256,'Mirror/Void baseline digest: '+p);bytes=before;}
