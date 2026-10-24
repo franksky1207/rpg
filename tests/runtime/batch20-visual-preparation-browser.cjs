@@ -3,7 +3,7 @@ const {chromium}=require('playwright'),fs=require('node:fs'),assert=require('nod
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH||(fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),args:['--no-sandbox']});
  try{
-  const page=await browser.newPage();await page.route('**/repair-visual.html',r=>r.fulfill({contentType:'text/html',body:'<div id="stage" style="position:relative;width:390px;height:240px"></div>'}));await page.goto(new URL('repair-visual.html',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/').href);await page.addScriptTag({url:'/3d-test/t3b-formal-renderer.js'});
+  const page=await browser.newPage();await page.route('**/repair-visual.html',r=>r.fulfill({contentType:'text/html',body:'<div id="stage" style="position:relative;width:390px;height:240px"></div>'}));await page.goto(new URL('repair-visual.html',process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/').href);await page.addScriptTag({url:new URL('3d-test/t3b-formal-renderer.js',page.url()).href});
   const result=await page.evaluate(async()=>{
    const api=CivilizationFormalBRenderer,{mappings}=await import('./3d-test/monster-sprites.mjs?v=20261024-au-ten-stages1'),{getSharedMonsterPool}=await import('./3d-test/monster-sprite-pool.mjs?v=20261024-repair2');
    const pool=getSharedMonsterPool(),rows=Object.values(mappings),cases=[],host=document.getElementById('stage');

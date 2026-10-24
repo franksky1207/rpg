@@ -7,7 +7,7 @@ const {sdk,finishIntro}=require('../equipment-formal/helpers.cjs');
  try{for(const viewport of [{width:390,height:844},{width:1365,height:900},{width:844,height:390}]){
   const page=await browser.newPage({viewport}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('**/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
   await page.goto(process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/');await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready');await finishIntro(page);
-  await page.addScriptTag({url:'/gmdata.js'});
+  await page.addScriptTag({url:new URL('gmdata.js',page.url()).href});
   const result=await page.evaluate(async()=>{
    state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};view='storyrecord';setFrontlineRecordTab('codex');
    const check=(condition,message)=>{if(!condition)throw Error(message);};
