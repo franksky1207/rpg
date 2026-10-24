@@ -126,6 +126,10 @@ jobs:
           node tests/runtime/monster-appearance-browser.cjs
           APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs
           node tests/runtime/batch20-alternate-colors-browser.cjs
+          node tests/runtime/batch15-all-identities-browser.cjs
+          node tests/runtime/batch16-all-identities-browser.cjs
+          node tests/runtime/batch17-all-identities-browser.cjs
+          node tests/runtime/batch18-all-identities-browser.cjs
           node tests/runtime/batch18-native-live-browser.cjs
           node tests/runtime/batch18-monster-recovery-browser.cjs
       - name: Preserve repair visual evidence
@@ -136,6 +140,11 @@ jobs:
           path: |
             work/visual-integration/*.json
             work/visual-integration/*.png
+            /tmp/batch15-all-identities.json
+            /tmp/batch16-all-identities.json
+            /tmp/batch17-all-identities.json
+            /tmp/batch18-all-identities.json
+            /tmp/batch16-mirror.json
             /tmp/batch20-alternate-colors.json
             /tmp/batch20-alternate-ten-stages.png
             /tmp/batch20-repair-browser.json

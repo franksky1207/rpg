@@ -8,7 +8,9 @@ const browser=await chromium.launch({headless:true});const entries=[];
 try{
 const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:"no-preference"});await page.setContent('<!doctype html><html><head></head><body><div id="main"><div class="combat-screen"><div id="combatPlayerCard" class="combatant"><div class="big-hp"><div class="bar"><span id="combatPlayerBar"></span></div></div><span id="combatPlayerHp"></span><span id="combatPlayerDamage"></span></div><div id="combatEnemyCard" class="combatant"><div class="big-hp"><div class="bar"><span id="combatEnemyBar"></span></div></div><span id="combatEnemyHp"></span><span id="combatEnemyDamage"></span></div></div></div></body></html>');
 await page.addStyleTag({content:'.combat-screen{position:relative;width:370px;height:460px;display:flex;gap:8px}.combatant{position:relative;width:180px;height:260px;background:#151c2e}.bar{height:16px;background:#30486b}.attacking{animation:Attack .19s}.hit{animation:hitShake .19s}.show{animation:hitShake .19s}@keyframes Attack{to{transform:translateX(8px)}}@keyframes hitShake{to{transform:translateX(3px)}}'});
-await page.addScriptTag({path:"combatfx.js"});
+// Current main presentation requires the real foreground lifecycle owner.
+  await page.addScriptTag({path:"combatlifecycle.js"});
+  await page.addScriptTag({path:"combatfx.js"});
 for(const mode of ["main-common-presentation","alternate-common-presentation","main-common-presentation-repeat"]){
  await page.evaluate(()=>{window.clearCombatPresentation?.("audit-start");document.querySelectorAll(".combat-fx-pop").forEach(e=>e.remove());});
  const session=await page.context().newCDPSession(page);

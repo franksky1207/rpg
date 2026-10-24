@@ -9,6 +9,8 @@ try{
   const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:"no-preference"});
   await page.setContent('<!doctype html><html lang="zh-Hant"><body><div id="main"></div></body></html>');
   for(const path of ["style.css","battleflow.css","alternateuniverse.css"])await page.addStyleTag({path});
+  // Current main presentation requires the real foreground lifecycle owner.
+  await page.addScriptTag({path:"combatlifecycle.js"});
   await page.addScriptTag({path:"combatfx.js"});
   if(mode==="alternate"){
    await page.evaluate(()=>{

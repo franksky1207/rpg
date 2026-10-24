@@ -5,6 +5,8 @@ const assert=require("node:assert/strict"),{chromium}=require("playwright");
  try{
   const page=await browser.newPage({viewport:{width:390,height:844}});
   await page.setContent('<!doctype html><html><body><div id="main"><div class="combat-screen"><div id="combatPlayerCard" class="combatant"><span id="combatPlayerHp"></span><span id="combatPlayerDamage"></span><span id="combatPlayerBar"></span></div><div id="combatEnemyCard" class="combatant"><span id="combatEnemyHp"></span><span id="combatEnemyDamage"></span><span id="combatEnemyBar"></span></div></div></div></body></html>');
+  // The current main presenter requires its real foreground lifecycle owner.
+  await page.addScriptTag({path:"combatlifecycle.js"});
   await page.addScriptTag({path:"combatfx.js"});
   const result=await page.evaluate(async()=>{
    const base={playerMaxHp:10000,playerStartHp:10000,e:{hp:10000},enemyStartHp:10000};

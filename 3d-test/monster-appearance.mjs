@@ -93,10 +93,12 @@ export function paintMonsterAppearance(bitmap,asset,spec,{canvasFactory=()=>docu
  c.restore();return canvas;
 }
 // The dynamic mirror keeps its player raster/equipment/alpha exactly intact.
-// A single crisp cool edge (no blur) and thin shard frame are presentation only.
+// Two crisp cool edges (no blur) and thin background shards are presentation only.
 export function applyMirrorAppearance(canvas){
- canvas.style.filter='drop-shadow(1px 0 0 #87daed)';
- canvas.style.outline='1px solid #a8dcf060';canvas.style.outlineOffset='-7px';
+ canvas.style.filter='drop-shadow(1px 0 0 #87daed) drop-shadow(-1px 0 0 #b6caff)';
+ canvas.style.outline='none';
+ // Fixed hairline shards are behind the player raster, so equipment is never painted over.
+ canvas.style.backgroundImage=canvas.dataset.clip==='defeat'?'none':'linear-gradient(115deg,transparent 28%,#8ce4ed80 28.2%,transparent 28.6%,transparent 68%,#c0d0ff70 68.2%,transparent 68.6%),linear-gradient(30deg,transparent 52%,#b4e7f080 52.2%,transparent 52.6%)';
  canvas.style.clipPath='polygon(0 0,96% 0,100% 7%,100% 92%,96% 100%,4% 100%,0 94%)';
  canvas.dataset.effect='mirror-projection';
 }

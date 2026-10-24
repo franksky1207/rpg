@@ -5,8 +5,8 @@
     "formalMappings": 1695,
     "effectiveAppearances": 895,
     "illegalDuplicates": 0,
-    "colors": 270,
-    "effectCombinations": 462,
+    "colors": 273,
+    "effectCombinations": 453,
     "visualAcceptance": "pending-human-review",
     "realIPhone": "not-tested"
   },
@@ -3092,13 +3092,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#dc982c",
+          "body": "#43b95e",
           "accent": "#b5f4ed",
-          "rim": "#b2f9c5"
+          "rim": "#ffe5a0"
         },
-        "split": 4,
+        "split": 2,
         "texture": 2,
-        "field": 0,
+        "field": 1,
         "rank": 1,
         "layer": 0,
         "progress": 8,
@@ -3107,7 +3107,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#dc982c\",\"accent\":\"#b5f4ed\",\"rim\":\"#b2f9c5\"},4,2,0,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#43b95e\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffe5a0\"},2,2,1,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-039",
@@ -3309,12 +3309,12 @@
         "assetId": "hm-01",
         "colors": {
           "body": "#4c67d5",
-          "accent": "#ffce67",
+          "accent": "#d8f18b",
           "rim": "#99caff"
         },
-        "split": 4,
+        "split": 1,
         "texture": 5,
-        "field": 7,
+        "field": 1,
         "rank": 1,
         "layer": 0,
         "progress": 10,
@@ -3323,7 +3323,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#4c67d5\",\"accent\":\"#ffce67\",\"rim\":\"#99caff\"},4,5,7,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#4c67d5\",\"accent\":\"#d8f18b\",\"rim\":\"#99caff\"},1,5,1,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-047",
@@ -3821,13 +3821,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#9354cf",
-          "accent": "#f5f1e3",
+          "body": "#dc982c",
+          "accent": "#b5f4ed",
           "rim": "#ffe5a0"
         },
-        "split": 3,
-        "texture": 7,
-        "field": 7,
+        "split": 2,
+        "texture": 9,
+        "field": 3,
         "rank": 1,
         "layer": 2,
         "progress": 13,
@@ -3836,7 +3836,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#9354cf\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},3,7,7,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#dc982c\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffe5a0\"},2,9,3,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-066",
@@ -4064,13 +4064,13 @@
         "version": "20261024-identity-v1",
         "assetId": "mech-02",
         "colors": {
-          "body": "#cb4fa6",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#db503e",
+          "accent": "#55d1ee",
+          "rim": "#effcff"
         },
-        "split": 6,
-        "texture": 1,
-        "field": 6,
+        "split": 1,
+        "texture": 5,
+        "field": 3,
         "rank": 1,
         "layer": 1,
         "progress": 15,
@@ -4079,7 +4079,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-02\",{\"body\":\"#cb4fa6\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},6,1,6,1,0.34,0.14,0]"
+      "fingerprint": "[\"mech-02\",{\"body\":\"#db503e\",\"accent\":\"#55d1ee\",\"rim\":\"#effcff\"},1,5,3,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-075",
@@ -4253,13 +4253,13 @@
         "version": "20261024-identity-v1",
         "assetId": "dr-02",
         "colors": {
-          "body": "#bbc43b",
+          "body": "#db503e",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#effcff"
         },
-        "split": 6,
-        "texture": 2,
-        "field": 7,
+        "split": 4,
+        "texture": 6,
+        "field": 0,
         "rank": 1,
         "layer": 0,
         "progress": 17,
@@ -4268,7 +4268,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"dr-02\",{\"body\":\"#bbc43b\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},6,2,7,0,0.34,0.14,0]"
+      "fingerprint": "[\"dr-02\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#effcff\"},4,6,0,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-082",
@@ -4496,13 +4496,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "body": "#4c67d5",
+          "accent": "#ffce67",
+          "rim": "#f4b9ff"
         },
-        "split": 3,
-        "texture": 6,
-        "field": 4,
+        "split": 2,
+        "texture": 4,
+        "field": 0,
         "rank": 1,
         "layer": 2,
         "progress": 18,
@@ -4511,7 +4511,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#738b99\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},3,6,4,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#4c67d5\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},2,4,0,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-091",
@@ -5090,13 +5090,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#738b99",
-          "accent": "#f5f1e3",
+          "body": "#28b69c",
+          "accent": "#ffce67",
           "rim": "#f4b9ff"
         },
-        "split": 3,
-        "texture": 1,
-        "field": 5,
+        "split": 1,
+        "texture": 9,
+        "field": 1,
         "rank": 1,
         "layer": 0,
         "progress": 23,
@@ -5105,7 +5105,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#738b99\",\"accent\":\"#f5f1e3\",\"rim\":\"#f4b9ff\"},3,1,5,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#28b69c\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},1,9,1,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-113",
@@ -5198,13 +5198,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#cb4fa6",
+          "body": "#db503e",
           "accent": "#ed9dd6",
-          "rim": "#99caff"
+          "rim": "#effcff"
         },
         "split": 4,
-        "texture": 7,
-        "field": 3,
+        "texture": 9,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 24,
@@ -5213,7 +5213,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#cb4fa6\",\"accent\":\"#ed9dd6\",\"rim\":\"#99caff\"},4,7,3,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#db503e\",\"accent\":\"#ed9dd6\",\"rim\":\"#effcff\"},4,9,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-117",
@@ -6144,12 +6144,12 @@
         "assetId": "hm-01",
         "colors": {
           "body": "#349bc9",
-          "accent": "#ed9dd6",
+          "accent": "#ff846c",
           "rim": "#ffad9e"
         },
-        "split": 6,
-        "texture": 2,
-        "field": 6,
+        "split": 1,
+        "texture": 8,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 31,
@@ -6158,7 +6158,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#349bc9\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffad9e\"},6,2,6,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#349bc9\",\"accent\":\"#ff846c\",\"rim\":\"#ffad9e\"},1,8,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-152",
@@ -6359,13 +6359,13 @@
         "version": "20261024-identity-v1",
         "assetId": "mech-02",
         "colors": {
-          "body": "#9a6446",
-          "accent": "#b5f4ed",
-          "rim": "#ffe5a0"
+          "body": "#4c67d5",
+          "accent": "#d8f18b",
+          "rim": "#effcff"
         },
-        "split": 6,
-        "texture": 0,
-        "field": 4,
+        "split": 1,
+        "texture": 3,
+        "field": 6,
         "rank": 1,
         "layer": 1,
         "progress": 32,
@@ -6374,7 +6374,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-02\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffe5a0\"},6,0,4,1,0.34,0.14,0]"
+      "fingerprint": "[\"mech-02\",{\"body\":\"#4c67d5\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},1,3,6,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-160",
@@ -6521,13 +6521,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#ff846c",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#55d1ee",
+          "rim": "#effcff"
         },
-        "split": 4,
-        "texture": 2,
-        "field": 2,
+        "split": 1,
+        "texture": 8,
+        "field": 1,
         "rank": 1,
         "layer": 2,
         "progress": 33,
@@ -6536,7 +6536,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#738b99\",\"accent\":\"#ff846c\",\"rim\":\"#99caff\"},4,2,2,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#bbc43b\",\"accent\":\"#55d1ee\",\"rim\":\"#effcff\"},1,8,1,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-166",
@@ -6818,13 +6818,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#4c67d5",
-          "accent": "#ff846c",
-          "rim": "#99caff"
+          "body": "#d3cba9",
+          "accent": "#55d1ee",
+          "rim": "#ffe5a0"
         },
-        "split": 6,
-        "texture": 7,
-        "field": 2,
+        "split": 2,
+        "texture": 8,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 36,
@@ -6833,7 +6833,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#4c67d5\",\"accent\":\"#ff846c\",\"rim\":\"#99caff\"},6,7,2,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#d3cba9\",\"accent\":\"#55d1ee\",\"rim\":\"#ffe5a0\"},2,8,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-177",
@@ -6899,13 +6899,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#349bc9",
+          "body": "#db503e",
           "accent": "#ed9dd6",
-          "rim": "#b2f9c5"
+          "rim": "#f4b9ff"
         },
-        "split": 4,
-        "texture": 9,
-        "field": 6,
+        "split": 3,
+        "texture": 6,
+        "field": 5,
         "rank": 1,
         "layer": 1,
         "progress": 36,
@@ -6914,7 +6914,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#349bc9\",\"accent\":\"#ed9dd6\",\"rim\":\"#b2f9c5\"},4,9,6,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#db503e\",\"accent\":\"#ed9dd6\",\"rim\":\"#f4b9ff\"},3,6,5,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-180",
@@ -6927,12 +6927,12 @@
         "assetId": "cmd-03",
         "colors": {
           "body": "#738b99",
-          "accent": "#d8f18b",
+          "accent": "#f5f1e3",
           "rim": "#f4b9ff"
         },
-        "split": 2,
+        "split": 1,
         "texture": 5,
-        "field": 2,
+        "field": 0,
         "rank": 1,
         "layer": 2,
         "progress": 36,
@@ -6941,7 +6941,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#d8f18b\",\"rim\":\"#f4b9ff\"},2,5,2,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#f5f1e3\",\"rim\":\"#f4b9ff\"},1,5,0,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-181",
@@ -7115,13 +7115,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#929fff",
-          "rim": "#99caff"
+          "body": "#cb4fa6",
+          "accent": "#b5f4ed",
+          "rim": "#effcff"
         },
-        "split": 4,
-        "texture": 2,
-        "field": 5,
+        "split": 1,
+        "texture": 6,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 38,
@@ -7130,7 +7130,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#738b99\",\"accent\":\"#929fff\",\"rim\":\"#99caff\"},4,2,5,0,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#cb4fa6\",\"accent\":\"#b5f4ed\",\"rim\":\"#effcff\"},1,6,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-188",
@@ -7223,13 +7223,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#ed9dd6",
-          "rim": "#ffe5a0"
+          "body": "#db503e",
+          "accent": "#f5f1e3",
+          "rim": "#99caff"
         },
-        "split": 6,
-        "texture": 6,
-        "field": 7,
+        "split": 2,
+        "texture": 1,
+        "field": 6,
         "rank": 1,
         "layer": 0,
         "progress": 39,
@@ -7238,7 +7238,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#d3cba9\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffe5a0\"},6,6,7,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},2,1,6,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-192",
@@ -7709,13 +7709,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#349bc9",
+          "body": "#cb4fa6",
           "accent": "#55d1ee",
-          "rim": "#ffe5a0"
+          "rim": "#99caff"
         },
-        "split": 0,
-        "texture": 7,
-        "field": 3,
+        "split": 3,
+        "texture": 4,
+        "field": 0,
         "rank": 1,
         "layer": 1,
         "progress": 42,
@@ -7724,7 +7724,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#349bc9\",\"accent\":\"#55d1ee\",\"rim\":\"#ffe5a0\"},0,7,3,1,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#cb4fa6\",\"accent\":\"#55d1ee\",\"rim\":\"#99caff\"},3,4,0,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-210",
@@ -8573,13 +8573,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ffce67",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#55d1ee",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 7,
-        "field": 1,
+        "split": 1,
+        "texture": 4,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 49,
@@ -8588,7 +8588,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#db503e\",\"accent\":\"#ffce67\",\"rim\":\"#effcff\"},5,7,1,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#349bc9\",\"accent\":\"#55d1ee\",\"rim\":\"#ffe5a0\"},1,4,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-242",
@@ -8627,13 +8627,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#cb4fa6",
-          "accent": "#ffce67",
-          "rim": "#99caff"
+          "body": "#9a6446",
+          "accent": "#ff846c",
+          "rim": "#ffe5a0"
         },
-        "split": 0,
-        "texture": 6,
-        "field": 0,
+        "split": 5,
+        "texture": 3,
+        "field": 1,
         "rank": 1,
         "layer": 0,
         "progress": 49,
@@ -8642,7 +8642,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#cb4fa6\",\"accent\":\"#ffce67\",\"rim\":\"#99caff\"},0,6,0,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#9a6446\",\"accent\":\"#ff846c\",\"rim\":\"#ffe5a0\"},5,3,1,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-244",
@@ -8870,13 +8870,13 @@
         "version": "20261024-identity-v1",
         "assetId": "dr-02",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#ed9dd6",
-          "rim": "#b2f9c5"
+          "body": "#bbc43b",
+          "accent": "#55d1ee",
+          "rim": "#99caff"
         },
-        "split": 0,
-        "texture": 1,
-        "field": 2,
+        "split": 5,
+        "texture": 4,
+        "field": 3,
         "rank": 1,
         "layer": 0,
         "progress": 51,
@@ -8885,7 +8885,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"dr-02\",{\"body\":\"#d3cba9\",\"accent\":\"#ed9dd6\",\"rim\":\"#b2f9c5\"},0,1,2,0,0.34,0.14,0]"
+      "fingerprint": "[\"dr-02\",{\"body\":\"#bbc43b\",\"accent\":\"#55d1ee\",\"rim\":\"#99caff\"},5,4,3,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-253",
@@ -8898,12 +8898,12 @@
         "assetId": "hm-02",
         "colors": {
           "body": "#738b99",
-          "accent": "#929fff",
+          "accent": "#55d1ee",
           "rim": "#f4b9ff"
         },
-        "split": 5,
-        "texture": 3,
-        "field": 7,
+        "split": 2,
+        "texture": 1,
+        "field": 3,
         "rank": 1,
         "layer": 0,
         "progress": 51,
@@ -8912,7 +8912,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#738b99\",\"accent\":\"#929fff\",\"rim\":\"#f4b9ff\"},5,3,7,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#738b99\",\"accent\":\"#55d1ee\",\"rim\":\"#f4b9ff\"},2,1,3,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-254",
@@ -9329,13 +9329,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#43b95e",
-          "accent": "#929fff",
-          "rim": "#ffad9e"
+          "body": "#28b69c",
+          "accent": "#b5f4ed",
+          "rim": "#99caff"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 2,
+        "split": 1,
+        "texture": 4,
+        "field": 5,
         "rank": 1,
         "layer": 1,
         "progress": 54,
@@ -9344,7 +9344,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#43b95e\",\"accent\":\"#929fff\",\"rim\":\"#ffad9e\"},5,1,2,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#28b69c\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},1,4,5,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-270",
@@ -9491,13 +9491,13 @@
         "version": "20261024-identity-v1",
         "assetId": "core-01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ffce67",
-          "rim": "#f4b9ff"
+          "body": "#349bc9",
+          "accent": "#f5f1e3",
+          "rim": "#b2f9c5"
         },
-        "split": 2,
-        "texture": 6,
-        "field": 5,
+        "split": 7,
+        "texture": 7,
+        "field": 7,
         "rank": 1,
         "layer": 2,
         "progress": 55,
@@ -9506,7 +9506,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"core-01\",{\"body\":\"#db503e\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},2,6,5,2,0.34,0.14,0]"
+      "fingerprint": "[\"core-01\",{\"body\":\"#349bc9\",\"accent\":\"#f5f1e3\",\"rim\":\"#b2f9c5\"},7,7,7,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-276",
@@ -9518,13 +9518,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#4c67d5",
-          "accent": "#55d1ee",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#ed9dd6",
+          "rim": "#f4b9ff"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 7,
+        "split": 3,
+        "texture": 1,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 56,
@@ -9533,7 +9533,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#4c67d5\",\"accent\":\"#55d1ee\",\"rim\":\"#99caff\"},7,3,7,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#bbc43b\",\"accent\":\"#ed9dd6\",\"rim\":\"#f4b9ff\"},3,1,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-277",
@@ -9599,13 +9599,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#cb4fa6",
-          "accent": "#d8f18b",
-          "rim": "#effcff"
+          "body": "#4c67d5",
+          "accent": "#55d1ee",
+          "rim": "#f4b9ff"
         },
-        "split": 5,
-        "texture": 4,
-        "field": 1,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 1,
         "layer": 1,
         "progress": 56,
@@ -9614,7 +9614,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#cb4fa6\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},5,4,1,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#4c67d5\",\"accent\":\"#55d1ee\",\"rim\":\"#f4b9ff\"},1,6,0,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-280",
@@ -10139,13 +10139,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ffce67",
-          "rim": "#effcff"
+          "body": "#738b99",
+          "accent": "#55d1ee",
+          "rim": "#f4b9ff"
         },
-        "split": 3,
-        "texture": 5,
-        "field": 1,
+        "split": 0,
+        "texture": 9,
+        "field": 2,
         "rank": 1,
         "layer": 1,
         "progress": 60,
@@ -10154,7 +10154,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#db503e\",\"accent\":\"#ffce67\",\"rim\":\"#effcff\"},3,5,1,1,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#55d1ee\",\"rim\":\"#f4b9ff\"},0,9,2,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-300",
@@ -10194,12 +10194,12 @@
         "assetId": "hm-02",
         "colors": {
           "body": "#d3cba9",
-          "accent": "#f5f1e3",
+          "accent": "#ffce67",
           "rim": "#b2f9c5"
         },
-        "split": 6,
-        "texture": 4,
-        "field": 1,
+        "split": 2,
+        "texture": 8,
+        "field": 6,
         "rank": 1,
         "layer": 0,
         "progress": 61,
@@ -10208,7 +10208,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#d3cba9\",\"accent\":\"#f5f1e3\",\"rim\":\"#b2f9c5\"},6,4,1,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#d3cba9\",\"accent\":\"#ffce67\",\"rim\":\"#b2f9c5\"},2,8,6,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-302",
@@ -10301,13 +10301,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#738b99",
-          "accent": "#929fff",
-          "rim": "#f4b9ff"
+          "body": "#43b95e",
+          "accent": "#ed9dd6",
+          "rim": "#b2f9c5"
         },
-        "split": 3,
-        "texture": 1,
-        "field": 7,
+        "split": 1,
+        "texture": 2,
+        "field": 2,
         "rank": 1,
         "layer": 2,
         "progress": 61,
@@ -10316,7 +10316,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#929fff\",\"rim\":\"#f4b9ff\"},3,1,7,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#43b95e\",\"accent\":\"#ed9dd6\",\"rim\":\"#b2f9c5\"},1,2,2,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-306",
@@ -10355,13 +10355,13 @@
         "version": "20261024-identity-v1",
         "assetId": "mech-01",
         "colors": {
-          "body": "#dc982c",
-          "accent": "#f5f1e3",
-          "rim": "#ffad9e"
+          "body": "#bbc43b",
+          "accent": "#55d1ee",
+          "rim": "#99caff"
         },
-        "split": 6,
-        "texture": 7,
-        "field": 1,
+        "split": 2,
+        "texture": 6,
+        "field": 2,
         "rank": 1,
         "layer": 0,
         "progress": 62,
@@ -10370,7 +10370,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-01\",{\"body\":\"#dc982c\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffad9e\"},6,7,1,0,0.34,0.14,0]"
+      "fingerprint": "[\"mech-01\",{\"body\":\"#bbc43b\",\"accent\":\"#55d1ee\",\"rim\":\"#99caff\"},2,6,2,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-308",
@@ -10409,12 +10409,12 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#d8f18b",
+          "body": "#43b95e",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 6,
-        "texture": 9,
+        "split": 2,
+        "texture": 1,
         "field": 4,
         "rank": 1,
         "layer": 1,
@@ -10424,7 +10424,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#d3cba9\",\"accent\":\"#d8f18b\",\"rim\":\"#ffad9e\"},6,9,4,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#43b95e\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},2,1,4,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-310",
@@ -10598,13 +10598,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#ffce67",
-          "rim": "#b2f9c5"
+          "body": "#bbc43b",
+          "accent": "#55d1ee",
+          "rim": "#99caff"
         },
-        "split": 1,
-        "texture": 1,
-        "field": 4,
+        "split": 5,
+        "texture": 6,
+        "field": 1,
         "rank": 1,
         "layer": 0,
         "progress": 64,
@@ -10613,7 +10613,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#d3cba9\",\"accent\":\"#ffce67\",\"rim\":\"#b2f9c5\"},1,1,4,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#bbc43b\",\"accent\":\"#55d1ee\",\"rim\":\"#99caff\"},5,6,1,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-317",
@@ -10868,12 +10868,12 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#349bc9",
-          "accent": "#ffce67",
-          "rim": "#ffe5a0"
+          "body": "#d3cba9",
+          "accent": "#929fff",
+          "rim": "#b2f9c5"
         },
-        "split": 6,
-        "texture": 6,
+        "split": 0,
+        "texture": 4,
         "field": 5,
         "rank": 1,
         "layer": 0,
@@ -10883,7 +10883,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},6,6,5,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#d3cba9\",\"accent\":\"#929fff\",\"rim\":\"#b2f9c5\"},0,4,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-327",
@@ -11111,12 +11111,12 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#55d1ee",
-          "rim": "#99caff"
+          "body": "#db503e",
+          "accent": "#b5f4ed",
+          "rim": "#f4b9ff"
         },
-        "split": 5,
-        "texture": 8,
+        "split": 1,
+        "texture": 4,
         "field": 7,
         "rank": 1,
         "layer": 2,
@@ -11126,7 +11126,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#738b99\",\"accent\":\"#55d1ee\",\"rim\":\"#99caff\"},5,8,7,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},1,4,7,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-336",
@@ -11219,13 +11219,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#ffce67",
-          "rim": "#99caff"
+          "body": "#43b95e",
+          "accent": "#ff846c",
+          "rim": "#ffad9e"
         },
-        "split": 6,
-        "texture": 4,
-        "field": 0,
+        "split": 1,
+        "texture": 5,
+        "field": 7,
         "rank": 1,
         "layer": 1,
         "progress": 68,
@@ -11234,7 +11234,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#738b99\",\"accent\":\"#ffce67\",\"rim\":\"#99caff\"},6,4,0,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#43b95e\",\"accent\":\"#ff846c\",\"rim\":\"#ffad9e\"},1,5,7,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-340",
@@ -11354,13 +11354,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#43b95e",
-          "accent": "#ed9dd6",
-          "rim": "#ffad9e"
+          "body": "#dc982c",
+          "accent": "#d8f18b",
+          "rim": "#ffe5a0"
         },
-        "split": 6,
-        "texture": 7,
-        "field": 7,
+        "split": 2,
+        "texture": 9,
+        "field": 6,
         "rank": 1,
         "layer": 1,
         "progress": 69,
@@ -11369,7 +11369,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#43b95e\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffad9e\"},6,7,7,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#dc982c\",\"accent\":\"#d8f18b\",\"rim\":\"#ffe5a0\"},2,9,6,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-345",
@@ -11408,13 +11408,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#ffce67",
-          "rim": "#ffe5a0"
+          "body": "#cb4fa6",
+          "accent": "#b5f4ed",
+          "rim": "#f4b9ff"
         },
-        "split": 7,
-        "texture": 2,
-        "field": 4,
+        "split": 3,
+        "texture": 9,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 70,
@@ -11423,7 +11423,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#d3cba9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},7,2,4,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#cb4fa6\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},3,9,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-347",
@@ -11760,12 +11760,12 @@
         "assetId": "mech-03",
         "colors": {
           "body": "#db503e",
-          "accent": "#b5f4ed",
+          "accent": "#f5f1e3",
           "rim": "#f4b9ff"
         },
-        "split": 6,
-        "texture": 3,
-        "field": 1,
+        "split": 1,
+        "texture": 9,
+        "field": 2,
         "rank": 1,
         "layer": 1,
         "progress": 72,
@@ -11774,7 +11774,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-03\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},6,3,1,1,0.34,0.14,0]"
+      "fingerprint": "[\"mech-03\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#f4b9ff\"},1,9,2,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-360",
@@ -11813,13 +11813,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#9354cf",
-          "accent": "#55d1ee",
-          "rim": "#b2f9c5"
+          "body": "#db503e",
+          "accent": "#d8f18b",
+          "rim": "#99caff"
         },
-        "split": 0,
-        "texture": 8,
-        "field": 2,
+        "split": 3,
+        "texture": 7,
+        "field": 3,
         "rank": 1,
         "layer": 0,
         "progress": 73,
@@ -11828,7 +11828,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#9354cf\",\"accent\":\"#55d1ee\",\"rim\":\"#b2f9c5\"},0,8,2,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#99caff\"},3,7,3,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-362",
@@ -11975,12 +11975,12 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ff846c",
-          "rim": "#99caff"
+          "body": "#349bc9",
+          "accent": "#f5f1e3",
+          "rim": "#ffad9e"
         },
-        "split": 0,
-        "texture": 1,
+        "split": 3,
+        "texture": 0,
         "field": 2,
         "rank": 1,
         "layer": 0,
@@ -11990,7 +11990,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#db503e\",\"accent\":\"#ff846c\",\"rim\":\"#99caff\"},0,1,2,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#349bc9\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffad9e\"},3,0,2,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-368",
@@ -12083,13 +12083,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#349bc9",
-          "accent": "#b5f4ed",
+          "body": "#9a6446",
+          "accent": "#929fff",
           "rim": "#ffad9e"
         },
-        "split": 0,
-        "texture": 4,
-        "field": 1,
+        "split": 3,
+        "texture": 8,
+        "field": 4,
         "rank": 1,
         "layer": 0,
         "progress": 75,
@@ -12098,7 +12098,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#349bc9\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},0,4,1,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#9a6446\",\"accent\":\"#929fff\",\"rim\":\"#ffad9e\"},3,8,4,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-372",
@@ -12920,13 +12920,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#bbc43b",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#db503e",
+          "accent": "#ffce67",
+          "rim": "#effcff"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 5,
+        "split": 5,
+        "texture": 5,
+        "field": 2,
         "rank": 1,
         "layer": 0,
         "progress": 81,
@@ -12935,7 +12935,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#bbc43b\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,3,5,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#db503e\",\"accent\":\"#ffce67\",\"rim\":\"#effcff\"},5,5,2,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-403",
@@ -12947,13 +12947,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#b5f4ed",
-          "rim": "#b2f9c5"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 1,
+        "split": 5,
+        "texture": 5,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 81,
@@ -12962,7 +12962,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#d3cba9\",\"accent\":\"#b5f4ed\",\"rim\":\"#b2f9c5\"},2,7,1,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},5,5,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-404",
@@ -13055,13 +13055,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#cb4fa6",
-          "accent": "#929fff",
-          "rim": "#f4b9ff"
+          "body": "#9a6446",
+          "accent": "#55d1ee",
+          "rim": "#ffad9e"
         },
         "split": 0,
-        "texture": 3,
-        "field": 6,
+        "texture": 2,
+        "field": 3,
         "rank": 1,
         "layer": 0,
         "progress": 82,
@@ -13070,7 +13070,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#cb4fa6\",\"accent\":\"#929fff\",\"rim\":\"#f4b9ff\"},0,3,6,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},0,2,3,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-408",
@@ -13244,13 +13244,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#9354cf",
-          "accent": "#f5f1e3",
-          "rim": "#ffe5a0"
+          "body": "#cb4fa6",
+          "accent": "#55d1ee",
+          "rim": "#effcff"
         },
-        "split": 7,
-        "texture": 1,
-        "field": 0,
+        "split": 3,
+        "texture": 8,
+        "field": 2,
         "rank": 1,
         "layer": 1,
         "progress": 83,
@@ -13259,7 +13259,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#9354cf\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},7,1,0,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#cb4fa6\",\"accent\":\"#55d1ee\",\"rim\":\"#effcff\"},3,8,2,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-415",
@@ -13568,12 +13568,12 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#bbc43b",
-          "accent": "#ffce67",
-          "rim": "#99caff"
+          "body": "#db503e",
+          "accent": "#b5f4ed",
+          "rim": "#effcff"
         },
-        "split": 2,
-        "texture": 0,
+        "split": 5,
+        "texture": 2,
         "field": 0,
         "rank": 1,
         "layer": 0,
@@ -13583,7 +13583,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#99caff\"},2,0,0,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#effcff\"},5,2,0,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-427",
@@ -13676,13 +13676,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#9354cf",
-          "accent": "#ed9dd6",
+          "body": "#dc982c",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 2,
-        "texture": 3,
-        "field": 7,
+        "split": 4,
+        "texture": 1,
+        "field": 6,
         "rank": 1,
         "layer": 2,
         "progress": 86,
@@ -13691,7 +13691,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#9354cf\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffad9e\"},2,3,7,2,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#dc982c\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},4,1,6,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-431",
@@ -13865,13 +13865,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#349bc9",
-          "accent": "#d8f18b",
+          "body": "#9a6446",
+          "accent": "#55d1ee",
           "rim": "#ffe5a0"
         },
-        "split": 2,
+        "split": 6,
         "texture": 9,
-        "field": 6,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 88,
@@ -13880,7 +13880,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#349bc9\",\"accent\":\"#d8f18b\",\"rim\":\"#ffe5a0\"},2,9,6,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffe5a0\"},6,9,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-438",
@@ -14027,13 +14027,13 @@
         "version": "20261024-identity-v1",
         "assetId": "mech-01",
         "colors": {
-          "body": "#4c67d5",
+          "body": "#28b69c",
           "accent": "#f5f1e3",
-          "rim": "#effcff"
+          "rim": "#f4b9ff"
         },
-        "split": 7,
-        "texture": 6,
-        "field": 6,
+        "split": 1,
+        "texture": 2,
+        "field": 0,
         "rank": 1,
         "layer": 0,
         "progress": 89,
@@ -14042,7 +14042,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-01\",{\"body\":\"#4c67d5\",\"accent\":\"#f5f1e3\",\"rim\":\"#effcff\"},7,6,6,0,0.34,0.14,0]"
+      "fingerprint": "[\"mech-01\",{\"body\":\"#28b69c\",\"accent\":\"#f5f1e3\",\"rim\":\"#f4b9ff\"},1,2,0,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-444",
@@ -14324,13 +14324,13 @@
         "version": "20261024-identity-v1",
         "assetId": "ship-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "body": "#dc982c",
+          "accent": "#f5f1e3",
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 0,
-        "field": 5,
+        "split": 1,
+        "texture": 3,
+        "field": 1,
         "rank": 1,
         "layer": 1,
         "progress": 91,
@@ -14339,7 +14339,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"ship-01\",{\"body\":\"#738b99\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},7,0,5,1,0.34,0.14,0]"
+      "fingerprint": "[\"ship-01\",{\"body\":\"#dc982c\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},1,3,1,1,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-455",
@@ -14432,13 +14432,13 @@
         "version": "20261024-identity-v1",
         "assetId": "dr-02",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ff846c",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#f5f1e3",
+          "rim": "#ffe5a0"
         },
-        "split": 2,
-        "texture": 6,
-        "field": 4,
+        "split": 5,
+        "texture": 5,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 92,
@@ -14447,7 +14447,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"dr-02\",{\"body\":\"#db503e\",\"accent\":\"#ff846c\",\"rim\":\"#effcff\"},2,6,4,0,0.34,0.14,0]"
+      "fingerprint": "[\"dr-02\",{\"body\":\"#349bc9\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},5,5,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-459",
@@ -14621,13 +14621,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#db503e",
-          "accent": "#b5f4ed",
+          "body": "#4c67d5",
+          "accent": "#f5f1e3",
           "rim": "#effcff"
         },
-        "split": 4,
-        "texture": 1,
-        "field": 6,
+        "split": 1,
+        "texture": 3,
+        "field": 5,
         "rank": 1,
         "layer": 2,
         "progress": 93,
@@ -14636,7 +14636,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#effcff\"},4,1,6,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#4c67d5\",\"accent\":\"#f5f1e3\",\"rim\":\"#effcff\"},1,3,5,2,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-466",
@@ -14810,13 +14810,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#929fff",
-          "rim": "#b2f9c5"
+          "body": "#738b99",
+          "accent": "#ff846c",
+          "rim": "#f4b9ff"
         },
-        "split": 0,
-        "texture": 6,
-        "field": 3,
+        "split": 1,
+        "texture": 5,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 95,
@@ -14825,7 +14825,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#d3cba9\",\"accent\":\"#929fff\",\"rim\":\"#b2f9c5\"},0,6,3,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#738b99\",\"accent\":\"#ff846c\",\"rim\":\"#f4b9ff\"},1,5,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-473",
@@ -14918,13 +14918,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-01",
         "colors": {
-          "body": "#dc982c",
-          "accent": "#d8f18b",
-          "rim": "#b2f9c5"
+          "body": "#738b99",
+          "accent": "#b5f4ed",
+          "rim": "#effcff"
         },
-        "split": 0,
-        "texture": 6,
-        "field": 5,
+        "split": 1,
+        "texture": 1,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 96,
@@ -14933,7 +14933,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-01\",{\"body\":\"#dc982c\",\"accent\":\"#d8f18b\",\"rim\":\"#b2f9c5\"},0,6,5,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-01\",{\"body\":\"#738b99\",\"accent\":\"#b5f4ed\",\"rim\":\"#effcff\"},1,1,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-477",
@@ -14972,13 +14972,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#bbc43b",
-          "accent": "#d8f18b",
-          "rim": "#99caff"
+          "body": "#dc982c",
+          "accent": "#f5f1e3",
+          "rim": "#ffad9e"
         },
-        "split": 0,
-        "texture": 9,
-        "field": 2,
+        "split": 2,
+        "texture": 4,
+        "field": 3,
         "rank": 1,
         "layer": 0,
         "progress": 96,
@@ -14987,7 +14987,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#bbc43b\",\"accent\":\"#d8f18b\",\"rim\":\"#99caff\"},0,9,2,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#dc982c\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffad9e\"},2,4,3,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-479",
@@ -15053,13 +15053,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-04",
         "colors": {
-          "body": "#9a6446",
-          "accent": "#ed9dd6",
-          "rim": "#ffe5a0"
+          "body": "#4c67d5",
+          "accent": "#ff846c",
+          "rim": "#effcff"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 0,
+        "split": 4,
+        "texture": 4,
+        "field": 5,
         "rank": 1,
         "layer": 0,
         "progress": 97,
@@ -15068,7 +15068,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-04\",{\"body\":\"#9a6446\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffe5a0\"},2,7,0,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-04\",{\"body\":\"#4c67d5\",\"accent\":\"#ff846c\",\"rim\":\"#effcff\"},4,4,5,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-482",
@@ -15080,13 +15080,13 @@
         "version": "20261024-identity-v1",
         "assetId": "mech-01",
         "colors": {
-          "body": "#bbc43b",
-          "accent": "#ffce67",
-          "rim": "#99caff"
+          "body": "#349bc9",
+          "accent": "#d8f18b",
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 8,
-        "field": 2,
+        "split": 3,
+        "texture": 5,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 97,
@@ -15095,7 +15095,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-01\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#99caff\"},7,8,2,0,0.34,0.14,0]"
+      "fingerprint": "[\"mech-01\",{\"body\":\"#349bc9\",\"accent\":\"#d8f18b\",\"rim\":\"#ffe5a0\"},3,5,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-483",
@@ -15107,13 +15107,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#738b99",
-          "accent": "#ed9dd6",
+          "body": "#28b69c",
+          "accent": "#ff846c",
           "rim": "#f4b9ff"
         },
-        "split": 4,
-        "texture": 7,
-        "field": 4,
+        "split": 1,
+        "texture": 9,
+        "field": 3,
         "rank": 1,
         "layer": 0,
         "progress": 97,
@@ -15122,7 +15122,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#ed9dd6\",\"rim\":\"#f4b9ff\"},4,7,4,0,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#28b69c\",\"accent\":\"#ff846c\",\"rim\":\"#f4b9ff\"},1,9,3,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-484",
@@ -15188,13 +15188,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#9354cf",
-          "accent": "#f5f1e3",
-          "rim": "#ffad9e"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 0,
-        "texture": 2,
-        "field": 1,
+        "split": 6,
+        "texture": 4,
+        "field": 7,
         "rank": 1,
         "layer": 0,
         "progress": 98,
@@ -15203,7 +15203,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#9354cf\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffad9e\"},0,2,1,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},6,4,7,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-487",
@@ -15512,13 +15512,13 @@
         "version": "20261024-identity-v1",
         "assetId": "hm-02",
         "colors": {
-          "body": "#738b99",
-          "accent": "#b5f4ed",
-          "rim": "#f4b9ff"
+          "body": "#9354cf",
+          "accent": "#d8f18b",
+          "rim": "#ffad9e"
         },
-        "split": 0,
-        "texture": 1,
-        "field": 7,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 1,
         "layer": 0,
         "progress": 100,
@@ -15527,7 +15527,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"hm-02\",{\"body\":\"#738b99\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},0,1,7,0,0.34,0.14,0]"
+      "fingerprint": "[\"hm-02\",{\"body\":\"#9354cf\",\"accent\":\"#d8f18b\",\"rim\":\"#ffad9e\"},1,6,0,0,0.34,0.14,0]"
     },
     {
       "id": "galaxy-map-499",
@@ -15674,13 +15674,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#d3cba9",
+          "body": "#dc982c",
           "accent": "#d8f18b",
-          "rim": "#b2f9c5"
+          "rim": "#ffad9e"
         },
-        "split": 5,
+        "split": 1,
         "texture": 8,
-        "field": 6,
+        "field": 0,
         "rank": 1,
         "layer": 2,
         "progress": 4,
@@ -15689,7 +15689,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#d3cba9\",\"accent\":\"#d8f18b\",\"rim\":\"#b2f9c5\"},5,8,6,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#dc982c\",\"accent\":\"#d8f18b\",\"rim\":\"#ffad9e\"},1,8,0,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-005",
@@ -15701,13 +15701,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#bbc43b",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#9354cf",
+          "accent": "#ed9dd6",
+          "rim": "#ffad9e"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 5,
+        "split": 1,
+        "texture": 8,
+        "field": 1,
         "rank": 1,
         "layer": 2,
         "progress": 5,
@@ -15716,7 +15716,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#bbc43b\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},5,1,5,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#9354cf\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffad9e\"},1,8,1,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-006",
@@ -15728,12 +15728,12 @@
         "version": "20261024-identity-v1",
         "assetId": "core-01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#b5f4ed",
-          "rim": "#f4b9ff"
+          "body": "#9354cf",
+          "accent": "#d8f18b",
+          "rim": "#ffe5a0"
         },
-        "split": 3,
-        "texture": 2,
+        "split": 6,
+        "texture": 7,
         "field": 2,
         "rank": 1,
         "layer": 2,
@@ -15743,7 +15743,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"core-01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},3,2,2,2,0.34,0.14,0]"
+      "fingerprint": "[\"core-01\",{\"body\":\"#9354cf\",\"accent\":\"#d8f18b\",\"rim\":\"#ffe5a0\"},6,7,2,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-007",
@@ -15809,13 +15809,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ff846c",
-          "rim": "#effcff"
+          "body": "#9a6446",
+          "accent": "#55d1ee",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 7,
-        "field": 3,
+        "split": 1,
+        "texture": 6,
+        "field": 4,
         "rank": 1,
         "layer": 2,
         "progress": 9,
@@ -15824,7 +15824,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#db503e\",\"accent\":\"#ff846c\",\"rim\":\"#effcff\"},5,7,3,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffe5a0\"},1,6,4,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-010",
@@ -15890,13 +15890,13 @@
         "version": "20261024-identity-v1",
         "assetId": "fort-01",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#929fff",
-          "rim": "#b2f9c5"
+          "body": "#db503e",
+          "accent": "#55d1ee",
+          "rim": "#effcff"
         },
-        "split": 5,
-        "texture": 7,
-        "field": 1,
+        "split": 1,
+        "texture": 4,
+        "field": 6,
         "rank": 1,
         "layer": 2,
         "progress": 12,
@@ -15905,7 +15905,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"fort-01\",{\"body\":\"#d3cba9\",\"accent\":\"#929fff\",\"rim\":\"#b2f9c5\"},5,7,1,2,0.34,0.14,0]"
+      "fingerprint": "[\"fort-01\",{\"body\":\"#db503e\",\"accent\":\"#55d1ee\",\"rim\":\"#effcff\"},1,4,6,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-013",
@@ -15917,13 +15917,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#738b99",
-          "accent": "#ffce67",
-          "rim": "#f4b9ff"
+          "body": "#cb4fa6",
+          "accent": "#929fff",
+          "rim": "#99caff"
         },
-        "split": 5,
-        "texture": 3,
-        "field": 1,
+        "split": 1,
+        "texture": 7,
+        "field": 7,
         "rank": 1,
         "layer": 2,
         "progress": 13,
@@ -15932,7 +15932,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},5,3,1,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#cb4fa6\",\"accent\":\"#929fff\",\"rim\":\"#99caff\"},1,7,7,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-014",
@@ -16295,13 +16295,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#dc982c",
-          "accent": "#ff846c",
-          "rim": "#ffad9e"
+          "body": "#db503e",
+          "accent": "#d8f18b",
+          "rim": "#effcff"
         },
-        "split": 6,
-        "texture": 2,
-        "field": 7,
+        "split": 0,
+        "texture": 3,
+        "field": 4,
         "rank": 1,
         "layer": 2,
         "progress": 27,
@@ -16310,7 +16310,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#dc982c\",\"accent\":\"#ff846c\",\"rim\":\"#ffad9e\"},6,2,7,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},0,3,4,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-028",
@@ -16538,13 +16538,13 @@
         "version": "20261024-identity-v1",
         "assetId": "fort-01",
         "colors": {
-          "body": "#bbc43b",
-          "accent": "#d8f18b",
-          "rim": "#99caff"
+          "body": "#db503e",
+          "accent": "#b5f4ed",
+          "rim": "#effcff"
         },
-        "split": 5,
-        "texture": 0,
-        "field": 1,
+        "split": 7,
+        "texture": 2,
+        "field": 4,
         "rank": 1,
         "layer": 2,
         "progress": 36,
@@ -16553,7 +16553,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"fort-01\",{\"body\":\"#bbc43b\",\"accent\":\"#d8f18b\",\"rim\":\"#99caff\"},5,0,1,2,0.34,0.14,0]"
+      "fingerprint": "[\"fort-01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#effcff\"},7,2,4,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-037",
@@ -16700,13 +16700,13 @@
         "version": "20261024-identity-v1",
         "assetId": "fort-01",
         "colors": {
-          "body": "#9354cf",
-          "accent": "#f5f1e3",
-          "rim": "#ffad9e"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
+        "split": 7,
         "texture": 3,
-        "field": 0,
+        "field": 5,
         "rank": 1,
         "layer": 2,
         "progress": 42,
@@ -16715,7 +16715,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"fort-01\",{\"body\":\"#9354cf\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffad9e\"},5,3,0,2,0.34,0.14,0]"
+      "fingerprint": "[\"fort-01\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},7,3,5,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-043",
@@ -16781,13 +16781,13 @@
         "version": "20261024-identity-v1",
         "assetId": "core-01",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#d8f18b",
-          "rim": "#ffad9e"
+          "body": "#9a6446",
+          "accent": "#b5f4ed",
+          "rim": "#b2f9c5"
         },
-        "split": 4,
-        "texture": 9,
-        "field": 2,
+        "split": 6,
+        "texture": 5,
+        "field": 6,
         "rank": 1,
         "layer": 2,
         "progress": 45,
@@ -16796,7 +16796,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"core-01\",{\"body\":\"#d3cba9\",\"accent\":\"#d8f18b\",\"rim\":\"#ffad9e\"},4,9,2,2,0.34,0.14,0]"
+      "fingerprint": "[\"core-01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#b2f9c5\"},6,5,6,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-046",
@@ -16836,12 +16836,12 @@
         "assetId": "core-01",
         "colors": {
           "body": "#bbc43b",
-          "accent": "#f5f1e3",
+          "accent": "#ed9dd6",
           "rim": "#effcff"
         },
-        "split": 4,
-        "texture": 2,
-        "field": 1,
+        "split": 7,
+        "texture": 8,
+        "field": 2,
         "rank": 1,
         "layer": 2,
         "progress": 47,
@@ -16850,7 +16850,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"core-01\",{\"body\":\"#bbc43b\",\"accent\":\"#f5f1e3\",\"rim\":\"#effcff\"},4,2,1,2,0.34,0.14,0]"
+      "fingerprint": "[\"core-01\",{\"body\":\"#bbc43b\",\"accent\":\"#ed9dd6\",\"rim\":\"#effcff\"},7,8,2,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-048",
@@ -17024,13 +17024,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#db503e",
-          "accent": "#55d1ee",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#d8f18b",
+          "rim": "#ffe5a0"
         },
-        "split": 6,
-        "texture": 3,
-        "field": 0,
+        "split": 1,
+        "texture": 2,
+        "field": 1,
         "rank": 1,
         "layer": 2,
         "progress": 54,
@@ -17039,7 +17039,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#db503e\",\"accent\":\"#55d1ee\",\"rim\":\"#effcff\"},6,3,0,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#349bc9\",\"accent\":\"#d8f18b\",\"rim\":\"#ffe5a0\"},1,2,1,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-055",
@@ -17105,13 +17105,13 @@
         "version": "20261024-identity-v1",
         "assetId": "fort-03",
         "colors": {
-          "body": "#28b69c",
+          "body": "#9a6446",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#b2f9c5"
         },
-        "split": 7,
-        "texture": 5,
-        "field": 5,
+        "split": 6,
+        "texture": 4,
+        "field": 2,
         "rank": 1,
         "layer": 2,
         "progress": 57,
@@ -17120,7 +17120,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"fort-03\",{\"body\":\"#28b69c\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,5,5,2,0.34,0.14,0]"
+      "fingerprint": "[\"fort-03\",{\"body\":\"#9a6446\",\"accent\":\"#f5f1e3\",\"rim\":\"#b2f9c5\"},6,4,2,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-058",
@@ -17132,13 +17132,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#ff846c",
-          "rim": "#ffad9e"
+          "body": "#4c67d5",
+          "accent": "#ed9dd6",
+          "rim": "#f4b9ff"
         },
-        "split": 7,
-        "texture": 5,
-        "field": 6,
+        "split": 1,
+        "texture": 8,
+        "field": 3,
         "rank": 1,
         "layer": 2,
         "progress": 58,
@@ -17147,7 +17147,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#d3cba9\",\"accent\":\"#ff846c\",\"rim\":\"#ffad9e\"},7,5,6,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#4c67d5\",\"accent\":\"#ed9dd6\",\"rim\":\"#f4b9ff\"},1,8,3,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-059",
@@ -17348,13 +17348,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#738b99",
-          "accent": "#b5f4ed",
-          "rim": "#f4b9ff"
+          "body": "#dc982c",
+          "accent": "#ff846c",
+          "rim": "#ffad9e"
         },
         "split": 6,
-        "texture": 9,
-        "field": 6,
+        "texture": 0,
+        "field": 0,
         "rank": 1,
         "layer": 2,
         "progress": 66,
@@ -17363,7 +17363,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#738b99\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},6,9,6,2,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#dc982c\",\"accent\":\"#ff846c\",\"rim\":\"#ffad9e\"},6,0,0,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-067",
@@ -17402,12 +17402,12 @@
         "version": "20261024-identity-v1",
         "assetId": "core-01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#ff846c",
-          "rim": "#f4b9ff"
+          "body": "#28b69c",
+          "accent": "#ffce67",
+          "rim": "#99caff"
         },
-        "split": 4,
-        "texture": 8,
+        "split": 6,
+        "texture": 6,
         "field": 7,
         "rank": 1,
         "layer": 2,
@@ -17417,7 +17417,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"core-01\",{\"body\":\"#db503e\",\"accent\":\"#ff846c\",\"rim\":\"#f4b9ff\"},4,8,7,2,0.34,0.14,0]"
+      "fingerprint": "[\"core-01\",{\"body\":\"#28b69c\",\"accent\":\"#ffce67\",\"rim\":\"#99caff\"},6,6,7,2,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-069",
@@ -18077,13 +18077,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#ed9dd6",
+          "body": "#43b95e",
+          "accent": "#929fff",
           "rim": "#b2f9c5"
         },
-        "split": 7,
-        "texture": 0,
-        "field": 0,
+        "split": 0,
+        "texture": 6,
+        "field": 4,
         "rank": 1,
         "layer": 3,
         "progress": 93,
@@ -18092,7 +18092,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#d3cba9\",\"accent\":\"#ed9dd6\",\"rim\":\"#b2f9c5\"},7,0,0,3,0.34,0.14,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#43b95e\",\"accent\":\"#929fff\",\"rim\":\"#b2f9c5\"},0,6,4,3,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-094",
@@ -18105,12 +18105,12 @@
         "assetId": "fort-03",
         "colors": {
           "body": "#db503e",
-          "accent": "#ffce67",
+          "accent": "#55d1ee",
           "rim": "#f4b9ff"
         },
-        "split": 7,
-        "texture": 7,
-        "field": 2,
+        "split": 2,
+        "texture": 3,
+        "field": 3,
         "rank": 1,
         "layer": 3,
         "progress": 94,
@@ -18119,7 +18119,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"fort-03\",{\"body\":\"#db503e\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},7,7,2,3,0.34,0.14,0]"
+      "fingerprint": "[\"fort-03\",{\"body\":\"#db503e\",\"accent\":\"#55d1ee\",\"rim\":\"#f4b9ff\"},2,3,3,3,0.34,0.14,0]"
     },
     {
       "id": "universe-boss-095",
@@ -18401,13 +18401,13 @@
         "version": "20261024-identity-v1",
         "assetId": "dr-02",
         "colors": {
-          "body": "#dc982c",
-          "accent": "#d8f18b",
-          "rim": "#ffad9e"
+          "body": "#43b95e",
+          "accent": "#ff846c",
+          "rim": "#b2f9c5"
         },
-        "split": 2,
+        "split": 5,
         "texture": 1,
-        "field": 0,
+        "field": 3,
         "rank": 2,
         "layer": 2,
         "progress": 0,
@@ -18416,7 +18416,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"dr-02\",{\"body\":\"#dc982c\",\"accent\":\"#d8f18b\",\"rim\":\"#ffad9e\"},2,1,0,2,0.4,0.14,0]"
+      "fingerprint": "[\"dr-02\",{\"body\":\"#43b95e\",\"accent\":\"#ff846c\",\"rim\":\"#b2f9c5\"},5,1,3,2,0.4,0.14,0]"
     },
     {
       "id": "special-relic_guardian",
@@ -18455,13 +18455,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#738b99",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#349bc9",
+          "accent": "#b5f4ed",
+          "rim": "#b2f9c5"
         },
-        "split": 6,
-        "texture": 4,
-        "field": 4,
+        "split": 2,
+        "texture": 3,
+        "field": 3,
         "rank": 2,
         "layer": 2,
         "progress": 0,
@@ -18470,7 +18470,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#738b99\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},6,4,4,2,0.4,0.14,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#349bc9\",\"accent\":\"#b5f4ed\",\"rim\":\"#b2f9c5\"},2,3,3,2,0.4,0.14,0]"
     },
     {
       "id": "special-collector",
@@ -19157,12 +19157,12 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#738b99",
+          "body": "#28b69c",
           "accent": "#d8f18b",
           "rim": "#99caff"
         },
-        "split": 7,
-        "texture": 0,
+        "split": 1,
+        "texture": 4,
         "field": 1,
         "rank": 3,
         "layer": 3,
@@ -19172,7 +19172,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#738b99\",\"accent\":\"#d8f18b\",\"rim\":\"#99caff\"},7,0,1,3,0.34,0.28,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#28b69c\",\"accent\":\"#d8f18b\",\"rim\":\"#99caff\"},1,4,1,3,0.34,0.28,0]"
     },
     {
       "id": "universe-bounty-10",
@@ -19481,13 +19481,13 @@
         "version": "20261024-identity-v1",
         "assetId": "mech-03",
         "colors": {
-          "body": "#d3cba9",
-          "accent": "#d8f18b",
-          "rim": "#ffad9e"
+          "body": "#bbc43b",
+          "accent": "#929fff",
+          "rim": "#effcff"
         },
-        "split": 7,
-        "texture": 0,
-        "field": 1,
+        "split": 1,
+        "texture": 5,
+        "field": 2,
         "rank": 3,
         "layer": 4,
         "progress": 2,
@@ -19496,7 +19496,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"mech-03\",{\"body\":\"#d3cba9\",\"accent\":\"#d8f18b\",\"rim\":\"#ffad9e\"},7,0,1,4,0.34,0.28,0]"
+      "fingerprint": "[\"mech-03\",{\"body\":\"#bbc43b\",\"accent\":\"#929fff\",\"rim\":\"#effcff\"},1,5,2,4,0.34,0.28,0]"
     },
     {
       "id": "void-regular-01",
@@ -19697,13 +19697,13 @@
         "version": "20261024-identity-v1",
         "assetId": "energy-01",
         "colors": {
-          "body": "#9a6446",
+          "body": "#db503e",
           "accent": "#55d1ee",
-          "rim": "#b2f9c5"
+          "rim": "#f4b9ff"
         },
-        "split": 4,
-        "texture": 0,
-        "field": 3,
+        "split": 5,
+        "texture": 5,
+        "field": 6,
         "rank": 3,
         "layer": 2,
         "progress": 8,
@@ -19712,7 +19712,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"energy-01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#b2f9c5\"},4,0,3,2,0.34,0.28,0]"
+      "fingerprint": "[\"energy-01\",{\"body\":\"#db503e\",\"accent\":\"#55d1ee\",\"rim\":\"#f4b9ff\"},5,5,6,2,0.34,0.28,0]"
     },
     {
       "id": "void-regular-09",
@@ -19751,13 +19751,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-01",
         "colors": {
-          "body": "#dc982c",
+          "body": "#43b95e",
           "accent": "#ed9dd6",
-          "rim": "#ffe5a0"
+          "rim": "#ffad9e"
         },
-        "split": 0,
+        "split": 2,
         "texture": 9,
-        "field": 7,
+        "field": 2,
         "rank": 3,
         "layer": 2,
         "progress": 10,
@@ -19766,7 +19766,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-01\",{\"body\":\"#dc982c\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffe5a0\"},0,9,7,2,0.34,0.28,0]"
+      "fingerprint": "[\"cmd-01\",{\"body\":\"#43b95e\",\"accent\":\"#ed9dd6\",\"rim\":\"#ffad9e\"},2,9,2,2,0.34,0.28,0]"
     },
     {
       "id": "void-boss-01",
@@ -19886,13 +19886,13 @@
         "version": "20261024-identity-v1",
         "assetId": "cmd-03",
         "colors": {
-          "body": "#db503e",
-          "accent": "#f5f1e3",
-          "rim": "#effcff"
+          "body": "#28b69c",
+          "accent": "#b5f4ed",
+          "rim": "#f4b9ff"
         },
-        "split": 7,
-        "texture": 9,
-        "field": 5,
+        "split": 0,
+        "texture": 1,
+        "field": 0,
         "rank": 3,
         "layer": 3,
         "progress": 4,
@@ -19901,7 +19901,7 @@
         "culture": 0,
         "variant": 0
       },
-      "fingerprint": "[\"cmd-03\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#effcff\"},7,9,5,3,0.34,0.28,0]"
+      "fingerprint": "[\"cmd-03\",{\"body\":\"#28b69c\",\"accent\":\"#b5f4ed\",\"rim\":\"#f4b9ff\"},0,1,0,3,0.34,0.28,0]"
     },
     {
       "id": "void-boss-06",
@@ -43679,13 +43679,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-c-01-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#ffce67",
+          "rim": "#f4b9ff"
         },
-        "split": 2,
-        "texture": 0,
-        "field": 3,
+        "split": 4,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -43694,7 +43694,7 @@
         "culture": 6,
         "variant": 9
       },
-      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},2,0,3,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},4,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0817",
@@ -43707,13 +43707,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-c-01-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#ffce67",
+          "rim": "#f4b9ff"
         },
-        "split": 2,
-        "texture": 0,
-        "field": 3,
+        "split": 4,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -43722,7 +43722,7 @@
         "culture": 6,
         "variant": 9
       },
-      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},2,0,3,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},4,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0818",
@@ -43735,13 +43735,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-c-01-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#ffce67",
+          "rim": "#f4b9ff"
         },
-        "split": 2,
-        "texture": 0,
-        "field": 3,
+        "split": 4,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -43750,7 +43750,7 @@
         "culture": 6,
         "variant": 9
       },
-      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},2,0,3,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},4,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0819",
@@ -43763,13 +43763,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-c-01-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#ffce67",
+          "rim": "#f4b9ff"
         },
-        "split": 2,
-        "texture": 0,
-        "field": 3,
+        "split": 4,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -43778,7 +43778,7 @@
         "culture": 6,
         "variant": 9
       },
-      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},2,0,3,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},4,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0820",
@@ -43791,13 +43791,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-c-01-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "body": "#bbc43b",
+          "accent": "#ffce67",
+          "rim": "#f4b9ff"
         },
-        "split": 2,
-        "texture": 0,
-        "field": 3,
+        "split": 4,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -43806,7 +43806,7 @@
         "culture": 6,
         "variant": 9
       },
-      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},2,0,3,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-c-01-v01\",{\"body\":\"#bbc43b\",\"accent\":\"#ffce67\",\"rim\":\"#f4b9ff\"},4,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0821",
@@ -44659,13 +44659,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-04-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#9a6446",
           "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "rim": "#ffad9e"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 2,
+        "split": 5,
+        "texture": 8,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -44674,7 +44674,7 @@
         "culture": 0,
         "variant": 9
       },
-      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},2,7,2,6,0.58,0.62,0]"
+      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},5,8,0,6,0.58,0.62,0]"
     },
     {
       "id": "alternate-depth-0852",
@@ -44687,13 +44687,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-04-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#9a6446",
           "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "rim": "#ffad9e"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 2,
+        "split": 5,
+        "texture": 8,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -44702,7 +44702,7 @@
         "culture": 0,
         "variant": 9
       },
-      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},2,7,2,6,0.58,0.62,0]"
+      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},5,8,0,6,0.58,0.62,0]"
     },
     {
       "id": "alternate-depth-0853",
@@ -44715,13 +44715,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-04-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#9a6446",
           "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "rim": "#ffad9e"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 2,
+        "split": 5,
+        "texture": 8,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -44730,7 +44730,7 @@
         "culture": 0,
         "variant": 9
       },
-      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},2,7,2,6,0.58,0.62,0]"
+      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},5,8,0,6,0.58,0.62,0]"
     },
     {
       "id": "alternate-depth-0854",
@@ -44743,13 +44743,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-04-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#9a6446",
           "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "rim": "#ffad9e"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 2,
+        "split": 5,
+        "texture": 8,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -44758,7 +44758,7 @@
         "culture": 0,
         "variant": 9
       },
-      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},2,7,2,6,0.58,0.62,0]"
+      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},5,8,0,6,0.58,0.62,0]"
     },
     {
       "id": "alternate-depth-0855",
@@ -44771,13 +44771,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-04-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#9a6446",
           "accent": "#b5f4ed",
-          "rim": "#99caff"
+          "rim": "#ffad9e"
         },
-        "split": 2,
-        "texture": 7,
-        "field": 2,
+        "split": 5,
+        "texture": 8,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -44786,7 +44786,7 @@
         "culture": 0,
         "variant": 9
       },
-      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#db503e\",\"accent\":\"#b5f4ed\",\"rim\":\"#99caff\"},2,7,2,6,0.58,0.62,0]"
+      "fingerprint": "[\"boss-au-04-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},5,8,0,6,0.58,0.62,0]"
     },
     {
       "id": "alternate-depth-0856",
@@ -45079,13 +45079,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-h-08-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#43b95e",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 4,
+        "split": 2,
+        "texture": 8,
+        "field": 3,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -45094,7 +45094,7 @@
         "culture": 1,
         "variant": 9
       },
-      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,3,4,6,0.58,0.62,1]"
+      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#43b95e\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},2,8,3,6,0.58,0.62,1]"
     },
     {
       "id": "alternate-depth-0867",
@@ -45107,13 +45107,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-h-08-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#43b95e",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 4,
+        "split": 2,
+        "texture": 8,
+        "field": 3,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -45122,7 +45122,7 @@
         "culture": 1,
         "variant": 9
       },
-      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,3,4,6,0.58,0.62,1]"
+      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#43b95e\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},2,8,3,6,0.58,0.62,1]"
     },
     {
       "id": "alternate-depth-0868",
@@ -45135,13 +45135,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-h-08-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#43b95e",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 4,
+        "split": 2,
+        "texture": 8,
+        "field": 3,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -45150,7 +45150,7 @@
         "culture": 1,
         "variant": 9
       },
-      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,3,4,6,0.58,0.62,1]"
+      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#43b95e\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},2,8,3,6,0.58,0.62,1]"
     },
     {
       "id": "alternate-depth-0869",
@@ -45163,13 +45163,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-h-08-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#43b95e",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 4,
+        "split": 2,
+        "texture": 8,
+        "field": 3,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -45178,7 +45178,7 @@
         "culture": 1,
         "variant": 9
       },
-      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,3,4,6,0.58,0.62,1]"
+      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#43b95e\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},2,8,3,6,0.58,0.62,1]"
     },
     {
       "id": "alternate-depth-0870",
@@ -45191,13 +45191,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-h-08-v01",
         "colors": {
-          "body": "#db503e",
+          "body": "#43b95e",
           "accent": "#f5f1e3",
-          "rim": "#99caff"
+          "rim": "#ffe5a0"
         },
-        "split": 7,
-        "texture": 3,
-        "field": 4,
+        "split": 2,
+        "texture": 8,
+        "field": 3,
         "rank": 7,
         "layer": 6,
         "progress": 9,
@@ -45206,7 +45206,7 @@
         "culture": 1,
         "variant": 9
       },
-      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#db503e\",\"accent\":\"#f5f1e3\",\"rim\":\"#99caff\"},7,3,4,6,0.58,0.62,1]"
+      "fingerprint": "[\"boss-h-08-v01\",{\"body\":\"#43b95e\",\"accent\":\"#f5f1e3\",\"rim\":\"#ffe5a0\"},2,8,3,6,0.58,0.62,1]"
     },
     {
       "id": "alternate-depth-0871",
@@ -47319,13 +47319,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-05-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#d8f18b",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 2,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47334,7 +47334,7 @@
         "culture": 6,
         "variant": 10
       },
-      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},5,1,2,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},1,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0947",
@@ -47347,13 +47347,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-05-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#d8f18b",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 2,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47362,7 +47362,7 @@
         "culture": 6,
         "variant": 10
       },
-      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},5,1,2,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},1,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0948",
@@ -47375,13 +47375,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-05-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#d8f18b",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 2,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47390,7 +47390,7 @@
         "culture": 6,
         "variant": 10
       },
-      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},5,1,2,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},1,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0949",
@@ -47403,13 +47403,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-05-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#d8f18b",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 2,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47418,7 +47418,7 @@
         "culture": 6,
         "variant": 10
       },
-      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},5,1,2,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},1,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0950",
@@ -47431,13 +47431,13 @@
         "version": "20261024-identity-v1",
         "assetId": "boss-au-05-v01",
         "colors": {
-          "body": "#db503e",
-          "accent": "#d8f18b",
-          "rim": "#effcff"
+          "body": "#349bc9",
+          "accent": "#ffce67",
+          "rim": "#ffe5a0"
         },
-        "split": 5,
-        "texture": 1,
-        "field": 2,
+        "split": 1,
+        "texture": 6,
+        "field": 0,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47446,7 +47446,7 @@
         "culture": 6,
         "variant": 10
       },
-      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#db503e\",\"accent\":\"#d8f18b\",\"rim\":\"#effcff\"},5,1,2,6,0.58,0.62,6]"
+      "fingerprint": "[\"boss-au-05-v01\",{\"body\":\"#349bc9\",\"accent\":\"#ffce67\",\"rim\":\"#ffe5a0\"},1,6,0,6,0.58,0.62,6]"
     },
     {
       "id": "alternate-depth-0951",
@@ -47460,12 +47460,12 @@
         "assetId": "boss-c-03-v01",
         "colors": {
           "body": "#9a6446",
-          "accent": "#b5f4ed",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 4,
+        "split": 6,
         "texture": 3,
-        "field": 6,
+        "field": 2,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47474,7 +47474,7 @@
         "culture": 2,
         "variant": 10
       },
-      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},4,3,6,6,0.58,0.62,2]"
+      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},6,3,2,6,0.58,0.62,2]"
     },
     {
       "id": "alternate-depth-0952",
@@ -47488,12 +47488,12 @@
         "assetId": "boss-c-03-v01",
         "colors": {
           "body": "#9a6446",
-          "accent": "#b5f4ed",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 4,
+        "split": 6,
         "texture": 3,
-        "field": 6,
+        "field": 2,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47502,7 +47502,7 @@
         "culture": 2,
         "variant": 10
       },
-      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},4,3,6,6,0.58,0.62,2]"
+      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},6,3,2,6,0.58,0.62,2]"
     },
     {
       "id": "alternate-depth-0953",
@@ -47516,12 +47516,12 @@
         "assetId": "boss-c-03-v01",
         "colors": {
           "body": "#9a6446",
-          "accent": "#b5f4ed",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 4,
+        "split": 6,
         "texture": 3,
-        "field": 6,
+        "field": 2,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47530,7 +47530,7 @@
         "culture": 2,
         "variant": 10
       },
-      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},4,3,6,6,0.58,0.62,2]"
+      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},6,3,2,6,0.58,0.62,2]"
     },
     {
       "id": "alternate-depth-0954",
@@ -47544,12 +47544,12 @@
         "assetId": "boss-c-03-v01",
         "colors": {
           "body": "#9a6446",
-          "accent": "#b5f4ed",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 4,
+        "split": 6,
         "texture": 3,
-        "field": 6,
+        "field": 2,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47558,7 +47558,7 @@
         "culture": 2,
         "variant": 10
       },
-      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},4,3,6,6,0.58,0.62,2]"
+      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},6,3,2,6,0.58,0.62,2]"
     },
     {
       "id": "alternate-depth-0955",
@@ -47572,12 +47572,12 @@
         "assetId": "boss-c-03-v01",
         "colors": {
           "body": "#9a6446",
-          "accent": "#b5f4ed",
+          "accent": "#55d1ee",
           "rim": "#ffad9e"
         },
-        "split": 4,
+        "split": 6,
         "texture": 3,
-        "field": 6,
+        "field": 2,
         "rank": 7,
         "layer": 6,
         "progress": 10,
@@ -47586,7 +47586,7 @@
         "culture": 2,
         "variant": 10
       },
-      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#b5f4ed\",\"rim\":\"#ffad9e\"},4,3,6,6,0.58,0.62,2]"
+      "fingerprint": "[\"boss-c-03-v01\",{\"body\":\"#9a6446\",\"accent\":\"#55d1ee\",\"rim\":\"#ffad9e\"},6,3,2,6,0.58,0.62,2]"
     },
     {
       "id": "alternate-depth-0956",

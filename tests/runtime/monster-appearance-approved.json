@@ -15,7 +15,7 @@
     },
     "3d-test/t3b-formal-renderer.js": {
       "beforeSha256": "2cd7f3cc05ee6676aa3d9d40cfd7a6737faa1f5ab67ccb4ff3c4c44659d403de",
-      "afterSha256": "06b48d9e1c4352f318752f90231d0c3c2376991d53520f89d2f6d2e7b67a7cac"
+      "afterSha256": "55f86d874caaf2e1f1bff40cc1ca66470bc06f9757d8aa7b41f90e3ea5dc598e"
     },
     "3d-test/test-center.js": {
       "beforeSha256": "c4dc859965c16104791644ad93c27947a1007e63b27165cff38246cb911f5778",
@@ -33,5 +33,11 @@
       "beforeSha256": "5bbb4a18b3acd4c7ec9c7621710ffb8c779f9f5223e9fe9d1af522ac3841d8a7",
       "afterSha256": "45334a86add7f152f9604faf7cba58f8208748b059b17022a26b2af407159d1e"
     }
+  },
+  "newFiles": {
+    "3d-test/monster-appearance.mjs": "ba3aa79afb62f6de23cafeeb5b71744b20923a5a9276d1b824a26b09425f378e",
+    "3d-test/monster-appearance-designs.mjs": "bc7ab4cf1a1bcf1f3ecf45f2935de6cdcc14cc375c2c28156fed23efc5b8c000",
+    "3d-test/monster-appearance-review.html": "76fc8c336dbb0d0234733642169f1b4340a0da93c6ec4823382901a1a9232ad4",
+    "3d-test/monster-appearance-review.mjs": "06dc87ebdc9e84f0b651f34c2dd4f0e6eaef3dbdf7a7fa55df66a31ee5162456"
   }
 }
