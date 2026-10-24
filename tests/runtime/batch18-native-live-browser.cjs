@@ -13,6 +13,9 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   await page.route('**/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
   const nativeUrl=new URL(base);nativeUrl.searchParams.set('production','1');await page.goto(nativeUrl.href);await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});await finishIntro(page);
   await page.evaluate(async item=>{
+   const {MonsterActor}=await import('./3d-test/monster-actor.mjs?v=20261024-approved1');
+   const draw=MonsterActor.prototype.draw;
+   MonsterActor.prototype.draw=function(pose){const result=draw.call(this,pose);window.__nativeMonsterSample={actor:this,pose:{...pose}};return result;};
    state=newState();state.introSeen=true;state.storyProgress={pendingStory:null,completedStories:['earth-prologue'],introCompleted:true,starterGearReceived:true};state.playerName='第18批驗收';state.level=item.world===1?500:item.world===2?1000:1100;
    state.bossKilled=state.bossKilled.map(()=>true);state.unlockedMap=100;state.mapProgress.forEach(r=>r.fill(10));
    if(item.world>=2){state.secondWorld.entered=true;state.secondWorld.civilizationLevel=10;state.secondWorld.mainline.bossKilled.fill(true);}
@@ -37,11 +40,17 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   const layout=await page.evaluate(()=>{
    const stage=document.querySelector('.formal-b-shared-stage'),mon=stage.querySelector('[data-monster]'),player=stage.querySelector('[data-suit]');
    const alpha=c=>{const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,b=c.getBoundingClientRect();let l=c.width,t=c.height,r=-1,bt=-1;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%c.width,y=Math.floor((i-3)/4/c.width);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);bt=Math.max(bt,y);}return {left:b.left+l/c.width*b.width,right:b.left+(r+1)/c.width*b.width,top:b.top+t/c.height*b.height,bottom:b.top+(bt+1)/c.height*b.height,height:(bt-t+1)/c.height*b.height};};
-   const boxes=[alpha(player),alpha(mon)],bars=['combatPlayerBar','combatEnemyBar'].map(id=>document.getElementById(id)?.parentElement.getBoundingClientRect().toJSON());
+   const painted=alpha(mon),sample=window.__nativeMonsterSample;
+   if(!sample||sample.actor.canvas!==mon)throw Error('native monster sample unavailable');
+   let body;try{sample.actor.draw({...sample.pose,bodyOnly:true});body=alpha(mon);}finally{sample.actor.draw(sample.pose);}
+   const clip=mon.closest('[data-monster-effect-viewport]').getBoundingClientRect();
+   const visiblePainted={left:Math.max(painted.left,clip.left),right:Math.min(painted.right,clip.right),top:Math.max(painted.top,clip.top),bottom:Math.min(painted.bottom,clip.bottom)};
+   const bodyUnclipped=body.left>=clip.left-.5&&body.right<=clip.right+.5&&body.top>=clip.top-.5&&body.bottom<=clip.bottom+.5;
+   const boxes=[alpha(player),body],bars=['combatPlayerBar','combatEnemyBar'].map(id=>document.getElementById(id)?.parentElement.getBoundingClientRect().toJSON());
    const overlap=(a,b)=>a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top;
-   return {boxes,bars,ratio:boxes[1].height/boxes[0].height,separated:boxes[0].right<boxes[1].left,bloodBarsUncovered:bars.every(b=>b&&boxes.every(a=>!overlap(a,b))),insideViewport:boxes.every(b=>b.left>=-.5&&b.right<=innerWidth+.5&&b.top>=-.5&&b.bottom<=innerHeight+.5)};
+   return {boxes,painted,visiblePainted,bodyUnclipped,bars,ratio:boxes[1].height/boxes[0].height,separated:boxes[0].right<boxes[1].left,bloodBarsUncovered:bars.every(b=>b&&boxes.every(a=>!overlap(a,b))),insideViewport:[boxes[0],visiblePainted].every(b=>b.left>=-.5&&b.right<=innerWidth+.5&&b.top>=-.5&&b.bottom<=innerHeight+.5)};
   });
-  assert.ok(layout.separated,'actual page left/right');assert.ok(layout.bloodBarsUncovered,'actual page HP bars');assert.ok(layout.insideViewport,'actual page viewport');assert.ok(layout.ratio>=1.5&&layout.ratio<=2,'actual page Canvas Alpha ratio');
+  assert.ok(layout.bodyUnclipped,'actual page body remains unclipped');assert.ok(layout.separated,'actual page left/right');assert.ok(layout.bloodBarsUncovered,'actual page HP bars');assert.ok(layout.insideViewport,'actual page viewport '+JSON.stringify(layout));assert.ok(layout.ratio>=1.5&&layout.ratio<=2,'actual page Canvas Alpha ratio');
 
   await page.evaluate(async()=>{
    window.mainBattlePresentationSleep=()=>Promise.resolve();
