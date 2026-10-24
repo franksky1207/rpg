@@ -20,6 +20,10 @@ for(const asset of new Set(rows.filter(r=>r.mode==='alternate').map(r=>r.assetId
 }
 assert.equal(new Set(alternateEffectSequences).size,20,'twenty prototypes do not copy one ten-effect sequence');
 assert.notEqual(appearanceFingerprint('special-gold_slime'),appearanceFingerprint('special-lucky_rabbit'));
+// Ignored configuration must never create fake effective fingerprints.
+const plain=resolveMonsterAppearance('galaxy-map-001');assert.equal(plain.layer,0);assert.equal(appearanceFingerprint(plain),appearanceFingerprint({...plain,field:7,fieldInk:.9,culture:6}));
+const energized=resolveMonsterAppearance(rows.find(r=>r.world==='higher'));
+assert.equal(appearanceFingerprint(energized),appearanceFingerprint({...energized,culture:energized.culture+3}));
 const baseline='b0241d67c9073c2dbf48f972b5e414cadf111d1c';
 for(const p of ['data/monsters/monster-assets.json','data/monsters/monster-mappings.json','data/monsters/monster-variants.json','monstercodexdata.js','combatcore.js','thirdworldarena.js','dungeonbounty.js','dungeonarena.js','dungeonvoid.js','mirrorcombatcore.js','mirrordungeonstate.js','alternateuniversedata.js','alternateuniversecombat.js','reincarnationcore.js','savemigration.js','resource-cache-sw.js','3d-test/monster-sprite-pool.mjs','3d-test/era-player-sprites.mjs'])assert.deepEqual(fs.readFileSync(p),cp.execFileSync('git',['show',baseline+':'+p],{maxBuffer:16*1024*1024}),p+' protected');
 const actor=fs.readFileSync('3d-test/monster-actor.mjs','utf8'),codex=fs.readFileSync('monstercodeximage.mjs','utf8');for(const s of [actor,codex]){assert.ok(s.includes('resolveMonsterAppearance('));assert.ok(s.includes('paintMonsterAppearance('));}

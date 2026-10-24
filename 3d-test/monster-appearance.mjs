@@ -47,7 +47,8 @@ export function resolveMonsterAppearance(input,{designIndex}={}){
 // Only fields actually consumed by paintMonsterAppearance enter the fingerprint.
 export function appearanceFingerprint(input){
  const s=input?.colors?input:resolveMonsterAppearance(input);
- return JSON.stringify([s.assetId,s.colors,s.split,s.texture,s.field,s.layer,s.ink,s.fieldInk,s.culture]);
+ const layers=Math.max(0,s.layer);
+ return JSON.stringify([s.assetId,s.colors,s.split,s.texture,layers?s.field:null,layers,s.ink,layers?s.fieldInk:0,layers?s.culture%3:0,s.rank>=4&&layers>0]);
 }
 function rgb(hex){return [1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));}
 function accentAt(x,y,split){
@@ -85,7 +86,7 @@ export function paintMonsterAppearance(bitmap,asset,spec,{canvasFactory=()=>docu
  c.globalAlpha=spec.fieldInk;c.lineWidth=spec.rank>=4?2.5:1.5;c.strokeStyle=spec.colors.accent;
  // Distinct closed fields / fixed glyphs, clipped to body alpha: no new body bounds.
  const sides=3+spec.field;
- for(let level=0;level<Math.max(1,spec.layer);level++){
+ for(let level=0;level<Math.max(0,spec.layer);level++){
   const radius=45-level*6,turn=(spec.culture%3)*.21;
   c.beginPath();for(let j=0;j<=sides;j++){const a=j/sides*Math.PI*2-Math.PI/2+turn,x=50+Math.cos(a)*radius,y=50+Math.sin(a)*radius;if(j)c.lineTo(x,y);else c.moveTo(x,y);}c.stroke();
  }
