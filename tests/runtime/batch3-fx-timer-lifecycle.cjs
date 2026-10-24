@@ -6,6 +6,8 @@ const assert=require("node:assert/strict");
  try{
   const page=await browser.newPage({viewport:{width:390,height:844}});
   await page.setContent('<!doctype html><html><body><div id="main"><div class="combat-screen"><div id="combatPlayerCard" class="combatant"><div class="big-hp"><div class="bar"><span id="combatPlayerBar"></span></div></div><span id="combatPlayerHp"></span></div><div id="combatEnemyCard" class="combatant"><div class="big-hp"><div class="bar"><span id="combatEnemyBar"></span></div></div><span id="combatEnemyHp"></span></div></div></div></body></html>');
+  // The current main presenter requires its real foreground lifecycle owner.
+  await page.addScriptTag({path:"combatlifecycle.js"});
   await page.addScriptTag({path:"combatfx.js"});
   const result=await page.evaluate(async()=>{
    const combat={events:[],playerMaxHp:100,playerStartHp:100,e:{hp:100},enemyStartHp:100};
@@ -31,19 +33,20 @@ const assert=require("node:assert/strict");
    const oldTask=window.animateStructuredCombatPresentation(combat,{
     sleep:()=>new Promise(resolve=>{releaseOld=resolve;}),
     clearAfter:true
-   });
+   }).then(()=>({interrupted:false}),error=>{if(error?.code!=="COMBAT_INTERRUPTED")throw error;return {interrupted:true};});
    window.prepareCombatPresentation(combat);
    const replacement=window.getCombatPresentationSnapshot()?.token;
    releaseOld();
-   await oldTask;
+   const oldResult=await oldTask;
    const replacementSurvived=window.isCombatPresentationActive()&&window.getCombatPresentationSnapshot()?.token===replacement;
    window.clearCombatPresentation("final-cleanup");
-   return {stale,active,remaining:document.querySelectorAll(".combat-fx-pop").length,orphan,replacementSurvived};
+   return {stale,active,remaining:document.querySelectorAll(".combat-fx-pop").length,orphan,replacementSurvived,supersededInterrupted:oldResult.interrupted};
   });
   assert.equal(result.stale,0,"cancelled battle must not show delayed stale FX");
   assert.deepEqual(result.active,["NEW"],"active battle retains intended FX");
   assert.equal(result.remaining,0,"cleared battle must release FX nodes");
   assert.equal(result.orphan,0,"unowned delayed FX must not revive after cleanup");
+  assert.equal(result.supersededInterrupted,true,"superseded playback must use the current lifecycle interruption contract");
   assert.equal(result.replacementSurvived,true,"stale playback cannot clear replacement battle");
   console.log("BATCH3_FX_TIMER_LIFECYCLE_PASS",JSON.stringify(result));
  }finally{await browser.close();}

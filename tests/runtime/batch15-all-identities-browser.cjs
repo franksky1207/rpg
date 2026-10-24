@@ -18,6 +18,8 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    const {mappings,registry}=await import('./monster-sprites.mjs');
    const {resolveFormalMonster}=await import('./monster-formal-resolver.mjs');
    const {palettes}=await import('./monster-actor.mjs');
+   const {appearanceFingerprint}=await import('./monster-appearance.mjs');
+   function sameAppearancePixels(a,b){if(a.width!==b.width||a.height!==b.height)return false;const x=a.getContext('2d').getImageData(0,0,a.width,a.height).data,y=b.getContext('2d').getImageData(0,0,b.width,b.height).data;return x.every((v,i)=>v===y[i]);}
    const gm=document.querySelector('#gm'),formal=document.querySelector('#formal');
    const mounted=await mount({host:gm,quality:'medium'}),rows=[];
    const wait=async(fn)=>{const end=performance.now()+10000;while(!fn()){if(performance.now()>end)throw Error('load-timeout');await new Promise(r=>setTimeout(r,1));}};
@@ -36,8 +38,10 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
      await select('[data-monster-identity]',row.id);await wait(()=>gm.querySelector('canvas[data-monster]'));
      const enemy=gm.querySelector('canvas[data-monster]');
      view=pair(gm.querySelector('.gm-suit-preview'),gm.querySelector('canvas[data-suit]'),enemy);
-     const expected=document.createElement('canvas');expected.style.filter=palettes[row.visual.palette];
-     if(enemy.style.filter!==expected.style.filter)errors.push('palette');
+     const expectedFingerprint=appearanceFingerprint(row);
+     // Painted local colors replace the obsolete whole-image CSS palette.
+     if(enemy.dataset.appearance!==expectedFingerprint)errors.push('appearance-spec');
+     if(enemy.style.filter!=='none')errors.push('unexpected-secondary-palette');
      if(!view.contained||!view.separated||view.ratio<.9)errors.push('gm-layout');
      const approved=resolveFormalMonster(identity);formalSupported=!!approved;
      if(row.world!=='both'&&!approved)errors.push('formal-resolution');
@@ -51,7 +55,8 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
       battle=pair(formal,formal.querySelector('[data-suit]'),formal.querySelector('[data-monster]'));
       if(!battle.contained||!battle.separated||battle.ratio<.9)errors.push('formal-layout');
       if(Math.abs(battle.ratio-view.ratio)>(1+Math.max(battle.ratio,view.ratio))/64/Math.min(battle.playerHeight,view.playerHeight))errors.push('ratio-mismatch');
-      if(formal.querySelector('[data-monster]').style.filter!==enemy.style.filter)errors.push('formal-palette');
+      const formalCanvas=formal.querySelector('[data-monster]');
+      if(formalCanvas.dataset.appearance!==expectedFingerprint||formalCanvas.style.filter!==enemy.style.filter||!sameAppearancePixels(formalCanvas,enemy))errors.push('formal-palette-pixels');
      }
     }catch(e){errors.push(String(e));}finally{renderer?.dispose();ac.abort();}
     rows.push({id:row.id,assetId:row.assetId,world:row.world,kind:row.kind,formalSupported,formalNA:formalSupported?null:'resolver excludes special identities',gm:view,formal:battle,errors});

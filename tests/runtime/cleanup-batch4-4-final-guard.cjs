@@ -44,7 +44,9 @@ sealedHistory.sources['combat-events.js'].afterSHA256=crypto.createHash('sha256'
 assert.deepEqual(history,sealedHistory,'only live owner digest changes; historical fixture sources remain immutable');
 const approvedBatch17=new Set(['combat-events.js','3d-test/fixture-owner-history.json']);
 const foregroundApproved=new Set(require("./batch20-approved-runtime.cjs").verifyAll());
-const unexpected=changed.filter(p=>!foregroundApproved.has(p)&&!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
+// Exact four user-authorized presentation additions, each SHA-verified; no root-wide exemption.
+const appearanceNew=require("./monster-appearance-approved.cjs").verifyNew();
+const unexpected=changed.filter(p=>!appearanceNew.has(p)&&!foregroundApproved.has(p)&&!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){

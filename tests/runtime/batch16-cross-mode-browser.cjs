@@ -25,7 +25,10 @@ const report=await page.evaluate(async specialRows=>{
  let effectsOffBodies=0;
  for(const id of ['void-regular-02','void-regular-04','void-regular-05','void-regular-09']){
   const row=mappings[id],visual=await new MonsterActor(probes,row.assetId,{identity:id}).init(),raw=await new MonsterActor(probes,row.assetId).init();probe.append(visual.canvas);visual.draw({clip:'idle',elapsedMs:400});raw.draw({clip:'idle',elapsedMs:400});
-  const a=visual.ctx.getImageData(0,0,256,256).data,b=raw.ctx.getImageData(0,0,256,256).data;if(a.some((v,i)=>v!==b[i])||visual.canvas.style.filter.includes('drop-shadow'))throw Error('effects-off-body '+id);effectsOffBodies++;visual.dispose();raw.dispose();
+  const prototypePixels=raw.ctx.getImageData(0,0,256,256).data;
+  // Bare actor supplies the unchanged base pose; borrow only the static identity raster.
+  raw.appearanceSource=visual.appearanceSource;raw.draw({clip:'idle',elapsedMs:400});
+  const a=visual.ctx.getImageData(0,0,256,256).data,b=raw.ctx.getImageData(0,0,256,256).data;if(a.some((v,i)=>v!==b[i])||!a.some((v,i)=>i%4!==3&&v!==prototypePixels[i])||visual.canvas.style.filter.includes('drop-shadow'))throw Error('effects-off-body '+id);effectsOffBodies++;visual.dispose();raw.dispose();
  }
  probes.dispose();probe.remove();renderer.dispose();ac.abort();api.clearSpriteCache();sampleCpuMs.sort((a,b)=>a-b);return {passed:true,rows,effectsOffBodies,samplingCpu:{samples:sampleCpuMs.length,p50:sampleCpuMs[Math.floor(sampleCpuMs.length*.5)],p95:sampleCpuMs[Math.floor(sampleCpuMs.length*.95)],max:Math.max(...sampleCpuMs),gpuAndHardwareThermalsMeasured:false},monster:api.monsterStats(),player:api.spriteStats(),realDevice:false};
 },require('./batch16-special-fixtures.cjs'));assert.equal(report.rows.length,260);assert.equal(report.monster.refs,0);assert.equal(report.monster.pending,0);assert.equal(report.monster.bytes,0);assert.equal(report.player.refs,0);fs.writeFileSync('/tmp/batch16-cross-mode.json',JSON.stringify(report,null,2));console.log('PASS 260 visual mode switches, start/stop, background cache clear, effects downgrade and high/calamity/alternate exclusions');}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -94,6 +94,8 @@ jobs:
           python3 tests/runtime/batch13-monster-assets.py
           python3 tests/runtime/batch17-boss-assets.py
           python3 tests/runtime/batch18-alternate-assets.py
+          node tests/runtime/monster-appearance-contract.mjs
+          node scripts/audit-monster-appearance.mjs
           node tests/runtime/batch20-alternate-ten-stages.mjs
           python3 scripts/generate-monster-trial-registry.py --check
           python3 scripts/generate-monster-codex.py --check
@@ -106,7 +108,7 @@ jobs:
       - name: Chromium browser functional samples
         run: |
           npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
           node scripts/build-publish-dry-run.cjs
           python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/monster-ci-http.log 2>&1 &
           sleep 2
@@ -121,7 +123,13 @@ jobs:
           node tests/runtime/batch16-mirror-browser.cjs
           node tests/runtime/batch16-live-dungeons-browser.cjs
           node tests/runtime/batch17-live-bosses-browser.cjs
+          node tests/runtime/monster-appearance-browser.cjs
+          APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs
           node tests/runtime/batch20-alternate-colors-browser.cjs
+          node tests/runtime/batch15-all-identities-browser.cjs
+          node tests/runtime/batch16-all-identities-browser.cjs
+          node tests/runtime/batch17-all-identities-browser.cjs
+          node tests/runtime/batch18-all-identities-browser.cjs
           node tests/runtime/batch18-native-live-browser.cjs
           node tests/runtime/batch18-monster-recovery-browser.cjs
       - name: Preserve repair visual evidence
@@ -130,6 +138,13 @@ jobs:
         with:
           name: batch20-repair-visual-evidence
           path: |
+            work/visual-integration/*.json
+            work/visual-integration/*.png
+            /tmp/batch15-all-identities.json
+            /tmp/batch16-all-identities.json
+            /tmp/batch17-all-identities.json
+            /tmp/batch18-all-identities.json
+            /tmp/batch16-mirror.json
             /tmp/batch20-alternate-colors.json
             /tmp/batch20-alternate-ten-stages.png
             /tmp/batch20-repair-browser.json

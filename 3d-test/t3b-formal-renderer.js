@@ -235,7 +235,7 @@ async function prepareKnownNext(mapping,signal,bundle){
 const fallbackEntries={normal:{assetId:'fallback'},elite:{assetId:'fallback'},boss:{assetId:'fallback'}};
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-au-ten-stages1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-identity-v1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -273,7 +273,7 @@ async function createSuit(options,bundle){
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
     import('./monster-formal-resolver.mjs?v=20261024-mirror-void1'),
-    import('./monster-actor.mjs?v=20261024-au-ten-stages1')
+    import('./monster-actor.mjs?v=20261024-identity-v1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const mirror=resolveFormalMirror({mode:bundle.enemyMode,world:bundle.enemyWorld,name:bundle.enemyName,playerName:bundle.enemyPlayerName},bundle.entry);
@@ -307,7 +307,7 @@ async function createSuit(options,bundle){
   const e=frame.enemy||frame,elapsed=Number.isFinite(e.elapsedMs)?Math.max(0,e.elapsedMs):0;
   const clip=e.clip||'idle';
   const tick=Math.floor(elapsed/(clip==='idle'?50:35)),key=clip+':'+tick;
-  if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),rootMotion:false,palette:monsterMapping.visual.palette});if(monsterMapping.visual.mirror)applyDungeonEffects(monsterActor.canvas,monsterMapping.visual);monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';layoutKey='';layoutSprites();return;}}
+  if(key!==monsterLastKey){try{monsterActor.draw({clip,elapsedMs:tick*(clip==='idle'?50:35),rootMotion:false,palette:monsterMapping.visual.palette});if(monsterMapping.visual.mirror){monsterActor.canvas.dataset.clip=clip;applyDungeonEffects(monsterActor.canvas,monsterMapping.visual);}monsterLastKey=key;}catch(error){monsterError=String(error?.message||error);monsterReady=false;monsterActor.dispose();monsterActor=null;enemyCanvas.style.visibility='';layoutKey='';layoutSprites();return;}}
   const shift=Number.isFinite(e.approach)?Math.min(approachLimit,Math.min(.42,Math.max(0,e.approach))*140):0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
