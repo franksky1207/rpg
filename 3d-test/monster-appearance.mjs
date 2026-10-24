@@ -1,3 +1,5 @@
+import {resolveArtSampleV2,paintArtSampleV2} from './monster-art-samples-v2.mjs';
+import {resolveArtSample,paintArtSample} from './monster-art-samples.mjs';
 import {appearanceDesigns} from './monster-appearance-designs.mjs?v=20261024-identity-v1';
 // Formal presentation owner. Pure, immutable specifications; no gameplay state or randomness.
 import {mappings} from './monster-sprites.mjs?v=20261024-au-ten-stages1';
@@ -24,7 +26,8 @@ function strength(r){
  return {rank:1,layer:r.world==='universe'?2+Number(Number(r.id.slice(-3))>=91):r.kind==='boss'?2:r.kind==='elite'?1:0,progress:r.world==='universe'?Number(r.id.slice(-3)):(r.region-1)*10+r.mapIndex};
 }
 function freeze(o){Object.values(o).forEach(v=>{if(v&&typeof v==='object')freeze(v);});return Object.freeze(o);}
-export function resolveMonsterAppearance(input,{designIndex}={}){
+export function resolveMonsterAppearance(input,{designIndex,route,bodyOnly=false}={}){
+ if(route==='art-samples-12'||route==='art-samples-12-v2'){const sample=route==='art-samples-12'?resolveArtSample(input):resolveArtSampleV2(input);if(sample)return bodyOnly?Object.freeze({...sample,power:0}):sample;}
  const id=typeof input==='string'?input:input?.id;
  const r=mappings[id?.replace(/^projection-/,'')]||input;
  if(!r?.assetId||!r.visual)throw Error('appearance-identity-required');
@@ -46,6 +49,8 @@ export function resolveMonsterAppearance(input,{designIndex}={}){
 }
 // Only fields actually consumed by paintMonsterAppearance enter the fingerprint.
 export function appearanceFingerprint(input){
+ if(input?.route==='art-samples-12-v2')return JSON.stringify([input.version,input.assetId,input.retained?input.groups:input.rules,input.rim,input.power]);
+ if(input?.route==='art-samples-12')return JSON.stringify([input.version,input.assetId,input.groups,input.rim,input.power]);
  const s=input?.colors?input:resolveMonsterAppearance(input);
  const layers=Math.max(0,s.layer);
  return JSON.stringify([s.assetId,s.colors,s.split,s.texture,layers?s.field:null,layers,s.ink,layers?s.fieldInk:0,layers?s.culture%3:0,s.rank>=4&&layers>0]);
@@ -57,6 +62,8 @@ function accentAt(x,y,split){
 // One bounded 512px source per active actor; never stored in the decoded prototype pool.
 // Real pixel recoloring gives local two-tone surfaces on Safari without Canvas.filter.
 export function paintMonsterAppearance(bitmap,asset,spec,{canvasFactory=()=>document.createElement('canvas')}={}){
+ if(spec.route==='art-samples-12-v2')return paintArtSampleV2(bitmap,asset,spec,{canvasFactory});
+ if(spec.route==='art-samples-12')return paintArtSample(bitmap,asset,spec,{canvasFactory});
  const canvas=canvasFactory();canvas.width=canvas.height=512;const c=canvas.getContext('2d',{willReadFrequently:true});
  c.drawImage(bitmap,0,0);const image=c.getImageData(0,0,512,512),p=image.data;
  const primary=rgb(spec.colors.body),secondary=rgb(spec.colors.accent),rim=rgb(spec.colors.rim),[l,t,r,b]=asset.alphaBounds;

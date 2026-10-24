@@ -147,6 +147,7 @@ jobs:
           name: runtime-integrity-report
           path: |
             runtime-integrity-report.txt
+            work/monster-round2/
             3d-player-browser-report.json
             3d-equipment-browser-report.json
             audio-lifecycle-browser-report.json
@@ -290,6 +291,10 @@ jobs:
             if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/runtime/monster-art-round2-contract.mjs
+          node tests/runtime/monster-art-samples-browser.cjs
+          node tests/runtime/monster-art-round2-browser.cjs
+          ART_BROWSER=webkit node tests/runtime/monster-art-round2-browser.cjs
           node tests/runtime/unified-mobile-combat-viewport-browser.cjs
           if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then
             echo 'Viewport mode browser navigation interrupted first attempt; retrying once.'
@@ -333,6 +338,7 @@ jobs:
           name: runtime-browser-regression
           path: |
             runtime-integrity-report.txt
+            work/monster-round2/
             3d-player-browser-report.json
             3d-equipment-browser-report.json
             audio-lifecycle-browser-report.json
