@@ -89,14 +89,23 @@ const policy=require("../../scripts/publish-assets.cjs");
   assert.equal(formalMonsterSprites.length,39,"33 sealed prototypes plus six approved Batch18 prototypes");
   assert.ok(formalMonsterSprites.includes("assets/monsters/v1/void/void-phantom-v01.webp"));
   for(const asset of formalMonsterSprites)assert.ok(manifest.files[asset],"missing formal monster asset: "+asset);
-  const expectedCachedMedia=49+formalPlayerSprites.length+formalMonsterSprites.length;
+  // The worker owns the small explicit module allowlist. Read it rather than
+  // freezing a media-only count that breaks every time a formal module is added.
+  const workerSource=fs.readFileSync(path.join(root,"resource-cache-sw.js"),"utf8");
+  const allowlist=workerSource.match(/const APPEARANCE_MODULES=new Set\\(\\[([\\s\\S]*?)\\]\\)/);
+  assert.ok(allowlist,"worker appearance-module allowlist must be present");
+  const appearanceModules=[...allowlist[1].matchAll(/'([^']+)'/g)].map(match=>match[1]);
+  assert.ok(appearanceModules.length>0,"worker appearance-module allowlist must not be empty");
+  assert.equal(new Set(appearanceModules).size,appearanceModules.length,"duplicate worker appearance module");
+  for(const modulePath of appearanceModules)assert.ok(manifest.files[modulePath],"missing cached appearance module: "+modulePath);
+  const expectedCachedMedia=49+formalPlayerSprites.length+formalMonsterSprites.length+appearanceModules.length;
   for(const asset of formalPlayerSprites)assert.ok(manifest.files[asset],"missing formal player asset: "+asset);
   assert.equal(cache.preload.failed,0);assert.equal(cache.preload.total,expectedCachedMedia);
   assert.equal(cache.status.entries,expectedCachedMedia);assert.ok(cache.status.bytes>0);
   assert.equal(cache.range.status,206);assert.equal(cache.range.bytes,4);assert.match(cache.range.header,/^bytes 2-5\/\d+$/);
   assert.equal(cache.clear.ok,true);assert.equal(cache.after.entries,0);assert.equal(cache.preserved,true);
   metrics.cache=cache;assert.deepEqual(metrics.missing,[]);assert.deepEqual(metrics.pageErrors,[]);
-  metrics.passed=true;console.log("PASS isolated candidate: all HTTP bytes/digests, 17 audio decodes, desktop/mobile settings, 94 cached media (49 existing + six formal player sprites + 39 formal monster sprites), Range, clear/save isolation");
+  metrics.passed=true;console.log("PASS isolated candidate: all HTTP bytes/digests, 17 audio decodes, desktop/mobile settings, "+expectedCachedMedia+" cached resources (49 gameplay + "+formalPlayerSprites.length+" player + "+formalMonsterSprites.length+" monster sprites + "+appearanceModules.length+" appearance modules), Range, clear/save isolation");
  }catch(error){metrics.passed=false;metrics.error=String(error.stack||error);throw error;}
  finally{fs.writeFileSync("publish-stage4-browser-report.json",JSON.stringify(metrics,null,2)+"\n");await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});
