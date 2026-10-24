@@ -6,6 +6,6 @@
  };
  window.civilizationHeritagePageHtml=function(){
   const lv=window.civilizationLevel(state),mult=window.civilizationCombatDamageMultiplier({world:3,state});
-  return `<section class="calamity-shell"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card"><h2>文明傳承</h2><p>宇宙文明 Lv.${lv} / 10</p><p>目前有效最終傷害倍率 ×${Number(mult).toFixed(2)}</p><p class="muted">依本輪實際狀態顯示；轉生重設的印記不視為目前有效能力。</p></div>${window.civilizationMarksArchiveHtml()}</section>`;
+  return `<section class="calamity-shell calamity-home"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card"><h2>文明傳承</h2><p>宇宙文明 Lv.${lv} / 10</p><p>目前有效最終傷害倍率 ×${Number(mult).toFixed(2)}</p><p class="muted">依本輪實際狀態顯示；轉生重設的印記不視為目前有效能力。</p></div>${window.civilizationMarksArchiveHtml()}</section>`;
  };
 })();
