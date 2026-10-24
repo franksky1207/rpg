@@ -122,6 +122,19 @@ jobs:
           node tests/runtime/batch20-alternate-colors-browser.cjs
           node tests/runtime/batch18-native-live-browser.cjs
           node tests/runtime/batch18-monster-recovery-browser.cjs
+      - name: Preserve repair visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: batch20-repair-visual-evidence
+          path: |
+            /tmp/batch20-alternate-colors.json
+            /tmp/batch20-alternate-ten-stages.png
+            /tmp/batch20-repair-browser.json
+            /tmp/batch20-visual-preparation.json
+            /tmp/batch18-native-live.json
+            /tmp/batch18-monster-recovery.json
+          retention-days: 14
   gm:
     needs: classify
     if: needs.classify.outputs.gm == 'true'

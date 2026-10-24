@@ -31,9 +31,11 @@
 ## 提交與Actions
 
 - PR：[#91](https://github.com/franksky1207/rpg/pull/91)。第一階段提交：`0b3fe8de42b28bb6735b40a8e464625958f0a638`。
-- 第一階段Fast Preflight、Functional CI（六分支）、Equipment GM、GM Terminology、Equipment Formal成功。必要[Runtime](https://github.com/franksky1207/rpg/actions/runs/40054748031)瀏覽器回歸仍執行中；不列為成功。
+- 第一階段Fast Preflight、Functional CI（六分支）、Equipment GM、GM Terminology、Equipment Formal成功。必要[Runtime](https://github.com/franksky1207/rpg/actions/runs/40054748031)靜態與瀏覽器兩工作皆成功，第一階段六個workflow全數成功。
 - 第二階段獨立提交與最終同SHA Actions／main／Pages待補。
 
 ## 發布及真機界線
 
 PR、同SHA Actions、main合併與Pages尚未完成，不得封箱。iPhone長時間流暢度、溫度、耗電與實際記憶體仍需真機；上述2MiB僅為受控decoded bitmap預算，不代表瀏覽器總記憶體。
+
+CI相容修正：歷史逐位元守衛僅正規化五個精確入口版本與本批唯一清除事件橋接，其他全檔位元保護不變；新驗收腳本使用Pages子路徑、保留JSON與20×10色階圖artifact。
