@@ -235,7 +235,7 @@ async function prepareKnownNext(mapping,signal,bundle){
 const fallbackEntries={normal:{assetId:'fallback'},elite:{assetId:'fallback'},boss:{assetId:'fallback'}};
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-au-ten-stages1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-identity-v1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -273,7 +273,7 @@ async function createSuit(options,bundle){
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
     import('./monster-formal-resolver.mjs?v=20261024-mirror-void1'),
-    import('./monster-actor.mjs?v=20261024-au-ten-stages1')
+    import('./monster-actor.mjs?v=20261024-identity-v1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const mirror=resolveFormalMirror({mode:bundle.enemyMode,world:bundle.enemyWorld,name:bundle.enemyName,playerName:bundle.enemyPlayerName},bundle.entry);

@@ -1,0 +1,37 @@
+{
+  "baseline": "b0241d67c9073c2dbf48f972b5e414cadf111d1c",
+  "files": {
+    "3d-test/gm-era-sprites.mjs": {
+      "beforeSha256": "9564970aaaef6980a43d19df9ca83cb6c086db0431ac1a39fc2189e005d0a2b6",
+      "afterSha256": "5b933e7e108420cc8ed2eadcc1b08e4f3c6d848afa1b6441ce1d12ee43928bc4"
+    },
+    "3d-test/index.html": {
+      "beforeSha256": "e49fe147936197dbf68d8c4cc716858c95945d7b4144c7e29588b921a769966c",
+      "afterSha256": "285239eba2caccea258f49b49d5562519752c0693b81a335537bd76d2e345f93"
+    },
+    "3d-test/monster-actor.mjs": {
+      "beforeSha256": "33b6400b45713a396dd97732574c492acf1ca9d150575260f4bb068d627ec88c",
+      "afterSha256": "f3d5a0673453c92bf2c02fbd96b0af91a2a1c9b84c468d7e6b4f89b33fd6f83b"
+    },
+    "3d-test/t3b-formal-renderer.js": {
+      "beforeSha256": "2cd7f3cc05ee6676aa3d9d40cfd7a6737faa1f5ab67ccb4ff3c4c44659d403de",
+      "afterSha256": "06b48d9e1c4352f318752f90231d0c3c2376991d53520f89d2f6d2e7b67a7cac"
+    },
+    "3d-test/test-center.js": {
+      "beforeSha256": "c4dc859965c16104791644ad93c27947a1007e63b27165cff38246cb911f5778",
+      "afterSha256": "9f2e9da7377624e3b7f85db4814bc4d5ac4f5707c7480124edd4d11f64e6f944"
+    },
+    "index.html": {
+      "beforeSha256": "a5acad9d223fadbcee684518b5e07c178b632768250f4dfad71219f6d0f57b8a",
+      "afterSha256": "31e53497af0a50f1a3ebc54d3826d5a3bd340743e42f9a6e984f37e133df085d"
+    },
+    "monstercodex.js": {
+      "beforeSha256": "f26f91c6f75ae49a7538219509d8c9653ea338725009c7a395f712dc531ec11a",
+      "afterSha256": "7fddd4314caa8eb9266dcdb61ffd8c81829861b8a40c59a56cab0233e37d59a0"
+    },
+    "monstercodeximage.mjs": {
+      "beforeSha256": "5bbb4a18b3acd4c7ec9c7621710ffb8c779f9f5223e9fe9d1af522ac3841d8a7",
+      "afterSha256": "45334a86add7f152f9604faf7cba58f8208748b059b17022a26b2af407159d1e"
+    }
+  }
+}

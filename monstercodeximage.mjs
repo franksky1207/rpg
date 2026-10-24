@@ -1,5 +1,6 @@
+import {resolveMonsterAppearance,paintMonsterAppearance,appearanceFingerprint} from './3d-test/monster-appearance.mjs?v=20261024-identity-v1';
 import {getSharedMonsterPool} from './3d-test/monster-sprite-pool.mjs?v=20261024-repair2';
-import {palettes,findMapping,findAsset} from './3d-test/monster-sprites.mjs?v=20261024-au-ten-stages1';
+import {findMapping,findAsset} from './3d-test/monster-sprites.mjs?v=20261024-au-ten-stages1';
 const pool=getSharedMonsterPool();
 const placements=new Map();
 // Tiny geometry records only: no retained codex bitmaps or appearance canvases.
@@ -25,9 +26,10 @@ export async function drawCodexMonster(canvas,row,{signal}={}){
   lease=await pool.acquire(asset.assetId,{signal});if(!canvas.isConnected)return;
   const ctx=canvas.getContext('2d'),p=placement(lease.bitmap,asset);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  canvas.style.filter=palettes[mapping.visual.palette]||'none';
+  const appearance=resolveMonsterAppearance(mapping);canvas.style.filter='none';canvas.dataset.appearance=appearanceFingerprint(appearance);
   const prepared=document.createElement('canvas');prepared.width=prepared.height=512;
-  prepared.getContext('2d').drawImage(lease.bitmap,p.x,p.y,p.size,p.size);
+  const source=paintMonsterAppearance(lease.bitmap,asset,appearance);
+  prepared.getContext('2d').drawImage(source,p.x,p.y,p.size,p.size);source.width=source.height=1;
   ctx.drawImage(prepared,p.shiftX,p.shiftY);prepared.width=prepared.height=1;
   canvas.dataset.palette=mapping.visual.palette;
   canvas.nextElementSibling.textContent='';

@@ -1,3 +1,4 @@
+import {resolveMonsterAppearance,paintMonsterAppearance,appearanceFingerprint,applyMirrorAppearance} from './monster-appearance.mjs?v=20261024-identity-v1';
 // Shared visual adapter, no battle state or owned timers. Formal activation is separate.
 import {pose} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
 import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261024-au-ten-stages1';
@@ -203,7 +204,7 @@ export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
   this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
  }
- async init(){try{const lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
+ async init(){try{const lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(this.mapping){this.appearance=resolveMonsterAppearance(this.mapping);this.appearanceSource=paintMonsterAppearance(lease.bitmap,this.entry,this.appearance);this.canvas.dataset.appearance=appearanceFingerprint(this.appearance);}if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
  draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
   if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
   const effects=this.mapping?.visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(this.canvas);
@@ -212,15 +213,15 @@ export class MonsterActor{
   // Center the actual alpha region; contain the full subject with pose margins.
   const size=Math.min(n*.68/(r-l),n*.68/(b-t))*512;
   c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
-  c.drawImage(this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
+  c.drawImage(this.appearanceSource||this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
   if(p.flash){c.globalCompositeOperation='source-atop';c.globalAlpha=p.flash;c.fillStyle='#fff';c.fillRect(-n,-n,n*2,n*2);}c.restore();
   // A compact bolt or pulse, never a crescent or a broad blade swing.
   if(clip==='attack'&&['mechanical-strike','ranged-shot','stationary-shot','pulse'].includes(a.animationType)){
    const q=Math.max(0,1-Math.abs(elapsedMs-336)/120);if(q){c.save();c.globalAlpha=q;c.fillStyle=a.animationType==='pulse'?'#c6a1fa':'#b2eaff';const w=n*(a.animationType==='ranged-shot'?.15:.09);c.fillRect(n*.08,n*.49,w,n*.018);c.restore();}
   }
-  const filter=palettes[palette]||palettes.original;if(this.paletteFilter!==filter){this.canvas.style.filter=filter;this.paletteFilter=filter;}if(this.mapping?.visual.sizePolicy==='dungeon')applyDungeonEffects(this.canvas,this.mapping.visual);this.canvas.dataset.clip=clip;return this.canvas;
+  const filter=this.appearance?'none':palettes[palette]||palettes.original;if(this.paletteFilter!==filter){this.canvas.style.filter=filter;this.paletteFilter=filter;}if(this.appearance)this.canvas.dataset.effect='static-'+this.appearance.texture+'-'+this.appearance.field;else if(this.mapping?.visual.sizePolicy==='dungeon')applyDungeonEffects(this.canvas,this.mapping.visual);this.canvas.dataset.clip=clip;return this.canvas;
  }
- dispose(){if(this.closed)return;this.closed=true;this.signal?.removeEventListener('abort',this.abort);this.lease?.release();this.lease=null;this.canvas.width=this.canvas.height=1;this.canvas.remove();}
+ dispose(){if(this.closed)return;this.closed=true;this.signal?.removeEventListener('abort',this.abort);this.lease?.release();this.lease=null;if(this.appearanceSource)this.appearanceSource.width=this.appearanceSource.height=1;this.appearanceSource=null;this.canvas.width=this.canvas.height=1;this.canvas.remove();}
 }
 
 // CSS effects live outside the painted canvas, never participate in body measurements.
@@ -230,6 +231,7 @@ function dungeonEffectsEnabled(canvas){
  return !disabled;
 }
 export function applyDungeonEffects(canvas,visual={}){
+ if(visual.mirror){applyMirrorAppearance(canvas);return;}
  const glow=visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(canvas);
  canvas.style.filter=(palettes[visual.palette]||'none')+(glow?' drop-shadow(0 0 '+(visual.energy===3?3:2)+'px '+(visual.palette?.includes('crimson')?'#833459':'#505b90')+')':'');
  if(glow&&visual.effect==='afterimage')canvas.style.filter+=' drop-shadow(2px 0 1px #453a6540)';
