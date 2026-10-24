@@ -19,7 +19,9 @@
 - 根因反證：只把兩個 UI 檔以相同基準 main 內容供給相同 Chromium 幾何測試，原斷言確實失敗 `stage never collapses`；修正版本三視窗均通過。未放寬幾何斷言。
 - GM 三視窗：玩家／怪物／對戰、原型／正式身份、六動作、速度／重播、雙向攻擊、進階區展開後仍無工程資訊、簡潔描述、內部快取清理與缺圖／重新載入、GM 撤銷及 state／localStorage 隔離。既有 equipment GM 驗證最大化／還原與相容測試入口。
 - 既有檢查：圖鑑1735檢查、279 Boss及189異宇宙快速切換／Pool上限與釋放、前景各模式取消、背景／快速追趕策略與終止、跨戰鬥／跨模式遲到結算、正式 Renderer／Controller、JavaScript結構、提示及數值owner保護、Publish dry-run。
-- 歷史來源鎖沿原鏈保留，僅在 `three-ui-approved-sources.json` 精確登記兩個UI及index的前後SHA，再還原至本批基準供原斷言繼續驗證；未知更動仍失敗。未修改任何數值、存檔、身份映射或素材。
+- 歷史來源鎖沿原鏈保留，僅在 `three-ui-approved-sources.json` 精確登記兩個UI及兩個HTML入口的前後SHA，再還原至本批基準供原斷言繼續驗證；未知更動仍失敗。未修改任何數值、存檔、身份映射或素材。
+
+首輪 Actions 的 GM terminology 歷史來源鎖拒絕 `3d-test/index.html` 新 cache query；補入同一份精確前後 SHA 登記，原歷史逐位元斷言仍完整執行，未修改產品程式或放寬斷言。
 
 本機額外嘗試的舊 `batch19-absolute-sizing-contract.cjs` 鎖定第19-1批歷史 mappings，與本次開始前的 main 已有差異；它不是現役 Actions gate，未改寫該斷言。現役尺寸／Renderer與正式owner保護使用現役工作流驗證。
 

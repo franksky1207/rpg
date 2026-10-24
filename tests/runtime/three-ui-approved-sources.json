@@ -12,6 +12,10 @@
     "index.html": {
       "beforeSha256": "67939e53bb9d1f1673943a593c23f416339e3bc5716f917dd4df95e4f42357ff",
       "afterSha256": "4680bae3fd628f53d47047aff6dee25f35757393f7171d21109a4fc93749a188"
+    },
+    "3d-test/index.html": {
+      "beforeSha256": "df16ff1312cb9a1af29e517d4bca46db1c61136cf2d557c403c7ca69919a922a",
+      "afterSha256": "e49fe147936197dbf68d8c4cc716858c95945d7b4144c7e29588b921a769966c"
     }
   }
 }
