@@ -92,7 +92,7 @@ const policy=require("../../scripts/publish-assets.cjs");
   // The worker owns the small explicit module allowlist. Read it rather than
   // freezing a media-only count that breaks every time a formal module is added.
   const workerSource=fs.readFileSync(path.join(root,"resource-cache-sw.js"),"utf8");
-  const allowlist=workerSource.match(/const APPEARANCE_MODULES=new Set\\(\\[([\\s\\S]*?)\\]\\)/);
+  const allowlist=workerSource.match(/const APPEARANCE_MODULES=new Set\(\[([\s\S]*?)\]\)/);
   assert.ok(allowlist,"worker appearance-module allowlist must be present");
   const appearanceModules=[...allowlist[1].matchAll(/'([^']+)'/g)].map(match=>match[1]);
   assert.ok(appearanceModules.length>0,"worker appearance-module allowlist must not be empty");
