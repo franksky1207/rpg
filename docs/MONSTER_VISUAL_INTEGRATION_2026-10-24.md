@@ -1,6 +1,6 @@
 # 全模式共用怪物外觀整合／工程驗收紀錄
 
-狀態：分支施工與驗收中，尚未宣稱正式封箱、Pages發布或人工視覺通過。
+狀態：**工程整合、必要自動化回歸與正式發布驗證完成；人工肉眼與iPhone真機尚待驗收，不列成功。** 功能main與同SHA證據見末尾正式發布紀錄。
 
 ## 基準與範圍
 
@@ -39,9 +39,9 @@
 
 ## 驗收狀態與發布證據
 
-本節在同一PR以最終實測補齊。已取得本機Chromium的895靜態來源、全部同原型配對、Alpha逐像素、資源pool上限與釋放結果，以及20組異宇宙與各模式比較圖。既有鏡像三viewport六動作／玩家反射像素測試通過。
+本節保留施工期檢查範圍，最終實測與發布證據見下方。已取得本機Chromium的895靜態來源、全部同原型配對、Alpha逐像素、資源pool上限與釋放結果，以及20組異宇宙與各模式比較圖。既有鏡像三viewport六動作／玩家反射像素測試通過。
 
-完整回歸、最新PR HEAD Actions、main、Pages URL／SHA尚待取得；不能以本段當作已發布。瀏覽器安裝與主機WebKit系統依賴限制需如實記錄，環境失敗須重跑或明列。iPhone Safari真機、長時間溫度／耗電／記憶體、鎖屏切App及人工「肉眼明顯差異」核准均尚未完成，不能宣稱通過。
+完整回歸、最終PR HEAD Actions、功能main與Pages URL／SHA已取得，精確證據見末尾正式發布紀錄。瀏覽器安裝與主機WebKit系統依賴限制需如實記錄，環境失敗須重跑或明列。iPhone Safari真機、長時間溫度／耗電／記憶體、鎖屏切App及人工「肉眼明顯差異」核准均尚未完成，不能宣稱通過。
 
 ### 回歸守衛與測試依賴修正
 
@@ -56,3 +56,49 @@ PR首輪 GM terminology job [40079411490](https://github.com/franksky1207/rpg/ac
 最後有效規格稽核：fingerprint排除零層能量場的無效field／fieldInk／culture，以及文化角度取餘數後相同的配置，不能用未生效欄位湊唯一率；普通怪實際0層、菁英1層、Boss2層。273色彩／413實際效果組合、895外觀、非白名單完全重複0不變。加嚴像素比較再次通過，最近配對仍mean21.2333。完整39原型GM／動畫／故障／快速切換／授權隔離三視窗及260跨模式／降級／資源回收通過。
 
 手機驗收頁記憶體上限：每頁最多40張256px靜態快照（約10MiB），換頁主動將舊Canvas縮至1px後移除，另保留一張焦點預覽。銀河500身份可按頁／上一隻／下一隻完整走訪；異宇宙每組十版仍一次完整並排，沒有常駐500個Canvas。390px實測分頁、回上一頁、鏡像六張、異宇宙十版及零pageerror通過；不等於iPhone硬體驗收。
+
+## 正式工程發布紀錄（人工項目另列待驗收）
+
+- 整合PR：[ #97](https://github.com/franksky1207/rpg/pull/97)，已squash合併；最終PR HEAD `bf26305c02285cab48dc8f5d88be97dff135355e`，六支workflow／14項檢查全部success。
+- 功能main：`6caa0664db5cbd413620a35c8f7b5648ce671844`；13支適用workflow全部success，包含Runtime兩個job、Functional CI全模式與Pages build／deploy。
+- 正式人工驗收入口：[手機／桌機比較頁](https://franksky1207.github.io/rpg/3d-test/monster-appearance-review.html)。以正式Actor產生靜態圖，異宇宙20組各十版完整檢視；大分類分頁至多40張。
+- 最終PR證據：[Functional CI／完整artifact](https://github.com/franksky1207/rpg/actions/runs/40082829551)、[Runtime Integrity](https://github.com/franksky1207/rpg/actions/runs/40082829548)。Artifact [12556291928](https://github.com/franksky1207/rpg/actions/runs/40082829551/artifacts/12556291928)，22,855,569 bytes，SHA256 `0672226ad00210a5ae243fef11f3384d94678e02abee868d626c75687310cebc`；已下載逐份讀取，不以啟動或舊SHA代替成功。Artifact依現有政策保留14天，正式比較頁與指紋JSON可永久重現。
+
+| 功能main工作流 | 結果／證據 |
+|---|---|
+| Asset Version Manifest | [success](https://github.com/franksky1207/rpg/actions/runs/40084556654) |
+| Equipment 2.5D Formal Battle | [success](https://github.com/franksky1207/rpg/actions/runs/40084556619) |
+| Equipment 2.5D GM Integration | [success](https://github.com/franksky1207/rpg/actions/runs/40084556680) |
+| Functional CI | [success](https://github.com/franksky1207/rpg/actions/runs/40084556599) |
+| GM 3D Test Center Browser | [success](https://github.com/franksky1207/rpg/actions/runs/40084556633) |
+| Galaxy 3D Button Browser Smoke | [success](https://github.com/franksky1207/rpg/actions/runs/40084556607) |
+| HTML JS CSS Cache Version Guard | [success](https://github.com/franksky1207/rpg/actions/runs/40084556632) |
+| Publication Dry Run (Stage 3) | [success](https://github.com/franksky1207/rpg/actions/runs/40084556622) |
+| Publish Asset Audit (Stage 2) | [success](https://github.com/franksky1207/rpg/actions/runs/40084556617) |
+| Publish Optimized GitHub Pages | [success](https://github.com/franksky1207/rpg/actions/runs/40084556677) |
+| Publish Release Gate (Stage 4) | [success](https://github.com/franksky1207/rpg/actions/runs/40084556672) |
+| Runtime Integrity | [success](https://github.com/franksky1207/rpg/actions/runs/40084556597) |
+| Story Integrity | [success](https://github.com/franksky1207/rpg/actions/runs/40084556605) |
+
+### 最終驗證結果
+
+- 1705身份（1695正式mapping＋10高維投影）、895有效外觀；273實際色彩組合、413實際效果組合。200組異宇宙五階＋10組高維王／投影明確白名單；非白名單完全重複0。原始JSON palette欄位保留相容性，不能以舊palette字串判定現行生效外觀；正式來源是共用解析／paint。
+- Chromium與WebKit各895款、各18221同原型跨模式配對、原Alpha逐像素不變、近似警示0；最近平均RGB距離分別21.2333／21.1717。兩瀏覽器各20組×十版完整比較圖，非只抽樣幾張。這不是人工視覺核准。
+- 最終PR artifact內1827原身份、222副本／特殊、180災厄／高維／投影、3000異宇宙三視窗案例，合計5229，全部通過。保留原尺寸／分離／裁切／六動作／死亡清空門檻，並逐RGBA確認GM與正式畫面一致。609歷史套件的27個special正式不適用案例未冒充正式通過；18特殊怪×紀元×三視窗的54案例由副本／特殊套件另驗正式。
+- 本機最終HEAD `bf26305c02285cab48dc8f5d88be97dff135355e` 的Batch6 32/32類別、36個不同原始測試，同次完整執行通過；260次跨模式、39原型GM三視窗、故障恢復／快速切換／授權隔離與Khronos GLB零errors／warnings通過。
+- 正式Pages：67檔（程式、映射、資源池、玩家來源、所有39原型及現役紀元素材）HTTP／SHA256與功能main逐位元一致；已以正式站重跑60個三視窗／三紀元原生異宇宙入口，全部通過。
+- 正式站圖鑑1735檢查、1705目錄、零pageerror。首輪路由中斷被Service Worker快取服務，未觸發預期故障；沒有當作功能成功。後以僅隔離SW的測試載具重跑全部原斷言通過，獨立SW實測仍啟用，驗94項暖快取、損毀修復與預設單項失敗後的清除重載；不刪除或放寬故障斷言，也未為測試修改遊戲程式。
+- [Pages build／deploy同功能main成功](https://github.com/franksky1207/rpg/actions/runs/40084556677)。本次文件補記只更新三份Markdown，不改任何Runtime或素材，不冒稱文件SHA另跑完整Runtime；補記後適用Actions／Pages以最新main工作流紀錄核對。
+
+### 人工視覺與 iPhone 真機待驗收（未列成功）
+
+入口：https://franksky1207.github.io/rpg/3d-test/monster-appearance-review.html
+
+- [ ] 正常遊戲顯示尺寸下，比較同圖五隻、相鄰身份、同原型跨進度；逐一確認色彩和靜態造型不是近似重複。
+- [ ] 實際圖鑑上一隻／下一隻切換，涵蓋宇宙100王、兩類災厄、高維十王與跨模式共用原型。
+- [ ] 20組異宇宙各十版本完整200款，每組均同時具有清楚色彩與靜態效果差異；同一宇宙五階允許完全相同。
+- [ ] 強度順位與效果上限觀感：異宇宙＞高維＞宇宙災厄＞銀河災厄＞副本＞特殊＞地圖；普通／菁英／Boss層次有感。
+- [ ] 高維競技投影沿用十王；鏡像能一眼辨識，玩家裝備、身形與六動作沒有被靜態光紋遮蓋。
+- [ ] iPhone Safari 的色彩、零模糊邊緣、裁切、Canvas回收與降低動態設定；反覆切換、鎖屏／切App、長時間溫度、耗電及記憶體。
+
+自動化像素距離、指紋唯一率及桌機WebKit不能代替以上人工驗收。沒有真帳號雲端往返硬體證據也不列成功。

@@ -1,6 +1,6 @@
 # 《文明戰線》全紀元怪物配色與靜態視覺效果優化規劃（2026-10-24）
 
-> 狀態：**使用者已明確授權一次完整整合，分支施工與驗收中**。本次授權優先於下方歷史「僅規劃／未授權」及分批建議；唯一基準main `b0241d67`。實際衝突核對、生效規則、完整指紋、測試與待人工項目見 [整合工程紀錄](MONSTER_VISUAL_INTEGRATION_2026-10-24.md)。下方保留規劃追溯，不得依過時狀態阻擋已授權工作。
+> 狀態：**已依使用者授權完整整合並發布；工程驗證完成，人工視覺與iPhone真機待驗收。** PR [#97](https://github.com/franksky1207/rpg/pull/97) 已合併，功能main `6caa0664db5cbd413620a35c8f7b5648ce671844`；最終PR六workflow／14檢查、功能main13支適用workflow及Pages build／deploy全部成功。生效規則、895外觀／413效果、完整指紋與實際證據見 [工程封箱報告](MONSTER_VISUAL_INTEGRATION_2026-10-24.md)。下方施工前統計與分批建議保留追溯，由本次明確授權及正式工程紀錄取代，不是現行待施工狀態。
 
 ## 1. 最高設計原則
 
@@ -13,6 +13,8 @@
 - 同一身份始終呈現相同外觀；不能每次重載、進出戰鬥或更換設備就隨機變色。
 
 ## 2. 已核對的現況（2026-10-24 main 唯讀）
+
+本節為施工前基準 `b0241d67` 的歷史盤點；現行正式有效規格已改由共用Actor解析／繪製，不能以此舊raw palette統計當作現況。
 
 以 `monstercodexdata.js`（由 `data/monsters/monster-mappings.json` 經 `scripts/generate-monster-codex.py` 產生）1,705 筆身份，使用原型＋palette＋effect＋energy（忽略大小）統計：
 
