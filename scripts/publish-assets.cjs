@@ -63,6 +63,7 @@ function inspect(root){
  for(const file of selected)if(!sizes.has(file))throw Error("Missing official audio: "+file);
  const registered=inspectRegistry(root,new Set(files)),registeredPaths=new Set(registered.paths);
  const category=p=>{
+  if(p==='3d-test/monster-appearance-designs.mjs')return 'retired-synthetic-monster-designs';
   if(p==='3d-test/atlas-review.js')return 'retired-gm-art-review';
   if(p==='3d-test/gm-whole-suit.mjs')return 'retired-gm-equipment-selector';
   if(p.startsWith("."))return "development";

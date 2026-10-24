@@ -11,6 +11,7 @@ function verifyNew(){
  const entries=require('./monster-appearance-approved.json').newFiles;
  assert.deepEqual(Object.keys(entries).sort(),['3d-test/monster-appearance-designs.mjs','3d-test/monster-appearance-review.html','3d-test/monster-appearance-review.mjs','3d-test/monster-appearance.mjs']);
  for(const [p,sha] of Object.entries(entries))assert.equal(crypto.createHash('sha256').update(require('./monster-integrated-approved.cjs').original(p)).digest('hex'),sha,'unregistered new appearance source: '+p);
- return new Set(Object.keys(entries));
+ const integrated=require('./monster-integrated-approved.cjs').verify();
+ return new Set([...Object.keys(entries),...Object.keys(integrated.newFiles)]);
 }
 module.exports={original,verifyNew};
