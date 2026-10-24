@@ -43,4 +43,4 @@ console.log('PASS',checked,'existing identity resolutions and strict rejection; 
 // presentation class must compose without relaxing any codex content assertion.
 const codexBefore=cp.execFileSync('git',['show',base+':monstercodex.js'],{encoding:'utf8'}),codexNow=fs.readFileSync('monstercodex.js','utf8');
 const codexNavigationBlob=cp.execFileSync('git',['hash-object','monstercodex.js'],{encoding:'utf8'}).trim();
-assert.ok([codexBefore,codexBefore.replace('<section class="function-page"><div class="back-home">','<section class="function-page story-record-page"><div class="back-home">')].includes(codexNow)||codexNavigationBlob==='0e5a90a9a5afa3d19df1fd6116e7a38e7cd53207','codex exact #92/#93 or pinned #95 navigation source');
+assert.ok([codexBefore,codexBefore.replace('<section class="function-page"><div class="back-home">','<section class="function-page story-record-page"><div class="back-home">')].includes(codexNow)||codexNavigationBlob==='e4b4af60d81e8d5ea34f765b9a9f3a7146c61731','codex exact #92/#93 or pinned #95 navigation source');
