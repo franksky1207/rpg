@@ -123,6 +123,17 @@
   return idleHtml();
  };
 
+ // Refresh only calamity UI fields between rounds. Never replace the shared stage.
+ window.refreshCalamityCombatUi=function(html){
+  const current=document.querySelector('#main .calamity-battle-shell');
+  if(!current){render();return;}
+  const template=document.createElement('template');template.innerHTML=html;
+  for(const selector of ['.calamity-combat-head','.calamity-run-stats','.calamity-stop-wrap','.combat-head','#combatPlayerCard','#combatEnemyCard','#combatMessage']){
+   const target=current.querySelector(selector),next=template.content.querySelector(selector);
+   if(target&&next&&target.innerHTML!==next.innerHTML)target.innerHTML=next.innerHTML;
+  }
+ };
+ function refreshCombat(){window.refreshCalamityCombatUi(combatHtml());}
  function battleViewFromSnapshot(snapshot){
   if(!snapshot)return null;
   return {
@@ -182,7 +193,7 @@
  }
  function refreshCatchUpUi(full){
   finalDisplay(full);
-  render();
+  refreshCombat();
   if(window.getMinimalModeAdapterId?.()==="civilization-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
  }
  function stopMinimalIfOpen(){
@@ -207,7 +218,7 @@
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
    await window.runCivilizationCalamityContinuous(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,
-    beforeBattle:async battle=>{ui.lastBattle=battle.result;ui.displayBattleNumber=battle.battleNumber;primeDisplay(battle.result);render();await animateBattle(battle);},
+    beforeBattle:async battle=>{ui.lastBattle=battle.result;ui.displayBattleNumber=battle.battleNumber;primeDisplay(battle.result);refreshCombat();await animateBattle(battle);},
     async onBattleComplete(battle){
      ui.lastBattle=battle.result;
      ui.finalRun=battle.run;
@@ -218,7 +229,7 @@
      const fast=uiDecision.fastCatchUp;
      if(fast){
       if(uiDecision.shouldPresentBattle){
-       primeDisplay(battle.result);render();
+       if(battle.prePresented)finalDisplay(battle.result);else primeDisplay(battle.result);refreshCombat();
        if(!battle.prePresented)await animateBattle(battle);
       }else{
        if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay(structuredDuration(battle.result?.combat||battle.result));
@@ -226,7 +237,7 @@
       }
       if(uiDecision.shouldYield&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      }else{
-      primeDisplay(battle.result);render();
+      if(battle.prePresented)finalDisplay(battle.result);else primeDisplay(battle.result);refreshCombat();
       if(!battle.prePresented)await animateBattle(battle);
       if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
      }

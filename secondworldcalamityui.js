@@ -126,6 +126,7 @@
    <div class="calamity-result-actions">${completed?"":`<button class="btn primary" onclick="startSecondWorldCalamityUI('${def.id}','single')">單場挑戰</button><button class="btn danger" onclick="startSecondWorldCalamityUI('${def.id}','continuous')">連續討伐</button>`}<button class="btn" onclick="returnToSecondWorldCalamityList()">返回文明災厄</button></div>
   </div></section>`;
  }
+ function refreshCombat(){window.refreshCalamityCombatUi(combat());}
  function battleViewFromSnapshot(snapshot){
   if(!snapshot)return null;
   return {
@@ -162,7 +163,7 @@
  }
  function refreshCatchUpUi(result){
   finalDisplay(result);
-  render();
+  refreshCombat();
   if(window.getMinimalModeAdapterId?.()==="second-world-calamity"&&typeof window.syncMinimalMode==="function")window.syncMinimalMode();
  }
  async function animate(result){
@@ -192,21 +193,21 @@
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
   const res=await window.runSecondWorldCalamityContinuous?.(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,
-   beforeBattle:async battle=>{ui.lastBattle=battle.result;ui.displayBattleNumber=battle.battleNumber;primeDisplay(battle.result);render();if(!battle.prePresented)await animate(battle.result);},
+   beforeBattle:async battle=>{ui.lastBattle=battle.result;ui.displayBattleNumber=battle.battleNumber;primeDisplay(battle.result);refreshCombat();if(!battle.prePresented)await animate(battle.result);},
    async onBattleComplete(step){
     ui.lastBattle=step.result;ui.finalRun=step.run;ui.displayBattleNumber=Math.max(1,Math.floor(Number(step.battleNumber)||1));ui.phase="combat";
     const policy=step?.presentationPolicy||null;
     const uiDecision=window.calamityContinuousUiDecision(policy,step.ended);
      const fast=uiDecision.fastCatchUp;
     if(fast){
-     if(uiDecision.shouldPresentBattle){primeDisplay(step.result);render();if(!step.prePresented)await animate(step.result);}
+     if(uiDecision.shouldPresentBattle){if(step.prePresented)finalDisplay(step.result);else primeDisplay(step.result);refreshCombat();if(!step.prePresented)await animate(step.result);}
      else{
       if(uiDecision.shouldConsumeDuration)await consumeCatchUpDelay(structuredDuration(step.result?.combat||step.result));
       if(uiDecision.shouldRefreshUi)refreshCatchUpUi(step.result);
      }
      if(uiDecision.shouldYield&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }else{
-     primeDisplay(step.result);render();if(!step.prePresented)await animate(step.result);
+     if(step.prePresented)finalDisplay(step.result);else primeDisplay(step.result);refreshCombat();if(!step.prePresented)await animate(step.result);
      if(typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("calamity");
     }
     if(!step.ended&&window.getSecondWorldCalamityRunSnapshot?.()?.active){

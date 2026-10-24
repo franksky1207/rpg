@@ -57,12 +57,23 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   await frame.locator('.gm-suit-actions').scrollIntoViewIfNeeded();
   const layout=await frame.locator('.gm-suit').evaluate(el=>({overflow:document.documentElement.scrollWidth>innerWidth,buttons:[...el.querySelectorAll('.gm-suit-actions button')].map(b=>{let r=b.getBoundingClientRect();return {w:r.width,h:r.height,left:r.left,right:r.right};}),text:el.innerText}));
   assert.equal(layout.overflow,false);assert.ok(layout.buttons.every(b=>b.h>=44&&b.left>=0&&b.right<=viewport.width));assert.doesNotMatch(layout.text,/SHA-256|512×512|實測可見倍率|解碼上限|第17批/);
+  await frame.locator('[data-advanced]').evaluate(el=>el.open=true);
+  assert.doesNotMatch(await frame.locator('.gm-suit').innerText(),/JSON|SHA|Pool|entries|bytes|refs|Registry|實測|使用身份|配色|bio-02/);
+  assert.equal(await frame.locator('[data-missing],[data-clear-cache],[data-diagnostics]').count(),0);
+  await frame.locator('[data-advanced]').evaluate(el=>el.open=false);
   await frame.locator('[data-action="idle"]').click();
   const painted=await frame.locator('.gm-suit-preview').evaluate(el=>[...el.querySelectorAll('canvas')].filter(c=>getComputedStyle(c).visibility!=='hidden').map(c=>({clip:c.dataset.clip,painted:c.getContext('2d').getImageData(0,0,c.width,c.height).data.some((a,i)=>i%4===3&&a>16)})));assert.ok(painted.length&&painted.every(c=>c.painted),'visible actors must be painted '+JSON.stringify(painted));
   await page.evaluate(()=>window.scrollTo(0,0));await frame.locator('body').evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:`/tmp/batch19-2-${viewport.width}-${mode}.png`,fullPage:false});
  }
- await frame.locator('[data-advanced] summary').first().click();await frame.locator('[data-clear-cache]').click();await frame.locator('canvas[data-suit]').waitFor();
- await frame.locator('[data-missing]').click();await frame.locator('[data-status]').filter({hasText:'缺圖或驗證失敗'}).waitFor();await frame.locator('[data-reload]').click();await frame.locator('canvas[data-suit]').waitFor();
+ const description=await frame.locator('.gm-suit').evaluate(async()=>{const {mappings,registry}=await import('./monster-sprites.mjs');const row=Object.values(mappings).find(r=>r.assetId==='bio-02'&&r.mode==='calamity');return {id:row.id,expected:registry.assets.find(a=>a.assetId===row.assetId).name+'｜大小：玩家的 '+Math.round((row.visual.visibleRatio||row.visual.scale)*100)+'%'};});
+ await frame.locator('[data-advanced]').evaluate(el=>el.open=true);
+ await frame.locator('select[data-monster]').selectOption('bio-02');await frame.locator('[data-monster-identity]').selectOption(description.id);
+ await frame.locator('[data-monster-status][data-ready="true"]').waitFor({state:'attached'});
+ assert.equal(await frame.locator('[data-monster-description]').textContent(),description.expected);
+ await frame.locator('[data-monster-description]').scrollIntoViewIfNeeded();await page.screenshot({path:`/tmp/three-ui-gm-advanced-${viewport.width}.png`});
+ await frame.locator('[data-advanced]').evaluate(el=>el.open=false);
+ await frame.locator('[data-advanced] summary').first().click();assert.equal(await frame.locator('[data-clear-cache],[data-missing],[data-diagnostics]').count(),0);assert.doesNotMatch(await frame.locator('.gm-suit').innerText(),/SHA|JSON|實測|配色|使用身份|entries|bytes|refs|bio-02/);await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.clearPreviewCache());await frame.locator('canvas[data-suit]').waitFor();
+ await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.testMissing());await frame.locator('[data-status]').filter({hasText:'缺圖或驗證失敗'}).waitFor();await frame.locator('[data-reload]').click();await frame.locator('canvas[data-suit]').waitFor();
  assert.equal(await page.evaluate(()=>JSON.stringify(state)),truth);assert.equal(await page.evaluate(()=>JSON.stringify(localStorage)),storage);
  await page.evaluate(()=>state.gm=false);await frame.locator('[data-status]').filter({hasText:'需要 GM 授權'}).waitFor();assert.equal(await frame.locator('canvas').count(),0);
  await page.evaluate(()=>closeGm3DPrototype());assert.deepEqual(errors,[]);reports.push({viewport,identities:coverage.length,alternateIdentities:1000,selections,errors});await page.close();console.log('PASS batch19-2',viewport);

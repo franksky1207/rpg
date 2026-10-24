@@ -25,16 +25,16 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
   assert.equal(await frame.locator('[data-scale],[data-direction],[data-viewport]').count(),0,'retired GM presentation controls stay removed');
   const box=await frame.locator('canvas').boundingBox();assert.ok(box.width>100&&box.width<viewport.width);
  }
- await frame.locator('[data-advanced] summary').first().click();await frame.locator('[data-missing]').click();await frame.locator('[data-status]').filter({hasText:'安全回退'}).waitFor();assert.equal(await frame.locator('canvas').count(),0);
+ await frame.locator('[data-advanced] summary').first().click();await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.testMissing());await frame.locator('[data-status]').filter({hasText:'安全回退'}).waitFor();assert.equal(await frame.locator('canvas').count(),0);
  await frame.locator('[data-reload]').click();await frame.locator('canvas[data-suit]').waitFor();
  // Rapid selection cancels obsolete requests and leaves exactly one canvas/lease.
  for(let i=0;i<12;i++)await frame.locator('[data-era]').selectOption(['era-galaxy','era-universe','era-higher'][i%3]);
  await frame.locator('canvas[data-suit="era-higher"]').waitFor();await page.waitForTimeout(350);
- const diag=JSON.parse(await frame.locator('[data-diagnostics]').innerText());assert.equal(diag.refs,1);assert.equal(diag.pending,0);assert.equal(diag.canvases,1);assert.equal(diag.rafs,1);assert.ok(diag.bytes<=diag.limit);
+ const diag=await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.diagnostics());assert.equal(diag.refs,1);assert.equal(diag.pending,0);assert.equal(diag.canvases,1);assert.equal(diag.rafs,1);assert.ok(diag.bytes<=diag.limit);
  await frame.locator('#maximizePreview').click();assert.equal(await frame.locator('body').evaluate(e=>e.classList.contains('gm-3d-maximized')),true);await frame.locator('#maximizePreview').click();
  const delta=await page.evaluate(t=>{const a=JSON.parse(t),out=[];function walk(a,b,p=''){if(a&&b&&typeof a==='object'&&typeof b==='object'){for(const k of new Set([...Object.keys(a),...Object.keys(b)]))walk(a[k],b[k],p+'.'+k);}else if(a!==b)out.push({p,a,b});}walk(a,state);return out;},truth);assert.deepEqual(delta,[],'GM state isolation');assert.equal(await page.evaluate(t=>JSON.stringify(localStorage)===t,storage),true,'GM persistence isolation');
  await page.screenshot({path:`/tmp/gm-phase4-${viewport.width}.png`,fullPage:true});
- await page.evaluate(()=>{state.gm=false;});await frame.locator('[data-status]').filter({hasText:'需要 GM 授權'}).waitFor({timeout:10000});assert.equal(await frame.locator('canvas').count(),0);const revoked=JSON.parse(await frame.locator('[data-diagnostics]').innerText());assert.equal(revoked.refs,0);assert.equal(revoked.bytes,0);
+ await page.evaluate(()=>{state.gm=false;});await frame.locator('[data-status]').filter({hasText:'需要 GM 授權'}).waitFor({timeout:10000});assert.equal(await frame.locator('canvas').count(),0);const revoked=await frame.locator('.gm-suit').evaluate(el=>el.__previewTestApi.diagnostics());assert.equal(revoked.refs,0);assert.equal(revoked.bytes,0);
  await page.evaluate(()=>{closeGm3DPrototype();state.gm=true;openGm3DPrototype();});await frame.locator('canvas[data-suit]').waitFor();assert.equal(await frame.locator('#categoryList,#caseList,#caseSearch').count(),0,'single direct interface');await frame.locator('body').evaluate(()=>Civilization3DTestCenter.selectCase('C-15-BATTLE'));assert.equal(await frame.locator('.gm-suit').count(),0);await frame.locator('body').evaluate(()=>Civilization3DTestCenter.selectCase('C-08-CHARACTER'));await frame.locator('canvas[data-suit="era-galaxy"]').waitFor();
  await page.evaluate(()=>closeGm3DPrototype());assert.equal(await page.locator('#gm3dPrototypeOverlay').count(),0);assert.deepEqual(errors,[]);reports.push({viewport,diag,revoked,requests,errors});await page.close();console.log('PASS GM era center',viewport.width);
 }

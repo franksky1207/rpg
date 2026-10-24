@@ -23,7 +23,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     await new Promise(r=>setTimeout(r,0));
     const canvas=host.querySelector('canvas[data-monster]'),expected=document.createElement('canvas');expected.style.filter=palettes[final.visual.palette];
     if(canvas.style.filter!==expected.style.filter)throw Error('late-palette-overwrite');
-    const stats=JSON.parse(host.querySelector('[data-diagnostics]').textContent).monster;
+    const stats=host.querySelector('.gm-suit').__previewTestApi.diagnostics().monster;
     if(stats.refs!==1||stats.pending!==0||stats.bytes>stats.limit||host.querySelectorAll('canvas[data-monster]').length!==1)throw Error('rapid-switch-lease-leak');
     rows.push({final:final.id,rapidSelections:31,stats});
    }
