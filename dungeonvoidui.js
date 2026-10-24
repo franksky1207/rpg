@@ -76,6 +76,14 @@
   return `<section class="void-shell"><div class="card void-panel"><div class="void-title main-minimal-mode-head"><span class="main-minimal-mode-head-label">【虛空幻境】</span>${run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openVoidMirageMinimalMode()">極簡模式</button>`:""}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="void-actions void-top-exit"><button data-combat-action="stop-continuous" class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${voidIdentityHtml()} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
  }
 
+ // Update native fields, leaving the formal shared stage and cards connected.
+ function refreshCombat(fr,{completed=false}={}){
+  const current=document.querySelector('#main .void-shell:has(.void-combat)');
+  if(!current){render();return;}
+  const template=document.createElement('template');template.innerHTML=combatHtml(fr,getVoidMirageRunSnapshot());
+  const selectors=completed?['.void-stats','.void-claim-line','.void-top-exit']:['.void-stats','.void-claim-line','.void-top-exit','#voidPlayerCard','#voidEnemyCard','#voidCombatMessage'];
+  for(const selector of selectors){const target=current.querySelector(selector),next=template.content.querySelector(selector);if(target&&next&&target.innerHTML!==next.innerHTML)target.innerHTML=next.innerHTML;}
+ }
  function resultHtml(run){
   const progress=progressSafe(),daily=dailySafe(),cleared=run?.cleared||0,isExit=run?.endedReason==="exit",endFloor=isExit?(run?.lastClearedFloor||run?.startFloor||0):(run?.failedFloor||0),endLabel=isExit?"退出樓層":"失敗樓層",endText=endFloor?`第 ${Number(endFloor).toLocaleString()} 層`:"—",nextStart=startFloor();
   return `<section class="void-shell"><div class="card void-panel void-result"><div class="void-title">【虛空幻境】</div><div class="void-result-reason">${reasonText(run?.endedReason)}</div><h2>本次挑戰完成</h2><div class="void-result-grid"><div><span>本次突破</span><strong>${Number(cleared).toLocaleString()} 層</strong></div><div><span>${endLabel}</span><strong>${endText}</strong></div><div><span>歷史最高</span><strong>第 ${Number(progress.highestCleared||0).toLocaleString()} 層</strong></div><div><span>當日最高</span><strong>第 ${Number(daily.highestFloor||0).toLocaleString()} 層</strong></div><div><span>下次挑戰起點</span><strong>第 ${Number(nextStart).toLocaleString()} 層</strong></div><div><span>今日可領 VIP</span><strong>${daily.claimed?"已領取":Number(daily.reward||0).toLocaleString()}</strong></div></div>${claimLineHtml(daily)}${voidUi.message?`<div class="notice" style="margin-top:10px">${voidUi.message}</div>`:""}<div class="muted" style="margin-top:10px">目前 VIP 積分：${Math.floor(Number(state.vipPoints)||0).toLocaleString()}</div><div class="void-actions"><button class="btn dungeon-entry-btn" onclick="startVoidMirageChallengeUI()">再次挑戰</button>${claimButtonHtml(daily)}<button class="btn" onclick="returnFromVoidMirage()">返回副本</button></div></div></section>`;
@@ -118,7 +126,7 @@
   const audioRunId=window.CivilizationAudioScenes?.startRun?.({mode:"void"});
   try{
    await window.runVoidMirageAuto({foregroundEpoch:voidUi.foregroundEpoch,
-    async beforeFloor(fr){voidUi.floorResult=fr;voidUi.phase="combat";render();if(!fr.prePresented)await animateFloor(fr);},
+    async beforeFloor(fr){voidUi.floorResult=fr;voidUi.phase="combat";refreshCombat(fr);if(!fr.prePresented)await animateFloor(fr);},
     async onFloorComplete(fr){
      if(!fr?.ok)return;
      voidUi.floorResult=fr;
@@ -135,7 +143,7 @@
       }
       if((policy?.shouldRefreshUi||policy?.shouldPresentBattle)&&typeof window.backgroundProgressUiYield==="function")await window.backgroundProgressUiYield("void");
      }else{
-      render();
+      refreshCombat(fr,{completed:fr.prePresented===true});
       if(window.getMinimalModeAdapterId?.()==="void-mirage"){
        if(fr.ended)stopVoidMinimalModeIfOpen();
        else {
