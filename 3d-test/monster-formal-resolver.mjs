@@ -11,7 +11,7 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
   const asset=findAsset(row.assetId);
   return asset?.formalBattleAllowed===true&&asset.gmPreviewAllowed===true&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
  }
- if(mode==='calamity'||world===3){
+ if(mode==='calamity'||world===3&&mode!=='void'){
   let row=null,projection=false;
   if(mode==='calamity'&&[1,2].includes(world)&&kind==='civilization-calamity'){
    row=Object.values(mappings).find(r=>r.status==='batch17-formal-enabled'&&r.world===(world===1?'galaxy':'universe')&&r.mode===mode&&r.bossId===location);
@@ -26,7 +26,8 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
   const asset=findAsset(row.assetId);
   return asset?.formalBattleAllowed===true&&asset.gmPreviewAllowed===true&&asset.facing==='left-3/4'?Object.freeze({mapping:row,asset}):null;
  }
- if(![1,2].includes(world))return null;
+ // Void's canonical identities are shared across all three eras.
+ if(![1,2].includes(world)&&!(world===3&&mode==='void'))return null;
  if(mode==='special'){
   if(kind!=='special'||typeof location!=='string')return null;
   const approvedIds=['gold_slime','mimic','reaper','lucky_rabbit','ancient_guardian','relic_guardian','bandit_king','collector','mysterious_traveler'];
@@ -82,6 +83,6 @@ export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
 
 // Mirror has no monster prototype: the same approved player appearance/Actor is reused.
 export function resolveFormalMirror({mode,world,name,playerName}={},entry){
- if(mode!=='mirror'||![1,2].includes(world)||typeof playerName!=='string'||name!=='鏡像・'+playerName||entry?.formalBattleAllowed!==true)return null;
+ if(mode!=='mirror'||![1,2,3].includes(world)||typeof playerName!=='string'||name!=='鏡像・'+playerName||entry?.formalBattleAllowed!==true)return null;
  return Object.freeze({id:'mirror-'+world,name,visual:{sizePolicy:'dungeon',visibleRatio:1.06,palette:'cyan-violet',effect:'rim',energy:1,mirror:true}});
 }

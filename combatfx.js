@@ -156,7 +156,15 @@ function isMajorCombatAudioImpact(evt,p,result){if(evt?.type!=="attack"||Number(
    if(owner!==null&&(!presentation?.active||presentation.token!==owner))return;
    ensureCombatExtras();
    const card=combatCard(target),layer=card?.querySelector(".combat-fx-layer");if(!layer)return;
-   const el=document.createElement("div"),lane=floatSerial++%3;
+   const el=document.createElement("div");let lane=floatSerial++%3;
+   // Reuse the shared effect layer, with bounded lanes in the compact dungeons.
+   // Repeated mark/combo cues must not pile up over names and HP.
+   if(card.closest('.mirror-combat-shell,.void-combat')){
+    for(const old of [...layer.children])if(old.textContent===label)old.remove();
+    if(layer.children.length>=3)layer.firstElementChild.remove();
+    const occupied=new Set([...layer.children].map(node=>Number(node.dataset.fxLane)));
+    lane=[0,1,2].find(value=>!occupied.has(value));el.dataset.fxLane=String(lane);
+   }
    el.className=`combat-fx-pop ${cfg.className||kind||""}`;
    el.textContent=label;
    el.style.left=`${lane===0?31:lane===1?50:69}%`;

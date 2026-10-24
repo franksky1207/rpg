@@ -208,7 +208,7 @@ else scheduleWarm();
 async function prepareMonsterVisual(identity,{signal,priority='next'}={}){
  try{
   if(signal?.aborted||global.document?.hidden||global.navigator?.connection?.saveData||global.CivilizationPresentationMode?.combatAnimationEnabled?.()===false||global.document?.body?.classList.contains('main-minimal-mode-open')||global.gmBackgroundBattleEnabled?.()===true)return false;
-  const [{resolveFormalMonster},{getSharedMonsterPool}]=await Promise.all([import('./monster-formal-resolver.mjs?v=20261024-au-ten-stages1'),import('./monster-sprite-pool.mjs?v=20261024-repair2')]);
+  const [{resolveFormalMonster},{getSharedMonsterPool}]=await Promise.all([import('./monster-formal-resolver.mjs?v=20261024-mirror-void1'),import('./monster-sprite-pool.mjs?v=20261024-repair2')]);
   if(signal?.aborted)return false;
   const approved=resolveFormalMonster(identity);if(!approved)return false;
   spriteMonsterPool ||= getSharedMonsterPool();
@@ -272,7 +272,7 @@ async function createSuit(options,bundle){
   const loadDeadline=setTimeout(cancelLoad,2500);
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
-    import('./monster-formal-resolver.mjs?v=20261024-au-ten-stages1'),
+    import('./monster-formal-resolver.mjs?v=20261024-mirror-void1'),
     import('./monster-actor.mjs?v=20261024-au-ten-stages1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;

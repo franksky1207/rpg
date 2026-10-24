@@ -57,6 +57,7 @@ jobs:
           node tests/runtime/unified-mobile-combat-viewport.cjs
           node tests/runtime/t3b-formal-owner-clock.cjs
           node tests/runtime/t3b-formal-controller.cjs
+          node tests/runtime/mirror-void-formal-contract.mjs
           node scripts/build-publish-dry-run.cjs
           node scripts/stage-hybrid-preview.cjs
       - name: Install browser
@@ -76,6 +77,8 @@ jobs:
             if curl -fsS http://127.0.0.1:4189/index.html >/dev/null; then break; fi
             sleep 0.25
           done
+          node tests/runtime/mirror-void-formal-browser.cjs
+          node tests/runtime/mirror-void-recovery-browser.cjs
           node tests/equipment-weapons/timing.cjs
           # The historical B developer fixture needs unpublished development/ sources.
           # Published GM now runs authorized shipped-only visuals; verify that real release instead.
@@ -92,6 +95,8 @@ jobs:
         with:
           name: formal-player-battle-evidence
           path: |
+            /tmp/mirror-void-*.png
+            /tmp/mirror-void-*.json
             /tmp/formal-*.png
             /tmp/weapons-*.png
             /tmp/equipment-weapons-*.json

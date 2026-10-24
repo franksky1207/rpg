@@ -1,0 +1,37 @@
+{
+  "baseline": "042b21cc720bacda8f0ca19081ebd175d1407a45",
+  "files": {
+    "3d-test/formal-player-sprites.css": {
+      "beforeSha256": "df7613950211b4b1c26ac74883ba2f8f468b0e9b243f61e9c952868082a80320",
+      "afterSha256": "c13afd68262763b45ad0b9cab057049b47f2e77f15d143d929eabb99b3808547"
+    },
+    "3d-test/monster-formal-resolver.mjs": {
+      "beforeSha256": "b3182d61b1fb56ae40a230f18b6e7196ea7828f2e9be2a3224e5709e3a427773",
+      "afterSha256": "02bfa33e3999f00419c86c52bcf323fba295e13e4136e92bfbf7e000650b8a70"
+    },
+    "3d-test/t3b-formal-renderer.js": {
+      "beforeSha256": "7942638060316352ac9a7d24fcdaae382a1872f402f0eba461a2a6e239994f5a",
+      "afterSha256": "2cd7f3cc05ee6676aa3d9d40cfd7a6737faa1f5ab67ccb4ff3c4c44659d403de"
+    },
+    "combatfx.js": {
+      "beforeSha256": "66d98dfcf1b1d09cb3d922b7f2ab028d2c6ccc6295d4fa5e834569b76df7b76e",
+      "afterSha256": "c1f168935fbdb43045b05afcc1a15912211f93c9002de925417f0dc3e656e70a"
+    },
+    "dungeonvoidui.js": {
+      "beforeSha256": "4029fba98c81aa33fb1329b2725664a42c508e2673dabb37a395a1b1c9679241",
+      "afterSha256": "75d6b9365d42c51d78dca5c6134b344768beb4b57c9c02c413890f0034dd5717"
+    },
+    "index.html": {
+      "beforeSha256": "4680bae3fd628f53d47047aff6dee25f35757393f7171d21109a4fc93749a188",
+      "afterSha256": "0f7e02b86a0fd578bd42233f51cf0f4fce15b126ef1374a58d9b41b48ece12f8"
+    },
+    "mirrordungeonrun.js": {
+      "beforeSha256": "e32e269705968c89d659603ddc5d874c9fceb3fb4c21178bac03272bd2454924",
+      "afterSha256": "d01f0e505655de176cd4305e5938a58c277d2c7e4a6e9161d8a9e81527675ac0"
+    },
+    "mirrordungeonui.js": {
+      "beforeSha256": "741a0f41195cef291f71270540c0437579d4671e91c3d07b0af52f6dbe62af4b",
+      "afterSha256": "b8aabfccc823b531490ca8c690df018d739f95a69cfed998c373c66e48d726cc"
+    }
+  }
+}

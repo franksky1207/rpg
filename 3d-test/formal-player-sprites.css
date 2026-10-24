@@ -36,3 +36,23 @@
  html body #main .void-shell .void-combat.formal-b-shared-layout .combat-arena{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
  html body #main .void-shell .void-combat.formal-b-shared-layout .combatant{min-height:0!important}
 }
+
+/* Mirror uses the same two-peer HUD as main/Arena. Override the legacy
+   background's three-column grid after VS is hidden; preserve actor sizing. */
+@media(min-width:761px){
+ #main>.combat-screen.mirror-combat-shell.formal-b-shared-layout>.combat-arena{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+}
+.mirror-combat-shell.formal-b-shared-layout .combatant{min-width:0}
+.mirror-combat-shell.formal-b-shared-layout .combatant h2{overflow-wrap:anywhere}
+.mirror-combat-shell.formal-b-shared-layout .status-label{flex-wrap:wrap;gap:4px 12px}
+.mirror-combat-shell.formal-b-shared-layout .status-label>span:last-child{white-space:nowrap}
+/* Give damage and the existing effect lanes their own space above the HUD. */
+:is(.mirror-combat-shell,.void-combat).formal-b-shared-layout .combatant{margin-top:46px}
+:is(.mirror-combat-shell,.void-combat).formal-b-shared-layout .combat-damage{top:-22px;font-size:24px;white-space:nowrap}
+:is(.mirror-combat-shell,.void-combat).formal-b-shared-layout .combat-fx-layer{top:-46px;bottom:auto;height:24px;overflow:visible}
+:is(.mirror-combat-shell,.void-combat).formal-b-shared-layout .combat-fx-pop{font-size:14px;white-space:nowrap}
+
+@media(max-width:760px){.mirror-combat-shell.formal-b-shared-layout>.mirror-run-head{order:-4}}
+/* The first cleared floor changes the reward line from a two-line empty state
+   to a one-line amount. Reserve its two lines while the mobile run is active. */
+@media(max-width:760px){.void-shell:has(.void-combat) .void-claim-line{min-height:3.2em}}

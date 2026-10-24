@@ -7,6 +7,14 @@ const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const at=(ref,p)=>cp.execFileSync('git',['show',ref+':'+p],{maxBuffer:8*1024*1024});
 function original(p,encoding){
  let bytes=fs.readFileSync(p);
+ // PR #93 is an independent, exact cache-only HTML composition. Accept that
+ // approved token before checking this repair; never overwrite its codex change.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1&storyBackground=20261024','monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1'));
+
+ // The independent Mirror/Void repair is exact-registered above the sealed links.
+ const dungeonRepair=require('./mirror-void-approved-sources.json'),dungeonSource=dungeonRepair.files[p];
+ if(dungeonSource){assert.equal(sha(bytes),dungeonSource.afterSha256,'unregistered Mirror/Void edit: '+p);const before=at(dungeonRepair.baseline,p);assert.equal(sha(before),dungeonSource.beforeSha256,'Mirror/Void baseline digest: '+p);bytes=before;}
+
  // Exact registration of the three authorized UI repairs; historical assertions still run.
  const repair=require('./three-ui-approved-sources.json'),registered=repair.files[p];
  if(registered){assert.equal(sha(bytes),registered.afterSha256,'unregistered UI repair source edit: '+p);const before=at(repair.baseline,p);assert.equal(sha(before),registered.beforeSha256,'UI repair baseline digest: '+p);bytes=before;}
@@ -26,6 +34,6 @@ function original(p,encoding){
  if(old){assert.equal(sha(bytes),old.afterSha256,'historical approved-runtime link: '+p);const before=at(historical.baseline,p);assert.equal(sha(before),old.beforeSha256,'historical baseline digest: '+p);if(p==='combatcore.js')assert.equal(bytes.toString().split('window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;')[0],before.toString().split('window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;')[0],'historical damage kernel remains exact');bytes=before;}
  return encoding?bytes.toString(encoding):bytes;
 }
-function verifyAll(){const paths=[...new Set([...Object.keys(historical.files),...Object.keys(current.files),...Object.keys(require('./three-ui-approved-sources.json').files)])];paths.forEach(p=>original(p));return paths;}
+function verifyAll(){const paths=[...new Set([...Object.keys(historical.files),...Object.keys(current.files),...Object.keys(require('./three-ui-approved-sources.json').files),...Object.keys(require('./mirror-void-approved-sources.json').files)])];paths.forEach(p=>original(p));return paths;}
 module.exports={original,verifyAll};
 if(require.main===module){require('./batch20-notice-protection.cjs');console.log('PASS exact-source Batch20 registration, historical locks unchanged:',verifyAll().length);}

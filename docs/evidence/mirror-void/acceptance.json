@@ -1,0 +1,1048 @@
+{
+  "baseline": "042b21cc720bacda8f0ca19081ebd175d1407a45",
+  "realIPhone": false,
+  "passed": true,
+  "identityResolutions": 3735,
+  "sharedVoidIdentitiesW3": 20,
+  "matrix": [
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "frames": 129,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "frames": 123,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 0,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 3,
+      "frames": 81,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "frames": 170,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "frames": 170,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 3,
+      "frames": 111,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "frames": 168,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "frames": 167,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "mirror",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 3,
+      "frames": 126,
+      "resumedBattle": 2,
+      "reloadPreserved": true,
+      "stats": {
+        "player": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        },
+        "monster": {
+          "bytes": 0,
+          "refs": 0,
+          "entries": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 1,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 2,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 4,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 4,
+          "loads": 4,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "world": 3,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 4,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 4,
+          "loads": 4,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 1,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 2,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "world": 3,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 1,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 2,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 2,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "mode": "void",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "world": 3,
+      "floors": [
+        "9",
+        "10",
+        "11"
+      ],
+      "assets": [
+        "hm-04",
+        "beast-03",
+        "void-phantom-v01"
+      ],
+      "exitReason": "exit",
+      "stats": {
+        "player": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 16777216,
+          "hits": 3,
+          "loads": 4,
+          "pending": 0,
+          "refs": 0,
+          "closed": false
+        },
+        "monster": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 3,
+          "loads": 3,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    }
+  ],
+  "recovery": [
+    {
+      "kind": "failure-feedback-and-once-only-settlement",
+      "failures": {
+        "out": [
+          false,
+          false,
+          false
+        ],
+        "before": "{\"history\":{\"bestWins\":0,\"bestDate\":null,\"miracleDates\":[]},\"daily\":{\"dateKey\":\"2026-10-24\",\"status\":\"idle\",\"challengeDate\":null,\"startedAt\":0,\"wins\":0,\"losses\":0,\"completedAt\":0},\"version\":3}",
+        "after": "{\"history\":{\"bestWins\":0,\"bestDate\":null,\"miracleDates\":[]},\"daily\":{\"dateKey\":\"2026-10-24\",\"status\":\"idle\",\"challengeDate\":null,\"startedAt\":0,\"wins\":0,\"losses\":0,\"completedAt\":0},\"version\":3}"
+      },
+      "dialogs": [
+        "上一場戰鬥尚在收尾，請稍後再試；鏡像已完成場次會保留。",
+        "鏡像戰模組尚未載入，請重新整理後再試；本輪進度會保留。",
+        "無法保存鏡像戰進度，未消耗今日次數；請確認儲存空間後再試。",
+        "今日鏡像戰已結束。"
+      ],
+      "settled": {
+        "daily": {
+          "dateKey": "2026-10-24",
+          "status": "completed",
+          "challengeDate": "2026-10-24",
+          "startedAt": 1792820546650,
+          "wins": 19,
+          "losses": 1,
+          "completedAt": 1792820550644
+        },
+        "vip": 7220,
+        "expected": 7220
+      }
+    },
+    {
+      "kind": "reincarnated-higher-appearance-in-W1-and-dense-effects",
+      "visuals": [
+        {
+          "viewport": {
+            "width": 1365,
+            "height": 900
+          },
+          "suit": "era-higher",
+          "mirror": "era-higher",
+          "cards": [
+            {
+              "width": 554,
+              "labels": 0,
+              "layer": 647,
+              "title": 681,
+              "damage": 673.4000244140625
+            },
+            {
+              "width": 554,
+              "labels": 0,
+              "layer": 647,
+              "title": 681,
+              "damage": 673.4000244140625
+            }
+          ],
+          "overflow": false
+        },
+        {
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "suit": "era-higher",
+          "mirror": "era-higher",
+          "cards": [
+            {
+              "width": 364,
+              "labels": 0,
+              "layer": 595,
+              "title": 625,
+              "damage": 603.05517578125
+            },
+            {
+              "width": 364,
+              "labels": 0,
+              "layer": 84,
+              "title": 114,
+              "damage": 108.93966674804688
+            }
+          ],
+          "overflow": false
+        },
+        {
+          "viewport": {
+            "width": 844,
+            "height": 390
+          },
+          "suit": "era-higher",
+          "mirror": "era-higher",
+          "cards": [
+            {
+              "width": 392,
+              "labels": 0,
+              "layer": 342.796875,
+              "title": 370.796875,
+              "damage": 369.1968688964844
+            },
+            {
+              "width": 392,
+              "labels": 0,
+              "layer": 342.796875,
+              "title": 370.796875,
+              "damage": 369.1968688964844
+            }
+          ],
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "kind": "high-floor",
+      "broken": false,
+      "proof": {
+        "world": 3,
+        "enemy": {
+          "role": "enemy",
+          "name": "虛空獵兵",
+          "id": null,
+          "kind": "dungeon-void-mirage",
+          "location": "38168",
+          "identityAvailability": "owner-name-and-context"
+        },
+        "verified": true,
+        "fallbackVisible": false,
+        "canvas": {
+          "width": 234,
+          "height": 234
+        },
+        "stats": {
+          "entries": 1,
+          "bytes": 1048576,
+          "limit": 2097152,
+          "hits": 1,
+          "loads": 1,
+          "images": [
+            {
+              "id": "hm-04",
+              "decoded": true,
+              "refs": 1
+            }
+          ],
+          "pending": 0,
+          "refs": 1,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    },
+    {
+      "kind": "high-floor",
+      "broken": true,
+      "proof": {
+        "world": 3,
+        "enemy": {
+          "role": "enemy",
+          "name": "虛空獵兵",
+          "id": null,
+          "kind": "dungeon-void-mirage",
+          "location": "38168",
+          "identityAvailability": "owner-name-and-context"
+        },
+        "verified": false,
+        "fallbackVisible": true,
+        "canvas": {
+          "width": 234,
+          "height": 234
+        },
+        "stats": {
+          "entries": 0,
+          "bytes": 0,
+          "limit": 2097152,
+          "hits": 0,
+          "loads": 2,
+          "images": [],
+          "pending": 0,
+          "refs": 0,
+          "closed": false,
+          "queued": 0
+        }
+      }
+    }
+  ],
+  "foregroundModes": {
+    "passed": true,
+    "reports": [
+      {
+        "item": {
+          "phase": 1,
+          "mode": "main"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 1,
+          "mode": "bounty"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 1,
+          "mode": "arena"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "main"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "bounty"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "arena"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "main"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "bounty"
+        },
+        "size": {
+          "width": 390,
+          "height": 844
+        },
+        "availability": {
+          "blocked": true,
+          "stops": 0
+        }
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "arena"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 1,
+          "mode": "special"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "special"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 1,
+          "mode": "calamity"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "calamity"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 1,
+          "mode": "void"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "void"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "void"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 1,
+          "mode": "mirror"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "mirror"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "mirror"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "alternate"
+        },
+        "openingCancelled": true,
+        "busyReleased": true,
+        "ownerReleased": true
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "review1"
+        },
+        "reviewRetirement": {
+          "retired": true,
+          "era": 2,
+          "absent": true,
+          "idle": true,
+          "unchanged": true
+        }
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "review2"
+        },
+        "reviewRetirement": {
+          "retired": true,
+          "era": 3,
+          "absent": true,
+          "idle": true,
+          "unchanged": true
+        }
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "review3"
+        },
+        "reviewRetirement": {
+          "retired": true,
+          "era": 3,
+          "absent": true,
+          "idle": true,
+          "unchanged": true
+        }
+      },
+      {
+        "item": {
+          "phase": 2,
+          "mode": "calreview1"
+        },
+        "reviewRetirement": {
+          "retired": true,
+          "era": 2,
+          "absent": true,
+          "idle": true,
+          "unchanged": true
+        }
+      },
+      {
+        "item": {
+          "phase": 3,
+          "mode": "calreview2"
+        },
+        "reviewRetirement": {
+          "retired": true,
+          "era": 3,
+          "absent": true,
+          "idle": true,
+          "unchanged": true
+        }
+      }
+    ]
+  }
+}
