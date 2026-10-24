@@ -118,7 +118,7 @@
   if(r&&unlocked(r,known)){
    const siblings=detailSiblings(r,detailWorld,known),position=siblings.findIndex(x=>x.id===r.id);
    const navigation=`<nav class="codex-detail-nav" aria-label="已解鎖怪物瀏覽"><button type="button" class="btn" onclick="moveMonsterCodexDetail(-1)" ${position<=0?'disabled':''}>← 上一隻</button><span aria-live="polite">${position+1} / ${siblings.length}</span><button type="button" class="btn" onclick="moveMonsterCodexDetail(1)" ${position<0||position>=siblings.length-1?'disabled':''}>下一隻 →</button></nav>`;
-   return header+`<article class="card"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p><div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div>${navigation}</article></section>`;
+   return header+`<article class="card"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p>${navigation}<div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div></article></section>`;
   }
   return header+`<div class="card">${groupsHtml(known)}</div></section>`;
  };
