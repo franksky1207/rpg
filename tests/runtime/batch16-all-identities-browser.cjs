@@ -18,14 +18,17 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    const {mount}=await import('./gm-era-sprites.mjs');
    const {mappings,registry}=await import('./monster-sprites.mjs');
    const {resolveFormalMonster}=await import('./monster-formal-resolver.mjs');
-   const {palettes,applyDungeonEffects}= await import('./monster-actor.mjs');
+   const {palettes,applyDungeonEffects,measuredMonsterProfiles,MonsterActor}= await import('./monster-actor.mjs');
    const {appearanceFingerprint}=await import('./monster-appearance.mjs');
    function sameAppearancePixels(a,b){if(a.width!==b.width||a.height!==b.height)return false;const x=a.getContext('2d').getImageData(0,0,a.width,a.height).data,y=b.getContext('2d').getImageData(0,0,b.width,b.height).data;return x.every((v,i)=>v===y[i]);}
    const gm=document.querySelector('#gm'),formal=document.querySelector('#formal');
    const mounted=await mount({host:gm,quality:'medium'}),rows=[];
    const wait=async(fn)=>{const end=performance.now()+10000;while(!fn()){if(performance.now()>end)throw Error('load-timeout');await new Promise(r=>setTimeout(r,1));}};
-   function read(c){const n=c.width,d=c.getContext('2d').getImageData(0,0,n,n).data,box=c.getBoundingClientRect();let l=n,t=n,r=-1,b=-1;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}return {height:(b-t+1)/n*box.height,left:box.left+l/n*box.width,right:box.left+(r+1)/n*box.width,top:box.top+t/n*box.height,bottom:box.top+(b+1)/n*box.height};}
-   function pair(host,p,m){const player=read(p),monster=read(m),stage=host.getBoundingClientRect();return {playerHeight:player.height,monsterHeight:monster.height,ratio:monster.height/player.height,contained:[player,monster].every(b=>b.left>=stage.left-.01&&b.right<=stage.right+.01&&b.top>=stage.top-.01&&b.bottom<=stage.bottom+.01),separated:player.right<monster.left};}
+   // Ratios/separation sample the fixed body through the same Actor pose, while
+   // full painted effects independently participate in viewport containment.
+   let bodyActor=null;const {getSharedMonsterPool}=await import('./monster-sprite-pool.mjs');
+   function read(c,bodyOnly=false,pose={clip:'idle',elapsedMs:0}){if(bodyOnly&&bodyActor)bodyActor.draw({...pose,bodyOnly:true});const n=c.width,d=(bodyOnly&&bodyActor?bodyActor.canvas:c).getContext('2d').getImageData(0,0,n,n).data,box=c.getBoundingClientRect();let l=n,t=n,r=-1,b=-1;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}return {height:(b-t+1)/n*box.height,left:box.left+l/n*box.width,right:box.left+(r+1)/n*box.width,top:box.top+t/n*box.height,bottom:box.top+(b+1)/n*box.height};}
+   function pair(host,p,m,pose){const player=read(p),painted=read(m),monster=read(m,true,pose),stage=(host.querySelector('[data-monster-effect-viewport]')||host).getBoundingClientRect();return {playerHeight:player.height,monsterHeight:monster.height,ratio:monster.height/player.height,contained:[player,painted].every(b=>b.left>=stage.left-.01&&b.right<=stage.right+.01&&b.top>=stage.top-.01&&b.bottom<=stage.bottom+.01),separated:player.right<monster.left};}
    async function select(selector,value){const e=gm.querySelector(selector);e.value=value;e.dispatchEvent(new Event('change'));}
    for(const row of [...Object.values(mappings).filter(r=>r.visual.sizePolicy==='dungeon'),...specialRows]){
     const errors=[];let view=null,battle=null,formalSupported=false;
@@ -35,9 +38,9 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     try{
      const era='era-'+(world===1?'galaxy':'universe');
      if(gm.querySelector('[data-era]').value!==era){await select('[data-era]',era);await wait(()=>gm.querySelector('canvas[data-suit]'));}
-     await select('select[data-monster]',row.assetId);await wait(()=>gm.querySelector('canvas[data-monster]'));
-     await select('[data-monster-identity]',row.id);await wait(()=>gm.querySelector('canvas[data-monster]'));
-     const enemy=gm.querySelector('canvas[data-monster]');
+     await select('select[data-monster]',row.assetId);
+     await select('[data-monster-identity]',row.id);await wait(()=>gm.querySelector('canvas[data-monster]')?.dataset.appearance===appearanceFingerprint(row));
+     const enemy=gm.querySelector('canvas[data-monster]');bodyActor=await new MonsterActor(getSharedMonsterPool(),row.assetId,{identity:row.id,tier:'medium'}).init();
      view=pair(gm.querySelector('.gm-suit-preview'),gm.querySelector('canvas[data-suit]'),enemy);
      const expectedFingerprint=appearanceFingerprint(row);
      // Painted local colors replace the obsolete whole-image CSS palette.
@@ -61,14 +64,14 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
       await window.captureBatch16(row.id);
       for(const clip of ['idle','attack','hit','dodge','return','defeat'])for(let ms=0;ms<=700;ms+=35){
        renderer.sample({player:{clip:'idle',elapsedMs:0},enemy:{clip,elapsedMs:ms,approach:.42}});
-       const poses=pair(formal,formal.querySelector('[data-suit]'),formal.querySelector('[data-monster]'));if(clip!=='defeat'&&(!poses.contained||!poses.separated))throw Error('pose-layout '+clip+':'+ms);
+       const poses=pair(formal,formal.querySelector('[data-suit]'),formal.querySelector('[data-monster]'),{clip,elapsedMs:ms});if(clip!=='defeat'&&(!poses.contained||!poses.separated))throw Error('pose-layout '+clip+':'+ms);
        const c=formal.querySelector('[data-monster]'),d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,n=c.width;
        for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);if(x===0||y===0||x===n-1||y===n-1)throw Error('clipped '+clip+':'+ms);}
        if(clip==='defeat'&&ms===700&&d.some((x,i)=>i%4===3&&x>16))throw Error('death-not-empty');
       }
 
      }
-    }catch(e){errors.push(String(e));}finally{renderer?.dispose();ac.abort();}
+    }catch(e){errors.push(String(e));}finally{bodyActor?.dispose();bodyActor=null;renderer?.dispose();ac.abort();}
     rows.push({id:row.id,assetId:row.assetId,world:row.world,kind:row.kind,formalSupported,formalNA:formalSupported?null:'resolver excludes special identities',gm:view,formal:battle,errors});
    }
    mounted.dispose();window.CivilizationFormalBRenderer.clearSpriteCache();

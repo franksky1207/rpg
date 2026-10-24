@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "summary": {
+    "identities": 30,
+    "cases": 180,
+    "success": 180,
+    "failed": 0,
+    "minRatio": 1.6502239459748507,
+    "maxRatio": 1.9729067588989768,
+    "maxRatioError": 0.00027735509254900315,
+    "groups": {
+      "galaxy/civilization-calamity": {
+        "cases": 30,
+        "success": 30,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "universe/civilization-calamity": {
+        "cases": 30,
+        "success": 30,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "higher/boss": {
+        "cases": 120,
+        "success": 120,
+        "failed": 0,
+        "formalNA": 0
+      }
+    }
+  }
+}

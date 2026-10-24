@@ -128,7 +128,7 @@
  const observer=new MutationObserver(async()=>{
   const canvas=document.getElementById('monsterCodexImage');if(canvas!==imageCanvas){imageController?.abort();imageCanvas=canvas;imageController=new AbortController();}if(!canvas||canvas.dataset.loading)return;canvas.dataset.loading='1';const epoch=++imageEpoch,id=canvas.dataset.codexId;
   if(!unlocked(byId.get(id),new Set(state.monsterCodex?.encountered||[])))return;
-  try{const {drawCodexMonster}=await import('./monstercodeximage.mjs?v=20261024-identity-v1');if(canvas.isConnected&&epoch===imageEpoch)await drawCodexMonster(canvas,byId.get(id),{signal:imageController.signal});}
+  try{const {drawCodexMonster,prepareCodexMonster}=await import('./monstercodeximage.mjs?v=20261024-approved1');if(canvas.isConnected&&epoch===imageEpoch){await drawCodexMonster(canvas,byId.get(id),{signal:imageController.signal});const row=byId.get(id),known=new Set(state.monsterCodex?.encountered||[]),siblings=detailSiblings(row,detailWorld,known),next=siblings[siblings.findIndex(r=>r.id===id)+1];if(next)void prepareCodexMonster(next,{signal:imageController.signal});}}
   catch(_){if(canvas.isConnected)document.getElementById('monsterCodexImageStatus').textContent='圖片暫時無法載入，請重新開啟查看。';}
  });
  if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});

@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "summary": {
+    "identities": 65,
+    "cases": 222,
+    "success": 222,
+    "failed": 0,
+    "minRatio": 0.9136402939904885,
+    "maxRatio": 1.9094134423207956,
+    "maxRatioError": 0.00025390344530751285,
+    "groups": {
+      "galaxy/dungeon-bounty": {
+        "cases": 45,
+        "success": 45,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "universe/dungeon-bounty": {
+        "cases": 45,
+        "success": 45,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "galaxy/dungeon-arena": {
+        "cases": 9,
+        "success": 9,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "universe/dungeon-arena": {
+        "cases": 9,
+        "success": 9,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "both/dungeon-void-mirage": {
+        "cases": 60,
+        "success": 60,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "galaxy/special": {
+        "cases": 27,
+        "success": 27,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "universe/special": {
+        "cases": 27,
+        "success": 27,
+        "failed": 0,
+        "formalNA": 0
+      }
+    }
+  }
+}

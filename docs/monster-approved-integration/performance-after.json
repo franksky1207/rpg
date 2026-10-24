@@ -1,0 +1,817 @@
+{
+  "sharedModuleLoadMs": 339.30000000074506,
+  "records": [
+    {
+      "label": "first-map-battle",
+      "firstVisibleMs": 231,
+      "includingInitialModuleLoadMs": 570.3000000007451,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 0,
+        "bytes": 0,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 0,
+        "misses": 0,
+        "prepares": 0,
+        "prepareMs": 0,
+        "evictions": 0,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 1,
+        "bytes": 2097152,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 1,
+        "misses": 1,
+        "prepares": 1,
+        "prepareMs": 195,
+        "evictions": 0,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 1048576,
+      "jsHeapBytes": 81074715
+    },
+    {
+      "label": "repeat-same-battle",
+      "firstVisibleMs": 7.400000000372529,
+      "includingInitialModuleLoadMs": 7.400000000372529,
+      "prototypeLoads": 0,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 1,
+        "bytes": 2097152,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 1,
+        "misses": 1,
+        "prepares": 1,
+        "prepareMs": 195,
+        "evictions": 0,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 1,
+        "bytes": 2097152,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 2,
+        "misses": 1,
+        "prepares": 1,
+        "prepareMs": 195,
+        "evictions": 0,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 1048576,
+      "jsHeapBytes": 81074715
+    },
+    {
+      "label": "continuous-galaxy-map-004",
+      "firstVisibleMs": 305.5,
+      "includingInitialModuleLoadMs": 305.5,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 1,
+        "bytes": 2097152,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 2,
+        "misses": 1,
+        "prepares": 1,
+        "prepareMs": 195,
+        "evictions": 0,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 3,
+        "misses": 2,
+        "prepares": 2,
+        "prepareMs": 372.59999999962747,
+        "evictions": 0,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 59186466
+    },
+    {
+      "label": "continuous-galaxy-map-008",
+      "firstVisibleMs": 158.09999999962747,
+      "includingInitialModuleLoadMs": 158.09999999962747,
+      "prototypeLoads": 0,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 3,
+        "misses": 2,
+        "prepares": 2,
+        "prepareMs": 372.59999999962747,
+        "evictions": 0,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 4,
+        "misses": 3,
+        "prepares": 3,
+        "prepareMs": 523.2000000011176,
+        "evictions": 1,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 69934682
+    },
+    {
+      "label": "continuous-galaxy-map-009",
+      "firstVisibleMs": 202.40000000037253,
+      "includingInitialModuleLoadMs": 202.40000000037253,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 4,
+        "misses": 3,
+        "prepares": 3,
+        "prepareMs": 523.2000000011176,
+        "evictions": 1,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 5,
+        "misses": 4,
+        "prepares": 4,
+        "prepareMs": 705.9000000003725,
+        "evictions": 2,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 78627314
+    },
+    {
+      "label": "first-codex",
+      "firstVisibleMs": 177.30000000074506,
+      "includingInitialModuleLoadMs": 177.30000000074506,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 5,
+        "misses": 4,
+        "prepares": 4,
+        "prepareMs": 705.9000000003725,
+        "evictions": 2,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 5,
+        "misses": 5,
+        "prepares": 5,
+        "prepareMs": 862,
+        "evictions": 3,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 90209858
+    },
+    {
+      "label": "codex-next-universe-boss-002",
+      "firstVisibleMs": 285,
+      "includingInitialModuleLoadMs": 285,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 5,
+        "misses": 5,
+        "prepares": 5,
+        "prepareMs": 862,
+        "evictions": 3,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 5,
+        "misses": 6,
+        "prepares": 6,
+        "prepareMs": 1127.8999999985099,
+        "evictions": 4,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 105022654
+    },
+    {
+      "label": "codex-next-universe-boss-001",
+      "firstVisibleMs": 1.300000000745058,
+      "includingInitialModuleLoadMs": 1.300000000745058,
+      "prototypeLoads": 0,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 5,
+        "misses": 6,
+        "prepares": 6,
+        "prepareMs": 1127.8999999985099,
+        "evictions": 4,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 6,
+        "misses": 6,
+        "prepares": 6,
+        "prepareMs": 1127.8999999985099,
+        "evictions": 4,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 105022654
+    },
+    {
+      "label": "codex-next-universe-boss-002",
+      "firstVisibleMs": 1.199999999254942,
+      "includingInitialModuleLoadMs": 1.199999999254942,
+      "prototypeLoads": 0,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 6,
+        "misses": 6,
+        "prepares": 6,
+        "prepareMs": 1127.8999999985099,
+        "evictions": 4,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 7,
+        "misses": 6,
+        "prepares": 6,
+        "prepareMs": 1127.8999999985099,
+        "evictions": 4,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 105022654
+    },
+    {
+      "label": "gm-replay-galaxy-map-003",
+      "firstVisibleMs": 60.20000000111759,
+      "includingInitialModuleLoadMs": 60.20000000111759,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 7,
+        "misses": 6,
+        "prepares": 6,
+        "prepareMs": 1127.8999999985099,
+        "evictions": 4,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 7,
+        "misses": 7,
+        "prepares": 7,
+        "prepareMs": 1176.0999999996275,
+        "evictions": 5,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 110953382
+    },
+    {
+      "label": "gm-replay-galaxy-map-009",
+      "firstVisibleMs": 182.59999999962747,
+      "includingInitialModuleLoadMs": 182.59999999962747,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 7,
+        "misses": 7,
+        "prepares": 7,
+        "prepareMs": 1176.0999999996275,
+        "evictions": 5,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 7,
+        "misses": 8,
+        "prepares": 8,
+        "prepareMs": 1345.300000000745,
+        "evictions": 6,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 16652305
+    },
+    {
+      "label": "gm-replay-galaxy-map-003",
+      "firstVisibleMs": 0.599999999627471,
+      "includingInitialModuleLoadMs": 0.599999999627471,
+      "prototypeLoads": 0,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 7,
+        "misses": 8,
+        "prepares": 8,
+        "prepareMs": 1345.300000000745,
+        "evictions": 6,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 8,
+        "misses": 8,
+        "prepares": 8,
+        "prepareMs": 1345.300000000745,
+        "evictions": 6,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 16652305
+    },
+    {
+      "label": "alternate-alternate-depth-0001",
+      "firstVisibleMs": 334.7000000011176,
+      "includingInitialModuleLoadMs": 334.7000000011176,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 8,
+        "misses": 8,
+        "prepares": 8,
+        "prepareMs": 1345.300000000745,
+        "evictions": 6,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 9,
+        "misses": 9,
+        "prepares": 9,
+        "prepareMs": 1523.300000000745,
+        "evictions": 7,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 20451999
+    },
+    {
+      "label": "alternate-alternate-depth-0002",
+      "firstVisibleMs": 6.599999999627471,
+      "includingInitialModuleLoadMs": 6.599999999627471,
+      "prototypeLoads": 0,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 9,
+        "misses": 9,
+        "prepares": 9,
+        "prepareMs": 1523.300000000745,
+        "evictions": 7,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 10,
+        "misses": 9,
+        "prepares": 9,
+        "prepareMs": 1523.300000000745,
+        "evictions": 7,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 20451999
+    },
+    {
+      "label": "alternate-alternate-depth-0006",
+      "firstVisibleMs": 220.2000000011176,
+      "includingInitialModuleLoadMs": 220.2000000011176,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 10,
+        "misses": 9,
+        "prepares": 9,
+        "prepareMs": 1523.300000000745,
+        "evictions": 7,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 11,
+        "misses": 10,
+        "prepares": 10,
+        "prepareMs": 1725.7000000011176,
+        "evictions": 8,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 31469933
+    },
+    {
+      "label": "alternate-alternate-depth-0011",
+      "firstVisibleMs": 185.69999999925494,
+      "includingInitialModuleLoadMs": 185.69999999925494,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 11,
+        "misses": 10,
+        "prepares": 10,
+        "prepareMs": 1725.7000000011176,
+        "evictions": 8,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 2,
+        "bytes": 4194304,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 12,
+        "misses": 11,
+        "prepares": 11,
+        "prepareMs": 1888.9000000022352,
+        "evictions": 9,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 2097152,
+      "jsHeapBytes": 42457333
+    },
+    {
+      "label": "after-resource-clear",
+      "firstVisibleMs": 70.09999999962747,
+      "includingInitialModuleLoadMs": 70.09999999962747,
+      "prototypeLoads": 1,
+      "appearanceBefore": {
+        "version": "20261024-approved1",
+        "entries": 0,
+        "bytes": 0,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 12,
+        "misses": 11,
+        "prepares": 11,
+        "prepareMs": 1888.9000000022352,
+        "evictions": 11,
+        "queued": 0
+      },
+      "appearanceAfter": {
+        "version": "20261024-approved1",
+        "entries": 1,
+        "bytes": 2097152,
+        "limit": 4194304,
+        "capacity": 2,
+        "refs": 0,
+        "pending": 0,
+        "hits": 13,
+        "misses": 12,
+        "prepares": 12,
+        "prepareMs": 1936.8000000026077,
+        "evictions": 11,
+        "queued": 0
+      },
+      "decodedPrototypeBytes": 1048576,
+      "jsHeapBytes": 20280581
+    }
+  ],
+  "downloads": [
+    {
+      "url": "monster-sprites.mjs",
+      "transfer": 1049295,
+      "decoded": 1048995
+    },
+    {
+      "url": "monster-actor.mjs",
+      "transfer": 26706,
+      "decoded": 26406
+    },
+    {
+      "url": "monster-appearance.mjs?v=20261024-approved1",
+      "transfer": 5014,
+      "decoded": 4714
+    },
+    {
+      "url": "monster-appearance-manager.mjs?v=20261024-approved1",
+      "transfer": 5263,
+      "decoded": 4963
+    },
+    {
+      "url": "monster-sprites.mjs?v=20261024-au-ten-stages1",
+      "transfer": 1049295,
+      "decoded": 1048995
+    },
+    {
+      "url": "monster-body-v2.mjs?v=20261024-approved1",
+      "transfer": 3839,
+      "decoded": 3539
+    },
+    {
+      "url": "monster-approved-art.mjs?v=20261024-approved1",
+      "transfer": 1270216,
+      "decoded": 1269916
+    },
+    {
+      "url": "monster-static-effects.mjs?v=20261024-approved1",
+      "transfer": 17907,
+      "decoded": 17607
+    },
+    {
+      "url": "monster-body-v1.mjs?v=20261024-approved1",
+      "transfer": 3144,
+      "decoded": 2844
+    },
+    {
+      "url": "monster-sprite-pool.mjs",
+      "transfer": 6065,
+      "decoded": 5765
+    },
+    {
+      "url": "monstercodeximage.mjs",
+      "transfer": 3063,
+      "decoded": 2763
+    },
+    {
+      "url": "monster-sprite-pool.mjs?v=20261024-repair2",
+      "transfer": 6065,
+      "decoded": 5765
+    },
+    {
+      "url": "monster-appearance-manager.mjs",
+      "transfer": 5263,
+      "decoded": 4963
+    },
+    {
+      "url": "monster-formal-resolver.mjs?v=20261024-mirror-void1",
+      "transfer": 6257,
+      "decoded": 5957
+    },
+    {
+      "url": "hm-01.webp?asset=8cf609169310d0e81a244675",
+      "transfer": 75758,
+      "decoded": 75458
+    },
+    {
+      "url": "monster-actor.mjs?v=20261024-approved1",
+      "transfer": 26706,
+      "decoded": 26406
+    },
+    {
+      "url": "hm-04.webp?asset=e92605f9c04f611108a2c6bc",
+      "transfer": 129348,
+      "decoded": 129048
+    },
+    {
+      "url": "mech-02.webp?asset=9bb4cc17c794bfd53b7d8384",
+      "transfer": 192714,
+      "decoded": 192414
+    },
+    {
+      "url": "cmd-01.webp?asset=c9e919910bc80bdd0a51c72e",
+      "transfer": 181420,
+      "decoded": 181120
+    },
+    {
+      "url": "cmd-03.webp?asset=95725d758dceed5c47c37366",
+      "transfer": 278190,
+      "decoded": 277890
+    },
+    {
+      "url": "hm-01.webp?asset=8cf609169310d0e81a244675",
+      "transfer": 75758,
+      "decoded": 75458
+    },
+    {
+      "url": "mech-02.webp?asset=9bb4cc17c794bfd53b7d8384",
+      "transfer": 192714,
+      "decoded": 192414
+    },
+    {
+      "url": "void-phantom-v01.webp?asset=6b52b6a956847f0ce77c0043",
+      "transfer": 214202,
+      "decoded": 213902
+    },
+    {
+      "url": "boss-c-03-v01.webp?asset=3ff6ddbcb85286251fa6bc91",
+      "transfer": 72472,
+      "decoded": 72172
+    },
+    {
+      "url": "boss-au-01-v01.webp?asset=c5c217d299b702c336a7d0f7",
+      "transfer": 208862,
+      "decoded": 208562
+    },
+    {
+      "url": "hm-01.webp?asset=8cf609169310d0e81a244675",
+      "transfer": 75758,
+      "decoded": 75458
+    }
+  ],
+  "appearance": {
+    "version": "20261024-approved1",
+    "entries": 1,
+    "bytes": 2097152,
+    "limit": 4194304,
+    "capacity": 2,
+    "refs": 0,
+    "pending": 0,
+    "hits": 13,
+    "misses": 12,
+    "prepares": 12,
+    "prepareMs": 1936.8000000026077,
+    "evictions": 11,
+    "queued": 0
+  },
+  "prototype": {
+    "entries": 1,
+    "bytes": 1048576,
+    "limit": 2097152,
+    "hits": 11,
+    "loads": 11,
+    "images": [
+      {
+        "id": "hm-01",
+        "decoded": true,
+        "refs": 0
+      }
+    ],
+    "pending": 0,
+    "refs": 0,
+    "closed": false,
+    "queued": 0
+  },
+  "notes": "Canvas/bitmap bytes are reported separately; JS heap is not total process memory. This is a 390px desktop emulation, not a physical iPhone."
+}

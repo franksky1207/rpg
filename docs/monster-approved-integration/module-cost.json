@@ -1,0 +1,35 @@
+{
+  "files": {
+    "3d-test/monster-approved-art.mjs": {
+      "raw": 1269916,
+      "gzipEstimate": 141086
+    },
+    "3d-test/monster-body-v1.mjs": {
+      "raw": 2844,
+      "gzipEstimate": 1372
+    },
+    "3d-test/monster-body-v2.mjs": {
+      "raw": 3539,
+      "gzipEstimate": 1724
+    },
+    "3d-test/monster-static-effects.mjs": {
+      "raw": 17607,
+      "gzipEstimate": 6117
+    },
+    "3d-test/monster-appearance.mjs": {
+      "raw": 4714,
+      "gzipEstimate": 2072
+    },
+    "3d-test/monster-appearance-manager.mjs": {
+      "raw": 4963,
+      "gzipEstimate": 1896
+    },
+    "monstercodeximage.mjs": {
+      "raw": 2763,
+      "gzipEstimate": 1182
+    }
+  },
+  "rawTotal": 1306346,
+  "gzipEstimateTotal": 155449,
+  "newArtImageDownloads": 0
+}

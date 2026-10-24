@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "summary": {
+    "identities": 609,
+    "cases": 1827,
+    "success": 1827,
+    "failed": 0,
+    "minRatio": 0.9136483789042006,
+    "maxRatio": 2.3003110466108496,
+    "maxRatioError": 0.0003598007819805016,
+    "groups": {
+      "galaxy/normal": {
+        "cases": 900,
+        "success": 900,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "galaxy/elite": {
+        "cases": 300,
+        "success": 300,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "galaxy/boss": {
+        "cases": 300,
+        "success": 300,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "universe/boss": {
+        "cases": 300,
+        "success": 300,
+        "failed": 0,
+        "formalNA": 0
+      },
+      "both/special": {
+        "cases": 27,
+        "success": 27,
+        "failed": 0,
+        "formalNA": 27
+      }
+    }
+  }
+}

@@ -14,3 +14,6 @@ combat-events-browser-report.json
 combat-events-owner-browser-report.json
 
 hybrid-comparison-platform-browser-report.json
+
+# Local acceptance evidence; selected reports are copied to docs for review.
+/work/

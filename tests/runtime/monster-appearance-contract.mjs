@@ -1,30 +1,18 @@
-import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import cp from 'node:child_process';
-import {mappings} from '../../3d-test/monster-sprites.mjs';
-import {resolveMonsterAppearance,appearanceFingerprint} from '../../3d-test/monster-appearance.mjs';
+import assert from 'node:assert/strict';import fs from 'node:fs';import cp from 'node:child_process';import crypto from 'node:crypto';
+import {mappings,findAsset} from '../../3d-test/monster-sprites.mjs';
+import {resolveMonsterAppearance,appearanceFingerprint,REVIEW_SOURCE} from '../../3d-test/monster-appearance.mjs';
 import {resolveFormalMonster} from '../../3d-test/monster-formal-resolver.mjs';
+const reference=JSON.parse(fs.readFileSync('tests/runtime/monster-approved-reference.json')),sha=o=>crypto.createHash('sha256').update(JSON.stringify(o)).digest('hex');assert.equal(REVIEW_SOURCE,reference.source);
 const rows=Object.values(mappings),keys=new Map();
-for(const r of rows){
- const s=resolveMonsterAppearance(r);assert.deepEqual(s,resolveMonsterAppearance(r));assert.ok(Object.isFrozen(s)&&Object.isFrozen(s.colors));
- const k=appearanceFingerprint(s),group=keys.get(k)||[];group.push(r);keys.set(k,group);
- if(r.world==='higher'){assert.deepEqual(resolveMonsterAppearance('projection-'+r.id),s);assert.equal(resolveFormalMonster({world:3,mode:'arena',kind:'dungeon-arena-third-world',id:r.id,location:'0',name:'高維投影·'+r.name})?.mapping.id,r.id);}
- if(r.mode==='alternate')assert.equal(s.rank,7);
- if(r.mode==='calamity')assert.equal(s.rank,r.world==='galaxy'?4:5);
-}
-assert.equal(keys.size,895);for(const group of keys.values())if(group.length>1){assert.equal(group.length,5);assert.ok(group.every(r=>r.mode==='alternate'&&r.universeNumber===group[0].universeNumber));}
-const alternateEffectSequences=[];
-for(const asset of new Set(rows.filter(r=>r.mode==='alternate').map(r=>r.assetId))){
- const versions=rows.filter(r=>r.assetId===asset&&r.mode==='alternate'&&r.stageIndex===0).map(resolveMonsterAppearance);
- alternateEffectSequences.push(JSON.stringify(versions.map(s=>[s.texture,s.field,s.culture])));assert.equal(versions.length,10);assert.equal(new Set(versions.map(s=>JSON.stringify(s.colors))).size,10);assert.equal(new Set(versions.map(s=>JSON.stringify([s.texture,s.field,s.culture]))).size,10);
-}
-assert.equal(new Set(alternateEffectSequences).size,20,'twenty prototypes do not copy one ten-effect sequence');
-assert.notEqual(appearanceFingerprint('special-gold_slime'),appearanceFingerprint('special-lucky_rabbit'));
-// Ignored configuration must never create fake effective fingerprints.
-const plain=resolveMonsterAppearance('galaxy-map-001');assert.equal(plain.layer,0);assert.equal(appearanceFingerprint(plain),appearanceFingerprint({...plain,field:7,fieldInk:.9,culture:6}));
-const energized=resolveMonsterAppearance(rows.find(r=>r.world==='higher'));
-assert.equal(appearanceFingerprint(energized),appearanceFingerprint({...energized,culture:energized.culture+3}));
-const baseline='b0241d67c9073c2dbf48f972b5e414cadf111d1c';
-for(const p of ['data/monsters/monster-assets.json','data/monsters/monster-mappings.json','data/monsters/monster-variants.json','monstercodexdata.js','combatcore.js','thirdworldarena.js','dungeonbounty.js','dungeonarena.js','dungeonvoid.js','mirrorcombatcore.js','mirrordungeonstate.js','alternateuniversedata.js','alternateuniversecombat.js','reincarnationcore.js','savemigration.js','resource-cache-sw.js','3d-test/monster-sprite-pool.mjs','3d-test/era-player-sprites.mjs'])assert.deepEqual(fs.readFileSync(p),cp.execFileSync('git',['show',baseline+':'+p],{maxBuffer:16*1024*1024}),p+' protected');
-const actor=fs.readFileSync('3d-test/monster-actor.mjs','utf8'),codex=fs.readFileSync('monstercodeximage.mjs','utf8');for(const s of [actor,codex]){assert.ok(s.includes('resolveMonsterAppearance('));assert.ok(s.includes('paintMonsterAppearance('));}
-console.log('PASS formal-owned immutable appearance; 895 designs / 1695 mappings; ten AU designs per prototype; projection inheritance; exact gameplay, sizing inputs, source assets, pool and player owners');
+for(const r of rows){const s=resolveMonsterAppearance(r),ref=reference.entries[s.id];assert.equal(s.assetId,r.assetId);assert.equal(sha(s.body),ref.specSha256);assert.equal(sha(s.effect),ref.effectSha256);assert.ok(Object.isFrozen(s)&&Object.isFrozen(s.effect.members)&&Object.isFrozen(s.body));const k=appearanceFingerprint(s),g=keys.get(k)||[];g.push(r);keys.set(k,g);assert.equal(s,resolveMonsterAppearance(r));assert.ok(s.effect.members.length>0,'L0 also has a static effect');
+ if(r.world==='higher'){assert.equal(resolveMonsterAppearance('projection-'+r.id),s);assert.equal(resolveFormalMonster({world:3,mode:'arena',kind:'dungeon-arena-third-world',id:r.id,location:'0',name:'高維投影·'+r.name})?.mapping.id,r.id);}}
+assert.equal(keys.size,895);assert.equal(rows.length,1695);for(const g of keys.values())if(g.length>1)assert.ok(g.length===5&&g.every(r=>r.mode==='alternate'&&r.universeNumber===g[0].universeNumber));
+for(const asset of new Set(rows.filter(r=>r.mode==='alternate').map(r=>r.assetId))){const versions=rows.filter(r=>r.assetId===asset&&r.mode==='alternate'&&r.stageIndex===0).map(r=>resolveMonsterAppearance(r));assert.equal(versions.length,10);assert.equal(new Set(versions.map(s=>s.effect.members.map(m=>m.id).sort().join('+'))).size,10);}
+assert.equal(new Set([...keys.values()].map(g=>resolveMonsterAppearance(g[0]).effect.members.map(m=>m.id).sort().join('+'))).size,556);assert.throws(()=>resolveMonsterAppearance('galaxy-map-003',{designIndex:3}),/fixed/);
+const baseline='658d5db2c14cd10598e648e2fafdfe3ad75f80dd';for(const p of ['data/monsters/monster-assets.json','data/monsters/monster-mappings.json','data/monsters/monster-variants.json','monstercodexdata.js','combatcore.js','thirdworldarena.js','dungeonbounty.js','dungeonarena.js','dungeonvoid.js','mirrorcombatcore.js','mirrordungeonstate.js','alternateuniversedata.js','alternateuniversecombat.js','reincarnationcore.js','savemigration.js','3d-test/monster-sprite-pool.mjs','3d-test/era-player-sprites.mjs'])assert.deepEqual(fs.readFileSync(p),cp.execFileSync('git',['show',baseline+':'+p],{maxBuffer:16*1024*1024}),p);
+for(const a of new Map(rows.map(r=>[r.assetId,findAsset(r.assetId)])).values())assert.equal(crypto.createHash('sha256').update(fs.readFileSync(a.path)).digest('hex'),a.sha256);
+const historicalActor=cp.execFileSync('git',['show',baseline+':3d-test/monster-actor.mjs'],{encoding:'utf8'}),currentActor=fs.readFileSync('3d-test/monster-actor.mjs','utf8');
+for(const name of ['monsterPose','battleSpriteLayout']){const segment=(s)=>{const start=s.indexOf('export function '+name+'('),end=s.indexOf('\n}\n',start);return s.slice(start,end+3);};assert.equal(segment(currentActor),segment(historicalActor),name+' body motion/layout math must remain exact');}
+const profiles=s=>s.slice(s.indexOf('export const measuredMonsterProfiles='),s.indexOf('\n};',s.indexOf('export const measuredMonsterProfiles='))+3);assert.equal(profiles(currentActor),profiles(historicalActor));
+for(const p of ['3d-test/monster-actor.mjs','monstercodeximage.mjs'])assert.ok(fs.readFileSync(p,'utf8').includes('getMonsterAppearanceManager()'));
+console.log('PASS fixed accepted body/effect specs for 895 appearances, 1695 identities + king projections; original assets/gameplay/animation inputs unchanged');

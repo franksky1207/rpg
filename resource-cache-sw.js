@@ -2,6 +2,8 @@
 "use strict";
 const PREFIX="civilization-resource-v1-", ACTIVE=PREFIX+"media";
 const MANIFEST="resource-manifest.json";
+// Explicit, small formal-appearance module closure only; all other JS/CSS stay network-owned.
+const APPEARANCE_MODULES=new Set(['3d-test/monster-approved-art.mjs','3d-test/monster-body-v1.mjs','3d-test/monster-body-v2.mjs','3d-test/monster-static-effects.mjs','3d-test/monster-appearance.mjs','3d-test/monster-appearance-manager.mjs','monstercodeximage.mjs']);
 const MEDIA=/\.(?:ogg|mp3|wav|png|jpe?g|webp|avif|glb|gltf|bin|ktx2|basis)$/i;
 let known=null, refreshJob=null, manifestTag=null;
 const verifiedSpriteCache=new Set();
@@ -40,7 +42,7 @@ async function clean(entries){
 }
 function keyFor(path,digest){const url=new URL(path,self.registration.scope);url.searchParams.set("asset",digest);return url.href;}
 async function media(request){
- let path=asPath(request.url);if(!path||!MEDIA.test(path)||!known?.has(path))return fetch(request);
+ let path=asPath(request.url);if(!path||(!MEDIA.test(path)&&!APPEARANCE_MODULES.has(path))||!known?.has(path))return fetch(request);
  const digest=known.get(path);
  const specified=new URL(request.url).searchParams.get("asset");
  if(specified&&specified!==digest)return fetch(request);
@@ -50,7 +52,7 @@ async function media(request){
  let saved=repair?null:await cache.match(key);
  // Validate a formal sprite once per SW lifetime, not on every animation frame.
  // A stale cache hit is removed and the original request is fetched again.
- if(saved&&isFormalSprite(path)&&!verifiedSpriteCache.has(key)){
+ if(saved&&(isFormalSprite(path)||APPEARANCE_MODULES.has(path))&&!verifiedSpriteCache.has(key)){
   let valid=false;try{valid=await verifiedSprite(saved,digest);}catch(_){}
   if(!valid){await cache.delete(key);saved=null;}
   else verifiedSpriteCache.add(key);
@@ -83,13 +85,14 @@ async function media(request){
   const hash=await crypto.subtle.digest("SHA-256",bytes);
   const actual=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("").slice(0,24);
   if(actual!==digest)return fetched; // deployment in progress; never cache mismatched bytes
-  try{await cache.put(key,fetched.clone());if(isFormalSprite(path))verifiedSpriteCache.add(key);}catch(_){} // quota errors must not block playback
+  try{await cache.put(key,fetched.clone());if(isFormalSprite(path)||APPEARANCE_MODULES.has(path))verifiedSpriteCache.add(key);}catch(_){} // quota errors must not block playback
  }catch(_){return fetched;} // hashing unavailable: return uncached response
  return fetched;
 }
 // Background preload is deliberately limited to shipped gameplay media, not raw source/audio libraries.
 let preloadJob=null,preloadGeneration=0;
 function shouldPreload(p){
+ if(APPEARANCE_MODULES.has(p))return true;
  if(BATCH18_SPRITES.has(p)||BATCH17_SPRITES.has(p))return true;
  // Six released player sprites (three eras x standing/attack atlas) are part of formal combat.
  // Exact whitelist excludes GM previews, old equipment models, and unpublished assets.
@@ -150,7 +153,7 @@ self.addEventListener("fetch",event=>{
  if(req.mode==="navigate"){
   event.respondWith(fetch(req,{cache:"no-store"}));event.waitUntil(refresh().catch(()=>{}));return;
  }
- if(!MEDIA.test(path))return; // JS/CSS and manifest use browser networking and existing versions.
+ if(!MEDIA.test(path)&&!APPEARANCE_MODULES.has(path))return; // Other JS/CSS and manifest retain existing networking.
  event.respondWith((async()=>{if(refreshJob)await refreshJob.catch(()=>{});return media(req);})());
 });
 self.addEventListener("message",event=>{

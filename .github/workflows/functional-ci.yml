@@ -125,6 +125,9 @@ jobs:
           node tests/runtime/batch17-live-bosses-browser.cjs
           node tests/runtime/monster-appearance-browser.cjs
           APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs
+          node tests/runtime/monster-approved-sizing-browser.cjs
+          RESOURCE_TEST_ROOT=.publish-stage3 node tests/runtime/monster-approved-cache-browser.cjs
+          node tests/runtime/monster-approved-performance.cjs
           node tests/runtime/batch20-alternate-colors-browser.cjs
           node tests/runtime/batch15-all-identities-browser.cjs
           node tests/runtime/batch16-all-identities-browser.cjs
@@ -138,6 +141,7 @@ jobs:
         with:
           name: batch20-repair-visual-evidence
           path: |
+            work/approved-integration/*.json
             work/visual-integration/*.json
             work/visual-integration/*.png
             /tmp/batch15-all-identities.json

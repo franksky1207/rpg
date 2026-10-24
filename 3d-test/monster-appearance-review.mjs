@@ -1,5 +1,5 @@
 import {mappings,registry} from './monster-sprites.mjs?v=20261024-au-ten-stages1';
-import {MonsterActor} from './monster-actor.mjs?v=20261024-identity-v1';
+import {MonsterActor} from './monster-actor.mjs?v=20261024-approved1';
 import {createMonsterPool} from './monster-sprite-pool.mjs?v=20261024-repair2';
 const pool=createMonsterPool({usage:'formal'}),all=Object.values(mappings),$=s=>document.querySelector(s);
 const modes={prototype:'同原型跨進度／跨模式',alternate:'異宇宙20×10完整版本',galaxy:'銀河同圖／相鄰身份',universe:'宇宙100王',calamity:'兩類文明災厄',higher:'高維十王及投影',special:'九個特殊身份',dungeon:'懸賞／競技／虛空',mirror:'鏡像玩家外觀對照'};
@@ -44,7 +44,7 @@ async function render(){
  rows=all.filter(r=>mode==='prototype'?r.assetId===asset:mode==='alternate'?r.assetId===asset&&r.mode==='alternate'&&r.stageIndex===0:mode==='galaxy'?r.id.startsWith('galaxy-map'):mode==='universe'?r.id.startsWith('universe-boss'):mode==='calamity'?r.mode==='calamity':mode==='higher'?r.world==='higher':mode==='special'?r.kind==='special':['bounty','arena','void'].includes(r.mode));
  const gallery=$('#gallery');clearSnapshots(gallery);index=offset=0;$('#pageRange').textContent='';
  if(mode==='mirror'){
-  const [{WholeSuitActor},{createSpritePool},{release},{applyMirrorAppearance}]=await Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1'),import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),import('./monster-appearance.mjs?v=20261024-identity-v1')]);
+  const [{WholeSuitActor},{createSpritePool},{release},{applyMirrorAppearance}]=await Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1'),import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1'),import('./monster-appearance.mjs?v=20261024-approved1')]);
   const players=createSpritePool({limit:4*1024*1024});clearSnapshots($('#focus'));
   for(const entry of release.entries)for(const mirrored of [false,true]){
    const actor=await new WholeSuitActor(players,entry,{tier:'medium'}).init();actor.mirrored=mirrored;actor.draw({clip:'idle',elapsedMs:0});

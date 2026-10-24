@@ -1,0 +1,57 @@
+{
+  "baseline": "658d5db2c14cd10598e648e2fafdfe3ad75f80dd",
+  "review": "20c7f286b32da7fc3533d34ed7561266f6969cc4",
+  "files": {
+    "3d-test/monster-actor.mjs": {
+      "before": "f3d5a0673453c92bf2c02fbd96b0af91a2a1c9b84c468d7e6b4f89b33fd6f83b",
+      "after": "663923780f558b29d44b29ce7a33cabaa52cca390e866c2f78092c37509c9ca2"
+    },
+    "3d-test/monster-appearance.mjs": {
+      "before": "a0f06fba774b6dd7bcd1d0a28ed4fd254cc17b3cf1dbd1173bbeaedf9b6c558b",
+      "after": "1ddff0c1b07d32a205470ca4c467507e5bef86d72ebfd071cb9ff36757d4bd35"
+    },
+    "3d-test/monster-appearance-review.mjs": {
+      "before": "d3af236c331f489d9ded2b1d4491d0462ff3b0e116dd989ebc35de7c2e5903d6",
+      "after": "f0dd868a9fb0ba133a63f9bcaea3ba62a0c6aacae507392645b527a8bf9d6c51"
+    },
+    "3d-test/gm-era-sprites.mjs": {
+      "before": "5b933e7e108420cc8ed2eadcc1b08e4f3c6d848afa1b6441ce1d12ee43928bc4",
+      "after": "a1829d0fbf92005a3ef1616f50b141ad509485000f373841c142bf86f1344ffb"
+    },
+    "3d-test/t3b-formal-renderer.js": {
+      "before": "55f86d874caaf2e1f1bff40cc1ca66470bc06f9757d8aa7b41f90e3ea5dc598e",
+      "after": "840486aacc3dba0915b5abe0916afd699e4a5ac2c2e87327a16130bf7d45617e"
+    },
+    "3d-test/test-center.js": {
+      "before": "9f2e9da7377624e3b7f85db4814bc4d5ac4f5707c7480124edd4d11f64e6f944",
+      "after": "fe11d13514a0a722de42d0504c829146bc5350b23ae2bfd8baa6a29da4b8041e"
+    },
+    "3d-test/index.html": {
+      "before": "285239eba2caccea258f49b49d5562519752c0693b81a335537bd76d2e345f93",
+      "after": "2af928c0174b38f1946302363d27ce02eae3c8a6834f771ef0f211358d47984d"
+    },
+    "monstercodeximage.mjs": {
+      "before": "45334a86add7f152f9604faf7cba58f8208748b059b17022a26b2af407159d1e",
+      "after": "9fbabcc3be925f080ea732f0f5408348e80fed287dd799209239e3f5e640e439"
+    },
+    "monstercodex.js": {
+      "before": "7fddd4314caa8eb9266dcdb61ffd8c81829861b8a40c59a56cab0233e37d59a0",
+      "after": "fd40424b381f16ddb7e6839ffefeaab4188c69b1539f629e8018504ea59a3f88"
+    },
+    "index.html": {
+      "before": "31e53497af0a50f1a3ebc54d3826d5a3bd340743e42f9a6e984f37e133df085d",
+      "after": "eb55a6be37e268288ed01c13ed72e36c89767c8208919c4327d9b2206ff42693"
+    },
+    "resource-cache-sw.js": {
+      "before": "bd2970f62331d4c2fc84ec5f8cee17e08e85924a2d87eb2510ac40e3817fa271",
+      "after": "1ca5bf6ed0b23f71db754884667b46423f3be77bfceec93de6e0c72dbe507bbc"
+    }
+  },
+  "newFiles": {
+    "3d-test/monster-approved-art.mjs": "0b8324f94a9febef648f9163deafd95c002ac4ba5c62227c997c42866fb1a5a5",
+    "3d-test/monster-body-v1.mjs": "01d848f0391997ddb7668c62e7047c576c54ad15895f2495aa5a9522c5baa823",
+    "3d-test/monster-body-v2.mjs": "aed083caeac7722d625ca1fdf614ab7828f6cfb6adcbe917da8a223e2606e1a5",
+    "3d-test/monster-static-effects.mjs": "aa9caec097ede3a033cc1aaf9f9fba46c86ab1a462d863c956cf0a674b1031b5",
+    "3d-test/monster-appearance-manager.mjs": "70125a0e363f89ba9d0c12bf9d77051862af71c3614552aeb041496722a4db51"
+  }
+}
