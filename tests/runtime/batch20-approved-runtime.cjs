@@ -7,6 +7,8 @@ const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const at=(ref,p)=>cp.execFileSync('git',['show',ref+':'+p],{maxBuffer:8*1024*1024});
 function original(p,encoding){
  let bytes=fs.readFileSync(p);
+ // Compose the later PR #93 heritage cache token before the exact #94 digest.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('civilizationheritage.js?v=20261024-batch20&batch20=20261024-r2&heritageBackground=20261024','civilizationheritage.js?v=20261024-batch20&batch20=20261024-r2'));
  // PR #93 is an independent, exact cache-only HTML composition. Accept that
  // approved token before checking this repair; never overwrite its codex change.
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1&storyBackground=20261024','monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1'));
@@ -18,7 +20,6 @@ function original(p,encoding){
  // Exact registration of the three authorized UI repairs; historical assertions still run.
  const repair=require('./three-ui-approved-sources.json'),registered=repair.files[p];
  if(p==='civilizationheritage.js')bytes=Buffer.from(bytes.toString().replace('<section class="calamity-shell calamity-home">','<section class="calamity-shell">'));
- if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&heritageBackground=20261024',''));
  if(p==='monstercodex.js')bytes=Buffer.from(bytes.toString().replace('<section class="function-page story-record-page"><div class="back-home">','<section class="function-page"><div class="back-home">'));
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&storyBackground=20261024',''));
  if(registered){assert.equal(sha(bytes),registered.afterSha256,'unregistered UI repair source edit: '+p);const before=at(repair.baseline,p);assert.equal(sha(before),registered.beforeSha256,'UI repair baseline digest: '+p);bytes=before;}
