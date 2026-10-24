@@ -84,7 +84,7 @@
  }
  window.monsterCodexPageHtml=function(){
   const known=new Set(state.monsterCodex?.encountered||[]),progress=window.monsterCodexDisplayProgress(),r=byId.get(selected);
-  const header=`<section class="function-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card"><h2>戰線紀錄</h2>${window.frontlineRecordTabsHtml()}<p>怪物圖鑑・已遭遇 ${progress.encountered} / ${progress.total}。正式遇敵即永久解鎖，無須勝利。</p><label>分類 <select onchange="selectMonsterCodexCategory(this.value)">${categoryNames.map(c=>`<option ${c===category?'selected':''}>${esc(c)}</option>`).join('')}</select></label></div>`;
+  const header=`<section class="function-page story-record-page"><div class="back-home"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button></div><div class="card"><h2>戰線紀錄</h2>${window.frontlineRecordTabsHtml()}<p>怪物圖鑑・已遭遇 ${progress.encountered} / ${progress.total}。正式遇敵即永久解鎖，無須勝利。</p><label>分類 <select onchange="selectMonsterCodexCategory(this.value)">${categoryNames.map(c=>`<option ${c===category?'selected':''}>${esc(c)}</option>`).join('')}</select></label></div>`;
   if(r&&unlocked(r,known))return header+`<article class="card"><button class="btn" onclick="closeMonsterCodexDetail()">← 返回清單</button><h3>${esc(nameOf(r,detailWorld))}</h3><p>${esc(locationOf(r,detailWorld))}・${esc(kindName(r))}・已遭遇</p><div style="width:100%;max-width:512px;aspect-ratio:1;margin:auto"><canvas id="monsterCodexImage" width="512" height="512" data-codex-id="${esc(r.id)}" style="width:100%;height:100%;display:block" aria-label="${esc(nameOf(r,detailWorld))}靜態圖片"></canvas><div id="monsterCodexImageStatus">圖片載入中…</div></div></article></section>`;
   return header+`<div class="card">${groupsHtml(known)}</div></section>`;
  };
