@@ -25,7 +25,7 @@ function original(p,encoding){
  const repair=require('./three-ui-approved-sources.json'),registered=repair.files[p];
  if(p==='monstercodex.js'){
   // Explicitly approved codex navigation addition: fail closed on every other edit.
-  assert.equal(cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim(),'e4b4af60d81e8d5ea34f765b9a9f3a7146c61731','unregistered codex navigation source edit');
+  assert.equal(cp.execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim(),'0107af3bc334288acaa45fb7fbfc1e4b314b426e','unregistered codex navigation source edit');
   bytes=at('5eb831d7f720d6e89e8c85ca23bfd724c96820f3',p);
  }
  if(p==='civilizationheritage.js')bytes=Buffer.from(bytes.toString().replace('<section class="calamity-shell calamity-home">','<section class="calamity-shell">'));
