@@ -205,7 +205,7 @@ else scheduleWarm();
 const fallbackEntries={normal:{assetId:'fallback'},elite:{assetId:'fallback'},boss:{assetId:'fallback'}};
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261022-batch19-frame1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-au-ten-stages1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -229,7 +229,7 @@ async function createSuit(options,bundle){
  let monsterActor=null,monsterAttempt=0,monsterMapping=null,monsterReady=false,monsterLastKey=null,monsterError='';
  let lastEnemyFrame=null;
  let monsterPoolPromise=null;
- const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261022-batch18-alternate1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
+ const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261024-au-ten-stages1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
  // Monster optional: keep the existing known-good silhouette until verified sprite is ready.
  async function activateMonster(){
   if(monsterAttempt||closed||signal.aborted||!isCurrent()||!['main','bounty','arena','void','mirror','special','calamity','alternate'].includes(bundle.enemyMode)||![1,2,3].includes(bundle.enemyWorld))return;
@@ -242,8 +242,8 @@ async function createSuit(options,bundle){
   const loadDeadline=setTimeout(cancelLoad,2500);
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
-    import('./monster-formal-resolver.mjs?v=20261022-batch18-alternate1'),
-    import('./monster-actor.mjs?v=20261022-batch19-frame1')
+    import('./monster-formal-resolver.mjs?v=20261024-au-ten-stages1'),
+    import('./monster-actor.mjs?v=20261024-au-ten-stages1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const mirror=resolveFormalMirror({mode:bundle.enemyMode,world:bundle.enemyWorld,name:bundle.enemyName,playerName:bundle.enemyPlayerName},bundle.entry);

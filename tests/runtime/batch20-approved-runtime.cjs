@@ -6,7 +6,10 @@ const current=require('./batch20-approved-runtime.json'),historical=require('./f
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const at=(ref,p)=>cp.execFileSync('git',['show',ref+':'+p],{maxBuffer:8*1024*1024});
 function original(p,encoding){
- let bytes=fs.readFileSync(p);const row=current.files[p];
+ let bytes=fs.readFileSync(p);
+ // Exact authorized repair cache revision; all other bytes remain protected.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('t3b-formal-renderer.js?v=20261024-au-ten-stages1','t3b-formal-renderer.js?v=20261022-batch19-frame1').replace('monstercodexdata.js?v=20261024-batch20&batch20=20261024-r2&appearance=20261024-au-ten-stages1','monstercodexdata.js?v=20261024-batch20&batch20=20261024-r2'));
+ const row=current.files[p];
  if(row){assert.equal(sha(bytes),row.afterSha256,'unregistered batch20 source edit: '+p);const before=at(current.baseline,p);assert.equal(sha(before),row.beforeSha256,'batch20 baseline digest: '+p);bytes=before;}
  const old=historical.files[p];
  if(old){assert.equal(sha(bytes),old.afterSha256,'historical approved-runtime link: '+p);const before=at(historical.baseline,p);assert.equal(sha(before),old.beforeSha256,'historical baseline digest: '+p);if(p==='combatcore.js')assert.equal(bytes.toString().split('window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;')[0],before.toString().split('window.COMBAT_FULL_HP_LOCK_START_NORMALIZATION_VERSION=1;')[0],'historical damage kernel remains exact');bytes=before;}

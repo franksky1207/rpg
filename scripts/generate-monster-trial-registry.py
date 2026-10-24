@@ -11,6 +11,20 @@ assert all(a['formalBattleAllowed'] is True for a in m['assets'])
 assert len(m['assets'])==len({a['assetId'] for a in m['assets']})==39
 assert len(mappings['records'])==len({x['id'] for x in mappings['records']})==1695
 assert {x['assetId'] for x in mappings['records']}=={a['assetId'] for a in m['assets']}
+# Appearance tiers follow actual formal prototype occurrences, never UI universe groups.
+counts, universes = {}, {}
+for row in sorted((r for r in mappings['records'] if r.get('mode') == 'alternate'), key=lambda r:r['depth']):
+ u, asset = row['universeNumber'], row['assetId']
+ if u not in universes:
+  counts[asset] = counts.get(asset, 0) + 1
+  universes[u] = (asset, counts[asset])
+ assert universes[u][0] == asset
+ tier = universes[u][1]
+ assert row['visual']['appearanceTier'] == tier
+ assert row['visual']['appearanceVersion'] == variants['alternateAppearanceVersion']
+ assert row['visual']['palette'] == variants['alternatePrototypes'][asset]['palettes'][tier-1]
+ assert row['visual']['visibleRatio'] == 1.75
+assert len(universes) == 200 and len(counts) == 20 and set(counts.values()) == {10}
 encode=lambda x:json.dumps(x,ensure_ascii=False,separators=(',',':'))
 code='// Approved map, dungeon and boss presentation data; formal consumers enforce explicit scope.\nconst data='+encode(m)+';\n'
 code+='const planned='+encode({x['id']:x['assetId'] for x in d['records']})+';\n'

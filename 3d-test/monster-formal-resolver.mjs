@@ -1,5 +1,5 @@
 // Explicit map/dungeon presentation whitelist. No fuzzy identity matching or gameplay writes.
-import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261022-batch18-alternate1';
+import {registry,mappings,findMapping,findAsset} from './monster-sprites.mjs?v=20261024-au-ten-stages1';
 export function resolveFormalMonster({world,mode,kind,name,location,id}={}){
  if(!registry.formalBattleEnabled)return null;
  if(mode==='alternate'){

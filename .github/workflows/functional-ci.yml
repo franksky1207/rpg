@@ -94,6 +94,7 @@ jobs:
           python3 tests/runtime/batch13-monster-assets.py
           python3 tests/runtime/batch17-boss-assets.py
           python3 tests/runtime/batch18-alternate-assets.py
+          node tests/runtime/batch20-alternate-ten-stages.mjs
           python3 scripts/generate-monster-trial-registry.py --check
           python3 scripts/generate-monster-codex.py --check
           node --test tests/runtime/batch13-monster-pool.test.mjs
@@ -115,6 +116,7 @@ jobs:
           node tests/runtime/batch16-mirror-browser.cjs
           node tests/runtime/batch16-live-dungeons-browser.cjs
           node tests/runtime/batch17-live-bosses-browser.cjs
+          node tests/runtime/batch20-alternate-colors-browser.cjs
           node tests/runtime/batch18-native-live-browser.cjs
           node tests/runtime/batch18-monster-recovery-browser.cjs
   gm:
