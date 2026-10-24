@@ -14,6 +14,7 @@ function original(p,encoding){
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1&storyBackground=20261024','monstercodex.js?v=20261024-batch20-2&batch20=20261024-r2&repair=20261024-r2&uiRepair=20261024-three1'));
 
  // The codex navigation cache token must be normalized before the Mirror/Void exact HTML digest.
+ if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&codexNavVisible=20261024',''));
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('&codexNav=20261024',''));
 
  // The independent Mirror/Void repair is exact-registered above the sealed links.
