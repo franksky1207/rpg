@@ -1,0 +1,39 @@
+{
+  "galaxy": "第 1 / 17 頁 · 500 檢視項目",
+  "universe": "第 1 / 4 頁 · 100 檢視項目",
+  "special": "第 1 / 1 頁 · 9 檢視項目",
+  "bounty": "第 1 / 1 頁 · 30 檢視項目",
+  "arena": "第 1 / 1 頁 · 6 檢視項目",
+  "void": "第 1 / 1 頁 · 20 檢視項目",
+  "galaxy-calamity": "第 1 / 1 頁 · 10 檢視項目",
+  "universe-calamity": "第 1 / 1 頁 · 10 檢視項目",
+  "higher": "第 1 / 1 頁 · 10 檢視項目",
+  "projection": "第 1 / 1 頁 · 10 檢視項目",
+  "alternate": "第 1 / 7 頁 · 200 檢視項目",
+  "prototype/hm-01": "第 1 / 2 頁 · 57 檢視項目",
+  "prototype/core-03": "第 1 / 1 頁 · 21 檢視項目",
+  "all": "第 1 / 31 頁 · 905 檢視項目",
+  "lab": "L2 · 外部電弧＋護盾片 · 本次按需繪製 30.6ms · 快取 1 / 6 MiB",
+  "cache": {
+    "bytes": 2097152,
+    "entries": 2,
+    "afterClear": 0
+  },
+  "coverage": {
+    "bodyBytesUnchanged": 895,
+    "pixelExactFullComposites": 895,
+    "identities": 1705,
+    "canonicalEffects": 895,
+    "components": 48,
+    "componentSets": 556,
+    "AUUniverses": 200,
+    "AUFiveStagesAndKingProjection": true,
+    "viewports": [
+      390,
+      768,
+      1440
+    ],
+    "staticCacheBounded": true,
+    "noBrowserErrors": true
+  }
+}

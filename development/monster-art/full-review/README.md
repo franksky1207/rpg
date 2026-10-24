@@ -1,3 +1,7 @@
+> **本次新增：模組化靜態效果候選**
+>
+> [HTTPS 直接預覽](https://htmlpreview.github.io/?https://github.com/franksky1207/rpg/blob/review/monster-static-effects-20261024/development/monster-art/full-review/index.html) · [效果說明](EFFECTS_REVIEW.md) · [元件庫](effect-library.html) · [分布](effect-statistics.html) · [本體 SHA256](effects-audit/index.html)。895 張本體完全固定。下面保留上一輪自然調色的歷史說明；本次請勿執行舊調色建置器，僅使用 EFFECTS_REVIEW.md 的效果腳本。
+
 # 《文明戰線》全怪物候選美術：人工檢視包
 
 **入口：[index.html](index.html)**。下載完整資料夾／ZIP 並解壓縮，直接用瀏覽器開啟即可；不需要啟動遊戲或等待 Pages。GitHub 原始碼頁面不會執行 HTML，請下載後開啟。

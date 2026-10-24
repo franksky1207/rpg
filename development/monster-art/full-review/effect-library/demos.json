@@ -1,0 +1,4826 @@
+[
+  {
+    "id": "contour-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "contour",
+        "position": "all",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "contour",
+        "visiblePixels": 1567,
+        "maskedBodyPixels": 42246
+      }
+    ]
+  },
+  {
+    "id": "contour-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "contour",
+        "position": "all",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "contour",
+        "visiblePixels": 3324,
+        "maskedBodyPixels": 42246
+      }
+    ]
+  },
+  {
+    "id": "aura-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "aura",
+        "position": "all",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "aura",
+        "visiblePixels": 84064,
+        "maskedBodyPixels": 6531
+      }
+    ]
+  },
+  {
+    "id": "aura-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "aura",
+        "position": "all",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "aura",
+        "visiblePixels": 86448,
+        "maskedBodyPixels": 6543
+      }
+    ]
+  },
+  {
+    "id": "lightning-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "lightning",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lightning",
+        "visiblePixels": 189,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "lightning-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "lightning",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lightning",
+        "visiblePixels": 712,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "solarRays-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "solarRays",
+        "position": "orbit",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "solarRays",
+        "visiblePixels": 1193,
+        "maskedBodyPixels": 12
+      }
+    ]
+  },
+  {
+    "id": "solarRays-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "solarRays",
+        "position": "orbit",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "solarRays",
+        "visiblePixels": 2772,
+        "maskedBodyPixels": 197
+      }
+    ]
+  },
+  {
+    "id": "fanSheets-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "fanSheets",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "fanSheets",
+        "visiblePixels": 611,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "fanSheets-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "fanSheets",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "fanSheets",
+        "visiblePixels": 2146,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "lightPillars-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "lightPillars",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lightPillars",
+        "visiblePixels": 328,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "lightPillars-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "lightPillars",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lightPillars",
+        "visiblePixels": 879,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shieldPanels-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "shieldPanels",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shieldPanels",
+        "visiblePixels": 758,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shieldPanels-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "shieldPanels",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shieldPanels",
+        "visiblePixels": 2573,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "hexCells-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "hexCells",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "hexCells",
+        "visiblePixels": 344,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "hexCells-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "hexCells",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "hexCells",
+        "visiblePixels": 1236,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "circuitBranches-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "circuitBranches",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "circuitBranches",
+        "visiblePixels": 242,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "circuitBranches-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "circuitBranches",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "circuitBranches",
+        "visiblePixels": 783,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "scanBrackets-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "scanBrackets",
+        "position": "corners",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "scanBrackets",
+        "visiblePixels": 336,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "scanBrackets-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "scanBrackets",
+        "position": "corners",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "scanBrackets",
+        "visiblePixels": 432,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shutterBars-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "shutterBars",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shutterBars",
+        "visiblePixels": 300,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shutterBars-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "shutterBars",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shutterBars",
+        "visiblePixels": 967,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "railFrame-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "railFrame",
+        "position": "diagonal",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "railFrame",
+        "visiblePixels": 1154,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "railFrame-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "railFrame",
+        "position": "diagonal",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "railFrame",
+        "visiblePixels": 1272,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "orbitalDrones-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "orbitalDrones",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "orbitalDrones",
+        "visiblePixels": 320,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "orbitalDrones-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "orbitalDrones",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "orbitalDrones",
+        "visiblePixels": 1120,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "floatingPlates-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "floatingPlates",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "floatingPlates",
+        "visiblePixels": 516,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "floatingPlates-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "floatingPlates",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "floatingPlates",
+        "visiblePixels": 2005,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "satelliteArms-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "satelliteArms",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "satelliteArms",
+        "visiblePixels": 299,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "satelliteArms-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "satelliteArms",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "satelliteArms",
+        "visiblePixels": 1068,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "segmentedCage-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "segmentedCage",
+        "position": "orbit",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "segmentedCage",
+        "visiblePixels": 1088,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "segmentedCage-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "segmentedCage",
+        "position": "orbit",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "segmentedCage",
+        "visiblePixels": 1232,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "antennaArray-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "antennaArray",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "antennaArray",
+        "visiblePixels": 350,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "antennaArray-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "antennaArray",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "antennaArray",
+        "visiblePixels": 1141,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "reactorClamps-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "reactorClamps",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "reactorClamps",
+        "visiblePixels": 252,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "reactorClamps-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "reactorClamps",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "reactorClamps",
+        "visiblePixels": 962,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "diamonds-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "diamonds",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "diamonds",
+        "visiblePixels": 258,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "diamonds-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "diamonds",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "diamonds",
+        "visiblePixels": 1000,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crystalCluster-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "crystalCluster",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crystalCluster",
+        "visiblePixels": 503,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crystalCluster-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "crystalCluster",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crystalCluster",
+        "visiblePixels": 1806,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "needleSpikes-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "needleSpikes",
+        "position": "orbit",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "needleSpikes",
+        "visiblePixels": 1548,
+        "maskedBodyPixels": 4
+      }
+    ]
+  },
+  {
+    "id": "needleSpikes-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "needleSpikes",
+        "position": "orbit",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "needleSpikes",
+        "visiblePixels": 3260,
+        "maskedBodyPixels": 129
+      }
+    ]
+  },
+  {
+    "id": "crystalGuard-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "crystalGuard",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crystalGuard",
+        "visiblePixels": 336,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crystalGuard-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "crystalGuard",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crystalGuard",
+        "visiblePixels": 1240,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "prismFans-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "prismFans",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "prismFans",
+        "visiblePixels": 515,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "prismFans-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "prismFans",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "prismFans",
+        "visiblePixels": 1860,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shards-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "shards",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shards",
+        "visiblePixels": 392,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shards-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "shards",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shards",
+        "visiblePixels": 1432,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "sporeCloud-L0",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "sporeCloud",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 14,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            174,
+            48
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sporeCloud",
+        "visiblePixels": 300,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "sporeCloud-L2",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "sporeCloud",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 17.387639287723907,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            39,
+            143
+          ],
+          [
+            478,
+            352
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sporeCloud",
+        "visiblePixels": 1069,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "tendrils-L0",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "tendrils",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 14,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            174,
+            48
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "tendrils",
+        "visiblePixels": 225,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "tendrils-L2",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "tendrils",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 17.387639287723907,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            39,
+            143
+          ],
+          [
+            478,
+            352
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "tendrils",
+        "visiblePixels": 718,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "petalBlades-L0",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "petalBlades",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 14,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            174,
+            48
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "petalBlades",
+        "visiblePixels": 276,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "petalBlades-L2",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "petalBlades",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 17.387639287723907,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            39,
+            143
+          ],
+          [
+            478,
+            352
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "petalBlades",
+        "visiblePixels": 977,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "membraneLobes-L0",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "membraneLobes",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 14,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            174,
+            48
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "membraneLobes",
+        "visiblePixels": 305,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "membraneLobes-L2",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "membraneLobes",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 17.387639287723907,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            39,
+            143
+          ],
+          [
+            478,
+            352
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "membraneLobes",
+        "visiblePixels": 1036,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "rootArcs-L0",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "rootArcs",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 14,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            174,
+            48
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "rootArcs",
+        "visiblePixels": 154,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "rootArcs-L2",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "rootArcs",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 17.387639287723907,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            39,
+            143
+          ],
+          [
+            478,
+            352
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "rootArcs",
+        "visiblePixels": 551,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "pollenSprays-L0",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "pollenSprays",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 14,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            174,
+            48
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "pollenSprays",
+        "visiblePixels": 302,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "pollenSprays-L2",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "pollenSprays",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 17.387639287723907,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            39,
+            143
+          ],
+          [
+            478,
+            352
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "pollenSprays",
+        "visiblePixels": 816,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "stars-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "stars",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "stars",
+        "visiblePixels": 305,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "stars-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "stars",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "stars",
+        "visiblePixels": 1107,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "constellation-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "constellation",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "constellation",
+        "visiblePixels": 296,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "constellation-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "constellation",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "constellation",
+        "visiblePixels": 881,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "comets-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "comets",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "comets",
+        "visiblePixels": 292,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "comets-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "comets",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "comets",
+        "visiblePixels": 921,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "lensArcs-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "lensArcs",
+        "position": "orbit",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lensArcs",
+        "visiblePixels": 4973,
+        "maskedBodyPixels": 1132
+      }
+    ]
+  },
+  {
+    "id": "lensArcs-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "lensArcs",
+        "position": "orbit",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lensArcs",
+        "visiblePixels": 9935,
+        "maskedBodyPixels": 1966
+      }
+    ]
+  },
+  {
+    "id": "gravityWell-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "gravityWell",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "gravityWell",
+        "visiblePixels": 496,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "gravityWell-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "gravityWell",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "gravityWell",
+        "visiblePixels": 1835,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "starCompass-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "starCompass",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "starCompass",
+        "visiblePixels": 589,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "starCompass-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "starCompass",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "starCompass",
+        "visiblePixels": 1960,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "rift-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "rift",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "rift",
+        "visiblePixels": 235,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "rift-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "rift",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "rift",
+        "visiblePixels": 846,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "faultPlanes-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "faultPlanes",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "faultPlanes",
+        "visiblePixels": 346,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "faultPlanes-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "faultPlanes",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "faultPlanes",
+        "visiblePixels": 1306,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "portalCorners-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "portalCorners",
+        "position": "diagonal",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "portalCorners",
+        "visiblePixels": 828,
+        "maskedBodyPixels": 102
+      }
+    ]
+  },
+  {
+    "id": "portalCorners-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "portalCorners",
+        "position": "diagonal",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "portalCorners",
+        "visiblePixels": 1078,
+        "maskedBodyPixels": 104
+      }
+    ]
+  },
+  {
+    "id": "echo-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "echo",
+        "position": "all",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "echo",
+        "visiblePixels": 4294,
+        "maskedBodyPixels": 41976
+      }
+    ]
+  },
+  {
+    "id": "echo-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "echo",
+        "position": "all",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "echo",
+        "visiblePixels": 6289,
+        "maskedBodyPixels": 42023
+      }
+    ]
+  },
+  {
+    "id": "foldedGrid-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "foldedGrid",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "foldedGrid",
+        "visiblePixels": 424,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "foldedGrid-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "foldedGrid",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "foldedGrid",
+        "visiblePixels": 1591,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "dimensionalKnots-L0",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "dimensionalKnots",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            188,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "dimensionalKnots",
+        "visiblePixels": 472,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "dimensionalKnots-L2",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "dimensionalKnots",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            50,
+            177
+          ],
+          [
+            461,
+            312
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "dimensionalKnots",
+        "visiblePixels": 1672,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crown-L0",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "crown",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            205,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crown",
+        "visiblePixels": 398,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crown-L2",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "crown",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 23.799999999999997,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            43,
+            261
+          ],
+          [
+            469,
+            273
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crown",
+        "visiblePixels": 1308,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "wings-L0",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "wings",
+        "position": "back",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "wings",
+        "visiblePixels": 2226,
+        "maskedBodyPixels": 854
+      }
+    ]
+  },
+  {
+    "id": "wings-L2",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "wings",
+        "position": "back",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "wings",
+        "visiblePixels": 2934,
+        "maskedBodyPixels": 1080
+      }
+    ]
+  },
+  {
+    "id": "sigil-L0",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "sigil",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            205,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sigil",
+        "visiblePixels": 376,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "sigil-L2",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "sigil",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 23.799999999999997,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            43,
+            261
+          ],
+          [
+            469,
+            273
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sigil",
+        "visiblePixels": 1241,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "domainGates-L0",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "domainGates",
+        "position": "flanks",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "domainGates",
+        "visiblePixels": 2569,
+        "maskedBodyPixels": 572
+      }
+    ]
+  },
+  {
+    "id": "domainGates-L2",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "domainGates",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 26,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "domainGates",
+        "visiblePixels": 2644,
+        "maskedBodyPixels": 1047
+      }
+    ]
+  },
+  {
+    "id": "sentinelTotems-L0",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "sentinelTotems",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            205,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sentinelTotems",
+        "visiblePixels": 212,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "sentinelTotems-L2",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "sentinelTotems",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 23.799999999999997,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            43,
+            261
+          ],
+          [
+            469,
+            273
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sentinelTotems",
+        "visiblePixels": 709,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "mandateSeals-L0",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 0,
+    "strength": 0.4,
+    "members": [
+      {
+        "id": "mandateSeals",
+        "position": "top",
+        "variant": 0,
+        "morphology": "symmetric",
+        "density": 1,
+        "scale": 20,
+        "opacity": 0.62,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            205,
+            50
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "mandateSeals",
+        "visiblePixels": 348,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "mandateSeals-L2",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 2,
+    "strength": 2.4,
+    "members": [
+      {
+        "id": "mandateSeals",
+        "position": "flanks",
+        "variant": 1,
+        "morphology": "asymmetric",
+        "density": 2,
+        "scale": 23.799999999999997,
+        "opacity": 0.7,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            43,
+            261
+          ],
+          [
+            469,
+            273
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "mandateSeals",
+        "visiblePixels": 1162,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "contour-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "contour",
+        "position": "all",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "contour",
+        "visiblePixels": 5814,
+        "maskedBodyPixels": 42246
+      }
+    ]
+  },
+  {
+    "id": "aura-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "aura",
+        "position": "all",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "aura",
+        "visiblePixels": 88419,
+        "maskedBodyPixels": 6554
+      }
+    ]
+  },
+  {
+    "id": "lightning-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "lightning",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lightning",
+        "visiblePixels": 1012,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "solarRays-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "solarRays",
+        "position": "orbit",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "solarRays",
+        "visiblePixels": 8659,
+        "maskedBodyPixels": 313
+      }
+    ]
+  },
+  {
+    "id": "fanSheets-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "fanSheets",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "fanSheets",
+        "visiblePixels": 2743,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "lightPillars-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "lightPillars",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lightPillars",
+        "visiblePixels": 908,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shieldPanels-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "shieldPanels",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shieldPanels",
+        "visiblePixels": 3074,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "hexCells-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "hexCells",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "hexCells",
+        "visiblePixels": 1761,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "circuitBranches-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "circuitBranches",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "circuitBranches",
+        "visiblePixels": 1099,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "scanBrackets-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "scanBrackets",
+        "position": "corners",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "scanBrackets",
+        "visiblePixels": 2750,
+        "maskedBodyPixels": 2
+      }
+    ]
+  },
+  {
+    "id": "shutterBars-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "shutterBars",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shutterBars",
+        "visiblePixels": 1592,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "railFrame-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "railFrame",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "railFrame",
+        "visiblePixels": 4502,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "orbitalDrones-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "orbitalDrones",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "orbitalDrones",
+        "visiblePixels": 1540,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "floatingPlates-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "floatingPlates",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "floatingPlates",
+        "visiblePixels": 2729,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "satelliteArms-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "satelliteArms",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "satelliteArms",
+        "visiblePixels": 1542,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "segmentedCage-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "segmentedCage",
+        "position": "orbit",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "segmentedCage",
+        "visiblePixels": 4496,
+        "maskedBodyPixels": 66
+      }
+    ]
+  },
+  {
+    "id": "antennaArray-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "antennaArray",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "antennaArray",
+        "visiblePixels": 1611,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "reactorClamps-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "reactorClamps",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "reactorClamps",
+        "visiblePixels": 1400,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "diamonds-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "diamonds",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "diamonds",
+        "visiblePixels": 1487,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crystalCluster-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "crystalCluster",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crystalCluster",
+        "visiblePixels": 2567,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "needleSpikes-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "needleSpikes",
+        "position": "orbit",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "needleSpikes",
+        "visiblePixels": 6085,
+        "maskedBodyPixels": 640
+      }
+    ]
+  },
+  {
+    "id": "crystalGuard-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "crystalGuard",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crystalGuard",
+        "visiblePixels": 1799,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "prismFans-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "prismFans",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "prismFans",
+        "visiblePixels": 2563,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "shards-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "shards",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "shards",
+        "visiblePixels": 1933,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "sporeCloud-L5",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "sporeCloud",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 17.5,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            49,
+            49
+          ],
+          [
+            463,
+            450
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sporeCloud",
+        "visiblePixels": 1339,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "tendrils-L5",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "tendrils",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 17.5,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            49,
+            49
+          ],
+          [
+            463,
+            450
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "tendrils",
+        "visiblePixels": 809,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "petalBlades-L5",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "petalBlades",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 17.5,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            49,
+            49
+          ],
+          [
+            463,
+            450
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "petalBlades",
+        "visiblePixels": 1190,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "membraneLobes-L5",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "membraneLobes",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 17.5,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            49,
+            49
+          ],
+          [
+            463,
+            450
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "membraneLobes",
+        "visiblePixels": 1323,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "rootArcs-L5",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "rootArcs",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 17.5,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            49,
+            49
+          ],
+          [
+            463,
+            450
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "rootArcs",
+        "visiblePixels": 755,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "pollenSprays-L5",
+    "assetId": "beast-03",
+    "bodyId": "universe-boss-021",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "pollenSprays",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 17.5,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            49,
+            49
+          ],
+          [
+            463,
+            450
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "pollenSprays",
+        "visiblePixels": 890,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "stars-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "stars",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "stars",
+        "visiblePixels": 1452,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "constellation-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "constellation",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "constellation",
+        "visiblePixels": 1157,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "comets-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "comets",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "comets",
+        "visiblePixels": 1120,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "lensArcs-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "lensArcs",
+        "position": "orbit",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "lensArcs",
+        "visiblePixels": 17912,
+        "maskedBodyPixels": 3864
+      }
+    ]
+  },
+  {
+    "id": "gravityWell-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "gravityWell",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "gravityWell",
+        "visiblePixels": 2589,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "starCompass-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "starCompass",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "starCompass",
+        "visiblePixels": 2353,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "rift-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "rift",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "rift",
+        "visiblePixels": 1271,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "faultPlanes-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "faultPlanes",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "faultPlanes",
+        "visiblePixels": 1980,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "portalCorners-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "portalCorners",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "portalCorners",
+        "visiblePixels": 3419,
+        "maskedBodyPixels": 156
+      }
+    ]
+  },
+  {
+    "id": "echo-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "echo",
+        "position": "all",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "echo",
+        "visiblePixels": 15423,
+        "maskedBodyPixels": 42121
+      }
+    ]
+  },
+  {
+    "id": "foldedGrid-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "foldedGrid",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "foldedGrid",
+        "visiblePixels": 2603,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "dimensionalKnots-L5",
+    "assetId": "hm-01",
+    "bodyId": "galaxy-bounty-01",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "dimensionalKnots",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 29.4,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            65,
+            65
+          ],
+          [
+            461,
+            402
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "dimensionalKnots",
+        "visiblePixels": 2477,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "crown-L5",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "crown",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 23.799999999999997,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            67,
+            65
+          ],
+          [
+            469,
+            469
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "crown",
+        "visiblePixels": 1690,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "wings-L5",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "wings",
+        "position": "back",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "wings",
+        "visiblePixels": 6203,
+        "maskedBodyPixels": 1475
+      }
+    ]
+  },
+  {
+    "id": "sigil-L5",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "sigil",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 23.799999999999997,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            67,
+            65
+          ],
+          [
+            469,
+            469
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sigil",
+        "visiblePixels": 1627,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "domainGates-L5",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "domainGates",
+        "position": "flanks",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 32,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "domainGates",
+        "visiblePixels": 9003,
+        "maskedBodyPixels": 1186
+      }
+    ]
+  },
+  {
+    "id": "sentinelTotems-L5",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "sentinelTotems",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 23.799999999999997,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            67,
+            65
+          ],
+          [
+            469,
+            469
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "sentinelTotems",
+        "visiblePixels": 910,
+        "maskedBodyPixels": 0
+      }
+    ]
+  },
+  {
+    "id": "mandateSeals-L5",
+    "assetId": "cmd-01",
+    "bodyId": "galaxy-bounty-09",
+    "level": 5,
+    "strength": 5.4,
+    "members": [
+      {
+        "id": "mandateSeals",
+        "position": "diagonal",
+        "variant": 2,
+        "morphology": "split",
+        "density": 3,
+        "scale": 23.799999999999997,
+        "opacity": 0.78,
+        "direction": 0,
+        "color": "#9ddcd7",
+        "anchors": [
+          [
+            67,
+            65
+          ],
+          [
+            469,
+            469
+          ]
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "mandateSeals",
+        "visiblePixels": 1526,
+        "maskedBodyPixels": 0
+      }
+    ]
+  }
+]
