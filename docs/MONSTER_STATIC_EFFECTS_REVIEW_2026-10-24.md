@@ -17,3 +17,5 @@
 建議先「同原型→效果獨立→正常／放大」，再看十王、災厄與異宇宙各十版，最後用家族／元件／組合篩選檢查細部。新增元件與效果都仍是候選，是否好看由人工決定。
 
 僅做必要本機頁面、像素、SHA、快取、390／768／1440px檢查。工作分支無PR，提交含 `[skip ci]`，沒有觸發、追蹤或等待Actions；未改workflow、正式MonsterActor、圖鑑、GM、動畫、大小或遊戲數值，未合併／正式發布。
+
+公開HTTPS檢查：固定程式提交 `7b76706d3d82cd2709e51370916f9af0b9d48a12` 已實際點選13分類、三種顯示、組合連結、線上試作台、統計、390px、895列本體證據與207總覽圖，無頁面錯誤。紀錄：[https-check.json](../development/monster-art/full-review/effects-audit/https-check.json)。僅檢查公開靜態預覽，未追蹤任何Actions。
