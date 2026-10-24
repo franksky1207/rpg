@@ -63,10 +63,11 @@ function inspect(root){
  for(const file of selected)if(!sizes.has(file))throw Error("Missing official audio: "+file);
  const registered=inspectRegistry(root,new Set(files)),registeredPaths=new Set(registered.paths);
  const category=p=>{
+  if(p==='3d-test/monster-appearance-designs.mjs')return 'retired-synthetic-monster-designs';
   if(p==='3d-test/atlas-review.js')return 'retired-gm-art-review';
   if(p==='3d-test/gm-whole-suit.mjs')return 'retired-gm-equipment-selector';
   if(p.startsWith("."))return "development";
-  if(/^(?:\.github|docs|tests|scripts|development)\//.test(p))return "development";
+  if(/^(?:\.github|docs|tests|scripts|development|work)\//.test(p))return "development";
   if(p.startsWith("assets/backgrounds-source/"))return "source";
   if(p.startsWith('assets/3d/')&&!registeredPaths.has(p))return 'unregistered-3d-source';
   if(p.startsWith("audio/assets/")&&!selected.has(p))return "unused-audio-or-source";

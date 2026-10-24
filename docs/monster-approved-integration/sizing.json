@@ -1,0 +1,197 @@
+[
+  {
+    "assetId": "hm-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "mech-02",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "ship-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "beast-03",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "core-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "bio-02",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "hm-02",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "hm-04",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "cmd-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "dr-02",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "mech-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "mech-03",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "veh-02",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "ship-04",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "fort-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "fort-03",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "cmd-03",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "beast-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "core-03",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "energy-01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "void-phantom-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-c-03-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-c-02-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-u-01-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-c-01-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-01-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-02-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-03-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-10-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-06-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-07-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-05-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-h-08-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-au-01-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-au-02-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-au-03-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-au-04-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-au-05-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  },
+  {
+    "assetId": "boss-au-06-v01",
+    "bodyFootprintExact": true,
+    "fullSixActionCanvasContained": true
+  }
+]

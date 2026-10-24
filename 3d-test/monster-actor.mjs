@@ -1,4 +1,5 @@
-import {resolveMonsterAppearance,paintMonsterAppearance,appearanceFingerprint,applyMirrorAppearance} from './monster-appearance.mjs?v=20261024-identity-v1';
+import {appearanceFingerprint,applyMirrorAppearance} from './monster-appearance.mjs?v=20261024-approved1';
+import {getMonsterAppearanceManager} from './monster-appearance-manager.mjs?v=20261024-approved1';
 // Shared visual adapter, no battle state or owned timers. Formal activation is separate.
 import {pose} from './equipment-sprites-v1/animation.mjs?v=20261019-batch12-rising-cut1';
 import {findAsset,palettes,findMapping} from './monster-sprites.mjs?v=20261024-au-ten-stages1';
@@ -38,17 +39,20 @@ const kindScale={
     'beast-01':1.16,'beast-03':1.65,'bio-02':1.54,'core-01':1.25,'core-03':1.74,'energy-01':1.34
    };
 const footprints=new WeakMap();
+function paddedFootprint(actor,profile){const n=actor.canvas.width,logical=actor.logicalSize||n,f=logical/n,d=(actor.padding||0)/n;const value={...profile};for(const k of ['l','t','r','b'])if(k in value)value[k]=(value[k]*logical+(actor.padding||0))/n;for(const k of ['w','h','minH','maxH'])if(k in value)value[k]=value[k]*logical/n;return value;}
 export function visibleFootprint(actor){
+ // Effects never enter body sizing; preserve the already approved 256px profiles.
+ if(actor.mapping&&(actor.logicalSize||actor.canvas.width)===256&&measuredMonsterProfiles[actor.entry.assetId])return paddedFootprint(actor,measuredMonsterProfiles[actor.entry.assetId].idle);
  const key=actor.entry,tier=actor.canvas.width+':'+!!actor.mirrored;
  if(footprints.get(key)?.has(tier))return footprints.get(key).get(tier);
- actor.draw({clip:'idle',elapsedMs:0});
+ actor.draw({clip:'idle',elapsedMs:0,bodyOnly:true});
  const c=actor.canvas,n=c.width,data=c.getContext('2d').getImageData(0,0,n,n).data;
  let l=n,t=n,r=-1,b=-1;
  for(let i=3;i<data.length;i+=4)if(data[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}
  if(r<l||b<t)throw Error('empty-sprite-footprint');
  let minH=Infinity,maxH=0;
  for(let ms=0;ms<1600;ms+=25){
-  actor.draw({clip:'idle',elapsedMs:ms});const d=c.getContext('2d').getImageData(0,0,n,n).data;let top=n,bottom=-1;
+  actor.draw({clip:'idle',elapsedMs:ms,bodyOnly:true});const d=c.getContext('2d').getImageData(0,0,n,n).data;let top=n,bottom=-1;
   for(let i=3;i<d.length;i+=4)if(d[i]>16){const y=Math.floor((i-3)/4/n);top=Math.min(top,y);bottom=Math.max(bottom,y);}
   const h=(bottom-top+1)/n;minH=Math.min(minH,h);maxH=Math.max(maxH,h);
  }
@@ -67,13 +71,13 @@ export function motionFootprint(actor,{remeasure=false}={}){
  // rescanning six actions while a short live owner phase is already running.
  const player=actor.canvas.width===192&&measuredPlayerMotion[actor.entry.id];
  if(!remeasure&&player)return actor.mirrored?{...player,l:1-player.r,r:1-player.l}:player;
- const monster=actor.canvas.width===256&&measuredMonsterProfiles[actor.entry.assetId];
- if(!remeasure&&monster)return monster.motion;
+ const monster=(actor.logicalSize||actor.canvas.width)===256&&measuredMonsterProfiles[actor.entry.assetId];
+ if(!remeasure&&monster)return paddedFootprint(actor,monster.motion);
  const key=actor.entry,tier=actor.canvas.width+':'+!!actor.mirrored;
  if(!remeasure&&motionFootprints.get(key)?.has(tier))return motionFootprints.get(key).get(tier);
  const c=actor.canvas,n=c.width;let l=n,t=n,r=-1,b=-1;
  for(const clip of ['idle','attack','hit','dodge','return','defeat'])for(let ms=0;ms<=700;ms+=35){
-  actor.draw({clip,elapsedMs:ms,attackElapsedMs:ms,rootMotion:true});
+  actor.draw({clip,elapsedMs:ms,attackElapsedMs:ms,rootMotion:true,bodyOnly:true});
   const data=c.getContext('2d').getImageData(0,0,n,n).data;
   for(let i=3;i<data.length;i+=4)if(data[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}
  }
@@ -187,7 +191,22 @@ export function battleSpriteLayout(player,monster,width,height,visual={}){
   approachLimit:boundedApproach?safeGap*.15*scale:58.8,
   targetPlayerHeight:target,playerHeight:scale,safetyRetreat:scale<target?(widthLimit<heightLimit?'animation-width':'animation-height'):null};
 }
+// A bounded paint viewport can use existing horizontal stage padding without
+// changing either actor's body size/position or animation envelope. The extra
+// layer stays inside the browser viewport and never grows page scroll width.
+const appearanceViewports=new WeakMap();
+function appearanceViewport(host,actors){
+ if(!host)return;let state=appearanceViewports.get(host);
+ if(!state){const layer=document.createElement('div');layer.dataset.monsterEffectViewport='';Object.assign(layer.style,{position:'absolute',top:'0',bottom:'0',overflow:'hidden',pointerEvents:'none'});state={layer,overflow:host.style.overflow,canvases:new Map()};host.style.overflow='visible';host.append(layer);appearanceViewports.set(host,state);}
+ const bounds=host.getBoundingClientRect(),viewport=globalThis.innerWidth||bounds.right;
+ const left=Math.max(0,Math.min(12,bounds.left)),right=Math.max(0,Math.min(12,viewport-bounds.right));
+ state.layer.style.left=-left+'px';state.layer.style.right=-right+'px';
+ for(const actor of actors){const canvas=actor.canvas;if(!state.canvases.has(canvas))state.canvases.set(canvas,canvas.style.marginLeft);canvas.style.marginLeft=left+'px';if(canvas.parentElement!==state.layer)state.layer.append(canvas);}
+}
+export function releaseMonsterAppearanceViewport(host){const state=appearanceViewports.get(host);if(!state)return;for(const [canvas,margin] of state.canvases){canvas.style.marginLeft=margin;if(canvas.parentElement===state.layer)host.append(canvas);}state.layer.remove();host.style.overflow=state.overflow;appearanceViewports.delete(host);}
 export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
+ const host=monster.canvas.parentElement?.closest?.('[data-monster-effect-viewport]')?.parentElement||monster.canvas.parentElement;
+ if(monster.appearance)appearanceViewport(host,[player,monster]);
  const layout=battleSpriteLayout(player,monster,width,height,visual);
  for(const [actor,key] of [[player,'player'],[monster,'monster']]){
   const b=layout[key],s=actor.canvas.style;
@@ -202,26 +221,27 @@ export function applyBattleSpriteLayout(player,monster,width,height,visual={}){
 
 export class MonsterActor{
  constructor(pool,id,{signal,identity=null,tier='medium',usage='gm',canvasFactory=()=>document.createElement('canvas')}={}){
-  this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.canvas.width=this.canvas.height=tier==='high'?512:tier==='low'?128:256;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
+  this.mapping=identity?findMapping(identity):null;if(identity&&(!this.mapping||this.mapping.assetId!==id))throw Error('monster-identity-mismatch');this.entry=findAsset(id);if(usage==='formal'&&this.entry?.formalBattleAllowed!==true)throw Error('monster-formal-unapproved');if(!this.entry)throw Error('monster-unavailable');this.pool=pool;this.signal=signal;this.closed=false;this.canvas=canvasFactory();this.logicalSize=tier==='high'?512:tier==='low'?128:256;this.padding=this.mapping?Math.ceil(this.logicalSize/8):0;this.canvas.width=this.canvas.height=this.logicalSize+2*this.padding;this.ctx=this.canvas.getContext('2d');this.abort=()=>this.dispose();signal?.addEventListener('abort',this.abort,{once:true});
  }
- async init(){try{const lease=await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(this.mapping){this.appearance=resolveMonsterAppearance(this.mapping);this.appearanceSource=paintMonsterAppearance(lease.bitmap,this.entry,this.appearance);this.canvas.dataset.appearance=appearanceFingerprint(this.appearance);}if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
- draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original'}={}){
-  if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.canvas.width,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
+ async init(){try{const lease=this.mapping?await getMonsterAppearanceManager().acquire(this.mapping,{pool:this.pool,signal:this.signal}):await this.pool.acquire(this.entry.assetId,{signal:this.signal});if(this.closed){lease.release();throw Error('monster-aborted');}this.lease=lease;if(this.mapping){this.appearance=lease.spec;this.appearanceSource=lease.source;this.bodySource=lease.body;this.canvas.dataset.appearance=appearanceFingerprint(this.appearance);}if(!this.ctx)throw Error('canvas-unavailable');this.canvas.dataset.monster=this.entry.assetId;return this;}catch(e){this.dispose();throw e;}}
+ draw({clip='idle',elapsedMs=0,palette=this.mapping?.visual.palette||'original',bodyOnly=false}={}){
+  if(this.closed||!this.lease)throw Error('monster-unavailable');const c=this.ctx,n=this.logicalSize,a=this.entry,p=monsterPose(a.animationType,clip,elapsedMs),[l,t,r,b]=a.visualBounds;
   const effects=this.mapping?.visual.sizePolicy==='dungeon'&&dungeonEffectsEnabled(this.canvas);
   if(effects&&clip==='idle'&&this.mapping?.visual.effect==='float')p.y-=.008*Math.sin(elapsedMs/1600*Math.PI*2);
   if(effects&&clip==='idle'&&this.mapping?.visual.effect==='pulse')p.flash+=.035*(1+Math.sin(elapsedMs/1600*Math.PI*2))/2;
   // Center the actual alpha region; contain the full subject with pose margins.
   const size=Math.min(n*.68/(r-l),n*.68/(b-t))*512;
-  c.clearRect(0,0,n,n);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
-  c.drawImage(this.appearanceSource||this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
+  c.clearRect(0,0,this.canvas.width,this.canvas.height);c.save();c.translate(this.padding,this.padding);c.save();c.translate(n*(.5+p.x),n*(.5+p.y));c.rotate(p.rotation);c.scale(p.scaleX,p.scaleY);c.globalAlpha=p.alpha;
+  c.drawImage((bodyOnly?this.bodySource:this.appearanceSource)||this.lease.bitmap,-(l+r)/1024*size,-(t+b)/1024*size,size,size);
   if(p.flash){c.globalCompositeOperation='source-atop';c.globalAlpha=p.flash;c.fillStyle='#fff';c.fillRect(-n,-n,n*2,n*2);}c.restore();
   // A compact bolt or pulse, never a crescent or a broad blade swing.
   if(clip==='attack'&&['mechanical-strike','ranged-shot','stationary-shot','pulse'].includes(a.animationType)){
    const q=Math.max(0,1-Math.abs(elapsedMs-336)/120);if(q){c.save();c.globalAlpha=q;c.fillStyle=a.animationType==='pulse'?'#c6a1fa':'#b2eaff';const w=n*(a.animationType==='ranged-shot'?.15:.09);c.fillRect(n*.08,n*.49,w,n*.018);c.restore();}
   }
+  c.restore();
   const filter=this.appearance?'none':palettes[palette]||palettes.original;if(this.paletteFilter!==filter){this.canvas.style.filter=filter;this.paletteFilter=filter;}if(this.appearance)this.canvas.dataset.effect='static-'+this.appearance.texture+'-'+this.appearance.field;else if(this.mapping?.visual.sizePolicy==='dungeon')applyDungeonEffects(this.canvas,this.mapping.visual);this.canvas.dataset.clip=clip;return this.canvas;
  }
- dispose(){if(this.closed)return;this.closed=true;this.signal?.removeEventListener('abort',this.abort);this.lease?.release();this.lease=null;if(this.appearanceSource)this.appearanceSource.width=this.appearanceSource.height=1;this.appearanceSource=null;this.canvas.width=this.canvas.height=1;this.canvas.remove();}
+ dispose(){if(this.closed)return;this.closed=true;this.signal?.removeEventListener('abort',this.abort);this.lease?.release();this.lease=null;this.appearanceSource=null;this.bodySource=null;this.canvas.width=this.canvas.height=1;this.canvas.remove();}
 }
 
 // CSS effects live outside the painted canvas, never participate in body measurements.

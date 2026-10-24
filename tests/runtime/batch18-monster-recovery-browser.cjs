@@ -28,9 +28,9 @@ try{for(const row of dungeonRows)for(const fault of ['http','integrity','decode'
  await page.locator('.formal-b-verified-monster').waitFor();
  for(let i=0;i<2;i++){
   await page.evaluate(async()=>{__ac.abort();CivilizationFormalBRenderer.clearSpriteCache();await __start();});await page.locator('.formal-b-verified-monster').waitFor();
-  const stats=await page.evaluate(()=>CivilizationFormalBRenderer.monsterStats());assert.equal(stats.refs,1);assert.equal(stats.pending,0);assert.ok(stats.bytes<=stats.limit);
+  const stats=await page.evaluate(async()=>{const {getMonsterAppearanceManager}=await import('./3d-test/monster-appearance-manager.mjs');return getMonsterAppearanceManager().stats();});assert.equal(stats.refs,1);assert.equal(stats.pending,0);assert.ok(stats.bytes<=stats.limit);
  }
  await page.evaluate(()=>{document.dispatchEvent(new Event('visibilitychange'));__ac.abort();CivilizationFormalBRenderer.clearSpriteCache();});
- const stats=await page.evaluate(()=>CivilizationFormalBRenderer.monsterStats());assert.equal(stats.refs,0);assert.equal(stats.pending,0);assert.equal(stats.bytes,0);
+ const stats=await page.evaluate(async()=>{const {getMonsterAppearanceManager}=await import('./3d-test/monster-appearance-manager.mjs');return {raw:CivilizationFormalBRenderer.monsterStats(),appearance:getMonsterAppearanceManager().stats()};});for(const cache of [stats.raw,stats.appearance]){assert.equal(cache.refs,0);assert.equal(cache.pending,0);assert.equal(cache.bytes,0);}
  report.rows.push({id:row.id,fault,requests,recoveredWithoutReload:true,continuousReentries:2,stats,realDevice:false});console.log('PASS dungeon recovery',row.id,fault);await page.close();
 }report.passed=true;}finally{fs.writeFileSync('/tmp/batch18-monster-recovery.json',JSON.stringify(report,null,2));await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

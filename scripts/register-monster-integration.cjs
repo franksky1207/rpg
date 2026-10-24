@@ -1,0 +1,6 @@
+// Register exact, reviewable source changes above sealed historical contracts.
+const fs=require('fs'),cp=require('child_process'),crypto=require('crypto');const baseline='658d5db2c14cd10598e648e2fafdfe3ad75f80dd',sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const paths=['3d-test/monster-actor.mjs','3d-test/monster-appearance.mjs','3d-test/monster-appearance-review.mjs','3d-test/gm-era-sprites.mjs','3d-test/t3b-formal-renderer.js','3d-test/test-center.js','3d-test/index.html','monstercodeximage.mjs','monstercodex.js','index.html','resource-cache-sw.js'];
+const newPaths=['3d-test/monster-approved-art.mjs','3d-test/monster-body-v1.mjs','3d-test/monster-body-v2.mjs','3d-test/monster-static-effects.mjs','3d-test/monster-appearance-manager.mjs'];
+const files=Object.fromEntries(paths.filter(p=>!fs.readFileSync(p).equals(cp.execFileSync('git',['show',baseline+':'+p]))).map(p=>[p,{before:sha(cp.execFileSync('git',['show',baseline+':'+p])),after:sha(fs.readFileSync(p))}]));
+fs.writeFileSync('tests/runtime/monster-integrated-approved.json',JSON.stringify({baseline,review:'20c7f286b32da7fc3533d34ed7561266f6969cc4',files,newFiles:Object.fromEntries(newPaths.map(p=>[p,sha(fs.readFileSync(p))]))},null,2)+'\n');

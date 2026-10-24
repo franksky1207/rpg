@@ -1,4 +1,5 @@
-import {resolveMonsterAppearance,paintMonsterAppearance,appearanceFingerprint} from './3d-test/monster-appearance.mjs?v=20261024-identity-v1';
+import {appearanceFingerprint} from './3d-test/monster-appearance.mjs?v=20261024-approved1';
+import {getMonsterAppearanceManager} from './3d-test/monster-appearance-manager.mjs?v=20261024-approved1';
 import {getSharedMonsterPool} from './3d-test/monster-sprite-pool.mjs?v=20261024-repair2';
 import {findMapping,findAsset} from './3d-test/monster-sprites.mjs?v=20261024-au-ten-stages1';
 const pool=getSharedMonsterPool();
@@ -18,20 +19,23 @@ function placement(bitmap,asset){
  scratch.width=scratch.height=1;
  if(placements.size>=39)placements.delete(placements.keys().next().value);placements.set(key,result);return result;
 }
-export async function drawCodexMonster(canvas,row,{signal}={}){
+export async function drawCodexMonster(canvas,row,{signal,bodyOnly=false}={}){
  const mapping=findMapping(row.id)||findMapping(row.id.replace(/^projection-/,''));
  const asset=findAsset(mapping?.assetId);if(!mapping||!asset)throw Error('monster-unavailable');
- let lease;
+ let lease;const manager=getMonsterAppearanceManager();
  try{
-  lease=await pool.acquire(asset.assetId,{signal});if(!canvas.isConnected)return;
-  const ctx=canvas.getContext('2d'),p=placement(lease.bitmap,asset);
+  lease=await manager.acquire(mapping,{pool,signal});if(!canvas.isConnected||signal?.aborted)return;
+  const ctx=canvas.getContext('2d'),p=placement(lease.body,asset);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  const appearance=resolveMonsterAppearance(mapping);canvas.style.filter='none';canvas.dataset.appearance=appearanceFingerprint(appearance);
+  const appearance=lease.spec;canvas.style.filter='none';canvas.dataset.appearance=appearanceFingerprint(appearance);
   const prepared=document.createElement('canvas');prepared.width=prepared.height=512;
-  const source=paintMonsterAppearance(lease.bitmap,asset,appearance);
-  prepared.getContext('2d').drawImage(source,p.x,p.y,p.size,p.size);source.width=source.height=1;
+  const source=bodyOnly?lease.body:lease.source;
+  prepared.getContext('2d').drawImage(source,p.x,p.y,p.size,p.size);
   ctx.drawImage(prepared,p.shiftX,p.shiftY);prepared.width=prepared.height=1;
   canvas.dataset.palette=mapping.visual.palette;
   canvas.nextElementSibling.textContent='';
  }finally{lease?.release();}
 }
+
+// One explicit neighbor only, selected from the existing unlocked detail order.
+export function prepareCodexMonster(row,{signal}={}){return getMonsterAppearanceManager().prepare(row.id,{pool,signal});}

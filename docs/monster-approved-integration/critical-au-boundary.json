@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "realDevice": false,
+  "rows": [
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "id": "alternate-depth-0901",
+      "assetId": "boss-au-01-v01",
+      "world": "both",
+      "kind": "alternate-universe-boss",
+      "formalSupported": true,
+      "formalNA": null,
+      "gm": {
+        "playerHeight": 64.37491861979167,
+        "monsterHeight": 112.66962890625001,
+        "ratio": 1.7502100402129352,
+        "contained": true,
+        "separated": true
+      },
+      "formal": {
+        "playerHeight": 48.284505208333336,
+        "monsterHeight": 84.497998046875,
+        "ratio": 1.7500023596035865,
+        "contained": true,
+        "separated": true
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "id": "alternate-depth-0901",
+      "assetId": "boss-au-01-v01",
+      "world": "both",
+      "kind": "alternate-universe-boss",
+      "formalSupported": true,
+      "formalNA": null,
+      "gm": {
+        "playerHeight": 64.37491861979167,
+        "monsterHeight": 112.66962890625001,
+        "ratio": 1.7502100402129352,
+        "contained": true,
+        "separated": true
+      },
+      "formal": {
+        "playerHeight": 85.837646484375,
+        "monsterHeight": 150.226171875,
+        "ratio": 1.7501198836147684,
+        "contained": true,
+        "separated": true
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "id": "alternate-depth-0901",
+      "assetId": "boss-au-01-v01",
+      "world": "both",
+      "kind": "alternate-universe-boss",
+      "formalSupported": true,
+      "formalNA": null,
+      "gm": {
+        "playerHeight": 64.37491861979167,
+        "monsterHeight": 112.66962890625001,
+        "ratio": 1.7502100402129352,
+        "contained": true,
+        "separated": true
+      },
+      "formal": {
+        "playerHeight": 48.284505208333336,
+        "monsterHeight": 84.497998046875,
+        "ratio": 1.7500023596035865,
+        "contained": true,
+        "separated": true
+      },
+      "errors": []
+    }
+  ],
+  "summary": {
+    "identities": 1,
+    "cases": 3,
+    "success": 3,
+    "failed": 0,
+    "minRatio": 1.7502100402129352,
+    "maxRatio": 1.7502100402129352,
+    "maxRatioError": 0.000207680609348726,
+    "groups": {
+      "both/alternate-universe-boss": {
+        "cases": 3,
+        "success": 3,
+        "failed": 0,
+        "formalNA": 0
+      }
+    }
+  }
+}

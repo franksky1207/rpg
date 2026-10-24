@@ -154,14 +154,14 @@ async function prepareSuit(options){
  const token=Object.freeze({kind:"whole-suit",id:entry.id});
  verified.set(token,{kind:"whole-suit",entry,signal:options.signal,enemyPlayerName:options.identity?.playerName||null,enemyKind:options.identity?.kind||null,enemyName:options.identity?.name||null,enemyId:options.identity?.id||null,enemyMode:options.identity?.mode||null,enemyWorld:options.identity?.world||null,enemyLocation:options.identity?.location||null});return token;
 }
-let spriteRuntime=null,spritePool=null,spriteMonsterPool=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
+let spriteRuntime=null,spritePool=null,spriteMonsterPool=null,appearanceManager=null,warming=null,warmController=null,warmTimer=null,warmIdle=null;
 const runtime=()=>spriteRuntime ||=(Promise.all([import('./equipment-sprites-v1/actor.mjs?v=20261021-batch16-dungeons1'),import('./equipment-sprites-v1/assets.mjs?v=20261019-batch12-rising-cut1')]).catch(error=>{spriteRuntime=null;throw error;}));
 const warmAllowed=()=>!global.document?.querySelector?.('#main .combat-screen')&&!global.document?.hidden&&!global.navigator?.connection?.saveData&&global.CivilizationPresentationMode?.combatAnimationEnabled?.()!==false&&!global.document?.body?.classList.contains('main-minimal-mode-open')&&global.gmBackgroundBattleEnabled?.()!==true;
 function cancelWarmup(){
  clearTimeout(warmTimer);if(warmIdle!==null)global.cancelIdleCallback?.(warmIdle);warmIdle=null;
  warmController?.abort();
 }
-function clearSpriteCache(){cancelWarmup();spritePool?.clear();spriteMonsterPool?.clear();}
+function clearSpriteCache(){cancelWarmup();spritePool?.clear();spriteMonsterPool?.clear();appearanceManager?.clear();}
 function warmIdentity(){
  const phase=Number(global.currentWorldPhase?.());
  return global.CivilizationEraAppearanceContract?.resolve({world:phase});
@@ -212,7 +212,7 @@ async function prepareMonsterVisual(identity,{signal,priority='next'}={}){
   if(signal?.aborted)return false;
   const approved=resolveFormalMonster(identity);if(!approved)return false;
   spriteMonsterPool ||= getSharedMonsterPool();
-  return await spriteMonsterPool.prepare(approved.asset.assetId,{signal,priority});
+  const {getMonsterAppearanceManager}=await import('./monster-appearance-manager.mjs?v=20261024-approved1');appearanceManager ||= getMonsterAppearanceManager();const decoded=await spriteMonsterPool.prepare(approved.asset.assetId,{signal,priority});if(!decoded||signal?.aborted)return false;return appearanceManager.prepare(approved.mapping,{pool:spriteMonsterPool,signal,priority});
  }catch(_){return false;}
 }
 async function prepareKnownNext(mapping,signal,bundle){
@@ -235,7 +235,7 @@ async function prepareKnownNext(mapping,signal,bundle){
 const fallbackEntries={normal:{assetId:'fallback'},elite:{assetId:'fallback'},boss:{assetId:'fallback'}};
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-identity-v1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint,releaseMonsterAppearanceViewport}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-approved1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -273,7 +273,7 @@ async function createSuit(options,bundle){
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
     import('./monster-formal-resolver.mjs?v=20261024-mirror-void1'),
-    import('./monster-actor.mjs?v=20261024-identity-v1')
+    import('./monster-actor.mjs?v=20261024-approved1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const mirror=resolveFormalMirror({mode:bundle.enemyMode,world:bundle.enemyWorld,name:bundle.enemyName,playerName:bundle.enemyPlayerName},bundle.entry);
@@ -311,7 +311,7 @@ async function createSuit(options,bundle){
   const shift=Number.isFinite(e.approach)?Math.min(approachLimit,Math.min(.42,Math.max(0,e.approach))*140):0;
   monsterActor.canvas.style.transform='translateX('+(-shift)+'px)';
  }
- const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);actor.canvas.remove();monsterActor?.dispose();monsterActor=null;host.querySelectorAll('.formal-b-enemy-sprite').forEach(node=>node.remove());actor.dispose();};
+ const dispose=()=>{if(closed)return;closed=true;signal.removeEventListener('abort',cancel);signal.removeEventListener('abort',dispose);releaseMonsterAppearanceViewport(host);actor.canvas.remove();monsterActor?.dispose();monsterActor=null;host.querySelectorAll('.formal-b-enemy-sprite').forEach(node=>node.remove());actor.dispose();};
  signal.addEventListener('abort',dispose,{once:true});
  if(signal.aborted||!isCurrent()){dispose();throw Error("stale-formal-suit");}
  actor.canvas.className='formal-b-whole-suit formal-b-player-sprite';actor.canvas.dataset.suit=bundle.entry.id;

@@ -1,0 +1,80 @@
+{
+  "first": {
+    "moduleCount": 7,
+    "files": [
+      "3d-test/monster-approved-art.mjs",
+      "3d-test/monster-body-v1.mjs",
+      "3d-test/monster-body-v2.mjs",
+      "3d-test/monster-static-effects.mjs",
+      "3d-test/monster-appearance.mjs",
+      "3d-test/monster-appearance-manager.mjs",
+      "monstercodeximage.mjs"
+    ],
+    "moduleBytes": 1306346,
+    "corruptionRecovered": true,
+    "keyVersioned": true
+  },
+  "offline": {
+    "width": 512,
+    "stats": {
+      "version": "20261024-approved1",
+      "entries": 1,
+      "bytes": 2097152,
+      "limit": 4194304,
+      "capacity": 2,
+      "refs": 0,
+      "pending": 0,
+      "hits": 0,
+      "misses": 2,
+      "prepares": 2,
+      "prepareMs": 284.40000000037253,
+      "evictions": 1,
+      "queued": 0
+    }
+  },
+  "clear": {
+    "emptied": {
+      "version": "20261024-approved1",
+      "entries": 0,
+      "bytes": 0,
+      "limit": 4194304,
+      "capacity": 2,
+      "refs": 0,
+      "pending": 0,
+      "hits": 1,
+      "misses": 2,
+      "prepares": 2,
+      "prepareMs": 284.40000000037253,
+      "evictions": 2,
+      "queued": 0
+    },
+    "status": {
+      "ok": true,
+      "entries": 0,
+      "bytes": 0
+    },
+    "ready": {
+      "version": "20261024-approved1",
+      "entries": 1,
+      "bytes": 2097152,
+      "limit": 4194304,
+      "capacity": 2,
+      "refs": 0,
+      "pending": 0,
+      "hits": 1,
+      "misses": 3,
+      "prepares": 3,
+      "prepareMs": 378.2999999988824,
+      "evictions": 2,
+      "queued": 0
+    },
+    "recovered": {
+      "ok": true,
+      "entries": 1,
+      "bytes": 75458
+    },
+    "perFramePixelReads": 0
+  },
+  "realIPhone": false,
+  "notes": "Offline cached module/prototype use in an already loaded page; existing network-fresh HTML navigation policy remains unchanged."
+}
