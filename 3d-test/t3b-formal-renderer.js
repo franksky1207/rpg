@@ -141,6 +141,10 @@ async function create(options){
  }catch(error){dispose();throw error;}
 }
 async function prepareSuit(options){
+ // Begin the one already identified enemy while player resources prepare; never
+ // await the full monster catalogue or add startup coordinator tasks.
+ void prepareMonsterVisual(options.identity,{signal:options.signal,priority:'current'});
+
  const {release}=await import('./era-player-sprites.mjs?v=20261019-batch12-rising-cut1');
  if(release.schema!=="cw.era-player-sprites.v1")throw Error("unapproved-formal-sprites");
  const identity=['galaxy','universe','higher'].includes(options.eraVisualId)?{ready:true,visualId:options.eraVisualId}:global.CivilizationEraAppearanceContract?.resolve({world:options.world??options.appearance?.world});
@@ -201,11 +205,37 @@ global.addEventListener?.('civilization-combat-animation-change',()=>{clearSprit
 if(global.document?.readyState==='loading')global.document.addEventListener('DOMContentLoaded',()=>scheduleWarm(),{once:true});
 else scheduleWarm();
 
+async function prepareMonsterVisual(identity,{signal,priority='next'}={}){
+ try{
+  if(signal?.aborted||global.document?.hidden||global.navigator?.connection?.saveData||global.CivilizationPresentationMode?.combatAnimationEnabled?.()===false||global.document?.body?.classList.contains('main-minimal-mode-open')||global.gmBackgroundBattleEnabled?.()===true)return false;
+  const [{resolveFormalMonster},{getSharedMonsterPool}]=await Promise.all([import('./monster-formal-resolver.mjs?v=20261024-au-ten-stages1'),import('./monster-sprite-pool.mjs?v=20261024-repair2')]);
+  if(signal?.aborted)return false;
+  const approved=resolveFormalMonster(identity);if(!approved)return false;
+  spriteMonsterPool ||= getSharedMonsterPool();
+  return await spriteMonsterPool.prepare(approved.asset.assetId,{signal,priority});
+ }catch(_){return false;}
+}
+async function prepareKnownNext(mapping,signal,bundle){
+ if(bundle.enemyMode!=='arena')return false;
+ if(bundle.enemyWorld===3){
+  // The owner already rolled the whole lineup. Read it without rolling/building
+  // enemies or touching a battle, reward, progress or settlement owner.
+  const snapshot=global.getThirdWorldArenaRuntimeState?.({visualOnly:true}),round=snapshot?.round,stage=Number(bundle.enemyLocation);
+  if(snapshot?.status!=='combat'||!Number.isInteger(stage)||stage<0||stage>=2||round?.stageIndex!==stage||round.enemy?.higherDimensionalBossId!==mapping.id||round.lineup?.[stage]?.bossId!==mapping.id)return false;
+  const next=round.lineup[stage+1];if(!next)return false;
+  return prepareMonsterVisual({world:3,mode:'arena',id:next.bossId,name:next.name,kind:'dungeon-arena-third-world',location:String(stage+1)},{signal,priority:'next'});
+ }
+ if(mapping?.mode!=='arena'||!['galaxy','universe'].includes(mapping.world)||mapping.arenaStage>=2)return false;
+ const {mappings}=await import('./monster-sprites.mjs?v=20261024-au-ten-stages1');
+ const next=Object.values(mappings).find(r=>r.mode==='arena'&&r.world===mapping.world&&r.arenaStage===mapping.arenaStage+1);
+ if(!next||signal?.aborted)return false;
+ return prepareMonsterVisual({world:next.world==='galaxy'?1:2,mode:'arena',name:next.name,kind:next.kind,location:String(next.arenaStage)},{signal,priority:'next'});
+}
 // Geometry caches are shared by rank; a new battle must not rescan 190 outline poses.
 const fallbackEntries={normal:{assetId:'fallback'},elite:{assetId:'fallback'},boss:{assetId:'fallback'}};
 async function createSuit(options,bundle){
  const {signal,host,isCurrent}=options;
- const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261022-batch19-frame1')]);
+ const [[{WholeSuitActor},{createSpritePool}],{applyBattleSpriteLayout,applyDungeonEffects,combatSizingFrame,visibleFootprint,motionFootprint}]=await Promise.all([runtime(),import('./monster-actor.mjs?v=20261024-au-ten-stages1')]);
  signal.throwIfAborted();if(!isCurrent())throw Error("stale-formal-suit");
  spritePool ||= createSpritePool({usage:'formal'});
  const timeout=new AbortController(),cancel=()=>timeout.abort();signal.addEventListener('abort',cancel,{once:true});
@@ -229,7 +259,7 @@ async function createSuit(options,bundle){
  let monsterActor=null,monsterAttempt=0,monsterMapping=null,monsterReady=false,monsterLastKey=null,monsterError='';
  let lastEnemyFrame=null;
  let monsterPoolPromise=null;
- const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261022-batch18-alternate1').then(({createMonsterPool})=>{spriteMonsterPool ||= createMonsterPool({usage:'formal'});return spriteMonsterPool;}));
+ const loadMonsterPool=()=>monsterPoolPromise||=(import('./monster-sprite-pool.mjs?v=20261024-repair2').then(({getSharedMonsterPool})=>{spriteMonsterPool ||= getSharedMonsterPool();return spriteMonsterPool;}));
  // Monster optional: keep the existing known-good silhouette until verified sprite is ready.
  async function activateMonster(){
   if(monsterAttempt||closed||signal.aborted||!isCurrent()||!['main','bounty','arena','void','mirror','special','calamity','alternate'].includes(bundle.enemyMode)||![1,2,3].includes(bundle.enemyWorld))return;
@@ -242,8 +272,8 @@ async function createSuit(options,bundle){
   const loadDeadline=setTimeout(cancelLoad,2500);
   try{
    const [{resolveFormalMonster,resolveFormalMirror},{MonsterActor,applyDungeonEffects}]=await Promise.all([
-    import('./monster-formal-resolver.mjs?v=20261022-batch18-alternate1'),
-    import('./monster-actor.mjs?v=20261022-batch19-frame1')
+    import('./monster-formal-resolver.mjs?v=20261024-au-ten-stages1'),
+    import('./monster-actor.mjs?v=20261024-au-ten-stages1')
    ]);
    if(closed||signal.aborted||!isCurrent())return;
    const mirror=resolveFormalMirror({mode:bundle.enemyMode,world:bundle.enemyWorld,name:bundle.enemyName,playerName:bundle.enemyPlayerName},bundle.entry);
@@ -263,7 +293,7 @@ async function createSuit(options,bundle){
    if(closed||signal.aborted||!isCurrent())return;
    const actor=await new MonsterActor(pool,approved.asset.assetId,{signal:loading.signal,identity:approved.mapping.id,usage:'formal',tier:'medium'}).init();
    if(closed||signal.aborted||!isCurrent()){actor.dispose();return;}
-   monsterActor=actor;actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
+   monsterActor=actor;void prepareKnownNext(approved.mapping,signal,bundle);actor.canvas.className='formal-b-enemy-sprite formal-b-verified-monster';
    actor.canvas.style.position='absolute';actor.canvas.style.maxWidth='none';actor.canvas.style.right='auto';
    host.append(actor.canvas);monsterReady=true;enemyCanvas.style.visibility='hidden';
    layoutKey='';layoutSprites();
@@ -369,5 +399,5 @@ async function createSuit(options,bundle){
  }
  return Object.freeze({sample,resize:layoutSprites,dispose,snapshot:()=>({closed,activeClip,engines:0,canCommit:false,canEmitCombatEvents:false})});
 }
-global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,warmSprites,scheduleWarm,clearSpriteCache,spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},monsterStats:()=>spriteMonsterPool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
+global.CivilizationFormalBRenderer=Object.freeze({version:1,prepare,create,prepareMonsterVisual,warmSprites,scheduleWarm,clearSpriteCache,spriteStats:()=>spritePool?.stats()||{bytes:0,refs:0,entries:0},monsterStats:()=>spriteMonsterPool?.stats()||{bytes:0,refs:0,entries:0},rendererReleased:false,fixtureAllowed:false});
 })(window);
