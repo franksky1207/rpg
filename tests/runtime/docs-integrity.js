@@ -38,6 +38,7 @@ assert(!fs.existsSync("LEVEL100_EXPANSION.md")&&!fs.existsSync("PROJECT_HANDOFF_
 
 console.log("Documentation Integrity OK");
 console.log("README / HANDOFF / PENDING / VIP supplement / docs/archive / asset policy are synchronized with the current main baseline.");
-for(const p of ["PROJECT_HANDOFF.md","PROJECT_PENDING_STATUS.md"]){const s=read(p);assert(s.includes("integrate/postrelease-optimization-20261025")&&s.includes("第4批")&&s.includes("第5批")&&s.includes("第6批"),p+"必須區分整合成果與未開工批次");}
+for(const p of ["PROJECT_HANDOFF.md","PROJECT_PENDING_STATUS.md"]){const s=read(p);assert(s.includes("PR #101")&&s.includes("PR #102")&&s.includes("PR #103")&&s.includes("第4批")&&s.includes("第5批")&&s.includes("第6批"),p+"必須標示最新已完成批次與現役狀態");
+assert(!s.includes("尚待使用者另行授權最終整合 PR")&&!s.includes("第6批文件封箱以本整合分支為準"),p+"不得保留已合併工作為待發布狀態");}
 assert(historical.includes("c0ec18d686d7111b2e5a7fa380c94653a2b8a2e4"),"歷史來源必須可從原SHA追溯");
 assert(assets.includes("32張WebP")&&assets.includes("Manifest SHA")&&assets.includes("退役"),"素材規範必須保護正式WebP及SHA並記錄來源退役");
