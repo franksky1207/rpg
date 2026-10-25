@@ -159,7 +159,7 @@ export async function mount({host,signal,quality='medium'}={}){
   content.replaceChildren();
   if(previewMode==='duel')content.append(new Option('自動連續戰鬥','auto'));
   else content.append(new Option('全部六動作循環','all'));
-  for(const role of previewMode==='duel'?['player','monster']:[previewMode])clips.forEach((clip,i)=>content.append(new Option((previewMode==='duel'?(role==='player'?'玩家・':'怪物・'):'')+labels[i],role+':'+clip)));
+  for(const role of previewMode==='duel'?['player','monster']:[previewMode])clips.forEach((clip,i)=>{const option=new Option((previewMode==='duel'?(role==='player'?'玩家・':'怪物・'):'')+labels[i],role+':'+clip);option.title=clip==='attack'?'攻擊（短距離上挑斬）':labels[i];content.append(option);});
  }
  function caption(){
   const row=selectedMapping(),world=era.options[era.selectedIndex].text,projection=era.value==='era-higher'&&$('[data-source]').value==='arena';
