@@ -1,348 +1,366 @@
 name: Runtime Integrity
-
-# Batch19-4 final integrated foreground/earned-income, GM fixture and standalone renderer and Schema18 smoke acceptance.
-# exact-head runtime guard; touching this file is the supported manual retrigger path.
-# Exact-head integration acceptance: compose the later PR93 heritage cache token before the PR94 source digest.
-# browser smoke added after third-world completion audit to verify the real page runtime, not only source regex.
-# W1 target-context optimization 4 exact-head retrigger. 2026-10-09 deferred GM title regression follow-up.
 on:
   push:
-    branches: [main]
+    branches:
+    - main
     paths:
-      - '**/*.js'
-      - 'tests/runtime/foreground-combat-*.cjs'
-      - 'tests/runtime/pr48-*.cjs'
-      - 'tests/runtime/pr48-*.mjs'
-      - 'tests/runtime/pr48-approved-presentation.json'
-      - 'tests/runtime/unified-mobile-combat-viewport*.cjs'
-      - 'tests/runtime/3d-formal-snapshots-contract.cjs'
-      - 'tests/runtime/t3a-hybrid-policy.cjs'
-      - 'tests/runtime/t3b-formal-projection.cjs'
-      - 'tests/runtime/t3b-formal-session.cjs'
-      - 'tests/runtime/t3b-formal-assets.cjs'
-      - 'tests/runtime/t3b-formal-renderer.cjs'
-      - 'tests/runtime/t3b-formal-controller.cjs'
-      - 'tests/runtime/t3b-formal-owner-clock.cjs'
-      - '3d-test/t3b-formal-projection.js'
-      - '3d-test/t3b-formal-session.js'
-      - '3d-test/t3b-formal-assets.js'
-      - '3d-test/t3a-hybrid-policy.js'
-      - 'tests/runtime/combat-events-contract.cjs'
-      - 'tests/runtime/combat-events-integration.cjs'
-      - 'index.html'
-      - 'alternateuniverse.css'
-      - 'adventureuipolish.css'
-      - 'thirdworldarena.css'
-      - 'assets/**'
-      - 'docs/**'
-      - '.github/workflows/runtime-integrity.yml'
+    - '**/*.js'
+    - tests/runtime/foreground-combat-*.cjs
+    - tests/runtime/pr48-*.cjs
+    - tests/runtime/pr48-*.mjs
+    - tests/runtime/pr48-approved-presentation.json
+    - tests/runtime/unified-mobile-combat-viewport*.cjs
+    - tests/runtime/3d-formal-snapshots-contract.cjs
+    - tests/runtime/t3a-hybrid-policy.cjs
+    - tests/runtime/t3b-formal-projection.cjs
+    - tests/runtime/t3b-formal-session.cjs
+    - tests/runtime/t3b-formal-assets.cjs
+    - tests/runtime/t3b-formal-renderer.cjs
+    - tests/runtime/t3b-formal-controller.cjs
+    - tests/runtime/t3b-formal-owner-clock.cjs
+    - 3d-test/t3b-formal-projection.js
+    - 3d-test/t3b-formal-session.js
+    - 3d-test/t3b-formal-assets.js
+    - 3d-test/t3a-hybrid-policy.js
+    - tests/runtime/combat-events-contract.cjs
+    - tests/runtime/combat-events-integration.cjs
+    - index.html
+    - alternateuniverse.css
+    - adventureuipolish.css
+    - thirdworldarena.css
+    - assets/**
+    - docs/**
+    - .github/workflows/runtime-integrity.yml
+    - scripts/ci-*
+    - .github/actions/setup-ci-browser/**
   pull_request:
     paths:
-      - '3d-test/monster-*.mjs'
-      - 'monstercodex*.js'
-      - 'monstercodex*.mjs'
-      - 'gmdata.js'
-      - 'resource-cache-client.js'
-      - 'tests/runtime/foreground-combat-*.cjs'
-      - 'tests/runtime/pr48-*.cjs'
-      - 'tests/runtime/unified-mobile-combat-viewport*.cjs'
-      - 'combat-viewport-coordinator.js'
-      - 'battle-mobile-viewport.css'
-      - '.github/workflows/runtime-integrity.yml'
-  workflow_dispatch:
-
+    - tests/runtime/reincarnation-batch7-closure.js
+    - 3d-test/monster-*.mjs
+    - monstercodex*.js
+    - monstercodex*.mjs
+    - gmdata.js
+    - resource-cache-client.js
+    - tests/runtime/foreground-combat-*.cjs
+    - tests/runtime/pr48-*.cjs
+    - tests/runtime/unified-mobile-combat-viewport*.cjs
+    - combat-viewport-coordinator.js
+    - battle-mobile-viewport.css
+    - .github/workflows/runtime-integrity.yml
+    - scripts/ci-*
+    - .github/actions/setup-ci-browser/**
+  workflow_dispatch: null
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
 jobs:
   runtime-integrity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # exact historical source SHA checks require the retirement baseline
-      - name: Check whether this push is still main head
-        id: freshness
-        if: github.event_name == 'push'
-        shell: bash
-        run: |
-          sleep 5
-          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
-          if [ "$latest" = "$GITHUB_SHA" ]; then
-            echo "current=true" >> "$GITHUB_OUTPUT"
-            echo "This commit is the current main head."
-          else
-            echo "current=false" >> "$GITHUB_OUTPUT"
-            echo "Skipping stale intermediate commit $GITHUB_SHA; current main is $latest."
-          fi
-      - uses: actions/setup-node@v4
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        with:
-          node-version: '24'
-      - name: Run full JavaScript syntax and owner integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: |
-          set -o pipefail
-          node tests/runtime/batch20-approved-runtime.cjs
-          node tests/runtime/unified-mobile-combat-viewport.cjs
-          node tests/runtime/pr48-stop-contract.cjs
-          node --test tests/runtime/pr48-sprite-warmup.test.mjs
-          node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
-          node tests/runtime/cleanup-batch4-4-final-guard.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-formal-snapshots-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/combat-events-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/combat-events-integration.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-shared-loader-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3a-hybrid-policy.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3b-formal-bridge.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3b-formal-projection.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3b-formal-session.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3b-formal-assets.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3b-formal-renderer.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t3b-formal-controller.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t4-preview-retirement.cjs
-          node tests/runtime/cleanup-batch4-3-current-inventory.cjs
-          node tests/runtime/t3b-formal-owner-clock.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-runtime-early-restore-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-runtime-auth-preferences-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-data-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-attempt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-combat-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-failure-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-progression-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-batch4-3-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-old-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Verify resource cache behavior and current audio contract
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: |
-          node tests/runtime/3d-equipment-contract.cjs
-          node tests/runtime/3d-batch28-preflight.cjs
-          node tests/runtime/resource-cache-integrity.js
-          node tests/runtime/resource-cache-behavior.js
-          node tests/runtime/resource-cache-prefetch-integrity.js
-          node tests/audio-lifecycle.test.cjs
-          node tests/audio-regression.test.cjs
-          node tests/runtime/3d-asset-registry-integrity.cjs
-      - name: Run unlimited VIP integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run GM mainline HP lock integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/gm-mainline-hp-lock-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run background asset integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/asset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Run project documentation integrity
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        run: set -o pipefail; node tests/runtime/docs-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Upload runtime integrity diagnostics
-        if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
-        uses: actions/upload-artifact@v4
-        with:
-          name: runtime-integrity-report
-          path: |
-            runtime-integrity-report.txt
-            3d-player-browser-report.json
-            3d-equipment-browser-report.json
-            audio-lifecycle-browser-report.json
-            combat-events-browser-report.json
-            combat-events-owner-browser-report.json
-            /tmp/foreground-combat-*.json
-            /tmp/pr48-viewport-browser.json
-            /tmp/pr48-live-combat.json
-            /tmp/pr48-mode-matrix.json
-            /tmp/t3b-formal-renderer-browser.json
-            /tmp/batch28-consolidated
-          if-no-files-found: ignore
-          retention-days: 1
-  runtime-browser-regression:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - name: Run full JavaScript syntax and owner integrity
+      run: |
+        set -o pipefail
+        node tests/runtime/batch20-approved-runtime.cjs
+        node tests/runtime/unified-mobile-combat-viewport.cjs
+        node tests/runtime/pr48-stop-contract.cjs
+        node --test tests/runtime/pr48-sprite-warmup.test.mjs
+        node tests/runtime/js-integrity.js 2>&1 | tee runtime-integrity-report.txt
+        node tests/runtime/cleanup-batch4-4-final-guard.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/3d-formal-snapshots-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/combat-events-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/combat-events-integration.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/3d-shared-loader-contract.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3a-hybrid-policy.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3b-formal-bridge.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3b-formal-projection.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3b-formal-session.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3b-formal-assets.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3b-formal-renderer.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t3b-formal-controller.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/t4-preview-retirement.cjs
+        node tests/runtime/cleanup-batch4-3-current-inventory.cjs
+        node tests/runtime/t3b-formal-owner-clock.cjs 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/resource-manifest-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/save-global-writers.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/newstate-save-owner-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/gm-runtime-early-restore-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/gm-runtime-auth-preferences-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-data-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-attempt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-combat-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-failure-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-progression-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-batch4-3-regression.js 2>&1 | tee -a runtime-integrity-report.txt
+        node tests/runtime/alternate-universe-old-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+    - name: Verify resource cache behavior and current audio contract
+      run: |
+        node tests/runtime/3d-equipment-contract.cjs
+        node tests/runtime/3d-batch28-preflight.cjs
+        node tests/runtime/resource-cache-integrity.js
+        node tests/runtime/resource-cache-behavior.js
+        node tests/runtime/resource-cache-prefetch-integrity.js
+        node tests/audio-lifecycle.test.cjs
+        node tests/audio-regression.test.cjs
+        node tests/runtime/3d-asset-registry-integrity.cjs
+    - name: Run unlimited VIP integrity
+      run: set -o pipefail; node tests/runtime/vip-unbounded-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+    - name: Run GM mainline HP lock integrity
+      run: set -o pipefail; node tests/runtime/gm-mainline-hp-lock-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+    - name: Run background asset integrity
+      run: set -o pipefail; node tests/runtime/asset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+    - name: Run project documentation integrity
+      run: set -o pipefail; node tests/runtime/docs-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+    - name: Install Node-only validation dependency
+      run: npm install --no-save gltf-validator@2.0.0-dev.3.10
+    - name: Run runtime-node-regression with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/ci-run-suite.cjs runtime-node-regression
+    - name: Upload runtime integrity diagnostics
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-integrity-report-${{ github.run_attempt }}
+        path: |
+          runtime-integrity-report.txt
+          ci-suite-*.json
+          3d-player-browser-report.json
+          3d-equipment-browser-report.json
+          audio-lifecycle-browser-report.json
+          combat-events-browser-report.json
+          combat-events-owner-browser-report.json
+          /tmp/foreground-combat-*.json
+          /tmp/pr48-viewport-browser.json
+          /tmp/pr48-live-combat.json
+          /tmp/pr48-mode-matrix.json
+          /tmp/t3b-formal-renderer-browser.json
+          /tmp/batch28-consolidated
+        if-no-files-found: ignore
+        retention-days: 1
+      if: always()
+  runtime-r1:
+    name: R1 — Core and saves
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Check whether this push is still main head
-        id: freshness
-        if: github.event_name == 'push'
-        shell: bash
-        run: |
-          sleep 5
-          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
-          if [ "$latest" = "$GITHUB_SHA" ]; then
-            echo "current=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "current=false" >> "$GITHUB_OUTPUT"
-            echo "Skipping stale intermediate commit $GITHUB_SHA; current main is $latest."
-          fi
-      - uses: actions/setup-node@v4
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        with:
-          node-version: '24'
-      - name: Restore Playwright browser cache
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-ubuntu-1.55.0-chromium-webkit-v1
-      - name: Install Playwright Node dependencies
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          start=$SECONDS
-          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
-          echo "Node dependency install seconds: $((SECONDS-start))"
-      - name: Install Chromium and WebKit
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          start=$SECONDS
-          npx playwright install --with-deps chromium webkit
-          echo "Playwright browser/dependency install seconds: $((SECONDS-start))"
-      - name: Run parallel browser runtime and reincarnation regression
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-          for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
-            sleep 0.25
-          done
-          node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-ui-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-combat-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-continuous-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/first-world-target-context-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-rerun-entry-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-rerun-world1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-rerun-world2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-rerun-world3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/thirdworld-rerun-settlement-stage-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-rerun-batch5-closure.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-rerun-batch5-e2e-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-overlevel-batch6-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/offline-sample-provenance-opt4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/player-batch-upgrades-batch6-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-dungeon-access-batch6-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-batch6-closure.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-save-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/save-level-migration-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/save-schema17-compatibility-matrix.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/story/reincarnation-three-era-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/recent-optimization-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/calamity-terminal-dynamic-opt-batch2.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/calamity-shared-ui-policy-opt-batch3.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-normalization-opt-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/breakthrough-core-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/breakthrough-final-damage-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-breakthrough-management-batch7-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-character-breakthrough-batch7-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-alternate-universe-management-batch7-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-alternate-universe-benchmark-batch7-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/alternate-universe-title-batch4-closure.js 2>&1 | tee -a runtime-integrity-report.txt
-          if ! node tests/runtime/gm-formal-writer-convergence-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt; then
-            echo 'GM browser navigation interrupted first attempt; retrying once in a fresh browser.' | tee -a runtime-integrity-report.txt
-            node tests/runtime/gm-formal-writer-convergence-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          fi
-          node tests/runtime/reincarnation-batch7-closure.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/batch7-post-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/batch7-post-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/batch7-post-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-reset-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-permanent-gear-carryover-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/equipment-world-semantics-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-transaction-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-ui-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-opt-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-opt-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/reincarnation-opt-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/special-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/newstate-browser-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/save-load-pipeline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Run R1 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs R1
+    - name: Upload runtime browser regression diagnostics
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-R1-${{ github.run_attempt }}
+        path: |-
+          runtime-integrity-report.txt
+          3d-player-browser-report.json
+          3d-equipment-browser-report.json
+          audio-lifecycle-browser-report.json
+          combat-events-browser-report.json
+          combat-events-owner-browser-report.json
+          /tmp/foreground-combat-*.json
+          /tmp/pr48-viewport-browser.json
+          /tmp/pr48-live-combat.json
+          /tmp/pr48-mode-matrix.json
+          /tmp/t3b-formal-renderer-browser.json
+          /tmp/batch28-consolidated
 
-      - name: Run real browser runtime smoke
-        if: github.event_name != 'push' || steps.freshness.outputs.current == 'true'
-        shell: bash
-        run: |
-          set -o pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/rpg-http.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-          for i in {1..20}; do
-            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
-            sleep 0.25
-          done
-          node tests/runtime/unified-mobile-combat-viewport-browser.cjs
-          if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then
-            echo 'Viewport mode browser navigation interrupted first attempt; retrying once.'
-            node tests/runtime/pr48-mode-matrix-browser.cjs
-          fi
-          node tests/runtime/pr48-live-combat-browser.cjs
-          node tests/runtime/foreground-combat-modes-browser.cjs
-          node tests/runtime/foreground-combat-checkpoints-browser.cjs
-          node tests/runtime/foreground-combat-recovery-browser.cjs
-          node tests/runtime/t3b-formal-renderer-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/combat-events-browser.js
-          node tests/runtime/combat-events-owner-browser.js
-          node tests/runtime/cross-era-background-browser.js
-          BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js
-          node tests/runtime/thirdworld-background-browser.js
-          BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js
-          W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js
-          node tests/runtime/browser-smoke.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/batch20-save-guide-browser.cjs
-          node tests/runtime/gm-battle-simulation-browser.js
-          node tests/runtime/gm-atlas-review-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-3d-test-center-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/t4-preview-retirement-browser.js
-          node tests/equipment-formal/browser.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/equipment-gm/browser.cjs 2>&1 | tee -a runtime-integrity-report.txt 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-gm-loader-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-mode-browser-regression.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-glb-validation.cjs 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/3d-equipment-assets-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          BATCH28_BASE_URL=http://127.0.0.1:4173/ node tests/runtime/batch28-consolidated-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/startup-readiness-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-startup-preload-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/gm-first-render-browser.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/code-cleanup-batch7-lazy-loading.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/code-cleanup-batch8-legacy-boundary.js 2>&1 | tee -a runtime-integrity-report.txt
-          node tests/runtime/post-reincarnation-cleanup-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt
-      - name: Upload runtime browser regression diagnostics
-        if: always() && (github.event_name != 'push' || steps.freshness.outputs.current == 'true')
-        uses: actions/upload-artifact@v4
-        with:
-          name: runtime-browser-regression
-          path: |
-            runtime-integrity-report.txt
-            3d-player-browser-report.json
-            3d-equipment-browser-report.json
-            audio-lifecycle-browser-report.json
-            combat-events-browser-report.json
-            combat-events-owner-browser-report.json
-            /tmp/foreground-combat-*.json
-            /tmp/pr48-viewport-browser.json
-            /tmp/pr48-live-combat.json
-            /tmp/pr48-mode-matrix.json
-            /tmp/t3b-formal-renderer-browser.json
-            /tmp/batch28-consolidated
-          if-no-files-found: ignore
-          retention-days: 1
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 1
+  runtime-r2:
+    name: R2 — Combat and eras
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium webkit
+    - name: Run R2 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs R2
+    - name: Upload runtime browser regression diagnostics
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-R2-${{ github.run_attempt }}
+        path: |-
+          runtime-integrity-report.txt
+          3d-player-browser-report.json
+          3d-equipment-browser-report.json
+          audio-lifecycle-browser-report.json
+          combat-events-browser-report.json
+          combat-events-owner-browser-report.json
+          /tmp/foreground-combat-*.json
+          /tmp/pr48-viewport-browser.json
+          /tmp/pr48-live-combat.json
+          /tmp/pr48-mode-matrix.json
+          /tmp/t3b-formal-renderer-browser.json
+          /tmp/batch28-consolidated
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 1
+  runtime-r3:
+    name: R3 — Reincarnation and progression
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Run R3 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs R3
+    - name: Upload runtime browser regression diagnostics
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-R3-${{ github.run_attempt }}
+        path: |-
+          runtime-integrity-report.txt
+          3d-player-browser-report.json
+          3d-equipment-browser-report.json
+          audio-lifecycle-browser-report.json
+          combat-events-browser-report.json
+          combat-events-owner-browser-report.json
+          /tmp/foreground-combat-*.json
+          /tmp/pr48-viewport-browser.json
+          /tmp/pr48-live-combat.json
+          /tmp/pr48-mode-matrix.json
+          /tmp/t3b-formal-renderer-browser.json
+          /tmp/batch28-consolidated
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 1
+  runtime-r4:
+    name: R4 — Browser and resources
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Run R4 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs R4
+    - name: Upload runtime browser regression diagnostics
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-R4-${{ github.run_attempt }}
+        path: |-
+          runtime-integrity-report.txt
+          3d-player-browser-report.json
+          3d-equipment-browser-report.json
+          audio-lifecycle-browser-report.json
+          combat-events-browser-report.json
+          combat-events-owner-browser-report.json
+          /tmp/foreground-combat-*.json
+          /tmp/pr48-viewport-browser.json
+          /tmp/pr48-live-combat.json
+          /tmp/pr48-mode-matrix.json
+          /tmp/t3b-formal-renderer-browser.json
+          /tmp/batch28-consolidated
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 1
+  gate:
+    name: runtime-integrity-gate
+    needs:
+    - runtime-integrity
+    - runtime-r1
+    - runtime-r2
+    - runtime-r3
+    - runtime-r4
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+    - env:
+        NEEDS_JSON: ${{ toJSON(needs) }}
+      run: |
+        python3 - <<'PYGATE'
+        import os,json
+        jobs=json.loads(os.environ['NEEDS_JSON'])
+        for name,item in jobs.items():
+            print(name,item['result'])
+            assert item['result']=='success', f"required job {name} did not pass"
+        PYGATE
+permissions:
+  contents: read

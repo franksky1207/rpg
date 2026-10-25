@@ -15,7 +15,14 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
   // mutate the GM context revision and can invalidate the 100-run fixture.
   await page.goto(url+(url.includes('?')?'&':'?')+'production=1',{waitUntil:"domcontentloaded",timeout:60000});
   await page.waitForFunction(()=>window.CivilizationStartupCoordinator?.snapshot().status==='ready',null,{timeout:60000});
-  await page.evaluate(()=>ensureCivilizationScriptGroup('gm'));
+  // Startup ready covers critical owners; story is loaded asynchronously after
+  // DOMContentLoaded. Complete the real story group before replacing global state
+  // so its initialization cannot race the strict GM read-only snapshot.
+  await page.evaluate(async()=>{
+   await ensureCivilizationScriptGroup('story');
+   await ensureCivilizationScriptGroup('gm');
+  });
+  assert.equal(await page.evaluate(()=>CivilizationScriptLoader.snapshot().groups.story.status),'ready');
   await page.waitForFunction(()=>window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION===2&&window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION===2&&window.GM_POWER_BENCHMARK_MODE_STATE_VERSION===2&&typeof window.applyReincarnationResetState==="function"&&typeof window.grantBreakthroughMilestonesForLevelCrossing==="function",{timeout:30000});
   // Do not replace the global formal state while startup/restore is still running.
   // This remains a strict byte-equivalence test; awaiting readiness does not waive it.
@@ -57,6 +64,7 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
    const readOnlyBefore=JSON.stringify(first),auSnapshot=window.gmAlternateUniverseFormalSnapshot(first),readOnlyAfter=JSON.stringify(first);
 
    const originalState=state,originalSave=window.save,originalBreakthrough=window.gmTestBreakthroughLevelValue?.()??0;
+   let uiRunFormalDrift=[];
    let saveCalls=0,sandboxSaveCalls=0,sandboxStable=false,uiRunFormalStable=false,refreshFormalStable=false,summary0="",summary1="",summaryAfterChange="",html0="",html1="",htmlAfterChange="",benchmark=null,directBenchmark=null,session637=null,registered=[],liveSummaryAfterChange="";
    try{
     state=clone(first);
@@ -82,7 +90,7 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
     if(!uiRunFormalStable){
      const before=JSON.parse(formalBeforeUiRun),after=JSON.parse(JSON.stringify(state));
      const keys=[...new Set([...Object.keys(before),...Object.keys(after)])];
-     console.error("[GM AU formal state drift]",keys.filter(k=>JSON.stringify(before[k])!==JSON.stringify(after[k])).map(k=>({key:k,before:JSON.stringify(before[k])?.slice(0,500),after:JSON.stringify(after[k])?.slice(0,500)})));
+     uiRunFormalDrift=keys.filter(k=>JSON.stringify(before[k])!==JSON.stringify(after[k])).map(k=>({key:k,before:before[k],after:after[k]}));
     }
     html1=window.gmPowerBenchmarkHtml();summary1=window.gmPowerBenchmarkSummaryText();
     const formalBeforeRefresh=JSON.stringify(state);
@@ -100,7 +108,7 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
     versions:{auBenchmark:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_VERSION,auIntegration:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INTEGRATION_VERSION,modeState:window.GM_POWER_BENCHMARK_MODE_STATE_VERSION},
     install:window.GM_ALTERNATE_UNIVERSE_BENCHMARK_INSTALL_REPORT,modeIds:Array.from(window.GM_POWER_BENCHMARK_MODE_IDS||[]),
     firstGrant,firstBefore,firstReset,life1AfterReset,life1Grant,life1Repeat,life1Late,access,overlevel,mirrorBefore,voidBefore,life2Reset,life2AfterReset,life2Grant,life2Repeat,life2Down,
-    readOnlyStable:readOnlyBefore===readOnlyAfter,auSnapshot,sandboxSaveCalls,sandboxStable,uiRunFormalStable,refreshFormalStable,html0,summary0,session637,directBenchmark,benchmark,html1,summary1,htmlAfterChange,summaryAfterChange,liveSummaryAfterChange,registered,
+    uiRunFormalDrift,readOnlyStable:readOnlyBefore===readOnlyAfter,auSnapshot,sandboxSaveCalls,sandboxStable,uiRunFormalStable,refreshFormalStable,html0,summary0,session637,directBenchmark,benchmark,html1,summary1,htmlAfterChange,summaryAfterChange,liveSummaryAfterChange,registered,
     benchmarkResultAfterChange:window.gmAlternateUniverseBenchmarkResultSnapshot?.()||null
    };
   });
@@ -134,6 +142,7 @@ const {sdk}=require("../equipment-formal/helpers.cjs");
   assert.equal(report.sandboxStable,true,"GM test breakthrough changes must not alter formal state.");
   assert.equal(report.sandboxSaveCalls,0,"Detached AU benchmark engine and GM test breakthrough setter must not call formal save.");
   assert.equal(report.directBenchmark.formalStateStable,true);assert.equal(report.directBenchmark.completed,100);
+  if(!report.uiRunFormalStable)console.error("[GM AU formal state drift]",JSON.stringify(report.uiRunFormalDrift));
   assert.equal(report.uiRunFormalStable,true,"Using the visible AU benchmark controls must not mutate formal state.");
   assert.equal(report.refreshFormalStable,true,"Refreshing the GM test UI after a sandbox change must not mutate formal state.");
   assert.ok(report.html0.includes("異宇宙測試"),"GM integration missing: "+report.html0.slice(-1400));assert.ok(report.html0.includes("王編號")&&report.html0.includes("上一隻")&&report.html0.includes("下一隻"),"GM AU navigation missing: "+report.html0.slice(-2200));

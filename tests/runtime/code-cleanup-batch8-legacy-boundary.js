@@ -8,7 +8,7 @@ const migration=read("savemigration.js");
 const compatibility=read("compatibilityowners.js");
 const matrix=read("tests/runtime/save-schema17-compatibility-matrix.js");
 const index=read("index.html");
-const workflow=read(".github/workflows/runtime-integrity.yml");
+const workflow=require("../../scripts/ci-workflow-source.cjs")(".github/workflows/runtime-integrity.yml");
 const archiveIndex=read("docs/HISTORICAL_ENGINEERING.md");
 
 assert.ok(/const SAVE_SCHEMA_VERSION=18;/.test(migration),"Schema18 checkpoint upgrade must retain the legacy boundary");

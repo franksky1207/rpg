@@ -10,7 +10,7 @@ const rerun3=fs.readFileSync("reincarnationrerunworld3.js","utf8");
 const migration=fs.readFileSync("savemigration.js","utf8");
 const migrationRegression=fs.readFileSync("tests/runtime/save-level-migration-regression.js","utf8");
 const backupRetention=fs.readFileSync("savebackupretention.js","utf8");
-const workflow=fs.readFileSync(".github/workflows/runtime-integrity.yml","utf8");
+const workflow=require("../../scripts/ci-workflow-source.cjs")(".github/workflows/runtime-integrity.yml");
 
 assert.ok(/src="savehookcore\.js\?v=(?:20261005-code-cleanup-batch1|20261025-optimization-batch2)(?:[&"])/.test(index),"index 必須載入 canonical Save Hook Core（包含正式優化快取版本）");
 assert.ok(index.includes('src="compatibilityowners.js?v=20261005-code-cleanup-batch7&foreground=20261023-194-v2"'),"index 必須使用 Batch7 compatibility owner canonical cache token");

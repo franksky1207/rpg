@@ -1,0 +1,49 @@
+name: Versioned CI browsers
+description: Install pinned Node tools and only the requested Playwright browsers
+inputs:
+  browsers:
+    description: Space separated browser names
+    required: true
+    default: chromium
+runs:
+  using: composite
+  steps:
+  - name: Identify browser system ABI
+    id: platform
+    shell: bash
+    run: |
+      set -euo pipefail
+      image="$(. /etc/os-release; printf '%s-%s' "$ID" "$VERSION_ID")"
+      test -n "$image"
+      echo "image=$image" >> "$GITHUB_OUTPUT"
+  - name: Restore exact chromium revision cache
+    if: contains(inputs.browsers, 'chromium')
+    uses: actions/cache@v4
+    with:
+      path: |-
+        ~/.cache/ms-playwright/chromium-*
+        ~/.cache/ms-playwright/chromium_headless_shell-*
+        ~/.cache/ms-playwright/ffmpeg-*
+      key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.platform.outputs.image }}-1.55.0-chromium-v3
+  - name: Restore exact webkit revision cache
+    if: contains(inputs.browsers, 'webkit')
+    uses: actions/cache@v4
+    with:
+      path: |-
+        ~/.cache/ms-playwright/webkit-*
+        ~/.cache/ms-playwright/ffmpeg-*
+      key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.platform.outputs.image }}-1.55.0-webkit-v3
+  - name: Install pinned browser tools
+    shell: bash
+    run: npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+  - name: Ensure browsers and system libraries
+    shell: bash
+    env:
+      CI_BROWSERS: ${{ inputs.browsers }}
+    run: |
+      set -euo pipefail
+      for browser in $CI_BROWSERS; do
+        case "$browser" in chromium|webkit) ;; *) echo "Unsupported browser: $browser"; exit 1;; esac
+      done
+      # Playwright verifies its pinned revision; install-deps is required even on cache hits.
+      npx playwright install --with-deps $CI_BROWSERS
