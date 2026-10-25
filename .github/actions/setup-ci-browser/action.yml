@@ -8,11 +8,19 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Identify browser system ABI
+      id: platform
+      shell: bash
+      run: |
+        set -euo pipefail
+        image="$(. /etc/os-release; printf '%s-%s' "$ID" "$VERSION_ID")"
+        test -n "$image"
+        echo "image=$image" >> "$GITHUB_OUTPUT"
     - name: Restore exact browser revision cache
       uses: actions/cache@v4
       with:
         path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ env.ImageOS }}-1.55.0-${{ inputs.browsers }}-v2
+        key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.platform.outputs.image }}-1.55.0-${{ inputs.browsers }}-v2
     - name: Install pinned browser tools
       shell: bash
       run: npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10

@@ -15,7 +15,7 @@
 - 三個原本直接搜尋 workflow 字串的歷史守衛改讀取實際被 workflow 呼叫的 suite；所有原斷言保留。新增對照完整性檢查；分類 job 會執行。
 - Functional gate 比對分類輸出：只有 domain=false 才接受 skipped；domain=true 的所有子 job 都必須 success。Runtime/Formal gate 拒絕 failure、cancelled 及 skipped。移除 Runtime 的 stale-head 早退，避免 required job 未執行卻顯示 success。
 - PR concurrency 以 workflow + event + PR number 分組，只有 PR 取消舊提交。Pages main 保持獨立固定 concurrency、`cancel-in-progress: false`、main 限制、Pages/OIDC 權限、受保護 environment 與 deploy needs；部署失敗仍直接回報失敗。
-- Playwright 1.55.0 瀏覽器快取以 OS、架構、runner image、版本、瀏覽器集合為 key，不設跨版本 fallback。每次仍執行 Playwright 安裝器確認版本及系統依賴。Node modules 不快取，不重用其他 SHA 的測試結果或候選內容。
+- Playwright 1.55.0 瀏覽器快取以 OS、架構、實際 OS 發行版/版本（由 /etc/os-release 取得，避免 expression env.ImageOS 空值）、版本、瀏覽器集合為 key，不設跨版本 fallback。每次仍執行 Playwright 安裝器確認版本及系統依賴。Node modules 不快取，不重用其他 SHA 的測試結果或候選內容。
 - Pages 僅刪除單獨 `publish-asset-audit.cjs` 的同來源掃描：它與 builder 都呼叫 `publish-assets.cjs` 的 `policy.inspect(root)`，同樣對 missing dependencies 失敗；builder 額外掃描實際輸出、重算 fingerprint 與報告。保留獨立 publish-policy regression、32 背景/17 音訊/5 音效類別、尺寸、所有瀏覽器與 GM sandbox 驗收。沒有增加跨 workflow 成功結果替代。
 - 原本各 workflow 已只有一次候選 build；拆分後選擇各 runner 本地建置，不傳大型 artifact。baseline 建置/資產檢查約數秒，候選傳輸及完整性核對開銷較高。Formal 各組仍 stage SHA-verified GM B 支援。
 - GM 約兩分鐘，維持單 job；使用共用 browser cache。與 Formal 重疊的 GM publication、runtime 與 browser 驗收保留，因兩 workflow 獨立觸發，沒有同 SHA/候選內容成功證明，不安全刪除。這是有意保留的重複。
