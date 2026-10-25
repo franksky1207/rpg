@@ -11,7 +11,7 @@
 
 - M1/M2/M3/M4、R1/R2/R3/R4、F1/F2/F3 共 11 個功能分組，各 runner 隔離。M3 另以 Chromium/WebKit 兩個矩陣分片獨立驗收；逐命令量測發現 WebKit 單支約428秒、Chromium約176秒，串行是最新關鍵路徑，因此將它們重疊而不增加測試次數。M4 以六個矩陣項目分開跑四批完整身份、正式動畫及故障恢復；每一原命令仍只執行一次。baseline 中四批全身份掃描約 17 分鐘，繼續串行會成為關鍵路徑，因此增加有限的 setup 開銷換取可獨立重跑。
 - Runtime 快速核心保留；八支純 Node 回歸移出瀏覽器 job，僅安裝 gltf-validator。實際瀏覽器測試按內容分組；WebKit 只裝於 M3-WebKit 與 R2；M3 Chromium 不安裝 WebKit。既有兩處一次性瀏覽器重試保留，不新增重試或 timeout。
-- `ci-suites.json` 是可執行清單；`ci-command-map.json` 是原命令逐項對照。`ci-run-suite.cjs` 對每個命令用 bash `-e -o pipefail`，保留 env、管線、參數及退出碼，產出 SHA、秒數、exit code 的 JSON 與 Actions summary。失敗立即失敗，不以報告生成掩蓋退出碼。
+- `ci-suites.json` 是可執行清單；`ci-command-map.json` 是原命令逐項對照。`ci-run-suite.cjs` 對每個命令用 bash `-e -o pipefail`，保留 env、管線、參數及退出碼，產出 SHA、秒數、exit code 的 JSON 與 Actions summary。失敗立即失敗，不以報告生成掩蓋退出碼。所有測試診斷 artifact（包含快速核心、GM、Pages preflight）以 run_attempt 區分，避免獨立重跑因同名 artifact 409 失敗，並保留前次失敗證據。
 - 三個原本直接搜尋 workflow 字串的歷史守衛改讀取實際被 workflow 呼叫的 suite；所有原斷言保留。新增對照完整性檢查；分類 job 會執行。
 - Functional gate 比對分類輸出：只有 domain=false 才接受 skipped；domain=true 的所有子 job 都必須 success。Runtime/Formal gate 拒絕 failure、cancelled 及 skipped。移除 Runtime 的 stale-head 早退，避免 required job 未執行卻顯示 success。
 - PR concurrency 以 workflow + event + PR number 分組，只有 PR 取消舊提交。Pages main 保持獨立固定 concurrency、`cancel-in-progress: false`、main 限制、Pages/OIDC 權限、受保護 environment 與 deploy needs；部署失敗仍直接回報失敗。

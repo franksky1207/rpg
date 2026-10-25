@@ -127,7 +127,7 @@ jobs:
     - name: Upload runtime integrity diagnostics
       uses: actions/upload-artifact@v4
       with:
-        name: runtime-integrity-report
+        name: runtime-integrity-report-${{ github.run_attempt }}
         path: |
           runtime-integrity-report.txt
           ci-suite-*.json

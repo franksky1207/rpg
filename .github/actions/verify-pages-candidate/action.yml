@@ -98,7 +98,7 @@ runs:
     if: always()
     uses: actions/upload-artifact@v4
     with:
-      name: ${{ inputs.audit-name }}
+      name: ${{ inputs.audit-name }}-${{ github.run_attempt }}
       path: |
         publish-stage3-report.json
         publish-stage4-browser-report.json
