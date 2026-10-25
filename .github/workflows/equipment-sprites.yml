@@ -44,13 +44,12 @@ jobs:
           python3 scripts/equipment-sprites.py validate
           python3 -m unittest discover -s tests/equipment-sprites -v
           node --test tests/equipment-sprites/runtime.test.mjs
-      - name: Install isolated browser
-        run: |
-          npm install --prefix /tmp/equipment-sprite-test --no-save playwright@1.55.0
-          /tmp/equipment-sprite-test/node_modules/.bin/playwright install --with-deps chromium
+      - name: Install pinned Chromium via shared setup
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
       - name: Raster real characters, animations and lifecycle
         env:
-          NODE_PATH: /tmp/equipment-sprite-test/node_modules
           CHROMIUM_PATH: ''
         run: node tests/equipment-sprites/browser.cjs
       - name: Verify development stays outside publication and generator is repeatable

@@ -399,12 +399,14 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
     - run: |
         node tests/runtime/gm-animation-center-terminology.cjs
         node tests/runtime/3d-player-snapshot-contract.js
         node tests/runtime/gm-runtime-early-restore-integrity.js
-        npm install --no-save playwright@1.55.0
-        npx playwright install --with-deps chromium
+        # Chromium was installed by the shared setup action.
         python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-functional-http.log 2>&1 &
         sleep 2
         node tests/runtime/batch19-2-gm-center-browser.cjs
@@ -443,11 +445,13 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
     - run: |
         node tests/runtime/batch2-background-sleeper-lifecycle.cjs
         node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
-        npm install --no-save playwright@1.55.0
-        npx playwright install --with-deps chromium
+        # Chromium was installed by the shared setup action.
         python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/background-functional-http.log 2>&1 &
         sleep 2
         node tests/runtime/special-fast-catchup-integrity.js
