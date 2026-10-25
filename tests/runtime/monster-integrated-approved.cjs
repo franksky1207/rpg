@@ -2,7 +2,7 @@
 // tests still exercise LIVE code; this projection is only for historical seals.
 const fs=require('fs'),cp=require('child_process'),crypto=require('crypto'),assert=require('node:assert/strict');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
-function original(p){const record=require('./monster-integrated-approved.json'),entry=record.files[p];let bytes=fs.readFileSync(p);
+function original(p){const record=require('./monster-integrated-approved.json'),entry=record.files[p];let bytes=require('./postrelease-ui-copy-approval.cjs').historicalBytes(p,fs.readFileSync(p));
  const batch3=require('./optimization-batch3-approved.json'),performanceEdit=batch3.files[p];
  if(performanceEdit){assert.equal(sha(bytes),performanceEdit.after,'unregistered Batch3 cache edit: '+p);const old=cp.execFileSync('git',['show',batch3.baseline+':'+p]);assert.equal(sha(old),performanceEdit.before,'Batch3 source baseline: '+p);bytes=old;}
  // Only the four Batch2 cache tokens are projected before the unchanged exact HTML seal.
