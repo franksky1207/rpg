@@ -257,3 +257,30 @@ body .center-maximized #prototypeHost:has(.gm-suit){height:auto;overflow:visible
 .gm-suit[data-view="monster"] canvas[data-suit]{visibility:hidden}
 
 .is-embedded .shell>header,.center-workspace:has(.gm-suit) .center-description{display:none}
+
+/* GM selection → viewport preview. The preview owns no settings layout. */
+body .gm-suit{padding:16px;}
+body .gm-suit [hidden]{display:none!important}
+body .gm-suit>[data-enter]{display:block;margin:20px auto 8px;min-height:48px;padding:10px 28px}
+body .gm-suit>[data-advanced]{margin-top:16px}
+body .gm-suit[data-view="player"]>[data-advanced]{display:none}
+body .gm-preview-panel{position:fixed;inset:0;z-index:10000;height:100dvh;box-sizing:border-box;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:radial-gradient(ellipse at 50% 45%,#202a35,#090d14 80%);overflow:hidden}
+body .gm-preview-top{display:flex;gap:8px;align-items:center;padding:3px 8px;min-width:0;border-bottom:1px solid #4b4639}
+body .gm-preview-top button{flex:none;min-height:36px;font-size:12px;padding:5px 8px}
+body .gm-preview-top [data-caption]{min-width:0;font-size:11px;line-height:1.4;overflow-wrap:anywhere;color:#e4d4ad}
+body .gm-preview-stage{position:relative;min-height:0;min-width:0;overflow:hidden}
+body .gm-preview-stage .gm-suit-preview{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;overflow:hidden!important;border:0;background:none}
+body .gm-preview-controls{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 8px;border-top:1px solid #4b4639;min-width:0}
+body .gm-preview-controls select{min-width:0;height:40px;font-size:13px;padding:4px}
+body .gm-preview-controls [data-content]{flex:1;max-width:280px;width:0}
+body .gm-preview-controls [data-speed]{width:66px}
+body .gm-preview-controls button{min-height:40px;min-width:54px;padding:5px 8px;font-size:13px}
+body.gm-preview-open{overflow:hidden!important}
+body.gm-preview-open .shell>header,body.gm-preview-open .shell>footer{display:none}
+body .stage:has(.gm-suit) .center-maximize-button{display:none}
+body .gm-suit.is-previewing>:not(.gm-preview-panel){display:none!important}
+
+/* Spend the tiny information row on the official identity; secondary provenance yields first. */
+body .gm-preview-top [data-caption]{display:flex;flex:1;align-items:center;gap:3px}
+body .gm-preview-top [data-origin]{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:inherit;color:#adadab}
+body .gm-preview-top [data-formal-name]{flex:0 0 auto;max-width:calc(100% - 3px);font:inherit;white-space:normal;overflow-wrap:anywhere}

@@ -1,0 +1,19 @@
+'use strict';
+const {chromium}=require('playwright'),assert=require('node:assert/strict');
+const {sdk,finishIntro}=require('../equipment-formal/helpers.cjs');
+(async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.CHROMIUM_PATH,args:['--no-sandbox']});try{
+ const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+ await page.route('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',r=>r.fulfill({contentType:'text/javascript',body:sdk}));
+ await page.addInitScript(ts=>{const RealDate=Date;window.Date=class extends RealDate{constructor(...args){super(...(args.length?args:[ts]));}static now(){return ts;}};},Date.now());
+ await page.goto(process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html');await page.evaluate(async()=>{await ensureCivilizationScriptGroup('story');await ensureCivilizationScriptGroup('gm');});await finishIntro(page);
+ await page.evaluate(()=>{state.gm=true;openGm3DPrototype();});const frame=page.frameLocator('#gm3dPrototypeOverlay iframe');await frame.locator('[data-enter]:enabled').waitFor();
+ const truth=await page.evaluate(()=>({state:JSON.stringify(state),storage:JSON.stringify(localStorage)}));
+ await frame.locator('[data-preview-mode]').selectOption('duel');await frame.locator('[data-enter]').click();await frame.locator('.gm-suit-preview').waitFor({state:'visible'});await page.waitForTimeout(1500);
+ assert.equal(await page.locator('#gm3dPrototypeOverlay>div').isVisible(),false,'GM parent header yields entire viewport');
+ const stage=await frame.locator('.gm-suit-preview').boundingBox();assert.ok(stage.height>700&&stage.width>=389);
+ await frame.locator('[data-back]').click();assert.equal(await page.locator('#gm3dPrototypeOverlay>div').isVisible(),true);
+ await frame.locator('[data-enter]').click();await frame.locator('.gm-suit-preview').waitFor({state:'visible'});await frame.locator('body').press('Escape');await frame.locator('[data-enter]').waitFor({state:'visible'});
+ assert.equal(await page.locator('#gm3dPrototypeOverlay').count(),1,'Escape returns to settings first');
+ assert.deepEqual(await page.evaluate(()=>({state:JSON.stringify(state),storage:JSON.stringify(localStorage)})),truth,'GM animations never write game state or saves');
+ await page.evaluate(()=>closeGm3DPrototype());assert.equal(await page.locator('#gm3dPrototypeOverlay').count(),0);assert.deepEqual(errors,[]);console.log('PASS real GM bridge: viewport, Escape, settings, formal state/storage isolation');
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});
