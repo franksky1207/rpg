@@ -5,7 +5,7 @@
 - 正式 main 基準：`ee1978ea2d9c60cad53a112250b1f5f214fc33ea`。
 - 唯一整合分支：`integrate/postrelease-optimization-20261025`；總規劃 [Issue #100](https://github.com/franksky1207/rpg/issues/100)。
 - 全面優化第2批：已完成核心穩定與存檔修正；第3批：已完成快取／預載優化。報告與證據保留於 `docs/POSTRELEASE_OPTIMIZATION_BATCH2_2026-10-25.md`、`docs/POSTRELEASE_OPTIMIZATION_BATCH3_2026-10-25.md` 與各自 evidence 目錄。
-- 第4批：歷史資料清理，詳見 `docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md`。未開 PR、未合併 main、未執行 Actions、未發布 Pages。第5批未開工；第6批正式文件封箱與集中發布驗收仍待授權。
+- 第4批：歷史資料清理，詳見 `docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md`。未開 PR、未合併 main、未執行 Actions、未發布 Pages。第5批玩家／GM 文字與錯誤提示已完成整合分支施工及隔離驗收（Issue #100）；第6批工程／正式文件整理已施工，正式集中 Actions／Pages 發布仍待授權。
 
 ## 正式契約與 owner
 
@@ -24,4 +24,4 @@
 
 正式 Pages 仍由 `.github/workflows/publish-optimized-pages.yml` 在 main 發布；整合分支 push 不匹配任何既有 Actions push 分支。發布前必須另行完成最終集中驗收。本機 Chromium 結果不代表真 iPhone、正式登入／雲端或 Pages 已驗收。
 
-歷史取消規劃與已完成報告已濃縮至 `docs/HISTORICAL_ENGINEERING.md`；不得把歷史施工狀態當成目前待辦。完整正式文件封箱留第6批。
+歷史取消規劃與已完成報告已濃縮至 `docs/HISTORICAL_ENGINEERING.md`；不得把歷史施工狀態當成目前待辦。第6批文件封箱以本整合分支為準；完成後尚須正式整合 PR、Actions 與 Pages 發布驗收。
