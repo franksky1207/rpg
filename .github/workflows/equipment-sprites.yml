@@ -44,10 +44,9 @@ jobs:
           python3 scripts/equipment-sprites.py validate
           python3 -m unittest discover -s tests/equipment-sprites -v
           node --test tests/equipment-sprites/runtime.test.mjs
-      - name: Install pinned Chromium via shared setup
-    - uses: ./.github/actions/setup-ci-browser
-      with:
-        browsers: chromium
+      - uses: ./.github/actions/setup-ci-browser
+        with:
+          browsers: chromium
       - name: Raster real characters, animations and lifecycle
         env:
           CHROMIUM_PATH: ''

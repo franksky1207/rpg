@@ -25,9 +25,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-    - uses: ./.github/actions/setup-ci-browser
-      with:
-        browsers: chromium
+      - uses: ./.github/actions/setup-ci-browser
+        with:
+          browsers: chromium
       - name: Verify readonly formal player snapshot
         run: node tests/runtime/3d-player-snapshot-contract.js
       - name: Check live GM test center navigation and fixtures

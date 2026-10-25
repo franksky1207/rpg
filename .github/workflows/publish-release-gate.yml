@@ -34,10 +34,9 @@ jobs:
           node tests/runtime/3d-asset-registry-integrity.cjs
           node tests/runtime/3d-equipment-contract.cjs
           node tests/runtime/3d-batch28-preflight.cjs
-      - name: Install Chromium for isolated browser tests
-    - uses: ./.github/actions/setup-ci-browser
-      with:
-        browsers: chromium
+      - uses: ./.github/actions/setup-ci-browser
+        with:
+          browsers: chromium
       - name: Smoke the isolated website (never deploy to Pages)
         shell: bash
         run: |
