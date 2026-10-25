@@ -196,17 +196,23 @@ jobs:
         retention-days: 1
   runtime-r2:
     name: R2 — Combat and eras
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-noble
+      options: --shm-size=1g
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    - name: Trust checked-out workspace inside container
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
     - uses: actions/setup-node@v4
       with:
         node-version: '24'
     - uses: ./.github/actions/setup-ci-browser
       with:
         browsers: chromium webkit
+        preinstalled: 'true'
     - name: Run R2 with command timings
       shell: bash
       run: |
@@ -219,7 +225,7 @@ jobs:
           sleep 0.25
         done
         curl -fsS http://127.0.0.1:4173/index.html >/dev/null
-        node scripts/ci-run-suite.cjs R2
+        node scripts/ci-run-suite.cjs R2-container
     - name: Upload runtime browser regression diagnostics
       if: always()
       uses: actions/upload-artifact@v4
@@ -241,6 +247,43 @@ jobs:
 
           ci-suite-*.json
           /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 1
+  runtime-r2-crash:
+    name: R2 — Chromium crash recovery (native)
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Verify genuine Chromium crash recovery outside container
+      shell: bash
+      run: |
+        set -euo pipefail
+        python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs R2-crash
+    - name: Upload crash recovery diagnostic
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-R2-crash-${{ github.run_attempt }}
+        path: |
+          ci-suite-R2-crash.json
+          /tmp/ci-http.log
+          /tmp/foreground-combat-*.json
         if-no-files-found: ignore
         retention-days: 1
   runtime-r3:
@@ -347,6 +390,7 @@ jobs:
     - runtime-integrity
     - runtime-r1
     - runtime-r2
+    - runtime-r2-crash
     - runtime-r3
     - runtime-r4
     if: always()

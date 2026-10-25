@@ -41,35 +41,6 @@
   "M4-recovery": [
     "node tests/runtime/batch18-monster-recovery-browser.cjs"
   ],
-  "R2": [
-    "node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-ui-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-combat-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-continuous-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/first-world-target-context-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/thirdworld-rerun-settlement-stage-regression.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/special-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
-    "node tests/runtime/unified-mobile-combat-viewport-browser.cjs",
-    "if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then\necho 'Viewport mode browser navigation interrupted first attempt; retrying once.'\nnode tests/runtime/pr48-mode-matrix-browser.cjs\nfi",
-    "node tests/runtime/pr48-live-combat-browser.cjs",
-    "node tests/runtime/foreground-combat-modes-browser.cjs",
-    "node tests/runtime/foreground-combat-checkpoints-browser.cjs",
-    "node tests/runtime/foreground-combat-recovery-browser.cjs",
-    "node tests/runtime/combat-events-browser.js",
-    "node tests/runtime/combat-events-owner-browser.js",
-    "node tests/runtime/cross-era-background-browser.js",
-    "BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js",
-    "node tests/runtime/thirdworld-background-browser.js",
-    "BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js",
-    "W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js"
-  ],
   "R3": [
     "node tests/runtime/reincarnation-rerun-entry-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
     "node tests/runtime/reincarnation-rerun-world1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
@@ -189,5 +160,36 @@
   ],
   "M3-webkit": [
     "APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs"
+  ],
+  "R2-container": [
+    "node tests/runtime/galaxy-review-combat-browser.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-baseline-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-owner-batch1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-ui-batch2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-combat-batch3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-continuous-batch4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-offline-rerun-review-batch5-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-final-batch6-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-optimization-1-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-optimization-2-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-optimization-3-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/first-world-target-context-optimization-4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/thirdworld-rerun-settlement-stage-regression.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/special-fast-catchup-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
+    "node tests/runtime/unified-mobile-combat-viewport-browser.cjs",
+    "if ! node tests/runtime/pr48-mode-matrix-browser.cjs; then\necho 'Viewport mode browser navigation interrupted first attempt; retrying once.'\nnode tests/runtime/pr48-mode-matrix-browser.cjs\nfi",
+    "node tests/runtime/pr48-live-combat-browser.cjs",
+    "node tests/runtime/foreground-combat-modes-browser.cjs",
+    "node tests/runtime/foreground-combat-checkpoints-browser.cjs",
+    "node tests/runtime/combat-events-browser.js",
+    "node tests/runtime/combat-events-owner-browser.js",
+    "node tests/runtime/cross-era-background-browser.js",
+    "BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js",
+    "node tests/runtime/thirdworld-background-browser.js",
+    "BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js",
+    "W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js"
+  ],
+  "R2-crash": [
+    "node tests/runtime/foreground-combat-recovery-browser.cjs"
   ]
 }

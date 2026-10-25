@@ -34,10 +34,9 @@ jobs:
           node tests/runtime/3d-asset-registry-integrity.cjs
           node tests/runtime/3d-equipment-contract.cjs
           node tests/runtime/3d-batch28-preflight.cjs
-      - name: Install Chromium for isolated browser tests
-        run: |
-          npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
-          npx playwright install --with-deps chromium
+      - uses: ./.github/actions/setup-ci-browser
+        with:
+          browsers: chromium
       - name: Smoke the isolated website (never deploy to Pages)
         shell: bash
         run: |
