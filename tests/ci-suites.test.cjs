@@ -12,7 +12,7 @@ test('all inventoried commands have exactly one suite and unchanged shell semant
 });
 test('historical runtime coverage guards resolve invoked suites only', () => {
   const source = require('../scripts/ci-workflow-source.cjs')('.github/workflows/runtime-integrity.yml');
-  for (const k of ['R1', 'R2', 'R3', 'R4', 'runtime-node-regression']) {
+  for (const k of ['R1', 'R2-container', 'R2-crash', 'R3', 'R4', 'runtime-node-regression']) {
     assert.ok(source.includes(`node scripts/ci-run-suite.cjs ${k}`));
     for (const c of suites[k]) assert.ok(source.includes(c));
   }
