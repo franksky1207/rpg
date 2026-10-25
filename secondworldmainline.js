@@ -193,7 +193,7 @@
     const combat=window.runSecondWorldBossCombat(index,{startHp:state.hp,encounter,logs:showPresentation,preparePresentation:showPresentation});
     if(!showPresentation)window.CivilizationCombatEvents?.presentationSkipped?.(combat,"background-or-fast-catch-up");
     ctx.lastCombat=combat;
-    if(!combat?.ok){ctx.currentEncounter=null;ctx.stopReason="error";alert(combat?.reason||"戰鬥啟動失敗。");break;}
+    if(!combat?.ok){ctx.currentEncounter=null;ctx.stopReason="error";console.error('[文明戰線] 宇宙戰鬥啟動失敗',combat?.reason);alert('宇宙戰鬥無法啟動，請確認目前戰鬥狀態後再試。');break;}
     const catchUpPolicy=fastCatchUp?catchUpStep():null;
     if(fastCatchUp)ctx.catchUpNeedsFinalSync=true;
     if(showPresentation){
@@ -208,7 +208,7 @@
     if(combat.win){
      state.hp=Math.max(0,Math.floor(Number(combat.hp)||0));
      const settled=window.settleSecondWorldBossVictory(index);
-     if(!settled.ok){ctx.stopReason="error";alert(settled.reason||"戰鬥結算失敗。");break;}
+     if(!settled.ok){ctx.stopReason="error";console.error('[文明戰線] 宇宙戰鬥結算失敗',settled.reason);alert('宇宙戰鬥結算未完成，請確認目前進度再試。');break;}
      window.CivilizationCombatEvents?.settlement?.(combat,"secondworldmainline.js",{committed:true,xp:settled.xp,darkMatter:settled.darkMatter,darkEnergy:settled.darkEnergy,items:settled.items});
      accumulate(ctx,settled);
      const appeared=settled.firstKill===true&&typeof window.getSecondWorldCalamityForBoss==="function"?window.getSecondWorldCalamityForBoss(index):null;
@@ -231,7 +231,7 @@
     }else{
      state.hp=0;
      const penalty=typeof window.applySecondWorldDeathPenalty==="function"?window.applySecondWorldDeathPenalty():{ok:false,reason:"死亡懲罰 owner 尚未載入。"};
-     if(!penalty.ok){ctx.stopReason="error";alert(penalty.reason||"死亡懲罰結算失敗。");break;}
+     if(!penalty.ok){ctx.stopReason="error";console.error('[文明戰線] 宇宙死亡結算失敗',penalty.reason);alert('戰鬥死亡結算未完成，請確認存檔狀態後再試。');break;}
      ctx.lastPenalty=penalty;ctx.stopReason="death";
      if(!continuous){setTimeout(()=>showDefeat(penalty,boss,combat),0);return true;}
      break;
