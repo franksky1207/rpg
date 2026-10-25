@@ -289,7 +289,6 @@
  window.resolveOfflineFarmTarget=resolveFarmTarget;
  window.normalizeOfflinePendingSettlement=normalizePending;
  window.offlineOverlevelRewardContext=offlineOverlevelRewardContext;
- window.OFFLINE_REWARD_RATE=OFFLINE_REWARD_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=4;
  window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION=1;
