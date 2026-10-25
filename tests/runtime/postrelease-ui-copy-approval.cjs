@@ -14,8 +14,13 @@ const changes={
  ['&postrelease=20261025-5"></script>','"></script>']]
 };
 function historicalBytes(p,bytes){
- const edits=changes[p];if(!edits)return bytes;
  let source=Buffer.from(bytes).toString('utf8');
+ if(p==='index.html'){
+  const marker='&postrelease=20261025-5';
+  assert.equal(source.split(marker).length-1,16,'exact batch 5 index asset URL tokens');
+  return Buffer.from(source.split(marker).join(''));
+ }
+ const edits=changes[p];if(!edits)return bytes;
  for(const [approved,prior] of edits){
   assert.equal(source.split(approved).length-1,1,'authorized postrelease edit must appear once: '+p);
   source=source.replace(approved,prior);
