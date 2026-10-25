@@ -68,11 +68,12 @@
   if(world===3)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world:3,phase};
   if(phase===2){
    if(world!==2)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase};
-   const darkMatter=secondWorldEquipmentSaleDarkMatter(item,useTest);
-   const darkEnergy=Number(item.q)===5?1:0;
+   const rawMatter=(20+2*Math.max(0,Math.floor((Math.max(500,Math.min(1000,Math.floor(Number(item.level)||500)))-500)/5)))*(QUALITY_MULTIPLIERS[Math.max(0,Math.min(5,Math.floor(Number(item.q)||0)))]||0);
+   const darkMatter=window.calculateReincarnationYield(rawMatter,{specialization:"appraisal",target:s,useTest});
+   const darkEnergy=Number(item.q)===5?window.calculateReincarnationYield(1,{target:s}):0;
    return {currency:"darkMatter",amount:darkMatter,gold:0,darkMatter,darkEnergy,world,phase};
   }
-  const gold=typeof window.specializationSellValue==="function"?window.specializationSellValue(item,useTest):Math.max(0,Math.floor(Number(item.sell)||0));
+  const gold=window.calculateReincarnationYield(Math.max(0,Math.floor(Number(item.sell)||0)),{specialization:"appraisal",target:s,useTest});
   return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0,world,phase:1};
  }
  function mergeEquipmentSaleQuotes(quotes=[]){
