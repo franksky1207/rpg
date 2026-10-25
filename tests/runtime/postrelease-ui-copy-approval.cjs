@@ -5,6 +5,7 @@ const assert=require('node:assert/strict');
 const changes={
  'alternateuniverseui.js':[['異宇宙戰鬥或結算發生異常，請重新整理後確認目前挑戰與失敗次數，再決定是否繼續。','異宇宙戰鬥未能完成，本次挑戰會保留；請重新整理後再試。']],
  'calamityui.js':[['文明災厄挑戰未能開始，請確認挑戰條件與目前戰鬥狀態。','目前無法開始文明災厄挑戰。']],
+ 'dungeonvoidui.js':[['虛空挑戰未能開始，請確認目前挑戰狀態後再試。','目前無法開始虛空幻境。']],
  'secondworldcalamityui.js':[['宇宙文明災厄挑戰未能開始，請確認文明條件與目前戰鬥狀態。','目前無法開始此文明災厄挑戰。']],
  '3d-test/test-center.js':[
  ['if(disabled){status.hidden=false;status.textContent="預覽已停用，不影響正式遊戲。";fallback.hidden=true;host.hidden=true;return;}','if(disabled){showFailure("預覽已停用，不影響正式遊戲。");return;}'],
