@@ -1,0 +1,868 @@
+{
+  "sourceCommit": "f5ad7c48b21b612094c8e7a4d559490c4975bb13",
+  "tests": [
+    {
+      "test": "tests/runtime/resource-cache-preload-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.57,
+      "log": "work/batch3/logs/resource-cache-preload-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-behavior.js",
+      "exitCode": 0,
+      "seconds": 0.5,
+      "log": "work/batch3/logs/resource-cache-behavior.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "work/batch3/logs/resource-cache-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-prefetch-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.18,
+      "log": "work/batch3/logs/resource-cache-prefetch-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/resource-manifest-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/monster-approved-cache-browser.cjs",
+      "exitCode": 0,
+      "seconds": 9.74,
+      "log": "work/batch3/logs/monster-approved-cache-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/startup-readiness-browser.js",
+      "exitCode": 0,
+      "seconds": 12.65,
+      "log": "work/batch3/logs/startup-readiness-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/code-cleanup-batch7-lazy-loading.js",
+      "exitCode": 0,
+      "seconds": 21.11,
+      "log": "work/batch3/logs/code-cleanup-batch7-lazy-loading.js.log"
+    },
+    {
+      "test": "tests/runtime/t3b-formal-controller.cjs",
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "work/batch3/logs/t3b-formal-controller.cjs.log"
+    },
+    {
+      "test": "tests/runtime/t3b-formal-owner-clock.cjs",
+      "exitCode": 0,
+      "seconds": 0.2,
+      "log": "work/batch3/logs/t3b-formal-owner-clock.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-stop-contract.cjs",
+      "exitCode": 0,
+      "seconds": 1.23,
+      "log": "work/batch3/logs/pr48-stop-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-all-depths-browser.cjs",
+      "exitCode": 0,
+      "seconds": 40.59,
+      "log": "work/batch3/logs/alternate-universe-all-depths-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-attempt-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-attempt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-batch4-3-regression.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "work/batch3/logs/alternate-universe-batch4-3-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-combat-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "work/batch3/logs/alternate-universe-combat-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-data-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-data-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-failure-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-failure-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-old-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/alternate-universe-old-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-progression-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/alternate-universe-progression-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-ui-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-ui-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/batch16-mirror-browser.cjs",
+      "exitCode": 0,
+      "seconds": 18.5,
+      "log": "work/batch3/logs/batch16-mirror-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-approved-runtime.cjs",
+      "exitCode": 0,
+      "seconds": 1.28,
+      "log": "work/batch3/logs/batch20-approved-runtime.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-cloud-browser.cjs",
+      "exitCode": 0,
+      "seconds": 8.01,
+      "log": "work/batch3/logs/batch20-cloud-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-save-guide-browser.cjs",
+      "exitCode": 0,
+      "seconds": 7.19,
+      "log": "work/batch3/logs/batch20-save-guide-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/calamity-shared-terminal-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "exitCode": 0,
+      "seconds": 0.1,
+      "log": "work/batch3/logs/calamity-terminal-dynamic-opt-batch2.js.log"
+    },
+    {
+      "test": "tests/runtime/cloud-save-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "work/batch3/logs/cloud-save-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-contract.cjs",
+      "exitCode": 0,
+      "seconds": 1.36,
+      "log": "work/batch3/logs/combat-events-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "seconds": 7.24,
+      "log": "work/batch3/logs/combat-events-integration.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.23,
+      "log": "work/batch3/logs/cross-combat-stale-continuous-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-era-background-browser.js",
+      "exitCode": 0,
+      "seconds": 42.67,
+      "log": "work/batch3/logs/cross-era-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/cross-mode-late-settlement-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-checkpoints-browser.cjs",
+      "exitCode": 0,
+      "seconds": 12.1,
+      "log": "work/batch3/logs/foreground-combat-checkpoints-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-lifecycle.cjs",
+      "exitCode": 0,
+      "seconds": 1.44,
+      "log": "work/batch3/logs/foreground-combat-lifecycle.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-modes-browser.cjs",
+      "exitCode": 0,
+      "seconds": 125.8,
+      "log": "work/batch3/logs/foreground-combat-modes-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 27.47,
+      "log": "work/batch3/logs/foreground-combat-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/formal-combat-catalog-browser.cjs",
+      "exitCode": 0,
+      "seconds": 10.7,
+      "log": "work/batch3/logs/formal-combat-catalog-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.36,
+      "log": "work/batch3/logs/gm-formal-writer-convergence-batch2-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.11,
+      "log": "work/batch3/logs/gm-runtime-auth-preferences-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-early-restore-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/gm-runtime-early-restore-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "seconds": 40.19,
+      "log": "work/batch3/logs/js-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/mirror-settlement-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.1,
+      "log": "work/batch3/logs/mirror-settlement-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-browser.cjs",
+      "exitCode": 0,
+      "seconds": 120.64,
+      "log": "work/batch3/logs/mirror-void-formal-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-contract.mjs",
+      "exitCode": 0,
+      "seconds": 0.98,
+      "log": "work/batch3/logs/mirror-void-formal-contract.mjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 50.5,
+      "log": "work/batch3/logs/mirror-void-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/newstate-save-owner-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "work/batch3/logs/newstate-save-owner-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/offline-sample-provenance-opt4-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.49,
+      "log": "work/batch3/logs/offline-sample-provenance-opt4-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/pr48-live-combat-browser.cjs",
+      "exitCode": 0,
+      "seconds": 29.07,
+      "log": "work/batch3/logs/pr48-live-combat-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-mode-matrix-browser.cjs",
+      "exitCode": 0,
+      "seconds": 110.82,
+      "log": "work/batch3/logs/pr48-mode-matrix-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-normalization-opt-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.81,
+      "log": "work/batch3/logs/reincarnation-normalization-opt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js",
+      "exitCode": 0,
+      "seconds": 4.41,
+      "log": "work/batch3/logs/reincarnation-permanent-gear-formal-flow-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.97,
+      "log": "work/batch3/logs/reincarnation-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-transaction-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.5,
+      "log": "work/batch3/logs/reincarnation-transaction-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-global-writers.js",
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "work/batch3/logs/save-global-writers.js.log"
+    },
+    {
+      "test": "tests/runtime/save-hook-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "work/batch3/logs/save-hook-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-level-migration-regression.js",
+      "exitCode": 0,
+      "seconds": 4.46,
+      "log": "work/batch3/logs/save-level-migration-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/save-load-pipeline-integrity.js",
+      "exitCode": 0,
+      "seconds": 5.8,
+      "log": "work/batch3/logs/save-load-pipeline-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-migration-staircase.js",
+      "exitCode": 0,
+      "seconds": 0.15,
+      "log": "work/batch3/logs/save-migration-staircase.js.log"
+    },
+    {
+      "test": "tests/runtime/save-schema17-compatibility-matrix.js",
+      "exitCode": 0,
+      "seconds": 4.44,
+      "log": "work/batch3/logs/save-schema17-compatibility-matrix.js.log"
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.7,
+      "log": "work/batch3/logs/special-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-background-browser.js",
+      "exitCode": 0,
+      "seconds": 47.57,
+      "log": "work/batch3/logs/thirdworld-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "exitCode": 0,
+      "seconds": 2.87,
+      "log": "work/batch3/logs/thirdworld-rerun-settlement-stage-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/unified-combat-runtime-contract.cjs",
+      "exitCode": 0,
+      "seconds": 0.12,
+      "log": "work/batch3/logs/unified-combat-runtime-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/docs-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "work/batch3/logs/docs-integrity.js.log"
+    },
+    {
+      "test": "schema18-save-roundtrip-browser.cjs (private fixture)",
+      "exitCode": 0,
+      "report": {
+        "passed": true,
+        "privateFixture": true,
+        "schema": 18,
+        "rootCount": 35,
+        "baseline": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+        "fullFieldParity": true,
+        "idempotent": true
+      }
+    },
+    {
+      "test": "schema18-save-roundtrip-browser.cjs (synthetic fixture)",
+      "exitCode": 0,
+      "report": {
+        "passed": true,
+        "privateFixture": false,
+        "schema": 18,
+        "rootCount": 33,
+        "baseline": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+        "fullFieldParity": true,
+        "idempotent": true
+      }
+    },
+    {
+      "test": "optimization-batch3-preload-browser.cjs",
+      "exitCode": 0,
+      "log": "work/batch3/preload-browser.log"
+    },
+    {
+      "test": "optimization-batch3-cache-browser.cjs",
+      "exitCode": 0,
+      "log": "work/batch3/cache-browser-run.log"
+    },
+    {
+      "test": "optimization-batch3-startup-browser.cjs",
+      "exitCode": 0,
+      "log": "work/batch3/startup-run.log"
+    },
+    {
+      "test": "optimization-batch3-stress-browser.cjs",
+      "exitCode": 0,
+      "log": "work/batch3/stress-run.log"
+    },
+    {
+      "test": "optimization-batch3-stress-browser.cjs (2GB/2core profile)",
+      "exitCode": 0,
+      "log": "work/batch3/stress-low-memory.log"
+    },
+    {
+      "test": "optimization-batch3-compile-browser.cjs",
+      "exitCode": 0,
+      "log": "work/batch3/startup-compilation.log"
+    }
+  ],
+  "additionalChecks": [
+    "JS syntax checks",
+    "Python fixture syntax check",
+    "HTML cache guard self-test and 9e9ed629..HEAD",
+    "manifest generator byte equality",
+    "git diff --check"
+  ],
+  "harnessCorrection": "Baseline summary now represents a missing second-waiter message as null; post-fix assertions still require every terminal and all failure counters.",
+  "attemptHistory": [
+    {
+      "test": "tests/runtime/resource-cache-preload-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.57,
+      "log": "work/batch3/logs/resource-cache-preload-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-behavior.js",
+      "exitCode": 0,
+      "seconds": 0.5,
+      "log": "work/batch3/logs/resource-cache-behavior.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.29,
+      "log": "work/batch3/logs/resource-cache-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-prefetch-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.18,
+      "log": "work/batch3/logs/resource-cache-prefetch-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.24,
+      "log": "work/batch3/logs/resource-manifest-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-cache-browser.js",
+      "exitCode": 1,
+      "seconds": 0.17,
+      "log": "work/batch3/logs/resource-cache-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/monster-approved-cache-browser.cjs",
+      "exitCode": 0,
+      "seconds": 9.74,
+      "log": "work/batch3/logs/monster-approved-cache-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/startup-readiness-browser.js",
+      "exitCode": 0,
+      "seconds": 12.65,
+      "log": "work/batch3/logs/startup-readiness-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/code-cleanup-batch7-lazy-loading.js",
+      "exitCode": 0,
+      "seconds": 21.11,
+      "log": "work/batch3/logs/code-cleanup-batch7-lazy-loading.js.log"
+    },
+    {
+      "test": "tests/runtime/t3b-formal-controller.cjs",
+      "exitCode": 0,
+      "seconds": 0.27,
+      "log": "work/batch3/logs/t3b-formal-controller.cjs.log"
+    },
+    {
+      "test": "tests/runtime/t3b-formal-owner-clock.cjs",
+      "exitCode": 0,
+      "seconds": 0.2,
+      "log": "work/batch3/logs/t3b-formal-owner-clock.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-stop-contract.cjs",
+      "exitCode": 0,
+      "seconds": 1.23,
+      "log": "work/batch3/logs/pr48-stop-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-all-depths-browser.cjs",
+      "exitCode": 0,
+      "seconds": 40.59,
+      "log": "work/batch3/logs/alternate-universe-all-depths-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-attempt-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-attempt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-batch4-3-regression.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "work/batch3/logs/alternate-universe-batch4-3-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-combat-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "work/batch3/logs/alternate-universe-combat-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-data-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-data-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-failure-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-failure-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-old-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/alternate-universe-old-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-progression-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/alternate-universe-progression-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-ui-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/alternate-universe-ui-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/batch16-mirror-browser.cjs",
+      "exitCode": 0,
+      "seconds": 18.5,
+      "log": "work/batch3/logs/batch16-mirror-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-approved-runtime.cjs",
+      "exitCode": 0,
+      "seconds": 1.28,
+      "log": "work/batch3/logs/batch20-approved-runtime.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-cloud-browser.cjs",
+      "exitCode": 0,
+      "seconds": 8.01,
+      "log": "work/batch3/logs/batch20-cloud-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-save-guide-browser.cjs",
+      "exitCode": 0,
+      "seconds": 7.19,
+      "log": "work/batch3/logs/batch20-save-guide-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/calamity-shared-terminal-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "exitCode": 0,
+      "seconds": 0.1,
+      "log": "work/batch3/logs/calamity-terminal-dynamic-opt-batch2.js.log"
+    },
+    {
+      "test": "tests/runtime/cloud-save-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "work/batch3/logs/cloud-save-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-contract.cjs",
+      "exitCode": 0,
+      "seconds": 1.36,
+      "log": "work/batch3/logs/combat-events-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "seconds": 7.24,
+      "log": "work/batch3/logs/combat-events-integration.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.23,
+      "log": "work/batch3/logs/cross-combat-stale-continuous-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-era-background-browser.js",
+      "exitCode": 0,
+      "seconds": 42.67,
+      "log": "work/batch3/logs/cross-era-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/cross-mode-late-settlement-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-checkpoints-browser.cjs",
+      "exitCode": 0,
+      "seconds": 12.1,
+      "log": "work/batch3/logs/foreground-combat-checkpoints-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-lifecycle.cjs",
+      "exitCode": 0,
+      "seconds": 1.44,
+      "log": "work/batch3/logs/foreground-combat-lifecycle.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-modes-browser.cjs",
+      "exitCode": 0,
+      "seconds": 125.8,
+      "log": "work/batch3/logs/foreground-combat-modes-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 27.47,
+      "log": "work/batch3/logs/foreground-combat-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/formal-combat-catalog-browser.cjs",
+      "exitCode": 0,
+      "seconds": 10.7,
+      "log": "work/batch3/logs/formal-combat-catalog-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.36,
+      "log": "work/batch3/logs/gm-formal-writer-convergence-batch2-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.11,
+      "log": "work/batch3/logs/gm-runtime-auth-preferences-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-early-restore-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "work/batch3/logs/gm-runtime-early-restore-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "seconds": 40.19,
+      "log": "work/batch3/logs/js-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/mirror-settlement-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.1,
+      "log": "work/batch3/logs/mirror-settlement-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-browser.cjs",
+      "exitCode": 1,
+      "seconds": 202.82,
+      "log": "work/batch3/logs/mirror-void-formal-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-contract.mjs",
+      "exitCode": 0,
+      "seconds": 0.98,
+      "log": "work/batch3/logs/mirror-void-formal-contract.mjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 50.5,
+      "log": "work/batch3/logs/mirror-void-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/newstate-save-owner-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "work/batch3/logs/newstate-save-owner-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/offline-sample-provenance-opt4-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.49,
+      "log": "work/batch3/logs/offline-sample-provenance-opt4-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/pr48-live-combat-browser.cjs",
+      "exitCode": 0,
+      "seconds": 29.07,
+      "log": "work/batch3/logs/pr48-live-combat-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-mode-matrix-browser.cjs",
+      "exitCode": 0,
+      "seconds": 110.82,
+      "log": "work/batch3/logs/pr48-mode-matrix-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-normalization-opt-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.81,
+      "log": "work/batch3/logs/reincarnation-normalization-opt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js",
+      "exitCode": 0,
+      "seconds": 4.41,
+      "log": "work/batch3/logs/reincarnation-permanent-gear-formal-flow-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.97,
+      "log": "work/batch3/logs/reincarnation-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-transaction-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.5,
+      "log": "work/batch3/logs/reincarnation-transaction-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "work/batch3/logs/resource-manifest-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-global-writers.js",
+      "exitCode": 0,
+      "seconds": 0.26,
+      "log": "work/batch3/logs/save-global-writers.js.log"
+    },
+    {
+      "test": "tests/runtime/save-hook-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "work/batch3/logs/save-hook-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-level-migration-regression.js",
+      "exitCode": 0,
+      "seconds": 4.46,
+      "log": "work/batch3/logs/save-level-migration-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/save-load-pipeline-integrity.js",
+      "exitCode": 0,
+      "seconds": 5.8,
+      "log": "work/batch3/logs/save-load-pipeline-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-migration-staircase.js",
+      "exitCode": 0,
+      "seconds": 0.15,
+      "log": "work/batch3/logs/save-migration-staircase.js.log"
+    },
+    {
+      "test": "tests/runtime/save-schema17-compatibility-matrix.js",
+      "exitCode": 0,
+      "seconds": 4.44,
+      "log": "work/batch3/logs/save-schema17-compatibility-matrix.js.log"
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.7,
+      "log": "work/batch3/logs/special-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-background-browser.js",
+      "exitCode": 0,
+      "seconds": 47.57,
+      "log": "work/batch3/logs/thirdworld-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "exitCode": 0,
+      "seconds": 2.87,
+      "log": "work/batch3/logs/thirdworld-rerun-settlement-stage-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/unified-combat-runtime-contract.cjs",
+      "exitCode": 0,
+      "seconds": 0.12,
+      "log": "work/batch3/logs/unified-combat-runtime-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/docs-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "work/batch3/logs/docs-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-browser.cjs",
+      "exitCode": 0,
+      "seconds": 120.64,
+      "log": "work/batch3/logs/mirror-void-formal-browser.cjs.log"
+    }
+  ],
+  "invalidCommands": [
+    {
+      "test": "tests/runtime/resource-cache-browser.js",
+      "exitCode": 1,
+      "seconds": 0.17,
+      "log": "work/batch3/logs/resource-cache-browser.js.log"
+    }
+  ],
+  "originalMirrorVoidFailure": "PASS mirror native UI + interruption/resume/reload 1365 1\nPASS mirror native UI + interruption/resume/reload 1365 2\nPASS mirror native UI + interruption/resume/reload 1365 3\nPASS mirror native UI + interruption/resume/reload 390 1\nPASS mirror native UI + interruption/resume/reload 390 2\nPASS mirror native UI + interruption/resume/reload 390 3\nPASS mirror native UI + interruption/resume/reload 844 1\nPASS mirror native UI + interruption/resume/reload 844 2\nPASS mirror native UI + interruption/resume/reload 844 3\npage.waitForFunction: Timeout 45000ms exceeded.\n    at /workspace/rpg/tests/runtime/mirror-void-formal-browser.cjs:53:15 {\n  log: [],\n  name: 'TimeoutError'\n}\n",
+  "failureAnalysis": "Initial six-browser concurrency run timed out observing Void floor 9 (45 seconds). No runtime source involved in the failing HTTP fixture changed. Identical full test and assertions passed serially in 120.64s. Exact transient failure was not captured; concurrent observation timing remains a test-load limitation, not asserted as a proven game defect. No assertion or timeout changed.",
+  "newCacheRegressionBefore": "Second waiter missed successful completion and clear completion; 31 scans/3100 reads. New benchmark also reproduced the in-flight clear status race."
+}
