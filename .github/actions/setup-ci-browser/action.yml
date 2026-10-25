@@ -5,6 +5,10 @@ inputs:
     description: Space separated browser names
     required: true
     default: chromium
+  preinstalled:
+    description: Browsers and OS dependencies are provided by the pinned Playwright container
+    required: false
+    default: 'false'
 runs:
   using: composite
   steps:
@@ -17,7 +21,7 @@ runs:
       test -n "$image"
       echo "image=$image" >> "$GITHUB_OUTPUT"
   - name: Restore exact chromium revision cache
-    if: contains(inputs.browsers, 'chromium')
+    if: inputs.preinstalled != 'true' && contains(inputs.browsers, 'chromium')
     uses: actions/cache@v4
     with:
       path: |-
@@ -26,7 +30,7 @@ runs:
         ~/.cache/ms-playwright/ffmpeg-*
       key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ steps.platform.outputs.image }}-1.55.0-chromium-v3
   - name: Restore exact webkit revision cache
-    if: contains(inputs.browsers, 'webkit')
+    if: inputs.preinstalled != 'true' && contains(inputs.browsers, 'webkit')
     uses: actions/cache@v4
     with:
       path: |-
@@ -45,5 +49,20 @@ runs:
       for browser in $CI_BROWSERS; do
         case "$browser" in chromium|webkit) ;; *) echo "Unsupported browser: $browser"; exit 1;; esac
       done
-      # Playwright verifies its pinned revision; install-deps is required even on cache hits.
-      npx playwright install --with-deps $CI_BROWSERS
+      if [[ '${{ inputs.preinstalled }}' == 'true' ]]; then
+        # The pinned official Playwright image supplies both browsers and native libraries.
+        node - <<'NODE'
+      const { chromium, webkit } = require('playwright');
+      for (const name of process.env.CI_BROWSERS.split(/\s+/).filter(Boolean)) {
+        const executable = ({ chromium, webkit })[name].executablePath();
+        if (!require('node:fs').existsSync(executable)) throw new Error('Missing preinstalled ' + name + ': ' + executable);
+        console.log('Preinstalled browser:', name, executable);
+      }
+      NODE
+      elif [[ "$CI_BROWSERS" == *webkit* ]]; then
+        # Non-container WebKit users retain the safe system-dependency setup.
+        npx playwright install --with-deps $CI_BROWSERS
+      else
+        # Chromium validated on Ubuntu 24.04 without extra apt dependencies.
+        npx playwright install $CI_BROWSERS
+      fi

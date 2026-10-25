@@ -196,7 +196,9 @@ jobs:
         retention-days: 1
   runtime-r2:
     name: R2 — Combat and eras
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-noble
     steps:
     - uses: actions/checkout@v4
       with:
@@ -207,6 +209,7 @@ jobs:
     - uses: ./.github/actions/setup-ci-browser
       with:
         browsers: chromium webkit
+        preinstalled: 'true'
     - name: Run R2 with command timings
       shell: bash
       run: |

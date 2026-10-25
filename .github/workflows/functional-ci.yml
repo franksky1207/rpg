@@ -195,8 +195,8 @@ jobs:
           /tmp/ci-http.log
         if-no-files-found: ignore
         retention-days: 7
-  monster-m3:
-    name: M3 — Appearance and performance (${{ matrix.suite }})
+  monster-m3-chromium:
+    name: M3 — Appearance and performance (M3-chromium)
     needs: classify
     if: needs.classify.outputs.monster == 'true'
     runs-on: ubuntu-latest
@@ -213,8 +213,8 @@ jobs:
     - run: python3 -m pip install Pillow==11.3.0
     - uses: ./.github/actions/setup-ci-browser
       with:
-        browsers: ${{ matrix.browsers }}
-    - name: Run ${{ matrix.suite }} with command timings
+        browsers: chromium
+    - name: Run M3-chromium with command timings
       shell: bash
       run: |
         set -euo pipefail
@@ -227,11 +227,11 @@ jobs:
           sleep 0.25
         done
         curl -fsS http://127.0.0.1:4173/index.html >/dev/null
-        node scripts/ci-run-suite.cjs ${{ matrix.suite }}
+        node scripts/ci-run-suite.cjs M3-chromium
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: monster-${{ matrix.suite }}-${{ github.run_attempt }}
+        name: monster-M3-chromium-${{ github.run_attempt }}
         path: |-
           work/approved-integration/*.json
           work/visual-integration/*.json
@@ -255,14 +255,71 @@ jobs:
           /tmp/ci-http.log
         if-no-files-found: ignore
         retention-days: 7
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - suite: M3-chromium
-          browsers: chromium
-        - suite: M3-webkit
-          browsers: webkit
+
+  monster-m3-webkit:
+    name: M3 — Appearance and performance (M3-webkit)
+    needs: classify
+    if: needs.classify.outputs.monster == 'true'
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python3 -m pip install Pillow==11.3.0
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: webkit
+        preinstalled: 'true'
+    - name: Run M3-webkit with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/build-publish-dry-run.cjs
+        python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs M3-webkit
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monster-M3-webkit-${{ github.run_attempt }}
+        path: |-
+          work/approved-integration/*.json
+          work/visual-integration/*.json
+          work/visual-integration/*.png
+          /tmp/batch15-all-identities.json
+          /tmp/batch16-all-identities.json
+          /tmp/batch17-all-identities.json
+          /tmp/batch18-all-identities.json
+          /tmp/batch16-mirror.json
+          /tmp/batch20-alternate-colors.json
+          /tmp/batch20-alternate-ten-stages.png
+          /tmp/batch20-repair-browser.json
+          /tmp/three-ui-repairs.json
+          /tmp/three-ui-*.png
+          /tmp/batch20-visual-preparation.json
+          /tmp/batch20-bounty-preparation.json
+          /tmp/batch18-native-live.json
+          /tmp/batch18-monster-recovery.json
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 7
+
   monster-m4:
     name: M4 — Full identity and alternate universe (${{ matrix.suite }})
     needs: classify
@@ -419,7 +476,8 @@ jobs:
     - combat
     - monster-m1
     - monster-m2
-    - monster-m3
+    - monster-m3-chromium
+    - monster-m3-webkit
     - monster-m4
     - gm
     - equipment
