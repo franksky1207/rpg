@@ -7,8 +7,6 @@ const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 const at=(ref,p)=>cp.execFileSync('git',['show',ref+':'+p],{maxBuffer:8*1024*1024});
 function original(p,encoding){
  let bytes=require('./monster-appearance-approved.cjs').original(p);
- // Exact reversible postrelease UI copy and cache tokens; owner safety locks remain intact.
- bytes=require('./postrelease-ui-copy-approval.cjs').historicalBytes(p,bytes);
  // Compose the later PR #93 heritage cache token before the exact #94 digest.
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('civilizationheritage.js?v=20261024-batch20&batch20=20261024-r2&heritageBackground=20261024','civilizationheritage.js?v=20261024-batch20&batch20=20261024-r2'));
  // PR #93 is an independent, exact cache-only HTML composition. Accept that
