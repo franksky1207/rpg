@@ -1,0 +1,29 @@
+name: Versioned CI browsers
+description: Install pinned Node tools and only the requested Playwright browsers
+inputs:
+  browsers:
+    description: Space separated browser names
+    required: true
+    default: chromium
+runs:
+  using: composite
+  steps:
+    - name: Restore exact browser revision cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ env.ImageOS }}-1.55.0-${{ inputs.browsers }}-v2
+    - name: Install pinned browser tools
+      shell: bash
+      run: npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+    - name: Ensure browsers and system libraries
+      shell: bash
+      env:
+        CI_BROWSERS: ${{ inputs.browsers }}
+      run: |
+        set -euo pipefail
+        for browser in $CI_BROWSERS; do
+          case "$browser" in chromium|webkit) ;; *) echo "Unsupported browser: $browser"; exit 1;; esac
+        done
+        # Playwright verifies its pinned revision; install-deps is required even on cache hits.
+        npx playwright install --with-deps $CI_BROWSERS

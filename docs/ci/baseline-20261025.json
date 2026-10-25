@@ -1,0 +1,1126 @@
+[
+  {
+    "id": 40168240909,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40168240909",
+    "name": "Functional CI",
+    "sha": "f5b85e1f1628b02cae076272b7653c1489e75882",
+    "event": "push",
+    "attempt": 1,
+    "conclusion": "success",
+    "wall_seconds": 2183.0,
+    "runner_minutes": 39.36666666666667,
+    "jobs": [
+      {
+        "name": "classify",
+        "id": 121093584835,
+        "conclusion": "success",
+        "seconds": 25.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 19.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Verify change-impact decisions and HTML asset versions",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Classify changed functionality",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 1.0
+          }
+        ]
+      },
+      {
+        "name": "resource",
+        "id": 121093662256,
+        "conclusion": "success",
+        "seconds": 6.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run node tests/runtime/resource-manifest-integrity.js",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "gm",
+        "id": 121093662266,
+        "conclusion": "success",
+        "seconds": 99.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Run node tests/runtime/gm-animation-center-terminology.cjs",
+            "conclusion": "success",
+            "seconds": 91.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "combat",
+        "id": 121093662275,
+        "conclusion": "success",
+        "seconds": 29.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 20.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Battle lifecycle, positioning, and transition contracts",
+            "conclusion": "success",
+            "seconds": 5.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 1.0
+          }
+        ]
+      },
+      {
+        "name": "equipment",
+        "id": 121093662280,
+        "conclusion": "success",
+        "seconds": 18.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 4.0
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run python3 -m pip install Pillow==11.3.0",
+            "conclusion": "success",
+            "seconds": 4.0
+          },
+          {
+            "name": "Run python3 scripts/formal-equipment-identities.py",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "monster",
+        "id": 121093662333,
+        "conclusion": "success",
+        "seconds": 2147.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 17.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run python3 -m pip install Pillow==11.3.0",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Live monster identity, assets, dungeons, bosses and alternate world contracts",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Chromium browser functional samples",
+            "conclusion": "success",
+            "seconds": 2120.0
+          },
+          {
+            "name": "Preserve repair visual evidence",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 1.0
+          }
+        ]
+      },
+      {
+        "name": "background",
+        "id": 121093662373,
+        "conclusion": "success",
+        "seconds": 34.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run node tests/runtime/batch2-background-sleeper-lifecycle.cjs",
+            "conclusion": "success",
+            "seconds": 27.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "functional-ci-gate",
+        "id": 121099872539,
+        "conclusion": "success",
+        "seconds": 4.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Require all selected domains to pass",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40165934882,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40165934882",
+    "name": "Runtime Integrity",
+    "sha": "acd449601e966e7f7bd58c90829cd038c0551650",
+    "event": "pull_request",
+    "attempt": 1,
+    "conclusion": "success",
+    "wall_seconds": 641.0,
+    "runner_minutes": 12.633333333333333,
+    "jobs": [
+      {
+        "name": "runtime-integrity",
+        "id": 121086863294,
+        "conclusion": "success",
+        "seconds": 119.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 16.0
+          },
+          {
+            "name": "Check whether this push is still main head",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run full JavaScript syntax and owner integrity",
+            "conclusion": "success",
+            "seconds": 97.0
+          },
+          {
+            "name": "Verify resource cache behavior and current audio contract",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run unlimited VIP integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run GM mainline HP lock integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run background asset integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run project documentation integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Upload runtime integrity diagnostics",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 1.0
+          }
+        ]
+      },
+      {
+        "name": "runtime-browser-regression",
+        "id": 121086863414,
+        "conclusion": "success",
+        "seconds": 639.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 17.0
+          },
+          {
+            "name": "Check whether this push is still main head",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Restore Playwright browser cache",
+            "conclusion": "success",
+            "seconds": 4.0
+          },
+          {
+            "name": "Install Playwright Node dependencies",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Install Chromium and WebKit",
+            "conclusion": "success",
+            "seconds": 26.0
+          },
+          {
+            "name": "Run parallel browser runtime and reincarnation regression",
+            "conclusion": "success",
+            "seconds": 41.0
+          },
+          {
+            "name": "Run real browser runtime smoke",
+            "conclusion": "success",
+            "seconds": 544.0
+          },
+          {
+            "name": "Upload runtime browser regression diagnostics",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Restore Playwright browser cache",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40168240895,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40168240895",
+    "name": "Equipment 2.5D Formal Battle",
+    "sha": "f5b85e1f1628b02cae076272b7653c1489e75882",
+    "event": "push",
+    "attempt": 1,
+    "conclusion": "success",
+    "wall_seconds": 484.0,
+    "runner_minutes": 8.016666666666667,
+    "jobs": [
+      {
+        "name": "formal-player",
+        "id": 121093584770,
+        "conclusion": "success",
+        "seconds": 481.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 18.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run python3 -m pip install Pillow==11.3.0",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Verify narrow release, original owners and failure paths",
+            "conclusion": "success",
+            "seconds": 5.0
+          },
+          {
+            "name": "Install browser",
+            "conclusion": "success",
+            "seconds": 24.0
+          },
+          {
+            "name": "Operate real published formal battle UI",
+            "conclusion": "success",
+            "seconds": 423.0
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40168240929,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40168240929",
+    "name": "Publish Optimized GitHub Pages",
+    "sha": "f5b85e1f1628b02cae076272b7653c1489e75882",
+    "event": "push",
+    "attempt": 1,
+    "conclusion": "success",
+    "wall_seconds": 375.0,
+    "runner_minutes": 6.133333333333334,
+    "jobs": [
+      {
+        "name": "build-and-verify",
+        "id": 121093585277,
+        "conclusion": "success",
+        "seconds": 357.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Build and validate optimized website",
+            "conclusion": "success",
+            "seconds": 5.0
+          },
+          {
+            "name": "Install isolated Chromium",
+            "conclusion": "success",
+            "seconds": 25.0
+          },
+          {
+            "name": "Verify optimized website in browser",
+            "conclusion": "success",
+            "seconds": 223.0
+          },
+          {
+            "name": "Verify exact 32 backgrounds, 17 audio, zero missing and release size",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Stage SHA-verified current GM B support",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Verify the published GM B sandbox closure",
+            "conclusion": "success",
+            "seconds": 93.0
+          },
+          {
+            "name": "Check GM entry and production homepage",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/configure-pages@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Upload only validated site to GitHub Pages",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Upload release audit for rollback traceability",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "deploy",
+        "id": 121094623027,
+        "conclusion": "success",
+        "seconds": 11.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Deploy validated website",
+            "conclusion": "success",
+            "seconds": 7.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40168240936,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40168240936",
+    "name": "Equipment 2.5D GM Integration",
+    "sha": "f5b85e1f1628b02cae076272b7653c1489e75882",
+    "event": "push",
+    "attempt": 1,
+    "conclusion": "success",
+    "wall_seconds": 118.0,
+    "runner_minutes": 1.9166666666666667,
+    "jobs": [
+      {
+        "name": "gm-published",
+        "id": 121093584900,
+        "conclusion": "success",
+        "seconds": 115.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 18.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run python3 -m pip install Pillow==11.3.0",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Verify original sources and deterministic GM publication",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Install browser",
+            "conclusion": "success",
+            "seconds": 22.0
+          },
+          {
+            "name": "Operate real sprites inside published game GM",
+            "conclusion": "success",
+            "seconds": 66.0
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40164919571,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40164919571",
+    "name": "Runtime Integrity",
+    "sha": "509f6b9e80ef592c35f7e6bc658b4621dcb8b347",
+    "event": "pull_request",
+    "attempt": 1,
+    "conclusion": "failure",
+    "wall_seconds": 893.0,
+    "runner_minutes": 16.95,
+    "jobs": [
+      {
+        "name": "runtime-integrity",
+        "id": 121083894004,
+        "conclusion": "success",
+        "seconds": 128.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 19.0
+          },
+          {
+            "name": "Check whether this push is still main head",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run full JavaScript syntax and owner integrity",
+            "conclusion": "success",
+            "seconds": 100.0
+          },
+          {
+            "name": "Verify resource cache behavior and current audio contract",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run unlimited VIP integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run GM mainline HP lock integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run background asset integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run project documentation integrity",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Upload runtime integrity diagnostics",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "runtime-browser-regression",
+        "id": 121083894109,
+        "conclusion": "failure",
+        "seconds": 889.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 30.0
+          },
+          {
+            "name": "Check whether this push is still main head",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Restore Playwright browser cache",
+            "conclusion": "success",
+            "seconds": 7.0
+          },
+          {
+            "name": "Install Playwright Node dependencies",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Install Chromium and WebKit",
+            "conclusion": "success",
+            "seconds": 39.0
+          },
+          {
+            "name": "Run parallel browser runtime and reincarnation regression",
+            "conclusion": "success",
+            "seconds": 65.0
+          },
+          {
+            "name": "Run real browser runtime smoke",
+            "conclusion": "failure",
+            "seconds": 739.0
+          },
+          {
+            "name": "Upload runtime browser regression diagnostics",
+            "conclusion": "success",
+            "seconds": 2.0
+          },
+          {
+            "name": "Post Restore Playwright browser cache",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40113687411,
+    "url": "https://github.com/franksky1207/rpg/actions/runs/40113687411",
+    "name": "Publish Optimized GitHub Pages",
+    "sha": "73f75f404bae9911b12ef98a9d6d6003cd6d3535",
+    "event": "push",
+    "attempt": 1,
+    "conclusion": "failure",
+    "wall_seconds": 224.0,
+    "runner_minutes": 3.65,
+    "jobs": [
+      {
+        "name": "build-and-verify",
+        "id": 120930456986,
+        "conclusion": "failure",
+        "seconds": 220.0,
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 9.0
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Build and validate optimized website",
+            "conclusion": "success",
+            "seconds": 3.0
+          },
+          {
+            "name": "Install isolated Chromium",
+            "conclusion": "success",
+            "seconds": 33.0
+          },
+          {
+            "name": "Verify optimized website in browser",
+            "conclusion": "failure",
+            "seconds": 167.0
+          },
+          {
+            "name": "Verify exact 32 backgrounds, 17 audio, zero missing and release size",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Stage SHA-verified B3 visual preview separately",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Verify the published GM B sandbox closure",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Check preview entry and production homepage",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Run actions/configure-pages@v5",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Upload only validated site to GitHub Pages",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Upload release audit for rollback traceability",
+            "conclusion": "success",
+            "seconds": 1.0
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "skipped",
+            "seconds": 0.0
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success",
+            "seconds": 0.0
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success",
+            "seconds": 0.0
+          }
+        ]
+      },
+      {
+        "name": "deploy",
+        "id": 120931263764,
+        "conclusion": "skipped",
+        "seconds": -1.0,
+        "steps": []
+      }
+    ]
+  }
+]

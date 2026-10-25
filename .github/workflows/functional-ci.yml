@@ -1,15 +1,15 @@
 name: Functional CI
-on:
-  pull_request:
+'on':
+  pull_request: null
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+    - main
+  workflow_dispatch: null
 permissions:
   contents: read
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-
 jobs:
   classify:
     runs-on: ubuntu-latest
@@ -21,232 +21,410 @@ jobs:
       background: ${{ steps.impact.outputs.background }}
       resource: ${{ steps.impact.outputs.resource }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Verify change-impact decisions and HTML asset versions
-        shell: bash
-        run: |
-          set -euo pipefail
-          node scripts/ci-impact.cjs --self-test
-          node tests/runtime/html-cache-version-guard.js --self-test
-          BASE="${{ github.event.pull_request.base.sha }}"
-          if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
-          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE="HEAD^"; fi
-          node tests/runtime/html-cache-version-guard.js "$BASE" HEAD
-      - id: impact
-        name: Classify changed functionality
-        shell: bash
-        run: |
-          set -euo pipefail
-          BASE="${{ github.event.pull_request.base.sha }}"
-          if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
-          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE="HEAD^"; fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            node scripts/ci-impact.cjs "$BASE" HEAD --all >> "$GITHUB_OUTPUT"
-          else
-            node scripts/ci-impact.cjs "$BASE" HEAD >> "$GITHUB_OUTPUT"
-          fi
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - name: Verify change-impact decisions and HTML asset versions
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/ci-impact.cjs --self-test
+          node --test tests/ci-suites.test.cjs
+        node tests/runtime/html-cache-version-guard.js --self-test
+        BASE="${{ github.event.pull_request.base.sha }}"
+        if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
+        if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE="HEAD^"; fi
+        node tests/runtime/html-cache-version-guard.js "$BASE" HEAD
+    - id: impact
+      name: Classify changed functionality
+      shell: bash
+      run: |
+        set -euo pipefail
+        BASE="${{ github.event.pull_request.base.sha }}"
+        if [ -z "$BASE" ]; then BASE="${{ github.event.before }}"; fi
+        if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then BASE="HEAD^"; fi
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          node scripts/ci-impact.cjs "$BASE" HEAD --all >> "$GITHUB_OUTPUT"
+        else
+          node scripts/ci-impact.cjs "$BASE" HEAD >> "$GITHUB_OUTPUT"
+        fi
   combat:
     needs: classify
     if: needs.classify.outputs.combat == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Battle lifecycle, positioning, and transition contracts
-        run: |
-          node tests/runtime/batch20-approved-runtime.cjs
-          node tests/runtime/foreground-combat-lifecycle.cjs
-          node tests/runtime/combat-events-integration.cjs
-          node tests/runtime/cross-combat-stale-continuous-regression.cjs
-          node tests/runtime/cross-mode-late-settlement-regression.cjs
-          node tests/runtime/unified-combat-runtime-contract.cjs
-          node tests/runtime/unified-mobile-combat-viewport.cjs
-          node tests/runtime/batch5-era-animation-contract.cjs
-          node --test tests/runtime/batch7-era-pool.test.mjs
-          node tests/runtime/combat-events-contract.cjs
-          node --test tests/equipment-gm/no-attack-aura.test.mjs
-  monster:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - name: Battle lifecycle, positioning, and transition contracts
+      run: |
+        node tests/runtime/batch20-approved-runtime.cjs
+        node tests/runtime/foreground-combat-lifecycle.cjs
+        node tests/runtime/combat-events-integration.cjs
+        node tests/runtime/cross-combat-stale-continuous-regression.cjs
+        node tests/runtime/cross-mode-late-settlement-regression.cjs
+        node tests/runtime/unified-combat-runtime-contract.cjs
+        node tests/runtime/unified-mobile-combat-viewport.cjs
+        node tests/runtime/batch5-era-animation-contract.cjs
+        node --test tests/runtime/batch7-era-pool.test.mjs
+        node tests/runtime/combat-events-contract.cjs
+        node --test tests/equipment-gm/no-attack-aura.test.mjs
+  monster-m1:
+    name: M1 — Monster basics and codex
     needs: classify
     if: needs.classify.outputs.monster == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python3 -m pip install Pillow==11.3.0
-      - name: Live monster identity, assets, dungeons, bosses and alternate world contracts
-        run: |
-          python3 tests/runtime/batch13-monster-assets.py
-          python3 tests/runtime/batch17-boss-assets.py
-          python3 tests/runtime/batch18-alternate-assets.py
-          node tests/runtime/monster-appearance-contract.mjs
-          node scripts/audit-monster-appearance.mjs
-          node tests/runtime/batch20-alternate-ten-stages.mjs
-          python3 scripts/generate-monster-trial-registry.py --check
-          python3 scripts/generate-monster-codex.py --check
-          node --test tests/runtime/batch20-shared-monster-pool.test.mjs
-          node --test tests/runtime/batch13-monster-pool.test.mjs
-          node tests/runtime/batch16-special-contract.cjs
-          node tests/runtime/batch16-cache.cjs
-          node tests/runtime/batch17-cache.cjs
-          node tests/runtime/batch18-cache.cjs
-      - name: Chromium browser functional samples
-        run: |
-          npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium webkit
-          node scripts/build-publish-dry-run.cjs
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 >/tmp/monster-ci-http.log 2>&1 &
-          sleep 2
-          node tests/runtime/batch20-notice-protection.cjs
-          node tests/runtime/three-ui-repairs-browser.cjs
-          node tests/runtime/batch20-codex-browser.cjs
-          node tests/runtime/batch20-repair-browser.cjs
-          node tests/runtime/batch20-visual-preparation-browser.cjs
-          node tests/runtime/batch20-bounty-preparation-browser.cjs
-          node tests/runtime/batch20-save-guide-browser.cjs
-          node tests/runtime/batch20-cloud-browser.cjs
-          node tests/runtime/batch16-mirror-browser.cjs
-          node tests/runtime/batch16-live-dungeons-browser.cjs
-          node tests/runtime/batch17-live-bosses-browser.cjs
-          node tests/runtime/monster-appearance-browser.cjs
-          APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs
-          node tests/runtime/monster-approved-sizing-browser.cjs
-          RESOURCE_TEST_ROOT=.publish-stage3 node tests/runtime/monster-approved-cache-browser.cjs
-          node tests/runtime/monster-approved-performance.cjs
-          node tests/runtime/batch20-alternate-colors-browser.cjs
-          node tests/runtime/batch15-all-identities-browser.cjs
-          node tests/runtime/batch16-all-identities-browser.cjs
-          node tests/runtime/batch17-all-identities-browser.cjs
-          node tests/runtime/batch18-all-identities-browser.cjs
-          node tests/runtime/batch18-native-live-browser.cjs
-          node tests/runtime/batch18-monster-recovery-browser.cjs
-      - name: Preserve repair visual evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: batch20-repair-visual-evidence
-          path: |
-            work/approved-integration/*.json
-            work/visual-integration/*.json
-            work/visual-integration/*.png
-            /tmp/batch15-all-identities.json
-            /tmp/batch16-all-identities.json
-            /tmp/batch17-all-identities.json
-            /tmp/batch18-all-identities.json
-            /tmp/batch16-mirror.json
-            /tmp/batch20-alternate-colors.json
-            /tmp/batch20-alternate-ten-stages.png
-            /tmp/batch20-repair-browser.json
-            /tmp/three-ui-repairs.json
-            /tmp/three-ui-*.png
-            /tmp/batch20-visual-preparation.json
-            /tmp/batch20-bounty-preparation.json
-            /tmp/batch18-native-live.json
-            /tmp/batch18-monster-recovery.json
-          retention-days: 14
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python3 -m pip install Pillow==11.3.0
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Run M1 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/build-publish-dry-run.cjs
+        python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs M1
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monster-M1-${{ github.run_attempt }}
+        path: |-
+          work/approved-integration/*.json
+          work/visual-integration/*.json
+          work/visual-integration/*.png
+          /tmp/batch15-all-identities.json
+          /tmp/batch16-all-identities.json
+          /tmp/batch17-all-identities.json
+          /tmp/batch18-all-identities.json
+          /tmp/batch16-mirror.json
+          /tmp/batch20-alternate-colors.json
+          /tmp/batch20-alternate-ten-stages.png
+          /tmp/batch20-repair-browser.json
+          /tmp/three-ui-repairs.json
+          /tmp/three-ui-*.png
+          /tmp/batch20-visual-preparation.json
+          /tmp/batch20-bounty-preparation.json
+          /tmp/batch18-native-live.json
+          /tmp/batch18-monster-recovery.json
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 7
+  monster-m2:
+    name: M2 — Dungeons and bosses
+    needs: classify
+    if: needs.classify.outputs.monster == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python3 -m pip install Pillow==11.3.0
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Run M2 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/build-publish-dry-run.cjs
+        python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs M2
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monster-M2-${{ github.run_attempt }}
+        path: |-
+          work/approved-integration/*.json
+          work/visual-integration/*.json
+          work/visual-integration/*.png
+          /tmp/batch15-all-identities.json
+          /tmp/batch16-all-identities.json
+          /tmp/batch17-all-identities.json
+          /tmp/batch18-all-identities.json
+          /tmp/batch16-mirror.json
+          /tmp/batch20-alternate-colors.json
+          /tmp/batch20-alternate-ten-stages.png
+          /tmp/batch20-repair-browser.json
+          /tmp/three-ui-repairs.json
+          /tmp/three-ui-*.png
+          /tmp/batch20-visual-preparation.json
+          /tmp/batch20-bounty-preparation.json
+          /tmp/batch18-native-live.json
+          /tmp/batch18-monster-recovery.json
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 7
+  monster-m3:
+    name: M3 — Appearance and performance
+    needs: classify
+    if: needs.classify.outputs.monster == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python3 -m pip install Pillow==11.3.0
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium webkit
+    - name: Run M3 with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/build-publish-dry-run.cjs
+        python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs M3
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monster-M3-${{ github.run_attempt }}
+        path: |-
+          work/approved-integration/*.json
+          work/visual-integration/*.json
+          work/visual-integration/*.png
+          /tmp/batch15-all-identities.json
+          /tmp/batch16-all-identities.json
+          /tmp/batch17-all-identities.json
+          /tmp/batch18-all-identities.json
+          /tmp/batch16-mirror.json
+          /tmp/batch20-alternate-colors.json
+          /tmp/batch20-alternate-ten-stages.png
+          /tmp/batch20-repair-browser.json
+          /tmp/three-ui-repairs.json
+          /tmp/three-ui-*.png
+          /tmp/batch20-visual-preparation.json
+          /tmp/batch20-bounty-preparation.json
+          /tmp/batch18-native-live.json
+          /tmp/batch18-monster-recovery.json
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 7
+  monster-m4:
+    name: M4 — Full identity and alternate universe (${{ matrix.suite }})
+    needs: classify
+    if: needs.classify.outputs.monster == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+        - M4-18
+        - M4-15
+        - M4-16
+        - M4-17
+        - M4-native
+        - M4-recovery
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python3 -m pip install Pillow==11.3.0
+    - uses: ./.github/actions/setup-ci-browser
+      with:
+        browsers: chromium
+    - name: Run ${{ matrix.suite }} with command timings
+      shell: bash
+      run: |
+        set -euo pipefail
+        node scripts/build-publish-dry-run.cjs
+        python3 -m http.server 4173 --bind 127.0.0.1 --directory .publish-stage3 > /tmp/ci-http.log 2>&1 &
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        node scripts/ci-run-suite.cjs ${{ matrix.suite }}
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: monster-${{ matrix.suite }}-${{ github.run_attempt }}
+        path: |-
+          work/approved-integration/*.json
+          work/visual-integration/*.json
+          work/visual-integration/*.png
+          /tmp/batch15-all-identities.json
+          /tmp/batch16-all-identities.json
+          /tmp/batch17-all-identities.json
+          /tmp/batch18-all-identities.json
+          /tmp/batch16-mirror.json
+          /tmp/batch20-alternate-colors.json
+          /tmp/batch20-alternate-ten-stages.png
+          /tmp/batch20-repair-browser.json
+          /tmp/three-ui-repairs.json
+          /tmp/three-ui-*.png
+          /tmp/batch20-visual-preparation.json
+          /tmp/batch20-bounty-preparation.json
+          /tmp/batch18-native-live.json
+          /tmp/batch18-monster-recovery.json
+
+          ci-suite-*.json
+          /tmp/ci-http.log
+        if-no-files-found: ignore
+        retention-days: 7
   gm:
     needs: classify
     if: needs.classify.outputs.gm == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - run: |
-          node tests/runtime/gm-animation-center-terminology.cjs
-          node tests/runtime/3d-player-snapshot-contract.js
-          node tests/runtime/gm-runtime-early-restore-integrity.js
-          npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-functional-http.log 2>&1 &
-          sleep 2
-          node tests/runtime/batch19-2-gm-center-browser.cjs
-          node tests/runtime/gm-3d-test-center-browser.js
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - run: |
+        node tests/runtime/gm-animation-center-terminology.cjs
+        node tests/runtime/3d-player-snapshot-contract.js
+        node tests/runtime/gm-runtime-early-restore-integrity.js
+        npm install --no-save playwright@1.55.0
+        npx playwright install --with-deps chromium
+        python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-functional-http.log 2>&1 &
+        sleep 2
+        node tests/runtime/batch19-2-gm-center-browser.cjs
+        node tests/runtime/gm-3d-test-center-browser.js
   equipment:
     needs: classify
     if: needs.classify.outputs.equipment == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python3 -m pip install Pillow==11.3.0
-      - run: |
-          python3 scripts/formal-equipment-identities.py
-          python3 scripts/equipment-sprites.py validate
-          python3 scripts/equipment-gm-publication.py --check
-          node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python3 -m pip install Pillow==11.3.0
+    - run: |
+        python3 scripts/formal-equipment-identities.py
+        python3 scripts/equipment-sprites.py validate
+        python3 scripts/equipment-gm-publication.py --check
+        node --test tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs
   background:
     needs: classify
     if: needs.classify.outputs.background == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - run: |
-          node tests/runtime/batch2-background-sleeper-lifecycle.cjs
-          node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
-          npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/background-functional-http.log 2>&1 &
-          sleep 2
-          node tests/runtime/special-fast-catchup-integrity.js
-          node tests/runtime/newstate-save-owner-integrity.js
-          node tests/runtime/alternate-universe-old-save-integrity.js
-          node tests/runtime/reincarnation-transaction-integrity.js
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - run: |
+        node tests/runtime/batch2-background-sleeper-lifecycle.cjs
+        node tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js
+        npm install --no-save playwright@1.55.0
+        npx playwright install --with-deps chromium
+        python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/background-functional-http.log 2>&1 &
+        sleep 2
+        node tests/runtime/special-fast-catchup-integrity.js
+        node tests/runtime/newstate-save-owner-integrity.js
+        node tests/runtime/alternate-universe-old-save-integrity.js
+        node tests/runtime/reincarnation-transaction-integrity.js
   resource:
     needs: classify
     if: needs.classify.outputs.resource == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - run: |
-          node tests/runtime/resource-manifest-integrity.js
-          node tests/runtime/resource-cache-integrity.js
-          node tests/runtime/resource-cache-behavior.js
-          node tests/runtime/resource-cache-prefetch-integrity.js
-          node scripts/publish-asset-audit.cjs
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - run: |
+        node tests/runtime/resource-manifest-integrity.js
+        node tests/runtime/resource-cache-integrity.js
+        node tests/runtime/resource-cache-behavior.js
+        node tests/runtime/resource-cache-prefetch-integrity.js
+        node scripts/publish-asset-audit.cjs
   gate:
     name: functional-ci-gate
-    needs: [classify, combat, monster, gm, equipment, background, resource]
+    needs:
+    - classify
+    - combat
+    - monster-m1
+    - monster-m2
+    - monster-m3
+    - monster-m4
+    - gm
+    - equipment
+    - background
+    - resource
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Require all selected domains to pass
-        env:
-          NEEDS_JSON: ${{ toJSON(needs) }}
-        run: |
-          python3 - <<'PY'
-          import os,json,sys
-          jobs=json.loads(os.environ['NEEDS_JSON'])
-          for name,item in jobs.items():
-              outcome=item['result']
-              print(name, outcome)
-              if name=='classify' and outcome!='success':sys.exit(1)
-              if outcome not in ('success','skipped'):sys.exit(1)
-          PY
+    - name: Require all selected domains to pass
+      env:
+        NEEDS_JSON: ${{ toJSON(needs) }}
+      run: |
+        python3 - <<'PYGATE'
+        import os,json,sys
+        jobs=json.loads(os.environ['NEEDS_JSON'])
+        assert jobs['classify']['result']=='success', 'classification failed'
+        outputs=jobs['classify']['outputs']
+        for name,item in jobs.items():
+            domain='monster' if name.startswith('monster-') else name
+            expected='success' if name=='classify' or outputs.get(domain)=='true' else 'skipped'
+            print(name,item['result'],'expected',expected)
+            assert item['result']==expected, f"unexpected result for {name}"
+        PYGATE

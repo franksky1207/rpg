@@ -1,5 +1,12 @@
 # 《文明戰線》目前工程交接
 
+## 2026-10-25 CI 效率工程更新
+
+PR #101（`integrate/postrelease-optimization-20261025`，第4批／第5批／第6批等整合）已合併，正式 Pages [#500](https://github.com/franksky1207/rpg/actions/runs/40168240929) 成功。以下舊整合待發布描述是歷史交接，已由此更新取代。CI 本次從 fetch 後最新 main `19a60010d3252c34bb15d62d40aaff140244cca4` 施工，分支 `optimize/ci-parallel-efficiency-20261025`；遊戲及存檔契約未修改。
+
+11 個功能分組、完整原命令對照、可靠 gate、快取與量測規則見 [CI 工程紀錄](docs/CI_PARALLEL_EFFICIENCY_20261025.md)。實際 Actions 驗收與合併後 Pages 結果以該分支唯一 PR 的 Checks / Conversation 及最終回報為準，未完成前不可宣稱發布成功。M4 有六個獨立 runner 分片；必要失敗／取消／非預期 skipped 都阻止 gate。正式 Pages 仍由原安全發布 workflow 控管，PR concurrency 不取消 main 部署。
+
+
 2026-10-25（Asia/Taipei）。正式版本以 GitHub `main` 的實際程式碼為準；尚未發布的優化成果以整合分支為準，不把本機測試宣稱為正式發布。
 
 - 正式 main 基準：`ee1978ea2d9c60cad53a112250b1f5f214fc33ea`。
