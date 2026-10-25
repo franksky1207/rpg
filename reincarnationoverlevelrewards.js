@@ -18,6 +18,24 @@
   if(!s||!rerunActive(s)||enemy<=player)return 1;
   return 1+RATE_PER_LEVEL*(enemy-player);
  }
+ const BREAKTHROUGH_YIELD_RATE=.01;
+ function breakthroughYieldLevel(target=null){return Math.max(0,Math.floor(Number(targetState(target)?.reincarnation?.breakthrough?.permanent)||0));}
+ // Takes a raw, pre-specialization reward. All bonuses are additive before overlevel.
+ function calculateReincarnationYield(base,{specialization="none",target=null,playerLevel=null,enemyLevel=null,integer=true,useTest=false,overlevelMultiplier=null}={}){
+  const s=targetState(target),raw=Math.max(0,Number(base)||0);
+  const spec=specialization==="none"?1:(typeof window.specializationMultiplier==="function"?Math.max(1,Number(window.specializationMultiplier(specialization,useTest))||1):1);
+  const overlevel=overlevelMultiplier==null?(playerLevel==null||enemyLevel==null?1:reincarnationOverlevelRewardMultiplier(playerLevel,enemyLevel,s)):Math.max(1,Number(overlevelMultiplier)||1);
+  const value=raw*(spec+breakthroughYieldLevel(s)*BREAKTHROUGH_YIELD_RATE)*overlevel;
+  return integer?Math.max(0,Math.ceil(value-1e-10)):Math.max(0,value);
+ }
+ // For already specialized rewards: only the newly added breakthrough component is computed from the unrounded raw amount.
+ function calculateReincarnationYieldFromAdjusted(adjusted,raw,{specialization="none",target=null,playerLevel=null,enemyLevel=null,overlevelMultiplier=null}={}){
+  const s=targetState(target),specialized=Math.max(0,Math.floor(Number(adjusted)||0)),base=Math.max(0,Number(raw)||0);
+  const overlevel=overlevelMultiplier==null?(playerLevel==null||enemyLevel==null?1:reincarnationOverlevelRewardMultiplier(playerLevel,enemyLevel,s)):Math.max(1,Number(overlevelMultiplier)||1);
+  if(breakthroughYieldLevel(s)===0)return overlevel>1?Math.ceil(specialized*overlevel):specialized;
+  const spec=specialization==="none"?1:(typeof window.specializationMultiplier==="function"?Math.max(1,Number(window.specializationMultiplier(specialization))||1):1);
+  return Math.max(0,Math.ceil(base*(spec+breakthroughYieldLevel(s)*BREAKTHROUGH_YIELD_RATE)*overlevel-1e-10));
+ }
  function applyReincarnationOverlevelIntegerReward(amount,playerLevel,enemyLevel,target=null){
   const base=Math.max(0,Number(amount)||0),multiplier=reincarnationOverlevelRewardMultiplier(playerLevel,enemyLevel,target);
   return multiplier>1?Math.max(0,Math.ceil(base*multiplier)):Math.max(0,Math.ceil(base));
@@ -59,6 +77,9 @@
 
  function validate(){
   const first={reincarnation:{count:0}},rerun={reincarnation:{count:1}},errors=[];
+  const yield130={reincarnation:{count:1,breakthrough:{permanent:130}}};
+  if(calculateReincarnationYield(100,{target:yield130})!==230)errors.push({code:"BREAKTHROUGH_YIELD_130"});
+  if(calculateReincarnationYield(1,{target:yield130})!==3)errors.push({code:"BREAKTHROUGH_YIELD_INTEGER"});
   if(reincarnationOverlevelRewardMultiplier(100,500,first)!==1)errors.push({code:"FIRST_RUN_ISOLATION"});
   if(reincarnationOverlevelRewardMultiplier(500,500,rerun)!==1||reincarnationOverlevelRewardMultiplier(600,500,rerun)!==1)errors.push({code:"NO_OVERLEVEL_NO_BONUS"});
   if(Math.abs(reincarnationOverlevelRewardMultiplier(100,500,rerun)-13)>1e-9)errors.push({code:"GAP_400",actual:reincarnationOverlevelRewardMultiplier(100,500,rerun)});
@@ -72,6 +93,9 @@
  window.REINCARNATION_OVERLEVEL_W1_ADAPTER_VERSION=W1_ADAPTER_VERSION;
  window.REINCARNATION_OVERLEVEL_FIGHT_WRAPPER_RETIRED_VERSION=FIGHT_WRAPPER_RETIRED_VERSION;
  window.reincarnationOverlevelRewardMultiplier=reincarnationOverlevelRewardMultiplier;
+ window.calculateReincarnationYield=calculateReincarnationYield;
+ window.calculateReincarnationYieldFromAdjusted=calculateReincarnationYieldFromAdjusted;
+ window.reincarnationBreakthroughYieldLevel=breakthroughYieldLevel;
  window.applyReincarnationOverlevelIntegerReward=applyReincarnationOverlevelIntegerReward;
  window.applyWorld1OnlineOverlevelReward=applyWorld1OnlineOverlevelReward;
  window.REINCARNATION_OVERLEVEL_REWARD_INTEGRITY=validate();
