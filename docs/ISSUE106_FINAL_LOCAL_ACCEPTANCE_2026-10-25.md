@@ -119,3 +119,35 @@ node tests/runtime/html-cache-version-guard.js origin/main HEAD
 另在本機 `.publish-stage3` 發布候選（port 4174）重跑角色 UI 與 browser-smoke，兩者成功；只是本機檢查，不是部署。dry run 為 `deploy=false`、missing refs=0，32 背景／6 音樂／11 音效集合維持不變。
 
 本機判定：可建立 Issue #106 唯一整合 PR。仍須等待該 PR 所有必要 Actions 成功後，才合併並核對 Pages 部署與最新 main SHA。實機 Safari 不在本次瀏覽器模擬驗收範圍。
+
+## PR #107 第一輪 CI 追查與修復
+
+第一輪 HEAD `d44ea474961b2eb504b3b805307121a658d1d088` 的 Gate 失敗未被忽略，逐項修復：
+
+1. GM Terminology 與 Runtime 主 job 的 cleanup Batch4-4 未納入已核准的收益 owner。新增已驗證的 Issue106 exact-source 集合；仍先驗每個 live SHA 及原 main SHA，保留全部歷史資產、來源與原比較，不加路徑 wildcard。
+2. R3 的 Batch6 closure 仍期待戰後補差額 API 發獎。改驗共用 raw 計算器相同的 130 EXP／260 金幣／26 基礎石／13 進階石，並增加相容 alias 不改 result／state、不能再次給獎的斷言；其餘 reset、進度、單次存檔與出售隔離保護保留。
+3. GM 固定動畫 fixture 仍驗舊 engine/core SHA，導致 GM 與 Pages candidate 拒絕載入。新增 `issue106-reward-owners.json`，只對精確已知 live SHA 投影至已封存 main 原始來源。proof 本身 SHA 固定；原 `owner-fixtures.json`、Case SHA、PHASE5 history SHA 與歷史 source 內容不改。未知 source／被竄改 proof 仍拒絕，17 項 playback contract（含新增負向驗證）通過；renderer contract 12 項通過。模組 cache URL 同步，維持單一 fixture module 身份及 WeakSet 驗證，未放寬「已驗證 input」條件。
+4. 發布 helper 明確帶入這一個 GM proof，staging contract 新增其存在斷言，原 174 項 GM B 資產封存不變；沒有恢復退役 A/C 頁面。
+5. F2 畫面測試會在截圖／讀 pixels 時剛好跨到下一樓層，第一輪出現 timeout，本機另重現像素取樣競態。測試只在原 presenter sleep 設受控取樣邊界，完整驗證第 9／10／11 層後放行原動畫與結算；沒有修改正式傷害、速度、renderer、存檔或副本流程。原像素 >100、身份、跨樓層同 stage、退出、未自動領獎斷言全部保留。
+
+追加驗收結果：以不同 test/script 路徑去重，**104 通過／0 失敗／0 個必要項目未執行**。其中完整 R3 41 條命令、F2 4 條命令全部通過；R3 本機第 33 項遇到 CHROMIUM_PATH 未設定，設為 `/usr/bin/chromium` 後續跑剩餘 9 項，沒有省略任何項目。GM 五種戰鬥 × 三種 viewport、發布候選 GM 完整播放／停止／釋放也通過，不寫入存檔或雲端。
+
+實際追加命令（瀏覽器仍使用前述環境，另外設定 `CHROMIUM_PATH=/usr/bin/chromium`）：
+
+```sh
+node scripts/ci-run-suite.cjs R3
+node scripts/ci-run-suite.cjs F2
+node tests/runtime/cleanup-batch4-4-final-guard.cjs
+node tests/runtime/unified-mobile-combat-viewport.cjs
+node --test tests/runtime/pr48-sprite-warmup.test.mjs
+node tests/runtime/t4-preview-retirement.cjs
+node tests/runtime/gm-animation-center-terminology.cjs
+node --test tests/runtime/hybrid-comparison-playback-contract.cjs
+node --test tests/runtime/hybrid-comparison-renderer-contract.cjs
+node tests/runtime/cleanup-batch2-3-staging.cjs
+node tests/runtime/t3b-formal-bridge.cjs
+node scripts/build-publish-dry-run.cjs
+node scripts/stage-hybrid-preview.cjs
+```
+
+這些修復集中於同一 PR；沒有新增 PR、手動重跑無關 Actions、刪除測試或取消必要 Gate。最終 GitHub 結果仍須以修復後最新 PR HEAD 及合併後最新 main 的實際結果為準，另於 Issue #106 記錄。

@@ -48,15 +48,28 @@ try{
   rows.push({mode:'mirror',viewport,world,proof,frames:frames.length,saved,resumedBattle:resumed.run.currentBattle,reloadPreserved:true,stats:await cleanup(page)});await page.close();console.log('PASS mirror native UI + interruption/resume/reload',viewport.width,world);
  }
  if(process.env.MIRROR_VOID_MODE!=='mirror')for(const viewport of sizes)for(const world of [1,2,3]){
-  const page=await boot(viewport);await seed(page,world);await page.evaluate(()=>{window.playerCombatStats=()=>({hp:100000,atk:100,def:100,crit:0,dodge:0});state.hp=100000;ensureVoidMirageState();state.dungeon.voidMirage.highestCleared=109;enterVoidMirageDungeon();startVoidMirageChallengeUI();});
+  const page=await boot(viewport);await seed(page,world);await page.evaluate(()=>{
+   // Hold a real presentation sleep at each inspected floor. Screenshots and
+   // canvas readback must not race the next native floor or its first RAF.
+   const present=window.animateStructuredCombatPresentation;
+   window.__voidProofWaiting=null;window.__voidProofRelease=null;
+   window.animateStructuredCombatPresentation=function(result,options={}){
+    const floor=Number(CivilizationCombatEvents.snapshot()?.actors?.enemy?.location);let held=false;
+    return present(result,{...options,sleep:async ms=>{
+     if(options.mode==='void'&&[9,10,11].includes(floor)&&!held){held=true;await new Promise(resolve=>{__voidProofWaiting=floor;__voidProofRelease=()=>{__voidProofRelease=null;__voidProofWaiting=null;resolve();};});}
+     return options.sleep(ms);
+    }});
+   };
+   window.playerCombatStats=()=>({hp:100000,atk:100,def:100,crit:0,dodge:0});state.hp=100000;ensureVoidMirageState();state.dungeon.voidMirage.highestCleared=109;enterVoidMirageDungeon();startVoidMirageChallengeUI();});
   const proofs=[];for(const floor of [9,10,11]){
-   await page.waitForFunction(floor=>CivilizationCombatEvents.snapshot()?.actors?.enemy?.location===String(floor),floor,{timeout:45000});await page.waitForFunction(()=>{const stage=document.querySelector('.formal-b-shared-stage');const canvases=[stage?.querySelector('[data-suit]'),stage?.querySelector('.formal-b-verified-monster')];return canvases.every(c=>{if(!c||!c.width||!c.height)return false;const data=c.getContext('2d')?.getImageData(0,0,c.width,c.height).data;if(!data)return false;let ink=0;for(let i=3;i<data.length;i+=4)if(data[i]>16&&++ink>100)return true;return false;});},null,{timeout:20000});const proof=await visible(page,'void');assert.equal(proof.event.world,world);assert.ok(proof.monster);assert.ok(proof.pixels.every(n=>n>100));proofs.push(proof);
+   await page.waitForFunction(floor=>CivilizationCombatEvents.snapshot()?.actors?.enemy?.location===String(floor)&&window.__voidProofWaiting===floor,floor,{timeout:45000}).catch(async error=>{console.error('VOID_CHECKPOINT_DIAGNOSTIC',await page.evaluate(()=>({run:getVoidMirageRunSnapshot(),event:CivilizationCombatEvents.snapshot(),lifecycle:CivilizationCombatLifecycle.snapshot(),modals:[...document.querySelectorAll('.modal.show,.open')].map(e=>e.id),busy:battleBusy,view})));throw error;});await page.waitForFunction(()=>{const stage=document.querySelector('.formal-b-shared-stage');const canvases=[stage?.querySelector('[data-suit]'),stage?.querySelector('.formal-b-verified-monster')];return canvases.every(c=>{if(!c||!c.width||!c.height)return false;const data=c.getContext('2d')?.getImageData(0,0,c.width,c.height).data;if(!data)return false;let ink=0;for(let i=3;i<data.length;i+=4)if(data[i]>16&&++ink>100)return true;return false;});},null,{timeout:20000});const proof=await visible(page,'void');assert.equal(proof.event.world,world);assert.ok(proof.monster);assert.ok(proof.pixels.every(n=>n>100));proofs.push(proof);
    await page.screenshot({path:`/tmp/mirror-void-void-${viewport.width}-${world}-${floor}.png`});
    if(floor===9)await page.evaluate(()=>{window.__voidScreen=document.querySelector(".void-combat");window.__voidTop=document.querySelector(".formal-b-shared-stage").getBoundingClientRect().top+scrollY;});
    assert.equal(await page.evaluate(()=>__voidScreen===document.querySelector(".void-combat")),true,'reuse same shared stage');
    assert.ok(await page.evaluate(()=>Math.abs(document.querySelector(".formal-b-shared-stage").getBoundingClientRect().top+scrollY-__voidTop)<1),'void stage stable across normal/Boss floors');
+   if(floor!==11)assert.equal(await page.evaluate(()=>{if(!__voidProofRelease)return false;__voidProofRelease();return true;}),true);
   }
-  await page.getByRole('button',{name:'強制退出虛空幻境',exact:true}).click();await page.waitForFunction(()=>!getVoidMirageRunSnapshot()?.active,{},{timeout:45000});const result=await page.evaluate(()=>({run:getVoidMirageRunSnapshot(),progress:structuredClone(state.dungeon.voidMirage),vip:state.vipPoints}));assert.equal(result.run.endedReason,'exit');assert.ok(result.run.lastClearedFloor>=11);assert.equal(result.vip,0,'no implicit reward claim');
+  await page.getByRole('button',{name:'強制退出虛空幻境',exact:true}).click();assert.equal(await page.evaluate(()=>{if(!__voidProofRelease)return false;__voidProofRelease();return true;}),true);await page.waitForFunction(()=>!getVoidMirageRunSnapshot()?.active,{},{timeout:45000});const result=await page.evaluate(()=>({run:getVoidMirageRunSnapshot(),progress:structuredClone(state.dungeon.voidMirage),vip:state.vipPoints}));assert.equal(result.run.endedReason,'exit');assert.ok(result.run.lastClearedFloor>=11);assert.equal(result.vip,0,'no implicit reward claim');
   rows.push({mode:'void',viewport,world,proofs,result,stats:await cleanup(page)});await page.close();console.log('PASS void native regular/Boss/next floor + exit',viewport.width,world);
  }
  fs.writeFileSync(process.env.MIRROR_VOID_REPORT||'/tmp/mirror-void-formal.json',JSON.stringify({passed:true,realIPhone:false,selectedMode:process.env.MIRROR_VOID_MODE||"both",rows},null,2));

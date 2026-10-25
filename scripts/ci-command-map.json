@@ -768,5 +768,10 @@
     "source": "runtime-integrity/issue106",
     "suite": "R3",
     "command": "node tests/runtime/issue106-approved-sources.cjs"
+  },
+  {
+    "source": "runtime-integrity/issue106",
+    "suite": "R3",
+    "command": "node --test tests/runtime/hybrid-comparison-playback-contract.cjs"
   }
 ]

@@ -61,6 +61,30 @@
     "playersemanticsui.js": {
       "before": "97e1701d0adb6e319b54e09c8eefd5749e01c5fc34825386e38fa8540042afaa",
       "after": "a81fb29c3124f8992ac7165a745699d07e361ccb7cd89081b4b5e0c2d1425921"
+    },
+    "development/hybrid-comparison/fixture-input.mjs": {
+      "before": "3a2662d2a436dbc7629511a12c781beec35ba8b5c4fbd8a1075453c9a98dd392",
+      "after": "f285ef0b4db267387f1387aa64eefa0001372a78a90d8e1f2f4f23d89b8fe807"
+    },
+    "3d-test/gm-battle-simulation.js": {
+      "before": "004d5584aa38e277e86202153166cfddee8f7717f2b8186007110293a6712686",
+      "after": "9e0dd8cd4eeb968a9164db97981f3057aac44d88dab3631b548f268bf6c81df4"
+    },
+    "3d-test/test-center.js": {
+      "before": "a56851794e7cd37b22b6338626ab802a00ebcf89416f050b512734a9dc281df8",
+      "after": "30ae796da317ad2f0e76819eec8940b280ef479f5738141ab86624b1d2ac465a"
+    },
+    "3d-test/index.html": {
+      "before": "b796b63d9ea5df79036cde73924cd8e61876e77d1434f5cbb4dc3e36c8c4a46e",
+      "after": "795ed689a537b226937687e586fd9aa7d978d8b6ffe9bf5e6460d480b2f7b786"
+    },
+    "development/hybrid-comparison/playback.mjs": {
+      "before": "7dadc72000252760453df2b3d727a36348e7d9804f2a7ece9dc693d02a8f1718",
+      "after": "d6ba3c1d7d05cae20a7c03990f8fcd54ed1fc8f89ce725e3b7670bf454c3b16f"
+    },
+    "development/hybrid-comparison/t2b3-v1/renderer.mjs": {
+      "before": "ab25e22e1f1ffa76fa51780ed54278112611bcba05f4da49db5e26f390cb853e",
+      "after": "d01d4c2ddc590b7b11fb7e5cd9815f9f29754969afce6d3f7ff1a9b939366b58"
     }
   }
 }

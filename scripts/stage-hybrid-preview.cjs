@@ -45,7 +45,7 @@ const selectedFingerprint=crypto.createHash('sha256').update(selected.map(([p])=
 if(selectedFingerprint!=='88005cf2ca5048e2b06e4b83de4554d75a3504134e44746599253a344ba7cab1')throw Error('GM B closure differs from verified batch-one inventory');
 for(const [p,record] of selected)add(p,record);
 for(const [p,record] of Object.entries(manifest.vendor))add(p,record);
-for(const p of ['playback.mjs','fixture-input.mjs','t2a-v1/owner-fixtures.json','t2a-v1/comparison-controls.json',
+for(const p of ['playback.mjs','fixture-input.mjs','issue106-reward-owners.json','t2a-v1/owner-fixtures.json','t2a-v1/comparison-controls.json',
  't2b3-v1/manifest.json','t2b3-v1/icon.svg','t2b3-v1/renderer.mjs','t2b3-v1/assets.mjs','t2b3-v1/atlas.mjs','t2b3-v1/native.mjs','t2b3-v1/contract.mjs','t2b3-v1/vendor.mjs'])add(prefix+p);
 for(const p of ['data.js','worldmaps-earth.js','engine.js','balance.js','alternateuniversedata.js','traits.js','combatmath.js','combatcore.js','combat-events.js','3d-test/appearance-snapshot.js','3d-test/formal-snapshots.js','assets/3d/asset-registry.json','development/3d-source/equipment/ancient-ruins-v1/rig-contract.json'])add(p);
 // Historical G007 refinements and source archives are retired; only current assets ship.

@@ -8,7 +8,7 @@ assert.ok(fs.existsSync(path.join(stage,".publish-candidate")),"Official release
 for(const name of ["index.html","comparison.css","comparison.mjs"]) {
  assert.ok(!fs.existsSync(path.join(stage,pre+name)),"Retired A/B/C entry still published: "+name);
 }
-for(const name of ["fixture-input.mjs","playback.mjs","t2b3-v1/manifest.json","t2b3-v1/renderer.mjs","t2b3-v1/assets.mjs","t2b3-v1/atlas.mjs","t2b3-v1/contract.mjs"]) {
+for(const name of ["fixture-input.mjs","issue106-reward-owners.json","playback.mjs","t2b3-v1/manifest.json","t2b3-v1/renderer.mjs","t2b3-v1/assets.mjs","t2b3-v1/atlas.mjs","t2b3-v1/contract.mjs"]) {
  assert.ok(fs.statSync(path.join(stage,pre+name)).isFile(),"GM B dependency missing: "+name);
 }
 for(const name of ["assets/gm-equipment-2_5d/v1/catalog.json","3d-test/gm-battle-simulation.js","3d-test/gm-battle-published.mjs"]) {

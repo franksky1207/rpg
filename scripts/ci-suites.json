@@ -110,7 +110,8 @@
     "node tests/runtime/issue106-reward-yield-integrity.js",
     "node tests/runtime/issue106-reward-yield-browser.cjs",
     "node tests/runtime/issue106-character-ui-integrity.cjs",
-    "node tests/runtime/issue106-approved-sources.cjs"
+    "node tests/runtime/issue106-approved-sources.cjs",
+    "node --test tests/runtime/hybrid-comparison-playback-contract.cjs"
   ],
   "R1": [
     "node tests/runtime/offline-sample-provenance-opt4-integrity.js 2>&1 | tee -a runtime-integrity-report.txt",
