@@ -47,7 +47,7 @@
    await presentCombat(result.combat);
    let settlement=null;if(result.settlementReady===true){settlement=typeof window.settleAlternateUniverseCombat==="function"?window.settleAlternateUniverseCombat(result):{ok:false};if(!settlement?.ok)throw new Error(settlement?.reason||"settlement-failed");}
    lastBattleReport={depth:attempt.depth,traits:Array.from(attempt.traits||[]),result,settlement};if(settlement?.ok===true&&result?.combat?.win===true)window.CivilizationAudio?.settlementVictory?.("alternate:"+String(attempt.attemptId||attempt.depth),{success:true});return true;
-  }catch(error){if(window.CivilizationCombatLifecycle?.isInterrupted(error))return false;console.error("[文明戰線] 異宇宙戰鬥失敗",error);alert("異宇宙戰鬥未能完成，本次挑戰會保留；請重新整理後再試。");return false;}
+  }catch(error){if(window.CivilizationCombatLifecycle?.isInterrupted(error))return false;console.error("[文明戰線] 異宇宙戰鬥失敗",error);alert("異宇宙戰鬥或結算發生異常，請重新整理後確認目前挑戰與失敗次數，再決定是否繼續。");return false;}
   finally{battleContext=null;window.CivilizationAudioScenes?.endRun?.(audioRunId);renderPage();}
  }
  function abandonFormal(){const attempt=activeAttempt();if(!attempt||battleContext)return false;if(!confirm("放棄尚未結算的異宇宙挑戰會記 1 次失敗。確定放棄？"))return false;const result=typeof window.abandonAlternateUniverseAttempt==="function"?window.abandonAlternateUniverseAttempt({attemptId:attempt.attemptId}):{ok:false};if(!result?.ok){alert("無法放棄本次挑戰，請重新整理後再試。");return false;}lastBattleReport=null;renderPage();return true;}
