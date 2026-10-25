@@ -44,7 +44,8 @@ Story completion 不列入轉生資格。正式轉生會先做 verified safety b
 轉生後每輪自然升級跨過 Lv.100／200／…／1000 時各取得 1 級突破，每輪最多 +10。每級正式效果：
 
 - raw equipment HP／ATK／DEF +2.5%；
-- final damage additive +0.05。
+- final damage additive +0.05；
+- 每級突破對適用正式收益另加 +1%，與適用專精加成相加，再乘現有越級倍率；銀河／宇宙正式與離線同一基礎公式，離線統一 10%（詳 Issue #106）。
 
 突破與裝備強化各自從 raw equipment 正式 owner 推導，不互相複利；GM 直接指定角色等級不會觸發自然升級里程碑。
 
@@ -56,19 +57,18 @@ Story completion 不列入轉生資格。正式轉生會先做 verified safety b
 - VIP2～VIP20 依既有規則解鎖特殊特權；VIP20 是最後一個特殊特權階段。
 - VIP21 以上不新增特權，但既有特權與每級基本能力成長持續有效。
 
-完整 VIP 改版紀錄見 `PROJECT_VIP_UNBOUNDED_UPDATE.md`。
+VIP 現役契約與 owner 見 `PROJECT_VIP_UNBOUNDED_UPDATE.md`。
 
 ## 目前後續開發主線
 
 既有三紀元正式內容目前以維護／實測為主。轉生核心資料、突破系統、正式轉生最小可用流程與其後優化已完成。
 
-目前尚未完成的主要工作依 `PROJECT_HANDOFF.md` 為準，核心包括：
+以下是未來開發方向（是否仍待辦應以即時 main、開放 Issue 為準，不將歷史規劃自動視為未完成）：
 
 1. 異宇宙 1000U 實際玩法與完整化；
 2. 轉生後 W1／W2／W3 自由重征服；
-3. 越級 EXP／核心資源／offline 共用倍率；
-4. 首次轉生後四大副本永久解鎖與 rerun eligibility；
-5. 更完整角色總覽、GM 轉生／突破／異宇宙管理與全生命週期 regression。
+3. 首次轉生後四大副本永久解鎖與 rerun eligibility；
+4. GM 轉生／突破／異宇宙管理及後續全生命週期實測。
 
 ## Integrity／維護
 
@@ -93,7 +93,7 @@ GitHub Pages 可直接使用 `main` 分支根目錄部署，入口為 `index.htm
 - `assets/README.md`：背景 source／runtime 素材政策。
 - `GM_UI_GUIDE.md`：現行 GM 功能按鈕語意、配色與管理區塊原則。
 
-修改前必須 fresh-read current `main` 的相關 owner／consumer；JS／CSS 改動需同步更新 `index.html` cache-bust。使用者說「先討論／先檢查」時不得修改；明確說「做／修改／執行／第 N 批」時可直接施工，完成後重新確認 actual main 與 Integrity。
-## 未發布優化整合
+通用施工、Codex 使用條件、風險分級測試及發布封箱以 `DEVELOPMENT_PROTOCOL.md` 為唯一正式規範；修改前 fresh-read current main 與直接相依 owner。
+## 已完成的近期優化
 
-正式 main 基準為 `ee1978ea`；第2～6批工程成果保存在 `integrate/postrelease-optimization-20261025`，**尚未合併或發布**。第4批清理見 `docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md`，第5～6批紀錄及驗收限制見 Issue #100；歷史工程見 `docs/HISTORICAL_ENGINEERING.md`。正式部署仍需整合 PR、集中驗收與 Pages 發布。
+PR #101 已整合發布全面優化第 2～6 批；PR #102 完成 CI 分流與加速；PR #103 完成 GM 動畫中心改版；PR #107 完成 Issue #106 的突破收益、離線統一 10% 與角色顯示。現況以當下 main 與對應 PR 為準，不以歷史施工分支的「未發布」描述當作待辦。

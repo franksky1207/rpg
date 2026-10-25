@@ -4,7 +4,7 @@
 分支：`main`
 
 > **最高原則：GitHub `main` 實際程式碼仍是唯一真實來源。**  
-> 本檔是 2026-09-26 VIP 無上限改版的正式補充文件；若舊 `PROJECT_HANDOFF.md`、舊對話或舊文件仍寫「VIP 最大20／VIP20 後積分無用途」，該敘述已失效，以本檔與 current `main` 為準。
+> 本檔只保留 VIP 無上限現役正式契約與 owner；若舊 `PROJECT_HANDOFF.md`、舊對話或舊文件仍寫「VIP 最大20／VIP20 後積分無用途」，該敘述已失效，以本檔與 current `main` 為準。
 
 ## 1. 正式規則
 
@@ -165,37 +165,10 @@ Runtime probe 會確認：
 - 第三紀元仍可延續競技場／虛空等既有玩法提供的 VIP 積分，作為跨紀元永久長線成長。
 - 第三紀元不需要因此新增 VIP21+ 特殊特權，也不需要把 VIP 積分轉換成高維資源。
 
-## 7. 本次自我檢查
 
-本次修改分三批完成：
+## 正式資料安全
 
-1. 正式 VIP progression／基本能力／VIP Loot 核心。
-2. 玩家 VIP UI、遊戲說明、GM 管理與 GM 測試。
-3. Integrity／CI／cache-bust／文件同步。
-
-第3批自我檢查特別確認：
-
-- `index.html` 僅保留本次應更新的 VIP／Guide／GM／Integrity cache-bust。
-- 自我檢查曾抓到 `worldmaps-core-war.js` 的無關 cache-bust 漂移，已立即還原，不納入正式變更。
-- Save schema 維持15，沒有新增 VIP save 欄位，不需要 migration。
-- VIP20 死亡保護及 VIP2～18 既有特殊特權門檻沒有改變。
-- 高維紀元 runtime 仍未實作，本次只修正其 VIP 設計前提。
-
-## 8. 2026-09-26 後續 owner／舊資料收斂
-
-針對 VIP 無上限改版再做一次維護檢查後，已追加以下正式收斂：
-
-- `engine.js` 不再持有 `VIP_MAX_LEVEL` 或第二套 `vipBonusStats()`；VIP 基本能力正式唯一 owner 為 `vipprogression.js`。
-- `vipgm.js` 本體直接支援無上限 VIP 測試；`gmhubextensions.js` 不再透過 runtime override 修正 VIP 測試。
-- `addVipPoints(...)` 不再保留自己的 vipPoints／vipLevel fallback；若正式 `normalizeVipState` 或 `vipLevelFromPoints` owner 未載入，直接 fail-fast，避免第二套 progression 漂移。
-- `VIP_ADD_POINTS_OWNER_REQUIRED_VERSION = 1` 標記上述依賴政策。
-- **舊存檔的 VIP 真實來源正式定義為 `vipPoints`。** `vipLevel` 為可重建衍生值；載入與正規化時一律依積分重算。
-- 舊資料測試已涵蓋：
-  - `vipPoints = 490,000`、舊 `vipLevel = 20` → VIP22。
-  - `vipPoints = 441,000`、缺少 `vipLevel` → VIP21。
-  - `vipPoints = 400,000`、錯誤 `vipLevel = 99` → VIP20。
-  - 只有 `vipLevel = 50`、缺少 `vipPoints` → 視為 0 積分並重建為 VIP0；不信任無積分依據的孤立等級值。
-- 不升 Save Schema；上述皆由現有 normalization owner 處理。
-- VIP Loot 追加回歸測試：VIP21／50／100 均完整繼承 VIP8／14／16／18 既有特權與原機率，但特權表仍只有 `vip8 / vip14 / vip16 / vip18`，不得因無限等級自行新增 VIP21+ tier。
-
-CI 最終結果應以 current main 最新 HEAD 的 GitHub Actions `Runtime Integrity` 為準；若後續文件 commit 使中間 commit 被 freshness guard 略過，應查看最後一個 current-head run。
+- `vipPoints` 為舊存檔與正式資料的 VIP 真實來源；`vipLevel` 從積分正規化重建，不建立第二份 VIP 基本能力或 progression owner。
+- `vipprogression.js` 管理等級、基礎能力及正規化；`viplootcore.js` 延續 VIP8／14／16／18 特權，VIP21+ 不建立新 tier。
+- GM 正式管理透過積分修改，GM 測試可使用無上限等級但不得回寫正式 save。
+- 是否適用於最新版本以 main 實碼和現役 VIP Integrity 為準，不把歷史 Schema、施工狀態或 cache-bust 記錄當作現況。
