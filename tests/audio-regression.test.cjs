@@ -24,10 +24,19 @@ const gm=source("audio/gm-audio-test.js");
 assert.doesNotMatch(gm,/介面點擊｜固定 085/,"cancelled UI click must not be in GM audition");
 assert.match(gm,/stopGmSfx/);
 assert.doesNotMatch(gm,/audio\(\)\?\.stopSfx/);
-const filesUi=fs.readdirSync(path.join(root,"audio/assets/common-sfx/ui-click")).filter(x=>x.endsWith(".ogg"));
-assert.deepEqual(filesUi,["sfx-085.ogg"],"single selected UI click asset");
-const manifest=JSON.parse(source("audio/assets/common-sfx/manifest.json"));
-assert.deepEqual(manifest.categories["ui-click"].converted.map(x=>x.file),filesUi);
+const selected=require("../scripts/publish-assets.cjs").inspect(root).audio.files;
+const crypto=require("node:crypto");
+const common=JSON.parse(source("audio/assets/common-sfx/manifest.json"));
+assert.equal(selected.length,17);
+for(const file of selected){
+ const raw=fs.readFileSync(path.join(root,file));assert.ok(raw.length>0,file);
+ if(file.includes("common-sfx/")){
+  const category=file.split("/").at(-2),name=path.basename(file);
+  const row=common.categories[category].converted.find(x=>x.file===name);assert.ok(row,file);
+  assert.equal(raw.length,row.bytes);assert.equal(crypto.createHash("sha256").update(raw).digest("hex"),row.sha256);
+ }
+}
+assert.equal(fs.existsSync(path.join(root,"audio/assets/common-sfx/ui-click/sfx-085.ogg")),false,"disabled click resource stays retired");
 const listened=[];
 const listeners=new Map();
 const document={

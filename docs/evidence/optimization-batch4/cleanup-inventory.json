@@ -1,0 +1,4730 @@
+{
+  "baseline": "c0ec18d686d7111b2e5a7fa380c94653a2b8a2e4",
+  "deleted": [
+    {
+      "path": "assets/backgrounds-source/adventure-map/desktop.png",
+      "bytes": 2625371,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/adventure-map/mobile.png",
+      "bytes": 2649825,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/battle-main/desktop.png",
+      "bytes": 2632861,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/battle-main/mobile.png",
+      "bytes": 2776633,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/calamity/desktop.png",
+      "bytes": 2278663,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/calamity/mobile.png",
+      "bytes": 2303792,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/character/desktop.png",
+      "bytes": 2521881,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/character/mobile.png",
+      "bytes": 2442794,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-arena-battle/desktop.png",
+      "bytes": 2581525,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-arena-battle/mobile.png",
+      "bytes": 2625206,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-arena/desktop.png",
+      "bytes": 2369355,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-arena/mobile.png",
+      "bytes": 2132497,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-bounty-battle/desktop.png",
+      "bytes": 2561088,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-bounty-battle/mobile.png",
+      "bytes": 2494556,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-bounty/desktop.png",
+      "bytes": 2346529,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-bounty/mobile.png",
+      "bytes": 2003539,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-home/desktop.png",
+      "bytes": 2503962,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-home/mobile.png",
+      "bytes": 2309154,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-void-battle/desktop.png",
+      "bytes": 2762861,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-void-battle/mobile.png",
+      "bytes": 2708853,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-void/desktop.png",
+      "bytes": 2532843,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/dungeon-void/mobile.png",
+      "bytes": 2631649,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/enhancement/desktop.PNG",
+      "bytes": 2460290,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/enhancement/mobile.PNG",
+      "bytes": 3433312,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/guide-settings/desktop.png",
+      "bytes": 2385146,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/guide-settings/mobile.png",
+      "bytes": 2278655,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/home/desktop.png",
+      "bytes": 2304960,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/home/mobile.png",
+      "bytes": 2449779,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/inventory-shop/desktop.png",
+      "bytes": 2358917,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/inventory-shop/mobile.png",
+      "bytes": 2196250,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/prepare/desktop.png",
+      "bytes": 2576966,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "assets/backgrounds-source/prepare/mobile.png",
+      "bytes": 2831871,
+      "class": "B",
+      "reason": "正式32張WebP與CSS/Manifest已驗證；舊source存在/容量比例檢查已改成正式完整性"
+    },
+    {
+      "path": "audio/A01_AUDIO_LEDGER.md",
+      "bytes": 32519,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "audio/ERA_THEME_LOCALIZATION.md",
+      "bytes": 15947,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "audio/assets/airy_0-balanced.mp3",
+      "bytes": 1056765,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/airy_0.mp3",
+      "bytes": 2559999,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/battle-themes/high-original.ogg",
+      "bytes": 1437326,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/battle-themes/medium-original.mp3",
+      "bytes": 3456996,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/battle-themes/normal-original.wav",
+      "bytes": 8469188,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-004.ogg",
+      "bytes": 12127,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-005.ogg",
+      "bytes": 9924,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-006.ogg",
+      "bytes": 9910,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-007.ogg",
+      "bytes": 11575,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-008.ogg",
+      "bytes": 12978,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-009.ogg",
+      "bytes": 8102,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-010.ogg",
+      "bytes": 10404,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-011.ogg",
+      "bytes": 12344,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-012.ogg",
+      "bytes": 9338,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-013.ogg",
+      "bytes": 10731,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-014.ogg",
+      "bytes": 12264,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-015.ogg",
+      "bytes": 10204,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-016.ogg",
+      "bytes": 12664,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-017.ogg",
+      "bytes": 10908,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-018.ogg",
+      "bytes": 9878,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-019.ogg",
+      "bytes": 12074,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-020.ogg",
+      "bytes": 13129,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-021.ogg",
+      "bytes": 9224,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-022.ogg",
+      "bytes": 8488,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-023.ogg",
+      "bytes": 9241,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-024.ogg",
+      "bytes": 10289,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-025.ogg",
+      "bytes": 8778,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-026.ogg",
+      "bytes": 9166,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-027.ogg",
+      "bytes": 8210,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-028.ogg",
+      "bytes": 6688,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-029.ogg",
+      "bytes": 10332,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-030.ogg",
+      "bytes": 10231,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-031.ogg",
+      "bytes": 7621,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-032.ogg",
+      "bytes": 8519,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-033.ogg",
+      "bytes": 10691,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-034.ogg",
+      "bytes": 11715,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-035.ogg",
+      "bytes": 11691,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-036.ogg",
+      "bytes": 11007,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/critical/sfx-037.ogg",
+      "bytes": 9464,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/dodge/teleport.wav",
+      "bytes": 286694,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sci-fi-sfx.zip",
+      "bytes": 2436465,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-001.ogg",
+      "bytes": 5364,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-002.ogg",
+      "bytes": 6430,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-003.ogg",
+      "bytes": 5663,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-006.ogg",
+      "bytes": 50501,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-007.ogg",
+      "bytes": 32208,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-008.ogg",
+      "bytes": 31612,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-009.ogg",
+      "bytes": 32011,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-010.ogg",
+      "bytes": 49891,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-011.ogg",
+      "bytes": 6247,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-012.ogg",
+      "bytes": 7442,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-013.ogg",
+      "bytes": 15642,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-014.ogg",
+      "bytes": 10355,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-015.ogg",
+      "bytes": 6538,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-016.ogg",
+      "bytes": 9119,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-017.ogg",
+      "bytes": 6640,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-018.ogg",
+      "bytes": 8596,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-019.ogg",
+      "bytes": 15735,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-020.ogg",
+      "bytes": 11817,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-021.ogg",
+      "bytes": 9434,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-022.ogg",
+      "bytes": 12460,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-023.ogg",
+      "bytes": 6050,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-024.ogg",
+      "bytes": 6904,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-025.ogg",
+      "bytes": 6653,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-026.ogg",
+      "bytes": 10306,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-027.ogg",
+      "bytes": 10403,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-028.ogg",
+      "bytes": 10302,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-030.ogg",
+      "bytes": 6660,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-031.ogg",
+      "bytes": 13363,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-032.ogg",
+      "bytes": 13083,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-033.ogg",
+      "bytes": 5727,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-034.ogg",
+      "bytes": 5435,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-035.ogg",
+      "bytes": 5974,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-036.ogg",
+      "bytes": 17954,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-037.ogg",
+      "bytes": 6015,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-038.ogg",
+      "bytes": 7134,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-039.ogg",
+      "bytes": 7210,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-040.ogg",
+      "bytes": 5815,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-041.ogg",
+      "bytes": 6505,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-042.ogg",
+      "bytes": 5960,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-043.ogg",
+      "bytes": 5944,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-044.ogg",
+      "bytes": 5856,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-045.ogg",
+      "bytes": 5643,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-046.ogg",
+      "bytes": 8975,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-047.ogg",
+      "bytes": 12634,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-048.ogg",
+      "bytes": 12990,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-049.ogg",
+      "bytes": 19820,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/heavy-hit/sfx-050.ogg",
+      "bytes": 7660,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-004.ogg",
+      "bytes": 11999,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-005.ogg",
+      "bytes": 13690,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-006.ogg",
+      "bytes": 10090,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-007.ogg",
+      "bytes": 9041,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-008.ogg",
+      "bytes": 10586,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-009.ogg",
+      "bytes": 14523,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sfx-010.ogg",
+      "bytes": 16286,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/normal-attack/sword_-_starninjas_1.zip",
+      "bytes": 149512,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/ui-click/sfx-085.ogg",
+      "bytes": 4516,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/common-sfx/victory/sboe.wav",
+      "bytes": 2161074,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/era-themes/galaxy-original.mp3",
+      "bytes": 6283056,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/era-themes/higher-original.zip",
+      "bytes": 32456598,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/era-themes/higher-source.flac",
+      "bytes": 6581088,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/era-themes/universe-original.mp3",
+      "bytes": 2569821,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/hover_0-balanced.mp3",
+      "bytes": 10125,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/hover_0-balanced2.mp3",
+      "bytes": 10341,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/hover_0.mp3",
+      "bytes": 62693,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/laserpew-balanced2.mp3",
+      "bytes": 8109,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/laserpew.ogg",
+      "bytes": 11428,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/pulse_0-balanced.mp3",
+      "bytes": 552813,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/pulse_0.mp3",
+      "bytes": 2845256,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/sector_0-balanced.mp3",
+      "bytes": 692829,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/sector_0.mp3",
+      "bytes": 2275786,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/title_6-balanced.mp3",
+      "bytes": 8437965,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/title_6.mp3",
+      "bytes": 9408734,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/transmission_1-balanced.mp3",
+      "bytes": 1765677,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/transmission_1.mp3",
+      "bytes": 3761631,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/urgent_0-balanced.mp3",
+      "bytes": 940269,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/urgent_0.mp3",
+      "bytes": 2275786,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/victory_4-balanced.mp3",
+      "bytes": 94653,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "audio/assets/victory_4.mp3",
+      "bytes": 235101,
+      "class": "B",
+      "reason": "不在6首音樂+11音效選取池；停用UI click存在性斷言改成現役音訊SHA/生命週期"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/README.md",
+      "bytes": 4337,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/build_player.py",
+      "bytes": 18541,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/export-measurements.json",
+      "bytes": 787,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/export_lods.py",
+      "bytes": 3549,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/face-atlas.png",
+      "bytes": 96164,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/lod_surface.py",
+      "bytes": 1295,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/refine_player.py",
+      "bytes": 8578,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/render_review.py",
+      "bytes": 4890,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/01-front.png",
+      "bytes": 888732,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/02-back.png",
+      "bytes": 872696,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/03-left.png",
+      "bytes": 810535,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/04-right.png",
+      "bytes": 811832,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/05-head-chest.png",
+      "bytes": 1173588,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/06-shoulder-hand.png",
+      "bytes": 1207286,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/07-hip-knee-shoes.png",
+      "bytes": 1167915,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/08-lod-low-medium-high.png",
+      "bytes": 1802164,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/09-game-light.png",
+      "bytes": 1235243,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/10-joint-deformation.png",
+      "bytes": 1185415,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/11-formal-browser.png",
+      "bytes": 84258,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/12-gm-browser.png",
+      "bytes": 84380,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/13-before-formal-mobile.png",
+      "bytes": 19987,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/14-before-gm.png",
+      "bytes": 70091,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/15-formal-mobile.png",
+      "bytes": 22251,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/16-formal-desktop-back.png",
+      "bytes": 20876,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/16-formal-desktop-front.png",
+      "bytes": 21937,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/16-formal-desktop-side.png",
+      "bytes": 16390,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/16-formal-mobile-back.png",
+      "bytes": 21450,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/16-formal-mobile-front.png",
+      "bytes": 22250,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/16-formal-mobile-side.png",
+      "bytes": 16942,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/b27-fast-after-phone-back.png",
+      "bytes": 43850,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/b27-fast-after-phone-front.png",
+      "bytes": 46153,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/b27-fast-after-phone-side.png",
+      "bytes": 31592,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/b27-fast-before-phone-back.png",
+      "bytes": 39560,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/b27-fast-before-phone-front.png",
+      "bytes": 39807,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/b27-fast-before-phone-side.png",
+      "bytes": 29538,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review-fast/render-settings.json",
+      "bytes": 457,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/01-front.png",
+      "bytes": 843802,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/02-back.png",
+      "bytes": 838958,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/03-left.png",
+      "bytes": 782546,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/04-right.png",
+      "bytes": 782324,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/05-head-chest.png",
+      "bytes": 1039885,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/06-shoulder-hand.png",
+      "bytes": 1106964,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/07-hip-knee-shoes.png",
+      "bytes": 1075312,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/08-lod-low-medium-high.png",
+      "bytes": 1743490,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/09-game-light.png",
+      "bytes": 1105378,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/10-joint-deformation.png",
+      "bytes": 1078188,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/11-formal-browser.png",
+      "bytes": 74353,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/12-gm-browser.png",
+      "bytes": 69977,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/review/render-settings.json",
+      "bytes": 637,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/socket-diff.json",
+      "bytes": 9155,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/source-validation.json",
+      "bytes": 1738,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/validate_source.py",
+      "bytes": 5148,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/characters/player-v1/woven-atlas.png",
+      "bytes": 96160,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/README.md",
+      "bytes": 3400,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/build_equipment.py",
+      "bytes": 13329,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/export-measurements.json",
+      "bytes": 1889,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/export_refined.py",
+      "bytes": 2002,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/fixture-adapter-evolution.json",
+      "bytes": 659,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/fixture-producer-evolution.json",
+      "bytes": 589,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/refine_equipment.py",
+      "bytes": 7508,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/render_review.py",
+      "bytes": 2495,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-desktop-back.png",
+      "bytes": 23468,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-desktop-front.png",
+      "bytes": 25040,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-desktop-side.png",
+      "bytes": 19355,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-mobile-back.png",
+      "bytes": 24279,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-mobile-front.png",
+      "bytes": 25782,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-mobile-max-back.png",
+      "bytes": 93053,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-mobile-max-front.png",
+      "bytes": 99629,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-mobile-max-side.png",
+      "bytes": 69496,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-formal-mobile-side.png",
+      "bytes": 20002,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-gm-back.png",
+      "bytes": 44844,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-gm-equipment-display.png",
+      "bytes": 30872,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-gm-front.png",
+      "bytes": 48403,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/b28c-gm-side.png",
+      "bytes": 35666,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/back.png",
+      "bytes": 665378,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/front.png",
+      "bytes": 686881,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/helmet.png",
+      "bytes": 769082,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/joint-pose.png",
+      "bytes": 733589,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/render-settings.json",
+      "bytes": 199,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/review/side.png",
+      "bytes": 608220,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/source-validation.json",
+      "bytes": 4312,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/3d-source/equipment/ancient-ruins-v1/validate_source.py",
+      "bytes": 3372,
+      "class": "A",
+      "reason": "已退役Blender工程/調色/審圖；18個登記GLB與rig-contract仍保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/candidate-lab.html",
+      "bytes": 445,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/candidate-lab.mjs",
+      "bytes": 5200,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-galaxy-boss.png",
+      "bytes": 94611,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-galaxy-elite.png",
+      "bytes": 92907,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-galaxy-normal.png",
+      "bytes": 91617,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-galaxy.gif",
+      "bytes": 527708,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-higher-boss.png",
+      "bytes": 99859,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-higher-elite.png",
+      "bytes": 97770,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-higher-normal.png",
+      "bytes": 96789,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-higher.gif",
+      "bytes": 541325,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-universe-boss.png",
+      "bytes": 100479,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-universe-elite.png",
+      "bytes": 98510,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-universe-normal.png",
+      "bytes": 97027,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-1365-universe.gif",
+      "bytes": 535464,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-galaxy-boss.png",
+      "bytes": 104930,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-galaxy-elite.png",
+      "bytes": 102402,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-galaxy-normal.png",
+      "bytes": 101130,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-galaxy.gif",
+      "bytes": 261643,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-higher-boss.png",
+      "bytes": 110777,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-higher-elite.png",
+      "bytes": 108567,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-higher-normal.png",
+      "bytes": 107118,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-higher.gif",
+      "bytes": 268544,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-universe-boss.png",
+      "bytes": 111618,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-universe-elite.png",
+      "bytes": 109386,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-universe-normal.png",
+      "bytes": 107989,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-390-universe.gif",
+      "bytes": 268596,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-galaxy-boss.png",
+      "bytes": 25923,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-galaxy-elite.png",
+      "bytes": 25379,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-galaxy-normal.png",
+      "bytes": 25049,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-galaxy.gif",
+      "bytes": 169156,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-higher-boss.png",
+      "bytes": 26666,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-higher-elite.png",
+      "bytes": 26014,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-higher-normal.png",
+      "bytes": 25681,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-higher.gif",
+      "bytes": 172530,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-universe-boss.png",
+      "bytes": 26757,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-universe-elite.png",
+      "bytes": 26140,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-universe-normal.png",
+      "bytes": 25810,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/accepted-844-universe.gif",
+      "bytes": 174096,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/evidence-index.json",
+      "bytes": 22918,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/formal-visual-report.json",
+      "bytes": 99085,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-body-trial.png",
+      "bytes": 141466,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-capped-compact-cut-128.png",
+      "bytes": 99560,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-capped-compact-cut-180.png",
+      "bytes": 157637,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-capped-elbow-uppercut-128.png",
+      "bytes": 100123,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-capped-elbow-uppercut-180.png",
+      "bytes": 158074,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-compact-arm-cut-128.png",
+      "bytes": 97773,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-compact-arm-cut-180.png",
+      "bytes": 156047,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-dash-cut-128.png",
+      "bytes": 96573,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-dash-cut-180.png",
+      "bytes": 154370,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-elbow-uppercut-128.png",
+      "bytes": 98497,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-elbow-uppercut-180.png",
+      "bytes": 156377,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-heavy-blow-128.png",
+      "bytes": 97406,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-heavy-blow-180.png",
+      "bytes": 155622,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-shoulder-uppercut-128.png",
+      "bytes": 98567,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-shoulder-uppercut-180.png",
+      "bytes": 156292,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-whole-image-control-128.png",
+      "bytes": 97644,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-whole-image-control-180.png",
+      "bytes": 153587,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-wrist-diagonal-128.png",
+      "bytes": 97954,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-wrist-diagonal-180.png",
+      "bytes": 156040,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-wrist-horizontal-128.png",
+      "bytes": 95606,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-wrist-horizontal-180.png",
+      "bytes": 151544,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-wrist-uppercut-128.png",
+      "bytes": 98085,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/galaxy-wrist-uppercut-180.png",
+      "bytes": 155984,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-body-trial.png",
+      "bytes": 154669,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-capped-compact-cut-128.png",
+      "bytes": 102102,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-capped-compact-cut-180.png",
+      "bytes": 162962,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-capped-elbow-uppercut-128.png",
+      "bytes": 102456,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-capped-elbow-uppercut-180.png",
+      "bytes": 163280,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-compact-arm-cut-128.png",
+      "bytes": 100763,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-compact-arm-cut-180.png",
+      "bytes": 161586,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-dash-cut-128.png",
+      "bytes": 99202,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-dash-cut-180.png",
+      "bytes": 159624,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-elbow-uppercut-128.png",
+      "bytes": 100774,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-elbow-uppercut-180.png",
+      "bytes": 161673,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-heavy-blow-128.png",
+      "bytes": 100377,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-heavy-blow-180.png",
+      "bytes": 161264,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-shoulder-uppercut-128.png",
+      "bytes": 101195,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-shoulder-uppercut-180.png",
+      "bytes": 161967,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-whole-image-control-128.png",
+      "bytes": 102613,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-whole-image-control-180.png",
+      "bytes": 164267,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-wrist-diagonal-128.png",
+      "bytes": 100939,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-wrist-diagonal-180.png",
+      "bytes": 161847,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-wrist-horizontal-128.png",
+      "bytes": 97662,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-wrist-horizontal-180.png",
+      "bytes": 155879,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-wrist-uppercut-128.png",
+      "bytes": 100638,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/higher-wrist-uppercut-180.png",
+      "bytes": 161288,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/trial-inputs.json",
+      "bytes": 2998,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-body-trial.png",
+      "bytes": 153887,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-capped-compact-cut-128.png",
+      "bytes": 104128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-capped-compact-cut-180.png",
+      "bytes": 166613,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-capped-elbow-uppercut-128.png",
+      "bytes": 104025,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-capped-elbow-uppercut-180.png",
+      "bytes": 166522,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-compact-arm-cut-128.png",
+      "bytes": 102880,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-compact-arm-cut-180.png",
+      "bytes": 165359,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-dash-cut-128.png",
+      "bytes": 100851,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-dash-cut-180.png",
+      "bytes": 162421,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-elbow-uppercut-128.png",
+      "bytes": 102826,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-elbow-uppercut-180.png",
+      "bytes": 165260,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-heavy-blow-128.png",
+      "bytes": 102215,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-heavy-blow-180.png",
+      "bytes": 164798,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-shoulder-uppercut-128.png",
+      "bytes": 102677,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-shoulder-uppercut-180.png",
+      "bytes": 164664,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-whole-image-control-128.png",
+      "bytes": 103331,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-whole-image-control-180.png",
+      "bytes": 165506,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-wrist-diagonal-128.png",
+      "bytes": 102496,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-wrist-diagonal-180.png",
+      "bytes": 164927,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-wrist-horizontal-128.png",
+      "bytes": 100507,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-wrist-horizontal-180.png",
+      "bytes": 161018,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-wrist-uppercut-128.png",
+      "bytes": 102086,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/rendered/universe-wrist-uppercut-180.png",
+      "bytes": 164404,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch12/verification-summary.json",
+      "bytes": 34446,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/all-identities.json",
+      "bytes": 1186998,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/01-browser.cjs.log",
+      "bytes": 398,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/02-combat-events-integration.cjs.log",
+      "bytes": 596,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/03-first-world-target-context-combat-batch3-integrity.js.log",
+      "bytes": 967,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/04-batch4-mobile-combat-viewport.cjs.log",
+      "bytes": 105,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/05-combat-events-owner-browser.js.log",
+      "bytes": 226,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/06-calamity-shared-terminal-fast-catchup-integrity.js.log",
+      "bytes": 130,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/07-alternate-universe-combat-integrity.js.log",
+      "bytes": 53,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/08-alternate-universe-batch4-3-regression.js.log",
+      "bytes": 77,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/09-galaxy-review-combat-browser.js.log",
+      "bytes": 76,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/10-batch5-era-animation-contract.cjs.log",
+      "bytes": 142,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/11-hybrid-comparison-renderer-contract.cjs.log",
+      "bytes": 1250,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/12-batch3-fx-timer-lifecycle.cjs.log",
+      "bytes": 113,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/13-batch3-presenter-pressure.cjs.log",
+      "bytes": 128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/14-3d-mode-browser-regression.js.log",
+      "bytes": 118,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/15-batch2-background-sleeper-lifecycle.cjs.log",
+      "bytes": 129,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/16-cross-era-background-browser.js.log",
+      "bytes": 172,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/17-thirdworld-background-browser.js.log",
+      "bytes": 152,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/18-offline-sample-provenance-opt4-integrity.js.log",
+      "bytes": 3616,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/19-gm-battle-simulation-browser.js.log",
+      "bytes": 145,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/20-gm-animation-center-terminology.cjs.log",
+      "bytes": 95,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/21-save-schema17-compatibility-matrix.js.log",
+      "bytes": 2195,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/22-save-load-pipeline-integrity.js.log",
+      "bytes": 429,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/23-reincarnation-save-integrity.js.log",
+      "bytes": 1389,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/24-audio-lifecycle-browser.js.log",
+      "bytes": 2483,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/25-batch11-audio-lazy-browser.cjs.log",
+      "bytes": 89,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/26-audio-settings-persistence-integrity.js.log",
+      "bytes": 84,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/27-resource-manifest-integrity.js.log",
+      "bytes": 69,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/28-resource-cache-integrity.js.log",
+      "bytes": 140,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/29-html-cache-version-guard.js.log",
+      "bytes": 57,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/30-cleanup-batch4-3-current-inventory.cjs.log",
+      "bytes": 106,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/31-gm-alternate-universe-management-batch7-3-integrity.js.log",
+      "bytes": 3956,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/32-hybrid-comparison-playback-contract.cjs.log",
+      "bytes": 1911,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/33-batch1-animation-frame-trace.cjs.log",
+      "bytes": 259,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/34-batch3-alternate-controller-trace.cjs.log",
+      "bytes": 670,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/35-t3b-formal-renderer.cjs.log",
+      "bytes": 128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/batch6-final16-logs/36-loading-resource-policy-integrity.js.log",
+      "bytes": 120,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/cross-mode.json",
+      "bytes": 29763,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/monster-recovery.json",
+      "bytes": 1557,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch15/pr65-failure-audit.json",
+      "bytes": 20131,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/all-identities.json",
+      "bytes": 112713,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/01-browser.cjs.log",
+      "bytes": 398,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/02-combat-events-integration.cjs.log",
+      "bytes": 595,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/03-first-world-target-context-combat-batch3-integrity.js.log",
+      "bytes": 967,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/04-batch4-mobile-combat-viewport.cjs.log",
+      "bytes": 105,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/05-combat-events-owner-browser.js.log",
+      "bytes": 226,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/06-calamity-shared-terminal-fast-catchup-integrity.js.log",
+      "bytes": 130,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/07-alternate-universe-combat-integrity.js.log",
+      "bytes": 53,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/08-alternate-universe-batch4-3-regression.js.log",
+      "bytes": 77,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/09-galaxy-review-combat-browser.js.log",
+      "bytes": 76,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/10-batch5-era-animation-contract.cjs.log",
+      "bytes": 142,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/11-hybrid-comparison-renderer-contract.cjs.log",
+      "bytes": 1251,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/12-batch3-fx-timer-lifecycle.cjs.log",
+      "bytes": 113,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/13-batch3-presenter-pressure.cjs.log",
+      "bytes": 129,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/14-3d-mode-browser-regression.js.log",
+      "bytes": 118,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/15-batch2-background-sleeper-lifecycle.cjs.log",
+      "bytes": 129,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/16-cross-era-background-browser.js.log",
+      "bytes": 172,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/17-thirdworld-background-browser.js.log",
+      "bytes": 152,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/18-offline-sample-provenance-opt4-integrity.js.log",
+      "bytes": 3616,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/19-gm-battle-simulation-browser.js.log",
+      "bytes": 145,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/20-gm-animation-center-terminology.cjs.log",
+      "bytes": 95,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/21-save-schema17-compatibility-matrix.js.log",
+      "bytes": 2195,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/22-save-load-pipeline-integrity.js.log",
+      "bytes": 429,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/23-reincarnation-save-integrity.js.log",
+      "bytes": 1389,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/24-audio-lifecycle-browser.js.log",
+      "bytes": 2483,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/25-batch11-audio-lazy-browser.cjs.log",
+      "bytes": 89,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/26-audio-settings-persistence-integrity.js.log",
+      "bytes": 84,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/27-resource-manifest-integrity.js.log",
+      "bytes": 69,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/28-resource-cache-integrity.js.log",
+      "bytes": 140,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/29-html-cache-version-guard.js.log",
+      "bytes": 57,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/30-cleanup-batch4-3-current-inventory.cjs.log",
+      "bytes": 106,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/31-gm-alternate-universe-management-batch7-3-integrity.js.log",
+      "bytes": 3956,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/32-hybrid-comparison-playback-contract.cjs.log",
+      "bytes": 1913,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/33-batch1-animation-frame-trace.cjs.log",
+      "bytes": 259,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/34-batch3-alternate-controller-trace.cjs.log",
+      "bytes": 671,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/35-t3b-formal-renderer.cjs.log",
+      "bytes": 128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/batch6-final16-logs/36-loading-resource-policy-integrity.js.log",
+      "bytes": 120,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/cross-mode.json",
+      "bytes": 29770,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/effects-off.json",
+      "bytes": 10361,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/live-dungeons.json",
+      "bytes": 7747,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/map-regression.json",
+      "bytes": 1186998,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/mirror.json",
+      "bytes": 2018,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/monster-recovery.json",
+      "bytes": 91628,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/native-cache.json",
+      "bytes": 535,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/publication-count-fix.json",
+      "bytes": 3026,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/resource-timeout.json",
+      "bytes": 448,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-galaxy-bounty-15.png",
+      "bytes": 24736,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-universe-arena-03.png",
+      "bytes": 41183,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-void-boss-10.png",
+      "bytes": 43204,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-void-regular-02.png",
+      "bytes": 35716,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-void-regular-04.png",
+      "bytes": 36702,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-void-regular-05.png",
+      "bytes": 36387,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-1365-void-regular-09.png",
+      "bytes": 35128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-galaxy-bounty-15.png",
+      "bytes": 44587,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-universe-arena-03.png",
+      "bytes": 58021,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-void-boss-10.png",
+      "bytes": 61331,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-void-regular-02.png",
+      "bytes": 46669,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-void-regular-04.png",
+      "bytes": 46235,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-void-regular-05.png",
+      "bytes": 47201,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-390-void-regular-09.png",
+      "bytes": 47467,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-galaxy-bounty-15.png",
+      "bytes": 24036,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-universe-arena-03.png",
+      "bytes": 40330,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-void-boss-10.png",
+      "bytes": 42103,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-void-regular-02.png",
+      "bytes": 34805,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-void-regular-04.png",
+      "bytes": 35839,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-void-regular-05.png",
+      "bytes": 35447,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/screenshots/batch16-844-void-regular-09.png",
+      "bytes": 34225,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch16/visual-cross-mode.json",
+      "bytes": 10336,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/all-identities.json",
+      "bytes": 123795,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/approved-batch6-ci.log",
+      "bytes": 62180,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/approved-pr-checks.json",
+      "bytes": 4899,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-candidate.log",
+      "bytes": 207,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-checks-current.txt",
+      "bytes": 1010,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-batch5.log",
+      "bytes": 5426,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-batch6.log",
+      "bytes": 209209,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-formal.log",
+      "bytes": 5277,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-monsters.log",
+      "bytes": 22136,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-raster.log",
+      "bytes": 20435,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-safety.log",
+      "bytes": 11245,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-ci-terminology.log",
+      "bytes": 17919,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-fast-switch.log",
+      "bytes": 125,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-layout.log",
+      "bytes": 100,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-native-cache.log",
+      "bytes": 2576,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-recovery.log",
+      "bytes": 6430,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-sw-cache.log",
+      "bytes": 1848,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/batch17-visual-cross-mode.log",
+      "bytes": 124,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/cross-mode-initial-local.json",
+      "bytes": 121050,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/dungeon-regression.json",
+      "bytes": 148563,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-batch1-animation-frame-trace.cjs.log",
+      "bytes": 259,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-batch3-alternate-controller-trace.cjs.log",
+      "bytes": 632,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-batch3-fx-timer-lifecycle.cjs.log",
+      "bytes": 113,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-batch3-presenter-pressure.cjs.log",
+      "bytes": 128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-combat-events-owner-browser.js.log",
+      "bytes": 226,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-first-world-target-context-combat-batch3-integrity.js.log",
+      "bytes": 967,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-galaxy-review-combat-browser.js.log",
+      "bytes": 76,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-gm-alternate-universe-management-batch7-3-integrity.js.log",
+      "bytes": 3956,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-offline-sample-provenance-opt4-integrity.js.log",
+      "bytes": 3616,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-reincarnation-save-integrity.js.log",
+      "bytes": 1389,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-save-load-pipeline-integrity.js.log",
+      "bytes": 429,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery-logs/batch17-env-save-schema17-compatibility-matrix.js.log",
+      "bytes": 2195,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/environment-recovery.json",
+      "bytes": 3065,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/fast-switch.json",
+      "bytes": 8625,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/height-results.md",
+      "bytes": 23191,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/landscape-correct-profile-single-case.json",
+      "bytes": 2427,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/landscape-correct-profile-single-case.log",
+      "bytes": 993,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/landscape-desktop-pointer-diagnostic.log",
+      "bytes": 1401,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/landscape-touch-diagnostic.log",
+      "bytes": 1588,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/live-all-bosses-browser.cjs",
+      "bytes": 6943,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/live-bosses.json",
+      "bytes": 5539,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/local-batch6-incomplete-31-of-32.json",
+      "bytes": 32632,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/local-batch6-incomplete-31-of-32.log",
+      "bytes": 10483,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/local-formal-isolated-rerun-pass.log",
+      "bytes": 397,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/map-regression.json",
+      "bytes": 1187023,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/merged-main-checks.json",
+      "bytes": 7165,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/monster-recovery.json",
+      "bytes": 49787,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/native-cache.json",
+      "bytes": 2788,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-all-identities.json",
+      "bytes": 123794,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-http.json",
+      "bytes": 4490,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live-bosses.json",
+      "bytes": 5487,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90-environment-interrupted.log",
+      "bytes": 3128,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90-landscape-failed-61-of-90.json",
+      "bytes": 142396,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90-landscape-failed-61-of-90.log",
+      "bytes": 22222,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90-startup-probe-failed.json",
+      "bytes": 41537,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90-startup-probe-failed.log",
+      "bytes": 3859,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90.json",
+      "bytes": 217116,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-live90.log",
+      "bytes": 35326,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-native-cache.json",
+      "bytes": 2787,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-source-exclusions.json",
+      "bytes": 2173,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/pages-verification.log",
+      "bytes": 3029,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/proposed-fixture-guard.patch",
+      "bytes": 2418,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/prototypes.json",
+      "bytes": 237693,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/publication-status.json",
+      "bytes": 1786,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/publish-candidate-browser.json",
+      "bytes": 3298,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/publish-candidate-inventory.json",
+      "bytes": 237246,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-1365-galaxy-calamity-10.png",
+      "bytes": 27347,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-1365-higher-dimensional-boss-09.png",
+      "bytes": 27972,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-390-galaxy-calamity-10.png",
+      "bytes": 49431,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-390-higher-dimensional-boss-09.png",
+      "bytes": 48318,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-844-galaxy-calamity-10.png",
+      "bytes": 26633,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-844-higher-dimensional-boss-09.png",
+      "bytes": 27164,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-live-1-calamity-boss.png",
+      "bytes": 450849,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-live-2-calamity-boss.png",
+      "bytes": 339785,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-live-3-arena-fixed.png",
+      "bytes": 484727,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-live-3-arena-varied.png",
+      "bytes": 487861,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/screenshots/batch17-live-3-main-boss.png",
+      "bytes": 457955,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch17/visual-cross-mode.json",
+      "bytes": 35248,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/approved-artifact-metadata.json",
+      "bytes": 757,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/approved-pr-checks.json",
+      "bytes": 2184,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/approved-pr-ci-log.json",
+      "bytes": 236769,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/first-b16-ci-failure.json",
+      "bytes": 14482,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/first-b17-ci-failure.json",
+      "bytes": 42982,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/first-harness-failure.json",
+      "bytes": 2233840,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/first-release-ci-failure.json",
+      "bytes": 33898,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-all-identities.json",
+      "bytes": 2041754,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-fast-switch.json",
+      "bytes": 9012,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-native-cache.json",
+      "bytes": 1677,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-native-live.json",
+      "bytes": 143003,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-pressure.json",
+      "bytes": 53019,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-recovery.json",
+      "bytes": 33096,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/local-repeat-native.json",
+      "bytes": 16991,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/merged-main-checks.json",
+      "bytes": 3601,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/package-verification.json",
+      "bytes": 5076,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/pages-all-identities.json",
+      "bytes": 2041754,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/pages-http.json",
+      "bytes": 88665,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/pages-native-cache.json",
+      "bytes": 1677,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/pages-native-live.json",
+      "bytes": 140915,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/pages-repeat-native.json",
+      "bytes": 16993,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/pr72-baseline.json",
+      "bytes": 1799,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/repeat-diagnostic-failure.json",
+      "bytes": 4468,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/repeat-diagnostic-failure.log",
+      "bytes": 2567,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/repeat-incomplete.json",
+      "bytes": 301,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/twenty-prototypes-final.png",
+      "bytes": 816891,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch18/unique-image-audit.json",
+      "bytes": 6481,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/boss-size-comparison.json",
+      "bytes": 4234,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/changed-files.txt",
+      "bytes": 1830,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/final-pr-checks.json",
+      "bytes": 4891,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/functional-main-checks.json",
+      "bytes": 5178,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/local-contact-333.json",
+      "bytes": 46815,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/local-fallback-comparison.json",
+      "bytes": 3442,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/local-formal-browser-summary.json",
+      "bytes": 6224,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/local-native.json",
+      "bytes": 91811,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/main-special-reference.json",
+      "bytes": 23253,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/original-boss.json",
+      "bytes": 21898,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/pages-fallback-comparison.json",
+      "bytes": 3425,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/pages-fallback-native.json",
+      "bytes": 41950,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/pages-native.json",
+      "bytes": 198183,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-1/release-verification.json",
+      "bytes": 95345,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-2/local-browser.json",
+      "bytes": 5802,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch19-2/local-browser.log",
+      "bytes": 5044,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/PATCH_REQUESTS.md",
+      "bytes": 2377,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/approved-sources/README.txt",
+      "bytes": 329,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/approved-sources/galaxy_approved_master.png",
+      "bytes": 963810,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/approved-sources/higher_complete_master_v2.png",
+      "bytes": 2361318,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/approved-sources/manifest.json",
+      "bytes": 1641,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/approved-sources/universe_approved_master.jpeg",
+      "bytes": 294184,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/candidates/galaxy-full-candidate.webp",
+      "bytes": 93246,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/candidates/manifest.json",
+      "bytes": 6487,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/candidates/universe-full-candidate.webp",
+      "bytes": 108134,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/higher-v2-removal-record.json",
+      "bytes": 686,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-review/audit.json",
+      "bytes": 5067,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-review/galaxy-review.png",
+      "bytes": 795919,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-review/higher-v2-review.png",
+      "bytes": 1270399,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-review/review.json",
+      "bytes": 8601,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-review/universe-review.png",
+      "bytes": 1107612,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/README.txt",
+      "bytes": 329,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/galaxy_attack_body.jpeg",
+      "bytes": 244984,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/galaxy_weapon.png",
+      "bytes": 684261,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/higher_body_no_weapon_v2.png",
+      "bytes": 2192943,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/higher_weapon_independent_v2.png",
+      "bytes": 1483886,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/manifest.json",
+      "bytes": 2720,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/universe_attack_body.jpeg",
+      "bytes": 586797,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/layer-sources/universe_weapon.png",
+      "bytes": 612210,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/mask-recipe.json",
+      "bytes": 1341,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/replacement-pack/README.txt",
+      "bytes": 346,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/replacement-pack/manifest.json",
+      "bytes": 988,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/combat-animation/batch7/source-history.json",
+      "bytes": 3707,
+      "class": "B",
+      "reason": "候選製圖/截圖/打包/日誌已完成；保留尺寸/負向驗收所需7個小型輸入，正式來源SHA保留"
+    },
+    {
+      "path": "development/hybrid-comparison/comparison.css",
+      "bytes": 4342,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "development/hybrid-comparison/comparison.mjs",
+      "bytes": 13356,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "development/hybrid-comparison/index.html",
+      "bytes": 5710,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "development/hybrid-comparison/t2a-v1/measurement-report-template.json",
+      "bytes": 2656,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "development/hybrid-comparison/t2a-v1/visual-only-script.json",
+      "bytes": 848,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "development/monster-art/batch13-six/README-CODEX.md",
+      "bytes": 608,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/manifest.sha256",
+      "bytes": 1342,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/runtime-lock.json",
+      "bytes": 308,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/sources/beast-03.png",
+      "bytes": 2386764,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/sources/bio-02.png",
+      "bytes": 2951854,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/sources/core-01.png",
+      "bytes": 2253652,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/sources/hm-01.png",
+      "bytes": 804717,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/sources/mech-02.png",
+      "bytes": 1789107,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-six/sources/ship-01.png",
+      "bytes": 2112611,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/README-CODEX.md",
+      "bytes": 376,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/data/monsters/batch1-asset-manifest.json",
+      "bytes": 1937,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/manifest.sha256",
+      "bytes": 1144,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/sources/cmd-01.png",
+      "bytes": 1857998,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/sources/dr-02.png",
+      "bytes": 2428852,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/sources/hm-02.png",
+      "bytes": 1118607,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/sources/hm-04.png",
+      "bytes": 1418183,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch1/sources/mech-01.png",
+      "bytes": 2366781,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/README-CODEX.md",
+      "bytes": 376,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/data/monsters/batch2-asset-manifest.json",
+      "bytes": 1947,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/manifest.sha256",
+      "bytes": 1158,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/sources/fort-01.png",
+      "bytes": 1742056,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/sources/fort-03.png",
+      "bytes": 2073628,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/sources/mech-03.png",
+      "bytes": 2382824,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/sources/ship-04.png",
+      "bytes": 1465399,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch2/sources/veh-02.png",
+      "bytes": 2231772,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/README-CODEX.md",
+      "bytes": 418,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/data/monsters/batch3-asset-manifest.json",
+      "bytes": 1591,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/manifest.sha256",
+      "bytes": 961,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/sources/beast-01.png",
+      "bytes": 1151005,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/sources/cmd-03.png",
+      "bytes": 2541908,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/sources/core-03.png",
+      "bytes": 2707959,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch13-twenty/batch3/sources/energy-01.png",
+      "bytes": 2457082,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch16-v01/CODEX_INSTRUCTIONS.md",
+      "bytes": 3001,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch16-v01/README.md",
+      "bytes": 882,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch16-v01/identity-review.json",
+      "bytes": 19247,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch16-v01/manifest.json",
+      "bytes": 2594,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch16-v01/reference/void-phantom-v01-preview.png",
+      "bytes": 273635,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/README_交接說明.md",
+      "bytes": 6123,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/C-01_rishi_wangzuo.png",
+      "bytes": 274492,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/C-02_mieshi_tianhuan.png",
+      "bytes": 315426,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/C-03_eyes_shared.png",
+      "bytes": 276365,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-01_pojie_tiancai.png",
+      "bytes": 300331,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-02_yongjie_zhongyuan.png",
+      "bytes": 418800,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-03_suyin_tiancheng.png",
+      "bytes": 340370,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-05_wanxiang_huiyan.png",
+      "bytes": 392541,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-06_weixi_zhiren.png",
+      "bytes": 325749,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-07_n逆因輪轉.png",
+      "bytes": 412129,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-08_shijie_shenyuan.png",
+      "bytes": 415507,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/H-10_gaowei_yuandian.png",
+      "bytes": 362115,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/png/U-01_zhongzhan_tianqiong.png",
+      "bytes": 248162,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/C-01_rishi_wangzuo.webp",
+      "bytes": 86402,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/C-02_mieshi_tianhuan.webp",
+      "bytes": 235982,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/C-03_eyes_shared.webp",
+      "bytes": 72172,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-01_pojie_tiancai.webp",
+      "bytes": 224668,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-02_yongjie_zhongyuan.webp",
+      "bytes": 316152,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-03_suyin_tiancheng.webp",
+      "bytes": 263766,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-05_wanxiang_huiyan.webp",
+      "bytes": 310582,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-06_weixi_zhiren.webp",
+      "bytes": 114110,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-07_n逆因輪轉.webp",
+      "bytes": 320138,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-08_shijie_shenyuan.webp",
+      "bytes": 127376,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/H-10_gaowei_yuandian.webp",
+      "bytes": 115804,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/images/webp/U-01_zhongzhan_tianqiong.webp",
+      "bytes": 70734,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/metadata/boss_30_mapping.csv",
+      "bytes": 2434,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/metadata/sha256sums.txt",
+      "bytes": 2458,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/preview/contact_sheet.png",
+      "bytes": 796350,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/verification.json",
+      "bytes": 7665,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch17/zip-receipt.json",
+      "bytes": 307,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/README_交接說明.md",
+      "bytes": 1323,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-01_ice-god_candidate_512.png",
+      "bytes": 279575,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-02_thunder-sky_candidate_512.png",
+      "bytes": 263664,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-03_deep-sea_candidate_512.png",
+      "bytes": 267445,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-04_nature-life_candidate_512.png",
+      "bytes": 364941,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-05_dragon-sovereign_candidate_512.png",
+      "bytes": 335950,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/png_backup/AU-06_desert-ancient_candidate_512.png",
+      "bytes": 379786,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-01_ice-god_candidate_512.webp",
+      "bytes": 208562,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-02_thunder-sky_candidate_512.webp",
+      "bytes": 203258,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-03_deep-sea_candidate_512.webp",
+      "bytes": 194208,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-04_nature-life_candidate_512.webp",
+      "bytes": 277622,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-05_dragon-sovereign_candidate_512.webp",
+      "bytes": 244246,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "development/monster-art/batch18/webp/AU-06_desert-ancient_candidate_512.webp",
+      "bytes": 267950,
+      "class": "B",
+      "reason": "已整合的來源/ZIP/中間版；保留正式WebP與原始輸出metadata，改驗正式SHA/Alpha/映射"
+    },
+    {
+      "path": "docs/2_5D_EQUIPMENT_SPRITE_PIPELINE_SPEC_2026-10-15.md",
+      "bytes": 11460,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/2_5D_LEGACY_ART_CLEANUP_BATCH5_CLOSURE_2026-10-17.md",
+      "bytes": 2681,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/2_5D_LEGACY_ART_FULL_CLEANUP_4_BATCH_PLAN_2026-10-17.md",
+      "bytes": 11410,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/ALTERNATE_UNIVERSE_MONSTER_ART_PLAN_2026-10-22.md",
+      "bytes": 8675,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH15_4_FORMAL_GM_ACCEPTANCE_2026-10-21.md",
+      "bytes": 5289,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH16_DUNGEON_SPRITES_2026-10-21.md",
+      "bytes": 10133,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH16_SPECIAL_SPRITE_ACCEPTANCE_2026-10-21.md",
+      "bytes": 3670,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH17_BOSS_SPRITES_2026-10-21.md",
+      "bytes": 19483,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH18_ALTERNATE_UNIVERSE_SPRITES_2026-10-22.md",
+      "bytes": 10997,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_1_ABSOLUTE_SPRITE_SIZING_2026-10-22.md",
+      "bytes": 15686,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_2_19_4_NEXT_WORK_PLAN_2026-10-22.md",
+      "bytes": 6919,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_2_GM_CENTER_2026-10-22.md",
+      "bytes": 4818,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_3_COMBAT_VIEWPORT_2026-10-23.md",
+      "bytes": 3097,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_4_ACTIONS_RELEASE_ACCEPTANCE_2026-10-23.md",
+      "bytes": 10611,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_4_FOREGROUND_IMPLEMENTATION_2026-10-23.md",
+      "bytes": 15281,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH19_4_FOREGROUND_INTERRUPTION_AUDIT_2026-10-23.md",
+      "bytes": 17695,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH20_IMPLEMENTATION_ACCEPTANCE_2026-10-24.md",
+      "bytes": 11469,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH20_MONSTER_CODEX_AND_REVIEW_RETIREMENT_PLAN_2026-10-22.md",
+      "bytes": 15973,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH20_REPAIR_ACCEPTANCE_2026-10-24.md",
+      "bytes": 10886,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH7_APPROVED_CHARACTER_SOURCE_ASSET_HANDOFF_2026-10-18.md",
+      "bytes": 1543,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH7_HIGHER_V2_REPLACEMENT_REVIEW_2026-10-18.md",
+      "bytes": 5226,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH7_INTEGRATED_ENGINEERING_REPORT_2026-10-18.md",
+      "bytes": 10343,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH7_LIGHTWEIGHT_FINAL_ACCEPTANCE_2026-10-18.md",
+      "bytes": 8816,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BATCH7_SIX_LAYER_INTEGRATION_REVIEW_2026-10-18.md",
+      "bytes": 1388,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/BOSS_CALAMITY_HIGHER_ART_PLAN_2026-10-21.md",
+      "bytes": 6385,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_AND_BACKGROUND_RENEWAL_MASTER_PLAN_2026-10-17.md",
+      "bytes": 10086,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH10_UI_MOBILE_2026-10-19.md",
+      "bytes": 2039,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH11_AUDIO_RESOURCES_MOBILE_PERFORMANCE_2026-10-19.md",
+      "bytes": 12699,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH12_EXECUTION_2026-10-19.md",
+      "bytes": 13139,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH1_DYNAMIC_CI_BASELINE_2026-10-17.md",
+      "bytes": 6588,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH1_FIXED12_CLOSURE_2026-10-17.md",
+      "bytes": 4961,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH1_FRAME_TRACE_2026-10-17.md",
+      "bytes": 3432,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH1_READONLY_AUDIT_2026-10-17.md",
+      "bytes": 17120,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH2_FINAL13_VERIFICATION_2026-10-17.md",
+      "bytes": 3401,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH2_LIFECYCLE_IMPLEMENTATION_2026-10-17.md",
+      "bytes": 4734,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH3_16_ITEM_ACCEPTANCE_2026-10-17.md",
+      "bytes": 6118,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH3_WORK_IN_PROGRESS_2026-10-17.md",
+      "bytes": 3581,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH4_19_ITEM_ACCEPTANCE_2026-10-18.md",
+      "bytes": 4311,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH5_24_ITEM_ACCEPTANCE_2026-10-18.md",
+      "bytes": 7023,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH6_FINAL_CLOSURE_2026-10-18.md",
+      "bytes": 3974,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH7_12_FUTURE_ROADMAP_2026-10-18.md",
+      "bytes": 17995,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH7_IMPLEMENTATION_STATUS_2026-10-18.md",
+      "bytes": 3525,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH8_EXECUTION_2026-10-19.md",
+      "bytes": 8690,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/COMBAT_ANIMATION_RENEWAL_BATCH9_EXISTING_BACKGROUNDS_2026-10-19.md",
+      "bytes": 3075,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/LIGHTWEIGHT_SPRITE_ACCEPTANCE_2026-10-18.md",
+      "bytes": 4243,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/MONSTER_ART_BATCH13_SIX_TRIAL_INTEGRATION_2026-10-20.md",
+      "bytes": 4364,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/MONSTER_ART_BATCH13_STEP3_SIX_TRIAL_AND_ZIP_2026-10-20.md",
+      "bytes": 5653,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/MONSTER_ART_BATCH13_TWENTY_INTEGRATION_2026-10-20.md",
+      "bytes": 7754,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/MONSTER_ART_PRODUCTION_PLAN_BATCH13_2026-10-20.md",
+      "bytes": 18777,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/MONSTER_SPRITE_INITIAL_RULES_2026-10-19.md",
+      "bytes": 10209,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/MONSTER_VISUAL_DIFFERENTIATION_PLAN_2026-10-24.md",
+      "bytes": 11579,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/PUBLISH_ASSET_INVENTORY_STAGE1_2026-10-11.md",
+      "bytes": 6543,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/PUBLISH_ASSET_PLAN_STAGE2_2026-10-11.md",
+      "bytes": 4774,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/PUBLISH_ASSET_STAGE3_2026-10-11.md",
+      "bytes": 3094,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/PUBLISH_ASSET_STAGE4_2026-10-11.md",
+      "bytes": 7988,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/T3B_FORMAL_B_RENDERER_OPEN_GATES_2026-10-13.md",
+      "bytes": 2614,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/WEAPON_THRUST_SYNC_ACCEPTANCE_2026-10-15.md",
+      "bytes": 9630,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/archive/LEVEL100_EXPANSION.md",
+      "bytes": 3359,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/archive/PROJECT_HANDOFF_UPDATE_2026-09-28_ARENA.md",
+      "bytes": 6055,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/archive/PROJECT_HANDOFF_UPDATE_2026-09-29_GM_BATCH16.md",
+      "bytes": 3146,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "docs/archive/README.md",
+      "bytes": 1193,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    },
+    {
+      "path": "scripts/batch01-27-compatibility-audit.py",
+      "bytes": 4609,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch12-build-attack-assets.py",
+      "bytes": 3790,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch12-candidate-evidence.cjs",
+      "bytes": 1215,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch12-package-visual-evidence.py",
+      "bytes": 2128,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch12-render-candidates.py",
+      "bytes": 2800,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch12-thrust-feasibility.py",
+      "bytes": 2256,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch12-visual-evidence.cjs",
+      "bytes": 5723,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch7-audit-images.py",
+      "bytes": 2696,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch7-build-formal-sprites.py",
+      "bytes": 3949,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch7-prepare-candidates.cjs",
+      "bytes": 4235,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/batch7-review-layers.py",
+      "bytes": 9086,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/hybrid-comparison-fixtures.cjs",
+      "bytes": 12277,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "scripts/hybrid-comparison-measurements.cjs",
+      "bytes": 3278,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "scripts/update-3d-registry.cjs",
+      "bytes": 3520,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "scripts/update-equipment-registry.cjs",
+      "bytes": 4780,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "tests/runtime/batch7-layer-boundary.test.mjs",
+      "bytes": 3529,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "tests/runtime/batch7-source-assets.cjs",
+      "bytes": 3362,
+      "class": "A",
+      "reason": "已退役製作/候選來源專用工具或測試，無現役工作流程呼叫；正式功能回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-art-browser.js",
+      "bytes": 8222,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-art-color-browser.js",
+      "bytes": 7094,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-art-color-r2-baseline-browser.js",
+      "bytes": 7696,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-art-color-r2-browser.js",
+      "bytes": 7356,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-art-color-reference-browser.js",
+      "bytes": 4134,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-contract.cjs",
+      "bytes": 8759,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-platform-browser.js",
+      "bytes": 12287,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-renderer-browser.js",
+      "bytes": 10772,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "tests/runtime/hybrid-comparison-renderer-comparison-browser.js",
+      "bytes": 11414,
+      "class": "A",
+      "reason": "獨立A/B/C製作/比較/調色工具已退役；現役B adapter/playback/renderer/174項SHA驗證與GM瀏覽器回歸保留"
+    },
+    {
+      "path": "《文明戰線》3D 全面升級・完整規劃與施工規格書.docx",
+      "bytes": 53209,
+      "class": "B",
+      "reason": "已完成或被取代的歷史文件；濃縮摘要及原Git SHA可追溯，更新過期文件存在斷言"
+    }
+  ],
+  "retainedCandidates": [
+    {
+      "class": "C",
+      "path": "development/hybrid-comparison/",
+      "reason": "GM C-15沙盒仍動態載入fixture/playback/renderer；174項request與165項B2 SHA inventory均未改"
+    },
+    {
+      "class": "C",
+      "path": "development/equipment-2_5d/",
+      "reason": "31檔為現役GM/formal exporter輸入及兩個publication SHA lock；需保留確定性重建及權限隔離"
+    },
+    {
+      "class": "C",
+      "path": "assets/3d/",
+      "reason": "19檔含18個登記GLB與registry；character-assets與GM/fixture/decoder依賴，SHA與skin/socket驗證保留"
+    },
+    {
+      "class": "C",
+      "path": "development/3d-source/equipment/ancient-ruins-v1/rig-contract.json",
+      "reason": "GM動態fixture與3d-equipment-contract仍使用；保持原始byte/SHA"
+    },
+    {
+      "class": "C",
+      "path": "development/monster-art/",
+      "reason": "只保留5份身份修正/原始輸出SHA/固定runtime metadata，支援有效回歸"
+    },
+    {
+      "class": "C",
+      "path": "development/combat-animation/",
+      "reason": "只保留7份現役尺寸測量/基準、culture-plan與未核准突刺負向驗收輸入"
+    },
+    {
+      "class": "D",
+      "path": "3d-test/",
+      "reason": "維持原路徑與全部正式/GM模組；不因命名或靜態低引用推定沒有初始化副作用"
+    },
+    {
+      "class": "D",
+      "path": "正式資料與全域API",
+      "reason": "完整runtime檔案SHA分組沒有完全重複檔；裝備source/runtime是有權限轉換的產生關係，怪物映射/圖鑑用途不同，不做跨模組重構"
+    }
+  ],
+  "modified": [
+    ".github/workflows/functional-ci.yml",
+    ".github/workflows/publish-optimized-pages.yml",
+    ".github/workflows/runtime-integrity.yml",
+    "PROJECT_HANDOFF.md",
+    "PROJECT_PENDING_STATUS.md",
+    "README.md",
+    "assets/README.md",
+    "development/hybrid-comparison/t2b3-v1/README.md",
+    "docs/2_5D_BATCH28_40_REBASE_MASTER_PLAN_2026-10-16.md",
+    "docs/MONSTER_ART_PRODUCTION_SOP.md",
+    "resource-manifest.json",
+    "tests/audio-regression.test.cjs",
+    "tests/runtime/asset-integrity.js",
+    "tests/runtime/batch12-presentation-safety.cjs",
+    "tests/runtime/batch13-monster-assets.py",
+    "tests/runtime/batch17-boss-assets.py",
+    "tests/runtime/batch17-boss-contract.cjs",
+    "tests/runtime/batch18-alternate-assets.py",
+    "tests/runtime/batch18-alternate-contract.cjs",
+    "tests/runtime/batch19-absolute-sizing-contract.cjs",
+    "tests/runtime/batch20-approved-runtime.json",
+    "tests/runtime/batch7-formal-assets.py",
+    "tests/runtime/code-cleanup-batch8-legacy-boundary.js",
+    "tests/runtime/docs-integrity.js"
+  ],
+  "addedAtInventoryCreation": [
+    "audio/README.md",
+    "docs/HISTORICAL_ENGINEERING.md",
+    "docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md",
+    "docs/evidence/optimization-batch4/published-baseline.json",
+    "tests/runtime/optimization-batch4-cleanup.cjs"
+  ]
+}

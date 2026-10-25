@@ -1,6 +1,6 @@
 {
   "baseline": "f0990025782a185ecec9ef04020addaf581b97bc",
-  "evidence": "docs/BATCH20_IMPLEMENTATION_ACCEPTANCE_2026-10-24.md",
+  "evidence": "https://github.com/franksky1207/rpg/blob/c0ec18d686d7111b2e5a7fa380c94653a2b8a2e4/docs/BATCH20_IMPLEMENTATION_ACCEPTANCE_2026-10-24.md",
   "files": {
     "calamitycore.js": {
       "beforeSha256": "f103c015211b550df15f41352f7837b16ae41185e34e2bdc9bb3e9643e2a0283",

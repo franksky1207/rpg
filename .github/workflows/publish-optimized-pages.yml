@@ -79,9 +79,9 @@ jobs:
           if(!(r.artifactBytes>0&&r.artifactBytes<800000000))throw Error('release size limit or invalid report');
           console.log('Verified optimized Pages bytes:',r.artifactBytes);
           NODE
-      # Optional browser-only preview lives under a separate URL path; the official
-      # candidate, game manifest and release acceptance were finalized above.
-      - name: Stage SHA-verified B3 visual preview separately
+      # The current GM B sandbox needs this SHA-verified support closure.
+      # Standalone A/B/C comparison entries remain retired.
+      - name: Stage SHA-verified current GM B support
         run: node scripts/stage-hybrid-preview.cjs
       - name: Verify the published GM B sandbox closure
         shell: bash
@@ -96,7 +96,7 @@ jobs:
           done
           RUNTIME_SMOKE_URL=http://127.0.0.1:4181/index.html node tests/runtime/gm-battle-simulation-browser.js
           RUNTIME_SMOKE_URL=http://127.0.0.1:4181/index.html node tests/equipment-gm/browser.cjs
-      - name: Check preview entry and production homepage
+      - name: Check GM entry and production homepage
         shell: bash
         run: |
           set -euo pipefail
@@ -104,6 +104,8 @@ jobs:
           test -s .publish-stage3/3d-test/test-center.js
           test -s .publish-stage3/development/hybrid-comparison/t2b3-v1/manifest.json
           test -s .publish-stage3/index.html
+          test ! -e .publish-stage3/development/hybrid-comparison/index.html
+          test ! -e .publish-stage3/development/hybrid-comparison/comparison.mjs
           test ! -e .publish-stage3/development/hybrid-comparison/t2b2-v1/player/animation-source.blend
       - uses: actions/configure-pages@v5
       - name: Upload only validated site to GitHub Pages

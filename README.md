@@ -94,3 +94,6 @@ GitHub Pages 可直接使用 `main` 分支根目錄部署，入口為 `index.htm
 - `GM_UI_GUIDE.md`：現行 GM 功能按鈕語意、配色與管理區塊原則。
 
 修改前必須 fresh-read current `main` 的相關 owner／consumer；JS／CSS 改動需同步更新 `index.html` cache-bust。使用者說「先討論／先檢查」時不得修改；明確說「做／修改／執行／第 N 批」時可直接施工，完成後重新確認 actual main 與 Integrity。
+## 未發布優化整合
+
+正式 main 基準為 `ee1978ea`；第2～4批成果保存在 `integrate/postrelease-optimization-20261025`，尚未發布。第4批清理與必要保留項見 `docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md`；歷史已完成規劃見 `docs/HISTORICAL_ENGINEERING.md`。第5批未開工，完整正式文件封箱留第6批。
