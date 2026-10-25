@@ -29,6 +29,6 @@
 
 ## 2026-10-25 維護盤點：CSS／版本參數／文件
 
-- CSS：僅刪除 `3d-test/test-center.css` 中早期手機 media block 的一條**完全重複**規則；保留稍後相同條件與相同宣告的現役規則，不調整顯示優先序或設計。
+- CSS：確認 `3d-test/test-center.css` 中有一條重複宣告，但此檔受到 GM 歷史 SHA 封存守衛及 HTML 快取版本守衛保護；單純刪除會要求修改版本 URL 與視覺核准鎖定，效益不符風險，因此**保留原檔不動**。
 - 版本網址：`index.html` 的累積 `?v=...&v2=...` 等參數雖長，仍可能涉及 HTML 版本守衛、Service Worker、智慧快取與 fingerprint；**未證實可等效替換，因此本次完全不改 URL、Manifest、下載規則及快取 key**。
 - 交接文件以本節正式狀態為準；歷史批次描述與施工前狀態請看 `docs/HISTORICAL_ENGINEERING.md` 及各批原始報告。不得將歷史整合分支 `integrate/postrelease-optimization-20261025` 的舊「未發布」文字當成新待辦。
