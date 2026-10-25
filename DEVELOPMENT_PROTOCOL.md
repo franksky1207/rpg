@@ -8,14 +8,14 @@
 ## 修改前
 
 1. 先重新讀取 `main` 中本次修改的正式 owner、直接相依檔案與相關 integrity／workflow；不得只依賴舊對話、記憶或舊交接檔。
-2. 使用者說「先討論／先檢查／先列出」時不得修改；使用者明確說「做／修改／執行／修正」後才可寫入 `main`。
-3. 先確認修改範圍、世界別（銀河紀元／宇宙紀元）、正式 state 與 GM sandbox 是否需要隔離。
+2. 使用者說「先討論／先檢查／先列出」時不得修改；使用者明確授權「做／修改／執行／修正」後才可施工；多批整合應先寫入工作分支，僅在正式驗收、合併授權與分支保護符合時更新 `main`。
+3. 先確認修改範圍、適用紀元（銀河／宇宙／高維／異宇宙）、正式 state 與 GM sandbox 是否需要隔離。
 
 ## 修改後自我檢查（必要步驟）
 
 使用者要求「修改後自我檢查」時，以下全部完成才可宣告該批完成：
 
-1. **重新讀取修改後的 `main`**：確認實際寫入內容與預期一致，不以剛送出的內容自行假定成功。
+1. **重新讀取實際修改分支**：確認提交內容及相依檔案；若已正式合併，再重新讀取最新 `main`，不可把分支完成冒充 main 發布。
 2. **檢查直接相依與 owner**：確認沒有重複 owner、世界判定錯置、正式 state 污染、舊 fallback 蓋過新規則等問題。
 3. **JavaScript／CSS cache-bust**：凡玩家端載入的 JS／CSS 有改動，必須同步更新 `index.html` 對應 `?v=`；不得遺漏，也不得誤改無關檔案的版本標記。
 4. **Runtime Integrity 必須綠燈**：JS、`index.html` 或 Runtime Integrity 涵蓋檔案有修改時，必須查看該次最新 `main` commit 的 GitHub Actions `Runtime Integrity` 最終結果。
@@ -51,3 +51,16 @@ GitHub Actions 失敗 Email 不應以關閉通知來掩蓋。目標是讓語法�
 7. **使用者成本優先**：Codex 額度屬有限開發資源；不能因方便、保守或套用固定冗長流程而浪費。除使用者明確要求外，不把 Codex 當每批固定的最後驗收者；給 Codex 的指令只包含確有必要的剩餘工作。
 
 以上規範補充工具與測試的**選擇方式**，不取代本文件既有的正式 `main` 完成條件、CI Gate、cache-bust 及必要安全保護。
+
+## 唯一施工流程與 CI 分工
+
+1. **明確範圍**：依最新 main 盤點 owner、相依、正式入口與安全守衛；先列必改、不得改、受影響測試與人工真機限制。
+2. **單一整合**：相關變更集中同一工作分支與 PR；程式、必要測試、HTML cache-bust、規範及證據同步處理，不為取得綠燈關閉守衛或單純放寬 timeout。
+3. **分層驗收**：先靜態／語法／快取預檢，再依修改影響跑最小功能測試；涉及瀏覽器行為才補相關 Browser；正式合併需滿足 PR 上既有必要 Gate，main 發布後再核對適用 Runtime、Pages 與同 SHA 證據。
+4. **失敗修正**：分析第一個失敗根因，掃描相同原因，修正原 PR 後只補跑必要項目；不能以跳過測試或無關後續提交掩蓋失敗。
+5. **CI 分流**：`.github/workflows/functional-ci.yml` 依功能影響分類，常設 `functional-ci-gate`；測試檔名稱含舊批次不等於仍需專屬批次流程。未知路徑與工作流程修改應採保守分類，不因文件精簡削弱實際 CI Gate。`runtime-integrity.yml`、`story-integrity.yml`、資源與 Pages 工作流程維持現役必要條件。路徑／執行命令以實際 workflow 和 `scripts/ci-impact.cjs` 為準。
+6. **封箱回報**：清楚分開已提交工作分支、PR 檢查、合併 main、Pages 發布與 iPhone 人工實測，列成功、失敗、未執行，不因本機通過宣稱正式部署成功。
+
+## 文件權責與優先順序
+
+最新 `main` 的正式程式、資料契約、資源 Manifest 及實際完整性測試是行為真實來源；本檔唯一管理通用施工／驗收方式。`STORY_WRITING_RULES.md`、`STORY_BIBLE.md`、`STORY_UNIVERSE_RULES.md`、`GM_UI_GUIDE.md`、`MINIMAL_MODE.md`、怪物美術規範及來源／授權文件只管理各自專業規則。`README.md`、`PROJECT_HANDOFF.md`、`PROJECT_PENDING_STATUS.md` 僅記錄正式現況與待辦，不另制定相衝突的通用流程。舊 Git Commit、Issue、PR、已完成施工報告只能供追溯，不再當作現行施工命令。若文件和現役 owner／安全斷言不符，先核對原因，不得逕自放寬安全條件。

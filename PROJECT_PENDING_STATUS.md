@@ -1,24 +1,23 @@
 # 《文明戰線》工程狀態
 
-> 2026-10-25 最新已核對 `main`：`238a845aac6a41eb45d9df6e6d81c77d13cead4b`；未來仍須先取最新 HEAD。
+> 僅記錄當前已知狀態；下次施工須讀取即時 main 與開放 Issue，不能把本文 SHA 或歷史批次當成最新真實來源。
 
-## 已完成／封箱
+## 最近完成
 
-- PR #101：全面優化第4批／第5批／第6批與先前第2～3批整合，合併、必要 Actions、Pages 成功；Issue #100 已結案。
-- PR #102：CI 工作分片、瀏覽器快取及嚴格 Gate 完成；不得回退為舊版冗長流程。
-- PR #103：GM 玩家／怪物／對戰，最大化預覽、視覺含特效的智慧縮放、六動作與自動對戰循環、1／1.5／2 倍速；合併、必要 Actions、Pages 成功。使用者回報 iPhone Safari 真機測試正常。
-- 舊 3D 升級、210套角色美術量產、2.5D／怪物整合等已取消或已完成的計畫不是待施工項目。
+- PR #101：全面優化第 2～6 批正式整合；Issue #100 結案。
+- PR #102：必要 CI 並行與嚴格 Gate。
+- PR #103：GM 動畫中心改版及已回報的 iPhone Safari 功能實測。
+- PR #107：Issue #106 收益與角色介面完成，含突破收益加成、離線 10% 及角色顯示。
+- 舊 3D 全面升級、210 套角色量產與早期怪物整合批次已取消或完成，不再當待辦。
 
 ## 現役安全契約
 
-- `SAVE_SCHEMA_VERSION = 18`，保留 Schema1～17 舊檔遷移；Future schema 必須 fail closed，任何寫入走既有 transaction owner。
-- 高維紀元：Lv.1000～2000；首輪 `reincarnation.count = 0`，只有 `count > 0` 啟用 rerun。不可影響三紀元、異宇宙、Boss 永久削血、收益及正式存檔。
-- 現役 GM B renderer、裝備來源發布閉包、18 個已登記 GLB、正式怪物身份與視覺映射都需保留。iPhone 個別功能真機回報不等於所有未測項目自動通過。
+- `SAVE_SCHEMA_VERSION = 18`；舊存檔正規化／遷移、Future schema 必須 fail closed；所有寫入使用正式 transaction owner。
+- 高維紀元：Lv.1000～2000；首輪 `reincarnation.count = 0`，只有 `count > 0` 啟用 rerun。異宇宙、Boss 永久削血、獎勵及存檔 owner 不可因文件整理更動。
+- 現役 GM B renderer、174 項 SHA 資源、裝備來源、正式 GLB／怪物映射及發佈鎖定保留。
 
-## 本次精準維護決策
+## 後續方向
 
-1. CSS：確認一條相同 media 條件的重複規則，但因 HTML 快取版本守衛與 GM 歷史外觀 SHA 封存，避免為零視覺效益修改發布資源，本次保留 CSS 不動。
-2. 版本參數：維持所有正式 `index.html` 資源 URL 不變，避免快取失效、大量重新下載或新舊版本混用。僅保留盤點結論，不為美觀重寫網址。
-3. 文件：把曾經記在 `integrate/postrelease-optimization-20261025` 的第4批、第5批、第6批「尚待發布」資訊歸為歷史，現況以本文件與 `PROJECT_HANDOFF.md` 為準。
-
-目前沒有經本次盤點證實的新增正式遊戲缺陷；後續如有修改，仍依受影響模組驗收、嚴格 CI Gate 與 Pages 發布規則辦理。歷史記錄見 `docs/HISTORICAL_ENGINEERING.md`。
+- 實際待辦以最新 main、尚未結案 Issue 與使用者新指示為準；過去曾列為未發布的整合分支與已完成報告都不是現役待辦。
+- 文件瘦身仍在 `chore/docs-governance-cleanup-20261025` 工作分支，第 4 批必要驗收／PR／合併完成以前，不能說 main 已包含這批文件清理。
+- 各類風險分級驗收、Codex 額度節約及必要 Pages Gate 以 `DEVELOPMENT_PROTOCOL.md` 為準。
