@@ -147,6 +147,7 @@
    if(!note){note=document.createElement("div");note.dataset.characterBreakthroughNote="1";note.className="muted";note.style.marginTop="8px";grid.insertAdjacentElement("afterend",note);}
     note.textContent="突破每級：裝備原始 HP／攻擊／防禦 +2.5%、最終傷害 +5%、轉生收益 +1%。";
   }
+  const duplicateCore=statByLabel(grid,"界弦核心");if(duplicateCore)duplicateCore.remove();
   if(snap.world===3&&grid){
    const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
    if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
@@ -187,5 +188,4 @@
  window.THIRD_WORLD_UNIVERSE_REVIEW_SEMANTICS_VERSION=2;
  window.applyCharacterWorldPhaseSemantics=applyCharacterSemantics;
  window.applyThirdWorldCompletedSystemSemantics=function(){applySettingsSemantics();};
-   const duplicateCore=statByLabel(grid,"界弦核心");if(duplicateCore)duplicateCore.remove();
 })();
