@@ -24,6 +24,9 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    const gm=document.querySelector('#gm'),formal=document.querySelector('#formal');
    const mounted=await mount({host:gm,quality:'medium'}),rows=[];
    const wait=async(fn)=>{const end=performance.now()+10000;while(!fn()){if(performance.now()>end)throw Error('load-timeout');await new Promise(r=>setTimeout(r,1));}};
+   // Enter the current two-layer GM UI before the frozen identity fixture mutates selections.
+   gm.querySelector('[data-preview-mode]').value='duel';gm.querySelector('[data-preview-mode]').dispatchEvent(new Event('change'));
+   gm.querySelector('[data-enter]').click();await wait(()=>gm.querySelector('canvas[data-monster]')&&mounted.diagnostics().presenting);
    // Ratios/separation sample the fixed body through the same Actor pose, while
    // full painted effects independently participate in viewport containment.
    let bodyActor=null;const {getSharedMonsterPool}=await import('./monster-sprite-pool.mjs');
@@ -83,9 +86,10 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     const names=[...gm.querySelector('[data-monster-identity]').options].map(o=>o.value);
     if(names.some(id=>mappings[id].world!==group.split('/')[0]))throw Error('gm-boss-group');
    }
+   gm.querySelector('[data-back]').click();
    gm.querySelector('[data-advanced]').open=true;gm.querySelector('[data-boss-compare]').click();
-   await wait(()=>gm.querySelectorAll('[data-boss-gallery] figure').length===30);
-   if(gm.querySelectorAll('.gm-suit-preview canvas').length!==2)throw Error('gallery-persistent-actors');
+   await wait(()=>gm.querySelectorAll('[data-boss-gallery] figure').length===30).catch(error=>{throw Error(error.message+' gallery '+JSON.stringify({figures:gm.querySelectorAll('[data-boss-gallery] figure').length,text:gm.querySelector('[data-boss-gallery]').textContent,status:gm.querySelector('[data-status]').textContent,stats:mounted.diagnostics()}));});
+   if(gm.querySelectorAll('.gm-suit-preview canvas').length!==0)throw Error('gallery-persistent-actors');
    const diagnostics=gm.querySelector('.gm-suit').__previewTestApi.diagnostics();
    if(diagnostics.monster.refs>2||diagnostics.monster.entries>2)throw Error('gallery-pool-budget');
    mounted.dispose();window.CivilizationFormalBRenderer.clearSpriteCache();

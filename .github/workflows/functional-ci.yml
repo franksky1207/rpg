@@ -352,6 +352,13 @@ jobs:
         sleep 2
         node tests/runtime/batch19-2-gm-center-browser.cjs
         node tests/runtime/gm-3d-test-center-browser.js
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: gm-preview-${{ github.run_attempt }}
+        path: /tmp/gm-preview-evidence/
+        if-no-files-found: warn
+        retention-days: 7
   equipment:
     needs: classify
     if: needs.classify.outputs.equipment == 'true'

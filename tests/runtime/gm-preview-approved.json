@@ -1,0 +1,32 @@
+{
+  "baseline": "98ff788b80610f1b750857eecc0eb83909d489a3",
+  "files": {
+    "3d-test/gm-era-sprites.mjs": {
+      "before": "a1829d0fbf92005a3ef1616f50b141ad509485000f373841c142bf86f1344ffb",
+      "after": "fca60a1d3ad675e6af267f94b8679e21f52a85b64478c67c13a7a063a2707892"
+    },
+    "3d-test/index.html": {
+      "before": "ad390f3fd07a7111071fa06f0571c70224ff8fbd67c4fdafbece8ad780751134",
+      "after": "b796b63d9ea5df79036cde73924cd8e61876e77d1434f5cbb4dc3e36c8c4a46e"
+    },
+    "3d-test/test-center.css": {
+      "before": "2eaee109af4e8de135a628ae8d1afa989d4b0bf24a46826c66f53538dc9720e7",
+      "after": "7ffc05608fd7d9c1094b1812c011ca50d2073493fd7f83097abe4cbcc5e70b24"
+    },
+    "3d-test/test-center.js": {
+      "before": "744d7d5f5b0ba27bdec3dad0fe7ceafc12d67cbe67da93130091971027f91313",
+      "after": "a56851794e7cd37b22b6338626ab802a00ebcf89416f050b512734a9dc281df8"
+    },
+    "gm3dprototype.js": {
+      "before": "8422ca850dcaf19026194bcc3cc920d129ad5d84d28be92feba233b438344894",
+      "after": "d86cf632a9d72329225d69ae38d3d701d7796f5342bf51609108f7e7b88a3a2e"
+    },
+    "index.html": {
+      "before": "07ff73a0f90a20a970a874b87e5ec43ac1f5401206bd2ebf96aac6da09e1745b",
+      "after": "7b085f34f7d36a41211ca07275c0849987cdac7e6ef427fa6abbedb57f6aaf21"
+    }
+  },
+  "newFiles": {
+    "3d-test/gm-preview-layout.mjs": "f791e3eeac5a485e25f5f0a904682fd81370b00cc678f71ef53f5d62c001492a"
+  }
+}

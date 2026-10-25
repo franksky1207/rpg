@@ -1,0 +1,2314 @@
+{
+  "baseMain": "98ff788b80610f1b750857eecc0eb83909d489a3",
+  "passed": true,
+  "realIPhone": false,
+  "viewports": [
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "passed": true,
+      "samples": [
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-001",
+            "name": "武裝暴徒"
+          },
+          "ratio": 0.9168404907975458,
+          "scale": 269.7629408471062,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999996,
+            "right": 380,
+            "top": 223.8108686722459,
+            "bottom": 524.1891313277541
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 39.80078125,
+              "right": 168.88671875,
+              "top": 247.70442708333334,
+              "bottom": 517.4609375,
+              "height": 269.7565104166667
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 110.499169921875,
+              "right": 336.45209960937495,
+              "top": 249.76025390625,
+              "bottom": 504.72065429687495,
+              "height": 254.96040039062498
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "calamity",
+            "id": "galaxy-calamity-01",
+            "name": "灰潮母巢"
+          },
+          "ratio": 1.75,
+          "scale": 96.2976490742214,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 218.65724730253152,
+            "bottom": 529.3427526974684
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 26.309733072916664,
+              "right": 72.38736979166666,
+              "top": 325.6856282552083,
+              "bottom": 421.97607421875,
+              "height": 96.29044596354166
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 66.3037109375,
+              "right": 336.81845703125003,
+              "top": 240.7880859375,
+              "bottom": 511.30283203125003,
+              "height": 270.51474609375003
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "bounty",
+            "id": "galaxy-bounty-01",
+            "name": "武裝逃逸者"
+          },
+          "ratio": 1.08,
+          "scale": 204.0293757398849,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380.00000000000006,
+            "top": 239.3230018189875,
+            "bottom": 508.67699818101255
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 33.78662109375,
+              "right": 131.419921875,
+              "top": 279.815673828125,
+              "bottom": 483.84423828125,
+              "height": 204.028564453125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 75.28671874999999,
+              "right": 343.2375,
+              "top": 262.13203125,
+              "bottom": 489.278125,
+              "height": 227.14609375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "arena",
+            "id": "galaxy-arena-01",
+            "name": "基礎模擬單元"
+          },
+          "ratio": 1.2,
+          "scale": 173.37701824095785,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999998,
+            "right": 380,
+            "top": 246.33122163273512,
+            "bottom": 501.6687783672649
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 30.22233072916667,
+              "right": 113.18619791666669,
+              "top": 295.8562825520833,
+              "bottom": 469.2294921875,
+              "height": 173.37320963541669
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 115.45947265625,
+              "right": 343.0107421875,
+              "top": 265.5205078125,
+              "bottom": 483.9697265625,
+              "height": 218.44921875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "main",
+            "id": "universe-boss-001",
+            "name": "彼岸守門者"
+          },
+          "ratio": 1.4756,
+          "scale": 139.62288982525735,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 235.54420853035867,
+            "bottom": 512.4557914696414
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 28.099609375,
+              "right": 101.35400390625,
+              "top": 306.10498046875,
+              "bottom": 445.71923828125,
+              "height": 139.6142578125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 99.21591796875,
+              "right": 340.715478515625,
+              "top": 255.158984375,
+              "bottom": 495.294140625,
+              "height": 240.13515625000002
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "calamity",
+            "id": "universe-calamity-01",
+            "name": "彼岸黑潮"
+          },
+          "ratio": 1.7,
+          "scale": 104.47091265793237,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10.000000000000002,
+            "right": 380,
+            "top": 243.55555407485227,
+            "bottom": 504.4444459251478
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 22.261067708333336,
+              "right": 77.71875,
+              "top": 343.4371744791667,
+              "bottom": 447.9039713541667,
+              "height": 104.466796875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 69.845703125,
+              "right": 335.49853515625,
+              "top": 265.080078125,
+              "bottom": 485.9599609375,
+              "height": 220.8798828125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "bounty",
+            "id": "universe-bounty-01",
+            "name": "界航偷渡者"
+          },
+          "ratio": 1.08,
+          "scale": 202.24332084304697,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 229.98028232051226,
+            "bottom": 518.0197176794877
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 33.71809895833333,
+              "right": 141.078125,
+              "top": 279.7945963541667,
+              "bottom": 482.03092447916663,
+              "height": 202.236328125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 86.54648437499999,
+              "right": 338.6677734375,
+              "top": 247.432421875,
+              "bottom": 503.5984375,
+              "height": 256.166015625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "arena",
+            "id": "universe-arena-01",
+            "name": "星域戰爭構裝"
+          },
+          "ratio": 1.2,
+          "scale": 166.15428214134673,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999998,
+            "right": 380,
+            "top": 244.48561957024944,
+            "bottom": 503.51438042975053
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 31.5380859375,
+              "right": 118.717041015625,
+              "top": 292.250732421875,
+              "bottom": 458.403564453125,
+              "height": 166.15283203125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 118.14414062499999,
+              "right": 343.69594726562497,
+              "top": 263.16748046875,
+              "bottom": 487.47314453125,
+              "height": 224.3056640625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-higher",
+            "source": "main",
+            "id": "higher-dimensional-boss-01",
+            "name": "破界天裁"
+          },
+          "ratio": 1.75,
+          "scale": 132.93567914510373,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 228.93271031948612,
+            "bottom": 519.0672896805139
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 29.57071940104167,
+              "right": 92.36507161458334,
+              "top": 308.2206217447917,
+              "bottom": 441.14892578125,
+              "height": 132.92830403645834
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 88.392138671875,
+              "right": 339.846875,
+              "top": 248.95185546875,
+              "bottom": 501.75126953125,
+              "height": 252.7994140625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-001",
+            "name": "武裝暴徒"
+          },
+          "ratio": 0.9168404907975458,
+          "scale": 269.7629408471062,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999996,
+            "right": 380,
+            "top": 223.8108686722459,
+            "bottom": 524.1891313277541
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 41.45572916666667,
+              "right": 170.54166666666669,
+              "top": 247.70442708333334,
+              "bottom": 517.4609375,
+              "height": 269.7565104166667
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 112.02587890625,
+              "right": 339.50551757812497,
+              "top": 249.76025390625,
+              "bottom": 503.1939453125,
+              "height": 253.43369140624998
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-004",
+            "name": "重裝鎮壓兵"
+          },
+          "ratio": 1.1904,
+          "scale": 184.2318478981583,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380.00000000000006,
+            "top": 238.57530170829682,
+            "bottom": 509.4246982917031
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 30.34375,
+              "right": 118.5,
+              "top": 278.2604166666667,
+              "bottom": 462.484375,
+              "height": 184.22395833333331
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 120.566162109375,
+              "right": 341.149609375,
+              "top": 254.337744140625,
+              "bottom": 492.771875,
+              "height": 238.43413085937502
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-005",
+            "name": "城區佔領者"
+          },
+          "ratio": 2.0467999999999997,
+          "scale": 122.2755916171137,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 229.51378252936132,
+            "bottom": 518.4862174706386
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 25.00480143229167,
+              "right": 84.26123046875,
+              "top": 314.0165201822917,
+              "bottom": 436.27978515625,
+              "height": 122.26326497395834
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 86.88144531249999,
+              "right": 341.48847656249995,
+              "top": 250.010302734375,
+              "bottom": 501.72407226562495,
+              "height": 251.71376953125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "special",
+            "id": "special-gold_slime",
+            "name": "稀有資源聚合體"
+          },
+          "ratio": 1.2864,
+          "scale": 134.23467424090742,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999998,
+            "right": 380,
+            "top": 238.98747372214035,
+            "bottom": 509.0125262778597
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 24.829345703125,
+              "right": 89.061279296875,
+              "top": 307.058349609375,
+              "bottom": 441.28662109375,
+              "height": 134.228271484375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 89.65253906250001,
+              "right": 336.33515625,
+              "top": 255.9181640625,
+              "bottom": 495.34541015625,
+              "height": 239.42724609375003
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "void",
+            "id": "void-regular-01",
+            "name": "虛影獵手"
+          },
+          "ratio": 1.1,
+          "scale": 129.3143088850465,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999973,
+            "right": 380.00000000000006,
+            "top": 238.2721363975474,
+            "bottom": 509.72786360245254
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 25.073567708333336,
+              "right": 86.95052083333334,
+              "top": 315.9137369791667,
+              "bottom": 445.220703125,
+              "height": 129.30696614583334
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 79.54658203125,
+              "right": 338.17353515625,
+              "top": 262.0376953125,
+              "bottom": 489.0546875,
+              "height": 227.0169921875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "calamity",
+            "id": "galaxy-calamity-01",
+            "name": "灰潮母巢"
+          },
+          "ratio": 1.75,
+          "scale": 96.2976490742214,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 218.65724730253152,
+            "bottom": 529.3427526974684
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 26.90047200520833,
+              "right": 73.56884765625,
+              "top": 325.6856282552083,
+              "bottom": 421.97607421875,
+              "height": 96.29044596354166
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 67.78193359375,
+              "right": 338.2966796875,
+              "top": 240.7880859375,
+              "bottom": 511.30283203125003,
+              "height": 270.51474609375003
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "calamity",
+            "id": "universe-calamity-10",
+            "name": "終戰天穹"
+          },
+          "ratio": 1.9726884531590412,
+          "scale": 111.16988971184995,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 222.57813432397074,
+            "bottom": 525.4218656760293
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 25.108072916666664,
+              "right": 84.12109375,
+              "top": 321.6888020833333,
+              "bottom": 432.8528645833333,
+              "height": 111.1640625
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 87.54140625000001,
+              "right": 342.9123046875,
+              "top": 240.2021484375,
+              "bottom": 507.115234375,
+              "height": 266.9130859375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-444",
+            "name": "星河征服母艦"
+          },
+          "ratio": 1.9758000000000002,
+          "scale": 94.63261297502433,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 240.4888414254502,
+            "bottom": 507.51115857454977
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 21.0322265625,
+              "right": 66.31640625,
+              "top": 347.51123046875,
+              "bottom": 442.1435546875,
+              "height": 94.63232421875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 70.77841796874999,
+              "right": 336.55537109375,
+              "top": 264.25546875,
+              "bottom": 485.22119140625,
+              "height": 220.96572265625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "main",
+            "id": "universe-boss-021",
+            "name": "邊疆吞星獸"
+          },
+          "ratio": 2.0295,
+          "scale": 113.90190761884517,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 10,
+            "right": 380,
+            "top": 239.49024306478853,
+            "bottom": 508.5097569352115
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 23.370279947916664,
+              "right": 83.83203125,
+              "top": 318.2334798177083,
+              "bottom": 432.1265462239583,
+              "height": 113.89306640625
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 84.99716796875,
+              "right": 333.278515625,
+              "top": 256.752197265625,
+              "bottom": 490.76450195312503,
+              "height": 234.0123046875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-050",
+            "name": "地球征服核心"
+          },
+          "ratio": 1.9488,
+          "scale": 126.09170896262853,
+          "stage": {
+            "width": 390,
+            "height": 748
+          },
+          "union": {
+            "left": 9.999999999999998,
+            "right": 380,
+            "top": 231.71103882882286,
+            "bottom": 516.2889611711771
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 23.934326171875,
+              "right": 84.268798828125,
+              "top": 312.0399576822917,
+              "bottom": 438.12353515625,
+              "height": 126.08357747395834
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 86.26513671875,
+              "right": 334.87568359374995,
+              "top": 252.21826171875,
+              "bottom": 500.82880859374995,
+              "height": 248.61054687499998
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "passed": true,
+      "samples": [
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-001",
+            "name": "武裝暴徒"
+          },
+          "ratio": 0.9168404907975458,
+          "scale": 246.07321827704058,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 253.24611098062607,
+            "right": 590.753889019374,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 281.9163411458333,
+              "right": 399.6653645833333,
+              "top": 31.793131510416664,
+              "bottom": 277.8583984375,
+              "height": 246.06526692708331
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 346.31201171875,
+              "right": 553.813427734375,
+              "top": 33.68701171875,
+              "bottom": 264.8630859375,
+              "height": 231.17607421875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "calamity",
+            "id": "galaxy-calamity-01",
+            "name": "灰潮母巢"
+          },
+          "ratio": 1.75,
+          "scale": 84.9268967755541,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 258.8446576367831,
+            "right": 585.155342363217,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 272.69677734375,
+              "right": 313.33447265625,
+              "top": 104.38720703125,
+              "bottom": 189.3095703125,
+              "height": 84.92236328125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 305.8833984375,
+              "right": 544.453564453125,
+              "top": 29.53759765625,
+              "bottom": 268.10776367187503,
+              "height": 238.570166015625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "bounty",
+            "id": "galaxy-bounty-01",
+            "name": "武裝逃逸者"
+          },
+          "ratio": 1.08,
+          "scale": 207.54861523417185,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 233.8089923125917,
+            "right": 610.1910076874083,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 257.9905598958333,
+              "right": 357.3059895833333,
+              "top": 51.193522135416664,
+              "bottom": 258.7373046875,
+              "height": 207.54378255208331
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 300.204052734375,
+              "right": 572.7816406249999,
+              "top": 33.221337890624994,
+              "bottom": 264.2896484375,
+              "height": 231.06831054687498
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "arena",
+            "id": "galaxy-arena-01",
+            "name": "基礎模擬單元"
+          },
+          "ratio": 1.2,
+          "scale": 186.049023126719,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 223.47847951446658,
+            "right": 620.5215204855334,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 244.010498046875,
+              "right": 333.036376953125,
+              "top": 63.148681640625,
+              "bottom": 249.18994140625,
+              "height": 186.041259765625
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 333.845751953125,
+              "right": 578.033984375,
+              "top": 30.59716796875,
+              "bottom": 265.01787109375,
+              "height": 234.420703125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "main",
+            "id": "universe-boss-001",
+            "name": "彼岸守門者"
+          },
+          "ratio": 1.4756,
+          "scale": 138.1548269163912,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 238.94517989478763,
+            "right": 605.0548201052123,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 255.13330078125,
+              "right": 328.47265625,
+              "top": 79.818115234375,
+              "bottom": 217.968994140625,
+              "height": 138.15087890625
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 325.850439453125,
+              "right": 563.459033203125,
+              "top": 29.42226562500001,
+              "bottom": 267.03085937500003,
+              "height": 237.60859375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "calamity",
+            "id": "universe-calamity-01",
+            "name": "彼岸黑潮"
+          },
+          "ratio": 1.7,
+          "scale": 109.72115318999177,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 227.70272792953114,
+            "right": 616.2972720704689,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 240.5615234375,
+              "right": 298.8046875,
+              "top": 114.90283203125,
+              "bottom": 224.61669921875,
+              "height": 109.7138671875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 290.542578125,
+              "right": 569.54541015625,
+              "top": 32.62070312499999,
+              "bottom": 264.6005859375,
+              "height": 231.9798828125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "bounty",
+            "id": "universe-bounty-01",
+            "name": "界航偷渡者"
+          },
+          "ratio": 1.08,
+          "scale": 192.38570524877304,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 246.0171525929202,
+            "right": 597.9828474070798,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 268.5625,
+              "right": 370.6875,
+              "top": 57.390625,
+              "bottom": 249.765625,
+              "height": 192.375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 318.82138671875,
+              "right": 558.661669921875,
+              "top": 26.62333984374999,
+              "bottom": 270.311328125,
+              "height": 243.68798828124997
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "arena",
+            "id": "universe-arena-01",
+            "name": "星域戰爭構裝"
+          },
+          "ratio": 1.2,
+          "scale": 175.7575998729452,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 226.30744511998574,
+            "right": 617.6925548800142,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 249.0771484375,
+              "right": 341.2919108072917,
+              "top": 60.527425130208336,
+              "bottom": 236.27791341145834,
+              "height": 175.75048828125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 340.7046875,
+              "right": 579.2923828124999,
+              "top": 29.771484375,
+              "bottom": 267.041015625,
+              "height": 237.26953125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-higher",
+            "source": "main",
+            "id": "higher-dimensional-boss-01",
+            "name": "破界天裁"
+          },
+          "ratio": 1.75,
+          "scale": 125.54303649698335,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 247.2879745956648,
+            "right": 596.7120254043352,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 267.3053385416667,
+              "right": 325.06901041666663,
+              "top": 84.87825520833333,
+              "bottom": 210.41796875,
+              "height": 125.53971354166666
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 322.56640625,
+              "right": 561.31171875,
+              "top": 28.92421875000001,
+              "bottom": 267.66953125000003,
+              "height": 238.7453125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-001",
+            "name": "武裝暴徒"
+          },
+          "ratio": 0.9168404907975458,
+          "scale": 246.07321827704058,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 253.24611098062607,
+            "right": 590.753889019374,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 281.9163411458333,
+              "right": 399.6653645833333,
+              "top": 31.793131510416664,
+              "bottom": 277.8583984375,
+              "height": 246.06526692708331
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 346.31201171875,
+              "right": 553.813427734375,
+              "top": 33.68701171875,
+              "bottom": 264.8630859375,
+              "height": 231.17607421875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-004",
+            "name": "重裝鎮壓兵"
+          },
+          "ratio": 1.1904,
+          "scale": 186.3748893697481,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 234.84802314709844,
+            "right": 609.1519768529016,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 274.86100260416663,
+              "right": 393.7737630208333,
+              "top": 50.139811197916664,
+              "bottom": 236.5126953125,
+              "height": 186.37288411458331
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 350.5765625,
+              "right": 581.45859375,
+              "top": 19.518749999999997,
+              "bottom": 264.5890625,
+              "height": 245.0703125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-005",
+            "name": "城區佔領者"
+          },
+          "ratio": 2.0467999999999997,
+          "scale": 115.94016609195775,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 246.58534492986914,
+            "right": 597.414655070131,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 265.787109375,
+              "right": 322.6881510416667,
+              "top": 90.12076822916667,
+              "bottom": 206.056640625,
+              "height": 115.93587239583334
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 319.48203125,
+              "right": 567.7560546875,
+              "top": 28.073437499999997,
+              "bottom": 268.11738281249995,
+              "height": 240.04394531249997
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "special",
+            "id": "special-gold_slime",
+            "name": "稀有資源聚合體"
+          },
+          "ratio": 1.2864,
+          "scale": 136.2106974663733,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 234.2766775888686,
+            "right": 609.7233224111314,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 255.98665364583331,
+              "right": 322.83561197916663,
+              "top": 79.08235677083333,
+              "bottom": 215.287109375,
+              "height": 136.20475260416666
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 316.554931640625,
+              "right": 574.22705078125,
+              "top": 22.774658203125,
+              "bottom": 274.55712890625,
+              "height": 251.782470703125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "void",
+            "id": "void-regular-01",
+            "name": "虛影獵手"
+          },
+          "ratio": 1.1,
+          "scale": 130.52633296536501,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 235.26605070396153,
+            "right": 608.7339492960384,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 251.27254231770831,
+              "right": 314.52783203125,
+              "top": 88.37019856770833,
+              "bottom": 218.88427734375,
+              "height": 130.51407877604166
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 308.342333984375,
+              "right": 569.386279296875,
+              "top": 35.448388671874994,
+              "bottom": 261.686474609375,
+              "height": 226.2380859375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "calamity",
+            "id": "galaxy-calamity-01",
+            "name": "灰潮母巢"
+          },
+          "ratio": 1.75,
+          "scale": 84.9268967755541,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 258.8446576367831,
+            "right": 585.155342363217,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 275.3017578125,
+              "right": 316.46044921875,
+              "top": 104.38720703125,
+              "bottom": 189.3095703125,
+              "height": 84.92236328125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 308.49072265625,
+              "right": 547.0608886718751,
+              "top": 29.53759765625,
+              "bottom": 268.10776367187503,
+              "height": 238.570166015625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "calamity",
+            "id": "universe-calamity-10",
+            "name": "終戰天穹"
+          },
+          "ratio": 1.9726884531590412,
+          "scale": 100.5817411014403,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 254.6199463542059,
+            "right": 589.3800536457941,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 270.745849609375,
+              "right": 324.759765625,
+              "top": 99.673095703125,
+              "bottom": 200.250732421875,
+              "height": 100.57763671875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 322.1443359375,
+              "right": 557.1111328125,
+              "top": 23.347753906250006,
+              "bottom": 268.75751953125,
+              "height": 245.409765625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-444",
+            "name": "星河征服母艦"
+          },
+          "ratio": 1.9758000000000002,
+          "scale": 97.10550126294605,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 232.1656800030846,
+            "right": 611.8343199969155,
+            "top": 10,
+            "bottom": 284.00000000000006
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 245.259765625,
+              "right": 292.3203125,
+              "top": 119.818359375,
+              "bottom": 216.91796875,
+              "height": 97.099609375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 294.528369140625,
+              "right": 568.83642578125,
+              "top": 34.397265625,
+              "bottom": 257.966259765625,
+              "height": 223.56899414062502
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "main",
+            "id": "universe-boss-021",
+            "name": "邊疆吞星獸"
+          },
+          "ratio": 2.0295,
+          "scale": 116.01062777399818,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 233.57500706652993,
+            "right": 610.4249929334701,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 255.049072265625,
+              "right": 317.3466796875,
+              "top": 90.204833984375,
+              "bottom": 206.92333984375,
+              "height": 116.718505859375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 315.765234375,
+              "right": 574.45625,
+              "top": 20.326171875,
+              "bottom": 265.9373046875,
+              "height": 245.61113281250002
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-050",
+            "name": "地球征服核心"
+          },
+          "ratio": 1.9488,
+          "scale": 121.40480881787015,
+          "stage": {
+            "width": 844,
+            "height": 294
+          },
+          "union": {
+            "left": 243.87655464355146,
+            "right": 600.1234453564485,
+            "top": 10,
+            "bottom": 284
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 263.2395833333333,
+              "right": 322.82291666666663,
+              "top": 87.34895833333333,
+              "bottom": 208.75,
+              "height": 121.40104166666666
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 324.2421875,
+              "right": 563.614453125,
+              "top": 29.76806640625,
+              "bottom": 273.3154296875,
+              "height": 243.54736328124997
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "passed": true,
+      "samples": [
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-001",
+            "name": "武裝暴徒"
+          },
+          "ratio": 0.9168404907975458,
+          "scale": 704.0927121503644,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 199.64215696646278,
+            "right": 1165.3578430335374,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 311.944580078125,
+              "right": 657.510986328125,
+              "top": 72.390380859375,
+              "bottom": 776.48193359375,
+              "height": 704.091552734375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 461.952197265625,
+              "right": 1083.583251953125,
+              "top": 93.70439453124999,
+              "bottom": 731.2747070312499,
+              "height": 637.5703125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "calamity",
+            "id": "galaxy-calamity-01",
+            "name": "灰潮母巢"
+          },
+          "ratio": 1.75,
+          "scale": 243.0025075621694,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 215.66135615780274,
+            "right": 1149.3386438421971,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 255.303955078125,
+              "right": 371.586669921875,
+              "top": 280.1019694010417,
+              "bottom": 523.10302734375,
+              "height": 243.00105794270831
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 350.26796875,
+              "right": 1032.9080078125,
+              "top": 65.884765625,
+              "bottom": 748.5248046875,
+              "height": 682.6400390625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "bounty",
+            "id": "galaxy-bounty-01",
+            "name": "武裝逃逸者"
+          },
+          "ratio": 1.08,
+          "scale": 593.861731180988,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 144.02645975573694,
+            "right": 1220.9735402442632,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 224.163818359375,
+              "right": 511.9853515625,
+              "top": 127.888916015625,
+              "bottom": 721.74853515625,
+              "height": 593.859619140625
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 334.02084960937503,
+              "right": 1121.86845703125,
+              "top": 84.35698242187499,
+              "bottom": 733.638427734375,
+              "height": 649.2814453125001
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "arena",
+            "id": "galaxy-arena-01",
+            "name": "基礎模擬單元"
+          },
+          "ratio": 1.2,
+          "scale": 532.3446501144076,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 114.46762021657594,
+            "right": 1250.532379783424,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 199.390869140625,
+              "right": 460.660400390625,
+              "top": 162.080810546875,
+              "bottom": 694.41748046875,
+              "height": 532.336669921875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 450.24921875,
+              "right": 1148.9503906250002,
+              "top": 72.92617187500002,
+              "bottom": 731.7015625,
+              "height": 658.775390625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "main",
+            "id": "universe-boss-001",
+            "name": "彼岸守門者"
+          },
+          "ratio": 1.4756,
+          "scale": 395.30432227171787,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 158.72270451647262,
+            "right": 1206.2772954835275,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 227.03385416666666,
+              "right": 439.32291666666663,
+              "top": 209.77864583333334,
+              "bottom": 605.0755208333333,
+              "height": 395.296875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 422.868212890625,
+              "right": 1106.60849609375,
+              "top": 65.56914062499999,
+              "bottom": 745.4464843750001,
+              "height": 679.87734375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "calamity",
+            "id": "universe-calamity-01",
+            "name": "彼岸黑潮"
+          },
+          "ratio": 1.7,
+          "scale": 313.94665730275017,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 126.55452079106713,
+            "right": 1238.4454792089327,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 184.684326171875,
+              "right": 353.2822265625,
+              "top": 310.1607259114583,
+              "bottom": 626.03955078125,
+              "height": 315.8788248697917
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 328.79135742187503,
+              "right": 1136.075537109375,
+              "top": 70.24125976562499,
+              "bottom": 738.4931640625,
+              "height": 668.2519042968751
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "bounty",
+            "id": "universe-bounty-01",
+            "name": "界航偷渡者"
+          },
+          "ratio": 1.08,
+          "scale": 550.4758865512338,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 178.95783807609297,
+            "right": 1186.042161923907,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 274.08447265625,
+              "right": 569.7060546875,
+              "top": 145.61181640625,
+              "bottom": 696.07958984375,
+              "height": 550.4677734375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 405.63564453125,
+              "right": 1084.553125,
+              "top": 46.54345703125,
+              "bottom": 769.498828125,
+              "height": 722.95537109375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "arena",
+            "id": "universe-arena-01",
+            "name": "星域戰爭構裝"
+          },
+          "ratio": 1.2,
+          "scale": 502.8976580306169,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 122.56217873747757,
+            "right": 1242.4378212625227,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 212.5732421875,
+              "right": 482.642822265625,
+              "top": 154.568603515625,
+              "bottom": 657.456787109375,
+              "height": 502.88818359375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 465.0107421875,
+              "right": 1143.921875,
+              "top": 66.58349609375,
+              "bottom": 745.49462890625,
+              "height": 678.9111328125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-higher",
+            "source": "main",
+            "id": "higher-dimensional-boss-01",
+            "name": "破界天裁"
+          },
+          "ratio": 1.75,
+          "scale": 359.2180314366239,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 182.59405869708456,
+            "right": 1182.4059413029154,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 242.09114583333331,
+              "right": 405.17057291666663,
+              "top": 224.25716145833334,
+              "bottom": 583.47265625,
+              "height": 359.21549479166663
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 398.0302734375,
+              "right": 1081.1642578125002,
+              "top": 64.1361328125,
+              "bottom": 747.2701171875,
+              "height": 683.1339843750001
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-001",
+            "name": "武裝暴徒"
+          },
+          "ratio": 0.9168404907975458,
+          "scale": 704.0927121503644,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 199.64215696646278,
+            "right": 1165.3578430335374,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 286.027099609375,
+              "right": 627.27392578125,
+              "top": 72.390380859375,
+              "bottom": 776.48193359375,
+              "height": 704.091552734375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 469.921826171875,
+              "right": 1067.643994140625,
+              "top": 81.74995117187501,
+              "bottom": 739.2443359375,
+              "height": 657.494384765625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-004",
+            "name": "重裝鎮壓兵"
+          },
+          "ratio": 1.1904,
+          "scale": 533.2770557148997,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 146.99945309242764,
+            "right": 1218.0005469075722,
+            "top": 10,
+            "bottom": 794.0000000000001
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 232.04239908854169,
+              "right": 493.76765950520837,
+              "top": 124.87784830729167,
+              "bottom": 658.14306640625,
+              "height": 533.2652180989584
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 478.14580078125,
+              "right": 1138.793896484375,
+              "top": 40.900146484375,
+              "bottom": 738.45595703125,
+              "height": 697.555810546875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-005",
+            "name": "城區佔領者"
+          },
+          "ratio": 2.0467999999999997,
+          "scale": 331.74120516822944,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 180.58361468984458,
+            "right": 1184.4163853101554,
+            "top": 10,
+            "bottom": 793.9999999999999
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 233.48828125,
+              "right": 396.30078125,
+              "top": 239.26171875,
+              "bottom": 570.9921875,
+              "height": 331.73046875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 389.1638671875,
+              "right": 1095.6375,
+              "top": 61.714453125000034,
+              "bottom": 748.5638183593751,
+              "height": 686.849365234375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "special",
+            "id": "special-gold_slime",
+            "name": "稀有資源聚合體"
+          },
+          "ratio": 1.2864,
+          "scale": 389.7415577140024,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 145.3646541228942,
+            "right": 1219.635345877106,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 219.48160807291666,
+              "right": 413.15519205729163,
+              "top": 207.66072591145834,
+              "bottom": 597.39892578125,
+              "height": 389.73819986979163
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 376.57763671875,
+              "right": 1122.302490234375,
+              "top": 42.33447265625,
+              "bottom": 771.206787109375,
+              "height": 728.872314453125
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "void",
+            "id": "void-regular-01",
+            "name": "虛影獵手"
+          },
+          "ratio": 1.1,
+          "scale": 373.4768067330152,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 148.19556113834244,
+            "right": 1216.8044388616577,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 194.012451171875,
+              "right": 375.02197265625,
+              "top": 234.266357421875,
+              "bottom": 607.74169921875,
+              "height": 373.475341796875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 357.31669921875,
+              "right": 1104.26396484375,
+              "top": 82.81630859375002,
+              "bottom": 730.1706054687501,
+              "height": 647.354296875
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "calamity",
+            "id": "galaxy-calamity-01",
+            "name": "灰潮母巢"
+          },
+          "ratio": 1.75,
+          "scale": 243.0025075621694,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 215.66135615780274,
+            "right": 1149.3386438421971,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 259.7763671875,
+              "right": 377.5498860677083,
+              "top": 280.1019694010417,
+              "bottom": 523.10302734375,
+              "height": 243.00105794270831
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 361.4587890625,
+              "right": 1044.0988281250002,
+              "top": 65.884765625,
+              "bottom": 748.5248046875,
+              "height": 682.6400390625
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "calamity",
+            "id": "universe-calamity-10",
+            "name": "終戰天穹"
+          },
+          "ratio": 1.9726884531590412,
+          "scale": 287.7959307428073,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 203.57313117407824,
+            "right": 1161.4268688259217,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 253.30330403645831,
+              "right": 407.8543294270833,
+              "top": 266.5878092447917,
+              "bottom": 554.3724772135416,
+              "height": 287.78466796875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 404.270703125,
+              "right": 1080.31630859375,
+              "top": 48.19931640624998,
+              "bottom": 754.1253906249999,
+              "height": 705.9260742187499
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-444",
+            "name": "星河征服母艦"
+          },
+          "ratio": 1.9758000000000002,
+          "scale": 277.84931748229815,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 139.3244274540815,
+            "right": 1225.6755725459186,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 175.119140625,
+              "right": 309.78173828125,
+              "top": 324.25048828125,
+              "bottom": 602.0986328125,
+              "height": 277.84814453125
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 322.32060546875005,
+              "right": 1107.215185546875,
+              "top": 79.81757812500001,
+              "bottom": 724.06630859375,
+              "height": 644.2487304687501
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-universe",
+            "source": "main",
+            "id": "universe-boss-021",
+            "name": "邊疆吞星獸"
+          },
+          "ratio": 2.0295,
+          "scale": 331.9428181562576,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 143.35695452612936,
+            "right": 1221.6430454738706,
+            "top": 9.999999999999943,
+            "bottom": 794.0000000000001
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 198.6708984375,
+              "right": 376.93310546875,
+              "top": 239.50764973958334,
+              "bottom": 571.4441731770833,
+              "height": 331.9365234375
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 370.233203125,
+              "right": 1106.2870117187501,
+              "top": 43.69072265624999,
+              "bottom": 742.3180664062501,
+              "height": 698.62734375
+            }
+          ]
+        },
+        {
+          "identity": {
+            "era": "era-galaxy",
+            "source": "main",
+            "id": "galaxy-map-050",
+            "name": "地球征服核心"
+          },
+          "ratio": 1.9488,
+          "scale": 347.3772631868985,
+          "stage": {
+            "width": 1365,
+            "height": 804
+          },
+          "union": {
+            "left": 172.8329154764392,
+            "right": 1192.1670845235608,
+            "top": 10,
+            "bottom": 794
+          },
+          "paint": [
+            {
+              "role": "player",
+              "clip": "attack",
+              "left": 253.798095703125,
+              "right": 466.908447265625,
+              "top": 231.332763671875,
+              "bottom": 578.70263671875,
+              "height": 347.369873046875
+            },
+            {
+              "role": "monster",
+              "clip": "hit",
+              "left": 402.8046875,
+              "right": 1091.71298828125,
+              "top": 66.55029296875,
+              "bottom": 767.40498046875,
+              "height": 700.8546875
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

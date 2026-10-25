@@ -55,7 +55,7 @@ async function start(){
   let mod;
   if(entry().kind==="character"){
    status.textContent="GM 角色預覽：使用三紀元正式角色素材，不修改存檔。";
-   mod=await import("./gm-era-sprites.mjs?v=20261022-batch19-2-center1&uiRepair=20261024-three1&appearance=20261024-approved1");
+   mod=await import("./gm-era-sprites.mjs?v=20261025-center1&uiRepair=20261024-three1&appearance=20261024-approved1");
   }else{
    status.textContent="GM 戰鬥動畫測試：不影響正式戰鬥或音效。";
    mod=await import("./gm-battle-simulation.js?v=20261019-batch12-rising-cut1");

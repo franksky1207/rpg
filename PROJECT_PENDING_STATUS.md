@@ -1,5 +1,10 @@
 # 《文明戰線》工程狀態
 
+## 2026-10-25 GM 動畫測試中心
+
+GM 三模式改為選擇頁與網頁內最大化預覽，新增連續六動作／自動對戰、統一 1／1.5／2 倍速及 GM 專用聯合可視範圍縮放。正式 Actor、映射、配色／特效、尺寸倍率與戰鬥／存檔 owner 不變。施工基準為包含 PR #101／#102 的 `98ff788b`；實作及驗收方式見 [改版紀錄](docs/GM_ANIMATION_CENTER_20261025.md)，合併／Actions／Pages 狀態以唯一整合 PR 的實際結果為準，不以本機結果宣稱發布。
+
+
 ## 2026-10-25 CI 效率工程更新
 
 PR #101（`integrate/postrelease-optimization-20261025`，第4批／第5批／第6批等整合）已合併，正式 Pages [#500](https://github.com/franksky1207/rpg/actions/runs/40168240929) 成功。以下舊整合待發布描述是歷史交接，已由此更新取代。CI 本次從 fetch 後最新 main `19a60010d3252c34bb15d62d40aaff140244cca4` 施工，分支 `optimize/ci-parallel-efficiency-20261025`；遊戲及存檔契約未修改。

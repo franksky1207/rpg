@@ -35,7 +35,7 @@ function open(){
   exit.addEventListener("click",close);
   bar.append(title,exit);
   const frame=document.createElement("iframe");
-  frame.src="3d-test/?embedded=1&v=20261022-batch19-2-center1";
+  frame.src="3d-test/?embedded=1&v=20261025-center1";
   frame.title="文明戰線 GM 動畫測試中心";
   frame.style.cssText="display:block;flex:1;min-height:0;width:100%;border:0;background:#060c18";
   layer.append(bar,frame);
@@ -56,6 +56,12 @@ document.addEventListener("keydown",event=>{
 });
 window.addEventListener("message",event=>{
  if(!overlay||event.origin!==location.origin||event.source!==overlay.querySelector("iframe")?.contentWindow )return;
+ if(event.data?.type==="civilization3d:preview-state"){
+  const active=event.data.active===true&&allowed();
+  overlay.firstElementChild.style.display=active?"none":"flex";
+  overlay.style.padding=active?"env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)":"env(safe-area-inset-top) 0 env(safe-area-inset-bottom)";
+  return;
+ }
  if(event.data?.type==="civilization3d:sprite-auth"){
   event.source.postMessage({type:"civilization3d:sprite-auth-response",requestId:event.data.requestId,authorized:allowed(),playerName:allowed()?String(state?.playerName||"玩家"):null},event.origin);return;
  }

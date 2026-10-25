@@ -10,6 +10,9 @@ try{for(const viewport of [{width:1365,height:900},{width:390,height:844},{width
  const result=await frame.evaluate(async()=>{
   window.requestAnimationFrame=()=>0;const {mount}=await import('./gm-era-sprites.mjs');const gm=document.querySelector('#gm'),host=document.querySelector('#formal'),mounted=await mount({host:gm}),rows=[];
   const wait=async fn=>{const end=performance.now()+10000;while(!fn()){if(performance.now()>end)throw Error('timeout');await new Promise(r=>setTimeout(r,5));}};
+   // Enter the current two-layer GM UI before the frozen identity fixture mutates selections.
+   gm.querySelector('[data-preview-mode]').value='duel';gm.querySelector('[data-preview-mode]').dispatchEvent(new Event('change'));
+   gm.querySelector('[data-enter]').click();await wait(()=>gm.querySelector('canvas[data-monster]')&&mounted.diagnostics().presenting);
   const select=(s,v)=>{const e=gm.querySelector(s);e.value=v;e.dispatchEvent(new Event('change'));};
   function read(c){const n=c.width,d=c.getContext('2d').getImageData(0,0,n,n).data,b=c.getBoundingClientRect();let min=n,max=-1,left=n,right=-1,count=0;for(let i=3;i<d.length;i+=4)if(d[i]>16){const x=(i-3)/4%n,y=Math.floor((i-3)/4/n);min=Math.min(min,y);max=Math.max(max,y);left=Math.min(left,x);right=Math.max(right,x);count++;}return {height:(max-min+1)/n*b.height,left:b.left+left/n*b.width,right:b.left+(right+1)/n*b.width,top:b.top+min/n*b.height,bottom:b.top+(max+1)/n*b.height,count};}
   for(const [world,era] of [[1,'galaxy'],[2,'universe']]){

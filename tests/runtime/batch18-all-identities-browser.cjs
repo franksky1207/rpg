@@ -24,6 +24,9 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
    const gm=document.querySelector('#gm'),formal=document.querySelector('#formal');
    const mounted=await mount({host:gm,quality:'medium'}),rows=[];
    const wait=async(fn)=>{const end=performance.now()+10000;while(!fn()){if(performance.now()>end)throw Error('load-timeout');await new Promise(r=>setTimeout(r,1));}};
+   // Enter the current two-layer GM UI before the frozen identity fixture mutates selections.
+   gm.querySelector('[data-preview-mode]').value='duel';gm.querySelector('[data-preview-mode]').dispatchEvent(new Event('change'));
+   gm.querySelector('[data-enter]').click();await wait(()=>gm.querySelector('canvas[data-monster]')&&mounted.diagnostics().presenting);
    // Ratios/separation sample the fixed body through the same Actor pose, while
    // full painted effects independently participate in viewport containment.
    let bodyActor=null;const {getSharedMonsterPool}=await import('./monster-sprite-pool.mjs');
