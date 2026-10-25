@@ -1,7 +1,5 @@
 name: GM Animation Center Terminology Gate
 on:
-  push:
-    branches: [fix/gm-animation-center-copy-full-20261018]
   pull_request:
     paths:
       - 'gm3dprototype.js'
