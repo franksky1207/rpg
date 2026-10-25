@@ -196,7 +196,7 @@ jobs:
         if-no-files-found: ignore
         retention-days: 7
   monster-m3:
-    name: M3 — Appearance and performance
+    name: M3 — Appearance and performance (${{ matrix.suite }})
     needs: classify
     if: needs.classify.outputs.monster == 'true'
     runs-on: ubuntu-latest
@@ -213,8 +213,8 @@ jobs:
     - run: python3 -m pip install Pillow==11.3.0
     - uses: ./.github/actions/setup-ci-browser
       with:
-        browsers: chromium webkit
-    - name: Run M3 with command timings
+        browsers: ${{ matrix.browsers }}
+    - name: Run ${{ matrix.suite }} with command timings
       shell: bash
       run: |
         set -euo pipefail
@@ -227,11 +227,11 @@ jobs:
           sleep 0.25
         done
         curl -fsS http://127.0.0.1:4173/index.html >/dev/null
-        node scripts/ci-run-suite.cjs M3
+        node scripts/ci-run-suite.cjs ${{ matrix.suite }}
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: monster-M3-${{ github.run_attempt }}
+        name: monster-${{ matrix.suite }}-${{ github.run_attempt }}
         path: |-
           work/approved-integration/*.json
           work/visual-integration/*.json
@@ -255,6 +255,14 @@ jobs:
           /tmp/ci-http.log
         if-no-files-found: ignore
         retention-days: 7
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - suite: M3-chromium
+          browsers: chromium
+        - suite: M3-webkit
+          browsers: webkit
   monster-m4:
     name: M4 — Full identity and alternate universe (${{ matrix.suite }})
     needs: classify

@@ -106,57 +106,57 @@
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/monster-appearance-contract.mjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node scripts/audit-monster-appearance.mjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/batch16-cache.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/batch17-cache.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/batch20-visual-preparation-browser.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/monster-appearance-browser.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-webkit",
     "command": "APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/monster-approved-sizing-browser.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "RESOURCE_TEST_ROOT=.publish-stage3 node tests/runtime/monster-approved-cache-browser.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/monster-approved-performance.cjs"
   },
   {
     "source": "functional-ci/monster",
-    "suite": "M3",
+    "suite": "M3-chromium",
     "command": "node tests/runtime/batch20-alternate-colors-browser.cjs"
   },
   {

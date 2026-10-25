@@ -26,19 +26,6 @@
     "node tests/runtime/batch18-cache.cjs",
     "node tests/runtime/batch18-all-identities-browser.cjs"
   ],
-  "M3": [
-    "node tests/runtime/monster-appearance-contract.mjs",
-    "node scripts/audit-monster-appearance.mjs",
-    "node tests/runtime/batch16-cache.cjs",
-    "node tests/runtime/batch17-cache.cjs",
-    "node tests/runtime/batch20-visual-preparation-browser.cjs",
-    "node tests/runtime/monster-appearance-browser.cjs",
-    "APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs",
-    "node tests/runtime/monster-approved-sizing-browser.cjs",
-    "RESOURCE_TEST_ROOT=.publish-stage3 node tests/runtime/monster-approved-cache-browser.cjs",
-    "node tests/runtime/monster-approved-performance.cjs",
-    "node tests/runtime/batch20-alternate-colors-browser.cjs"
-  ],
   "M4-15": [
     "node tests/runtime/batch15-all-identities-browser.cjs"
   ],
@@ -182,5 +169,20 @@
     "node tests/runtime/mirror-void-formal-browser.cjs",
     "node tests/runtime/mirror-void-recovery-browser.cjs",
     "node tests/equipment-formal/higher-dungeons.cjs"
+  ],
+  "M3-chromium": [
+    "node tests/runtime/monster-appearance-contract.mjs",
+    "node scripts/audit-monster-appearance.mjs",
+    "node tests/runtime/batch16-cache.cjs",
+    "node tests/runtime/batch17-cache.cjs",
+    "node tests/runtime/batch20-visual-preparation-browser.cjs",
+    "node tests/runtime/monster-appearance-browser.cjs",
+    "node tests/runtime/monster-approved-sizing-browser.cjs",
+    "RESOURCE_TEST_ROOT=.publish-stage3 node tests/runtime/monster-approved-cache-browser.cjs",
+    "node tests/runtime/monster-approved-performance.cjs",
+    "node tests/runtime/batch20-alternate-colors-browser.cjs"
+  ],
+  "M3-webkit": [
+    "APPEARANCE_BROWSER=webkit node tests/runtime/monster-appearance-browser.cjs"
   ]
 }
