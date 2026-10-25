@@ -152,11 +152,12 @@
  function secondWorldMainlineRewardPreview(value,options={}){
   const index=clampBossIndex(value),boss=bossMeta(index),s=options.state||currentState();
   if(index<0||!boss||!s)return null;
-  const xp=secondWorldBossExpReward(index,options.useTestSpecializations===true,s),darkMatter=secondWorldBossDarkMatterReward(index,options.useTestSpecializations===true),darkEnergy=1,equipmentLevel=Math.min(rewardPlayerLevel(s),boss.level);
+  const useTest=options.useTestSpecializations===true,rawXp=Math.ceil((typeof sameExp==="function"?sameExp(boss.level):25+4*boss.level)*(typeof expLevelFactor==="function"?expLevelFactor(boss.level,s.level):1));
+  const rawDarkMatter=secondWorldBossDarkMatterBase(index),equipmentLevel=Math.min(rewardPlayerLevel(s),boss.level);
   const multiplier=typeof window.reincarnationOverlevelRewardMultiplier==="function"?window.reincarnationOverlevelRewardMultiplier(s.level,boss.level,s):1;
-  if(!(multiplier>1))return {bossIndex:index,xp,darkMatter,darkEnergy,equipmentLevel,overlevelRewardMultiplier:1};
-  const apply=typeof window.applyReincarnationOverlevelIntegerReward==="function"?window.applyReincarnationOverlevelIntegerReward:(amount=>Math.ceil(Math.max(0,Number(amount)||0)*multiplier));
-  return {bossIndex:index,xp:apply(xp,s.level,boss.level,s),darkMatter:apply(darkMatter,s.level,boss.level,s),darkEnergy:apply(darkEnergy,s.level,boss.level,s),equipmentLevel,overlevelRewardMultiplier:multiplier};
+  if(typeof window.calculateReincarnationYield!=="function")throw new Error("Breakthrough yield calculation owner unavailable");
+  const common={target:s,playerLevel:s.level,enemyLevel:boss.level,useTest};
+  return {bossIndex:index,xp:window.calculateReincarnationYield(rawXp,{...common,specialization:"training"}),darkMatter:window.calculateReincarnationYield(rawDarkMatter,{...common,specialization:"scavenge"}),darkEnergy:window.calculateReincarnationYield(1,common),equipmentLevel,overlevelRewardMultiplier:multiplier};
  }
  function runRewardTransaction(label,mutate){
   if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"共用正式結算 transaction owner 尚未載入。"};
