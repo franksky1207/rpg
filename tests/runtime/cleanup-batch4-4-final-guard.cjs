@@ -11,9 +11,9 @@ const prohibited=[
  /^docs\/(?:3D_BATCH27_|3D_BATCH28[ABC]_|3D_HYBRID_T[12])/,
 ];
 for(const re of prohibited)assert.deepEqual(tree.filter(p=>re.test(p)),[],"Retired visual scheme returned: "+re);
-const text=fs.readFileSync("docs/2_5D_BATCH28_40_REBASE_MASTER_PLAN_2026-10-16.md","utf8");
-assert.match(text,/不製作210套角色/);
-assert.doesNotMatch(text,/G20＝G096|210套兩張概念圖全量產/);
+// Retired mass-production plans are protected by the prohibited tree patterns above;
+// do not require a historical Markdown plan to remain in the active tree.
+assert.deepEqual(tree.filter(p=>/^docs\/(?:3D_EQUIPMENT_210_SET_MASTER_INDEX|BATCH28_G0)/.test(p)),[],"Retired mass-production planning files returned");
 const changed=run("diff","--name-only",base,"HEAD").split("\n").filter(Boolean);
 const protectedRoots=[/^(?:data|combatcore|combat-events|savemigration|offlineprogress|ui|engine|balance|audio|gm3dprototype)\.js$/,/^index\.html$/,/^assets\/gm-equipment-2_5d\//,/^assets\/3d\//,/^3d-test\//,/^development\/equipment-2_5d\//];
 // Batch 4 explicitly authorizes only these GM presentation entrypoints.
