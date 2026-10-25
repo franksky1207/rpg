@@ -1,5 +1,5 @@
 name: Functional CI
-'on':
+on:
   pull_request: null
   push:
     branches:
@@ -410,12 +410,14 @@ jobs:
     - equipment
     - background
     - resource
+    - pages-preflight
     if: always()
     runs-on: ubuntu-latest
     steps:
     - name: Require all selected domains to pass
       env:
         NEEDS_JSON: ${{ toJSON(needs) }}
+        EVENT_NAME: ${{ github.event_name }}
       run: |
         python3 - <<'PYGATE'
         import os,json,sys
@@ -423,8 +425,23 @@ jobs:
         assert jobs['classify']['result']=='success', 'classification failed'
         outputs=jobs['classify']['outputs']
         for name,item in jobs.items():
-            domain='monster' if name.startswith('monster-') else name
-            expected='success' if name=='classify' or outputs.get(domain)=='true' else 'skipped'
+            domain='monster' if name.startswith('monster-') else 'resource' if name=='pages-preflight' else name
+            selected=name=='classify' or outputs.get(domain)=='true'
+            if name=='pages-preflight' and os.environ['EVENT_NAME']!='pull_request': selected=False
+            expected='success' if selected else 'skipped'
             print(name,item['result'],'expected',expected)
             assert item['result']==expected, f"unexpected result for {name}"
         PYGATE
+  pages-preflight:
+    if: github.event_name == 'pull_request' && needs.classify.outputs.resource == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+    - uses: ./.github/actions/verify-pages-candidate
+      with:
+        audit-name: pages-preflight-release-audit
+    name: Pages candidate preflight (read-only)
+    needs: classify

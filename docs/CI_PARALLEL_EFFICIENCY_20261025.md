@@ -19,7 +19,7 @@
 - Pages 僅刪除單獨 `publish-asset-audit.cjs` 的同來源掃描：它與 builder 都呼叫 `publish-assets.cjs` 的 `policy.inspect(root)`，同樣對 missing dependencies 失敗；builder 額外掃描實際輸出、重算 fingerprint 與報告。保留獨立 publish-policy regression、32 背景/17 音訊/5 音效類別、尺寸、所有瀏覽器與 GM sandbox 驗收。沒有增加跨 workflow 成功結果替代。
 - 原本各 workflow 已只有一次候選 build；拆分後選擇各 runner 本地建置，不傳大型 artifact。baseline 建置/資產檢查約數秒，候選傳輸及完整性核對開銷較高。Formal 各組仍 stage SHA-verified GM B 支援。
 - GM 約兩分鐘，維持單 job；使用共用 browser cache。與 Formal 重疊的 GM publication、runtime 與 browser 驗收保留，因兩 workflow 獨立觸發，沒有同 SHA/候選內容成功證明，不安全刪除。這是有意保留的重複。
-- Pages 新增僅 workflow／共用 action 改動時的 PR preflight，完整執行候選驗收，但 configure/upload-pages/deploy 全限 main。PR 使用獨立 concurrency group，可取消同 PR 舊版；永不佔用或取消 main 發布 group。
+- Functional CI 新增受 resource 分類控制的唯讀 Pages candidate preflight，透過共用 composite action 完整執行同一份發布候選驗收（只在 PR 執行，main 不重複），沒有 configure/upload-pages/deploy 或發布權限。正式 Pages workflow 維持 main-only、固定 group、cancel-in-progress=false；遵守既有 concurrency 安全守衛。
 - workflow / 共用 action / suite 改動觸發對應驗收。沒有改玩家 Pages 路徑或入口。
 
 ## 實測 baseline

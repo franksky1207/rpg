@@ -1,5 +1,5 @@
 name: Equipment 2.5D Formal Battle
-'on':
+on:
   push:
     branches:
     - main

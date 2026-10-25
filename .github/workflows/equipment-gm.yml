@@ -1,5 +1,5 @@
 name: Equipment 2.5D GM Integration
-'on':
+on:
   push:
     branches:
     - main
