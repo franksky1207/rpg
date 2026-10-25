@@ -56,7 +56,11 @@
     },
     "index.html": {
       "before": "7b085f34f7d36a41211ca07275c0849987cdac7e6ef427fa6abbedb57f6aaf21",
-      "after": "7b475546eba045a58b9300b937e80d5463e9a2d58d6f02454ae328d6ecfbb315"
+      "after": "be23cb3b216007488a060b40a17530755dd934cd4aad5933f8129f4dafb30374"
+    },
+    "playersemanticsui.js": {
+      "before": "97e1701d0adb6e319b54e09c8eefd5749e01c5fc34825386e38fa8540042afaa",
+      "after": "a81fb29c3124f8992ac7165a745699d07e361ccb7cd89081b4b5e0c2d1425921"
     }
   }
 }
