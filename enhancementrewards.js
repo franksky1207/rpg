@@ -27,7 +27,7 @@
   return {basic:0,advanced:0};
  }
  function grantMainlineReward(enemy,playerLevel=null){const r=mainlineReward(enemy,playerLevel);return addStones(r.basic,r.advanced);}
- function saleReward(item){const q=Math.floor(Number(item?.q));return q===4?{basic:5,advanced:0}:q===5?{basic:0,advanced:1}:{basic:0,advanced:0};}
+ function saleReward(item){const q=Math.floor(Number(item?.q)),raw=q===4?{basic:5,advanced:0}:q===5?{basic:0,advanced:1}:{basic:0,advanced:0};if(typeof window.calculateReincarnationYield!=="function")throw new Error("強化石出售收益計算器未載入。");return {basic:window.calculateReincarnationYield(raw.basic),advanced:window.calculateReincarnationYield(raw.advanced)};}
  function saleRewards(items){return addRewards(...(Array.isArray(items)?items:[]).map(saleReward));}
  function grantSaleRewards(items){const r=saleRewards(items);return addStones(r.basic,r.advanced);}
  function grantSaleReward(item){return grantSaleRewards(item?[item]:[]);}
