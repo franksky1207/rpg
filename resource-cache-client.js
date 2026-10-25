@@ -51,7 +51,7 @@ async function checkStartupVersions(){
 }
 function versionReport(){return startupChanges;}
 function finishStartupVersionCheck(){if(!startupChanges?.ok||!pendingVersionFiles)return false;try{localStorage.setItem(VERSION_KEY,JSON.stringify(pendingVersionFiles));pendingVersionFiles=null;return true;}catch(_){return false;}}
-let preloading=false;
+let preloading=false,statusJob=null,lastStatus=null;
 async function readDirectCacheStatus(){
  if(!("caches" in g))return {ok:false};
  try{
@@ -75,29 +75,39 @@ async function startBackgroundPreload(){
   const port=new MessageChannel();
   port.port1.onmessage=event=>{
    const info=event.data||{};
-   if(info.phase==="progress"||info.phase==="complete")updateSettingsStatus().catch(()=>{});
-   if(info.phase==="complete"||info.phase==="error"){preloading=false;port.port1.close();}
+   if(info.phase==="progress")renderSettingsStatus();
+   if(info.phase==="complete"||info.phase==="error"){
+    preloading=false;port.port1.close();
+    // A scan begun before completion may have captured the old cache keys.
+    Promise.resolve(statusJob).then(()=>updateSettingsStatus()).catch(()=>{});
+   }
   };
   worker.postMessage({type:"CIV_CACHE_PRELOAD"},[port.port2]);
   return true;
  }catch(_){preloading=false;return false;}
 }
 function humanBytes(bytes){if(!Number.isFinite(bytes)||bytes<0)return "無法計算";if(bytes<1024)return bytes+" B";if(bytes<1048576)return (bytes/1024).toFixed(1)+" KB";return (bytes/1048576).toFixed(1)+" MB";}
-async function updateSettingsStatus(){
+function renderSettingsStatus(result=lastStatus){
  const target=document.getElementById("localResourceCacheStatus");
- if(!target)return;
- const result=await readDirectCacheStatus();
- if(!target.isConnected)return;
- target.textContent=result.ok?("已儲存 "+result.entries+" 個資源，約 "+humanBytes(result.bytes)+(preloading?"（正在背景下載）":"")):("快取狀態無法讀取"+(SUPPORTED?"":"（瀏覽器不支援）"));
+ if(!target?.isConnected||!result)return;
+ const text=result.ok?("已儲存 "+result.entries+" 個資源，約 "+humanBytes(result.bytes)+(preloading?"（正在背景下載）":"")):("快取狀態無法讀取"+(SUPPORTED?"":"（瀏覽器不支援）"));
+ if(target.textContent!==text)target.textContent=text;
+}
+async function updateSettingsStatus(){
+ if(!document.getElementById("localResourceCacheStatus"))return;
+ // Settings rerenders share one measurement; progress only updates the suffix.
+ if(!statusJob)statusJob=readDirectCacheStatus().then(result=>lastStatus=result).finally(()=>statusJob=null);
+ renderSettingsStatus(await statusJob);
 }
 async function clearWithConfirmation(){
  if(!confirm("確定清除已下載的遊戲資源？角色進度、帳號資料與 GM 設定不會刪除。下次進入遊戲將重新下載必要資源。"))return false;
  const result=await clear();
  alert(result.ok?"已清除遊戲資源快取。下次進入時將重新下載需要的資源。":"目前無法清除遊戲資源，請稍後再試。");
+ await statusJob;
  await updateSettingsStatus();
  return result.ok===true;
 }
-async function clear(){const result=await message("CIV_CACHE_CLEAR");if(result.ok)g.dispatchEvent(new Event("civilization-resource-cache-cleared"));return result;}
+async function clear(){const result=await message("CIV_CACHE_CLEAR");if(result.ok){lastStatus=null;g.dispatchEvent(new Event("civilization-resource-cache-cleared"));}return result;}
 function status(){return readDirectCacheStatus();}
 function refresh(){return message("CIV_CACHE_REFRESH");}
 g.CivilizationResourceCache=Object.freeze({version:2,register,clear,status,refresh,updateSettingsStatus,clearWithConfirmation,checkStartupVersions,versionReport,finishStartupVersionCheck,startBackgroundPreload});

@@ -3,6 +3,8 @@
 const fs=require('fs'),cp=require('child_process'),crypto=require('crypto'),assert=require('node:assert/strict');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 function original(p){const record=require('./monster-integrated-approved.json'),entry=record.files[p];let bytes=fs.readFileSync(p);
+ const batch3=require('./optimization-batch3-approved.json'),performanceEdit=batch3.files[p];
+ if(performanceEdit){assert.equal(sha(bytes),performanceEdit.after,'unregistered Batch3 cache edit: '+p);const old=cp.execFileSync('git',['show',batch3.baseline+':'+p]);assert.equal(sha(old),performanceEdit.before,'Batch3 source baseline: '+p);bytes=old;}
  // Only the four Batch2 cache tokens are projected before the unchanged exact HTML seal.
  if(p==='index.html')bytes=Buffer.from(bytes.toString().replace('savehookcore.js?v=20261025-optimization-batch2','savehookcore.js?v=20261005-code-cleanup-batch1-fix1').replace('combatlifecycle.js?v=20261025-optimization-batch2','combatlifecycle.js?v=20261023-foreground1').replace('cloudsave.js?v=20261025-optimization-batch2','cloudsave.js?v=20260924-save-hook-batch6').replace('mirrordungeonrun.js?v=20261025-optimization-batch2&previous=','mirrordungeonrun.js?v='));
  const batch2=require('./optimization-batch2-approved.json'),changed=batch2.files[p];

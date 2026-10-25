@@ -1,0 +1,17 @@
+{
+  "baseline": "9e9ed6292499fd5546842bb8ee55384fcde0bb1e",
+  "files": {
+    "resource-cache-client.js": {
+      "before": "4c24a4913d265e1aab4256c8abb6003e506b1ffb0fd55ca0a358c861168a5fa3",
+      "after": "cdc353681b8cf9adc7c9deb6aa139e153e549659541a25834ceb34070903a9c5"
+    },
+    "resource-cache-sw.js": {
+      "before": "1ca5bf6ed0b23f71db754884667b46423f3be77bfceec93de6e0c72dbe507bbc",
+      "after": "49a9f7dba6dad45c8a15ef1d7f8092bc0464e6a19b52c092de6fd4ea920d03fb"
+    },
+    "index.html": {
+      "before": "a248ad74929e5aaab3a1c891dc6ff23b0f0e7b271cc325fc8d4666a70df6cbe4",
+      "after": "3122d064da598ae5586aee62dd9f164dd3159711084dd0b1ac826db33d7f5196"
+    }
+  }
+}
