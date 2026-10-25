@@ -6,9 +6,9 @@
 
 - 唯一基準：重新 fetch 的 main `ee1978ea2d9c60cad53a112250b1f5f214fc33ea`。
 - 本機整合分支：`integrate/postrelease-optimization-20261025`。
-- 第一個修正提交：`7a551a168b529dd9a4f6224683060b08a569bd94`；其後同分支承接鏡像結算修正及本報告。最終 SHA、統計與恢復步驟列於輸出的交付紀錄。
+- 第一個修正提交：`7a551a168b529dd9a4f6224683060b08a569bd94`；其後同分支承接鏡像結算修正及本報告。最終 SHA、統計與恢復步驟列於 Issue #100 驗收留言及本機 work/batch2/DELIVERY.md。
 - 未 push、未建立 PR、未合併 main、未執行 Actions／workflow_dispatch、未發布 Pages、未修改 workflows。未使用 skip-CI。
-- 工作區屬雲端環境，不能保證下一個新對話仍保留同一磁碟。另輸出 incremental Git bundle 與 patch；bundle 以以上 main 為 prerequisite。取得 bundle 才能在另一環境恢復，不把僅有本機分支當成跨環境保存保證。
+- 工作區屬雲端環境，不能保證下一個新對話仍保留同一磁碟。指定聊天 output 目錄在本環境不可寫，無法提供該目錄的下載附件。incremental Git bundle／patch 保存在本機 `work/batch2/`，bundle 以以上 main 為 prerequisite，已驗證可在另一本機空 Git 庫還原。必須承接同一環境或先從環境取出 bundle；不能宣稱程式碼已安全保存到新環境。Issue 只保存報告，不保存程式碼。
 - 真實存檔只用於本機測試；原始 JSON、角色名稱與進度數值均不提交、不寫 Issue。測試透過 `RPG_SAVE_FIXTURE` 接受外部檔案。
 
 ## 問題、根因及修改
@@ -175,7 +175,7 @@ JSON 匯入由 gmdata 驗證結構／版本、執行同一 migrateSave，重設�
 
 ## 修改量與第3批依賴
 
-精確總檔案數、刪除數、程式／證據增減量及最終 commit 列於輸出的交付紀錄（可由 `git diff --stat ee1978ea..HEAD` 重現）。沒有刪除檔案、沒有移除任何玩家進度、沒有美術異動。
+精確總檔案數、刪除數、程式／證據增減量及最終 commit 列於 Issue 驗收留言及本機交付紀錄（可由 `git diff --stat ee1978ea..HEAD` 重現）。沒有刪除檔案、沒有移除任何玩家進度、沒有美術異動。
 
 第3批必須承接此本機整合分支／bundle，不從 main 另起而丟掉本批修正。性能量測時保留 `combatlifecycle.invalidate` 的替換與離頁差異、Save Hook finally 收尾、雲端 owner 只在寫入成功後更新、鏡像共用交易邊界，以及全部19-4 checkpoint／rewardFloorHp／resume規則。
 
