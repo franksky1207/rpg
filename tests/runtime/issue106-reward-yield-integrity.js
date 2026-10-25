@@ -30,11 +30,48 @@ for(const retired of ["OFFLINE_EXP_RATE","OFFLINE_GOLD_RATE","OFFLINE_GEAR_RATE"
  assert.ok(!offline.includes(retired),"Retired offline owner: "+retired);
 }
 assert.match(offline,/calculateReincarnationYield\(expected\?\.basic/);
-assert.match(offline,/calculateReincarnationYield\(xpRaw/);
-assert.match(world1,/calculateReincarnationYield\(xpBase/);
+assert.match(offline,/firstWorldMainlineRewardPreview\(enemy/);
+assert.match(world1,/firstWorldMainlineRewardPreview\(e/);
 assert.ok(!world1.includes("result=window.applyWorld1OnlineOverlevelReward"));
 assert.match(world2,/calculateReincarnationYield\(rawXp/);
 assert.match(world2,/calculateReincarnationYield\(rawMatter/);
 assert.match(stone,/calculateReincarnationYield\(raw.basic/);
 assert.ok(!offline.includes("*.05"));
 console.log("Issue #106 reward-yield integrity passed (levels, specialization, overlevel, sales, offline owner).");
+
+// Integer contract: currency preserves legacy nested ceil at B0; materials floor
+// the complete yield, bounded below by the legacy overlevel integer award.
+assert.equal(calc(1,{target:profile(1),resource:true}),1);
+assert.equal(calc(1,{target:profile(130),resource:true}),2);
+assert.equal(calc(1,{target:profile(1),resource:true,overlevelMultiplier:1.15}),2);
+assert.equal(calc(1,{target:profile(0),specialization:"training",overlevelMultiplier:1.15}),4);
+assert.equal(calc(0,{target:profile(500),resource:true}),0);
+assert.ok(!core.includes("calculateReincarnationYieldFromAdjusted"),"Unused adjusted-input owner must be retired");
+assert.ok(!core.includes("function applyBattleStoneBonus"),"Post-settlement top-up implementation must be retired");
+const already={ok:true,win:true,xp:100,gold:100,e:{level:500}};
+const before=JSON.stringify(mock.state);
+assert.equal(mock.window.applyWorld1OnlineOverlevelReward(already,1),already);
+assert.equal(JSON.stringify(mock.state),before,"Retired compatibility API must never mutate state");
+assert.equal(already.xp,100,"Compatibility API must not award twice");
+assert.ok(!offline.includes("收益 5%")&&!offline.includes("資源 5%"));
+
+const isolated={console,state:{specializations:{training:60,scavenge:60,appraisal:60}},document:{getElementById:()=>true}};
+isolated.window=isolated;
+vm.createContext(isolated);
+vm.runInContext(read("specialization.js"),isolated);
+vm.runInContext(core,isolated);
+for(const breakthrough of [0,1,10,130,500])for(const specLevel of [0,60]){
+ const target={...profile(breakthrough),specializations:{training:specLevel,scavenge:specLevel,appraisal:specLevel}};
+ const saved=JSON.stringify(target),formalSaved=JSON.stringify(isolated.state);
+ for(const key of ["training","scavenge","appraisal"]){
+  const expected=100*(1+specLevel*.025+breakthrough*.01);
+  assert.ok(Math.abs(isolated.calculateReincarnationYield(100,{target,specialization:key,integer:false})-expected)<1e-9);
+  isolated.gmTestSpecializations[key]=60-specLevel;
+  assert.ok(Math.abs(isolated.calculateReincarnationYield(100,{target,specialization:key,useTest:true,integer:false})-100*(1+(60-specLevel)*.025+breakthrough*.01))<1e-9);
+ }
+ assert.equal(JSON.stringify(target),saved,"Preview must not normalize or mutate target");
+ assert.equal(JSON.stringify(isolated.state),formalSaved,"Explicit target must not normalize global formal state");
+}
+console.log("Issue #106 integer, target-state and GM isolation contracts passed.");
+
+assert.equal(calc(1,{target:profile(1),specialization:"training",overlevelMultiplier:1.15}),4,"B1 currency must not lose B0 legacy rounding");

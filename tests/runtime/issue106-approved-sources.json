@@ -1,0 +1,62 @@
+{
+  "baseline": "314fe6814ea17e3ff2cd8deafe25ef6943204513",
+  "scope": "Issue106 batch1 yield owners and exact cache tokens; historical semantics unchanged",
+  "files": {
+    "combatcore.js": {
+      "before": "dd5344db15e9b01ea480935efc90c278168d595a64f63aedb4c3020caf38bfdc",
+      "after": "18b980d93984b04c23ad38c5a434d518010964ddf6786760a5c2c421fe57d0dc"
+    },
+    "engine.js": {
+      "before": "a5c966ac2087f47dbb3d20a85853ac1d78cba97cb78f87b234483b9421269367",
+      "after": "bb769d0c7dc51a7e2e5f1fbb1feebf76e2c47295fc871b1ed592d2e426323469"
+    },
+    "enhancementintegrity.js": {
+      "before": "0a6d9dd6a09e7d0598a97ca49d25800baa616d0b626bc4d65ae978abee082ce3",
+      "after": "71adddf19852f91b42890e08cdd6308e768ad7118551e5bdb18512c9abe20fda"
+    },
+    "enhancementrewards.js": {
+      "before": "392fba0dda2f97e6ae3ab9a4e3f67435f1b666026db6e3a64c3d7f55aab13f30",
+      "after": "254d0c485aa8cda600606b23f3250a416bf96fdefde796d8173d8c78eba9071e"
+    },
+    "offlineprogress.js": {
+      "before": "f3ca7029b60c1cf29c01e84871e0ff6e934ecb1a2a87b283e9b52eb78efbe86a",
+      "after": "6f8d83d9572d0388115551c02468921f58b3d0784abbc9fa16c2e324b8d8217e"
+    },
+    "reincarnationoverlevelrewards.js": {
+      "before": "107e94cbe96e4487512a3bb59d8956d59fca72fcd571b67a58c3e7346e1c2edb",
+      "after": "3f5d10fb2aab8a0e351849c6d2c51b539e9f42ef802b17507c2e14a286a32d93"
+    },
+    "secondworldrewards.js": {
+      "before": "5391263816300816628aee40c7abf91d41856047a9705d480d0cb00b46e765df",
+      "after": "c95f8c245806fd7b548261638e21f2d1a0b282009a952d30a8ce43cc196c62b9"
+    },
+    "specialencounter.js": {
+      "before": "bf2dbb39d5783539756f16e5afc1098d583e173c2d59180119c70abe56de8193",
+      "after": "94bc48b30a6592da7ec18375032ac18b6de44666a2e8d0039fab33cacb0d1696"
+    },
+    "specialization.js": {
+      "before": "9563dde21eea70ef962bbb3f812dcd1e444c340320cc73a4de6d2e84e5972d27",
+      "after": "af18cc00a22b8dd8e094b1749e026735a53cb5e7425a79292c15ae3a1da46f78"
+    },
+    "equipmentlock.js": {
+      "before": "eedd19cfbb1e48f751a1f04435f10c83f108c745d84544d45570e554c21b5ca6",
+      "after": "c737a95d63275d50d82b812def61c5a2d2c12ec046ef1c2aaf75ff417b1e282e"
+    },
+    "mainminimalmodeintegrity.js": {
+      "before": "bbaa4db1f094de6f998adf88c4afd61f2b9148d3d2b403a80032e421bece9574",
+      "after": "8f8b080ed6a8a53200eaaf4fe1faf84b69fa9ece99ff1ee6dafcfb6213eff242"
+    },
+    "offlineworld3adapter.js": {
+      "before": "254cba081a0ce798265186ec43fc609115ad7e2c2697f58f1c4fdb66e6c9c276",
+      "after": "da70fb3e7ddb732288aa694c13335b66aec9c3fef3e86b34067f291e6dba3d08"
+    },
+    "enhancementmigration.js": {
+      "before": "f613c99ac8983ebda319179ab8706e445339c76bed13c587b512f3a3a2ca4e83",
+      "after": "3ea8c12e453e16ef5ac9258726a1adcd068b0b839eefaa5dacf6967db7f1fdb0"
+    },
+    "index.html": {
+      "before": "7b085f34f7d36a41211ca07275c0849987cdac7e6ef427fa6abbedb57f6aaf21",
+      "after": "7b475546eba045a58b9300b937e80d5463e9a2d58d6f02454ae328d6ecfbb315"
+    }
+  }
+}

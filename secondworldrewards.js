@@ -19,7 +19,7 @@
   const index=clampBossIndex(value),boss=bossMeta(index),s=target&&typeof target==="object"?target:currentState();
   if(index<0||!boss||!s)return 0;
   const base=Math.ceil((typeof sameExp==="function"?sameExp(boss.level):25+4*boss.level)*(typeof expLevelFactor==="function"?expLevelFactor(boss.level,s.level):1));
-  return typeof window.specializationAdjustedExp==="function"?window.specializationAdjustedExp(base,useTest):base;
+  return window.calculateReincarnationYield(base,{specialization:"training",target:s,useTest});
  }
  function secondWorldBossDarkMatterBase(value){
   const index=clampBossIndex(value);
@@ -27,8 +27,7 @@
  }
  function secondWorldBossDarkMatterReward(value,useTest=false){
   const base=secondWorldBossDarkMatterBase(value);
-  const mul=typeof window.specializationMultiplier==="function"?window.specializationMultiplier("scavenge",useTest):1;
-  return Math.max(0,Math.ceil(base*mul));
+  return window.calculateReincarnationYield(base,{specialization:"scavenge",useTest});
  }
  function secondWorldEquipmentQualityRoll(rng=Math.random){
   const random=typeof rng==="function"?rng:Math.random,r=random()*100;
@@ -70,7 +69,7 @@
    if(world!==2)return {currency:"none",amount:0,gold:0,darkMatter:0,darkEnergy:0,world,phase};
    const rawMatter=(20+2*Math.max(0,Math.floor((Math.max(500,Math.min(1000,Math.floor(Number(item.level)||500)))-500)/5)))*(QUALITY_MULTIPLIERS[Math.max(0,Math.min(5,Math.floor(Number(item.q)||0)))]||0);
    const darkMatter=window.calculateReincarnationYield(rawMatter,{specialization:"appraisal",target:s,useTest});
-   const darkEnergy=Number(item.q)===5?window.calculateReincarnationYield(1,{target:s}):0;
+   const darkEnergy=Number(item.q)===5?window.calculateReincarnationYield(1,{target:s,resource:true}):0;
    return {currency:"darkMatter",amount:darkMatter,gold:0,darkMatter,darkEnergy,world,phase};
   }
   const gold=window.calculateReincarnationYield(Math.max(0,Math.floor(Number(item.sell)||0)),{specialization:"appraisal",target:s,useTest});
@@ -155,10 +154,10 @@
   if(index<0||!boss||!s)return null;
   const useTest=options.useTestSpecializations===true,rawXp=Math.ceil((typeof sameExp==="function"?sameExp(boss.level):25+4*boss.level)*(typeof expLevelFactor==="function"?expLevelFactor(boss.level,s.level):1));
   const rawDarkMatter=secondWorldBossDarkMatterBase(index),equipmentLevel=Math.min(rewardPlayerLevel(s),boss.level);
-  const multiplier=typeof window.reincarnationOverlevelRewardMultiplier==="function"?window.reincarnationOverlevelRewardMultiplier(s.level,boss.level,s):1;
+  const multiplier=options.overlevelMultiplier??(typeof window.reincarnationOverlevelRewardMultiplier==="function"?window.reincarnationOverlevelRewardMultiplier(s.level,boss.level,s):1);
   if(typeof window.calculateReincarnationYield!=="function")throw new Error("Breakthrough yield calculation owner unavailable");
-  const common={target:s,playerLevel:s.level,enemyLevel:boss.level,useTest};
-  return {bossIndex:index,xp:window.calculateReincarnationYield(rawXp,{...common,specialization:"training"}),darkMatter:window.calculateReincarnationYield(rawDarkMatter,{...common,specialization:"scavenge"}),darkEnergy:window.calculateReincarnationYield(1,common),equipmentLevel,overlevelRewardMultiplier:multiplier};
+  const common={target:s,playerLevel:s.level,enemyLevel:boss.level,useTest,integer:options.integer!==false,overlevelMultiplier:multiplier};
+  return {bossIndex:index,xp:window.calculateReincarnationYield(rawXp,{...common,specialization:"training"}),darkMatter:window.calculateReincarnationYield(rawDarkMatter,{...common,specialization:"scavenge"}),darkEnergy:window.calculateReincarnationYield(1,{...common,resource:true}),equipmentLevel,overlevelRewardMultiplier:multiplier};
  }
  function runRewardTransaction(label,mutate){
   if(typeof window.runSettlementTransaction!=="function")return {ok:false,reason:"共用正式結算 transaction owner 尚未載入。"};

@@ -211,11 +211,8 @@
   }
 
   if(typeof window.calculateReincarnationYield!=="function")throw new Error("正式收益共用計算器未載入。");
-  const rewardContext={target:state,playerLevel:playerLevelBefore,enemyLevel:e.level};
-  const xpBase=Math.ceil(sameExp(e.level)*(e.kind==="boss"?5:e.kind==="elite"?2:1)*expLevelFactor(e.level,state.level));
-  const goldBaseAmount=Math.ceil(goldBase(e.level)*(e.kind==="boss"?6:e.kind==="elite"?2.5:1));
-  const xp=window.calculateReincarnationYield(xpBase,{...rewardContext,specialization:"training"});
-  const gold=window.calculateReincarnationYield(goldBaseAmount,{...rewardContext,specialization:"scavenge"});
+  const rewardContext={target:window.reincarnationYieldStateSnapshot(state),playerLevel:playerLevelBefore,enemyLevel:e.level};
+  const {xp,gold}=firstWorldMainlineRewardPreview(e,{target:rewardContext.target,playerLevel:playerLevelBefore});
   state.gold+=gold;
   gainExp(xp,logs);
   let firstBossKill=false;
@@ -247,7 +244,7 @@
    }
   }
   const rawBattleStones=mainlineEnhancementStoneReward(e,playerLevelBefore);
-  const enhancementStones={basic:window.calculateReincarnationYield(rawBattleStones.basic,rewardContext),advanced:window.calculateReincarnationYield(rawBattleStones.advanced,rewardContext)};
+  const enhancementStones={basic:window.calculateReincarnationYield(rawBattleStones.basic,{...rewardContext,resource:true}),advanced:window.calculateReincarnationYield(rawBattleStones.advanced,{...rewardContext,resource:true})};
   if(enhancementStones.basic||enhancementStones.advanced)addEnhancementStones(enhancementStones.basic,enhancementStones.advanced);
 
   logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);

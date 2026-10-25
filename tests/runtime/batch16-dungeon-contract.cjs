@@ -22,7 +22,8 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
   const input={mode:row.mode,world:row.world==='universe'?2:1,name:row.name,kind:row.kind,location:row.mode==='arena'?String(row.arenaStage):row.mode==='void'?String(row.isBossFloor?(row.bossCycle+1)*10:1):null};
   assert.equal(resolveFormalMonster(input)?.mapping.id,row.id);
   for(const mode of ['calamity','alternate','special','thirdworld-arena','mirror'])assert.equal(resolveFormalMonster({...input,mode}),null);
-  assert.equal(resolveFormalMonster({...input,world:3}),null);assert.equal(resolveFormalMonster({...input,name:row.name+'偽'}),null);assert.equal(resolveFormalMonster({...input,kind:'boss'}),null);
+  if(row.mode==='void')assert.equal(resolveFormalMonster({...input,world:3})?.mapping.id,row.id,'canonical W3 void identity remains exact');
+  else assert.equal(resolveFormalMonster({...input,world:3}),null);assert.equal(resolveFormalMonster({...input,name:row.name+'偽'}),null);assert.equal(resolveFormalMonster({...input,kind:'boss'}),null);
   const silhouette=assets.find(a=>a.assetId===row.assetId);
   if(/(?:艦|艇)$/.test(row.name))assert.ok(silhouette.path.includes('/starship/'),'ship-name must use a ship silhouette: '+row.name);
   if(/(?:核心|主機)$/.test(row.name))assert.ok(silhouette.path.includes('/core/'),'core-name must use a core silhouette: '+row.name);
@@ -30,7 +31,9 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
  }
  assert.deepEqual(rows.filter(r=>r.assetId==='void-phantom-v01').map(r=>r.name),['幻境遊魂','異相戰影','迷界殘像','空間殘響']);
  for(const world of [1,2])assert.ok(resolveFormalMirror({mode:'mirror',world,name:'鏡像・測試者',playerName:'測試者'},{formalBattleAllowed:true}));
- assert.equal(resolveFormalMirror({mode:'mirror',world:3,name:'鏡像・測試者',playerName:'測試者'},{formalBattleAllowed:true}),null);
+ assert.deepEqual(resolveFormalMirror({mode:'mirror',world:3,name:'鏡像・測試者',playerName:'測試者'},{formalBattleAllowed:true}),{id:'mirror-3',name:'鏡像・測試者',visual:{sizePolicy:'dungeon',visibleRatio:1.06,palette:'cyan-violet',effect:'rim',energy:1,mirror:true}});
+ assert.equal(resolveFormalMirror({mode:'mirror',world:4,name:'鏡像・測試者',playerName:'測試者'},{formalBattleAllowed:true}),null);
+ assert.equal(resolveFormalMirror({mode:'mirror',world:3,name:'鏡像・測試者',playerName:'測試者'},{formalBattleAllowed:false}),null);
  // All numeric/gameplay owners and 609 original mappings/images are unchanged.
  const before=JSON.parse(cp.execFileSync('git',['show','cff02989:data/monsters/monster-mappings.json'],{encoding:'utf8'}));
  const currentOriginal=read('data/monsters/monster-mappings.json').records.filter(r=>!r.mode);
@@ -43,7 +46,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
  }),before.records,'only nine approved special status flags may change');
  for(const file of ['dungeonbounty.js','dungeonarena.js','dungeonvoid.js','mirrordungeonrun.js','combatcore.js','dungeoncore.js','mirrorcombatcore.js','offline.js']){
   if(!fs.existsSync(file))continue;
-  assert.equal(fs.readFileSync(file,'utf8'),cp.execFileSync('git',['show','cff02989:'+file],{encoding:'utf8'}),file);
+  assert.equal(require('./batch20-approved-runtime.cjs').original(file,'utf8'),cp.execFileSync('git',['show','cff02989:'+file],{encoding:'utf8'}),file);
  }
  const old=JSON.parse(cp.execFileSync('git',['show','cff02989:data/monsters/monster-assets.json'],{encoding:'utf8'}));assert.deepEqual(assets.slice(0,20),old.assets);
  console.log('PASS 56 exact owner identities; whitelist exclusions; four V01 uses; 609 original mappings/20 assets and gameplay owners unchanged');

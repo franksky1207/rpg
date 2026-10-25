@@ -89,6 +89,11 @@
  function specializationPercentForLevel(key,level){const lv=clampSpecializationLevel(level);if(key==="training"||key==="scavenge"||key==="appraisal")return lv*2.5;if(key==="initiative")return lv;if(key==="combo"||key==="penetration"||key==="counter"||key==="drain")return lv*.5;return 0;}
  window.specializationPercentForLevel=specializationPercentForLevel;
  window.specializationPercentBonus=function(key,useTest=false){return specializationPercentForLevel(key,window.specializationLevel(key,useTest));};
+ // Explicit targets and GM test levels must not read or normalize global formal state.
+ window.specializationMultiplierForState=function(key,target,useTest=false){
+  const level=useTest?window.gmTestSpecializations?.[key]:target?.specializations?.[key];
+  return 1+specializationPercentForLevel(key,level)/100;
+ };
  window.specializationMultiplier=function(key,useTest=false){return 1+window.specializationPercentBonus(key,useTest)/100;};
  window.specializationAdjustedExp=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("training",useTest)));};
  window.specializationAdjustedGold=function(base,useTest=false){return Math.max(0,Math.ceil((Number(base)||0)*window.specializationMultiplier("scavenge",useTest)));};

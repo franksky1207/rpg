@@ -122,11 +122,11 @@
 
  function specialRewardExpAmount(baseXp,rewardCtx,useTestSpecializations=false){
   const effectBase=ceil((Number(baseXp)||0)*(Number(rewardCtx?.expMultiplier)||1));
-  return typeof specializationAdjustedExp==="function"?specializationAdjustedExp(effectBase,useTestSpecializations):effectBase;
+  return window.calculateReincarnationYield(effectBase,{specialization:"training",useTest:useTestSpecializations});
  }
  function specialRewardGoldAmount(baseGold,rewardCtx,useTestSpecializations=false){
   const effectBase=ceil((Number(baseGold)||0)*(Number(rewardCtx?.goldMultiplier)||1));
-  return typeof specializationAdjustedGold==="function"?specializationAdjustedGold(effectBase,useTestSpecializations):effectBase;
+  return window.calculateReincarnationYield(effectBase,{specialization:"scavenge",useTest:useTestSpecializations});
  }
  window.specialRewardExpAmount=specialRewardExpAmount;
  window.specialRewardGoldAmount=specialRewardGoldAmount;
