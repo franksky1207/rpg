@@ -70,7 +70,7 @@
   if(typeof window.gmStoryTestHtml==="function")return window.gmStoryTestHtml();
   return '<div class="muted gm-hub-note">劇情測試模組載入中…</div>';
  }
- function lateWindowRenderer(name,fallbackHtml='GM 模組尚未載入。'){
+ function lateWindowRenderer(name,fallbackHtml='GM 功能尚未載入完整，請重新開啟管理頁面。'){
   return function(){
    const renderer=window[name];
    return typeof renderer==="function"?renderer():`<div class="muted gm-hub-note">${fallbackHtml}</div>`;
