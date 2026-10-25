@@ -28,17 +28,17 @@ const assert=require('assert');
     Math.random=()=>.99;const firstResult=fightOnce(0,0,firstEncounter);Math.random=originalRandom;
     out.w1First={baseXp:firstBaseXp,baseGold:firstBaseGold,resultXp:firstResult.xp,resultGold:firstResult.gold,multiplier:firstResult.overlevelRewardMultiplier||1,stones:firstResult.enhancementStones};
 
-    // Rerun W1 online applies the shared multiplier after the legacy reward result, including battle stones only.
+    // Rerun W1 online computes complete yield before settlement (no post-settlement bonus).
     state=makeW1(1);state.level=100;overpower(state);state.hp=playerCombatStats().hp;selectedMap=99;selectedEnemy=4;
     const rerunEncounter=createMonsterEncounter(99,4),rerunBaseXp=expReward(rerunEncounter),rerunBaseGold=goldReward(rerunEncounter),rerunBaseStones=mainlineEnhancementStoneReward(rerunEncounter,100),rerunMultiplier=reincarnationOverlevelRewardMultiplier(100,rerunEncounter.level,state);
     Math.random=()=>.99;const rerunResult=fightOnce(99,4,rerunEncounter);Math.random=originalRandom;
     out.w1Rerun={enemyLevel:rerunEncounter.level,multiplier:rerunResult.overlevelRewardMultiplier,baseXp:rerunBaseXp,baseGold:rerunBaseGold,expectedXp:Math.ceil(rerunBaseXp*rerunMultiplier),expectedGold:Math.ceil(rerunBaseGold*rerunMultiplier),resultXp:rerunResult.xp,resultGold:rerunResult.gold,baseStones:rerunBaseStones,resultStones:rerunResult.enhancementStones,expectedAdvanced:Math.ceil((rerunBaseStones.advanced||0)*rerunMultiplier),saleStones:rerunResult.saleEnhancementStones};
 
-    // W2 first-run preview is byte-for-byte equivalent in numeric outputs to existing reward owners.
+    // W2 first-run preview remains numerically equivalent at zero permanent breakthrough.
     state=makeW2(0);const firstBoss=secondWorldBoss(99),firstW2Xp=secondWorldBossExpReward(99,false,state),firstW2Dm=secondWorldBossDarkMatterReward(99,false),firstW2Preview=secondWorldMainlineRewardPreview(99,{state});
     out.w2First={bossLevel:firstBoss.level,baseXp:firstW2Xp,baseDarkMatter:firstW2Dm,preview:firstW2Preview};
 
-    // W2 rerun online uses the same shared multiplier and ceil rule; formal settlement books the multiplied dark energy atomically.
+    // W2 rerun preview uses the shared complete-yield owner; settlement books dark energy atomically.
     state=makeW2(1);const w2Boss=secondWorldBoss(99),w2BaseXp=secondWorldBossExpReward(99,false,state),w2BaseDm=secondWorldBossDarkMatterReward(99,false),w2Multiplier=reincarnationOverlevelRewardMultiplier(state.level,w2Boss.level,state),w2Preview=secondWorldMainlineRewardPreview(99,{state});
     const dmBefore=state.secondWorld.darkMatter,deBefore=state.secondWorld.darkEnergy;
     Math.random=()=>.99;const w2Settlement=settleSecondWorldBossVictory(99,{ignoreUnlock:true,rng:()=>.99});Math.random=originalRandom;
