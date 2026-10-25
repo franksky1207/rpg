@@ -115,7 +115,7 @@
  };
  window.gmDimensionalStrings=function(){
   if(formalManagePhase(state)!==3||!state?.thirdWorld||typeof state.thirdWorld!=="object")return alert("目前尚未進入高維紀元。");
-  if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+  if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("GM 正式管理功能尚未載入完整，請重新開啟管理頁面。");
   const current=Math.max(0,Math.floor(Number(state.thirdWorld.dimensionalStrings)||0));
   const raw=prompt("指定維度之弦（0 以上）",current);
   if(raw===null)return false;
