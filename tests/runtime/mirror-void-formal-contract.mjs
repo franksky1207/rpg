@@ -1,4 +1,5 @@
 import appearanceApproval from './monster-appearance-approved.cjs';
+import postreleaseCopy from './postrelease-ui-copy-approval.cjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
@@ -37,7 +38,7 @@ for(const world of [1,2,3])for(const appearance of ['galaxy','universe','higher'
 for(const floor of ['0','01','1.5','NaN','9007199254740992'])assert.equal(resolveFormalMonster({mode:'void',world:3,name:'虛空獵兵',kind:'dungeon-void-mirage',location:floor}),null);
 // Exact frozen owners: all #92 work, images, identity catalogues, damage, reward,
 // save/schema/reincarnation, and foreground/background lifecycle stay on main.
-for(const p of ['calamityui.js','secondworldcalamityui.js','3d-test/gm-era-sprites.mjs','3d-test/test-center.js','3d-test/index.html','3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','data/monsters/monster-assets.json','data/monsters/monster-mappings.json','monstercodexdata.js','combatcore.js','mirrorcombatcore.js','mirrordungeonstate.js','dungeonvoid.js','dungeoncore.js','combatlifecycle.js','combat-events.js','reincarnationcore.js','savemigration.js','offlineprogress.js','alternateuniversecombat.js'])assert.deepEqual(appearanceApproval.original(p),cp.execFileSync('git',['show',base+':'+p],{maxBuffer:8*1024*1024}),p+' protected');
+for(const p of ['calamityui.js','secondworldcalamityui.js','3d-test/gm-era-sprites.mjs','3d-test/test-center.js','3d-test/index.html','3d-test/monster-actor.mjs','3d-test/monster-sprite-pool.mjs','data/monsters/monster-assets.json','data/monsters/monster-mappings.json','monstercodexdata.js','combatcore.js','mirrorcombatcore.js','mirrordungeonstate.js','dungeonvoid.js','dungeoncore.js','combatlifecycle.js','combat-events.js','reincarnationcore.js','savemigration.js','offlineprogress.js','alternateuniversecombat.js'])assert.deepEqual(postreleaseCopy.historicalBytes(p,appearanceApproval.original(p)),cp.execFileSync('git',['show',base+':'+p],{maxBuffer:8*1024*1024}),p+' protected');
 console.log('PASS',checked,'existing identity resolutions and strict rejection; 20 shared Void W3 identities; 9 world/appearance mirrors; #92 and formal owners exact');
 
 // Independent PR #93 may merge before or after this repair. Its one approved
