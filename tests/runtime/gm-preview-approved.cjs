@@ -8,6 +8,7 @@ assert.equal(record.baseline,'98ff788b80610f1b750857eecc0eb83909d489a3');
 assert.deepEqual(Object.keys(record.files).sort(),['3d-test/gm-era-sprites.mjs','3d-test/index.html','3d-test/test-center.css','3d-test/test-center.js','gm3dprototype.js','index.html']);
 assert.deepEqual(Object.keys(record.newFiles),['3d-test/gm-preview-layout.mjs']);
 function historicalBytes(path,bytes){
+ bytes=require('./issue106-approved-sources.cjs').historicalBytes(path,bytes);
  const entry=record.files[path];if(!entry)return bytes;
  assert.equal(sha(bytes),entry.after,'unregistered GM preview edit: '+path);
  const before=cp.execFileSync('git',['show',record.baseline+':'+path],{maxBuffer:8*1024*1024});

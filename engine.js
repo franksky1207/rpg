@@ -136,14 +136,21 @@ function statLine(it){return [it.atk?`攻擊 +${it.atk}`:"",it.def?`防禦 +${it
 function itemAbilityLines(it){if(!it)return [];let rows=[{kind:"main",text:formatStatValue(it.mainStat.stat,it.mainStat.value)}];it.affixes.forEach(a=>rows.push({kind:"affix",text:formatStatValue(a.stat,a.value)}));return rows}
 
 function calcDamage(atk,def){return Math.max(1,ceil((atk-def*.55)*(.95+Math.random()*.1)))}
-function expReward(e,useTestSpecializations=false){const mul=e.kind==="boss"?5:e.kind==="elite"?2:1;const base=ceil(sameExp(e.level)*mul*expLevelFactor(e.level,state.level));return specializationAdjustedExp(base,useTestSpecializations)}
-function goldReward(e,useTestSpecializations=false){const mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;const base=ceil(goldBase(e.level)*mul);return specializationAdjustedGold(base,useTestSpecializations)}
+// Complete pre-grant preview shared by online, background and offline W1 callers.
+function firstWorldMainlineRewardPreview(e,{target=state,playerLevel=target.level,overlevelMultiplier=null,integer=true}={}){
+ const xpBase=ceil(sameExp(e.level)*(e.kind==="boss"?5:e.kind==="elite"?2:1)*expLevelFactor(e.level,playerLevel));
+ const goldBaseAmount=ceil(goldBase(e.level)*(e.kind==="boss"?6:e.kind==="elite"?2.5:1));
+ const common={target,playerLevel,enemyLevel:e.level,overlevelMultiplier,integer};
+ return {xp:window.calculateReincarnationYield(xpBase,{...common,specialization:"training"}),gold:window.calculateReincarnationYield(goldBaseAmount,{...common,specialization:"scavenge"})};
+}
+function expReward(e,useTestSpecializations=false){const mul=e.kind==="boss"?5:e.kind==="elite"?2:1;const base=ceil(sameExp(e.level)*mul*expLevelFactor(e.level,state.level));return window.calculateReincarnationYield(base,{specialization:"training",useTest:useTestSpecializations})}
+function goldReward(e,useTestSpecializations=false){const mul=e.kind==="boss"?6:e.kind==="elite"?2.5:1;const base=ceil(goldBase(e.level)*mul);return window.calculateReincarnationYield(base,{specialization:"scavenge",useTest:useTestSpecializations})}
 function enemyUnlocked(mapIdx,eIdx){if(eIdx===0)return true;let p=state.mapProgress[mapIdx]||[0,0,0,0];if(eIdx===1)return p[0]>=10;if(eIdx===2)return p[1]>=10;if(eIdx===3)return p[2]>=10;if(eIdx===4){if(state.bossLocked?.[mapIdx])return false;if(state.bossKilled[mapIdx])return true;return p[3]>=10&&state.level>=MAPS[mapIdx].max}return false}
 function highestUnlockedEnemy(mapIdx){for(let i=4;i>=0;i--)if(enemyUnlocked(mapIdx,i))return i;return 0}
 function progressEnemyKill(mapIdx,eIdx){if(eIdx<0||eIdx>3)return;let p=state.mapProgress[mapIdx];p[eIdx]=Math.min(999,p[eIdx]+1)}
 function canBoss(mapIdx){return enemyUnlocked(mapIdx,4)&&!state.bossLocked?.[mapIdx]}
 function addProgress(mapIdx,enemyKind){if(enemyKind!=="elite"||!state.bossLocked?.[mapIdx])return;state.bossProgress[mapIdx]=Math.min(10,(state.bossProgress[mapIdx]||0)+1);if(state.bossProgress[mapIdx]>=10)state.bossLocked[mapIdx]=false}
-function addItem(it,options={}){if(!it)return {kept:false,sold:0,sale:null};let slot=state.equipment[it.type],upgrade=equipmentScore(it)>equipmentScore(slot);if(it.q===5||(state.settings.keepUpgrade&&upgrade)){state.inventory.push(it);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,sale:null}}if(it.q<=4&&state.settings.autoSell[it.q]){if(typeof window.settleEquipmentSale==="function"){const sale=window.settleEquipmentSale(it,options);return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),sale}}const sold=specializationSellValue(it,options.useTestSpecializations===true);state.gold+=sold;return {kept:false,sold,sale:null}}state.inventory.push(it);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,sale:null}}
+function addItem(it,options={}){if(!it)return {kept:false,sold:0,sale:null};let slot=state.equipment[it.type],upgrade=equipmentScore(it)>equipmentScore(slot);if(it.q===5||(state.settings.keepUpgrade&&upgrade)){state.inventory.push(it);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,sale:null}}if(it.q<=4&&state.settings.autoSell[it.q]){if(typeof window.settleEquipmentSale==="function"){const sale=window.settleEquipmentSale(it,options);return {kept:false,sold:Math.max(0,Number(sale?.quote?.amount)||0),sale}}state.inventory.push(it);return {kept:true,sold:0,sale:null,reason:"sale-owner-missing"}}state.inventory.push(it);if(upgrade)upgradeDropNoticePending=true;return {kept:true,sold:0,sale:null}}
 function gainExp(n,logs=[]){state.exp+=Math.max(0,Number(n)||0);let ups=0;while(state.level<MAX_LEVEL&&state.exp>=expNeed(state.level)){state.exp-=expNeed(state.level);state.level++;ups++;state.hp=playerCombatStats().hp;logs.push(`升級！你到達 Lv.${state.level}，HP 已完全恢復。`)}if(state.level>=MAX_LEVEL)state.exp=0;return ups}
 const DEATH_EQUIPMENT_LOSS_CHANCE=.30;
 function resolveDeathEquipmentPenalty(logs=[],options={}){

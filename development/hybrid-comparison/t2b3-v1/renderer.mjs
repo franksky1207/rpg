@@ -1,4 +1,4 @@
-import {isVerifiedInput} from '../fixture-input.mjs?v=20261015-phase5';
+import {isVerifiedInput} from '../fixture-input.mjs?v=20261015-phase5&issue106=20261025-rewards';
 import {Assets,ART} from './assets.mjs?v=20261015-phase5-lock1';
 import {AtlasActor,decodedAtlasStats} from './atlas.mjs?v=20261015-phase5-lock1';
 import {NativeActor} from './native.mjs?v=20261015-phase5-lock1';

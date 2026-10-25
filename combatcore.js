@@ -210,7 +210,9 @@
    return {ok:true,win:false,logs,events:combat.events,e,penalty,combatEndHp,turns:combat.turns,firstBossKill:false,bossMapIndex:e.kind==="boss"?mapIdx:null,pendingStoryId:null};
   }
 
-  const xp=expReward(e),gold=goldReward(e);
+  if(typeof window.calculateReincarnationYield!=="function")throw new Error("正式收益共用計算器未載入。");
+  const rewardContext={target:window.reincarnationYieldStateSnapshot(state),playerLevel:playerLevelBefore,enemyLevel:e.level};
+  const {xp,gold}=firstWorldMainlineRewardPreview(e,{target:rewardContext.target,playerLevel:playerLevelBefore});
   state.gold+=gold;
   gainExp(xp,logs);
   let firstBossKill=false;
@@ -241,7 +243,9 @@
     saleEnhancementStones=mergeEnhancementStoneRewards(saleEnhancementStones,extraResult.enhancementStones);
    }
   }
-  const enhancementStones=grantMainlineEnhancementStoneReward(e,playerLevelBefore);
+  const rawBattleStones=mainlineEnhancementStoneReward(e,playerLevelBefore);
+  const enhancementStones={basic:window.calculateReincarnationYield(rawBattleStones.basic,{...rewardContext,resource:true}),advanced:window.calculateReincarnationYield(rawBattleStones.advanced,{...rewardContext,resource:true})};
+  if(enhancementStones.basic||enhancementStones.advanced)addEnhancementStones(enhancementStones.basic,enhancementStones.advanced);
 
   logs.push(`${e.name}被擊敗。獲得 EXP +${xp}、金幣 +${gold}。`);
   if(e.kind==="normal"&&eIdx<2&&state.mapProgress[mapIdx][eIdx]===10)logs.push(`新敵人已出現：${MAPS[mapIdx].enemies[eIdx+1][0]}。`);
@@ -253,7 +257,7 @@
   let pendingStoryId=null;
   if(firstBossKill&&window.civilizationStoryProgress?.queueBossStory)pendingStoryId=window.civilizationStoryProgress.queueBossStory(mapIdx);
   let result={ok:true,win:true,logs,events:combat.events,e,xp,gold,item:items[0]?.item||null,sold:items[0]?.sold||0,items,enhancementStones,saleEnhancementStones,combatEndHp,turns:combat.turns,firstBossKill,bossMapIndex:e.kind==="boss"?mapIdx:null,pendingStoryId};
-  if(typeof window.applyWorld1OnlineOverlevelReward==="function")result=window.applyWorld1OnlineOverlevelReward(result,playerLevelBefore,state,{persist:false})||result;
+  result.overlevelRewardMultiplier=typeof window.reincarnationOverlevelRewardMultiplier==="function"?window.reincarnationOverlevelRewardMultiplier(playerLevelBefore,e.level,state):1;
   const bridgeSaved=save(false);
   if(bridgeSaved===true)window.CivilizationCombatEvents?.settlement?.(combat,"combatcore.js",{committed:true,xp:result.xp,gold:result.gold,items:result.items});
   return result;

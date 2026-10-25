@@ -139,16 +139,18 @@
   ensureCharacterStat(grid,"轉生次數",snap.reincarnationCount>0?`${snap.reincarnationCount} 次`:"尚未轉生");
   ensureCharacterStat(grid,"突破等級",`Lv.${snap.breakthroughLevel}`);
   ensureCharacterStat(grid,"突破裝備加成",`+${percentText(snap.breakthroughEquipmentBonusPercent)}%`);
-  ensureCharacterStat(grid,"突破最終傷害",`+${percentText(snap.breakthroughFinalDamageBonusPercent)}%`);
+   const damageRow=ensureCharacterStat(grid,"突破最終傷害",`+${percentText(snap.breakthroughFinalDamageBonusPercent)}%`);
+   const yieldRow=ensureCharacterStat(grid,"轉生收益加成",`+${Math.max(0,Math.floor(Number(snap.breakthroughLevel)||0))}%`);
+   if(damageRow&&yieldRow)damageRow.insertAdjacentElement("afterend",yieldRow);
   if(grid){
    let note=card.querySelector('[data-character-breakthrough-note="1"]');
    if(!note){note=document.createElement("div");note.dataset.characterBreakthroughNote="1";note.className="muted";note.style.marginTop="8px";grid.insertAdjacentElement("afterend",note);}
-   note.textContent="突破每級：裝備原始 HP／攻擊／防禦 +2.5%，最終傷害 +5%。";
+    note.textContent="突破每級：裝備原始 HP／攻擊／防禦 +2.5%、最終傷害 +5%、轉生收益 +1%。";
   }
+  const duplicateCore=statByLabel(grid,"界弦核心");if(duplicateCore)duplicateCore.remove();
   if(snap.world===3&&grid){
    const resource=Array.from(grid.querySelectorAll(".stat")).find(row=>/^(金幣|暗物質|暗能量|維度之弦)/.test(String(row.textContent||"").trim()));
    if(resource)resource.innerHTML=`${snap.resourceLabel}<b>${snap.resourceAmount.toLocaleString()}</b>`;
-   ensureCharacterStat(grid,"界弦核心",`Lv.${snap.coreLevel} / ${snap.coreMax}`);
   }
   return true;
  }

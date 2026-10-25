@@ -1,5 +1,5 @@
 (function(){
- const VERSION=4;
+ const VERSION=5;
  window.MAIN_MINIMAL_MODE_INTEGRITY_VERSION=VERSION;
  const src=fn=>{try{return typeof fn==="function"?Function.prototype.toString.call(fn):"";}catch(e){return "";}};
 
@@ -51,9 +51,12 @@
   if(/MutationObserver/.test(minimalSources))fail("minimal-mode-observer-present");
   if(/PowerSave|power-save/.test(minimalSources))fail("legacy-runtime-name-present");
 
-  if(typeof window.backgroundProgressMainBattleAllowsBackground!=="function")fail("background-gate-api");
+  // The old main-battle gate API was retired with the shared lifecycle owner.
+  // Keep the safety checks on the live start/stop, visibility and foreground owners.
+  if(typeof window.backgroundProgressStart!=="function"||typeof window.backgroundProgressStop!=="function")fail("background-flow-api");
+  if(typeof window.backgroundProgressEnvironmentIsBackground!=="function")fail("background-visibility-api");
   if(typeof window.gmBackgroundBattleEnabled!=="function")fail("gm-background-api");
-  if(typeof window.backgroundProgressMainBattleAllowsBackground==="function"&&typeof window.gmBackgroundBattleEnabled==="function"&&window.backgroundProgressMainBattleAllowsBackground()!==window.gmBackgroundBattleEnabled())fail("background-gate-mismatch");
+  if(typeof window.CivilizationCombatLifecycle?.foreground!=="function"||typeof window.CivilizationCombatLifecycle?.cancel!=="function")fail("foreground-lifecycle-api");
 
   if(typeof window.mainMinimalModeEnsureCombatHeader==="function"&&window.mainMinimalModeEnsureCombatHeader({continuous:false})!==false)fail("single-battle-entry-guard");
   if(typeof window.mainMinimalModeHandleBattleResult==="function"&&window.isMainMinimalModeOpen?.()===false&&window.mainMinimalModeHandleBattleResult({pendingStoryId:null})!==false)fail("inactive-result-guard");

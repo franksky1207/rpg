@@ -49,16 +49,11 @@
  function saleOwnerMissingResult(item=null){return {ok:false,reason:"sale-owner-missing",item,quote:{ok:false,currency:"unavailable",amount:0,gold:0,darkMatter:0,darkEnergy:0}};}
  function settleSale(item,options={}){
   if(typeof window.settleEquipmentSale==="function")return window.settleEquipmentSale(item,options);
-  if(secondWorldActive())return saleOwnerMissingResult(item);
-  const sold=typeof specializationSellValue==="function"?specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
-  state.gold+=sold;
-  return {ok:true,item,sold,quote:{currency:"gold",amount:sold,gold:sold,darkMatter:0,darkEnergy:0}};
+  return saleOwnerMissingResult(item);
  }
  function saleQuote(item,options={}){
   if(typeof window.equipmentSaleQuote==="function")return window.equipmentSaleQuote(item,options);
-  if(secondWorldActive())return saleOwnerMissingResult(item).quote;
-  const gold=typeof specializationSellValue==="function"?specializationSellValue(item,options.useTestSpecializations===true):Math.max(0,Math.floor(Number(item?.sell)||0));
-  return {currency:"gold",amount:gold,gold,darkMatter:0,darkEnergy:0};
+  return saleOwnerMissingResult(item).quote;
  }
  function saleText(value){
   if(typeof window.equipmentSaleText==="function")return window.equipmentSaleText(value);
@@ -193,7 +188,7 @@
  };
  window.equipmentSellLowerAll=function(preview=null){
   const data=preview?.targets?preview:equipmentLowerSalePreview();
-  if(secondWorldActive()&&typeof window.settleEquipmentSaleBatch!=="function")return {ok:false,reason:"sale-owner-missing",count:0,total:0};
+  if(typeof window.settleEquipmentSaleBatch!=="function")return {ok:false,reason:"sale-owner-missing",count:0,total:0};
   const sale=typeof window.settleEquipmentSaleBatch==="function"?window.settleEquipmentSaleBatch(data.targets):null;
   if(!sale?.ok&&typeof window.settleEquipmentSaleBatch==="function")return {ok:false,reason:sale?.reason||"sale",count:0,total:0};
   if(!sale){

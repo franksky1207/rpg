@@ -7,7 +7,7 @@ const fs=require('node:fs'),vm=require('node:vm'),cp=require('node:child_process
  assert.deepEqual(m.records.slice(0,665),old.records,'all prior 665 identities unchanged');
  assert.deepEqual(a.assets.slice(0,21),JSON.parse(cp.execFileSync('git',['show',baseline+':data/monsters/monster-assets.json'])).assets);
  assert.equal(a.assets.length,39);assert.equal(m.records.length,1695);
- for(const file of ['calamityconfig.js','calamitycore.js','secondworldcalamity.js','secondworldcalamityrun.js','thirdworlddata.js','thirdworldcombat.js','thirdworldarena.js','combatcore.js','offlineprogress.js'])assert.equal(fs.readFileSync(file,'utf8'),cp.execFileSync('git',['show','c0ec18d686d7111b2e5a7fa380c94653a2b8a2e4:'+file],{encoding:'utf8'}),file+' gameplay unchanged');
+ for(const file of ['calamityconfig.js','calamitycore.js','secondworldcalamity.js','secondworldcalamityrun.js','thirdworlddata.js','thirdworldcombat.js','thirdworldarena.js','combatcore.js','offlineprogress.js'])assert.equal(require('./postrelease-ui-copy-approval.cjs').historicalBytes(file,require('./issue106-approved-sources.cjs').historicalBytes(file,fs.readFileSync(file))).toString('utf8'),cp.execFileSync('git',['show','c0ec18d686d7111b2e5a7fa380c94653a2b8a2e4:'+file],{encoding:'utf8'}),file+' gameplay unchanged');
  const ctx=vm.createContext({console});ctx.window=ctx;
  vm.runInContext(fs.readFileSync('engine.js','utf8').split('\n').find(line=>line.startsWith('function round1(')),ctx);
  const data=fs.readFileSync('data.js','utf8'),start=data.indexOf('const WORLD_REGIONS=');vm.runInContext(data.slice(start,data.indexOf(';',start)+1),ctx);

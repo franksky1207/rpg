@@ -33,8 +33,8 @@ export async function mount({host,signal,quality='medium'}){
  let parts;
  try{
   parts=await Promise.all([
-  import(new URL('fixture-input.mjs?v=20261015-phase5',root)),import(new URL('playback.mjs?v=20261015-phase5',root)),
-  import(new URL('t2b3-v1/renderer.mjs?v=20261015-thrust1',root)),import(new URL('t2b3-v1/contract.mjs?v=20261015-thrust1',root))]);
+  import(new URL('fixture-input.mjs?v=20261015-phase5&issue106=20261025-rewards',root)),import(new URL('playback.mjs?v=20261015-phase5&issue106=20261025-rewards',root)),
+  import(new URL('t2b3-v1/renderer.mjs?v=20261015-thrust1&issue106=20261025-rewards',root)),import(new URL('t2b3-v1/contract.mjs?v=20261015-thrust1',root))]);
  }catch(error){
   if(signal.aborted)throw error;
   // Published Pages explicitly excludes development fixture sources.

@@ -8,6 +8,14 @@ const files=walk(".").sort();assert(files.length>0,"找不到任何 JavaScript �
 const syntaxFailures=[];for(const file of files){const checked=spawnSync(process.execPath,["--check",file],{encoding:"utf8"});if(checked.status!==0)syntaxFailures.push(file+": "+String(checked.stderr||checked.stdout||"syntax error").trim());}assert(syntaxFailures.length===0,"JavaScript 語法檢查失敗：\n"+syntaxFailures.join("\n\n"));
 
 const index=read("index.html"),source=name=>read(name);
+// Issue #106: a single 10% offline conversion owner, without legacy 5% paths.
+const offlineRewardSource=read("offlineprogress.js");
+assert(/const OFFLINE_REWARD_RATE=\.10;/.test(offlineRewardSource),"Offline reward rate must be the single canonical 10% owner.");
+for(const retired of ["OFFLINE_EXP_RATE","OFFLINE_GOLD_RATE","OFFLINE_GEAR_RATE","OFFLINE_ENHANCEMENT_STONE_RATE","OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE"]){
+ assert(!offlineRewardSource.includes(retired),"Retired offline rate still referenced: "+retired);
+}
+assert(/function offlineReward\(value=1\)/.test(offlineRewardSource)&&/window\.offlineReward=offlineReward/.test(offlineRewardSource),"Offline rewards must share the canonical conversion entrypoint.");
+
 const compatibility=source("compatibilityowners.js"),saveHook=source("savehookcore.js"),saveGuard=source("saveversionguard.js"),backupRetention=source("savebackupretention.js"),saveMigration=source("savemigration.js"),migrationRegression=source("tests/runtime/save-level-migration-regression.js"),batch7Lazy=source("tests/runtime/code-cleanup-batch7-lazy-loading.js"),workflow=require("../../scripts/ci-workflow-source.cjs")(".github/workflows/runtime-integrity.yml"),scriptLoader=source("scriptgrouploader.js"),runtimeApi=source("runtimeapi.js"),combatMath=source("combatmath.js"),dungeonCore=source("dungeoncore.js"),secondWorldCombat=source("secondworldcombat.js"),worldTransitionSafety=source("worldtransitionsafety.js"),offlineState=source("offlinestatecore.js"),battlePipeline=source("battlepipeline.js"),rerun1=source("reincarnationrerunworld1.js"),rerun2=source("reincarnationrerunworld2.js"),rerun3=source("reincarnationrerunworld3.js"),equipmentCore=source("equipmentrewardcore.js"),reincarnationCore=source("reincarnationcore.js"),uiSource=source("ui.js"),permanentGearGuard=source("reincarnationpermanentgearguard.js"),gmFormalControls=source("gmbatch16formalcontrols.js");
 const normalScripts=[...index.matchAll(/<script\b[^>]*\bsrc=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));
 const delayedScripts=[...index.matchAll(/<script\b[^>]*\bdata-src=["']([^"']+)["']/g)].map(match=>match[1].split("?")[0]).filter(src=>!/^https?:\/\//.test(src));

@@ -28,17 +28,17 @@ const assert=require('assert');
     Math.random=()=>.99;const firstResult=fightOnce(0,0,firstEncounter);Math.random=originalRandom;
     out.w1First={baseXp:firstBaseXp,baseGold:firstBaseGold,resultXp:firstResult.xp,resultGold:firstResult.gold,multiplier:firstResult.overlevelRewardMultiplier||1,stones:firstResult.enhancementStones};
 
-    // Rerun W1 online applies the shared multiplier after the legacy reward result, including battle stones only.
+    // Rerun W1 online computes complete yield before settlement (no post-settlement bonus).
     state=makeW1(1);state.level=100;overpower(state);state.hp=playerCombatStats().hp;selectedMap=99;selectedEnemy=4;
     const rerunEncounter=createMonsterEncounter(99,4),rerunBaseXp=expReward(rerunEncounter),rerunBaseGold=goldReward(rerunEncounter),rerunBaseStones=mainlineEnhancementStoneReward(rerunEncounter,100),rerunMultiplier=reincarnationOverlevelRewardMultiplier(100,rerunEncounter.level,state);
     Math.random=()=>.99;const rerunResult=fightOnce(99,4,rerunEncounter);Math.random=originalRandom;
     out.w1Rerun={enemyLevel:rerunEncounter.level,multiplier:rerunResult.overlevelRewardMultiplier,baseXp:rerunBaseXp,baseGold:rerunBaseGold,expectedXp:Math.ceil(rerunBaseXp*rerunMultiplier),expectedGold:Math.ceil(rerunBaseGold*rerunMultiplier),resultXp:rerunResult.xp,resultGold:rerunResult.gold,baseStones:rerunBaseStones,resultStones:rerunResult.enhancementStones,expectedAdvanced:Math.ceil((rerunBaseStones.advanced||0)*rerunMultiplier),saleStones:rerunResult.saleEnhancementStones};
 
-    // W2 first-run preview is byte-for-byte equivalent in numeric outputs to existing reward owners.
+    // W2 first-run preview remains numerically equivalent at zero permanent breakthrough.
     state=makeW2(0);const firstBoss=secondWorldBoss(99),firstW2Xp=secondWorldBossExpReward(99,false,state),firstW2Dm=secondWorldBossDarkMatterReward(99,false),firstW2Preview=secondWorldMainlineRewardPreview(99,{state});
     out.w2First={bossLevel:firstBoss.level,baseXp:firstW2Xp,baseDarkMatter:firstW2Dm,preview:firstW2Preview};
 
-    // W2 rerun online uses the same shared multiplier and ceil rule; formal settlement books the multiplied dark energy atomically.
+    // W2 rerun preview uses the shared complete-yield owner; settlement books dark energy atomically.
     state=makeW2(1);const w2Boss=secondWorldBoss(99),w2BaseXp=secondWorldBossExpReward(99,false,state),w2BaseDm=secondWorldBossDarkMatterReward(99,false),w2Multiplier=reincarnationOverlevelRewardMultiplier(state.level,w2Boss.level,state),w2Preview=secondWorldMainlineRewardPreview(99,{state});
     const dmBefore=state.secondWorld.darkMatter,deBefore=state.secondWorld.darkEnergy;
     Math.random=()=>.99;const w2Settlement=settleSecondWorldBossVictory(99,{ignoreUnlock:true,rng:()=>.99});Math.random=originalRandom;
@@ -55,23 +55,23 @@ const assert=require('assert');
     const firstOfflineContext={battles:offlineCount,map:99,enemy:3,playerLevel:100,enemyLevel:offlineEnemy.level,overlevelContextRecorded:true};
     const firstOfflineBaseXp=expReward(offlineEnemy),firstOfflineBaseGold=goldReward(offlineEnemy),firstOfflineExpectedStones=expectedMainlineEnhancementStoneReward(offlineEnemy,100);
     const firstOffline=await grantFirstWorldOfflineRewards(firstOfflineContext,offlineEnemy);
-    out.offlineW1First={enemyLevel:offlineEnemy.level,multiplier:firstOffline.overlevelRewardMultiplier,totalXp:firstOffline.totalXp,directGold:firstOffline.directGold,battleBasic:firstOffline.enhancement.battleBasic,expectedXp:Math.floor(firstOfflineBaseXp*.10*offlineCount),expectedGold:Math.floor(firstOfflineBaseGold*.10*offlineCount),expectedBasic:Math.floor((Number(firstOfflineExpectedStones.basic)||0)*.05*offlineCount)};
+    out.offlineW1First={enemyLevel:offlineEnemy.level,multiplier:firstOffline.overlevelRewardMultiplier,totalXp:firstOffline.totalXp,directGold:firstOffline.directGold,battleBasic:firstOffline.enhancement.battleBasic,expectedXp:Math.floor(firstOfflineBaseXp*.10*offlineCount),expectedGold:Math.floor(firstOfflineBaseGold*.10*offlineCount),expectedBasic:Math.floor((Number(firstOfflineExpectedStones.basic)||0)*.10*offlineCount)};
 
     const rerunOfflineState=makeW1(1);rerunOfflineState.level=100;state=rerunOfflineState;
     const rerunOfflineContext={battles:offlineCount,map:99,enemy:3,playerLevel:100,enemyLevel:offlineEnemy.level,overlevelContextRecorded:true};
     const rerunOfflineMultiplier=reincarnationOverlevelRewardMultiplier(100,offlineEnemy.level,state),rerunOfflineBaseXp=expReward(offlineEnemy),rerunOfflineBaseGold=goldReward(offlineEnemy),rerunOfflineExpectedStones=expectedMainlineEnhancementStoneReward(offlineEnemy,100);
     const rerunOffline=await grantFirstWorldOfflineRewards(rerunOfflineContext,offlineEnemy);
-    out.offlineW1Rerun={multiplier:rerunOffline.overlevelRewardMultiplier,sharedMultiplier:rerunOfflineMultiplier,totalXp:rerunOffline.totalXp,directGold:rerunOffline.directGold,battleBasic:rerunOffline.enhancement.battleBasic,expectedXp:Math.floor(applyReincarnationOverlevelIntegerReward(rerunOfflineBaseXp,100,offlineEnemy.level,state)*.10*offlineCount),expectedGold:Math.floor(applyReincarnationOverlevelIntegerReward(rerunOfflineBaseGold,100,offlineEnemy.level,state)*.10*offlineCount),expectedBasic:Math.floor((Number(rerunOfflineExpectedStones.basic)||0)*rerunOfflineMultiplier*.05*offlineCount)};
+    out.offlineW1Rerun={multiplier:rerunOffline.overlevelRewardMultiplier,sharedMultiplier:rerunOfflineMultiplier,totalXp:rerunOffline.totalXp,directGold:rerunOffline.directGold,battleBasic:rerunOffline.enhancement.battleBasic,expectedXp:Math.floor(firstWorldMainlineRewardPreview(offlineEnemy,{target:rerunOfflineState,playerLevel:100,overlevelMultiplier:rerunOfflineMultiplier,integer:false}).xp*.10*offlineCount),expectedGold:Math.floor(firstWorldMainlineRewardPreview(offlineEnemy,{target:rerunOfflineState,playerLevel:100,overlevelMultiplier:rerunOfflineMultiplier,integer:false}).gold*.10*offlineCount),expectedBasic:Math.floor((Number(rerunOfflineExpectedStones.basic)||0)*rerunOfflineMultiplier*.10*offlineCount)};
 
     // Batch6-3 W2 offline: first run unchanged, rerun shares 6-1 owner for EXP / dark matter / dark energy.
     const w2OfflineCount=20,w2OfflineBoss=secondWorldBoss(99);
     state=makeW2(0);Math.random=()=>.99;const firstW2OfflineBaseXp=secondWorldBossExpReward(99,false,state),firstW2OfflineBaseDm=secondWorldBossDarkMatterReward(99,false);
     const firstW2Offline=await grantSecondWorldOfflineRewards({battles:w2OfflineCount,bossIndex:99,playerLevel:500,enemyLevel:w2OfflineBoss.level,overlevelContextRecorded:true},w2OfflineBoss);
-    out.offlineW2First={multiplier:firstW2Offline.overlevelRewardMultiplier,totalXp:firstW2Offline.totalXp,directDarkMatter:firstW2Offline.directDarkMatter,directDarkEnergy:firstW2Offline.directDarkEnergy,expectedXp:Math.floor(firstW2OfflineBaseXp*.10*w2OfflineCount),expectedDarkMatter:Math.floor(firstW2OfflineBaseDm*.10*w2OfflineCount),expectedDarkEnergy:Math.floor(w2OfflineCount*.05)};
+    out.offlineW2First={multiplier:firstW2Offline.overlevelRewardMultiplier,totalXp:firstW2Offline.totalXp,directDarkMatter:firstW2Offline.directDarkMatter,directDarkEnergy:firstW2Offline.directDarkEnergy,expectedXp:Math.floor(firstW2OfflineBaseXp*.10*w2OfflineCount),expectedDarkMatter:Math.floor(firstW2OfflineBaseDm*.10*w2OfflineCount),expectedDarkEnergy:Math.floor(w2OfflineCount*.10)};
 
     state=makeW2(1);Math.random=()=>.99;const rerunW2OfflineMultiplier=reincarnationOverlevelRewardMultiplier(500,w2OfflineBoss.level,state),rerunW2OfflineBaseXp=secondWorldBossExpReward(99,false,state),rerunW2OfflineBaseDm=secondWorldBossDarkMatterReward(99,false);
     const rerunW2Offline=await grantSecondWorldOfflineRewards({battles:w2OfflineCount,bossIndex:99,playerLevel:500,enemyLevel:w2OfflineBoss.level,overlevelContextRecorded:true},w2OfflineBoss);
-    out.offlineW2Rerun={multiplier:rerunW2Offline.overlevelRewardMultiplier,sharedMultiplier:rerunW2OfflineMultiplier,totalXp:rerunW2Offline.totalXp,directDarkMatter:rerunW2Offline.directDarkMatter,directDarkEnergy:rerunW2Offline.directDarkEnergy,expectedXp:Math.floor(applyReincarnationOverlevelIntegerReward(rerunW2OfflineBaseXp,500,w2OfflineBoss.level,state)*.10*w2OfflineCount),expectedDarkMatter:Math.floor(applyReincarnationOverlevelIntegerReward(rerunW2OfflineBaseDm,500,w2OfflineBoss.level,state)*.10*w2OfflineCount),expectedDarkEnergy:Math.floor(applyReincarnationOverlevelIntegerReward(1,500,w2OfflineBoss.level,state)*.05*w2OfflineCount)};
+    out.offlineW2Rerun={multiplier:rerunW2Offline.overlevelRewardMultiplier,sharedMultiplier:rerunW2OfflineMultiplier,totalXp:rerunW2Offline.totalXp,directDarkMatter:rerunW2Offline.directDarkMatter,directDarkEnergy:rerunW2Offline.directDarkEnergy,expectedXp:Math.floor(rerunW2OfflineBaseXp*rerunW2OfflineMultiplier*.10*w2OfflineCount),expectedDarkMatter:Math.floor(rerunW2OfflineBaseDm*rerunW2OfflineMultiplier*.10*w2OfflineCount),expectedDarkEnergy:Math.floor(rerunW2OfflineMultiplier*.10*w2OfflineCount)};
 
     // Target identity survives sample -> farm target, while legacy pending without level identity stays on 1x for compatibility.
     state=makeW2(1);normalizeOfflineSaveState(state,{sourceVersion:17,currentTime:Date.now()});state.offline.battleSamples=[];

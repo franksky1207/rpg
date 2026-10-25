@@ -48,7 +48,10 @@ const approvedBatch17=new Set(['combat-events.js','3d-test/fixture-owner-history
 const foregroundApproved=new Set(require("./batch20-approved-runtime.cjs").verifyAll());
 // Exact four user-authorized presentation additions, each SHA-verified; no root-wide exemption.
 const appearanceNew=require("./monster-appearance-approved.cjs").verifyNew();
-const unexpected=changed.filter(p=>!gmPreviewNew.has(p)&&!appearanceNew.has(p)&&!foregroundApproved.has(p)&&!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
+// Issue106 permits only exact registered bytes; all historical comparisons remain intact.
+require('./issue106-approved-sources.cjs').verify();
+const issue106Approved=new Set(Object.keys(require('./issue106-approved-sources.json').files));
+const unexpected=changed.filter(p=>!issue106Approved.has(p)&&!gmPreviewNew.has(p)&&!appearanceNew.has(p)&&!foregroundApproved.has(p)&&!approvedBatch17.has(p)&&p!=="ui.js"&&p!==batch12Css&&!approvedBatch8.has(p)&&p!=="index.html"&&p!=="gm3dprototype.js"&&!approvedBatch4Gm.has(p)&&!approvedBatch13.has(p)&&!batch14Authorized.has(p)&&protectedRoots.some(re=>re.test(p)));
 for(const p of approvedBatch4Gm)if(changed.includes(p))assert.ok(live.has(p),"Approved GM presentation entrypoint disappeared: "+p);
 assert.deepEqual(unexpected,[],"Batch4-4 protected live runtime or assets changed unexpectedly");
 if(changed.includes("index.html")){

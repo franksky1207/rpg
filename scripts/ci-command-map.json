@@ -748,5 +748,30 @@
     "source": "equipment-formal/formal-player",
     "suite": "F2",
     "command": "node tests/equipment-formal/higher-dungeons.cjs"
+  },
+  {
+    "source": "runtime-integrity/issue106",
+    "suite": "R3",
+    "command": "node tests/runtime/issue106-reward-yield-integrity.js"
+  },
+  {
+    "source": "runtime-integrity/issue106",
+    "suite": "R3",
+    "command": "node tests/runtime/issue106-reward-yield-browser.cjs"
+  },
+  {
+    "source": "runtime-integrity/issue106",
+    "suite": "R3",
+    "command": "node tests/runtime/issue106-character-ui-integrity.cjs"
+  },
+  {
+    "source": "runtime-integrity/issue106",
+    "suite": "R3",
+    "command": "node tests/runtime/issue106-approved-sources.cjs"
+  },
+  {
+    "source": "runtime-integrity/issue106",
+    "suite": "R3",
+    "command": "node --test tests/runtime/hybrid-comparison-playback-contract.cjs"
   }
 ]

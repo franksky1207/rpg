@@ -1,3 +1,4 @@
+import issue106Approval from './issue106-approved-sources.cjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import cp from 'node:child_process';
@@ -26,5 +27,5 @@ for(const row of Object.values(mappings)){
 }
 assert.equal(seen.size,200);assert.equal(counts.size,20);assert.deepEqual([...new Set(counts.values())],[10]);
 assert.equal(new Set(Object.values(variants.alternatePrototypes).flatMap(p=>p.palettes.map(k=>palettes[k]))).size,200);
-for(const f of ['data/monsters/monster-assets.json','alternateuniversedata.js','alternateuniversecombat.js','alternateuniverseprogression.js','combatcore.js','reincarnationcore.js'])assert.equal(fs.readFileSync(f,'utf8'),cp.execFileSync('git',['show',base+':'+f],{encoding:'utf8',maxBuffer:16*1024*1024}));
+for(const f of ['data/monsters/monster-assets.json','alternateuniversedata.js','alternateuniversecombat.js','alternateuniverseprogression.js','combatcore.js','reincarnationcore.js'])assert.equal(issue106Approval.historicalBytes(f,fs.readFileSync(f)).toString('utf8'),cp.execFileSync('git',['show',base+':'+f],{encoding:'utf8',maxBuffer:16*1024*1024}));
 console.log('PASS 1000 identities / 200 universes / 20 prototypes × 10 deterministic unique palettes; five stages agree; ratio 1.75; other modes, image bytes and gameplay owners unchanged');

@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const plain=x=>JSON.parse(JSON.stringify(x)),root='../../development/hybrid-comparison/';
 const bundle=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/owner-fixtures.json')),controls=JSON.parse(fs.readFileSync('development/hybrid-comparison/t2a-v1/comparison-controls.json'));
 let adapter,Playback,bindRenderer,pack;
-const init=(async()=>{adapter=await import(root+'fixture-input.mjs?v=20261015-phase5');({Playback,bindRenderer}=await import(root+'playback.mjs'));pack=await adapter.validateData(bundle,controls,{readSource:async p=>fs.readFileSync(p,'utf8')});})();
+const init=(async()=>{adapter=await import(root+'fixture-input.mjs?v=20261015-phase5&issue106=20261025-rewards');({Playback,bindRenderer}=await import(root+'playback.mjs'));pack=await adapter.validateData(bundle,controls,{readSource:async p=>fs.readFileSync(p,'utf8')});})();
 function clock(){let now=0,id=0;const jobs=new Map();return{now:()=>now,set(fn,ms){const key=++id;jobs.set(key,{fn,due:now+ms});return key;},clear:id=>jobs.delete(id),advance(ms=0){const target=now+ms;let count=0;while(true){const row=[...jobs].filter(([,j])=>j.due<=target).sort((a,b)=>a[1].due-b[1].due)[0];if(!row)break;if(++count>1000)throw Error('Unbounded timer');now=row[1].due;jobs.delete(row[0]);row[1].fn();}now=target;},count:()=>jobs.size};}
 const flush=async()=>{for(let i=0;i<100;i++)await Promise.resolve();};
 const selection=(caseId='normal-baseline',scheme='A',variantId='g007-subset-31',lod='medium')=>({caseId,scheme,variantId,lod});
@@ -24,3 +24,11 @@ test('late promise cannot commit old display; delivery signal/isCurrent expires 
 test('subscription dedup/abort/dispose and scene-owned cleanup release exactly once',async()=>{await init;const {p}=setup();const fn=()=>{},a=new AbortController();let releases=0;const d=p.subscribe(fn,{signal:a.signal,dispose:()=>releases++});assert.equal(p.subscribe(fn),d);a.abort();d();assert.equal(releases,1);p.subscribe(()=>{}, {sessionOwned:true,dispose:()=>releases++});p.replay();assert.equal(releases,2);p.dispose();assert.equal(p.diagnostics().subscribers,0);});
 test('stale Renderer factory resource auto-disposes, rejected factory can retry without stopping playback',async()=>{await init;const {p,c}=setup();let resolve,releases=0;const pending=bindRenderer(p,()=>new Promise(r=>resolve=r));p.replay();resolve({onFrame(){},dispose(){releases++;}});assert.equal((await pending).reason,'stale-renderer');assert.equal(releases,1);const bad=await bindRenderer(p,()=>Promise.reject(Error('factory reject')));assert.equal(bad.ok,false);const good=await bindRenderer(p,async()=>({onFrame(){},dispose(){releases++;}}));assert.equal(good.ok,true);p.play();c.advance(100000);p.dispose();assert.equal(releases,2);});
 test('never-completing Renderer factory bounded to one; controller still completes',async()=>{await init;const {p,c}=setup();void bindRenderer(p,()=>new Promise(()=>{}));assert.equal((await bindRenderer(p,()=>{})).reason,'factory-busy-playback-unblocked');p.play();c.advance(100000);assert.equal(p.mode,'completed');assert.equal(p.diagnostics().pendingFactory,1);p.dispose();});
+
+test('Issue106 exact source proof rejects tampering without changing frozen fixtures',async()=>{
+ await init;
+ const read=p=>fs.readFileSync(p,'utf8');
+ await assert.rejects(adapter.validateData(bundle,controls,{readSource:async p=>p==='development/hybrid-comparison/issue106-reward-owners.json'?read(p)+' ':read(p)}),/Issue106 reward owner proof changed/);
+ await assert.rejects(adapter.validateData(bundle,controls,{readSource:async p=>p==='engine.js'?read(p)+' ':read(p)}),/Source SHA changed: engine.js/);
+ assert.equal(pack.fixtureSHA,'7b551e35c24ac6e9ec676d9d9534f6bd30ebcde026ac945826d979e9a15b1820');
+});

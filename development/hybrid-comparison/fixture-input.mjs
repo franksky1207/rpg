@@ -28,7 +28,17 @@ export async function validateData(bundle,controls,{readSource,signal}={}){
  requireValue(controls.schema==='cw.t2a.comparison-controls'&&controls.version===1&&await sha(controls)===CONTROLS_SHA,'Controls SHA mismatch');
  requireValue(typeof readSource==='function'&&JSON.stringify(Object.keys(bundle.sources))===JSON.stringify(SOURCE_PATHS),'Missing authority source reader/manifest');
  let currentRegistry=null;
- const sourceTexts=await Promise.all(SOURCE_PATHS.map(async file=>{aborted(signal);const text=await readSource(file,signal);aborted(signal);const digest=await sha(text);
+ const sourceTexts=await Promise.all(SOURCE_PATHS.map(async file=>{aborted(signal);let text=await readSource(file,signal);aborted(signal);let digest=await sha(text);
+  // Exact Issue106 source projection. Reward/settlement changes cannot alter
+  // the immutable visual fixture, and unknown live bytes still fail closed.
+  const rewardOwners={"engine.js": "bb769d0c7dc51a7e2e5f1fbb1feebf76e2c47295fc871b1ed592d2e426323469", "combatcore.js": "18b980d93984b04c23ad38c5a434d518010964ddf6786760a5c2c421fe57d0dc"};
+  if(rewardOwners[file]===digest){
+   const proofText=await readSource('development/hybrid-comparison/issue106-reward-owners.json',signal);
+   requireValue(await sha(proofText)==='f697743cca0a9607ad6da03004393ce7c165e961a735af45b2f23dc9323d20a0','Issue106 reward owner proof changed');
+   const proof=JSON.parse(proofText),row=proof.sources[file];
+   requireValue(proof.schema==='cw.issue106.reward-owners.v1'&&proof.baselineHEAD==='314fe6814ea17e3ff2cd8deafe25ef6943204513'&&row.afterSHA256===digest&&await sha(row.source)===row.beforeSHA256,'Issue106 reward source mismatch: '+file);
+   text=row.source;digest=row.beforeSHA256;
+  }
   if(['combat-events.js','3d-test/appearance-snapshot.js'].includes(file)&&digest!==bundle.sources[file]){
    const proofText=await readSource('3d-test/fixture-owner-history.json',signal);
    requireValue(await sha(proofText)===PHASE5_SOURCES_SHA,'Phase5 owner history changed');const proof=JSON.parse(proofText),row=proof.sources[file];

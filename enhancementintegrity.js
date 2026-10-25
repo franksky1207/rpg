@@ -19,14 +19,14 @@
   if(!issues.some(row=>row?.code==="LEVEL_BELOW_FORMAL_MIN"&&row?.type==="weapon"))fail("UNIVERSE_LOW_LEVEL_DETECT","宇宙低於 +20 的異常狀態未被偵測");
   const c20=window.enhancementUpgradeCost(20,galaxy),c21=window.enhancementUpgradeCost(21,universe),c30=window.enhancementUpgradeCost(30,universe),c40=window.enhancementUpgradeCost(40,universe);
   if(c20?.basic!==500||c20?.advanced!==100)fail("COST20","+20 成本異常");
-  if(!c21?.available||c21.darkMatter!==30000||c21.darkEnergy!==300)fail("COST21","+21 成本異常");
-  if(!c30?.available||c30.darkMatter!==138000||c30.darkEnergy!==390)fail("COST30","+30 成本異常");
-  if(!c40?.available||c40.darkMatter!==258000||c40.darkEnergy!==490)fail("COST40","+40 成本異常");
+  if(!c21?.available||c21.darkMatter!==30000||c21.darkEnergy!==200)fail("COST21","+21 成本異常");
+  if(!c30?.available||c30.darkMatter!==138000||c30.darkEnergy!==290)fail("COST30","+30 成本異常");
+  if(!c40?.available||c40.darkMatter!==258000||c40.darkEnergy!==390)fail("COST40","+40 成本異常");
   if(window.enhancementUpgradeCost(21,galaxy)?.available!==false||window.enhancementUpgradeCost(20,universe)?.available!==false)fail("WORLD_COST_GATE","銀河 +21／宇宙 +20 成本 gate 異常");
   const firstTotal=Array.from({length:20},(_,i)=>window.enhancementUpgradeCost(i+1,galaxy)).reduce((a,row)=>({basic:a.basic+row.basic,advanced:a.advanced+row.advanced}),{basic:0,advanced:0});
   if(firstTotal.basic!==5250||firstTotal.advanced!==1050)fail("COST_TOTAL_FIRST","單欄 +0→+20 累積成本異常");
   const secondTotal=Array.from({length:20},(_,i)=>window.enhancementUpgradeCost(21+i,universe)).reduce((a,row)=>({darkMatter:a.darkMatter+row.darkMatter,darkEnergy:a.darkEnergy+row.darkEnergy}),{darkMatter:0,darkEnergy:0});
-  if(secondTotal.darkMatter!==2880000||secondTotal.darkEnergy!==7900)fail("COST_TOTAL_SECOND","單欄 +20→+40 累積成本異常");
+  if(secondTotal.darkMatter!==2880000||secondTotal.darkEnergy!==5900)fail("COST_TOTAL_SECOND","單欄 +20→+40 累積成本異常");
   if(window.enhancementBonusPercent(20)!==50||window.enhancementBonusPercent(30)!==75||window.enhancementBonusPercent(40)!==100)fail("BONUS_LEVELS","+20/+30/+40 主能力倍率異常");
  }
  if(typeof state!=="undefined"&&state&&typeof window.enhancementFormalStateIssues==="function"){
@@ -34,10 +34,10 @@
   if(currentIssues.length)fail("FORMAL_STATE_RANGE","目前正式角色強化資料不符合所在紀元範圍");
  }
  if(typeof enhancementStoneEligible!=="function"||enhancementStoneEligible(115,105)!==false||enhancementStoneEligible(115,106)!==true)fail("LEVEL_GAP","10 級差邊界異常");
- const saleLegend=typeof enhancementStoneSaleReward==="function"?enhancementStoneSaleReward({q:4}):null,saleMythic=typeof enhancementStoneSaleReward==="function"?enhancementStoneSaleReward({q:5}):null;
+ const saleLegend=typeof enhancementStoneSaleReward==="function"?enhancementStoneSaleReward({q:4},{target:{}}):null,saleMythic=typeof enhancementStoneSaleReward==="function"?enhancementStoneSaleReward({q:5},{target:{}}):null;
  if(saleLegend?.basic!==5||saleMythic?.advanced!==1)fail("SALE_REWARD","高品質出售石頭異常");
  if(typeof enhancementStoneSaleRewards!=="function"||typeof grantEnhancementStoneSaleRewards!=="function"||typeof grantMainlineEnhancementStoneReward!=="function")fail("REWARD_GRANT_API","正式強化石發放 API 未完整載入");
- else{const saleBatch=enhancementStoneSaleRewards([{q:4},{q:4},{q:5},{q:3}]);if(saleBatch.basic!==10||saleBatch.advanced!==1)fail("SALE_BATCH_REWARD","批次出售強化石合併異常");}
+ else{const saleBatch=enhancementStoneSaleRewards([{q:4},{q:4},{q:5},{q:3}],{target:{}});if(saleBatch.basic!==10||saleBatch.advanced!==1)fail("SALE_BATCH_REWARD","批次出售強化石合併異常");}
  if(typeof expectedMainlineEnhancementStoneReward!=="function")fail("EXPECTED_REWARD_API","主線理論強化石產量 API 未載入");
  else{
   const normalExpected=expectedMainlineEnhancementStoneReward({kind:"normal",level:100},100);
@@ -51,14 +51,14 @@
  }
  if(Number(window.MAINLINE_ENHANCEMENT_PIPELINE_VERSION)!==2)fail("MAINLINE_OWNER","主線強化石 owner 異常");
  if(Number(window.EQUIPMENT_ENHANCEMENT_PIPELINE_VERSION)!==4)fail("EQUIPMENT_OWNER","出售／換裝強化石 owner 異常");
- if(Number(window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION)!==3||typeof offlineEnhancementStoneReward!=="function")fail("OFFLINE_OWNER","離線強化石 owner 異常");
+ if(Number(window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION)!==4||typeof offlineEnhancementStoneReward!=="function")fail("OFFLINE_OWNER","離線強化石 owner 異常");
  else{
-  const normalOffline=offlineEnhancementStoneReward({kind:"normal",level:100},20,100);
-  const eliteOffline=offlineEnhancementStoneReward({kind:"elite",level:100},100,100);
-  const blockedOffline=offlineEnhancementStoneReward({kind:"elite",level:100},100,110);
-  const bossOffline=offlineEnhancementStoneReward({kind:"boss",level:100},100,100);
-  if(normalOffline.basic!==1||normalOffline.advanced!==0)fail("OFFLINE_NORMAL","普通怪離線強化石結算異常");
-  if(eliteOffline.basic!==6||eliteOffline.advanced!==0)fail("OFFLINE_ELITE","菁英怪離線強化石結算異常");
+  const normalOffline=offlineEnhancementStoneReward({kind:"normal",level:100},20,100,null,{});
+  const eliteOffline=offlineEnhancementStoneReward({kind:"elite",level:100},100,100,null,{});
+  const blockedOffline=offlineEnhancementStoneReward({kind:"elite",level:100},100,110,null,{});
+  const bossOffline=offlineEnhancementStoneReward({kind:"boss",level:100},100,100,null,{});
+  if(normalOffline.basic!==2||normalOffline.advanced!==0)fail("OFFLINE_NORMAL","普通怪離線強化石結算異常");
+  if(eliteOffline.basic!==13||eliteOffline.advanced!==0)fail("OFFLINE_ELITE","菁英怪離線強化石結算異常");
   if(blockedOffline.basic!==0||blockedOffline.advanced!==0)fail("OFFLINE_LEVEL_GAP","離線強化石未遵守 10 級差規則");
   if(bossOffline.advanced!==0)fail("OFFLINE_ADVANCED","離線不得取得進階強化石");
  }
@@ -76,7 +76,7 @@
    });
   }catch(error){fail("COMBAT_PROBE",`正式強化能力計算測試失敗：${String(error)}`);}
  }
- if(Number(window.ENHANCEMENT_UI_VERSION)!==6||typeof enhancementPage!=="function"||typeof openEnhancementConfirm!=="function"||typeof window.performEnhancementUpgrade!=="function")fail("UI_OWNER","強化正式 UI 未完整載入");
+ if(Number(window.ENHANCEMENT_UI_VERSION)!==8||typeof enhancementPage!=="function"||typeof openEnhancementConfirm!=="function"||typeof window.performEnhancementUpgrade!=="function")fail("UI_OWNER","強化正式 UI 未完整載入");
  if(document.getElementById("enhancement-ui-styles"))fail("LEGACY_UI_STYLE","強化 UI 不應再由 JS 注入樣式");
  if(document.getElementById("enhancementGmStyles"))fail("LEGACY_GM_STYLE","GM 強化不應再由 JS 注入樣式");
  if(typeof homePage==="function"&&!homePage().includes("go('enhancement')"))fail("HOME_ROUTE","首頁未正式提供強化入口");
