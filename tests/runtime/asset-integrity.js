@@ -21,14 +21,14 @@ function formatBytes(value){
 const sourceRoot=path.join("assets","backgrounds-source");
 const runtimeRoot=path.join("assets","backgrounds");
 const policyFile=path.join("assets","README.md");
-assert(fs.existsSync(sourceRoot),"缺少 assets/backgrounds-source 原始素材目錄。");
+assert(!fs.existsSync(sourceRoot)||walkFiles(sourceRoot).length===0,"退役背景來源不得重新入庫。");
 assert(fs.existsSync(runtimeRoot),"缺少 assets/backgrounds 正式背景目錄。");
 assert(fs.existsSync(policyFile),"缺少 assets/README.md 素材管理規範。");
 
-const sourceFiles=walkFiles(sourceRoot);
+
 const runtimeFiles=walkFiles(runtimeRoot);
-assert(sourceFiles.length>0,"backgrounds-source 不應為空。");
-assert(runtimeFiles.length>0,"正式 backgrounds 不應為空。");
+
+assert(runtimeFiles.length===32,"正式背景必須恰好 32 張 WebP。");
 
 const runtimeNonWebp=runtimeFiles.filter(file=>path.extname(file).toLowerCase()!==".webp");
 assert(runtimeNonWebp.length===0,"正式背景目錄只能部署 WebP："+runtimeNonWebp.join(", "));
@@ -48,7 +48,7 @@ for(const ref of cssRefs){
  assert(fs.existsSync(ref),"backgrounds.css 引用不存在的正式背景："+ref);
 }
 
-const textExtensions=new Set([".html",".css",".js"]);
+const textExtensions=new Set([".html",".css",".js",".mjs"]);
 const repoText=walkFiles(".").filter(file=>{
  if(file.startsWith(".git"+path.sep)||file.startsWith("node_modules"+path.sep)||file.startsWith("tests"+path.sep))return false;
  return textExtensions.has(path.extname(file).toLowerCase());
@@ -60,12 +60,14 @@ for(const file of repoText){
 }
 assert(illegalSourceRefs.length===0,"正式 HTML/CSS/JS 不得直接引用 source 素材："+illegalSourceRefs.join(", "));
 
-const sourceBytes=bytes(sourceFiles);
-const runtimeBytes=bytes(runtimeFiles);
-assert(runtimeBytes<sourceBytes,`正式 WebP 總體積應小於 source 素材：runtime=${formatBytes(runtimeBytes)} source=${formatBytes(sourceBytes)}`);
-
-console.log("Asset Integrity OK");
-console.log(`source files: ${sourceFiles.length} / ${formatBytes(sourceBytes)}`);
-console.log(`runtime WebP: ${runtimeFiles.length} / ${formatBytes(runtimeBytes)}`);
-console.log(`runtime/source ratio: ${(runtimeBytes/sourceBytes*100).toFixed(1)}%`);
-console.log(`CSS formal background references: ${cssRefs.length}`);
+const manifest=JSON.parse(fs.readFileSync("resource-manifest.json","utf8"));
+const crypto=require("node:crypto");
+assert(runtimeDirs.length===16,"正式背景必須為16組desktop/mobile配對。");
+assert(new Set(cssRefs).size===32,"CSS必須完整引用32張正式背景。");
+for(const file of runtimeFiles){
+ const name=file.split(path.sep).join("/");
+ assert(cssRefs.includes(name),"正式背景沒有CSS引用："+name);
+ assert(manifest.files[name]===crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex").slice(0,24),"背景Manifest SHA不符："+name);
+}
+assert(!Object.keys(manifest.files).some(p=>p.startsWith("assets/backgrounds-source/")),"Manifest不得引用退役來源。");
+console.log(`Asset Integrity OK: 32 WebP / 16 pairs / ${formatBytes(bytes(runtimeFiles))} / CSS and SHA manifest complete`);

@@ -16,6 +16,10 @@ on:
       - 'scripts/*.cjs'
       - '.github/workflows/publish-asset-audit.yml'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 jobs:

@@ -14,7 +14,7 @@
 - 養成系統：8 種專精（各 Lv.60）、**VIP 等級無上限（特殊特權至 VIP20）**、銀河強化 +20、宇宙／高維強化 +40、10 印記、宇宙文明等級 Lv.10，以及轉生後永久突破等級。
 - 副本／戰鬥：懸賞、競技場、鏡像、虛空、文明災厄、主線／特殊怪與高維正式戰鬥。
 - 戰鬥倍速：依正式世界／轉生解鎖規則提供玩家 1×／1.5×；GM 可測 2×。
-- 離線收益、背景戰鬥、Fast Catch-up、回顧戰、GM 正式管理與 sandbox 測試均已有正式 owner。
+- 離線收益、背景戰鬥、Fast Catch-up、戰線紀錄（只讀歷史）、GM 正式管理與 sandbox 測試均有正式 owner；已退役的無收益回顧戰不再列為可重打玩法。
 - Cloud Save 使用 Supabase；本機正式 save 仍以 `localStorage` 為基礎。
 
 ## 目前 Save／轉生基準
@@ -94,3 +94,6 @@ GitHub Pages 可直接使用 `main` 分支根目錄部署，入口為 `index.htm
 - `GM_UI_GUIDE.md`：現行 GM 功能按鈕語意、配色與管理區塊原則。
 
 修改前必須 fresh-read current `main` 的相關 owner／consumer；JS／CSS 改動需同步更新 `index.html` cache-bust。使用者說「先討論／先檢查」時不得修改；明確說「做／修改／執行／第 N 批」時可直接施工，完成後重新確認 actual main 與 Integrity。
+## 未發布優化整合
+
+正式 main 基準為 `ee1978ea`；第2～6批工程成果保存在 `integrate/postrelease-optimization-20261025`，**尚未合併或發布**。第4批清理見 `docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md`，第5～6批紀錄及驗收限制見 Issue #100；歷史工程見 `docs/HISTORICAL_ENGINEERING.md`。正式部署仍需整合 PR、集中驗收與 Pages 發布。

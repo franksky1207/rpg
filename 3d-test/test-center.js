@@ -47,7 +47,7 @@ function renderInfo(){
 async function start(){
  release();
  const ticket=serial;
- if(disabled){showFailure("預覽已停用，不影響正式遊戲。");return;}
+ if(disabled){status.hidden=false;status.textContent="預覽已停用，不影響正式遊戲。";fallback.hidden=true;host.hidden=true;return;}
  fallback.hidden=true;host.hidden=false;status.hidden=false;
  const abort=new AbortController();let viewer=null;
  runtime={dispose:()=>{abort.abort();viewer?.dispose?.();},resize:()=>viewer?.resize?.(),setQuality:value=>viewer?.setQuality?.(value)};
@@ -64,7 +64,7 @@ async function start(){
   viewer=await mod.mount({host,signal:abort.signal,quality:quality.value});
   if(ticket===serial)status.hidden=true;
   if(ticket!==serial||abort.signal.aborted)viewer?.dispose?.();
- }catch(error){if(ticket===serial)showFailure("視覺測試無法載入："+String(error?.message||error));}
+ }catch(error){if(ticket===serial){console.error("[文明戰線] GM 動畫預覽載入失敗",error);showFailure("動畫預覽載入失敗，請重新啟動預覽。");}}
 }
 toggle.onclick=()=>{disabled=!disabled;toggle.textContent=disabled?"啟用預覽":"停用預覽";void start();};
 $("restart").onclick=()=>{disabled=false;toggle.textContent="停用預覽";void start();};

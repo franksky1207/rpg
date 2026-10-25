@@ -17,6 +17,10 @@ on:
       - '.github/workflows/publish-dry-run.yml'
       - 'docs/PUBLISH_ASSET*'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 jobs:

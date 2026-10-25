@@ -190,7 +190,7 @@
  window.startVoidMirageChallengeUI=function(){
   if(voidUi.running)return;
   const started=typeof beginVoidMirageRun==="function"?beginVoidMirageRun():{ok:false};
-  if(!started.ok){voidUi.message="目前無法開始虛空幻境。";render();return;}
+  if(!started.ok){voidUi.message="虛空挑戰未能開始，請確認目前挑戰狀態後再試。";render();return;}
   const allowBackground=typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;
   if(allowBackground&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
   else if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");

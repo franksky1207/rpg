@@ -13,18 +13,8 @@ for a in m['assets']:
   assert im.getchannel('A').getextrema()==(0,255)
   assert list(im.getbbox())==a['visualBounds']==a['alphaBounds']
  assert a['formalBattleAllowed'] and a['gmPreviewAllowed']
-source=r/'development/monster-art/batch13-six'
-for line in (source/'manifest.sha256').read_text().splitlines():
- sha,path=line.split(None,1)
- p=r/path if path.startswith(('assets/','data/')) else source/path
- assert hashlib.sha256(p.read_bytes()).hexdigest()==sha,path
 manifest=json.loads((r/'resource-manifest.json').read_text())
 assert all(a['path'] in manifest['files'] for a in m['assets'])
 assert not any('sources/' in p or 'development/monster-art/' in p for p in manifest['files'])
-for source in (r/'development/monster-art/batch13-twenty').glob('batch*'):
- for line in (source/'manifest.sha256').read_text().splitlines():
-  sha,path=line.split(None,1)
-  p=r/path if path.startswith('assets/') else source/path
-  assert hashlib.sha256(p.read_bytes()).hexdigest()==sha,path
 assert {p.relative_to(r).as_posix() for p in (r/'assets/monsters/v1').rglob('*.webp')}=={a['path'] for a in m['assets']}
-print('PASS twenty genuine WebP SHA/bytes/dimensions/alpha/bounds; all ZIP checksums; no runtime sources')
+print('PASS twenty genuine WebP SHA/bytes/dimensions/alpha/bounds; retired ZIPs absent; no runtime sources')

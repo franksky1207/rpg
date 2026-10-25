@@ -1,0 +1,909 @@
+{
+  "baseline": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+  "sourceCommit": "cc49a290ffa2a6f2de223e8bdedf1bf838dcbc0f",
+  "localOnly": true,
+  "githubActionsRun": false,
+  "tests": [
+    {
+      "test": "tests/runtime/alternate-universe-all-depths-browser.cjs",
+      "exitCode": 0,
+      "seconds": 34.51,
+      "log": "logs/alternate-universe-all-depths-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-attempt-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/alternate-universe-attempt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-batch4-3-regression.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "logs/alternate-universe-batch4-3-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-combat-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/alternate-universe-combat-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-data-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/alternate-universe-data-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-failure-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/alternate-universe-failure-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-old-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "logs/alternate-universe-old-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-progression-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/alternate-universe-progression-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-ui-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/alternate-universe-ui-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/batch16-mirror-browser.cjs",
+      "exitCode": 0,
+      "seconds": 14.46,
+      "log": "logs/batch16-mirror-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-approved-runtime.cjs",
+      "exitCode": 0,
+      "seconds": 2.79,
+      "log": "logs/batch20-approved-runtime.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-cloud-browser.cjs",
+      "exitCode": 0,
+      "seconds": 4.25,
+      "log": "logs/batch20-cloud-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-save-guide-browser.cjs",
+      "exitCode": 0,
+      "seconds": 3.1,
+      "log": "logs/batch20-save-guide-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "logs/calamity-shared-terminal-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "logs/calamity-terminal-dynamic-opt-batch2.js.log"
+    },
+    {
+      "test": "tests/runtime/cloud-save-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "logs/cloud-save-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-contract.cjs",
+      "exitCode": 0,
+      "seconds": 1.99,
+      "log": "logs/combat-events-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "seconds": 6.98,
+      "log": "logs/combat-events-integration.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "logs/cross-combat-stale-continuous-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-era-background-browser.js",
+      "exitCode": 0,
+      "seconds": 42.77,
+      "log": "logs/cross-era-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.13,
+      "log": "logs/cross-mode-late-settlement-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-checkpoints-browser.cjs",
+      "exitCode": 0,
+      "seconds": 14.77,
+      "log": "logs/foreground-combat-checkpoints-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-lifecycle.cjs",
+      "exitCode": 0,
+      "seconds": 1.66,
+      "log": "logs/foreground-combat-lifecycle.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-modes-browser.cjs",
+      "exitCode": 0,
+      "seconds": 125.58,
+      "log": "logs/foreground-combat-modes-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 32.17,
+      "log": "logs/foreground-combat-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/formal-combat-catalog-browser.cjs",
+      "exitCode": 0,
+      "seconds": 4.03,
+      "log": "logs/formal-combat-catalog-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.55,
+      "log": "logs/gm-formal-writer-convergence-batch2-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "logs/gm-runtime-auth-preferences-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-early-restore-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/gm-runtime-early-restore-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "seconds": 60.01,
+      "log": "logs/js-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/mirror-settlement-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "logs/mirror-settlement-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-browser.cjs",
+      "exitCode": 0,
+      "seconds": 184.94,
+      "log": "logs/mirror-void-formal-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-contract.mjs",
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "logs/mirror-void-formal-contract.mjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 60.48,
+      "log": "logs/mirror-void-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/newstate-save-owner-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "logs/newstate-save-owner-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/offline-sample-provenance-opt4-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.69,
+      "log": "logs/offline-sample-provenance-opt4-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/pr48-live-combat-browser.cjs",
+      "exitCode": 0,
+      "seconds": 28.6,
+      "log": "logs/pr48-live-combat-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-mode-matrix-browser.cjs",
+      "exitCode": 0,
+      "seconds": 66.61,
+      "log": "logs/pr48-mode-matrix-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-normalization-opt-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.41,
+      "log": "logs/reincarnation-normalization-opt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js",
+      "exitCode": 0,
+      "seconds": 3.74,
+      "log": "logs/reincarnation-permanent-gear-formal-flow-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 2.97,
+      "log": "logs/reincarnation-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-transaction-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.31,
+      "log": "logs/reincarnation-transaction-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.2,
+      "log": "logs/resource-manifest-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-global-writers.js",
+      "exitCode": 0,
+      "seconds": 0.48,
+      "log": "logs/save-global-writers.js.log"
+    },
+    {
+      "test": "tests/runtime/save-hook-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "logs/save-hook-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-level-migration-regression.js",
+      "exitCode": 0,
+      "seconds": 3.95,
+      "log": "logs/save-level-migration-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/save-load-pipeline-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.73,
+      "log": "logs/save-load-pipeline-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-migration-staircase.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "logs/save-migration-staircase.js.log"
+    },
+    {
+      "test": "tests/runtime/save-schema17-compatibility-matrix.js",
+      "exitCode": 0,
+      "seconds": 4.83,
+      "log": "logs/save-schema17-compatibility-matrix.js.log"
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.35,
+      "log": "logs/special-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-background-browser.js",
+      "exitCode": 0,
+      "seconds": 47.96,
+      "log": "logs/thirdworld-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "exitCode": 0,
+      "seconds": 4.07,
+      "log": "logs/thirdworld-rerun-settlement-stage-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/unified-combat-runtime-contract.cjs",
+      "exitCode": 0,
+      "seconds": 0.17,
+      "log": "logs/unified-combat-runtime-contract.cjs.log"
+    },
+    {
+      "test": "schema18-save-roundtrip-browser.cjs (private fixture)",
+      "exitCode": 0,
+      "report": {
+        "passed": true,
+        "privateFixture": true,
+        "schema": 18,
+        "rootCount": 35,
+        "baseline": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+        "fullFieldParity": true,
+        "idempotent": true
+      }
+    },
+    {
+      "test": "schema18-save-roundtrip-browser.cjs (synthetic inventory/lostGear)",
+      "exitCode": 0,
+      "report": {
+        "passed": true,
+        "privateFixture": false,
+        "schema": 18,
+        "rootCount": 33,
+        "baseline": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+        "fullFieldParity": true,
+        "idempotent": true
+      }
+    },
+    {
+      "test": "tests/runtime/docs-integrity.js",
+      "exitCode": 0
+    }
+  ],
+  "attemptHistory": [
+    {
+      "test": "tests/runtime/foreground-combat-lifecycle.cjs",
+      "exitCode": 0,
+      "seconds": 1.44,
+      "log": "logs/foreground-combat-lifecycle.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "seconds": 3.38,
+      "log": "logs/combat-events-integration.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "logs/cross-combat-stale-continuous-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/cross-mode-late-settlement-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/unified-combat-runtime-contract.cjs",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "logs/unified-combat-runtime-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-contract.cjs",
+      "exitCode": 0,
+      "seconds": 0.45,
+      "log": "logs/combat-events-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-global-writers.js",
+      "exitCode": 0,
+      "seconds": 0.11,
+      "log": "logs/save-global-writers.js.log"
+    },
+    {
+      "test": "tests/runtime/newstate-save-owner-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "logs/newstate-save-owner-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-migration-staircase.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/save-migration-staircase.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-data-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/alternate-universe-data-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-attempt-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/alternate-universe-attempt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-combat-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.03,
+      "log": "logs/alternate-universe-combat-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-failure-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/alternate-universe-failure-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-progression-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/alternate-universe-progression-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-ui-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/alternate-universe-ui-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-batch4-3-regression.js",
+      "exitCode": 0,
+      "seconds": 0.04,
+      "log": "logs/alternate-universe-batch4-3-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-old-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "logs/alternate-universe-old-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exitCode": 1,
+      "seconds": 0.51,
+      "log": "logs/special-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "logs/calamity-shared-terminal-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "exitCode": 0,
+      "seconds": 0.16,
+      "log": "logs/calamity-terminal-dynamic-opt-batch2.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-normalization-opt-integrity.js",
+      "exitCode": 1,
+      "seconds": 0.55,
+      "log": "logs/reincarnation-normalization-opt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "exitCode": 1,
+      "seconds": 0.64,
+      "log": "logs/thirdworld-rerun-settlement-stage-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "logs/gm-runtime-auth-preferences-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-level-migration-regression.js",
+      "exitCode": 1,
+      "seconds": 0.58,
+      "log": "logs/save-level-migration-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/save-schema17-compatibility-matrix.js",
+      "exitCode": 1,
+      "seconds": 0.69,
+      "log": "logs/save-schema17-compatibility-matrix.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-save-integrity.js",
+      "exitCode": 1,
+      "seconds": 0.6,
+      "log": "logs/reincarnation-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-transaction-integrity.js",
+      "exitCode": 1,
+      "seconds": 0.58,
+      "log": "logs/reincarnation-transaction-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+      "exitCode": 1,
+      "seconds": 0.46,
+      "log": "logs/gm-formal-writer-convergence-batch2-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "seconds": 10.72,
+      "log": "logs/js-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-modes-browser.cjs",
+      "exitCode": 0,
+      "seconds": 104.0,
+      "log": "logs/foreground-combat-modes-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-checkpoints-browser.cjs",
+      "exitCode": 0,
+      "seconds": 14.77,
+      "log": "logs/foreground-combat-checkpoints-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 27.43,
+      "log": "logs/foreground-combat-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-load-pipeline-integrity.js",
+      "exitCode": 0,
+      "seconds": 5.3,
+      "log": "logs/save-load-pipeline-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-level-migration-regression.js",
+      "exitCode": 0,
+      "seconds": 3.95,
+      "log": "logs/save-level-migration-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/save-schema17-compatibility-matrix.js",
+      "exitCode": 0,
+      "seconds": 4.83,
+      "log": "logs/save-schema17-compatibility-matrix.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-save-integrity.js",
+      "exitCode": 0,
+      "seconds": 2.97,
+      "log": "logs/reincarnation-save-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-transaction-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.31,
+      "log": "logs/reincarnation-transaction-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-formal-writer-convergence-batch2-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.55,
+      "log": "logs/gm-formal-writer-convergence-batch2-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.0,
+      "log": "logs/special-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-normalization-opt-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.41,
+      "log": "logs/reincarnation-normalization-opt-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-rerun-settlement-stage-regression.js",
+      "exitCode": 0,
+      "seconds": 4.07,
+      "log": "logs/thirdworld-rerun-settlement-stage-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/batch20-cloud-browser.cjs",
+      "exitCode": 0,
+      "seconds": 6.61,
+      "log": "logs/batch20-cloud-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-save-guide-browser.cjs",
+      "exitCode": 0,
+      "seconds": 4.33,
+      "log": "logs/batch20-save-guide-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-era-background-browser.js",
+      "exitCode": 0,
+      "seconds": 42.77,
+      "log": "logs/cross-era-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/thirdworld-background-browser.js",
+      "exitCode": 0,
+      "seconds": 47.96,
+      "log": "logs/thirdworld-background-browser.js.log"
+    },
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "seconds": 27.89,
+      "log": "logs/js-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/newstate-save-owner-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "logs/newstate-save-owner-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-global-writers.js",
+      "exitCode": 0,
+      "seconds": 0.48,
+      "log": "logs/save-global-writers.js.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-contract.cjs",
+      "exitCode": 0,
+      "seconds": 1.99,
+      "log": "logs/combat-events-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "seconds": 8.34,
+      "log": "logs/combat-events-integration.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.13,
+      "log": "logs/cross-mode-late-settlement-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.19,
+      "log": "logs/cross-combat-stale-continuous-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/unified-combat-runtime-contract.cjs",
+      "exitCode": 0,
+      "seconds": 0.17,
+      "log": "logs/unified-combat-runtime-contract.cjs.log"
+    },
+    {
+      "test": "tests/runtime/alternate-universe-all-depths-browser.cjs",
+      "exitCode": 0,
+      "seconds": 34.51,
+      "log": "logs/alternate-universe-all-depths-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-mode-matrix-browser.cjs",
+      "exitCode": 0,
+      "seconds": 66.61,
+      "log": "logs/pr48-mode-matrix-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/pr48-live-combat-browser.cjs",
+      "exitCode": 0,
+      "seconds": 28.6,
+      "log": "logs/pr48-live-combat-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-hook-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.3,
+      "log": "logs/save-hook-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/cloud-save-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.28,
+      "log": "logs/cloud-save-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-lifecycle.cjs",
+      "exitCode": 0,
+      "seconds": 1.66,
+      "log": "logs/foreground-combat-lifecycle.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-approved-runtime.cjs",
+      "exitCode": 0,
+      "seconds": 1.62,
+      "log": "logs/batch20-approved-runtime.cjs.log"
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.1,
+      "log": "logs/resource-manifest-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/formal-combat-catalog-browser.cjs",
+      "exitCode": 0,
+      "seconds": 4.03,
+      "log": "logs/formal-combat-catalog-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-cloud-browser.cjs",
+      "exitCode": 0,
+      "seconds": 4.25,
+      "log": "logs/batch20-cloud-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/save-load-pipeline-integrity.js",
+      "exitCode": 0,
+      "seconds": 4.73,
+      "log": "logs/save-load-pipeline-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-early-restore-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.06,
+      "log": "logs/gm-runtime-early-restore-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/gm-runtime-auth-preferences-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.05,
+      "log": "logs/gm-runtime-auth-preferences-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/offline-sample-provenance-opt4-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.69,
+      "log": "logs/offline-sample-provenance-opt4-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/reincarnation-permanent-gear-formal-flow-regression.js",
+      "exitCode": 0,
+      "seconds": 3.74,
+      "log": "logs/reincarnation-permanent-gear-formal-flow-regression.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-shared-terminal-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "logs/calamity-shared-terminal-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/calamity-terminal-dynamic-opt-batch2.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "logs/calamity-terminal-dynamic-opt-batch2.js.log"
+    },
+    {
+      "test": "tests/runtime/special-fast-catchup-integrity.js",
+      "exitCode": 0,
+      "seconds": 3.35,
+      "log": "logs/special-fast-catchup-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/save-migration-staircase.js",
+      "exitCode": 0,
+      "seconds": 0.09,
+      "log": "logs/save-migration-staircase.js.log"
+    },
+    {
+      "test": "tests/runtime/batch20-save-guide-browser.cjs",
+      "exitCode": 0,
+      "seconds": 3.1,
+      "log": "logs/batch20-save-guide-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-contract.mjs",
+      "exitCode": 0,
+      "seconds": 2.38,
+      "log": "logs/mirror-void-formal-contract.mjs.log"
+    },
+    {
+      "test": "tests/runtime/resource-manifest-integrity.js",
+      "exitCode": 0,
+      "seconds": 0.2,
+      "log": "logs/resource-manifest-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/combat-events-integration.cjs",
+      "exitCode": 0,
+      "seconds": 6.98,
+      "log": "logs/combat-events-integration.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-settlement-failure-regression.cjs",
+      "exitCode": 0,
+      "seconds": 0.07,
+      "log": "logs/mirror-settlement-failure-regression.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 32.17,
+      "log": "logs/foreground-combat-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/foreground-combat-modes-browser.cjs",
+      "exitCode": 0,
+      "seconds": 125.58,
+      "log": "logs/foreground-combat-modes-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch16-mirror-browser.cjs",
+      "exitCode": 0,
+      "seconds": 14.46,
+      "log": "logs/batch16-mirror-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-run-recovery-browser.cjs",
+      "exitCode": 1,
+      "seconds": 0.2,
+      "log": "logs/mirror-void-run-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/batch20-approved-runtime.cjs",
+      "exitCode": 0,
+      "seconds": 2.79,
+      "log": "logs/batch20-approved-runtime.cjs.log"
+    },
+    {
+      "test": "tests/runtime/js-integrity.js",
+      "exitCode": 0,
+      "seconds": 60.01,
+      "log": "logs/js-integrity.js.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-recovery-browser.cjs",
+      "exitCode": 0,
+      "seconds": 60.48,
+      "log": "logs/mirror-void-recovery-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-browser.cjs",
+      "exitCode": 0,
+      "seconds": 184.94,
+      "log": "logs/mirror-void-formal-browser.cjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-contract.mjs",
+      "exitCode": 1,
+      "seconds": 1.8,
+      "log": "logs/mirror-void-formal-contract.mjs.log"
+    },
+    {
+      "test": "tests/runtime/mirror-void-formal-contract.mjs",
+      "exitCode": 0,
+      "seconds": 0.38,
+      "log": "logs/mirror-void-formal-contract.mjs.log"
+    }
+  ],
+  "invalidTestCommands": [
+    {
+      "test": "tests/runtime/mirror-void-run-recovery-browser.cjs",
+      "exitCode": 1,
+      "seconds": 0.2,
+      "log": "logs/mirror-void-run-recovery-browser.cjs.log"
+    }
+  ],
+  "expectedPreFixFailures": {
+    "save-hook-failure-regression.cjs": 2,
+    "cloud-save-failure-regression.cjs": 2,
+    "foreground-combat-lifecycle.cjs": 1,
+    "mirror-settlement-failure-regression.cjs": 2
+  },
+  "harnessCorrections": [
+    "Matching Playwright Chromium installed; all affected tests rerun.",
+    "Explicitly load deferred GM group for new roundtrip test.",
+    "Use identical fixed clock and seeded RNG for baseline/live synthetic fixtures.",
+    "Correct nonexistent mirror-void-run-recovery-browser.cjs invocation to existing mirror-void-recovery-browser.cjs.",
+    "Register authorized lifecycle/mirror bytes above unchanged historical source seals; rerun exact-source contract after other concurrent suites completed."
+  ],
+  "additionalChecks": [
+    "git diff --check",
+    "node --check mirrordungeonrun.js",
+    "node --check cloudsave.js",
+    "node --check savehookcore.js",
+    "html-cache-version-guard.js --self-test",
+    "html-cache-version-guard.js origin/main HEAD (4 changed runtime files)"
+  ]
+}

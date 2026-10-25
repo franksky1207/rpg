@@ -145,7 +145,7 @@
    }else{
     canEnter=unlocked&&implemented;
     currentFloorHtml=unlocked?`<div class="dungeon-current-floor">歷史最高：第 ${voidInfo.highest.toLocaleString()} 層<br>挑戰起點：第 ${voidInfo.start.toLocaleString()} 層</div>`:"";
-    statusText=`當日最高：第 ${Number(voidInfo.daily.highestFloor||0).toLocaleString()} 層　・　${voidInfo.daily.claimed?"今日獎勵已領取":`可領 ${Number(voidInfo.daily.reward||0).toLocaleString()} VIP`}`;
+    statusText=`當日最高：第 ${Number(voidInfo.daily.highestFloor||0).toLocaleString()} 層　・　${voidInfo.daily.claimed?"今日獎勵已領取":Number(voidInfo.daily.highestFloor||0)<=0?"今日尚無可領獎勵":`待領 ${Number(voidInfo.daily.reward||0).toLocaleString()} VIP 積分`}`;
     if(unlocked&&!implemented)buttonLabel="尚未開放";else if(canEnter)buttonLabel=`進入${title}`;
    }
    const unlockLabel=universe?(unlocked?"宇宙紀元已解鎖":"尚未解鎖"):(unlocked?`Lv.${need} 已解鎖`:`Lv.${need} 解鎖`);

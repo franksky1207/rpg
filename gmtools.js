@@ -19,7 +19,7 @@ function gmRewardSummaryHtml(summary,extraRows=""){
 }
 
 function gmLevel(){
- if(typeof window.gmCommitFormalCharacterLevelMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+ if(typeof window.gmCommitFormalCharacterLevelMutation!=="function")return alert("GM 正式管理功能尚未載入完整，請重新開啟管理頁面。");
  const cap=typeof window.effectiveLevelCap==="function"?window.effectiveLevelCap(state):MAX_LEVEL;
  const raw=prompt(`指定等級（1～${cap}）`,state.level);
  if(raw===null)return false;
@@ -32,7 +32,7 @@ function gmLevel(){
 }
 
 function gmFormalResourceCommit(kind,label,current){
- if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+ if(typeof window.gmCommitFormalResourceMutation!=="function")return alert("GM 正式管理功能尚未載入完整，請重新開啟管理頁面。");
  const raw=prompt(`指定${label}（0 以上）`,Math.max(0,Math.floor(Number(current)||0)));
  if(raw===null)return false;
  const n=Number(raw);
@@ -47,7 +47,7 @@ function gmDarkMatter(){return gmFormalResourceCommit("dark-matter","暗物質",
 function gmDarkEnergy(){return gmFormalResourceCommit("dark-energy","暗能量",state.secondWorld?.darkEnergy||0);}
 
 function gmSetWorldProgress(){
- if(typeof window.gmFirstWorldProgressPlan!=="function"||typeof window.gmCommitFormalFirstWorldProgressMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+ if(typeof window.gmFirstWorldProgressPlan!=="function"||typeof window.gmCommitFormalFirstWorldProgressMutation!=="function")return alert("GM 正式管理功能尚未載入完整，請重新開啟管理頁面。");
  const raw=prompt(`指定目前攻略到哪個等級關卡（1～${MAX_LEVEL}）`,state.level);
  if(raw===null)return false;
  const target=Number(raw),plan=Number.isInteger(target)?window.gmFirstWorldProgressPlan(target):{ok:false};
@@ -68,8 +68,8 @@ function gmSecondWorldProgressSnapshot(target=state){return typeof window.second
 function gmApplySecondWorldProgressCount(value,target=state){return typeof window.rebuildSecondWorldFormalProgress==="function"?window.rebuildSecondWorldFormalProgress(value,target):{ok:false,reason:"progress-owner-missing"};}
 function gmSetSecondWorldProgress(){
  if(state?.secondWorld?.entered!==true||state?.thirdWorld?.entered===true)return alert("只有目前位於宇宙紀元時才能指定宇宙紀元進度。");
- if(typeof window.runSettlementTransaction!=="function")return alert("正式存檔 transaction owner 尚未載入。");
- if(typeof window.rebuildSecondWorldFormalProgress!=="function")return alert("宇宙紀元正式進度 owner 尚未載入。");
+ if(typeof window.runSettlementTransaction!=="function")return alert("GM 存檔管理功能尚未載入完整，請重新開啟管理頁面。");
+ if(typeof window.rebuildSecondWorldFormalProgress!=="function")return alert("宇宙紀元進度管理功能尚未載入完整。");
  const current=gmSecondWorldProgressSnapshot(state).completedBosses;
  const raw=prompt("指定宇宙紀元已擊破 Boss 數（0～100）",current);
  if(raw===null)return;
@@ -95,8 +95,8 @@ function gmThirdWorldProgressSnapshot(target=state){return typeof window.thirdWo
 function gmApplyThirdWorldProgressPercent(value,target=state){return typeof window.rebuildThirdWorldFormalProgress==="function"?window.rebuildThirdWorldFormalProgress(value,target):{ok:false,reason:"progress-owner-missing"};}
 function gmSetThirdWorldProgress(){
  if(state?.thirdWorld?.entered!==true)return alert("只有目前位於高維紀元時才能指定高維紀元進度。");
- if(typeof window.runSettlementTransaction!=="function")return alert("正式存檔 transaction owner 尚未載入。");
- if(typeof window.rebuildThirdWorldFormalProgress!=="function")return alert("高維紀元正式進度 owner 尚未載入。");
+ if(typeof window.runSettlementTransaction!=="function")return alert("GM 存檔管理功能尚未載入完整，請重新開啟管理頁面。");
+ if(typeof window.rebuildThirdWorldFormalProgress!=="function")return alert("高維紀元進度管理功能尚未載入完整。");
  const current=Math.round(Number(gmThirdWorldProgressSnapshot(state).completionPercent)||0);
  const raw=prompt("指定高維紀元攻略完成度（0～100%）",current);
  if(raw===null)return;
@@ -106,7 +106,7 @@ function gmSetThirdWorldProgress(){
  if(!tx?.ok){alert(`高維紀元進度更新失敗：${tx?.reason||tx?.value?.reason||"未知錯誤"}`);return;}
  if(typeof render==="function")render();
  const snapshot=gmThirdWorldProgressSnapshot(state);
- alert(`高維紀元攻略完成度已指定為 ${percent}%：10 名高維存在的永久 HP、Stage、總體稱號 Tier 與高維故事階段已同步。${percent===100?"高維最終故事與紀元完成狀態亦已同步。":""}\n角色等級、EXP、維度之弦與高維核心養成維持原值。\n目前稱號 Tier：${snapshot.titleTier}｜故事 Stage：${snapshot.storyStage}`);
+ alert(`高維紀元攻略完成度已指定為 ${percent}%：10 名高維存在的永久 HP、強化階段、稱號階段與高維故事進度已同步。${percent===100?"高維最終故事與紀元完成狀態亦已同步。":""}\n角色等級、EXP、維度之弦與高維核心養成維持原值。\n目前稱號階段：${snapshot.titleTier}｜故事階段：${snapshot.storyStage}`);
 }
 window.GM_THIRD_WORLD_PROGRESS_MANAGEMENT_VERSION=2;
 window.gmThirdWorldProgressSnapshot=gmThirdWorldProgressSnapshot;
@@ -114,7 +114,7 @@ window.gmApplyThirdWorldProgressPercent=gmApplyThirdWorldProgressPercent;
 window.gmSetThirdWorldProgress=gmSetThirdWorldProgress;
 
 function gmCreateGear(){
- if(typeof window.gmCommitFormalGeneratedEquipmentMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+ if(typeof window.gmCommitFormalGeneratedEquipmentMutation!=="function")return alert("GM 正式管理功能尚未載入完整，請重新開啟管理頁面。");
  const q=Number(document.getElementById("gmGearQuality")?.value);
  const level=Number(document.getElementById("gmGearLevel")?.value);
  const type=document.getElementById("gmGearType")?.value;
@@ -158,7 +158,7 @@ function gmSecondWorldGearChangeBoss(){
  gmSecondWorldGearBoss=bosses.some(b=>b.index===requested)?requested:(bosses[0]?.index??0);
 }
 function gmCreateSecondWorldGear(){
- if(typeof window.gmCommitFormalGeneratedEquipmentMutation!=="function")return alert("正式 GM transaction owner 尚未載入。");
+ if(typeof window.gmCommitFormalGeneratedEquipmentMutation!=="function")return alert("GM 正式管理功能尚未載入完整，請重新開啟管理頁面。");
  gmSecondWorldGearChangeBoss();
  const q=Math.floor(Number(document.getElementById("gmSecondWorldGearQuality")?.value));
  const type=document.getElementById("gmSecondWorldGearType")?.value;

@@ -91,6 +91,7 @@ async function media(request){
 }
 // Background preload is deliberately limited to shipped gameplay media, not raw source/audio libraries.
 let preloadJob=null,preloadGeneration=0;
+const preloadReporters=new Set();
 function shouldPreload(p){
  if(APPEARANCE_MODULES.has(p))return true;
  if(BATCH18_SPRITES.has(p)||BATCH17_SPRITES.has(p))return true;
@@ -114,14 +115,16 @@ function shouldPreload(p){
  return false;
 }
 async function preloadAssets(report){
+ preloadReporters.add(report);
  if(preloadJob)return preloadJob;
+ const notify=info=>{for(const listener of preloadReporters){try{listener(info);}catch(_){}}};
  const generation=preloadGeneration;
  preloadJob=(async()=>{
   const entries=known||await refresh();
   const cache=await caches.open(ACTIVE);
   const paths=[...entries.keys()].filter(shouldPreload);
   let done=0,saved=0,failed=0;
-  report({phase:"start",total:paths.length,done,saved,failed});
+  notify({phase:"start",total:paths.length,done,saved,failed});
   // Run gently behind the home screen; failures are nonfatal and retried next visit.
   for(const path of paths){
    if(generation!==preloadGeneration)break;
@@ -139,10 +142,10 @@ async function preloadAssets(report){
     await cache.put(key,response.clone());saved++;
    }catch(_){failed++;}
    done++;
-   if(done%3===0||done===paths.length)report({phase:"progress",total:paths.length,done,saved,failed});
+   if(done%3===0||done===paths.length)notify({phase:"progress",total:paths.length,done,saved,failed});
   }
-  report({phase:"complete",total:paths.length,done,saved,failed});
- })().finally(()=>preloadJob=null);
+  notify({phase:"complete",total:paths.length,done,saved,failed});
+ })().catch(error=>{notify({phase:"error",error:String(error)});throw error;}).finally(()=>{preloadJob=null;preloadReporters.clear();});
  return preloadJob;
 }
 self.addEventListener("install",event=>{event.waitUntil(self.skipWaiting());});
@@ -159,7 +162,7 @@ self.addEventListener("fetch",event=>{
 self.addEventListener("message",event=>{
  const data=event.data||{},port=event.ports&&event.ports[0];
  const respond=msg=>{try{port?.postMessage(msg);}catch(_){}};
- if(data.type==="CIV_CACHE_PRELOAD")event.waitUntil(preloadAssets(respond).catch(e=>respond({phase:"error",error:String(e)})));
+ if(data.type==="CIV_CACHE_PRELOAD")event.waitUntil(preloadAssets(respond).catch(()=>{}));
  if(data.type==="CIV_CACHE_REFRESH")event.waitUntil(refresh().then(()=>respond({ok:true,version:manifestTag,count:known.size})).catch(e=>respond({ok:false,error:String(e.message||e)})));
  if(data.type==="CIV_CACHE_STATUS")event.waitUntil(caches.open(ACTIVE).then(async c=>{
   const keys=await c.keys();let bytes=0,measured=0;

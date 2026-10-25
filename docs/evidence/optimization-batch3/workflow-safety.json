@@ -1,0 +1,477 @@
+{
+  "main": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+  "branch": "integrate/postrelease-optimization-20261025",
+  "workflowCount": 17,
+  "workflowFilesUnchanged": true,
+  "openPullRequestsAtInitialCheck": 0,
+  "gitPushDryRun": "success; no refs written",
+  "workflows": [
+    {
+      "file": ".github/workflows/asset-version-manifest.yml",
+      "sha256": "31d26b81bd7d365a3cda11a7f4caad05bc57b32195c171373126a19cfc6e6244",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "**/*.js",
+            "**/*.css",
+            "index.html",
+            "assets/backgrounds/**",
+            "audio/assets/**",
+            "3d-test/assets/**",
+            "assets/3d/**",
+            "assets/models/**",
+            "vendor/babylonjs/**",
+            "scripts/generate-resource-manifest.py"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/equipment-concepts.yml",
+      "sha256": "b844c5a8f74d0129a91d4ce4fe7b1e3e2cce8def5914c7488289d3ef6e272a93",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "data.js",
+            "engine.js",
+            "worldmaps-*.js",
+            "secondworlddata.js",
+            "secondworldrewards.js",
+            "thirdworlddata.js",
+            "thirdworldloot.js",
+            "scripts/formal-equipment-identities.py",
+            ".github/workflows/equipment-concepts.yml"
+          ]
+        },
+        "pull_request": {
+          "paths": [
+            "data.js",
+            "engine.js",
+            "worldmaps-*.js",
+            "secondworlddata.js",
+            "secondworldrewards.js",
+            "thirdworlddata.js",
+            "thirdworldloot.js",
+            "scripts/formal-equipment-identities.py",
+            ".github/workflows/equipment-concepts.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/equipment-formal.yml",
+      "sha256": "daa83d57298a683a7c63397163f959115e6a73c160982e85446138e19c4e3e05",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "assets/era-player/**",
+            "3d-test/equipment-sprites-v1/**",
+            "3d-test/era-player-sprites.mjs",
+            "3d-test/gm-battle-published.mjs",
+            "tests/equipment-*/**",
+            "scripts/equipment*",
+            "scripts/formal-equipment-identities.py",
+            "combatcore.js",
+            "index.html"
+          ]
+        },
+        "pull_request": {
+          "paths": [
+            "assets/era-player/**",
+            "3d-test/equipment-sprites-v1/**",
+            "3d-test/era-player-sprites.mjs",
+            "3d-test/gm-battle-published.mjs",
+            "tests/equipment-*/**",
+            "scripts/equipment*",
+            "scripts/formal-equipment-identities.py",
+            "combatcore.js",
+            "index.html"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/equipment-gm.yml",
+      "sha256": "44783a3cb66d0f6b2c7de1bc03b49cacee817ab27fbebb5f373396799984b841",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "assets/era-player/**",
+            "3d-test/equipment-sprites-v1/**",
+            "3d-test/era-player-sprites.mjs",
+            "3d-test/gm-battle-published.mjs",
+            "tests/equipment-*/**",
+            "scripts/equipment*",
+            "scripts/formal-equipment-identities.py",
+            "combatcore.js",
+            "index.html"
+          ]
+        },
+        "pull_request": {
+          "paths": [
+            "assets/era-player/**",
+            "3d-test/equipment-sprites-v1/**",
+            "3d-test/era-player-sprites.mjs",
+            "3d-test/gm-battle-published.mjs",
+            "tests/equipment-*/**",
+            "scripts/equipment*",
+            "scripts/formal-equipment-identities.py",
+            "combatcore.js",
+            "index.html"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/equipment-sprites.yml",
+      "sha256": "846511ddac31d824c6931dcf94df902ea3495c54f9af39b5fc86a748204930d2",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "assets/era-player/**",
+            "3d-test/equipment-sprites-v1/**",
+            "development/equipment-2_5d/**",
+            "scripts/equipment*",
+            "scripts/formal-equipment-identities.py",
+            "tests/equipment-sprites/**",
+            ".github/workflows/equipment-sprites.yml"
+          ]
+        },
+        "pull_request": {
+          "paths": [
+            "assets/era-player/**",
+            "3d-test/equipment-sprites-v1/**",
+            "development/equipment-2_5d/**",
+            "development/3d-source/equipment/concepts/**",
+            "scripts/equipment*",
+            "tests/equipment-sprites/**",
+            ".github/workflows/equipment-sprites.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/fast-development-preflight.yml",
+      "sha256": "5c161ac0dab7141ecc6610eb177cb80315e144932fe90740d3fba2cf4bc4781e",
+      "events": {
+        "pull_request": "",
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/functional-ci.yml",
+      "sha256": "d8e7eb4ae00c62b8e56c22d421e49edb5dc0af40c833c58396d8419e2ff38f08",
+      "events": {
+        "pull_request": "",
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/galaxy-3d-button-smoke.yml",
+      "sha256": "4ff497a153f76f2c4c85355ec0bb45b67796a51fce59382e1b13b61da7c9d094",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "worldmapui.js",
+            "ui.js",
+            "3d-test/formal-home.js",
+            "3d-test/runtime.js",
+            "index.html",
+            "tests/runtime/galaxy-3d-button-browser.js",
+            ".github/workflows/galaxy-3d-button-smoke.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/gm-3d-test-center-browser.yml",
+      "sha256": "ce6e78442b00a081894fad63b8e447d005bc26beeb823b6092fb35e69fd13393",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "3d-test/**",
+            "gm3dprototype.js",
+            "tests/runtime/gm-3d-test-center-browser.js",
+            "tests/runtime/gm-battle-simulation-browser.js",
+            "tests/runtime/3d-gm-loader-browser.js",
+            "tests/runtime/3d-player-snapshot-contract.js",
+            ".github/workflows/gm-3d-test-center-browser.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/gm-animation-center-terminology.yml",
+      "sha256": "b0b86503b63fe1b0e4c5ed5b96a97a07a62bfd52671d94fcd4685454d610be80",
+      "events": {
+        "push": {
+          "branches": [
+            "fix/gm-animation-center-copy-full-20261018"
+          ]
+        },
+        "pull_request": {
+          "paths": [
+            "gm3dprototype.js",
+            "3d-test/**",
+            "index.html",
+            "tests/runtime/gm-animation-center-terminology.cjs"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/html-cache-version-guard.yml",
+      "sha256": "e6068a80cb4fe5fb50cd43d74ad16e281ce5e174763655c48c09734d8869a3e9",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "**/*.js",
+            "**/*.css",
+            "**/*.html",
+            "tests/runtime/html-cache-version-guard.js",
+            ".github/workflows/html-cache-version-guard.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/publish-asset-audit.yml",
+      "sha256": "1f9ffc38f52c4badaa1f5f29bd60fe76c324c5b39cec228891e559127db992f5",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "index.html",
+            "resource-manifest.json",
+            "**/*.js",
+            "**/*.css",
+            "**/*.html",
+            "assets/**",
+            "audio/**",
+            "vendor/**",
+            "3d-test/**",
+            "development/**",
+            "scripts/*.cjs",
+            ".github/workflows/publish-asset-audit.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/publish-dry-run.yml",
+      "sha256": "3052b38ecf3123db87aa0e413934889ff6c3a4a08cbfb1cc204cd8f49897aaf2",
+      "events": {
+        "workflow_dispatch": "",
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "**/*.js",
+            "**/*.css",
+            "**/*.html",
+            "resource-manifest.json",
+            "assets/**",
+            "audio/**",
+            "vendor/**",
+            "3d-test/**",
+            "scripts/*.cjs",
+            "scripts/generate-resource-manifest.py",
+            ".github/workflows/publish-dry-run.yml",
+            "docs/PUBLISH_ASSET*"
+          ]
+        }
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/publish-optimized-pages.yml",
+      "sha256": "4cbff782d22adc7fb4802227adeca446ff359becc815f3980ffa20a2c9c4e522",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/publish-release-gate.yml",
+      "sha256": "09b091541b6ca7d44b2c9c96f14ad4c7cc6175ed0703096ba91a80c8758b18d9",
+      "events": {
+        "workflow_dispatch": "",
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "**/*.js",
+            "tests/runtime/3d-formal-snapshots-contract.cjs",
+            "tests/runtime/combat-events-contract.cjs",
+            "tests/runtime/combat-events-integration.cjs",
+            "**/*.css",
+            "**/*.html",
+            "resource-manifest.json",
+            "assets/**",
+            "audio/**",
+            "vendor/**",
+            "3d-test/**",
+            "scripts/*.cjs",
+            "scripts/generate-resource-manifest.py",
+            ".github/workflows/publish-release-gate.yml",
+            "docs/PUBLISH_ASSET*"
+          ]
+        }
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/runtime-integrity.yml",
+      "sha256": "ec2f799c0c6dcc047e3fa2c04bd8f45279987afdb80ffa321dfa2b1734904033",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "**/*.js",
+            "tests/runtime/foreground-combat-*.cjs",
+            "tests/runtime/pr48-*.cjs",
+            "tests/runtime/pr48-*.mjs",
+            "tests/runtime/pr48-approved-presentation.json",
+            "tests/runtime/unified-mobile-combat-viewport*.cjs",
+            "tests/runtime/3d-formal-snapshots-contract.cjs",
+            "tests/runtime/t3a-hybrid-policy.cjs",
+            "tests/runtime/t3b-formal-projection.cjs",
+            "tests/runtime/t3b-formal-session.cjs",
+            "tests/runtime/t3b-formal-assets.cjs",
+            "tests/runtime/t3b-formal-renderer.cjs",
+            "tests/runtime/t3b-formal-controller.cjs",
+            "tests/runtime/t3b-formal-owner-clock.cjs",
+            "3d-test/t3b-formal-projection.js",
+            "3d-test/t3b-formal-session.js",
+            "3d-test/t3b-formal-assets.js",
+            "3d-test/t3a-hybrid-policy.js",
+            "tests/runtime/combat-events-contract.cjs",
+            "tests/runtime/combat-events-integration.cjs",
+            "index.html",
+            "alternateuniverse.css",
+            "adventureuipolish.css",
+            "thirdworldarena.css",
+            "assets/**",
+            "docs/archive/**",
+            ".github/workflows/runtime-integrity.yml"
+          ]
+        },
+        "pull_request": {
+          "paths": [
+            "3d-test/monster-*.mjs",
+            "monstercodex*.js",
+            "monstercodex*.mjs",
+            "gmdata.js",
+            "resource-cache-client.js",
+            "tests/runtime/foreground-combat-*.cjs",
+            "tests/runtime/pr48-*.cjs",
+            "tests/runtime/unified-mobile-combat-viewport*.cjs",
+            "combat-viewport-coordinator.js",
+            "battle-mobile-viewport.css",
+            ".github/workflows/runtime-integrity.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    },
+    {
+      "file": ".github/workflows/story-integrity.yml",
+      "sha256": "0853d41d0c53745a55d220cd3924f5e82354fd9850502533910181fbc8fd2b42",
+      "events": {
+        "push": {
+          "branches": [
+            "main"
+          ],
+          "paths": [
+            "data.js",
+            "secondworlddata.js",
+            "secondworldstoryregistry.js",
+            "worldmaps-*.js",
+            "storydata-*.js",
+            "story.css",
+            "storyintegrity.js",
+            "storyui.js",
+            "storymigration.js",
+            "storyprogress.js",
+            "storyrecordtabs.js",
+            "storyruntimeintegrity.js",
+            "thirdworldphase.js",
+            "thirdworldmigrationregression.js",
+            "gmstorytest.js",
+            "ui.js",
+            "combatcore.js",
+            "battlepipeline.js",
+            "index.html",
+            "tests/story/**",
+            ".github/workflows/story-integrity.yml"
+          ]
+        },
+        "workflow_dispatch": ""
+      },
+      "pushMatchesIntegrationBranch": false
+    }
+  ]
+}

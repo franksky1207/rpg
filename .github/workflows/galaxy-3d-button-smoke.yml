@@ -11,6 +11,10 @@ on:
       - 'tests/runtime/galaxy-3d-button-browser.js'
       - '.github/workflows/galaxy-3d-button-smoke.yml'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 jobs:

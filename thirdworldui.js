@@ -100,7 +100,7 @@
   else{
    const result=window.injectAllThirdWorldCoreStrings();coreFeedbackOk=result?.ok===true;
    if(coreFeedbackOk){const gained=whole(result.levelsGained),injected=whole(result.injected),after=result.snapshot||coreSnapshot();coreFeedback=`已注入 ${fmt(injected)} 維度之弦${gained>0?`，界弦核心提升 ${gained} 級`:""}。目前 Lv.${whole(after?.level)}${after?.atMax?" MAX":`，本級進度 ${fmt(after?.coreProgress)} / ${fmt(after?.progressRequired)}`}。`;}
-   else coreFeedback=String(result?.reason||"界弦核心注入失敗，請稍後再試。");
+   else {console.warn("[文明戰線] 界弦核心注入失敗",result?.reason);coreFeedback="界弦核心注入未完成，請確認目前資源及連戰狀態後再試。";}
   }
   if(typeof window.render==="function")window.render();return coreFeedbackOk;
  }

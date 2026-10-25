@@ -1,0 +1,843 @@
+{
+  "baseline": "c0ec18d686d7111b2e5a7fa380c94653a2b8a2e4",
+  "localOnly": true,
+  "actionsExecuted": false,
+  "pagesPublished": false,
+  "realIPhoneTested": false,
+  "privateSaveUsed": false,
+  "browser": "system Chromium, Playwright; isolated auth SDK fixture; no real cloud writes",
+  "finalCommandGroups": 62,
+  "finalChecks": [
+    {
+      "command": "node tests/runtime/asset-integrity.js",
+      "exit": 0,
+      "seconds": 0.75,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/docs-integrity.js",
+      "exit": 0,
+      "seconds": 0.69,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "exit": 0,
+      "seconds": 141.63,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "exit": 0,
+      "seconds": 0.44,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/audio-regression.test.cjs",
+      "exit": 0,
+      "seconds": 0.47,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/audio-lifecycle.test.cjs",
+      "exit": 0,
+      "seconds": 0.09,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch13-monster-assets.py",
+      "exit": 0,
+      "seconds": 0.48,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch17-boss-assets.py",
+      "exit": 0,
+      "seconds": 0.23,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch18-alternate-assets.py",
+      "exit": 0,
+      "seconds": 0.19,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch7-formal-assets.py",
+      "exit": 0,
+      "seconds": 0.12,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch13-monster-mappings.cjs",
+      "exit": 0,
+      "seconds": 0.11,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch17-boss-contract.cjs",
+      "exit": 0,
+      "seconds": 0.17,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/batch18-alternate-contract.cjs",
+      "exit": 0,
+      "seconds": 0.53,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/batch19-absolute-sizing-contract.cjs",
+      "exit": 0,
+      "seconds": 0.18,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/batch12-presentation-safety.cjs",
+      "exit": 0,
+      "seconds": 0.12,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+      "exit": 0,
+      "seconds": 0.6,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "exit": 0,
+      "seconds": 0.13,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch4-3-current-inventory.cjs",
+      "exit": 0,
+      "seconds": 0.12,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch4-4-final-guard.cjs",
+      "exit": 0,
+      "phase": "configured-rerun-or-acceptance"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch2-4-integration.cjs",
+      "exit": 0,
+      "seconds": 0.61,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/code-cleanup-batch8-legacy-boundary.js",
+      "exit": 0,
+      "seconds": 0.03,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-playback-contract.cjs",
+      "exit": 0,
+      "seconds": 2.56,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-renderer-contract.cjs",
+      "exit": 0,
+      "seconds": 0.54,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-art-contract.cjs",
+      "exit": 0,
+      "phase": "configured-rerun-or-acceptance"
+    },
+    {
+      "command": "node --test tests/runtime/batch7-era-pool.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs tests/equipment-gm/no-attack-aura.test.mjs",
+      "exit": 0,
+      "seconds": 3.79,
+      "phase": "first"
+    },
+    {
+      "command": "python3 scripts/equipment-gm-publication.py --check",
+      "exit": 0,
+      "seconds": 0.42,
+      "phase": "first"
+    },
+    {
+      "command": "python3 scripts/equipment-formal-publication.py --check",
+      "exit": 0,
+      "seconds": 0.07,
+      "phase": "first"
+    },
+    {
+      "command": "python3 scripts/equipment-formal-fixture-history.py --check",
+      "exit": 0,
+      "seconds": 0.05,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "exit": 0,
+      "seconds": 0.15,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/combat-events-contract.cjs",
+      "exit": 0,
+      "seconds": 0.5,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/combat-events-integration.cjs",
+      "exit": 0,
+      "seconds": 3.23,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "exit": 0,
+      "seconds": 0.15,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-batch28-preflight.cjs",
+      "exit": 0,
+      "seconds": 0.14,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-behavior.js",
+      "exit": 0,
+      "seconds": 0.24,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+      "exit": 0,
+      "seconds": 0.08,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/cloud-save-failure-regression.cjs",
+      "exit": 0,
+      "seconds": 0.69,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-hook-failure-regression.cjs",
+      "exit": 0,
+      "seconds": 0.54,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/mirror-settlement-failure-regression.cjs",
+      "exit": 0,
+      "seconds": 0.94,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-schema17-compatibility-matrix.js",
+      "exit": 0,
+      "seconds": 5.5,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-migration-staircase.js",
+      "exit": 0,
+      "seconds": 0.48,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-preload-regression.cjs",
+      "exit": 0,
+      "seconds": 0.56,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/foreground-combat-lifecycle.cjs",
+      "exit": 0,
+      "seconds": 1.96,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exit": 0,
+      "seconds": 0.79,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exit": 0,
+      "seconds": 0.54,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/schema18-save-roundtrip-browser.cjs",
+      "exit": 0,
+      "seconds": 10.76,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/optimization-batch3-cache-browser.cjs",
+      "exit": 0,
+      "seconds": 7.97,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/optimization-batch3-preload-browser.cjs",
+      "exit": 0,
+      "seconds": 1.58,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-load-pipeline-integrity.js",
+      "exit": 0,
+      "seconds": 3.63,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-all-depths-browser.cjs",
+      "exit": 0,
+      "seconds": 11.75,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/pr48-mode-matrix-browser.cjs",
+      "exit": 0,
+      "phase": "configured-rerun-or-acceptance"
+    },
+    {
+      "command": "node tests/runtime/gm-battle-simulation-browser.js",
+      "exit": 0,
+      "seconds": 152.66,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/equipment-gm/browser.cjs",
+      "exit": 0,
+      "seconds": 33.8,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/equipment-formal/browser.cjs",
+      "exit": 0,
+      "seconds": 22.16,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/runtime/3d-glb-validation.cjs",
+      "exit": 0,
+      "seconds": 0.95,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/runtime/t4-preview-retirement-browser.js",
+      "exit": 0,
+      "seconds": 64.57,
+      "phase": "gm"
+    },
+    {
+      "command": "node scripts/build-publish-dry-run.cjs",
+      "exit": 0,
+      "seconds": 0.93,
+      "phase": "final"
+    },
+    {
+      "command": "node scripts/stage-hybrid-preview.cjs",
+      "exit": 0,
+      "seconds": 0.47,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/optimization-batch4-cleanup.cjs",
+      "exit": 0,
+      "seconds": 2.48,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch2-3-staging.cjs",
+      "exit": 0,
+      "seconds": 0.82,
+      "phase": "final"
+    },
+    {
+      "command": "node scripts/check-workflow-concurrency.cjs",
+      "exit": 0,
+      "seconds": 0.25,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/publish-candidate-browser.js",
+      "exit": 0,
+      "phase": "configured-rerun-or-acceptance"
+    },
+    {
+      "command": "node tests/runtime/loading-resource-policy-integrity.js",
+      "exit": 0,
+      "phase": "configured-rerun-or-acceptance"
+    }
+  ],
+  "executionHistory": [
+    {
+      "command": "node tests/runtime/asset-integrity.js",
+      "exit": 0,
+      "seconds": 0.3,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/docs-integrity.js",
+      "exit": 0,
+      "seconds": 0.07,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "exit": 0,
+      "seconds": 16.1,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "exit": 0,
+      "seconds": 0.26,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/audio-regression.test.cjs",
+      "exit": 0,
+      "seconds": 0.47,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/audio-lifecycle.test.cjs",
+      "exit": 0,
+      "seconds": 0.09,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch13-monster-assets.py",
+      "exit": 0,
+      "seconds": 0.48,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch17-boss-assets.py",
+      "exit": 0,
+      "seconds": 0.23,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch18-alternate-assets.py",
+      "exit": 0,
+      "seconds": 0.19,
+      "phase": "first"
+    },
+    {
+      "command": "python3 tests/runtime/batch7-formal-assets.py",
+      "exit": 0,
+      "seconds": 0.12,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch13-monster-mappings.cjs",
+      "exit": 0,
+      "seconds": 0.11,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch17-boss-contract.cjs",
+      "exit": 1,
+      "seconds": 0.17,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch18-alternate-contract.cjs",
+      "exit": 1,
+      "seconds": 0.19,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch19-absolute-sizing-contract.cjs",
+      "exit": 1,
+      "seconds": 0.28,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch12-presentation-safety.cjs",
+      "exit": 1,
+      "seconds": 0.48,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-asset-registry-integrity.cjs",
+      "exit": 0,
+      "seconds": 0.6,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-equipment-contract.cjs",
+      "exit": 0,
+      "seconds": 0.13,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch4-3-current-inventory.cjs",
+      "exit": 0,
+      "seconds": 0.12,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch4-4-final-guard.cjs",
+      "exit": 0,
+      "seconds": 2.15,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch2-4-integration.cjs",
+      "exit": 0,
+      "seconds": 0.61,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/code-cleanup-batch8-legacy-boundary.js",
+      "exit": 1,
+      "seconds": 0.04,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-contract.cjs",
+      "exit": 1,
+      "seconds": 0.79,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-playback-contract.cjs",
+      "exit": 0,
+      "seconds": 2.56,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-renderer-contract.cjs",
+      "exit": 0,
+      "seconds": 0.54,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/hybrid-comparison-art-contract.cjs",
+      "exit": 1,
+      "seconds": 0.07,
+      "phase": "first"
+    },
+    {
+      "command": "node --test tests/runtime/batch7-era-pool.test.mjs tests/equipment-formal/runtime.test.mjs tests/equipment-gm/runtime.test.mjs tests/equipment-weapons/runtime.test.mjs tests/equipment-gm/no-attack-aura.test.mjs",
+      "exit": 0,
+      "seconds": 3.79,
+      "phase": "first"
+    },
+    {
+      "command": "python3 scripts/equipment-gm-publication.py --check",
+      "exit": 0,
+      "seconds": 0.42,
+      "phase": "first"
+    },
+    {
+      "command": "python3 scripts/equipment-formal-publication.py --check",
+      "exit": 0,
+      "seconds": 0.07,
+      "phase": "first"
+    },
+    {
+      "command": "python3 scripts/equipment-formal-fixture-history.py --check",
+      "exit": 0,
+      "seconds": 0.05,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-formal-snapshots-contract.cjs",
+      "exit": 0,
+      "seconds": 0.15,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/combat-events-contract.cjs",
+      "exit": 0,
+      "seconds": 0.5,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/combat-events-integration.cjs",
+      "exit": 0,
+      "seconds": 3.23,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-shared-loader-contract.cjs",
+      "exit": 0,
+      "seconds": 0.15,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/3d-batch28-preflight.cjs",
+      "exit": 0,
+      "seconds": 0.14,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-behavior.js",
+      "exit": 0,
+      "seconds": 0.24,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-prefetch-integrity.js",
+      "exit": 0,
+      "seconds": 0.08,
+      "phase": "first"
+    },
+    {
+      "command": "node tests/runtime/batch17-boss-contract.cjs",
+      "exit": 0,
+      "seconds": 0.17,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/batch18-alternate-contract.cjs",
+      "exit": 1,
+      "seconds": 0.14,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/batch19-absolute-sizing-contract.cjs",
+      "exit": 0,
+      "seconds": 0.18,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/batch12-presentation-safety.cjs",
+      "exit": 0,
+      "seconds": 0.12,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/code-cleanup-batch8-legacy-boundary.js",
+      "exit": 0,
+      "seconds": 0.03,
+      "phase": "rerun"
+    },
+    {
+      "command": "node tests/runtime/cloud-save-failure-regression.cjs",
+      "exit": 0,
+      "seconds": 0.69,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-hook-failure-regression.cjs",
+      "exit": 0,
+      "seconds": 0.54,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/mirror-settlement-failure-regression.cjs",
+      "exit": 0,
+      "seconds": 0.94,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-schema17-compatibility-matrix.js",
+      "exit": 0,
+      "seconds": 5.5,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-migration-staircase.js",
+      "exit": 0,
+      "seconds": 0.48,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/resource-cache-preload-regression.cjs",
+      "exit": 0,
+      "seconds": 0.56,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/foreground-combat-lifecycle.cjs",
+      "exit": 0,
+      "seconds": 1.96,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/cross-combat-stale-continuous-regression.cjs",
+      "exit": 0,
+      "seconds": 0.79,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/cross-mode-late-settlement-regression.cjs",
+      "exit": 0,
+      "seconds": 0.54,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/schema18-save-roundtrip-browser.cjs",
+      "exit": 0,
+      "seconds": 10.76,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/optimization-batch3-cache-browser.cjs",
+      "exit": 0,
+      "seconds": 7.97,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/optimization-batch3-preload-browser.cjs",
+      "exit": 0,
+      "seconds": 1.58,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/save-load-pipeline-integrity.js",
+      "exit": 0,
+      "seconds": 3.63,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/alternate-universe-all-depths-browser.cjs",
+      "exit": 0,
+      "seconds": 11.75,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/pr48-mode-matrix-browser.cjs",
+      "exit": 1,
+      "seconds": 0.24,
+      "phase": "functional"
+    },
+    {
+      "command": "node tests/runtime/gm-battle-simulation-browser.js",
+      "exit": 0,
+      "seconds": 152.66,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/equipment-gm/browser.cjs",
+      "exit": 0,
+      "seconds": 33.8,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/equipment-formal/browser.cjs",
+      "exit": 0,
+      "seconds": 22.16,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/runtime/3d-glb-validation.cjs",
+      "exit": 0,
+      "seconds": 0.95,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/runtime/t4-preview-retirement-browser.js",
+      "exit": 0,
+      "seconds": 64.57,
+      "phase": "gm"
+    },
+    {
+      "command": "node tests/runtime/asset-integrity.js",
+      "exit": 0,
+      "seconds": 0.75,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/docs-integrity.js",
+      "exit": 0,
+      "seconds": 0.69,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/js-integrity.js",
+      "exit": 0,
+      "seconds": 141.63,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/publish-build-regression.cjs",
+      "exit": 0,
+      "seconds": 0.44,
+      "phase": "final"
+    },
+    {
+      "command": "node scripts/build-publish-dry-run.cjs",
+      "exit": 0,
+      "seconds": 0.93,
+      "phase": "final"
+    },
+    {
+      "command": "node scripts/stage-hybrid-preview.cjs",
+      "exit": 0,
+      "seconds": 0.47,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/optimization-batch4-cleanup.cjs",
+      "exit": 0,
+      "seconds": 2.48,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/cleanup-batch2-3-staging.cjs",
+      "exit": 0,
+      "seconds": 0.82,
+      "phase": "final"
+    },
+    {
+      "command": "node tests/runtime/batch18-alternate-contract.cjs",
+      "exit": 0,
+      "seconds": 0.53,
+      "phase": "final"
+    },
+    {
+      "command": "node scripts/check-workflow-concurrency.cjs",
+      "exit": 0,
+      "seconds": 0.25,
+      "phase": "final"
+    }
+  ],
+  "failureResolutions": [
+    "Historical raw-owner locks and old single-culture palettes predated accepted main/integration changes. Updated owner locks to batch4 starting commit; identity, negative cases, per-stage appearance and functional assertions remain.",
+    "Retired archive/UI click/source image existence checks replaced with current deployed file, SHA, mapping, provenance and save-boundary checks.",
+    "Legacy A/B/C fixture generator is retired; its exclusive contract test removed. Live immutable GM adapter/playback/renderer and artifact/real GM negative regression suites remain and pass.",
+    "Missing module/browser executable resolved using already installed gltf-validator via NODE_PATH and explicit /usr/bin/chromium via CHROMIUM_PATH/CHROMIUM_EXECUTABLE. No browser assertions changed.",
+    "New preservation regex initially matched .json as a .js prefix. Anchored extension; resource-manifest verified separately by regeneration, media SHA and actual candidate bytes."
+  ],
+  "additionalStaticChecks": [
+    "changed JS/CJS syntax",
+    "changed Python py_compile",
+    "zero broken local Markdown links",
+    "git diff --cached --check",
+    "17 workflow push branch filters exclude integration",
+    "no open PR for integration branch"
+  ],
+  "preservation": {
+    "guardedSourceFiles": 352,
+    "candidateFiles": 655,
+    "candidateBytes": 83950231,
+    "candidateSha256Files": 654,
+    "officialCandidateFiles": 483,
+    "officialCandidateBytes": 50203680,
+    "preloadResources": 101
+  },
+  "trackedTree": {
+    "beforeCount": 1893,
+    "afterCount": 1126,
+    "deleted": 775,
+    "added": 8,
+    "modified": 24,
+    "unchanged": 1094,
+    "deletedBytes": 307642990,
+    "beforeBytes": 407440193,
+    "afterBytes": 100071308,
+    "netBytesRemoved": 307368885
+  }
+}

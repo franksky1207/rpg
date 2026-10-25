@@ -34,7 +34,7 @@ on:
       - 'adventureuipolish.css'
       - 'thirdworldarena.css'
       - 'assets/**'
-      - 'docs/archive/**'
+      - 'docs/**'
       - '.github/workflows/runtime-integrity.yml'
   pull_request:
     paths:

@@ -1,24 +1,11 @@
 name: Publish Release Gate (Stage 4)
+# Manual isolated release diagnosis only. Automatic main publish already runs these gates.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '**/*.js'
-      - 'tests/runtime/3d-formal-snapshots-contract.cjs'
-      - 'tests/runtime/combat-events-contract.cjs'
-      - 'tests/runtime/combat-events-integration.cjs'
-      - '**/*.css'
-      - '**/*.html'
-      - 'resource-manifest.json'
-      - 'assets/**'
-      - 'audio/**'
-      - 'vendor/**'
-      - '3d-test/**'
-      - 'scripts/*.cjs'
-      - 'scripts/generate-resource-manifest.py'
-      - '.github/workflows/publish-release-gate.yml'
-      - 'docs/PUBLISH_ASSET*'
+
+concurrency:
+  group: publish-release-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: read

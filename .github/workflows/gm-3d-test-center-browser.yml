@@ -11,6 +11,10 @@ on:
       - 'tests/runtime/3d-player-snapshot-contract.js'
       - '.github/workflows/gm-3d-test-center-browser.yml'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 jobs:

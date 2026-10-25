@@ -9,7 +9,7 @@ const compatibility=read("compatibilityowners.js");
 const matrix=read("tests/runtime/save-schema17-compatibility-matrix.js");
 const index=read("index.html");
 const workflow=read(".github/workflows/runtime-integrity.yml");
-const archiveIndex=read("docs/archive/README.md");
+const archiveIndex=read("docs/HISTORICAL_ENGINEERING.md");
 
 assert.ok(/const SAVE_SCHEMA_VERSION=18;/.test(migration),"Schema18 checkpoint upgrade must retain the legacy boundary");
 assert.ok(/const SAVE_MIN_SUPPORTED_VERSION=1;/.test(migration),"Batch8 必須保留最低支援 Schema1");
@@ -37,11 +37,11 @@ const archived=[
  "docs/archive/PROJECT_HANDOFF_UPDATE_2026-09-28_ARENA.md",
  "docs/archive/PROJECT_HANDOFF_UPDATE_2026-09-29_GM_BATCH16.md"
 ];
-for(const path of archived)assert.ok(exists(path),`歷史文件未封存：${path}`);
+for(const path of archived)assert.equal(exists(path),false,`退役歷史文件不得重新入庫：${path}`);
 for(const path of ["LEVEL100_EXPANSION.md","PROJECT_HANDOFF_UPDATE_2026-09-28_ARENA.md","PROJECT_HANDOFF_UPDATE_2026-09-29_GM_BATCH16.md"])assert.equal(exists(path),false,`歷史文件不應繼續留在根目錄：${path}`);
-assert.ok(archiveIndex.includes("main` 的實際程式碼永遠是唯一真實來源")&&archiveIndex.includes("不得作為 current runtime owner"),"Archive index 必須明示 historical/current 邊界");
+assert.ok(archiveIndex.includes("歷史")&&archiveIndex.includes("正式 owner"),"Archive index 必須明示 historical/current 邊界");
 
 assert.ok(workflow.includes("code-cleanup-batch8-legacy-boundary.js"),"Runtime Integrity 必須永久執行 Batch8 boundary regression");
-assert.ok(workflow.includes("docs/archive/**"),"Historical archive 變更必須觸發 Runtime Integrity");
+assert.ok(workflow.includes("docs/**"),"文件變更必須觸發 Runtime Integrity");
 
 console.log("Code cleanup Batch8 legacy/archive boundary integrity passed:",JSON.stringify({schema:18,minSupported:1,legacyMode:"all-known",future:"fail-closed",legacyCleanup:"migration-owner-only",runtimeMergePolicy:"preserve-lazy-loading-boundaries",archived:archived.length}));

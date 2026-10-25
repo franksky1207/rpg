@@ -1,0 +1,13 @@
+{
+  "baseline": "ee1978ea2d9c60cad53a112250b1f5f214fc33ea",
+  "files": {
+    "mirrordungeonrun.js": {
+      "before": "d01f0e505655de176cd4305e5938a58c277d2c7e4a6e9161d8a9e81527675ac0",
+      "after": "52aa1c5b060ea8ed2ae22237a5d8b34b893457c914a8148a7af68c35c872c09d"
+    },
+    "combatlifecycle.js": {
+      "before": "ca3032ab7b38e7632c827cf38f1fb01819aa239737b6352ba3167c017531fcc3",
+      "after": "45cc1334e8fb757306319bdd08c1c905e8796835ba1b4817dddfacd4573d2efa"
+    }
+  }
+}

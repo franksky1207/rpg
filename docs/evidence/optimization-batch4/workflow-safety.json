@@ -1,0 +1,119 @@
+[
+  {
+    "workflow": ".github/workflows/asset-version-manifest.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/equipment-concepts.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/equipment-formal.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/equipment-gm.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/equipment-sprites.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/fast-development-preflight.yml",
+    "pushBranches": null,
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/functional-ci.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/galaxy-3d-button-smoke.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/gm-3d-test-center-browser.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/gm-animation-center-terminology.yml",
+    "pushBranches": [
+      "fix/gm-animation-center-copy-full-20261018"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/html-cache-version-guard.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/publish-asset-audit.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/publish-dry-run.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/publish-optimized-pages.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/publish-release-gate.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/runtime-integrity.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  },
+  {
+    "workflow": ".github/workflows/story-integrity.yml",
+    "pushBranches": [
+      "main"
+    ],
+    "integrationPushMatches": false
+  }
+]

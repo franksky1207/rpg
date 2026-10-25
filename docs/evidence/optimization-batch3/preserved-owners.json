@@ -1,0 +1,67 @@
+[
+  {
+    "file": "combatlifecycle.js",
+    "unchanged": true,
+    "sha256": "45cc1334e8fb757306319bdd08c1c905e8796835ba1b4817dddfacd4573d2efa"
+  },
+  {
+    "file": "savehookcore.js",
+    "unchanged": true,
+    "sha256": "0657453ae10d363d6eb0ff3d2b0bfe5d60c5d7170a811b008ed5a60ba3ba4015"
+  },
+  {
+    "file": "cloudsave.js",
+    "unchanged": true,
+    "sha256": "d02a117f7ca817d4d826cfa5f143842c945463ca57703b49c2ff1cffd22ba094"
+  },
+  {
+    "file": "mirrordungeonrun.js",
+    "unchanged": true,
+    "sha256": "52aa1c5b060ea8ed2ae22237a5d8b34b893457c914a8148a7af68c35c872c09d"
+  },
+  {
+    "file": "3d-test/t3b-formal-renderer.js",
+    "unchanged": true,
+    "sha256": "840486aacc3dba0915b5abe0916afd699e4a5ac2c2e87327a16130bf7d45617e"
+  },
+  {
+    "file": "3d-test/monster-appearance-manager.mjs",
+    "unchanged": true,
+    "sha256": "70125a0e363f89ba9d0c12bf9d77051862af71c3614552aeb041496722a4db51"
+  },
+  {
+    "file": "3d-test/monster-sprite-pool.mjs",
+    "unchanged": true,
+    "sha256": "95390fa58183376b6535fdcb19b403fec6e9c00398e78586c4e4f791d9df1526"
+  },
+  {
+    "file": "3d-test/monster-appearance.mjs",
+    "unchanged": true,
+    "sha256": "1ddff0c1b07d32a205470ca4c467507e5bef86d72ebfd071cb9ff36757d4bd35"
+  },
+  {
+    "file": "3d-test/monster-static-effects.mjs",
+    "unchanged": true,
+    "sha256": "aa9caec097ede3a033cc1aaf9f9fba46c86ab1a462d863c956cf0a674b1031b5"
+  },
+  {
+    "file": "monstercodeximage.mjs",
+    "unchanged": true,
+    "sha256": "4a6b2f2921c4c599435adeea2c3a37740f135d747e5be03c79f62dfba13cd6f5"
+  },
+  {
+    "file": "backgroundpreload.js",
+    "unchanged": true,
+    "sha256": "671780ddf7450e19e05b80668a3bb0a12404d47ed8d4442778121a3f58b5bbdf"
+  },
+  {
+    "file": "scriptgrouploader.js",
+    "unchanged": true,
+    "sha256": "aa7745f1ed338d9bc59b6c2f29b35bbf809930d29f8c9a21c6e2b3b5112dfa57"
+  },
+  {
+    "file": "monstercodexdata.js",
+    "unchanged": true,
+    "sha256": "fb322878f0e14216d03957106b6efda4f1fe13e084a6d30566a4ed0a7e128e7f"
+  }
+]
