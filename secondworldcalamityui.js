@@ -184,7 +184,7 @@
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
   const res=await window.runSecondWorldCalamitySingle?.(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,beforeBattle:async battle=>{ui.lastBattle=battle.result;primeDisplay(battle.result);render();if(!battle.prePresented)await animate(battle.result);}});
-  if(!res?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始此文明災厄挑戰。";render();return;}
+  if(!res?.ok){ui.running=false;ui.phase="idle";ui.message="宇宙文明災厄挑戰未能開始，請確認文明條件與目前戰鬥狀態。";render();return;}
   ui.lastBattle=res.result;ui.finalRun=res.run;ui.displayBattleNumber=1;primeDisplay(res.result);render();if(!res.prePresented)await animate(res.result);ui.running=false;ui.phase="result";ui.battleView=null;render();notifyTitlePostFlow("universe-calamity-single");
   }catch(error){if(!window.CivilizationCombatLifecycle?.isInterrupted(error))console.error("Universe calamity battle failed",error);ui.running=false;ui.phase="idle";ui.lastBattle=null;ui.finalRun=null;ui.battleView=null;if(window.getMinimalModeAdapterId?.()==="second-world-calamity")window.setMinimalModeState?.("stopped");render();}
   finally{window.CivilizationAudioScenes?.endRun?.(audioRunId);}
