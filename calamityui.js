@@ -205,7 +205,7 @@
   const audioRunId=window.CivilizationAudioScenes?.createRunToken?.();
   try{
   const result=await window.runCivilizationCalamitySingle?.(ui.selectedId,{audioRunId,foregroundEpoch:ui.foregroundEpoch,beforeBattle:async battle=>{ui.lastBattle=battle.result;primeDisplay(battle.result);render();await animateBattle(battle);}});
-  if(!result?.ok){ui.running=false;ui.phase="idle";ui.message="目前無法開始文明災厄挑戰。";render();return;}
+  if(!result?.ok){ui.running=false;ui.phase="idle";ui.message="文明災厄挑戰未能開始，請確認挑戰條件與目前戰鬥狀態。";render();return;}
   ui.lastBattle=result.result;ui.finalRun=result.run;ui.displayBattleNumber=1;
   primeDisplay(result.result);render();
   if(!result.prePresented)await animateBattle(result);
