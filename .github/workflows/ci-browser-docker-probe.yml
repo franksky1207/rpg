@@ -1,0 +1,57 @@
+name: Playwright Docker WebKit isolated probe
+on:
+  push:
+    branches: [ci/browser-deps-probe-20261026]
+    paths: [.github/workflows/ci-browser-docker-probe.yml]
+permissions:
+  contents: read
+jobs:
+  webkit-container:
+    name: WebKit official container startup and compatibility
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - name: Report container tools and browser assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat /etc/os-release
+          node --version
+          python3 --version
+          ls -ld /ms-playwright/webkit-*
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install project-pinned Playwright and GLB tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          time npm install --no-save playwright@1.55.0 gltf-validator@2.0.0-dev.3.10
+      - name: Check WebKit and Chromium with localhost page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/docker-webkit-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+            sleep 0.25
+          done
+          node - <<'NODE'
+          const {webkit,chromium}=require('playwright');
+          (async()=>{
+            for (const [name,type] of Object.entries({webkit,chromium})) {
+              const start=Date.now();
+              const browser=await type.launch({headless:true});
+              try {
+                const page=await browser.newPage();
+                const response=await page.goto('http://127.0.0.1:4173/index.html');
+                if (!response || !response.ok()) throw Error(name+': localhost failed');
+                console.log('PASS',name,'version',browser.version(),'elapsed_ms',Date.now()-start);
+              } finally { await browser.close(); }
+            }
+          })().catch(e=>{console.error(e);process.exitCode=1});
+          NODE
