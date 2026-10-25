@@ -59,7 +59,7 @@ window.addEventListener("message",event=>{
  if(event.data?.type==="civilization3d:preview-state"){
   const active=event.data.active===true&&allowed();
   overlay.firstElementChild.style.display=active?"none":"flex";
-  overlay.style.padding=active?"0":"env(safe-area-inset-top) 0 env(safe-area-inset-bottom)";
+  overlay.style.padding=active?"env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)":"env(safe-area-inset-top) 0 env(safe-area-inset-bottom)";
   return;
  }
  if(event.data?.type==="civilization3d:sprite-auth"){

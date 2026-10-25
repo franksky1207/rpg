@@ -3,7 +3,7 @@
   "files": {
     "3d-test/gm-era-sprites.mjs": {
       "before": "a1829d0fbf92005a3ef1616f50b141ad509485000f373841c142bf86f1344ffb",
-      "after": "d1ab71b4c2d3061d4e6999615b6927b9b73d34330f0af6668940b366a010dfa8"
+      "after": "fca60a1d3ad675e6af267f94b8679e21f52a85b64478c67c13a7a063a2707892"
     },
     "3d-test/index.html": {
       "before": "ad390f3fd07a7111071fa06f0571c70224ff8fbd67c4fdafbece8ad780751134",
@@ -11,7 +11,7 @@
     },
     "3d-test/test-center.css": {
       "before": "2eaee109af4e8de135a628ae8d1afa989d4b0bf24a46826c66f53538dc9720e7",
-      "after": "9f21efdbec0feaa01c75a9c20bf79e2961a99fd90721051f5f25252def8f10b9"
+      "after": "7ffc05608fd7d9c1094b1812c011ca50d2073493fd7f83097abe4cbcc5e70b24"
     },
     "3d-test/test-center.js": {
       "before": "744d7d5f5b0ba27bdec3dad0fe7ceafc12d67cbe67da93130091971027f91313",
@@ -19,7 +19,7 @@
     },
     "gm3dprototype.js": {
       "before": "8422ca850dcaf19026194bcc3cc920d129ad5d84d28be92feba233b438344894",
-      "after": "886056b2af9a614bfd76aa2675cbe9855e7f993908af738fc03f9a07af2b6d53"
+      "after": "d86cf632a9d72329225d69ae38d3d701d7796f5342bf51609108f7e7b88a3a2e"
     },
     "index.html": {
       "before": "07ff73a0f90a20a970a874b87e5ec43ac1f5401206bd2ebf96aac6da09e1745b",

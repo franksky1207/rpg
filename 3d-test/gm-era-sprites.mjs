@@ -63,25 +63,27 @@ export async function mount({host,signal,quality='medium'}={}){
  $('[data-preview-mode]').addEventListener('change',()=>void changeMode(),{signal:own.signal});
  $('[data-source]').addEventListener('change',()=>void selectSource(),{signal:own.signal});
  $('[data-identity]').addEventListener('change',()=>void selectIdentity(),{signal:own.signal});
- let gallerySerial=0;
+ let gallerySerial=0,galleryLoad=null;
+ function cancelGallery(){gallerySerial++;galleryLoad?.abort();galleryLoad=null;const gallery=$('[data-boss-gallery]');gallery.hidden=true;gallery.style.display='none';gallery.replaceChildren();}
  $('[data-boss-compare]').addEventListener('click',async()=>{
-  if(!await authorize())return;
+  if(!await authorize()||presenting||closed)return;
+  galleryLoad?.abort();galleryLoad=null;
   const gallery=$('[data-boss-gallery]'),ticket=++gallerySerial;
   gallery.hidden=!gallery.hidden;gallery.style.display=gallery.hidden?'none':'grid';
   if(gallery.hidden){gallery.replaceChildren();return;}
-  gallery.replaceChildren();
+  gallery.replaceChildren();galleryLoad=new AbortController();const gallerySignal=galleryLoad.signal;
   // Sequential one-shot snapshots: no gallery RAF, no persistent battle Actors.
   for(const row of Object.values(mappings).filter(r=>r.status==='batch17-formal-enabled')){
-   if(closed||!authorized||ticket!==gallerySerial)break;
+   if(closed||!authorized||gallerySignal.aborted||ticket!==gallerySerial)break;
    if(performance.now()-lastAuth>2000&&!await authorize())break;
-   const thumb=new MonsterActor(monsterPool,row.assetId,{identity:row.id,signal:own.signal,tier:'low'});
+   const thumb=new MonsterActor(monsterPool,row.assetId,{identity:row.id,signal:gallerySignal,tier:'low'});
    try{await thumb.init();thumb.draw({clip:'idle',elapsedMs:0});
-    if(closed||!authorized||ticket!==gallerySerial)break;
+    if(closed||!authorized||gallerySignal.aborted||ticket!==gallerySerial)break;
     const fig=document.createElement('figure'),img=document.createElement('img'),label=document.createElement('figcaption');
     img.src=thumb.canvas.toDataURL();img.width=img.height=112;img.alt=row.name;img.style.filter=thumb.canvas.style.filter;
     label.textContent=row.name+'｜大小：玩家的 '+Math.round(row.visual.visibleRatio*100)+'%';
     fig.style.margin='0';fig.append(img,label);gallery.append(fig);
-   }catch{if(!closed)gallery.append(document.createTextNode(row.name+'：載入失敗，可重試'));}finally{thumb.dispose();}
+   }catch{if(!closed&&!gallerySignal.aborted&&ticket===gallerySerial)gallery.append(document.createTextNode(row.name+'：載入失敗，可重試'));}finally{thumb.dispose();}
   }
  },{signal:own.signal});
  $('[data-dungeon]').addEventListener('change',async()=>{
@@ -129,7 +131,7 @@ export async function mount({host,signal,quality='medium'}={}){
   authPending=(async()=>{
    try{authorized=await request();}catch{authorized=false;}finally{lastAuth=performance.now();}
    if(closed)return false;setEnabled(authorized);
-   if(!authorized){playing=false;cancelAnimationFrame(raf);raf=0;clear();clearMonster();monsterPool.clear();pool.clear();status.textContent='需要 GM 授權，請返回遊戲重新開啟。';}
+   if(!authorized){cancelGallery();playing=false;cancelAnimationFrame(raf);raf=0;clear();clearMonster();monsterPool.clear();pool.clear();status.textContent='需要 GM 授權，請返回遊戲重新開啟。';}
    return authorized;
   })();
   return authPending.finally(()=>{authPending=null;});
@@ -184,12 +186,12 @@ export async function mount({host,signal,quality='medium'}={}){
  }
  function begin(){if(!presenting||!actor||(previewMode!=='player'&&!monster))return;stop();playing=true;playPhase();$('[data-play]').textContent='停止';start();}
  function previewState(active){if(window.parent!==window)window.parent.postMessage({type:'civilization3d:preview-state',active},location.origin);}
- function leave(){previewState(false);presenting=false;for(const p of pending.values()){clearTimeout(p.timer);p.resolve(authorized);}pending.clear();stop();cancelAnimationFrame(raf);raf=0;lastTick=null;clear();clearMonster();panel.hidden=true;ui.classList.remove('is-previewing');document.body.classList.remove('gm-preview-open');enter.focus();}
+ function leave(){cancelGallery();previewState(false);presenting=false;for(const p of pending.values()){clearTimeout(p.timer);p.resolve(authorized);}pending.clear();stop();cancelAnimationFrame(raf);raf=0;lastTick=null;clear();clearMonster();panel.hidden=true;ui.classList.remove('is-previewing');document.body.classList.remove('gm-preview-open');enter.focus();}
  $('[data-back]').addEventListener('click',leave,{signal:own.signal});
  $('[data-play]').addEventListener('click',()=>playing?stop():begin(),{signal:own.signal});
  content.addEventListener('change',()=>{stop();begin();},{signal:own.signal});
  enter.addEventListener('click',async()=>{
-  if(!await authorize()||closed)return;if(previewMode!=='player'&&!selectedMapping()){status.textContent='請先選擇正式怪物身份。';return;}presenting=true;previewState(true);panel.hidden=false;ui.classList.add('is-previewing');document.body.classList.add('gm-preview-open');preview.style.visibility='hidden';enter.disabled=true;
+  if(!await authorize()||closed)return;if(previewMode!=='player'&&!selectedMapping()){status.textContent='請先選擇正式怪物身份。';return;}cancelGallery();presenting=true;previewState(true);panel.hidden=false;ui.classList.add('is-previewing');document.body.classList.add('gm-preview-open');preview.style.visibility='hidden';enter.disabled=true;
   configureContent();caption();
   try{await show();if(previewMode!=='player')await showMonster();if(!presenting||closed)return;if(!actor||(previewMode!=='player'&&!monster))throw Error('preview-not-ready');duelLayout();drawIdle();preview.style.visibility='visible';$('[data-back]').focus();begin();}
   catch(error){if(presenting){leave();status.textContent='預覽載入失敗，請重新進入。';}}
@@ -234,7 +236,7 @@ export async function mount({host,signal,quality='medium'}={}){
  $('[data-monster-identity]').addEventListener('change',()=>{const row=selectedMapping();if(row)$('[data-monster]').value=row.assetId;describeMonster();void showMonster();},{signal:own.signal});
  let measuredWidth=0,measuredHeight=0;const observer=new ResizeObserver(()=>{const w=preview.clientWidth,h=preview.clientHeight;if(w===measuredWidth&&h===measuredHeight)return;measuredWidth=w;measuredHeight=h;duelLayout();});observer.observe(preview);own.signal.addEventListener('abort',()=>observer.disconnect(),{once:true});
  const start=()=>{if(presenting&&!closed&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);};
- const dispose=()=>{if(closed)return;closed=true;previewState(false);presenting=false;playing=false;document.body.classList.remove('gm-preview-open');clearMonster();monsterAnimation.dispose();monsterPool.dispose();cancelAnimationFrame(raf);raf=0;clear();animation.dispose();pool.dispose();own.abort();for(const p of pending.values()){clearTimeout(p.timer);p.reject(Error('disposed'));}pending.clear();signal?.removeEventListener('abort',dispose);ui.remove();};
+ const dispose=()=>{if(closed)return;closed=true;cancelGallery();previewState(false);presenting=false;playing=false;document.body.classList.remove('gm-preview-open');clearMonster();monsterAnimation.dispose();monsterPool.dispose();cancelAnimationFrame(raf);raf=0;clear();animation.dispose();pool.dispose();own.abort();for(const p of pending.values()){clearTimeout(p.timer);p.reject(Error('disposed'));}pending.clear();signal?.removeEventListener('abort',dispose);ui.remove();};
  signal?.addEventListener('abort',dispose,{once:true});if(signal?.aborted){dispose();return {dispose};}
  document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();cancelAnimationFrame(raf);raf=0;lastTick=null;}else if(presenting)void authorize().then(ok=>{if(ok)start();});},{signal:own.signal});
  ui.dataset.view='player';updateSources();setEnabled(false);await authorize();

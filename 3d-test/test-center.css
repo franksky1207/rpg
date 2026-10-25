@@ -284,3 +284,6 @@ body .gm-suit.is-previewing>:not(.gm-preview-panel){display:none!important}
 body .gm-preview-top [data-caption]{display:flex;flex:1;align-items:center;gap:3px}
 body .gm-preview-top [data-origin]{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:inherit;color:#adadab}
 body .gm-preview-top [data-formal-name]{flex:0 0 auto;max-width:calc(100% - 3px);font:inherit;white-space:normal;overflow-wrap:anywhere}
+
+/* The GM outer dialog owns device safe areas; avoid iframe-specific env propagation. */
+body.is-embedded .gm-preview-panel{padding:0}

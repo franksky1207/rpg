@@ -86,9 +86,10 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
     const names=[...gm.querySelector('[data-monster-identity]').options].map(o=>o.value);
     if(names.some(id=>mappings[id].world!==group.split('/')[0]))throw Error('gm-boss-group');
    }
+   gm.querySelector('[data-back]').click();
    gm.querySelector('[data-advanced]').open=true;gm.querySelector('[data-boss-compare]').click();
    await wait(()=>gm.querySelectorAll('[data-boss-gallery] figure').length===30).catch(error=>{throw Error(error.message+' gallery '+JSON.stringify({figures:gm.querySelectorAll('[data-boss-gallery] figure').length,text:gm.querySelector('[data-boss-gallery]').textContent,status:gm.querySelector('[data-status]').textContent,stats:mounted.diagnostics()}));});
-   if(gm.querySelectorAll('.gm-suit-preview canvas').length!==2)throw Error('gallery-persistent-actors');
+   if(gm.querySelectorAll('.gm-suit-preview canvas').length!==0)throw Error('gallery-persistent-actors');
    const diagnostics=gm.querySelector('.gm-suit').__previewTestApi.diagnostics();
    if(diagnostics.monster.refs>2||diagnostics.monster.entries>2)throw Error('gallery-pool-budget');
    mounted.dispose();window.CivilizationFormalBRenderer.clearSpriteCache();
