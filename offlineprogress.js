@@ -1,11 +1,8 @@
 (function(){
  const OFFLINE_MAX_MS=12*60*60*1000;
  const OFFLINE_MIN_MS=60*1000;
- const OFFLINE_EXP_RATE=.10;
- const OFFLINE_GOLD_RATE=.10;
- const OFFLINE_GEAR_RATE=.10;
- const OFFLINE_ENHANCEMENT_STONE_RATE=.05;
- const OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE=.05;
+ // Canonical offline conversion owner: all eligible resource and equipment opportunities use 10%.
+ const OFFLINE_REWARD_RATE=.10;
  const DEFAULT_BATTLE_MS=1800;
  const REAL_BATTLE_MIN_MS=100;
  const REAL_BATTLE_MAX_MS=601000;
@@ -128,7 +125,7 @@
  function offlineEnhancementStoneReward(enemy,battleCount,playerLevel,context=null){
   const count=Math.max(0,Math.floor(Number(battleCount)||0));if(!enemy||count<1||typeof expectedMainlineEnhancementStoneReward!=="function")return {basic:0,advanced:0};
   const expected=expectedMainlineEnhancementStoneReward(enemy,playerLevel),multiplier=context?.recorded?Math.max(1,Number(context.multiplier)||1):1;
-  return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*multiplier*count*OFFLINE_ENHANCEMENT_STONE_RATE),advanced:Math.floor(Math.max(0,Number(expected?.advanced)||0)*multiplier*count*OFFLINE_ENHANCEMENT_STONE_RATE)};
+  return {basic:Math.floor(Math.max(0,Number(expected?.basic)||0)*multiplier*count*OFFLINE_REWARD_RATE),advanced:Math.floor(Math.max(0,Number(expected?.advanced)||0)*multiplier*count*OFFLINE_REWARD_RATE)};
  }
  function normalizePending(raw){
   const speed=currentCombatSpeed(),phase=currentPhase();if(!isObject(raw)||Number(raw.sampleVersion)!==OFFLINE_BATTLE_SAMPLE_VERSION||Number(raw.combatSpeed)!==speed)return null;
@@ -182,8 +179,8 @@
   const formalGold=offlineOverlevelIntegerReward(goldReward(enemy),context),formalXp=offlineOverlevelIntegerReward(expReward(enemy),context);
   const gear=createGearAccumulator({target:state,reject:item=>{soldCount++;soldGold+=offlineSellValue(item);saleStones=mergeEnhancementStoneRewards(saleStones,enhancementStoneSaleReward(item));}});
   for(let i=0;i<count;i++){
-   goldCarry+=formalGold*OFFLINE_GOLD_RATE;const xpValue=formalXp*OFFLINE_EXP_RATE;if(state.level>=MAX_LEVEL)convertedCarry+=xpValue;else{xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}}
-   if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;let encounter=null;try{encounter=typeof createMonsterEncounter==="function"?createMonsterEncounter(pending.map,pending.enemy):monsterObj(pending.map,pending.enemy);}catch(_){encounter=null;}if(encounter&&encounter.kind!=="boss"){const item=typeof dropItem==="function"?dropItem(encounter,pending.map):null;if(item)gear.consider(item);}}
+   goldCarry+=formalGold*OFFLINE_REWARD_RATE;const xpValue=formalXp*OFFLINE_REWARD_RATE;if(state.level>=MAX_LEVEL)convertedCarry+=xpValue;else{xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;totalXp+=grant;gainExp(grant,[]);}}
+   if(Math.random()<OFFLINE_REWARD_RATE){eligibleRolls++;let encounter=null;try{encounter=typeof createMonsterEncounter==="function"?createMonsterEncounter(pending.map,pending.enemy):monsterObj(pending.map,pending.enemy);}catch(_){encounter=null;}if(encounter&&encounter.kind!=="boss"){const item=typeof dropItem==="function"?dropItem(encounter,pending.map):null;if(item)gear.consider(item);}}
    if((i+1)%YIELD_EVERY===0)await yieldThread();
   }
   const finalized=gear.finalize(),directGold=Math.floor(goldCarry),convertedGold=Math.floor(convertedCarry);state.gold+=directGold+convertedGold+soldGold;const battleStones=offlineEnhancementStoneReward(enemy,count,rewardPlayerLevel,context),totalStones=mergeEnhancementStoneRewards(battleStones,saleStones);if(totalStones.basic||totalStones.advanced)addEnhancementStones(totalStones.basic,totalStones.advanced);if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
@@ -193,18 +190,18 @@
   const count=Math.max(0,Math.floor(Number(pending.battles)||0)),bossIndex=Math.floor(Number(pending.bossIndex));if(!boss||bossIndex<0||typeof window.secondWorldBossExpReward!=="function"||typeof window.secondWorldBossDarkMatterReward!=="function"||typeof window.makeSecondWorldEquipmentForBoss!=="function")throw new Error("Second-world offline reward owner unavailable");
   const context=offlineOverlevelRewardContext(pending,boss.level),formalXp=offlineOverlevelIntegerReward(window.secondWorldBossExpReward(bossIndex,false,state),context),formalDarkMatter=offlineOverlevelIntegerReward(window.secondWorldBossDarkMatterReward(bossIndex,false),context),formalDarkEnergy=offlineOverlevelIntegerReward(1,context),expBefore=expSnapshot(),soldItems=[];let xpCarry=0,darkMatterCarry=0,eligibleRolls=0;const gear=createGearAccumulator({target:state,reject:item=>soldItems.push(item)});
   for(let i=0;i<count;i++){
-   const xpValue=formalXp*OFFLINE_EXP_RATE;xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);}darkMatterCarry+=formalDarkMatter*OFFLINE_GOLD_RATE;
-   if(Math.random()<OFFLINE_GEAR_RATE){eligibleRolls++;const item=window.makeSecondWorldEquipmentForBoss(bossIndex,{state});if(item)gear.consider(item);}if((i+1)%YIELD_EVERY===0)await yieldThread();
+   const xpValue=formalXp*OFFLINE_REWARD_RATE;xpCarry+=xpValue;const grant=Math.floor(xpCarry);if(grant>0){xpCarry-=grant;if(typeof window.gainEffectiveExp==="function")window.gainEffectiveExp(grant,[]);else gainExp(grant,[]);}darkMatterCarry+=formalDarkMatter*OFFLINE_REWARD_RATE;
+   if(Math.random()<OFFLINE_REWARD_RATE){eligibleRolls++;const item=window.makeSecondWorldEquipmentForBoss(bossIndex,{state});if(item)gear.consider(item);}if((i+1)%YIELD_EVERY===0)await yieldThread();
   }
-  const finalized=gear.finalize(),directDarkMatter=Math.floor(darkMatterCarry),directDarkEnergy=Math.floor(count*formalDarkEnergy*OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE);state.secondWorld.darkMatter=Math.max(0,Math.floor(Number(state.secondWorld.darkMatter)||0))+directDarkMatter;state.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(state.secondWorld.darkEnergy)||0))+directDarkEnergy;
+  const finalized=gear.finalize(),directDarkMatter=Math.floor(darkMatterCarry),directDarkEnergy=Math.floor(count*formalDarkEnergy*OFFLINE_REWARD_RATE);state.secondWorld.darkMatter=Math.max(0,Math.floor(Number(state.secondWorld.darkMatter)||0))+directDarkMatter;state.secondWorld.darkEnergy=Math.max(0,Math.floor(Number(state.secondWorld.darkEnergy)||0))+directDarkEnergy;
   let sale={ok:true,quote:{darkMatter:0,darkEnergy:0,gold:0,amount:0},count:0};if(soldItems.length){if(typeof window.settleEquipmentSaleBatch!=="function")throw new Error("Second-world offline sale owner unavailable");sale=window.settleEquipmentSaleBatch(soldItems,{state});if(!sale?.ok)throw new Error("Second-world offline equipment sale failed");}if(typeof restorePlayerHp==="function")restorePlayerHp({save:false});else state.hp=playerCombatStats().hp;
   const saleDarkMatter=Math.max(0,Math.floor(Number(sale?.quote?.darkMatter)||0)),saleDarkEnergy=Math.max(0,Math.floor(Number(sale?.quote?.darkEnergy)||0)),expAfter=expSnapshot(),totalXp=expProgressDelta(expBefore,expAfter);
-  return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,overlevelRewardMultiplier:context.multiplier,overlevelContextRecorded:context.recorded,expProgress:{before:expBefore,after:expAfter},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
+  return {world:2,totalXp,totalDarkMatter:directDarkMatter+saleDarkMatter,directDarkMatter,saleDarkMatter,totalDarkEnergy:directDarkEnergy+saleDarkEnergy,directDarkEnergy,saleDarkEnergy,overlevelRewardMultiplier:context.multiplier,overlevelContextRecorded:context.recorded,expProgress:{before:expBefore,after:expAfter},enhancement:{darkEnergy:directDarkEnergy,rate:OFFLINE_REWARD_RATE},gear:{eligibleRolls,droppedCount:finalized.droppedCount,soldCount:soldItems.length,soldDarkMatter:saleDarkMatter,soldDarkEnergy:saleDarkEnergy,keptOrdinary:finalized.keptOrdinary,mythics:finalized.mythics,keptCount:finalized.keptCount}};
  }
  async function grantThirdWorldOfflineRewards(pending){
   const count=Math.max(0,Math.floor(Number(pending.battles)||0));if(typeof window.makeThirdWorldEquipmentDrops!=="function")throw new Error("Third-world offline equipment owner unavailable");
   const protectedBefore=snapshotStateOutsideAllowedRoots(state),inventoryCountBefore=Array.isArray(state.inventory)?state.inventory.length:0,inventoryBefore=inventoryPrefixSnapshot(state,inventoryCountBefore);if(protectedBefore==null)throw new Error("Third-world offline allow-list snapshot failed");
-  const eligibleRolls=countBernoulliHitsGeometric(count,OFFLINE_GEAR_RATE,Math.random),gear=createGearAccumulator({target:state});
+  const eligibleRolls=countBernoulliHitsGeometric(count,OFFLINE_REWARD_RATE,Math.random),gear=createGearAccumulator({target:state});
   for(let i=0;i<eligibleRolls;i++){
    const drops=window.makeThirdWorldEquipmentDrops({state,level:Math.max(1000,Math.floor(Number(state.level)||1000)),sourceTag:"third-world-offline"});for(const row of drops||[])if(row?.item)gear.consider(row.item);if((i+1)%THIRD_WORLD_GEAR_ROLL_YIELD_EVERY===0)await yieldThread();
   }
@@ -253,13 +250,13 @@
   return Object.freeze({version:4,passed:errors.length===0,targetIsolation:true,deterministic:true,sharedDispositionOwner:true,allQualitySettings:true,mythicSpecialContainerRetired:true,errors:Object.freeze(errors)});
  }
  function runThirdWorldOfflinePerformanceIntegrity(){
-  const errors=[],maxBattles=Math.floor(OFFLINE_MAX_MS/REAL_BATTLE_MIN_MS),expectedOpportunities=Math.round(maxBattles*OFFLINE_GEAR_RATE),all=countBernoulliHitsGeometric(10,.10,()=>0),none=countBernoulliHitsGeometric(100,.10,()=>.999999);
+  const errors=[],maxBattles=Math.floor(OFFLINE_MAX_MS/REAL_BATTLE_MIN_MS),expectedOpportunities=Math.round(maxBattles*OFFLINE_REWARD_RATE),all=countBernoulliHitsGeometric(10,.10,()=>0),none=countBernoulliHitsGeometric(100,.10,()=>.999999);
   if(maxBattles!==432000||expectedOpportunities!==43200)errors.push({code:"STRESS_PROFILE",maxBattles,expectedOpportunities});
   if(all!==10||none!==0||countBernoulliHitsGeometric(10,0,()=>0)!==0||countBernoulliHitsGeometric(10,1,()=>.5)!==10)errors.push({code:"GEOMETRIC_SAMPLER_BOUNDARY",all,none});
-  return Object.freeze({version:1,passed:errors.length===0,algorithm:"geometric-skip",maxOfflineMs:OFFLINE_MAX_MS,minBattleMs:REAL_BATTLE_MIN_MS,maxTheoreticalBattles:maxBattles,gearRate:OFFLINE_GEAR_RATE,expectedGearOpportunitiesAtTheoreticalMax:expectedOpportunities,renderLimit:OFFLINE_GEAR_RENDER_LIMIT,errors:Object.freeze(errors)});
+  return Object.freeze({version:1,passed:errors.length===0,algorithm:"geometric-skip",maxOfflineMs:OFFLINE_MAX_MS,minBattleMs:REAL_BATTLE_MIN_MS,maxTheoreticalBattles:maxBattles,gearRate:OFFLINE_REWARD_RATE,expectedGearOpportunitiesAtTheoreticalMax:expectedOpportunities,renderLimit:OFFLINE_GEAR_RENDER_LIMIT,errors:Object.freeze(errors)});
  }
  function validateThirdWorldOfflineSettlement(){
-  const errors=[];if(Number(window.EQUIPMENT_AUTO_PROCESS_POLICY_VERSION)!==1||typeof window.equipmentDropDisposition!=="function")errors.push({code:"EQUIPMENT_AUTO_PROCESS_POLICY"});if(OFFLINE_GEAR_RATE!==.10)errors.push({code:"GEAR_RATE",rate:OFFLINE_GEAR_RATE});if(typeof window.makeThirdWorldEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_LOOT_OWNER"});if(THIRD_WORLD_TARGET_TYPE!=="higher-dimensional")errors.push({code:"TARGET_TYPE"});if(Number(window.OFFLINE_SAMPLE_OWNER_VERSION)!==1||typeof window.appendOfflineBattleSample!=="function")errors.push({code:"SAMPLE_OWNER"});if(Number(window.OFFLINE_RESET_OWNER_VERSION)!==1||typeof window.resetOfflineSaveState!=="function")errors.push({code:"RESET_OWNER"});if(Number(window.OFFLINE_LEGACY_SAMPLE_POLICY_VERSION)!==1||window.OFFLINE_SAMPLE_OWNER_INTEGRITY?.passed!==true)errors.push({code:"LEGACY_SAMPLE_POLICY"});if(window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY?.passed!==true)errors.push({code:"GEAR_ACCUMULATOR_TARGETING"});if(window.THIRD_WORLD_OFFLINE_PERFORMANCE_INTEGRITY?.passed!==true)errors.push({code:"PERFORMANCE_STRESS"});if(THIRD_WORLD_OFFLINE_STATE_ALLOWLIST.join("|")!=="inventory|offline")errors.push({code:"STATE_ALLOWLIST",allowlist:THIRD_WORLD_OFFLINE_STATE_ALLOWLIST});const source=Function.prototype.toString.call(grantThirdWorldOfflineRewards);if(/gainExp\(|gainEffectiveExp\(|dimensionalStrings\s*[+\-=]|coreLevel\s*[+\-=]|bosses\s*[+\-=]/.test(source))errors.push({code:"PROTECTED_PROGRESS_MUTATION_SOURCE"});if(!/snapshotStateOutsideAllowedRoots/.test(source)||!/inventoryPrefixSnapshot/.test(source))errors.push({code:"ALLOWLIST_GUARD_MISSING"});if(!/countBernoulliHitsGeometric/.test(source))errors.push({code:"W3_GEAR_SKIP_SAMPLER_MISSING"});return Object.freeze({version:7,passed:errors.length===0,gearRate:OFFLINE_GEAR_RATE,gearOnly:true,bossDamage:false,exp:false,dimensionalStrings:false,title:false,story:false,core:false,stateAllowlist:THIRD_WORLD_OFFLINE_STATE_ALLOWLIST,performanceVersion:THIRD_WORLD_OFFLINE_PERFORMANCE_VERSION,errors:Object.freeze(errors)});
+  const errors=[];if(Number(window.EQUIPMENT_AUTO_PROCESS_POLICY_VERSION)!==1||typeof window.equipmentDropDisposition!=="function")errors.push({code:"EQUIPMENT_AUTO_PROCESS_POLICY"});if(OFFLINE_REWARD_RATE!==.10)errors.push({code:"GEAR_RATE",rate:OFFLINE_REWARD_RATE});if(typeof window.makeThirdWorldEquipmentDrops!=="function"||window.THIRD_WORLD_EQUIPMENT_REWARD_INTEGRITY?.passed!==true)errors.push({code:"THIRD_WORLD_LOOT_OWNER"});if(THIRD_WORLD_TARGET_TYPE!=="higher-dimensional")errors.push({code:"TARGET_TYPE"});if(Number(window.OFFLINE_SAMPLE_OWNER_VERSION)!==1||typeof window.appendOfflineBattleSample!=="function")errors.push({code:"SAMPLE_OWNER"});if(Number(window.OFFLINE_RESET_OWNER_VERSION)!==1||typeof window.resetOfflineSaveState!=="function")errors.push({code:"RESET_OWNER"});if(Number(window.OFFLINE_LEGACY_SAMPLE_POLICY_VERSION)!==1||window.OFFLINE_SAMPLE_OWNER_INTEGRITY?.passed!==true)errors.push({code:"LEGACY_SAMPLE_POLICY"});if(window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY?.passed!==true)errors.push({code:"GEAR_ACCUMULATOR_TARGETING"});if(window.THIRD_WORLD_OFFLINE_PERFORMANCE_INTEGRITY?.passed!==true)errors.push({code:"PERFORMANCE_STRESS"});if(THIRD_WORLD_OFFLINE_STATE_ALLOWLIST.join("|")!=="inventory|offline")errors.push({code:"STATE_ALLOWLIST",allowlist:THIRD_WORLD_OFFLINE_STATE_ALLOWLIST});const source=Function.prototype.toString.call(grantThirdWorldOfflineRewards);if(/gainExp\(|gainEffectiveExp\(|dimensionalStrings\s*[+\-=]|coreLevel\s*[+\-=]|bosses\s*[+\-=]/.test(source))errors.push({code:"PROTECTED_PROGRESS_MUTATION_SOURCE"});if(!/snapshotStateOutsideAllowedRoots/.test(source)||!/inventoryPrefixSnapshot/.test(source))errors.push({code:"ALLOWLIST_GUARD_MISSING"});if(!/countBernoulliHitsGeometric/.test(source))errors.push({code:"W3_GEAR_SKIP_SAMPLER_MISSING"});return Object.freeze({version:7,passed:errors.length===0,gearRate:OFFLINE_REWARD_RATE,gearOnly:true,bossDamage:false,exp:false,dimensionalStrings:false,title:false,story:false,core:false,stateAllowlist:THIRD_WORLD_OFFLINE_STATE_ALLOWLIST,performanceVersion:THIRD_WORLD_OFFLINE_PERFORMANCE_VERSION,errors:Object.freeze(errors)});
  }
  window.OFFLINE_SAMPLE_SELECTION_VERSION=OFFLINE_SAMPLE_SELECTION_VERSION;
  window.OFFLINE_SAMPLES_PER_SPEED=OFFLINE_SAMPLES_PER_SPEED;
@@ -281,15 +278,15 @@
  window.createOfflineGearAccumulator=createGearAccumulator;
  window.OFFLINE_GEAR_ACCUMULATOR_INTEGRITY=runGearAccumulatorRegression();
  window.THIRD_WORLD_OFFLINE_PERFORMANCE_INTEGRITY=runThirdWorldOfflinePerformanceIntegrity();
- window.OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE=OFFLINE_SECOND_WORLD_DARK_ENERGY_RATE;
- window.OFFLINE_THIRD_WORLD_GEAR_RATE=OFFLINE_GEAR_RATE;
+ window.OFFLINE_REWARD_RATE=OFFLINE_REWARD_RATE;
+ window.OFFLINE_THIRD_WORLD_GEAR_RATE=OFFLINE_REWARD_RATE;
  window.grantFirstWorldOfflineRewards=grantOfflineRewards;
  window.grantSecondWorldOfflineRewards=grantSecondWorldOfflineRewards;
  window.grantThirdWorldOfflineRewards=grantThirdWorldOfflineRewards;
  window.resolveOfflineFarmTarget=resolveFarmTarget;
  window.normalizeOfflinePendingSettlement=normalizePending;
  window.offlineOverlevelRewardContext=offlineOverlevelRewardContext;
- window.OFFLINE_ENHANCEMENT_STONE_RATE=OFFLINE_ENHANCEMENT_STONE_RATE;
+ window.OFFLINE_REWARD_RATE=OFFLINE_REWARD_RATE;
  window.offlineEnhancementStoneReward=offlineEnhancementStoneReward;
  window.OFFLINE_ENHANCEMENT_PIPELINE_VERSION=4;
  window.OFFLINE_COMBAT_SPEED_SAMPLE_VERSION=1;
