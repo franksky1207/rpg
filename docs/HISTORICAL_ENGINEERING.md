@@ -8,3 +8,9 @@
 - [本次六批優化 Issue #100](https://github.com/franksky1207/rpg/issues/100)。第2～3批驗收及 evidence 在整合分支繼續保留；第4批報告記錄本次刪除與有效依賴。
 
 背景PNG與非正式音訊來源已退役；正式WebP／OGG、原始授權與SHA provenance繼續保護。怪物來源metadata中的PNG檔名只記錄歷史來源，不是待下載URL。GM B閉包、裝備發布來源、怪物映射／尺寸回歸必要的小型JSON仍保留。
+
+## 2026-10-25 第2～6批／CI／GM 施工狀態說明
+
+曾經在 `PROJECT_HANDOFF.md`、`PROJECT_PENDING_STATUS.md` 記載的整合分支 `integrate/postrelease-optimization-20261025`、第4批／第5批／第6批「尚未合併或發布」，是 PR #101 合併**之前**的歷史快照，不是目前待辦。原文可由合併前 commit／PR 與 `docs/POSTRELEASE_OPTIMIZATION_BATCH4_2026-10-25.md`、`docs/POSTRELEASE_OPTIMIZATION_BATCH6_2026-10-25.md` 追溯。
+
+PR #101、#102、#103 均已合併及正式發布；截至本次盤點 `main` 為 `238a845aac6a41eb45d9df6e6d81c77d13cead4b`。後續先讀即時 main 再施工。2026-10-25 的版本網址及 CSS 整理採保守策略：不修改快取／Manifest／資源 URL，只移除已證明相同的 CSS 宣告。
