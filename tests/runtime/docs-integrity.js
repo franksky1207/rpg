@@ -22,7 +22,7 @@ assert(!readme.includes("SAVE_SCHEMA_VERSION = 15"),"README 不得再把舊 Sche
 assert(handoff.includes("reincarnation")&&handoff.includes("異宇宙"),"Handoff 必須同步轉生／異宇宙主線資訊。");
 assert(worldphase.includes("const WORLD_PHASE_VERSION=7;")&&worldphase.includes("const WORLD_PHASE_RERUN_ENTRY_POLICY_VERSION=1;")&&worldphase.includes('id:"higher-dimensional"'),"worldphase.js 必須維持 World Phase V7／轉生重征服 entry policy／高維紀元正式 owner。");
 
-assert(pending.includes("SAVE_SCHEMA_VERSION = 18")&&pending.includes("高維紀元：Lv.1000～2000"),"Pending 必須同步 Schema17 與高維紀元 Lv.1000～2000。");
+assert(pending.includes("SAVE_SCHEMA_VERSION = 18")&&pending.includes("高維紀元：Lv.1000～2000"),"Pending 必須同步 Schema18 與高維紀元 Lv.1000～2000。");
 assert(pending.includes("Future schema 必須 fail closed")&&pending.includes("transaction owner"),"Pending 必須保留 Save／Migration 安全原則。");
 assert(pending.includes("首輪 `reincarnation.count = 0`")&&pending.includes("只有 `count > 0` 啟用 rerun"),"Pending 必須保留首輪／轉生輪隔離規則。");
 
