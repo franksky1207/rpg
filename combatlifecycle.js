@@ -5,18 +5,19 @@
  const checkpoints=new WeakMap();
  const backgroundAllowed=()=>window.gmBackgroundBattleEnabled?.()===true;
  const interrupted=()=>Object.assign(new Error("戰鬥已中止，可重新挑戰。"),{code:"COMBAT_INTERRUPTED"});
- function cancel(reason="interrupted"){
-  const battle=active;if(!battle||battle.done||battle.cancelled||backgroundAllowed())return false;
+ function invalidate(battle,reason){
+  if(!battle||battle.done||battle.cancelled)return false;
   // Invalidate first. Neither a save callback nor an expired sleep may revive this battle.
   battle.cancelled=true;battle.reason=reason;
   try{battle.flush(true);}catch(error){battle.saveError=error;}
   finally{for(const wake of battle.waiters)wake();battle.waiters.clear();if(window.getCombatPresentationSnapshot?.()?.token===battle.presentationToken)window.clearCombatPresentation?.("foreground-interrupted");}
   return true;
  }
+ function cancel(reason="interrupted"){return backgroundAllowed()?false:invalidate(active,reason);}
  function depart(reason){if(backgroundAllowed())return;if(!away){away=true;departureEpoch++;}cancel(reason);}
  function begin(result){
   if((document.visibilityState==="hidden"||lostFocus||departed)&&!backgroundAllowed()){depart("hidden-start");throw interrupted();}
-  if(active&&!active.done)cancel("superseded");
+  if(active&&!active.done)invalidate(active,"superseded");
   const checkpoint=checkpoints.get(result)||checkpoints.get(result?.events);
   let lastSave=performance.now(),positiveHp=null,applied=0;
   const battle={id:++serial,presentationToken:window.getCombatPresentationSnapshot?.()?.token,cancelled:false,done:false,waiters:new Set(),

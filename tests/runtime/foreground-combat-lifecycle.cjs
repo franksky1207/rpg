@@ -51,3 +51,11 @@ test('visible app return with focus restored but no window focus event releases 
  assert.throws(()=>h.api.foreground(oldEpoch),e=>e.code==='COMBAT_INTERRUPTED','the interrupted run still cannot revive');
  h.api.foreground(h.api.epoch());const b=h.api.begin({events:[]});b.complete();b.finish();
 });
+test('superseding a GM background battle wakes the stale waiter while the new owner stays active',async()=>{
+ const h=harness();h.gm(true);const old=h.api.begin({events:[]});
+ const waiting=old.sleep(60000,()=>new Promise(()=>{}));h.p({token:2});const next=h.api.begin({events:[]});
+ assert.equal(old.cancelled,true,'background permission only exempts departure, never owner replacement');
+ assert.equal(h.clears(),0,'stale owner cannot clear new presentation');
+ await assert.rejects(waiting,e=>e.code==='COMBAT_INTERRUPTED');old.finish();
+ assert.equal(h.api.snapshot().id,next.id);next.complete();next.finish();
+});

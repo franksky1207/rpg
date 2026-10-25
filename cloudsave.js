@@ -110,6 +110,8 @@
   try{
    const {data:existing,error:metaError}=await c.from(TABLE).select("updated_at,level,exp,revision").eq("user_id",u.id).maybeSingle();
    if(metaError)throw metaError;
+   if(user()?.id!==u.id)throw new Error("登入帳號已變更，請重新操作雲端存檔。");
+   if(ownerMismatch())throw new Error("本機存檔所屬帳號已變更，已取消上傳。");
    cloudMeta=existing?{updated_at:existing.updated_at,level:n(existing.level,1),exp:n(existing.exp,0),revision:n(existing.revision,1)}:null;
    const local=localSnapshot();
    if(!confirm(confirmSummary("upload",local,cloudMeta))){renderOnly();return;}
@@ -145,19 +147,20 @@
   try{
    const {data,error}=await c.from(TABLE).select("save_data,updated_at,level,exp,revision").eq("user_id",u.id).maybeSingle();
    if(error)throw error;
+   if(user()?.id!==u.id)throw new Error("登入帳號已變更，請重新操作雲端存檔。");
    if(!data?.save_data){cloudMeta=null;renderOnly();setStatus("目前沒有可下載的雲端存檔。","error");return;}
    cloudMeta={updated_at:data.updated_at,level:n(data.level,1),exp:n(data.exp,0),revision:n(data.revision,1)};
    const prepared=prepareDownloadedState(data.save_data);
    const local=localSnapshot();
    if(!confirm(confirmSummary("download",local,cloudMeta))){renderOnly();return;}
-   const previous=cloneJson(state);
+   const previous=state;
    try{
     state=prepared;
     if(typeof window.markSaveLoadResolved==="function")window.markSaveLoadResolved("cloud-download");
-    bindLocalOwner(u.id);
     if(typeof save==="function"&&!save(false))throw new Error("下載後寫入本機存檔失敗。");
+    bindLocalOwner(u.id);
     writeLocalMeta();
-   }catch(applyError){if(previous)state=previous;throw applyError;}
+   }catch(applyError){state=previous;throw applyError;}
    setStatus("雲端存檔已下載完成，正在重新載入遊戲…","success");
    setTimeout(()=>location.reload(),250);
   }catch(error){renderOnly();setStatus(errorText(error),"error");}

@@ -13,7 +13,7 @@
  function runHooks(map,context,label){
   map.forEach((fn,id)=>{
    try{const result=fn(context);if(label==="before"&&result===false){context.cancelled=true;if(!context.cancelReason)context.cancelReason=`hook:${id}`;}}
-   catch(error){console.error(`[文明戰線] Save ${label} hook failed: ${id}`,error);}
+   catch(error){if(label==="before"){context.cancelled=true;if(!context.cancelReason)context.cancelReason=`hook:${id}`;}console.error(`[文明戰線] Save ${label} hook failed: ${id}`,error);}
   });
  }
  function registerBeforeSaveHook(id,fn){return registerHook(beforeSaveHooks,id,fn);}
@@ -27,11 +27,12 @@
  if(baseSave.__saveHookCoreVersion){throw new Error("Save Hook Core cannot wrap an already-hooked save().");}
  const hookedSave=function(show=true){
   const context={show:show!==false,state:typeof state!=="undefined"?state:null,startedAt:Date.now(),cancelled:false,cancelReason:"",result:false,savedAt:0};
-  runHooks(beforeSaveHooks,context,"before");
-  if(!context.cancelled)context.result=baseSave(show)===true;
-  if(context.result===true){context.savedAt=Date.now();runHooks(afterSaveHooks,context,"after");}
-  context.finishedAt=Date.now();runHooks(settlementSaveHooks,context,"settlement");
-  return context.result===true;
+  try{
+   runHooks(beforeSaveHooks,context,"before");
+   if(!context.cancelled)context.result=baseSave(show)===true;
+   if(context.result===true){context.savedAt=Date.now();runHooks(afterSaveHooks,context,"after");}
+   return context.result===true;
+  }finally{context.finishedAt=Date.now();runHooks(settlementSaveHooks,context,"settlement");}
  };
  hookedSave.__saveHookOwner=IMPLEMENTATION_OWNER;
  hookedSave.__saveHookCoreVersion=CORE_VERSION;
