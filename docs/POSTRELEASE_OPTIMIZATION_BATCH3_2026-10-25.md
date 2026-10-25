@@ -109,12 +109,13 @@ Linux Chromium、390×844、4倍CPU節流、loopback HTTPS；每版本3個新con
 
 ## 正規Git保存與交接
 
-已審查17個workflows，全部未改：push只匹配main或另一條固定舊分支，本整合分支不匹配；查詢無open PR。普通Git push的dry-run已成功，未寫ref。最終提交後以**同名非PR遠端整合分支**保存，readback HEAD與實際push結果記錄Issue #100結案留言；沒有靠skip-CI、改／停用workflow或PR設定繞過驗收。
+已審查17個workflows，全部未改：push只匹配main或另一條固定舊分支，本整合分支不匹配；查詢無open PR。普通Git push已成功，以**同名非PR遠端整合分支**保存第2／3批提交祖先；遠端readback與本機HEAD相同，REST查詢該head的workflow runs為0。最終文件提交後再次核對的HEAD與結果記錄Issue #100結案留言；沒有靠skip-CI、改／停用workflow或PR設定繞過驗收。
 
 本批驗收文件、數值與可重現測試隨分支提交。Issue只保存摘要／SHA／結果，不再儲存base64 bundle。第4批可正常執行：
 
 ```bash
-git fetch origin integrate/postrelease-optimization-20261025
+git remote set-branches --add origin integrate/postrelease-optimization-20261025
+git fetch origin
 git switch integrate/postrelease-optimization-20261025
 # 新環境若尚無本機分支：
 # git switch --track origin/integrate/postrelease-optimization-20261025
@@ -122,7 +123,7 @@ git pull --ff-only origin integrate/postrelease-optimization-20261025
 git rev-parse HEAD
 ```
 
-先核對Issue所列本批最終SHA再施工，不從main另起而漏掉第2／3批。
+原工作區是只追蹤main的clone，已補上整合分支的fetch refspec；上述set-branches也讓同類新環境能建立origin的追蹤參照。先核對Issue所列本批最終SHA再施工，不從main另起而漏掉第2／3批。
 
 ## 重現與第4批依賴
 
