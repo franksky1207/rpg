@@ -67,8 +67,8 @@ VIP 現役契約與 owner 見 `PROJECT_VIP_UNBOUNDED_UPDATE.md`。
 
 1. 異宇宙 1000U 實際玩法與完整化；
 2. 轉生後 W1／W2／W3 自由重征服；
-4. 首次轉生後四大副本永久解鎖與 rerun eligibility；
-5. GM 轉生／突破／異宇宙管理及後續全生命週期實測。
+3. 首次轉生後四大副本永久解鎖與 rerun eligibility；
+4. GM 轉生／突破／異宇宙管理及後續全生命週期實測。
 
 ## Integrity／維護
 
