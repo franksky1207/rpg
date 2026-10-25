@@ -35,6 +35,7 @@ on:
     - .github/actions/setup-ci-browser/**
   pull_request:
     paths:
+    - tests/runtime/reincarnation-batch7-closure.js
     - 3d-test/monster-*.mjs
     - monstercodex*.js
     - monstercodex*.mjs

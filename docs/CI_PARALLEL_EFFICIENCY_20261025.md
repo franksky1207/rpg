@@ -36,6 +36,10 @@
 
 Runtime main #40168240860 只有約30秒，因舊 freshness 規則略過所有測試，**不作完整 baseline**；採 PR 同代碼完整成功 #40165934882。失敗案例保留 Runtime #40164919571 與 Pages #40113687411。舊 job 通常把安裝、建置與多支測試混在同一 step，無法從 step API 精確拆出個別 build 秒數；新 suite 逐命令計時，避免捏造舊資料。
 
+## CI 回歸隔離修正
+
+R3 首次與單 job 重跑均在既有 `reincarnation-batch7-closure.js` 的 GM 正式狀態 byte-equivalence 斷言失敗；其餘 Runtime 組與 Gate 行為正常。該測試原本只等待 critical startup / GM，未等待非同步 story group 就替換全域 fixture。補上真正 story group 載入完成及 ready 斷言，保留全部原斷言、100 場正式 sandbox、正式畫面及既有 timeout；不暫停時鐘、不 mock 遊戲 owner、不更改正式程式。失敗時把原本未轉送到 Node log 的頁面端 state drift 以完整 before/after 回傳，便於確定來源。遠端結果以 PR 最新 HEAD 為準，不能用本機通過代替。單 job 重跑功能已實際驗證；舊失敗紀錄保留。
+
 ## 集中驗收與後續量測
 
 先完成本機 actionlint、YAML、shell syntax、逐命令多重集合等值、分類、歷史守衛及 Node 回歸，再建立單一 PR。正式執行與量測以此分支的唯一 PR 的 Checks / Conversation 與合併後 main Pages run 為準；最終測量在 PR 說明中連結，避免為更新報表再跑一次整套 CI。此文件不把尚未執行的 CI 宣稱成功。
