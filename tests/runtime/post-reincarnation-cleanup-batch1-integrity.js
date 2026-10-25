@@ -12,7 +12,7 @@ const migrationRegression=fs.readFileSync("tests/runtime/save-level-migration-re
 const backupRetention=fs.readFileSync("savebackupretention.js","utf8");
 const workflow=fs.readFileSync(".github/workflows/runtime-integrity.yml","utf8");
 
-assert.ok(index.includes('src="savehookcore.js?v=20261005-code-cleanup-batch1'),"index 必須載入 canonical Save Hook Core");
+assert.ok(/src="savehookcore\.js\?v=(?:20261005-code-cleanup-batch1|20261025-optimization-batch2)(?:[&"])/.test(index),"index 必須載入 canonical Save Hook Core（包含正式優化快取版本）");
 assert.ok(index.includes('src="compatibilityowners.js?v=20261005-code-cleanup-batch7&foreground=20261023-194-v2"'),"index 必須使用 Batch7 compatibility owner canonical cache token");
 assert.ok(index.includes('src="scriptgrouploader.js?v=20261005-gm-authorized-restore1&v2=20261006-gm-runtime-policy-batch3&v3=20261006-gm-runtime-policy-batch3-final1&v4=20261006-gm-runtime-policy-batch3-final2&v5=20261008-gm-early-runtime-restore1&v6=20261008-gm-auth-pref-sync1&v7=20261008-gm-first-render1&v8=20261008-gm-load-opt2&v9=20261009-gm-dom-ready&v10=20261010-account-gm&v11=20261010-startup-gm-cache4&v12=20261010-gm-filehash4&v13=20261010-manifest-gm5&v14=20261010-gm-3d-warm&v15=20261010-actual-progress&v16=20261010-3d-opt-b3-gm-progress"'),"index 必須使用 Batch3 GM runtime policy Script Group Loader canonical cache token");
 assert.ok(index.indexOf('src="savehookcore.js')<index.indexOf('src="compatibilityowners.js'),"Save Hook Core 必須先於 compatibility owner 載入");
