@@ -214,3 +214,14 @@ body.main-minimal-mode-open{overflow:hidden;background:#000}
   .main-minimal-mode-status.is-complete{opacity:1}
   .main-minimal-mode-knob{transition:none}
 }
+
+/* Galaxy calamity home: prioritize battles without modifying sealed calamityui.js. */
+.calamity-home{display:flex;flex-direction:column}
+.calamity-home > .back-home,
+.calamity-home > .calamity-title,
+.calamity-home > .calamity-notice{order:0}
+.calamity-home > .calamity-section-head{order:1}
+.calamity-home > .calamity-grid{order:2}
+.calamity-home > .card:not(.calamity-title){order:3}
+.calamity-home > .calamity-mark-grid{order:4}
+.calamity-home > details.card{order:5}
