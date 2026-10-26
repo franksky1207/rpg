@@ -13,11 +13,11 @@
  const adapters=new Map();
 
  function renderMinimalModeEntry(action){
-  if(!/^[a-zA-Z_$][\\w$]*\\(\\)$/.test(String(action)))return "";
+  if(!/^[a-zA-Z_$][\w$]*\(\)$/.test(String(action)))return "";
   return `<button type="button" class="main-minimal-mode-enter" onclick="${action}">極簡模式</button>`;
  }
  function renderContinuousStopControl({onclick,id="",label="停止連續戰鬥",disabled=false,wrapClass="continuous-stop-wrap combat-viewport-stop",buttonClass="btn danger"}={}){
-  if(!/^[a-zA-Z_$][\\w$]*\\(\\)$/.test(String(onclick)))return "";
+  if(!/^[a-zA-Z_$][\w$]*\(\)$/.test(String(onclick)))return "";
   const safe=s=>String(s).replace(/[^a-zA-Z0-9_ -]/g,"");
   const escaped=String(label).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   return `<div class="${safe(wrapClass)}"><button data-combat-action="stop-continuous"${id?` id="${safe(id).trim()}"`:""} class="${safe(buttonClass)}" onclick="${onclick}"${disabled?" disabled":""}>${escaped}</button></div>`;
