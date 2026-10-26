@@ -17,3 +17,7 @@ test('historical runtime coverage guards resolve invoked suites only', () => {
     for (const c of suites[k]) assert.ok(source.includes(c));
   }
 });
+
+// Post-112 maintenance contracts share this already-executed CI suite entry.
+require('./ci-suite-report.test.cjs');
+require('./runtime/resource-preload-closure.test.cjs');
