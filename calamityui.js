@@ -94,7 +94,7 @@
   const php=view?.playerHp??p.hp,pmax=view?.playerMax??p.hp;
   const continuous=ui.mode==="continuous",stopping=run?.stopRequested===true||run?.active===false;
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
-   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openCivilizationCalamityMinimalMode()">極簡模式</button>`:""}</div>
+   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`${window.renderMinimalModeEntry("openCivilizationCalamityMinimalMode()")}`:""}</div>
    <div class="calamity-run-stats"><div><span>災厄</span><strong>${esc(def?.name||enemy.name)}</strong></div><div><span>已完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div></div>
    ${continuous?`<div class="calamity-stop-wrap"><button data-combat-action="stop-continuous" id="calamityStopBtn" class="btn danger" onclick="stopCivilizationCalamityContinuousUI()" ${stopping?"disabled":""}>${stopping?"停止中":"停止連續討伐"}</button></div>`:""}
    <div class="combat-screen calamity-combat"><div class="combat-head">${modeLabel(ui.mode)}</div><div class="combat-arena">
