@@ -25,7 +25,7 @@ for (const command of suites[name]) {
 report.passed = report.commands.length === suites[name].length && report.commands.every(r => r.exitCode === 0 && !r.signal);
 fs.writeFileSync(file, JSON.stringify(report, null, 2) + '\n');
 if (process.env.GITHUB_STEP_SUMMARY) {
-  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### ${name}\n\n| Command | Seconds |\n| --- | ---: |\n` + report.commands.map(r => `| \`${r.command.split('\n')[0].replaceAll('|', '\\|')}\` | ${r.seconds} |`).join('\n') + '\n');
+  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### ${name} — ${report.passed ? 'PASS' : 'FAIL'}\n\n| Command | Seconds | Exit |\n| --- | ---: | ---: |\n` + report.commands.map(r => `| \`${r.command.split('\n')[0].replaceAll('|', '\\|')}\` | ${r.seconds} | ${r.exitCode ?? r.signal ?? 'error'} |`).join('\n') + '\n');
 }
 
 if (!report.passed) process.exitCode = report.commands.at(-1)?.exitCode || 1;
