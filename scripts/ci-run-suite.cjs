@@ -17,10 +17,15 @@ for (const command of suites[name]) {
   fs.writeFileSync(file, JSON.stringify(report, null, 2) + '\n');
   console.log(`Duration: ${row.seconds}s; exit: ${row.exitCode}`);
   console.log('::endgroup::');
-  if (result.error || result.status !== 0) process.exit(result.status || 1);
+  if (result.error || result.status !== 0) {
+    report.error = result.error ? String(result.error.message || result.error) : null;
+    break;
+  }
 }
-report.passed = true;
+report.passed = report.commands.length === suites[name].length && report.commands.every(r => r.exitCode === 0 && !r.signal);
 fs.writeFileSync(file, JSON.stringify(report, null, 2) + '\n');
 if (process.env.GITHUB_STEP_SUMMARY) {
   fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### ${name}\n\n| Command | Seconds |\n| --- | ---: |\n` + report.commands.map(r => `| \`${r.command.split('\n')[0].replaceAll('|', '\\|')}\` | ${r.seconds} |`).join('\n') + '\n');
 }
+
+if (!report.passed) process.exitCode = report.commands.at(-1)?.exitCode || 1;
