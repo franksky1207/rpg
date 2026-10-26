@@ -239,7 +239,7 @@
     const active=window.activeSecondWorldMainlineContext;
     const activeHere=active?.continuous===true&&Number(active.bossIndex)===Number(boss.index);
     let action="";
-    if(activeHere)action=`<button class="btn danger universe-boss-action" type="button" onclick="requestSecondWorldContinuousStop()">本場結束後停止</button>`;
+    if(activeHere)action=window.renderContinuousStopControl({mode:"second-world-mainline"});
     else{
       const buttons=[];
       if(canChallenge&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&typeof window.startSecondWorldBossBattle==="function"){
@@ -298,12 +298,11 @@
     const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(encounter.traits):"";
     const round=Math.max(1,Math.floor(Number(ctx.completed)||0)+1);
     const continuous=ctx.continuous===true;
-    const requested=ctx.stopRequested===true;
     const speed=typeof window.effectiveCombatSpeed==="function"?Number(window.effectiveCombatSpeed()):1;
     const speedText=[1,1.5,2].includes(speed)?speed:1;
     const head=continuous?`連續戰鬥・第 ${round} 場`:"單場戰鬥";
-    const stop=continuous?`<div class="continuous-stop-wrap combat-viewport-stop"><button data-combat-action="stop-continuous" class="btn danger" onclick="requestSecondWorldContinuousStop()" ${requested?"disabled":""}>${requested?"本場結束後停止":"停止連續戰鬥"}</button></div>`:"";
-    return `<section class="combat-screen universe-combat-screen">
+    const stop=window.renderContinuousStopControl({mode:"second-world-mainline"});
+    return `<section class="combat-screen formal-continuous-combat universe-combat-screen">
       <div class="combat-head">${head}<span class="universe-combat-speed">${speedText}×</span></div>
       ${stop}<div class="combat-arena">
        <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof playerNameHtml==="function"?playerNameHtml():"玩家"} Lv.${state.level}</h2>${`<div class="muted">暗物質 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkMatter)||0)).toLocaleString()}　暗能量 ${Math.max(0,Math.floor(Number(state.secondWorld?.darkEnergy)||0)).toLocaleString()}</div>`}<div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${Math.max(0,Math.floor(playerShownHp))} / ${Math.max(1,Math.floor(playerMax))}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPct}%"></span></div></div>${`<div class="xp-block"><div class="status-label"><span>EXP</span><span>${progress.atCap?"MAX":progress.exp+" / "+progress.need}</span></div><div class="bar"><span class="xp" style="width:${progress.percent}%"></span></div></div>`}</div>

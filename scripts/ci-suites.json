@@ -187,7 +187,8 @@
     "BACKGROUND_BROWSER=webkit node tests/runtime/cross-era-background-browser.js",
     "node tests/runtime/thirdworld-background-browser.js",
     "BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js",
-    "W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js"
+    "W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js",
+    "node tests/runtime/formal-continuous-stop-browser.cjs"
   ],
   "R2-crash": [
     "node tests/runtime/foreground-combat-recovery-browser.cjs"

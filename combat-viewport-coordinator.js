@@ -20,8 +20,14 @@ function geometry(screen,stage){
  }
  const owner=screen.closest?.(".calamity-battle-shell,.void-shell,.arena-shell,.dungeon-page-shell")||screen;
  const stop=cards.length?(screen.querySelector?.(".combat-viewport-stop")||owner.querySelector?.(".combat-viewport-stop")):null;
- if(stop&&!stop.hidden){const r=stop.getBoundingClientRect();if(r.height>0)rects.push(r);}
- return {stage:stageRect,top:Math.min(...rects.map(r=>r.top)),bottom:Math.max(...rects.map(r=>r.bottom)),signature:rects.flatMap(r=>[r.top,r.bottom,r.width])};
+ const primary=[stageRect];
+ if(stop&&!stop.hidden){const r=stop.getBoundingClientRect();if(r.height>0){rects.push(r);primary.push(r);}}
+ // Explicit shared markup follows DOM order. Keep its heading/control visible
+ // with the animation when all HP cards cannot fit a landscape viewport.
+ const heading=cards.length&&screen.classList?.contains("formal-continuous-combat")?(screen.querySelector(".combat-head")||owner.querySelector?.(".calamity-combat-head")):null;
+ const actionTop=Math.min(...primary.map(r=>r.top)),actionBottom=Math.max(...primary.map(r=>r.bottom));
+ if(heading){const r=heading.getBoundingClientRect();if(r.height>0)primary.push(r);}
+ return {stage:stageRect,top:Math.min(...rects.map(r=>r.top)),bottom:Math.max(...rects.map(r=>r.bottom)),primaryTop:Math.min(...primary.map(r=>r.top)),primaryBottom:Math.max(...primary.map(r=>r.bottom)),hasSharedHeading:!!heading,actionTop,actionBottom,signature:[...rects,...primary].flatMap(r=>[r.top,r.bottom,r.width])};
 }
 function center(screen,stage,ticket,prior=null,stable=0,tries=0){
  if(ticket!==token||!live()||manual||!stage?.isConnected||stage.hidden){if(ticket===token)queued=false;return;}
@@ -30,12 +36,18 @@ function center(screen,stage,ticket,prior=null,stable=0,tries=0){
  stable=prior&&prior.length===measure.length&&measure.every((v,i)=>Math.abs(v-prior[i])<1)?stable+1:0;
  if(stable<3){if(tries<30)raf(()=>center(screen,stage,ticket,measure,stable,tries+1));else queued=false;return;}
  queued=false;focused=true;
- const vp=g.visualViewport,height=Number(vp?.height)||g.innerHeight||1,offset=Number(vp?.offsetTop)||0;
+ const vp=g.visualViewport,viewportHeight=Number(vp?.height)||g.innerHeight||1,viewportTop=Number(vp?.offsetTop)||0;
+ let height=viewportHeight,offset=viewportTop;
+ const header=d.querySelector?.("header"),position=header?g.getComputedStyle?.(header)?.position:null;
+ if(header&&["sticky","fixed"].includes(position)){const h=header.getBoundingClientRect();if(h.top<=viewportTop+1&&h.bottom>viewportTop){offset=Math.min(viewportTop+viewportHeight,h.bottom);height=Math.max(1,viewportHeight-(offset-viewportTop));}}
  const usable=Math.max(1,height-24),span=info.bottom-info.top;
  // If everything fits, center the complete essential region; otherwise
  // preserve the whole stage and bias toward nearby HUD without resizing actors.
- const top=span<=usable?info.top:Math.max(info.top,Math.min(r.top-12,info.bottom-usable));
- const bottom=span<=usable?info.bottom:top+usable;
+ const completeTop=Math.min(info.top,info.primaryTop),completeBottom=Math.max(info.bottom,info.primaryBottom),completeFits=completeBottom-completeTop<=usable;
+ const usePrimary=span>usable&&info.hasSharedHeading&&info.primaryBottom-info.primaryTop<=height;
+ const useAction=span>usable&&!usePrimary&&info.hasSharedHeading&&info.actionBottom-info.actionTop<=usable;
+ const top=completeFits?completeTop:span<=usable?info.top:usePrimary?info.primaryTop:useAction?info.actionTop:Math.max(info.top,Math.min(r.top-12,info.bottom-usable));
+ const bottom=completeFits?completeBottom:span<=usable?info.bottom:usePrimary?info.primaryBottom:useAction?info.actionBottom:top+usable;
  const delta=(top+bottom)/2-(offset+height/2);
  const max=Math.max(0,Math.max(d.scrollingElement?.scrollHeight||0,d.documentElement?.scrollHeight||0)-(g.innerHeight||height));
  const now=Number(g.scrollY)||0,target=Math.max(0,Math.min(max,now+delta));
@@ -48,8 +60,9 @@ function inspect(){
  // The page may retain earlier combat cards; choose the active visible stage, not the first stale screen.
  const screens=typeof root.querySelectorAll==="function"?Array.from(root.querySelectorAll(".combat-screen")):[];
  const screen=screens.find(s=>stageOf(s))||root.querySelector(".combat-screen");
- if(!screen){if(lastScreen){cancel();lastStage=null;lastScreen=null;manual=false;focused=false;}return;}
+ if(!screen){root.toggleAttribute?.("data-combat-viewport-reserve",false);if(lastScreen){cancel();lastStage=null;lastScreen=null;manual=false;focused=false;}return;}
  const stage=stageOf(screen);
+ root.toggleAttribute?.("data-combat-viewport-reserve",animationExpected()&&!!screen.querySelector?.(".formal-b-shared-stage,.formal-b-battle-stage"));
  if(stage!==lastStage||screen!==lastScreen){cancel();lastStage=stage;lastScreen=screen;}
  if(!stage||!live()||manual||focused||queued)return;
  queued=true;const ticket=++token;raf(()=>center(screen,stage,ticket));

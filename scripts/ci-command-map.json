@@ -773,5 +773,10 @@
     "source": "runtime-integrity/issue106",
     "suite": "R3",
     "command": "node --test tests/runtime/hybrid-comparison-playback-contract.cjs"
+  },
+  {
+    "source": "runtime-integrity/formal-continuous-stop",
+    "suite": "R2-container",
+    "command": "node tests/runtime/formal-continuous-stop-browser.cjs"
   }
 ]

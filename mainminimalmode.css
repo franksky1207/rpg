@@ -226,11 +226,8 @@ body.main-minimal-mode-open{overflow:hidden;background:#000}
 .calamity-home > .calamity-mark-grid{order:4}
 .calamity-home > details.card:not(.calamity-title){order:5}
 
-/* Special-encounter stop belongs above its combat arena; owner JS remains sealed. */
-.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap){
- display:flex;flex-direction:column;
-}
-.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-head{order:0}
-.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .continuous-stop-wrap{order:1}
-.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-arena{order:2}
-.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-message{order:3}
+/* Authored heading / common stop / animation order; no structural CSS rescue. */
+.formal-continuous-stop{display:flex;justify-content:center;width:100%;box-sizing:border-box;margin:10px 0}
+.formal-continuous-stop-button{max-width:100%;min-height:44px;padding:10px 20px;white-space:normal}
+.formal-continuous-stop-button:disabled{cursor:default;opacity:.7}
+@media(max-width:820px),(max-height:500px){.formal-continuous-stop-button{width:100%}}

@@ -10,7 +10,7 @@
   // Invalidate first. Neither a save callback nor an expired sleep may revive this battle.
   battle.cancelled=true;battle.reason=reason;
   try{battle.flush(true);}catch(error){battle.saveError=error;}
-  finally{for(const wake of battle.waiters)wake();battle.waiters.clear();if(window.getCombatPresentationSnapshot?.()?.token===battle.presentationToken)window.clearCombatPresentation?.("foreground-interrupted");}
+  finally{for(const wake of battle.waiters)wake();battle.waiters.clear();window.syncFormalContinuousStopControls?.();if(window.getCombatPresentationSnapshot?.()?.token===battle.presentationToken)window.clearCombatPresentation?.("foreground-interrupted");}
   return true;
  }
  function cancel(reason="interrupted"){return backgroundAllowed()?false:invalidate(active,reason);}
@@ -29,9 +29,9 @@
     try{await Promise.race([sleeper(ms),cancelled]);this.check();}finally{this.waiters.delete(wake);}
    },
    complete(){this.check();this.done=true;},
-   finish(){this.waiters.clear();if(active===this)active=null;}
+   finish(){this.waiters.clear();if(active===this)active=null;window.syncFormalContinuousStopControls?.();}
   };
-  active=battle;
+  active=battle;window.syncFormalContinuousStopControls?.();
   return battle;
  }
  window.CivilizationCombatLifecycle=Object.freeze({begin,cancel,interrupted,isInterrupted:error=>error?.code==="COMBAT_INTERRUPTED",

@@ -48,17 +48,6 @@
  }
  window.openSecondWorldCalamityMinimalMode=function(){return typeof window.openMinimalMode==="function"?window.openMinimalMode(ADAPTER_ID):false;};
 
- const originalPage=window.secondWorldCivilizationCalamityPageHtml;
- function injectEntry(html){
-  if(typeof html!=="string"||!html.includes('calamity-stop-wrap')||html.includes("openSecondWorldCalamityMinimalMode()"))return html;
-  return html.replace(/(<div class="calamity-combat-head">)(<span>[^<]*<\/span>)/,
-   (_,head,label)=>head.replace('calamity-combat-head','calamity-combat-head main-minimal-mode-head')+label.replace('<span>','<span class="main-minimal-mode-head-label">')+window.renderMinimalModeEntry("openSecondWorldCalamityMinimalMode()"));
- }
- if(typeof originalPage==="function"){
-  const decorated=function(){return injectEntry(originalPage.apply(this,arguments));};
-  Object.defineProperty(decorated,"formalRenderer",{value:originalPage});
-  window.secondWorldCivilizationCalamityPageHtml=decorated;
- }
  function applyEndState(run){
   retainedRun=run||retainedRun;
   const id=retainedRun?.calamityId;

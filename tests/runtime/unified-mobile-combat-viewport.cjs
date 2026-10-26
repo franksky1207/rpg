@@ -4,7 +4,7 @@ const src=fs.readFileSync("combat-viewport-coordinator.js","utf8");
 assert.doesNotMatch(src,/textContent|insertBefore|stopControl/);
 assert.match(src,/visualViewport/);
 for(const p of ["dungeonbounty.js","dungeonarena.js","thirdworldarenaui.js","worldmapui.js","thirdworldui.js","calamityui.js","secondworldcalamityui.js"]){
- const s=fs.readFileSync(p,"utf8");assert.match(s,/data-combat-action="stop-continuous"/,p);
+ const s=fs.readFileSync(p,"utf8");assert.match(s,/window\.renderContinuousStopControl\(/,p);
 }
 const handlers={};let y=0,hidden=true;const q=[];
 const stage={isConnected:true,get hidden(){return hidden;},getBoundingClientRect(){return {top:700-y,bottom:950-y,width:350,height:250}}};

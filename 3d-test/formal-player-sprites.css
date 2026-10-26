@@ -13,10 +13,11 @@
 .formal-b-shared-layout .combatant.attacking,.formal-b-shared-layout .combatant.hit{animation:none!important}
 @media(max-width:760px){
  .formal-b-shared-layout .combat-arena{display:contents}
- .formal-b-shared-layout>.combat-head,.formal-b-shared-layout>.muted{order:-4}
- .formal-b-shared-layout .combat-arena>.combatant.enemy{order:-3}
- .formal-b-shared-layout>.formal-b-shared-stage{order:-2;height:clamp(265px,43dvh,340px)}
- .formal-b-shared-layout .combat-arena>.combatant.player{order:-1}
+ .formal-b-shared-layout:not(.formal-continuous-combat)>.combat-head,.formal-b-shared-layout:not(.formal-continuous-combat)>.muted{order:-4}
+ .formal-b-shared-layout:not(.formal-continuous-combat) .combat-arena>.combatant.enemy{order:-3}
+ .formal-b-shared-layout:not(.formal-continuous-combat)>.formal-b-shared-stage{order:-2}
+ .formal-b-shared-layout>.formal-b-shared-stage{height:clamp(265px,43dvh,340px)}
+ .formal-b-shared-layout:not(.formal-continuous-combat) .combat-arena>.combatant.player{order:-1}
  .formal-b-shared-layout .combatant{min-height:0;padding:10px}
  .formal-b-shared-stage .formal-b-whole-suit,.formal-b-shared-stage .formal-b-enemy-sprite{height:82%;max-width:47%}
  .formal-b-player-sprite{left:2%}
@@ -25,7 +26,8 @@
 
 
 /* Keep the same stage order and height through asynchronous preparation. */
-@media(max-width:760px){.formal-b-stage-pending>.formal-b-shared-stage{order:-2;height:clamp(265px,43dvh,340px)}}
+@media(max-width:760px){.formal-b-stage-pending:not(.formal-continuous-combat)>.formal-b-shared-stage{order:-2}
+.formal-b-stage-pending>.formal-b-shared-stage{height:clamp(265px,43dvh,340px)}}
 
 /* Landscape wins for both reserved and ready stages. */
 @media(max-height:500px){.formal-b-stage-pending>.formal-b-shared-stage,.formal-b-shared-stage,.formal-b-shared-layout>.formal-b-shared-stage{height:clamp(170px,52dvh,250px)}}

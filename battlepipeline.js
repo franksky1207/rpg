@@ -57,7 +57,7 @@
  window.blankBattleEnhancementRewards=blankEnhancementRewards;
  window.ensureBattleEnhancementRewards=ensureEnhancementRewards;
  window.addBattleEnhancementReward=addContextEnhancementReward;
- window.requestContinuousBattleStop=function(){const ctx=window.activeMainBattleContext;if(!battleBusy||ctx?.continuous!==true)return false;ctx.exitRequested=true;const btn=document.getElementById("continuousBattleStopBtn");if(btn){btn.disabled=true;btn.textContent="本場結束後停止";}return true;};
+ window.requestContinuousBattleStop=function(){const ctx=window.activeMainBattleContext;if(!battleBusy||ctx?.continuous!==true)return false;ctx.exitRequested=true;window.syncFormalContinuousStopControls?.();return true;};
 
  runBattles=async function(count,ctx=null,targetContext=null){
   if(battleBusy)return false;
@@ -124,4 +124,8 @@
  window.MAIN_BATTLE_PIPELINE_CLEANUP_VERSION=1;
  window.MAINLINE_BOSS_STORY_PIPELINE_VERSION=2;
  window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;
+ window.registerFormalContinuousStopAdapter?.("main",{
+  read:()=>{const c=window.activeMainBattleContext;return {owner:c,active:typeof battleBusy!=="undefined"&&battleBusy===true,continuous:c?.continuous===true,requested:c?.exitRequested===true,finishing:true};},
+  request:()=>window.requestContinuousBattleStop()
+ });
 })();

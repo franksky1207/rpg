@@ -240,4 +240,9 @@
 
  window.getVoidMirageRunSnapshot=runSnapshot;
  if(typeof state!=="undefined"&&state)normalizeVoidMirageState(state);
+ window.registerFormalContinuousStopAdapter?.("void",{
+  pendingLabel:"本層結束後將退出",
+  read:()=>({owner:voidMirageRun,active:voidMirageRun?.active===true,continuous:true,requested:voidMirageRun?.exitRequested===true,finishing:voidMirageRun?.phase==="fighting"}),
+  request:()=>window.requestVoidMirageExit()
+ });
 })();

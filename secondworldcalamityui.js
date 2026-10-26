@@ -100,9 +100,9 @@
   const ehp=view?.enemyHp??last?.enemyEndHp??st.currentHp,php=view?.playerHp??last?.playerEndHp??p.hp;
   const continuous=ui.mode==="continuous";
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
-   <div class="calamity-combat-head"><span>${continuous?`連續討伐・第 ${Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1))} 場`:"單場挑戰"}</span></div>
-   ${continuous?`<div class="calamity-stop-wrap"><button data-combat-action="stop-continuous" class="btn danger" onclick="stopSecondWorldCalamityContinuousUI()">停止連續討伐</button></div>`:""}
-   <div class="combat-screen calamity-combat"><div class="combat-arena">
+   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1))} 場`:"單場挑戰"}</span>${continuous&&run?.active?window.renderMinimalModeEntry("openSecondWorldCalamityMinimalMode()"):""}</div>
+   ${window.renderContinuousStopControl({mode:"second-world-calamity",pending:continuous})}
+   <div class="combat-screen formal-continuous-combat calamity-combat"><div class="combat-arena">
     <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${playerName()} Lv.${state.level}</h2><div class="muted">ATK ${fmt(p.atk)}　DEF ${fmt(p.def)}<br>暴擊 ${Number(p.crit||0).toFixed(1)}%　閃避 ${Number(p.dodge||0).toFixed(1)}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(p.hp)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${Math.max(0,Math.min(100,php/p.hp*100))}%"></span></div></div></div>
     <div class="combat-vs">VS</div>
     <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="calamity-threat-badge">文明災厄</div><h2>${esc(e.name)}</h2><div class="muted">ATK ${fmt(e.atk)}　DEF ${fmt(e.def)}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(ehp)} / ${fmt(e.hp)}</span></div><div class="bar calamity-hp-bar"><span class="hp" id="combatEnemyBar" style="width:${Math.max(0,Math.min(100,ehp/e.hp*100))}%"></span></div></div></div>
@@ -248,7 +248,7 @@
   ui.foregroundEpoch=window.CivilizationCombatLifecycle?.epoch();ui.selectedId=id;ui.mode=mode==="continuous"&&!st.completed?"continuous":"single";ui.phase="combat";ui.running=true;ui.message="";ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();if(typeof window.resetBattleEntryViewport!=="function")throw new Error("Battle Entry Viewport Reset owner 未載入。");window.resetBattleEntryViewport();
   if(ui.mode==="continuous")continuous();else single();return true;
  };
- window.stopSecondWorldCalamityContinuousUI=function(){return window.requestSecondWorldCalamityStop?.();};
+ window.stopSecondWorldCalamityContinuousUI=function(){const out=window.requestFormalContinuousStop("second-world-calamity");return out.result||out;};
  window.returnToSecondWorldCalamityList=function(){ui.phase="idle";ui.running=false;ui.lastBattle=null;ui.finalRun=null;ui.displayBattleNumber=1;ui.battleView=null;render();};
  window.leaveSecondWorldCalamityUI=function(){ui.phase="idle";ui.running=false;view="home";render();};
  window.queueSecondWorldCalamityAppearanceNotice=function(value){

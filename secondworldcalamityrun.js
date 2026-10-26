@@ -275,4 +275,8 @@
  window.secondWorldCalamityBackgroundEnabled=backgroundEnabled;
  window.stopSecondWorldCalamityRunForPageHide=stopForPageHide;
  window.SECOND_WORLD_CALAMITY_GLOBAL_RUN_MUTEX_INTEGRITY={version:GLOBAL_MUTEX_VERSION,passed:typeof BLOCKER_NAME==="string"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};
+ window.registerFormalContinuousStopAdapter?.("second-world-calamity",{
+  read:()=>({owner:activeRun,active:activeRun?.active===true,continuous:activeRun?.mode==="continuous",requested:activeRun?.stopRequested===true,finishing:activeRun?.phase==="fighting"}),
+  request:()=>window.requestSecondWorldCalamityStop()
+ });
 })();

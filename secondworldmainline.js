@@ -295,4 +295,8 @@
   passed:typeof window.startSecondWorldBossBattle==="function"&&typeof window.startSecondWorldBossContinuous==="function"&&typeof window.requestSecondWorldContinuousStop==="function"&&typeof window.secondWorldMainlinePresentationActive==="function"&&window.SECOND_WORLD_COMBAT_SETTLEMENT_READY===true&&Number(window.SECOND_WORLD_COMBAT_REVIEW_POLICY_VERSION)===1&&Number(window.BACKGROUND_PROGRESS_FAST_CATCH_UP_POLICY_VERSION)===1&&Number(window.SECOND_WORLD_ATOMIC_SETTLEMENT_VERSION)===1,
   version:VERSION,backgroundGmGateVersion:BACKGROUND_GM_GATE_VERSION,reviewFlowVersion:REVIEW_FLOW_VERSION,reviewStateIsolationVersion:REVIEW_STATE_ISOLATION_VERSION,reviewResultLockVersion:REVIEW_RESULT_LOCK_VERSION
  };
+ window.registerFormalContinuousStopAdapter?.("second-world-mainline",{
+  read:()=>({owner:activeContext,active:busy===true,continuous:activeContext?.continuous===true,requested:activeContext?.stopRequested===true,finishing:true}),
+  request:()=>window.requestSecondWorldContinuousStop()
+ });
 })();

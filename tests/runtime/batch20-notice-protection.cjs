@@ -12,6 +12,6 @@ let count=0;
 for(const [file,markers]of Object.entries(functions)){const old=before(file),next=fs.readFileSync(file,'utf8');for(const marker of markers){assert.equal(block(next,marker),block(old,marker),file+':'+marker);count++;}}
 // All owners of automatic story/title/world/Boss notifications, audio and their styles stay identical.
 const protectedFiles=['storyui.js','storyprogress.js','playertitles.js','playertitleui.js','worldphase.js','worldphaseui.js','thirdworldphase.js','thirdworldplayerflow.js','secondworldmainlineresult.js','calamityui.css','playertitles.css','story.css','audio/audio-core.js','combatmath.js','markcore.js','civilizationcore.js','reincarnationcore.js','reincarnationrerunworld1.js','reincarnationrerunworld2.js','reincarnationrerunworld3.js','thirdworldprogress.js','secondworldprogress.js'];
-for(const file of protectedFiles){if(!fs.existsSync(file))continue;assert.equal(fs.readFileSync(file,'utf8'),before(file),file);count++;}
+for(const file of protectedFiles){if(!fs.existsSync(file))continue;assert.equal(require('./formal-stop-approved.cjs').historicalBytes(file,fs.readFileSync(file)).toString('utf8'),before(file),file);count++;}
 const core=require('./issue106-approved-sources.cjs').historicalBytes('combatcore.js',fs.readFileSync('combatcore.js')).toString('utf8').split('\n').filter(l=>!l.includes('window.recordMonsterCodexEncounter?.')).join('\n');assert.equal(core,before('combatcore.js'),'formal combat math unchanged');count++;
 console.log('PASS: '+count+' protected notice functions/owners match '+baseline+' byte-for-byte');
