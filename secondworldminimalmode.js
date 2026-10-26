@@ -57,7 +57,7 @@
  function injectEntry(html){
   const ctx=liveContext();
   if(!ctx?.continuous||!ctx.currentEncounter||typeof html!=="string"||html.includes("openSecondWorldMainlineMinimalMode()"))return html;
-  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span><button type="button" class="main-minimal-mode-enter" onclick="openSecondWorldMainlineMinimalMode()">極簡模式</button></div>`);
+  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span>${window.renderMinimalModeEntry("openSecondWorldMainlineMinimalMode()")}</div>`);
  }
  if(typeof originalAdventurePage==="function")window.secondWorldAdventurePageHtml=function(){return injectEntry(originalAdventurePage.apply(this,arguments));};
 
