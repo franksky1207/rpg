@@ -377,7 +377,7 @@
   }
   const ctx=displayContext(),enemy=root.querySelector("[data-third-world-minimal-enemy]"),round=root.querySelector("[data-third-world-minimal-round]"),deaths=root.querySelector("[data-third-world-minimal-deaths]"),cap=root.querySelector("[data-third-world-minimal-cap]"),level=root.querySelector("[data-third-world-minimal-level]"),exp=root.querySelector("[data-third-world-minimal-exp]"),strings=root.querySelector("[data-third-world-minimal-strings]"),note=root.querySelector("[data-main-minimal-mode-note]");
   if(enemy)enemy.textContent=ctx?.bossName||"高維存在";
-  if(round)round.textContent=`第 ${Math.max(1,whole(ctx?.battleNumber||1))} 場`;
+  if(round)round.textContent=`第 ${window.minimalModeFormatNumber(Math.max(1,whole(ctx?.battleNumber||1)))} 場`;
   if(deaths)deaths.textContent=`${whole(ctx?.deaths)} / ${runMaxDeaths()}`;
   if(cap)cap.textContent=suppressionPct(ctx?.hpCapPercent??100);
   if(level)level.textContent=`Lv.${whole(state?.level)}`;
