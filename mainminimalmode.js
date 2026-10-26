@@ -12,6 +12,8 @@
  let unsubscribeEnvironment=null;
  const adapters=new Map();
 
+ function minimalModeFormatNumber(value){return Math.max(0,Math.floor(Number(value)||0)).toLocaleString("zh-TW");}
+ window.minimalModeFormatNumber=minimalModeFormatNumber;
  function renderMinimalModeEntry(action){
   if(!/^[a-zA-Z_$][\w$]*\(\)$/.test(String(action)))return "";
   return `<button type="button" class="main-minimal-mode-enter" onclick="${action}">極簡模式</button>`;
@@ -68,7 +70,7 @@
   const basic=root.querySelector("[data-main-minimal-mode-basic-stones]");
   const advanced=root.querySelector("[data-main-minimal-mode-advanced-stones]");
   if(enemy&&mode==="running")enemy.textContent=encounter?`${encounter.name}　Lv.${encounter.level}`:"戰鬥中";
-  if(round)round.textContent=`第 ${Math.max(1,Math.floor(Number(combatRound)||1))} 場`;
+  if(round)round.textContent=`第 ${minimalModeFormatNumber(Math.max(1,Math.floor(Number(combatRound)||1)))} 場`;
   if(level)level.textContent=Number(state?.level)>=Number(MAX_LEVEL)?`Lv.${MAX_LEVEL} MAX`:`Lv.${state.level}`;
   if(exp)exp.textContent=`EXP　${expText()}`;
   if(gold)gold.textContent=resourceText();
