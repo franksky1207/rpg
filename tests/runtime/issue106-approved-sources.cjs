@@ -7,6 +7,17 @@ function historicalBytes(path,bytes){
  const lock=require('./issue106-approved-sources.json'),row=lock.files[path];
  if(!row)return bytes;
  assert.equal(lock.baseline,'314fe6814ea17e3ff2cd8deafe25ef6943204513');
+ // Batch 1-3 combat UI: only approved asset URL cache tokens may be
+ // projected away for historical source seals; live HTML remains untouched.
+ if(path==='index.html'){
+  let source=bytes.toString('utf8');
+  for(const [token,count] of [['&combatUiB1=20261026',5],['&combatUiB2=20261026',9],['&combatUiB3=20261026',3]]){
+   assert.equal(source.split(token).length-1,count,'combat UI approved cache token count: '+token);
+   source=source.split(token).join('');
+  }
+  assert.doesNotMatch(source,/combatUiB[123]=20261026/,'unregistered combat UI cache tokens');
+  bytes=Buffer.from(source);
+ }
  assert.equal(digest(bytes),row.after,'unregistered Issue106 source edit: '+path);
  const before=cp.execFileSync('git',['show',lock.baseline+':'+path],{maxBuffer:16*1024*1024});
  assert.equal(digest(before),row.before,'Issue106 main baseline digest: '+path);
