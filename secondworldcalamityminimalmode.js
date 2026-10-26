@@ -36,7 +36,7 @@
   const progress=root.querySelector("[data-second-world-calamity-minimal-progress]");
   const kills=root.querySelector("[data-second-world-calamity-minimal-kills]");
   if(name)name.textContent=run?.calamityName||st?.definition?.name||"文明災厄";
-  if(round){const count=Math.max(0,Math.floor(Number(run?.battleCount)||0)),display=Math.max(1,Math.floor(Number(presentation?.displayBattleNumber)||1));round.textContent=`第 ${mode==="running"?display:Math.max(1,count)} 場`;}
+  if(round){const count=Math.max(0,Math.floor(Number(run?.battleCount)||0)),display=Math.max(1,Math.floor(Number(presentation?.displayBattleNumber)||1));round.textContent=`第 ${window.minimalModeFormatNumber(mode==="running"?display:Math.max(1,count))} 場`;}
   if(enemyHp){const hp=mode==="running"?(view?.enemyHp??st?.currentHp??last?.enemyEndHp??maxHp):(st?.currentHp??maxHp);enemyHp.textContent=`災厄 HP　${fmt(hp)} / ${fmt(maxHp)}`;}
   if(playerHp){const hp=mode==="running"?(view?.playerHp??last?.playerEndHp??state?.hp??pMax):(state?.hp??pMax);playerHp.textContent=`玩家 HP　${fmt(hp)} / ${fmt(pMax)}`;}
   if(progress)progress.textContent=`文明進度　${pct(st?.progressPercent)}`;
