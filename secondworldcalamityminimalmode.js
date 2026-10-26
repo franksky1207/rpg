@@ -1,7 +1,6 @@
 (function(){
  const VERSION=3;
  const ADAPTER_ID="second-world-calamity";
- const originalPage=window.secondWorldCivilizationCalamityPageHtml;
  const originalContinuous=window.runSecondWorldCalamityContinuous;
  let retainedRun=null;
  let retainedStatus=null;
@@ -48,19 +47,6 @@
   return window.registerMinimalModeAdapter(ADAPTER_ID,{isActive,runningStatus:"文明災厄連續討伐中",centerClass:"main-minimal-mode-center--stacked",contentHtml,sync});
  }
  window.openSecondWorldCalamityMinimalMode=function(){return typeof window.openMinimalMode==="function"?window.openMinimalMode(ADAPTER_ID):false;};
-
- function injectEntry(html){
-  const run=liveRun();
-  if(!run?.active||run.mode!=="continuous"||typeof html!=="string"||html.includes("openSecondWorldCalamityMinimalMode()"))return html;
-  return html.replace(/<div class="calamity-combat-head"><span>([\s\S]*?)<\/span><\/div>/,`<div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span><button type="button" class="main-minimal-mode-enter" onclick="openSecondWorldCalamityMinimalMode()">極簡模式</button></div>`);
- }
- if(typeof originalPage==="function"){
-  const decorated=function(){return injectEntry(originalPage.apply(this,arguments));};
-  // Keep the existing renderer discoverable by read-only diagnostics after
-  // the minimal-mode button decorator, without creating a second UI owner.
-  Object.defineProperty(decorated,"formalRenderer",{value:originalPage});
-  window.secondWorldCivilizationCalamityPageHtml=decorated;
- }
 
  function applyEndState(run){
   retainedRun=run||retainedRun;

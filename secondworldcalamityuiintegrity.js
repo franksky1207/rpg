@@ -26,9 +26,7 @@
  required.forEach(name=>{if(typeof window[name]!=="function")fail("UI_API",name+" 未載入");});
  try{
   const page=window.secondWorldCivilizationCalamityPageHtml;
-  const decoratorSource=Function.prototype.toString.call(page);
-  if(page.formalRenderer&&(!/injectEntry/.test(decoratorSource)||!/originalPage\.apply/.test(decoratorSource)))fail("PAGE_DECORATOR_OWNER","極簡按鈕不得更換正式renderer");
-  const pageSource=Function.prototype.toString.call(page.formalRenderer||page);
+  const pageSource=Function.prototype.toString.call(page);
   const startSource=Function.prototype.toString.call(window.startSecondWorldCalamityUI);
   if(typeof window.startUniverseCalamityReview!=="undefined"||typeof window.startGalaxyCalamityReview!=="undefined")fail("REVIEW_RETIRED","災厄回顧 API 不得存在");
   const prepareSource=Function.prototype.toString.call(window.prepareSecondWorldCivilizationCalamityEntry);
@@ -38,6 +36,8 @@
   if(!/thirdWorldReviewOnly/.test(startSource))fail("THIRD_WORLD_FORMAL_GATE","高維紀元必須阻擋第二紀元正式文明災厄入口",startSource);
   if(!/resetBattleEntryViewport/.test(startSource)||/resetSecondWorldCalamityBattleViewport/.test(startSource))fail("BATTLE_ENTRY_SCROLL_WIRING","第二世界文明災厄單場／連續戰鬥入口必須使用共用 viewport reset owner",startSource);
   if(!/civilizationHeritagePageHtml/.test(pageSource))fail("HERITAGE_RENDERER","高維必須顯示只讀文明傳承");
+  const combatSource=Function.prototype.toString.call(window.secondWorldCivilizationCalamityFormalCombatRenderer||function(){});
+  if(!/openSecondWorldCalamityMinimalMode/.test(combatSource))fail("MINIMAL_ENTRY_OWNER","宇宙災厄極簡模式入口必須由正式 renderer 產生");
   if(!/AppearanceRequirement/.test(flushSource)||!/challengeable/.test(flushSource)||!/thirdWorldReviewOnly/.test(flushSource))fail("NOTICE_REQUIREMENT_WIRING","現身通知必須顯示當下是否可挑戰，且高維紀元不得再跳第二紀元現身通知",flushSource);
   if(!/notifyTitlePostFlow/.test(prepareSource))fail("TITLE_POST_FLOW_ENTRY_FALLBACK","第二世界文明災厄入口必須補檢 pending 稱號通知",prepareSource);
   if(!pageSource)fail("PAGE_RENDERER","第二世界文明災厄頁 renderer 不可為空");
