@@ -398,6 +398,8 @@ jobs:
     if: needs.classify.outputs.gm == 'true'
     runs-on: ubuntu-latest
     steps:
+    - name: Start GM job timing
+      run: echo "GM_JOB_STARTED_MS=$(date +%s%3N)" >> "$GITHUB_ENV"
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
@@ -405,15 +407,22 @@ jobs:
     - uses: ./.github/actions/setup-ci-browser
       with:
         browsers: chromium
-    - run: |
-        node tests/runtime/gm-animation-center-terminology.cjs
-        node tests/runtime/3d-player-snapshot-contract.js
-        node tests/runtime/gm-runtime-early-restore-integrity.js
-        # Chromium was installed by the shared setup action.
+    - name: Run five GM entries with timings
+      shell: bash
+      run: |
+        set -euo pipefail
         python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gm-functional-http.log 2>&1 &
-        sleep 2
-        node tests/runtime/batch19-2-gm-center-browser.cjs
-        node tests/runtime/gm-3d-test-center-browser.js
+        server_pid=$!
+        trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+        for i in {1..40}; do
+          if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then break; fi
+          sleep 0.25
+        done
+        curl -fsS http://127.0.0.1:4173/index.html >/dev/null
+        # Original ordered entries: gm-animation-center-terminology.cjs,
+        # 3d-player-snapshot-contract.js, gm-runtime-early-restore-integrity.js,
+        # batch19-2-gm-center-browser.cjs, gm-3d-test-center-browser.js.
+        node tests/runtime/gm-functional-suite.cjs
     - uses: actions/upload-artifact@v4
       if: always()
       with:
