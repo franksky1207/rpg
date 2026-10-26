@@ -1,7 +1,6 @@
 (function(){
  const VERSION=3;
  const ADAPTER_ID="second-world-calamity";
- const originalPage=window.secondWorldCivilizationCalamityPageHtml;
  const originalContinuous=window.runSecondWorldCalamityContinuous;
  let retainedRun=null;
  let retainedStatus=null;
@@ -37,7 +36,7 @@
   const progress=root.querySelector("[data-second-world-calamity-minimal-progress]");
   const kills=root.querySelector("[data-second-world-calamity-minimal-kills]");
   if(name)name.textContent=run?.calamityName||st?.definition?.name||"文明災厄";
-  if(round){const count=Math.max(0,Math.floor(Number(run?.battleCount)||0)),display=Math.max(1,Math.floor(Number(presentation?.displayBattleNumber)||1));round.textContent=`第 ${mode==="running"?display:Math.max(1,count)} 場`;}
+  if(round){const count=Math.max(0,Math.floor(Number(run?.battleCount)||0)),display=Math.max(1,Math.floor(Number(presentation?.displayBattleNumber)||1));round.textContent=`第 ${window.minimalModeFormatNumber(mode==="running"?display:Math.max(1,count))} 場`;}
   if(enemyHp){const hp=mode==="running"?(view?.enemyHp??st?.currentHp??last?.enemyEndHp??maxHp):(st?.currentHp??maxHp);enemyHp.textContent=`災厄 HP　${fmt(hp)} / ${fmt(maxHp)}`;}
   if(playerHp){const hp=mode==="running"?(view?.playerHp??last?.playerEndHp??state?.hp??pMax):(state?.hp??pMax);playerHp.textContent=`玩家 HP　${fmt(hp)} / ${fmt(pMax)}`;}
   if(progress)progress.textContent=`文明進度　${pct(st?.progressPercent)}`;
@@ -49,19 +48,17 @@
  }
  window.openSecondWorldCalamityMinimalMode=function(){return typeof window.openMinimalMode==="function"?window.openMinimalMode(ADAPTER_ID):false;};
 
+ const originalPage=window.secondWorldCivilizationCalamityPageHtml;
  function injectEntry(html){
-  const run=liveRun();
-  if(!run?.active||run.mode!=="continuous"||typeof html!=="string"||html.includes("openSecondWorldCalamityMinimalMode()"))return html;
-  return html.replace(/<div class="calamity-combat-head"><span>([\s\S]*?)<\/span><\/div>/,`<div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span><button type="button" class="main-minimal-mode-enter" onclick="openSecondWorldCalamityMinimalMode()">極簡模式</button></div>`);
+  if(typeof html!=="string"||!html.includes('calamity-stop-wrap')||html.includes("openSecondWorldCalamityMinimalMode()"))return html;
+  return html.replace(/(<div class="calamity-combat-head">)(<span>[^<]*<\/span>)/,
+   (_,head,label)=>head.replace('calamity-combat-head','calamity-combat-head main-minimal-mode-head')+label.replace('<span>','<span class="main-minimal-mode-head-label">')+window.renderMinimalModeEntry("openSecondWorldCalamityMinimalMode()"));
  }
  if(typeof originalPage==="function"){
   const decorated=function(){return injectEntry(originalPage.apply(this,arguments));};
-  // Keep the existing renderer discoverable by read-only diagnostics after
-  // the minimal-mode button decorator, without creating a second UI owner.
   Object.defineProperty(decorated,"formalRenderer",{value:originalPage});
   window.secondWorldCivilizationCalamityPageHtml=decorated;
  }
-
  function applyEndState(run){
   retainedRun=run||retainedRun;
   const id=retainedRun?.calamityId;

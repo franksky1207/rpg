@@ -214,3 +214,23 @@ body.main-minimal-mode-open{overflow:hidden;background:#000}
   .main-minimal-mode-status.is-complete{opacity:1}
   .main-minimal-mode-knob{transition:none}
 }
+
+/* Galaxy calamity home: prioritize battles without modifying sealed calamityui.js. */
+.calamity-home{display:flex;flex-direction:column}
+.calamity-home > .back-home,
+.calamity-home > .calamity-title,
+.calamity-home > .calamity-notice{order:0}
+.calamity-home > .calamity-section-head{order:1}
+.calamity-home > .calamity-grid{order:2}
+.calamity-home > .card:not(.calamity-title){order:3}
+.calamity-home > .calamity-mark-grid{order:4}
+.calamity-home > details.card:not(.calamity-title){order:5}
+
+/* Special-encounter stop belongs above its combat arena; owner JS remains sealed. */
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap){
+ display:flex;flex-direction:column;
+}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-head{order:0}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .continuous-stop-wrap{order:1}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-arena{order:2}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-message{order:3}

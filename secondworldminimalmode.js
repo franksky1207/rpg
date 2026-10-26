@@ -37,7 +37,7 @@
   const darkMatter=root.querySelector("[data-second-world-minimal-dark-matter]");
   const darkEnergy=root.querySelector("[data-second-world-minimal-dark-energy]");
   if(enemy)enemy.textContent=encounter?`${encounter.name}　Lv.${encounter.level}`:"宇宙 Boss";
-  if(round){const completed=Math.max(0,Math.floor(Number(ctx?.completed)||0));round.textContent=`第 ${mode==="running"?completed+1:Math.max(1,completed)} 場`;}
+  if(round){const completed=Math.max(0,Math.floor(Number(ctx?.completed)||0));round.textContent=`第 ${window.minimalModeFormatNumber(mode==="running"?completed+1:Math.max(1,completed))} 場`;}
   if(level)level.textContent=progress.atCap?`Lv.${state.level} MAX`:`Lv.${state.level}`;
   if(exp)exp.textContent=`EXP　${progress.atCap?"MAX":`${fmt(progress.exp)} / ${fmt(progress.need)}`}`;
   if(darkMatter)darkMatter.textContent=`暗物質　${fmt(state?.secondWorld?.darkMatter)}`;
@@ -57,7 +57,7 @@
  function injectEntry(html){
   const ctx=liveContext();
   if(!ctx?.continuous||!ctx.currentEncounter||typeof html!=="string"||html.includes("openSecondWorldMainlineMinimalMode()"))return html;
-  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span><button type="button" class="main-minimal-mode-enter" onclick="openSecondWorldMainlineMinimalMode()">極簡模式</button></div>`);
+  return html.replace(/<div class="combat-head">([\s\S]*?)<\/div>/,`<div class="combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">$1</span>${window.renderMinimalModeEntry("openSecondWorldMainlineMinimalMode()")}</div>`);
  }
  if(typeof originalAdventurePage==="function")window.secondWorldAdventurePageHtml=function(){return injectEntry(originalAdventurePage.apply(this,arguments));};
 
