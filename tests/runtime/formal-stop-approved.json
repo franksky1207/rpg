@@ -1,0 +1,729 @@
+{
+  "baseline": "215cb89207363b0ed16e08fae9b8532ee67390a3",
+  "scope": "Only named shared-stop UI/dispatch, owner registration, lifecycle notifications and exact cache URLs; numerical and settlement owners unchanged",
+  "files": {
+    "mainminimalmode.js": {
+      "beforeSha256": "77a3150bb07767e758f2d016f499e59a928f0729aab5f34dbeae2e5f7d60f195",
+      "afterSha256": "389b95ce8092d6e46d5987cb278c88d52bee629e4cc001c8f08d33ed91c2e874",
+      "edits": [
+        {
+          "scope": "shared-stop-render-dispatch-state",
+          "before": " function renderContinuousStopControl({onclick,id=\"\",label=\"停止連續戰鬥\",disabled=false,wrapClass=\"continuous-stop-wrap combat-viewport-stop\",buttonClass=\"btn danger\"}={}){\n  if(!/^[a-zA-Z_$][\\w$]*\\(\\)$/.test(String(onclick)))return \"\";\n  const safe=s=>String(s).replace(/[^a-zA-Z0-9_ -]/g,\"\");\n  const escaped=String(label).replace(/&/g,\"&amp;\").replace(/</g,\"&lt;\").replace(/>/g,\"&gt;\");\n  return `<div class=\"${safe(wrapClass)}\"><button data-combat-action=\"stop-continuous\"${id?` id=\"${safe(id).trim()}\"`:\"\"} class=\"${safe(buttonClass)}\" onclick=\"${onclick}\"${disabled?\" disabled\":\"\"}>${escaped}</button></div>`;\n }\n window.renderMinimalModeEntry=renderMinimalModeEntry;\n window.renderContinuousStopControl=renderContinuousStopControl;\n",
+          "after": " const stopAdapters=new Map(),stopRuns=new WeakMap(),stopInFlight=new WeakSet();\n let stopSerial=0,stopObserver=null;\n const stopEscape=value=>String(value).replace(/&/g,\"&amp;\").replace(/</g,\"&lt;\").replace(/>/g,\"&gt;\").replace(/\"/g,\"&quot;\");\n function registerFormalContinuousStopAdapter(mode,adapter){\n  if(typeof mode!==\"string\"||!/^[a-z][a-z0-9-]*$/.test(mode)||stopAdapters.has(mode)||typeof adapter?.read!==\"function\"||typeof adapter?.request!==\"function\")return false;\n  stopAdapters.set(mode,adapter);return true;\n }\n function formalStopSnapshot(mode){\n  const adapter=stopAdapters.get(mode);\n  if(!adapter)return {available:false,mode,status:\"unavailable\",reason:\"adapter-missing\"};\n  try{\n   const current=adapter.read()||{},owner=current.owner;\n   if(!owner||typeof owner!==\"object\")return {available:false,mode,status:\"stopped\",reason:\"no-run\"};\n   if(!stopRuns.has(owner))stopRuns.set(owner,++stopSerial);\n   const epoch=window.CivilizationCombatLifecycle?.epoch?.()||0,run=`${stopRuns.get(owner)}-${epoch}`;\n   const active=current.active===true,continuous=current.continuous===true,requested=current.requested===true;\n   return {owner,adapter,mode,run,active,continuous,requested,available:active&&continuous,\n    finishing:requested&&current.finishing===true,status:!active?\"stopped\":requested?(current.finishing?\"finishing\":\"requested\"):\"running\",\n    label:requested?String(adapter.pendingLabel||\"本場結束後停止\"):\"停止連續戰鬥\"};\n  }catch(error){return {available:false,mode,status:\"unavailable\",reason:\"owner-unavailable\"};}\n }\n function getFormalContinuousStopState(mode){\n  const {owner,adapter,...state}=formalStopSnapshot(mode);return {active:false,continuous:false,requested:false,finishing:false,...state};\n }\n function syncFormalContinuousStopControls(){\n  // A UI may mount before its formal owner begins. Empty authored slots are\n  // not stop state; populate them only when an actual continuous owner exists.\n  for(const slot of document.querySelectorAll('[data-formal-continuous-stop-slot]')){\n   const mode=slot.dataset.formalContinuousStopSlot,state=formalStopSnapshot(mode);\n   const existing=[...document.querySelectorAll('[data-combat-action=\"stop-continuous\"][data-combat-mode]')].some(b=>b.dataset.combatMode===mode&&b.dataset.combatRun===state.run);\n   if(state.available&&!existing&&!slot.querySelector('button'))slot.innerHTML=renderContinuousStopControl({mode,id:slot.dataset.stopId||\"\"});\n  }\n  const seen=new Set();\n  for(const button of document.querySelectorAll('[data-combat-action=\"stop-continuous\"][data-combat-mode]')){\n   const state=formalStopSnapshot(button.dataset.combatMode),wrapper=button.closest('[data-formal-continuous-stop]');\n   const key=button.dataset.combatMode+':'+button.dataset.combatRun;\n   if(!state.available||state.run!==button.dataset.combatRun||seen.has(key)){wrapper?.remove();continue;}\n   seen.add(key);button.disabled=state.requested||stopInFlight.has(state.owner);\n   button.dataset.stopState=state.status;\n   if(button.textContent!==state.label)button.textContent=state.label;\n   button.setAttribute('aria-busy',state.finishing?'true':'false');\n  }\n }\n function requestFormalContinuousStop(mode,options={}){\n  const state=formalStopSnapshot(mode),control=options?.control;\n  if(!state.available)return {ok:false,reason:state.reason||\"not-continuous\",state:getFormalContinuousStopState(mode)};\n  if(control&&(!control.isConnected||control.dataset.combatMode!==mode||control.dataset.combatRun!==state.run)||options.run&&options.run!==state.run)return {ok:false,reason:\"stale-control\"};\n  if(state.requested||stopInFlight.has(state.owner))return {ok:false,reason:\"already-requested\",state:getFormalContinuousStopState(mode)};\n  stopInFlight.add(state.owner);\n  try{\n   const result=state.adapter.request();\n   if(result===false||result?.ok===false)return {ok:false,reason:result?.reason||\"owner-rejected\",result};\n   const after=formalStopSnapshot(mode);\n   return {ok:after.requested===true||!after.available,result,state:getFormalContinuousStopState(mode)};\n  }catch(error){return {ok:false,reason:\"owner-failed\"};}\n  finally{stopInFlight.delete(state.owner);syncFormalContinuousStopControls();}\n }\n function requestFormalContinuousStopFromControl(control){return requestFormalContinuousStop(control?.dataset?.combatMode,{control});}\n function renderContinuousStopControl({mode,id=\"\",pending=false}={}){\n  const state=formalStopSnapshot(mode),safeId=String(id).replace(/[^a-zA-Z0-9_-]/g,\"\");\n  if(!state.available)return pending&&stopAdapters.has(mode)?`<div data-formal-continuous-stop-slot=\"${stopEscape(mode)}\" data-stop-id=\"${safeId}\"></div>`:\"\";\n  return `<div class=\"continuous-stop-wrap combat-viewport-stop formal-continuous-stop\" data-formal-continuous-stop=\"${stopEscape(mode)}\"><button type=\"button\" data-combat-action=\"stop-continuous\" data-combat-mode=\"${stopEscape(mode)}\" data-combat-run=\"${state.run}\" data-stop-state=\"${state.status}\"${safeId?` id=\"${safeId}\"`:\"\"} class=\"btn danger formal-continuous-stop-button\" onclick=\"requestFormalContinuousStopFromControl(this)\"${state.requested?\" disabled\":\"\"} aria-busy=\"${state.finishing?'true':'false'}\">${stopEscape(state.label)}</button></div>`;\n }\n window.registerFormalContinuousStopAdapter=registerFormalContinuousStopAdapter;\n window.getFormalContinuousStopState=getFormalContinuousStopState;\n window.getFormalContinuousStopModes=()=>[...stopAdapters.keys()];\n window.requestFormalContinuousStop=requestFormalContinuousStop;\n window.requestFormalContinuousStopFromControl=requestFormalContinuousStopFromControl;\n window.syncFormalContinuousStopControls=syncFormalContinuousStopControls;\n window.renderMinimalModeEntry=renderMinimalModeEntry;\n window.renderContinuousStopControl=renderContinuousStopControl;\n // Reconcile only explicit controls; never infer modes from labels or relocate UI.\n function observeFormalStops(){\n  if(stopObserver||typeof MutationObserver!==\"function\"||!document.body)return;\n  stopObserver=new MutationObserver(syncFormalContinuousStopControls);stopObserver.observe(document.body,{childList:true,subtree:true});\n  syncFormalContinuousStopControls();\n }\n document.addEventListener('DOMContentLoaded',observeFormalStops,{once:true});\n observeFormalStops();\n"
+        }
+      ]
+    },
+    "battlepipeline.js": {
+      "beforeSha256": "0ddb54c88310fd21529c4e289ead3391924d8469d7a2eb10a59f42d2e3ed24d7",
+      "afterSha256": "20a316b1fedcc34a43dcf873cf9368153ca64db1809d4a01d3454a911ab2543e",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "\n window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;\n})();",
+          "after": "\n window.MAIN_MINIMAL_MODE_PIPELINE_HOOK_VERSION=1;\n window.registerFormalContinuousStopAdapter?.(\"main\",{\n  read:()=>{const c=window.activeMainBattleContext;return {owner:c,active:typeof battleBusy!==\"undefined\"&&battleBusy===true,continuous:c?.continuous===true,requested:c?.exitRequested===true,finishing:true};},\n  request:()=>window.requestContinuousBattleStop()\n });\n})();"
+        },
+        {
+          "scope": "remove-per-mode-stop-dom-state",
+          "before": "const btn=document.getElementById(\"continuousBattleStopBtn\");if(btn){btn.disabled=true;btn.textContent=\"本場結束後停止\";}",
+          "after": "window.syncFormalContinuousStopControls?.();"
+        }
+      ]
+    },
+    "secondworldmainline.js": {
+      "beforeSha256": "45516aafad0e6bd48c06141397ff4d1e73aeeb187a0a32c58860b1fbdd7a2c1d",
+      "afterSha256": "7671e3f8276ae13c3338488aee1ff660eb63ef4b33721f6d49133d06dd29b9a8",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "\n };\n})();\n",
+          "after": "\n };\n window.registerFormalContinuousStopAdapter?.(\"second-world-mainline\",{\n  read:()=>({owner:activeContext,active:busy===true,continuous:activeContext?.continuous===true,requested:activeContext?.stopRequested===true,finishing:true}),\n  request:()=>window.requestSecondWorldContinuousStop()\n });\n})();\n"
+        }
+      ]
+    },
+    "calamityrun.js": {
+      "beforeSha256": "34f73aeeb3df720b837090681ca0779d66e9c5a78e34946ceff9dce61d62bd18",
+      "afterSha256": "1ac605220f7b2f373908d72cb681fb6dd68f11184c692c8dfc16764797971d28",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "AME===\"string\"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};\n})();",
+          "after": "AME===\"string\"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};\n window.registerFormalContinuousStopAdapter?.(\"calamity\",{\n  read:()=>({owner:activeRun,active:activeRun?.active===true,continuous:activeRun?.mode===\"continuous\",requested:activeRun?.stopRequested===true,finishing:activeRun?.phase===\"fighting\"}),\n  request:()=>window.requestCivilizationCalamityContinuousStop()\n });\n})();"
+        }
+      ]
+    },
+    "secondworldcalamityrun.js": {
+      "beforeSha256": "c251742c592fd16851b06964378d828f225ed325dc3804a922937889b36e20d9",
+      "afterSha256": "967df1b5ac4c148845e81e84bd01830701684829e91abcb153c5dd48fc2c28f2",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "AME===\"string\"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};\n})();",
+          "after": "AME===\"string\"&&BLOCKER_NAME.length>0,blockerRegistered:()=>blockerRegistered};\n window.registerFormalContinuousStopAdapter?.(\"second-world-calamity\",{\n  read:()=>({owner:activeRun,active:activeRun?.active===true,continuous:activeRun?.mode===\"continuous\",requested:activeRun?.stopRequested===true,finishing:activeRun?.phase===\"fighting\"}),\n  request:()=>window.requestSecondWorldCalamityStop()\n });\n})();"
+        }
+      ]
+    },
+    "thirdworldrun.js": {
+      "beforeSha256": "d431540df8ec068042e229badafce0fa4e640b4fde397ec768c5c7e1d74b0b35",
+      "afterSha256": "c917a6c5358f8be90341cf49e36376f3fbc471ee240f6c013fcb2477854e41fc",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "明戰線] Third-world run integrity error\",window.THIRD_WORLD_RUN_INTEGRITY.errors);\n})();\n",
+          "after": "明戰線] Third-world run integrity error\",window.THIRD_WORLD_RUN_INTEGRITY.errors);\n window.registerFormalContinuousStopAdapter?.(\"higher-stage\",{\n  read:()=>({owner:runtime,active:runtime?.active===true,continuous:true,requested:runtime?.stopRequested===true,finishing:runtime?.presentingBattle===true}),\n  request:()=>typeof window.stopThirdWorldPlayerFlow===\"function\"?window.stopThirdWorldPlayerFlow(\"manual\"):window.stopThirdWorldContinuousRun(\"manual\")\n });\n})();\n"
+        }
+      ]
+    },
+    "dungeonbounty.js": {
+      "beforeSha256": "b404cb624bf4914c32a41213ebaf4a2480aa2a48907f258ddbbad6195923435e",
+      "afterSha256": "0dade1171f472b3196842328b4f47c531216e1429c440edb526bdb4bf3a6b008",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "ate.stopRequested,summary:{...bountyState.summary},daily:dailyStatus()}:null;};\n})();",
+          "after": "ate.stopRequested,summary:{...bountyState.summary},daily:dailyStatus()}:null;};\n window.registerFormalContinuousStopAdapter?.(\"bounty\",{\n  pendingLabel:\"本場結束後停止\",\n  read:()=>({owner:bountyState,active:bountyState.phase===\"combat\",continuous:bountyState.continuous===true,requested:bountyState.stopRequested===true,finishing:true}),\n  request:()=>window.requestBountyContinuousStop()\n });\n})();"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "const stop=bountyState.continuous?`<div class=\"controls combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"bountyContinuousStop\" class=\"btn\" onclick=\"requestBountyContinuousStop()\">${bountyState.stopRequested?\"本場結束後停止\":\"停止連續挑戰\"}</button></div>`:\"\"",
+          "after": "const stop=window.renderContinuousStopControl({mode:\"bounty\",id:\"bountyContinuousStop\"})"
+        },
+        {
+          "scope": "remove-per-mode-stop-dom-state",
+          "before": "const btn=document.getElementById(\"bountyContinuousStop\");if(btn){btn.textContent=\"本場結束後停止\";btn.disabled=true;}",
+          "after": "window.syncFormalContinuousStopControls?.();"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "dungeonarena.js": {
+      "beforeSha256": "1c7486b6954a55e34d0470278beb2225f7947bca1b80f2d0695a15fd4611d1f4",
+      "afterSha256": "2408b113a7084e21fd02a44ae2bdfb1617ba360e6f5572dfea34369c7d564d82",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};\n})();",
+          "after": "history:arenaState.history.map(x=>({...x,enemy:x.enemy?{...x.enemy}:null}))};};\n window.registerFormalContinuousStopAdapter?.(\"arena\",{\n  pendingLabel:\"本輪結束後停止\",\n  read:()=>({owner:arenaState,active:arenaState.phase===\"combat\",continuous:arenaState.continuous===true,requested:arenaState.stopRequested===true,finishing:true}),\n  request:()=>window.requestArenaContinuousStop()\n });\n})();"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": ",stop=arenaState.continuous?`<div class=\"controls arena-actions combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"arenaContinuousStop\" class=\"btn\" onclick=\"requestArenaContinuousStop()\">${arenaState.stopRequested?\"本輪結束後停止\":\"停止連續挑戰\"}</button></div>`:\"\"",
+          "after": ",stop=window.renderContinuousStopControl({mode:\"arena\",id:\"arenaContinuousStop\"})"
+        },
+        {
+          "scope": "remove-per-mode-stop-dom-state",
+          "before": "const btn=document.getElementById(\"arenaContinuousStop\");if(btn){btn.textContent=\"本輪結束後停止\";btn.disabled=true;}",
+          "after": "window.syncFormalContinuousStopControls?.();"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "thirdworldarena.js": {
+      "beforeSha256": "5235ba635c9735b56de629f9ebefbb516a637cee4637b46adc02d580961a00fc",
+      "afterSha256": "5138cf3591c8f559ce25eb1ce4b32f0e0f9a5b86c360cd5d26e011519ea0f50f",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "ArenaCoreIntegrity=integrity;window.THIRD_WORLD_ARENA_CORE_INTEGRITY_VERSION=4;\n})();",
+          "after": "ArenaCoreIntegrity=integrity;window.THIRD_WORLD_ARENA_CORE_INTEGRITY_VERSION=4;\n window.registerFormalContinuousStopAdapter?.(\"higher-arena\",{\n  pendingLabel:\"本輪結束後停止\",\n  read:()=>({owner:arenaRuntime,active:[\"ready\",\"between\",\"combat\"].includes(arenaRuntime.status),continuous:arenaRuntime.requestedRuns>1,requested:arenaRuntime.stopRequested===true,finishing:arenaRuntime.status===\"combat\"}),\n  request:()=>window.requestThirdWorldArenaStop()\n });\n})();"
+        }
+      ]
+    },
+    "dungeonvoid.js": {
+      "beforeSha256": "edba87762f4765a4e7c46bc6ff9f2457e62057eecb9ee828dee1a4e0383fdc7b",
+      "afterSha256": "57fd5bd053db9a2d76bc132a4587448dda40857cdf98d140c74df0b4494f7265",
+      "edits": [
+        {
+          "scope": "owner-read-request-adapter",
+          "before": "\n if(typeof state!==\"undefined\"&&state)normalizeVoidMirageState(state);\n})();",
+          "after": "\n if(typeof state!==\"undefined\"&&state)normalizeVoidMirageState(state);\n window.registerFormalContinuousStopAdapter?.(\"void\",{\n  pendingLabel:\"本層結束後將退出\",\n  read:()=>({owner:voidMirageRun,active:voidMirageRun?.active===true,continuous:true,requested:voidMirageRun?.exitRequested===true,finishing:voidMirageRun?.phase===\"fighting\"}),\n  request:()=>window.requestVoidMirageExit()\n });\n})();"
+        }
+      ]
+    },
+    "ui.js": {
+      "beforeSha256": "600c07e6cf01861b0491b980a8830d43bf75bd26d25ad4b9edde1cf4c2eca916",
+      "afterSha256": "7e9d510941a468228c504826798787681e1ccc12c1a2142d378eb631b6028b04",
+      "edits": [
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "const stop=continuous?`<div class=\"continuous-stop-wrap combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"continuousBattleStopBtn\" class=\"btn danger\" onclick=\"requestContinuousBattleStop()\" ${requested?\"disabled\":\"\"}>${requested?\"本場結束後停止\":\"停止連續戰鬥\"}</button></div>`:\"\"",
+          "after": "const stop=window.renderContinuousStopControl({mode:\"main\",id:\"continuousBattleStopBtn\"})"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": " const requested=window.activeMainBattleContext?.exitRequested===true;\n",
+          "after": ""
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "worldmapui.js": {
+      "beforeSha256": "d0fa892aa5a4fff824e427dca938ae7ac63e70ec837bc080ce08289c3dc0da73",
+      "afterSha256": "920f1ebc5bc2b6064a793b6cfc185ebe89ce8d631606035086f4eff7c088bea6",
+      "edits": [
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "const stop=continuous?`<div class=\"continuous-stop-wrap combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" class=\"btn danger\" onclick=\"requestSecondWorldContinuousStop()\" ${requested?\"disabled\":\"\"}>${requested?\"本場結束後停止\":\"停止連續戰鬥\"}</button></div>`:\"\"",
+          "after": "const stop=window.renderContinuousStopControl({mode:\"second-world-mainline\"})"
+        },
+        {
+          "scope": "universe-home-stop-entry",
+          "before": "if(activeHere)action=`<button class=\"btn danger universe-boss-action\" type=\"button\" onclick=\"requestSecondWorldContinuousStop()\">本場結束後停止</button>`;",
+          "after": "if(activeHere)action=window.renderContinuousStopControl({mode:\"second-world-mainline\"});"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "    const requested=ctx.stopRequested===true;\n",
+          "after": ""
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "specialencounter.js": {
+      "beforeSha256": "94bc48b30a6592da7ec18375032ac18b6de44666a2e8d0039fab33cacb0d1696",
+      "afterSha256": "57e4c8fd46836f4c1bf0d2192c3ac089101423075ba494ad55af1d26ed790da4",
+      "edits": [
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "const stop=continuous?`<div class=\"continuous-stop-wrap\"><button id=\"continuousBattleStopBtn\" class=\"btn danger\" onclick=\"${world2?\"requestSecondWorldContinuousStop()\":\"requestContinuousBattleStop()\"}\" ${requested?\"disabled\":\"\"}>${requested?\"本場結束後停止\":\"停止連續戰鬥\"}</button></div>`:\"\"",
+          "after": "const stop=window.renderContinuousStopControl({mode:world2?\"second-world-mainline\":\"main\",id:\"continuousBattleStopBtn\"})"
+        },
+        {
+          "scope": "special-stop-before-animation",
+          "before": "<div class=\"combat-head\">⚠ 特殊遭遇</div><div class=\"combat-arena\">",
+          "after": "<div class=\"combat-head\">⚠ 特殊遭遇</div>${stop}<div class=\"combat-arena\">"
+        },
+        {
+          "scope": "special-remove-bottom-stop",
+          "before": "特殊戰鬥開始</div>${stop}</section>",
+          "after": "特殊戰鬥開始</div></section>"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "  const active=world2?window.activeSecondWorldMainlineContext:window.activeMainBattleContext;\n  const continuous=active?.continuous===true,requested=world2?active?.stopRequested===true:active?.exitRequested===true;\n",
+          "after": ""
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "thirdworldarenaui.js": {
+      "beforeSha256": "6ab94d701a7d595a3a1ca5c413f89263ad068eec3b1ea290b55c9ca3b57d2ad6",
+      "afterSha256": "a7dd314f2ed5eaaf1053e68d00c58f99b4f30e779a1e9395e8c160ac1018f806",
+      "edits": [
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": ",stop=rt.requestedRuns>1?`<div class=\"controls arena-actions combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" id=\"w3ArenaStopBtn\" class=\"btn\" onclick=\"requestThirdWorldArenaUiStop()\">${rt.stopRequested?\"本輪結束後停止\":\"停止後續場次\"}</button></div>`:\"\"",
+          "after": ",stop=window.renderContinuousStopControl({mode:\"higher-arena\",id:\"w3ArenaStopBtn\"})"
+        },
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": "window.requestThirdWorldArenaUiStop=function(){const out=typeof window.requestThirdWorldArenaStop===\"function\"?window.requestThirdWorldArenaStop():{ok:false};if(typeof render===\"function\")render();return out;};",
+          "after": "window.requestThirdWorldArenaUiStop=function(){const out=window.requestFormalContinuousStop(\"higher-arena\");return out.result||out;};"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "thirdworldui.js": {
+      "beforeSha256": "89de1f25263ed92c57fce03c3afda53ee17efdae6ef968803ff88f7d782e2d1f",
+      "afterSha256": "4b6f682fb334cefb9bffd82cefb701bcbc25a11066c893178aa882aa0f3434cd",
+      "edits": [
+        {
+          "scope": "higher-stop-constructor",
+          "before": "<div class=\"continuous-stop-wrap combat-viewport-stop\"><button data-combat-action=\"stop-continuous\" class=\"btn danger\" onclick=\"stopThirdWorldRunFromPlayerUi()\">停止連續戰鬥</button></div>",
+          "after": "${window.renderContinuousStopControl({mode:\"higher-stage\"})}"
+        },
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": "window.stopThirdWorldRunFromPlayerUi=function(){const stopped=stopActiveRun(\"manual\");if(typeof window.render===\"function\")window.render();return stopped;};",
+          "after": "window.stopThirdWorldRunFromPlayerUi=function(){const out=window.requestFormalContinuousStop(\"higher-stage\");if(out.ok&&!window.getFormalContinuousStopState(\"higher-stage\").active&&typeof window.render===\"function\")window.render();return out.ok;};"
+        },
+        {
+          "scope": "higher-home-stop-entry",
+          "before": "if(whole(run.bossIndex)===whole(index))return `<button class=\"btn danger third-world-boss-action third-world-boss-action-stop\" type=\"button\" onclick=\"stopThirdWorldRunFromPlayerUi()\">停止連續戰鬥</button>`;",
+          "after": "if(whole(run.bossIndex)===whole(index))return window.renderContinuousStopControl({mode:\"higher-stage\"});"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        },
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": " window.thirdWorldGoHomeFromPlayerUi=function(){stopActiveRun(\"manual\");if(typeof go===\"function\")go(\"home\");return true;};\n",
+          "after": " window.thirdWorldGoHomeFromPlayerUi=function(){window.requestFormalContinuousStop(\"higher-stage\");if(typeof go===\"function\")go(\"home\");return true;};\n"
+        },
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": " window.thirdWorldOpenInventoryFromPlayerUi=function(){stopActiveRun(\"manual\");if(typeof go===\"function\")go(\"inventory\");return true;};\n",
+          "after": " window.thirdWorldOpenInventoryFromPlayerUi=function(){window.requestFormalContinuousStop(\"higher-stage\");if(typeof go===\"function\")go(\"inventory\");return true;};\n"
+        }
+      ]
+    },
+    "calamityui.js": {
+      "beforeSha256": "c6a41c0aedf5568c0ea096ed6f4e09aa0faab7deb8305be318031031f0edeb3a",
+      "afterSha256": "4330255d9e61ad9385270e3291c01926dab5e408dc7f7ef36ac75146b839971d",
+      "edits": [
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": "window.stopCivilizationCalamityContinuousUI=function(){\n  const result=window.requestCivilizationCalamityContinuousStop?.();\n  const btn=document.getElementById(\"calamityStopBtn\");if(btn){btn.disabled=true;btn.textContent=\"停止中\";}\n  const msg=document.getElementById(\"combatMessage\");if(msg)msg.textContent=\"已停止連續討伐；不會再開始下一場。\";\n  return !!result?.ok;\n };",
+          "after": "window.stopCivilizationCalamityContinuousUI=function(){return window.requestFormalContinuousStop(\"calamity\").ok;};"
+        },
+        {
+          "scope": "calamity-stop-constructor",
+          "before": "const continuous=ui.mode===\"continuous\",stopping=run?.stopRequested===true||run?.active===false;",
+          "after": "const continuous=ui.mode===\"continuous\";"
+        },
+        {
+          "scope": "calamity-stop-constructor",
+          "before": "   ${continuous?`<div class=\"calamity-stop-wrap\"><button data-combat-action=\"stop-continuous\" id=\"calamityStopBtn\" class=\"btn danger\" onclick=\"stopCivilizationCalamityContinuousUI()\" ${stopping?\"disabled\":\"\"}>${stopping?\"停止中\":\"停止連續討伐\"}</button></div>`:\"\"}\n   <div class=\"combat-screen calamity-combat\"><div class=\"combat-head\">${modeLabel(ui.mode)}</div><div class=\"combat-arena\">",
+          "after": "   <div class=\"combat-screen calamity-combat\"><div class=\"combat-head\">${modeLabel(ui.mode)}</div>${window.renderContinuousStopControl({mode:\"calamity\",id:\"calamityStopBtn\",pending:continuous})}<div class=\"combat-arena\">"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        },
+        {
+          "scope": "calamity-stop-constructor",
+          "before": "'.calamity-stop-wrap'",
+          "after": "'[data-formal-continuous-stop]'"
+        }
+      ]
+    },
+    "secondworldcalamityui.js": {
+      "beforeSha256": "e3f31d0f157c8a8a3cc67c2810610337b99213c3989e832b9ed460a32a2e0265",
+      "afterSha256": "ebb7e0ec71fd9439489fd40a9df6b21898e71211d9eae15739941076cfd1c011",
+      "edits": [
+        {
+          "scope": "calamity-stop-constructor",
+          "before": "${continuous?`<div class=\"calamity-stop-wrap\"><button data-combat-action=\"stop-continuous\" class=\"btn danger\" onclick=\"stopSecondWorldCalamityContinuousUI()\">停止連續討伐</button></div>`:\"\"}",
+          "after": "${window.renderContinuousStopControl({mode:\"second-world-calamity\",pending:continuous})}"
+        },
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": "window.stopSecondWorldCalamityContinuousUI=function(){return window.requestSecondWorldCalamityStop?.();};",
+          "after": "window.stopSecondWorldCalamityContinuousUI=function(){const out=window.requestFormalContinuousStop(\"second-world-calamity\");return out.result||out;};"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        },
+        {
+          "scope": "calamity-stop-constructor",
+          "before": "<div class=\"calamity-combat-head\"><span>${continuous?`連續討伐・第 ${Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1))} 場`:\"單場挑戰\"}</span></div>",
+          "after": "<div class=\"calamity-combat-head main-minimal-mode-head\"><span class=\"main-minimal-mode-head-label\">${continuous?`連續討伐・第 ${Math.max(1,Math.floor(Number(ui.displayBattleNumber)||1))} 場`:\"單場挑戰\"}</span>${continuous&&run?.active?window.renderMinimalModeEntry(\"openSecondWorldCalamityMinimalMode()\"):\"\"}</div>"
+        }
+      ]
+    },
+    "dungeonvoidui.js": {
+      "beforeSha256": "38c1de4cc0413695f838dd122ed2d105889d0e21ade5221f1edc824dd8a0f34a",
+      "afterSha256": "de4c1989abcc60be45aa434eff5c053830607e0ffe701be5eb87894779461717",
+      "edits": [
+        {
+          "scope": "void-remove-outer-stop",
+          "before": "<div class=\"void-actions void-top-exit\"><button data-combat-action=\"stop-continuous\" class=\"btn void-exit-btn\" ${voidUi.exitAfterFloor?\"disabled\":\"\"} onclick=\"requestVoidMirageExitUI()\">${exitLabel}</button></div>",
+          "after": ""
+        },
+        {
+          "scope": "void-stop-after-combat-heading",
+          "before": "<div class=\"combat-head\">自動挑戰中</div><div class=\"combat-arena\">",
+          "after": "<div class=\"combat-head\">自動挑戰中</div>${window.renderContinuousStopControl({mode:\"void\"})}<div class=\"combat-arena\">"
+        },
+        {
+          "scope": "void-owner-state-only",
+          "before": "  const exitLabel=voidUi.exitAfterFloor?\"本層結束後將退出\":\"強制退出虛空幻境\";\n",
+          "after": ""
+        },
+        {
+          "scope": "void-remove-duplicate-flag",
+          "before": " let voidUi={phase:\"idle\",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:\"\"};\n",
+          "after": " let voidUi={phase:\"idle\",running:false,floorResult:null,finalRun:null,message:\"\"};\n"
+        },
+        {
+          "scope": "void-remove-duplicate-flag",
+          "before": "  voidUi={phase:\"idle\",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:\"\"};\n",
+          "after": "  voidUi={phase:\"idle\",running:false,floorResult:null,finalRun:null,message:\"\"};\n"
+        },
+        {
+          "scope": "void-remove-duplicate-flag",
+          "before": "  voidUi={phase:\"combat\",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:\"\"};render();\n",
+          "after": "  voidUi={phase:\"combat\",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:false,floorResult:null,finalRun:null,message:\"\"};render();\n"
+        },
+        {
+          "scope": "void-remove-duplicate-flag",
+          "before": " window.returnFromVoidMirage=function(){voidUi={phase:\"idle\",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:\"\"};view=\"dungeon\";render();};\n",
+          "after": " window.returnFromVoidMirage=function(){voidUi={phase:\"idle\",running:false,floorResult:null,finalRun:null,message:\"\"};view=\"dungeon\";render();};\n"
+        },
+        {
+          "scope": "void-refresh-common-control",
+          "before": "  const selectors=completed?['.void-stats','.void-claim-line','.void-top-exit']:['.void-stats','.void-claim-line','.void-top-exit','#voidPlayerCard','#voidEnemyCard','#voidCombatMessage'];\n",
+          "after": "  const selectors=completed?['.void-stats','.void-claim-line','[data-formal-continuous-stop]']:['.void-stats','.void-claim-line','[data-formal-continuous-stop]','#voidPlayerCard','#voidEnemyCard','#voidCombatMessage'];\n"
+        },
+        {
+          "scope": "compatibility-ui-stop-dispatch",
+          "before": "window.requestVoidMirageExitUI=function(){\n  if(voidUi.phase===\"result\")return;\n  voidUi.exitAfterFloor=true;\n  if(typeof window.requestVoidMirageExit===\"function\")window.requestVoidMirageExit();\n  const btn=document.querySelector(\".void-exit-btn\");if(btn){btn.disabled=true;btn.textContent=\"本層結束後將退出\";}\n  const msg=document.getElementById(\"voidCombatMessage\");if(msg)msg.textContent=\"已要求退出：本層結束後離開虛空幻境。\";\n };",
+          "after": "window.requestVoidMirageExitUI=function(){return window.requestFormalContinuousStop(\"void\");};"
+        },
+        {
+          "scope": "combat-stop-ui-constructor",
+          "before": "class=\"combat-screen",
+          "after": "class=\"combat-screen formal-continuous-combat"
+        }
+      ]
+    },
+    "combatlifecycle.js": {
+      "beforeSha256": "45cc1334e8fb757306319bdd08c1c905e8796835ba1b4817dddfacd4573d2efa",
+      "afterSha256": "8809e95a514b40ad30455f412fc480b780b3d8344dabda0c0ec3775cd061a101",
+      "edits": [
+        {
+          "scope": "lifecycle-begin-notification",
+          "before": "  active=battle;\n  return battle;",
+          "after": "  active=battle;window.syncFormalContinuousStopControls?.();\n  return battle;"
+        },
+        {
+          "scope": "lifecycle-cancel-notification",
+          "before": "  finally{for(const wake of battle.waiters)wake();battle.waiters.clear();if(window.getCombatPresentationSnapshot?.()?.token===battle.presentationToken)window.clearCombatPresentation?.(\"foreground-interrupted\");}\n",
+          "after": "  finally{for(const wake of battle.waiters)wake();battle.waiters.clear();window.syncFormalContinuousStopControls?.();if(window.getCombatPresentationSnapshot?.()?.token===battle.presentationToken)window.clearCombatPresentation?.(\"foreground-interrupted\");}\n"
+        },
+        {
+          "scope": "lifecycle-finish-notification",
+          "before": "   finish(){this.waiters.clear();if(active===this)active=null;}\n",
+          "after": "   finish(){this.waiters.clear();if(active===this)active=null;window.syncFormalContinuousStopControls?.();}\n"
+        }
+      ]
+    },
+    "mainminimalmode.css": {
+      "beforeSha256": "d07e28e7e6d0d2350d1c0655f7ab29dd966b4bc4e0565b25abea89f09eb149c4",
+      "afterSha256": "30e8390b07200203bc35329ffe1efda1410541086f65c098d12ecfd5e9dcec6d",
+      "edits": [
+        {
+          "scope": "remove-special-css-reordering-and-style-common-control",
+          "before": "/* Special-encounter stop belongs above its combat arena; owner JS remains sealed. */\n.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap){\n display:flex;flex-direction:column;\n}\n.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-head{order:0}\n.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .continuous-stop-wrap{order:1}\n.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-arena{order:2}\n.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-message{order:3}\n",
+          "after": "/* Authored heading / common stop / animation order; no structural CSS rescue. */\n.formal-continuous-stop{display:flex;justify-content:center;width:100%;box-sizing:border-box;margin:10px 0}\n.formal-continuous-stop-button{max-width:100%;min-height:44px;padding:10px 20px;white-space:normal}\n.formal-continuous-stop-button:disabled{cursor:default;opacity:.7}\n@media(max-width:820px),(max-height:500px){.formal-continuous-stop-button{width:100%}}\n"
+        }
+      ]
+    },
+    "index.html": {
+      "beforeSha256": "66a1d975a6b6f1f76951cffd4800546b417f643c548d98aa9285f360b2b5f38a",
+      "afterSha256": "0c86093de7e1aae5fb6d00b84b79986197b7869dff5b7976e667bb742788a362",
+      "edits": [
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"mainminimalmode.js?v=20260917-void-adapter-batch1&v2=20261004-rerun-speed-badge-reuse1&v3=20261005-w1-target-context-batch4&combatUiB1=20261026&combatUiB2=20261026\"",
+          "after": "src=\"mainminimalmode.js?v=20260917-void-adapter-batch1&v2=20261004-rerun-speed-badge-reuse1&v3=20261005-w1-target-context-batch4&combatUiB1=20261026&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"battlepipeline.js?v=20260930-audit-batch4&v2=20261005-w1-target-context-batch3&v3=20261005-w1-target-opt2&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&lifecycle=20261020-late-settlement-v1&foreground=20261023-194-v2\"",
+          "after": "src=\"battlepipeline.js?v=20260930-audit-batch4&v2=20261005-w1-target-context-batch3&v3=20261005-w1-target-opt2&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&lifecycle=20261020-late-settlement-v1&foreground=20261023-194-v2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"secondworldmainline.js?v=20260928-thirdworld-batch11-o3&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&foreground=20261023-194-v2&batch20=20261024-r2&postrelease=20261025-5\"",
+          "after": "src=\"secondworldmainline.js?v=20260928-thirdworld-batch11-o3&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&foreground=20261023-194-v2&batch20=20261024-r2&postrelease=20261025-5&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"calamityrun.js?v=20261010-six-track-battle-integration2&v2=20261007-calamity-terminal-catchup1&v3=20261007-calamity-terminal-checkpoint-opt2&vopt=20261007-shared-calamity-ui-storyrecord-batch3&victory=20261010-finalsettlement&audioLifecycle=20261011-unified-v1&foreground=20261023-194-v2&batch20=20261024-r2\"",
+          "after": "src=\"calamityrun.js?v=20261010-six-track-battle-integration2&v2=20261007-calamity-terminal-catchup1&v3=20261007-calamity-terminal-checkpoint-opt2&vopt=20261007-shared-calamity-ui-storyrecord-batch3&victory=20261010-finalsettlement&audioLifecycle=20261011-unified-v1&foreground=20261023-194-v2&batch20=20261024-r2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"secondworldcalamityrun.js?v=20261010-six-track-battle-integration2&v2=20261007-calamity-terminal-catchup1&v3=20261007-calamity-terminal-checkpoint-opt2&vopt=20261007-shared-calamity-ui-storyrecord-batch3&victory=20261010-finalsettlement&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&foreground=20261023-194-v2&batch20=20261024-r2\"",
+          "after": "src=\"secondworldcalamityrun.js?v=20261010-six-track-battle-integration2&v2=20261007-calamity-terminal-catchup1&v3=20261007-calamity-terminal-checkpoint-opt2&vopt=20261007-shared-calamity-ui-storyrecord-batch3&victory=20261010-finalsettlement&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&foreground=20261023-194-v2&batch20=20261024-r2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"thirdworldrun.js?v=20261013-background-hud-recovery1&foreground=20261023-194-v2\"",
+          "after": "src=\"thirdworldrun.js?v=20261013-background-hud-recovery1&foreground=20261023-194-v2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"dungeonbounty.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&repair=20261024-r2&combatUiB2=20261026\"",
+          "after": "src=\"dungeonbounty.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&repair=20261024-r2&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"dungeonarena.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3&foreground=20261023-194-v2\"",
+          "after": "src=\"dungeonarena.js?v=20261010-battle-end-return-theme1&v2=20261004-reincarnation-dungeon-opt2&victory=20261010-finalsettlement&audiofix1=20261011&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3&foreground=20261023-194-v2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"thirdworldarena.js?v=20260929-thirdworld-batch15-opt2&events=20261012-t1c-v1&foreground=20261023-194-v2&repair=20261024-r2\"",
+          "after": "src=\"thirdworldarena.js?v=20260929-thirdworld-batch15-opt2&events=20261012-t1c-v1&foreground=20261023-194-v2&repair=20261024-r2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"dungeonvoid.js?v=20260929-thirdworld-batch15-1&v2=20261004-reincarnation-dungeon-opt2&events=20261012-t1c-v1&foreground=20261023-194-v2\"",
+          "after": "src=\"dungeonvoid.js?v=20260929-thirdworld-batch15-1&v2=20261004-reincarnation-dungeon-opt2&events=20261012-t1c-v1&foreground=20261023-194-v2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"ui.js?v=20261002-autoprocess-policy-batch1&vaudio=20261010-a03-formal-coverage2&v2=20261004-reincarnation-speed-ui-fix1&v3=20261005-reincarnation-gear-root-fix1&v4=20261006-calamity-ui-opt-batch3&v5=20261008-gm-first-render1&v6=20261009-3d-b03&v7=20261009-galaxy-b05&v8=20261009-b05-combat-cleanup&v9=20261009-gm-startup-early&vgalaxyreview=20261010-review-combat6&vreviewroute=20261010-v8&vhome=20261010-first-home-reconcile&v17=20261010-b17-mode-settings&vopt4=20261010-home-reconcile&cacheUi=20261011-b03&audioPersist=20261011-audio-settings-save&settingsLayout=20261011-b02&settingsCopy=20261011-no-gm-v2&audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&combatUiB2=20261026\"",
+          "after": "src=\"ui.js?v=20261002-autoprocess-policy-batch1&vaudio=20261010-a03-formal-coverage2&v2=20261004-reincarnation-speed-ui-fix1&v3=20261005-reincarnation-gear-root-fix1&v4=20261006-calamity-ui-opt-batch3&v5=20261008-gm-first-render1&v6=20261009-3d-b03&v7=20261009-galaxy-b05&v8=20261009-b05-combat-cleanup&v9=20261009-gm-startup-early&vgalaxyreview=20261010-review-combat6&vreviewroute=20261010-v8&vhome=20261010-first-home-reconcile&v17=20261010-b17-mode-settings&vopt4=20261010-home-reconcile&cacheUi=20261011-b03&audioPersist=20261011-audio-settings-save&settingsLayout=20261011-b02&settingsCopy=20261011-no-gm-v2&audioLifecycle=20261019-batch11-lazy1&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"worldmapui.js?v=20260928-thirdworld-batch11-o2&v2=20261009-galaxy-b05&v3=20261009-galaxy-visible-fix&v4=20261010-review-click-fix&v13=20261010-repair2-universe-focus&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3&batch20=20261024-r2\"",
+          "after": "src=\"worldmapui.js?v=20260928-thirdworld-batch11-o2&v2=20261009-galaxy-b05&v3=20261009-galaxy-visible-fix&v4=20261010-review-click-fix&v13=20261010-repair2-universe-focus&events=20261012-t1c-v1&t4=20261013-preview-retire1&pr48=20261019-center3&batch20=20261024-r2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"specialencounter.js?v=20260929-thirdworld-batch15-1&v2=20261005-w1-target-opt1&v3=20261006-special-fast-catchup1&events=20261012-t1c-v1&foreground=20261023-194-v2&issue106=20261025-batch1&combatUiB1=20261026&combatUiB2=20261026\"",
+          "after": "src=\"specialencounter.js?v=20260929-thirdworld-batch15-1&v2=20261005-w1-target-opt1&v3=20261006-special-fast-catchup1&events=20261012-t1c-v1&foreground=20261023-194-v2&issue106=20261025-batch1&combatUiB1=20261026&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"thirdworldarenaui.js?v=20261010-six-track-battle-integration2&vaudio=20261010-a03-formal-coverage2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&postrelease=20261025-5\"",
+          "after": "src=\"thirdworldarenaui.js?v=20261010-six-track-battle-integration2&vaudio=20261010-a03-formal-coverage2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&postrelease=20261025-5&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"thirdworldui.js?v=20261013-background-hud-recovery1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&postrelease=20261025-5&combatUiB2=20261026\"",
+          "after": "src=\"thirdworldui.js?v=20261013-background-hud-recovery1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&postrelease=20261025-5&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"calamityui.js?v=20260922-universe-calamity-batch2&v2=20261006-calamity-entry-scroll1&v3=20261006-calamity-ui-opt-batch3&v4=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&uiRepair=20261024-three1&postrelease=20261025-5&combatUiB2=20261026&combatUiB3=20261026\"",
+          "after": "src=\"calamityui.js?v=20260922-universe-calamity-batch2&v2=20261006-calamity-entry-scroll1&v3=20261006-calamity-ui-opt-batch3&v4=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&uiRepair=20261024-three1&postrelease=20261025-5&combatUiB2=20261026&combatUiB3=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"secondworldcalamityui.js?v=20260927-thirdworld-ui-opt9-2&v2=20261006-calamity-live-ui1&v3=20261006-calamity-entry-scroll1&v4=20261006-calamity-ui-opt-batch3&v5=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&uiRepair=20261024-three1&postrelease=20261025-5&postrelease=20261025-5&combatUiB1=20261026&combatUiB2=20261026\"",
+          "after": "src=\"secondworldcalamityui.js?v=20260927-thirdworld-ui-opt9-2&v2=20261006-calamity-live-ui1&v3=20261006-calamity-entry-scroll1&v4=20261006-calamity-ui-opt-batch3&v5=20261007-calamity-terminal-catchup1&vopt=20261007-shared-calamity-ui-storyrecord-batch3&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&uiRepair=20261024-three1&postrelease=20261025-5&postrelease=20261025-5&combatUiB1=20261026&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"dungeonvoidui.js?v=20261010-six-track-battle-integration2&mirrorVoid=20261024-v1&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&postrelease=20261025-5&combatUiB2=20261026\"",
+          "after": "src=\"dungeonvoidui.js?v=20261010-six-track-battle-integration2&mirrorVoid=20261024-v1&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&postrelease=20261025-5&combatUiB2=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"combatlifecycle.js?v=20261025-optimization-batch2&foreground=20261023-194-v3\"",
+          "after": "src=\"combatlifecycle.js?v=20261025-optimization-batch2&foreground=20261023-194-v3&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "href=\"mainminimalmode.css?v=20260917-void-adapter-batch1&combatUiB3=20261026\"",
+          "after": "href=\"mainminimalmode.css?v=20260917-void-adapter-batch1&combatUiB3=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "href=\"battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4&batch19=20261023-3\"",
+          "after": "href=\"battle-mobile-viewport.css?v=20261019-batch10-usability1&v26=20261019-unified1&pr48=20261019-center4&batch19=20261023-3&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "href=\"3d-test/formal-player-sprites.css?v=20261019-batch9-background1&pr48=20261019-center3&batch19=20261022-frame1&mirrorVoid=20261024-v1\"",
+          "after": "href=\"3d-test/formal-player-sprites.css?v=20261019-batch9-background1&pr48=20261019-center3&batch19=20261022-frame1&mirrorVoid=20261024-v1&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "href=\"dungeonvoid.css?v=20260917-void-adapter-batch1\"",
+          "after": "href=\"dungeonvoid.css?v=20260917-void-adapter-batch1&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "href=\"thirdworldui.css?v=20260928-thirdworld-batch10-2\"",
+          "after": "href=\"thirdworldui.css?v=20260928-thirdworld-batch10-2&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "href=\"calamityui.css?v=20260922-review-batch4\"",
+          "after": "href=\"calamityui.css?v=20260922-review-batch4&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"secondworldcalamityminimalmode.js?v=20261013-compat-owner-diagnostics1&combatUiB1=20261026&combatUiB3=20261026\"",
+          "after": "src=\"secondworldcalamityminimalmode.js?v=20261013-compat-owner-diagnostics1&combatUiB1=20261026&combatUiB3=20261026&formalStop=20261026\""
+        },
+        {
+          "scope": "exact-affected-asset-cache-token",
+          "before": "src=\"combat-viewport-coordinator.js?v=20261019-unified1&pr48=20261019-center3&batch19=20261023-3&ios=20261023-foreground1\"",
+          "after": "src=\"combat-viewport-coordinator.js?v=20261019-unified1&pr48=20261019-center3&batch19=20261023-3&ios=20261023-foreground1&formalStop=20261026\""
+        }
+      ]
+    },
+    "battle-mobile-viewport.css": {
+      "beforeSha256": "ab61c36513580e9bfffdfc343d30bff0a1bdff2eba375d0ba5fd7cb1dd4ae9cd",
+      "edits": [
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": "/* Authored stop controls precede the stage; preserve original button styling. */\n@media(max-width:820px), (max-height:500px) and (pointer:coarse){\n  #main .combat-screen>.combat-viewport-stop{order:-2;position:relative;z-index:2}\n /* Keep original button appearance and dimensions. */\n #main .combat-screen.formal-b-shared-layout>.formal-b-shared-stage{order:-2}\n #main .combat-screen.formal-b-shared-layout>.combat-viewport-stop{order:-2}\n}\n",
+          "after": "/* Migrated formal controls follow authored heading / stop / animation order.\n   Retain legacy finite-mode layout without reordering shared stop controls. */\n@media(max-width:820px), (max-height:500px) and (pointer:coarse){\n #main .combat-screen.formal-b-shared-layout:not(.formal-continuous-combat)>.formal-b-shared-stage{order:-2}\n}\n"
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".void-top-exit,.arena-actions",
+          "after": ".arena-actions"
+        },
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": "#main:has(.formal-b-stage-pending,.formal-b-shared-layout)::after",
+          "after": "#main[data-combat-viewport-reserve]::after"
+        }
+      ],
+      "afterSha256": "35895a390ab7b7939fa7cbde830840f376f6a4648da3a18f826736412bbb2506"
+    },
+    "3d-test/formal-player-sprites.css": {
+      "beforeSha256": "c13afd68262763b45ad0b9cab057049b47f2e77f15d143d929eabb99b3808547",
+      "edits": [
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": ".formal-b-shared-layout>.combat-head,.formal-b-shared-layout>.muted{order:-4}",
+          "after": ".formal-b-shared-layout:not(.formal-continuous-combat)>.combat-head,.formal-b-shared-layout:not(.formal-continuous-combat)>.muted{order:-4}"
+        },
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": ".formal-b-shared-layout .combat-arena>.combatant.enemy{order:-3}",
+          "after": ".formal-b-shared-layout:not(.formal-continuous-combat) .combat-arena>.combatant.enemy{order:-3}"
+        },
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": ".formal-b-shared-layout>.formal-b-shared-stage{order:-2;height:clamp(265px,43dvh,340px)}",
+          "after": ".formal-b-shared-layout:not(.formal-continuous-combat)>.formal-b-shared-stage{order:-2}\n .formal-b-shared-layout>.formal-b-shared-stage{height:clamp(265px,43dvh,340px)}"
+        },
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": ".formal-b-shared-layout .combat-arena>.combatant.player{order:-1}",
+          "after": ".formal-b-shared-layout:not(.formal-continuous-combat) .combat-arena>.combatant.player{order:-1}"
+        },
+        {
+          "scope": "retire-stop-layout-overrides",
+          "before": ".formal-b-stage-pending>.formal-b-shared-stage{order:-2;height:clamp(265px,43dvh,340px)}",
+          "after": ".formal-b-stage-pending:not(.formal-continuous-combat)>.formal-b-shared-stage{order:-2}\n.formal-b-stage-pending>.formal-b-shared-stage{height:clamp(265px,43dvh,340px)}"
+        }
+      ],
+      "afterSha256": "08e168b44c28dcb1a5f610c2449a2602f1c0928da80f45e55284993ffab84cde"
+    },
+    "dungeonvoid.css": {
+      "beforeSha256": "972c02468679fe0f59fe933de082c9b2dc3ba4258ea3a1d8fe52a5007866b799",
+      "edits": [
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".void-top-exit{margin:6px 0 10px}\n",
+          "after": ""
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".void-top-exit .void-exit-btn{width:100%;max-width:520px}\n",
+          "after": ""
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".void-exit-btn{background:#7b3438;border-color:#a24a50;color:#fff}\n",
+          "after": ""
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".void-exit-btn:hover{background:#914047}\n",
+          "after": ""
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".void-exit-btn:disabled{opacity:.62;cursor:not-allowed}\n",
+          "after": ""
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": " .void-top-exit{margin:4px 0 6px}\n",
+          "after": ""
+        },
+        {
+          "scope": "retire-unused-stop-style",
+          "before": " .void-top-exit .void-exit-btn{padding:9px 10px;font-size:14px}\n",
+          "after": ""
+        }
+      ],
+      "afterSha256": "4ab5fa578861f205521e3cb5714d2f864bd8d92d5e02d9ab2ec638eba085be89"
+    },
+    "thirdworldui.css": {
+      "beforeSha256": "713d61887d118fe749fda5e0995e8ba20637c0db85bd1111b3f81e168908fe0d",
+      "edits": [
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".third-world-boss-action-stop{font-weight:800}",
+          "after": ""
+        }
+      ],
+      "afterSha256": "850f3dff1506bc51de7ed3ca301ee4762ebb6bce67ea6c7a999ddb124b318816"
+    },
+    "calamityui.css": {
+      "beforeSha256": "405fbc91b8cb06198cb5df9575fe23e5f51a5eb6fd8f9743c6c37c529c5b5376",
+      "edits": [
+        {
+          "scope": "retire-unused-stop-style",
+          "before": ".calamity-stop-wrap{text-align:center;margin:8px 0 12px}",
+          "after": ""
+        }
+      ],
+      "afterSha256": "caf16990f9e0ff7741d8d092764b93354de0a4320add94a53bbcc984bd7e4791"
+    },
+    "secondworldcalamityminimalmode.js": {
+      "beforeSha256": "d18a4f32bc4966520a8e6250a076c4c11372410bd652ab0472f45ab46c60d5e1",
+      "edits": [
+        {
+          "scope": "retire-legacy-minimal-entry-injector",
+          "before": " const originalPage=window.secondWorldCivilizationCalamityPageHtml;\n function injectEntry(html){\n  if(typeof html!==\"string\"||!html.includes('calamity-stop-wrap')||html.includes(\"openSecondWorldCalamityMinimalMode()\"))return html;\n  return html.replace(/(<div class=\"calamity-combat-head\">)(<span>[^<]*<\\/span>)/,\n   (_,head,label)=>head.replace('calamity-combat-head','calamity-combat-head main-minimal-mode-head')+label.replace('<span>','<span class=\"main-minimal-mode-head-label\">')+window.renderMinimalModeEntry(\"openSecondWorldCalamityMinimalMode()\"));\n }\n if(typeof originalPage===\"function\"){\n  const decorated=function(){return injectEntry(originalPage.apply(this,arguments));};\n  Object.defineProperty(decorated,\"formalRenderer\",{value:originalPage});\n  window.secondWorldCivilizationCalamityPageHtml=decorated;\n }\n",
+          "after": ""
+        }
+      ],
+      "afterSha256": "a75c528e6649a4b3ab4d2e7468bf891f748e07c727751d8653f91cfd2a1ee0b7"
+    },
+    "combat-viewport-coordinator.js": {
+      "beforeSha256": "b0dc5f8af41b560ee5fca92599112ea4d27d6da60d22246c2a32368dbeee15ee",
+      "edits": [
+        {
+          "scope": "readonly-viewport-primary-region",
+          "before": " if(stop&&!stop.hidden){const r=stop.getBoundingClientRect();if(r.height>0)rects.push(r);}\n return {stage:stageRect,top:Math.min(...rects.map(r=>r.top)),bottom:Math.max(...rects.map(r=>r.bottom)),signature:rects.flatMap(r=>[r.top,r.bottom,r.width])};",
+          "after": " const primary=[stageRect];\n if(stop&&!stop.hidden){const r=stop.getBoundingClientRect();if(r.height>0){rects.push(r);primary.push(r);}}\n // Explicit shared markup follows DOM order. Keep its heading/control visible\n // with the animation when all HP cards cannot fit a landscape viewport.\n const heading=cards.length&&screen.classList?.contains(\"formal-continuous-combat\")?(screen.querySelector(\".combat-head\")||owner.querySelector?.(\".calamity-combat-head\")):null;\n const actionTop=Math.min(...primary.map(r=>r.top)),actionBottom=Math.max(...primary.map(r=>r.bottom));\n if(heading){const r=heading.getBoundingClientRect();if(r.height>0)primary.push(r);}\n return {stage:stageRect,top:Math.min(...rects.map(r=>r.top)),bottom:Math.max(...rects.map(r=>r.bottom)),primaryTop:Math.min(...primary.map(r=>r.top)),primaryBottom:Math.max(...primary.map(r=>r.bottom)),hasSharedHeading:!!heading,actionTop,actionBottom,signature:[...rects,...primary].flatMap(r=>[r.top,r.bottom,r.width])};"
+        },
+        {
+          "scope": "readonly-viewport-primary-region",
+          "before": " const top=span<=usable?info.top:Math.max(info.top,Math.min(r.top-12,info.bottom-usable));\n const bottom=span<=usable?info.bottom:top+usable;",
+          "after": " const completeTop=Math.min(info.top,info.primaryTop),completeBottom=Math.max(info.bottom,info.primaryBottom),completeFits=completeBottom-completeTop<=usable;\n const usePrimary=span>usable&&info.hasSharedHeading&&info.primaryBottom-info.primaryTop<=height;\n const useAction=span>usable&&!usePrimary&&info.hasSharedHeading&&info.actionBottom-info.actionTop<=usable;\n const top=completeFits?completeTop:span<=usable?info.top:usePrimary?info.primaryTop:useAction?info.actionTop:Math.max(info.top,Math.min(r.top-12,info.bottom-usable));\n const bottom=completeFits?completeBottom:span<=usable?info.bottom:usePrimary?info.primaryBottom:useAction?info.actionBottom:top+usable;"
+        },
+        {
+          "scope": "readonly-viewport-primary-region",
+          "before": " const stage=stageOf(screen);\n if(stage!==lastStage",
+          "after": " const stage=stageOf(screen);\n root.toggleAttribute?.(\"data-combat-viewport-reserve\",animationExpected()&&!!screen.querySelector?.(\".formal-b-shared-stage,.formal-b-battle-stage\"));\n if(stage!==lastStage"
+        },
+        {
+          "scope": "readonly-viewport-primary-region",
+          "before": " if(!screen){if(lastScreen)",
+          "after": " if(!screen){root.toggleAttribute?.(\"data-combat-viewport-reserve\",false);if(lastScreen)"
+        },
+        {
+          "scope": "readonly-viewport-primary-region",
+          "before": " const vp=g.visualViewport,height=Number(vp?.height)||g.innerHeight||1,offset=Number(vp?.offsetTop)||0;",
+          "after": " const vp=g.visualViewport,viewportHeight=Number(vp?.height)||g.innerHeight||1,viewportTop=Number(vp?.offsetTop)||0;\n let height=viewportHeight,offset=viewportTop;\n const header=d.querySelector?.(\"header\"),position=header?g.getComputedStyle?.(header)?.position:null;\n if(header&&[\"sticky\",\"fixed\"].includes(position)){const h=header.getBoundingClientRect();if(h.top<=viewportTop+1&&h.bottom>viewportTop){offset=Math.min(viewportTop+viewportHeight,h.bottom);height=Math.max(1,viewportHeight-(offset-viewportTop));}}"
+        }
+      ],
+      "afterSha256": "4819544d3c34f28eea7ba9a27291634552c28910a9ec049617cf7bcfda172e91"
+    }
+  }
+}

@@ -8,7 +8,7 @@ const strip=s=>s.replaceAll(' data-combat-action="stop-continuous"','').replaceA
 // permits only relocation. All remaining markup AND executable code stay exact.
 const normalize=s=>strip(s).replace('  if(window.CivilizationCombatViewport?.animationExpected?.()&&window.matchMedia?.("(max-width:820px), (max-height:500px) and (pointer:coarse)")?.matches)return;\n','').replaceAll('${stop}','').replace(/<div class="continuous-stop-wrap"><button[^]*?<\/button><\/div>/g,'');
 let count=0;
-for(const p of files){const before=cp.execFileSync('git',['show',base+':'+p],{encoding:'utf8'}),after=fs.readFileSync(p,'utf8');assert.equal(normalize(preForeground(p,'utf8')),normalize(before),'gameplay, HUD and non-stop markup unchanged: '+p);
+for(const p of files){const before=cp.execFileSync('git',['show',base+':'+p],{encoding:'utf8'}),after=require('./formal-stop-approved.cjs').historicalBytes(p,fs.readFileSync(p)).toString('utf8');assert.equal(normalize(preForeground(p,'utf8')),normalize(before),'gameplay, HUD and non-stop markup unchanged: '+p);
  const marked=[...after.matchAll(/<button data-combat-action="stop-continuous"[^]*?<\/button>/g)].map(m=>m[0]);assert.equal(marked.length,1,'one authored existing stop owner: '+p);
  for(const button of marked){const original=strip(button);assert(before.includes(original),'original label, dimensions, classes, event, disabled condition retained: '+p);assert(!/onclick="start/.test(button),'start must never be marked stop');count++;}
 }
@@ -18,3 +18,6 @@ const bg=fs.readFileSync('backgroundprogress.js','utf8');
 assert.match(bg,/runtime-status-invalid/,'shared runtime invalid state must remain fail-closed');
 assert.match(bg,/worldTransitionRuntimeStatus/,'shared runtime must retain registered cross-mode blockers');
 console.log('PR48_STOP_CONTRACT_PASS',count,'original stop owners; gameplay and every button attribute preserved');
+
+// Historical attributes remain exact; current shared controls are validated live.
+require('./formal-continuous-stop.test.cjs');

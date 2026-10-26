@@ -25,11 +25,6 @@
 .void-reward{color:#f0cd7d;font-weight:800}
 
 .void-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
-.void-top-exit{margin:6px 0 10px}
-.void-top-exit .void-exit-btn{width:100%;max-width:520px}
-.void-exit-btn{background:#7b3438;border-color:#a24a50;color:#fff}
-.void-exit-btn:hover{background:#914047}
-.void-exit-btn:disabled{opacity:.62;cursor:not-allowed}
 .void-result{max-width:680px;margin:0 auto;text-align:center;padding:22px}
 .void-result h2{color:#dffaff;margin:6px 0 14px}
 .void-result-reason{font-size:18px;font-weight:800;color:#9ddbe5;margin-bottom:12px}
@@ -61,8 +56,6 @@
  .void-combat .status-label{font-size:12px;margin-bottom:3px}
  .void-combat .bar{height:10px}
  .void-message{font-size:12px;min-height:0;margin-top:5px;padding:5px}
- .void-top-exit{margin:4px 0 6px}
- .void-top-exit .void-exit-btn{padding:9px 10px;font-size:14px}
  .void-result{padding:17px 12px}
 }
 

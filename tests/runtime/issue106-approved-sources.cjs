@@ -4,6 +4,7 @@
 const fs=require('node:fs'),cp=require('node:child_process'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 function historicalBytes(path,bytes){
+ bytes=require("./formal-stop-approved.cjs").historicalBytes(path,bytes);
  const lock=require('./issue106-approved-sources.json'),row=lock.files[path];
  if(!row)return bytes;
  assert.equal(lock.baseline,'314fe6814ea17e3ff2cd8deafe25ef6943204513');

@@ -18,14 +18,85 @@
   if(!/^[a-zA-Z_$][\w$]*\(\)$/.test(String(action)))return "";
   return `<button type="button" class="main-minimal-mode-enter" onclick="${action}">極簡模式</button>`;
  }
- function renderContinuousStopControl({onclick,id="",label="停止連續戰鬥",disabled=false,wrapClass="continuous-stop-wrap combat-viewport-stop",buttonClass="btn danger"}={}){
-  if(!/^[a-zA-Z_$][\w$]*\(\)$/.test(String(onclick)))return "";
-  const safe=s=>String(s).replace(/[^a-zA-Z0-9_ -]/g,"");
-  const escaped=String(label).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  return `<div class="${safe(wrapClass)}"><button data-combat-action="stop-continuous"${id?` id="${safe(id).trim()}"`:""} class="${safe(buttonClass)}" onclick="${onclick}"${disabled?" disabled":""}>${escaped}</button></div>`;
+ const stopAdapters=new Map(),stopRuns=new WeakMap(),stopInFlight=new WeakSet();
+ let stopSerial=0,stopObserver=null;
+ const stopEscape=value=>String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+ function registerFormalContinuousStopAdapter(mode,adapter){
+  if(typeof mode!=="string"||!/^[a-z][a-z0-9-]*$/.test(mode)||stopAdapters.has(mode)||typeof adapter?.read!=="function"||typeof adapter?.request!=="function")return false;
+  stopAdapters.set(mode,adapter);return true;
  }
+ function formalStopSnapshot(mode){
+  const adapter=stopAdapters.get(mode);
+  if(!adapter)return {available:false,mode,status:"unavailable",reason:"adapter-missing"};
+  try{
+   const current=adapter.read()||{},owner=current.owner;
+   if(!owner||typeof owner!=="object")return {available:false,mode,status:"stopped",reason:"no-run"};
+   if(!stopRuns.has(owner))stopRuns.set(owner,++stopSerial);
+   const epoch=window.CivilizationCombatLifecycle?.epoch?.()||0,run=`${stopRuns.get(owner)}-${epoch}`;
+   const active=current.active===true,continuous=current.continuous===true,requested=current.requested===true;
+   return {owner,adapter,mode,run,active,continuous,requested,available:active&&continuous,
+    finishing:requested&&current.finishing===true,status:!active?"stopped":requested?(current.finishing?"finishing":"requested"):"running",
+    label:requested?String(adapter.pendingLabel||"本場結束後停止"):"停止連續戰鬥"};
+  }catch(error){return {available:false,mode,status:"unavailable",reason:"owner-unavailable"};}
+ }
+ function getFormalContinuousStopState(mode){
+  const {owner,adapter,...state}=formalStopSnapshot(mode);return {active:false,continuous:false,requested:false,finishing:false,...state};
+ }
+ function syncFormalContinuousStopControls(){
+  // A UI may mount before its formal owner begins. Empty authored slots are
+  // not stop state; populate them only when an actual continuous owner exists.
+  for(const slot of document.querySelectorAll('[data-formal-continuous-stop-slot]')){
+   const mode=slot.dataset.formalContinuousStopSlot,state=formalStopSnapshot(mode);
+   const existing=[...document.querySelectorAll('[data-combat-action="stop-continuous"][data-combat-mode]')].some(b=>b.dataset.combatMode===mode&&b.dataset.combatRun===state.run);
+   if(state.available&&!existing&&!slot.querySelector('button'))slot.innerHTML=renderContinuousStopControl({mode,id:slot.dataset.stopId||""});
+  }
+  const seen=new Set();
+  for(const button of document.querySelectorAll('[data-combat-action="stop-continuous"][data-combat-mode]')){
+   const state=formalStopSnapshot(button.dataset.combatMode),wrapper=button.closest('[data-formal-continuous-stop]');
+   const key=button.dataset.combatMode+':'+button.dataset.combatRun;
+   if(!state.available||state.run!==button.dataset.combatRun||seen.has(key)){wrapper?.remove();continue;}
+   seen.add(key);button.disabled=state.requested||stopInFlight.has(state.owner);
+   button.dataset.stopState=state.status;
+   if(button.textContent!==state.label)button.textContent=state.label;
+   button.setAttribute('aria-busy',state.finishing?'true':'false');
+  }
+ }
+ function requestFormalContinuousStop(mode,options={}){
+  const state=formalStopSnapshot(mode),control=options?.control;
+  if(!state.available)return {ok:false,reason:state.reason||"not-continuous",state:getFormalContinuousStopState(mode)};
+  if(control&&(!control.isConnected||control.dataset.combatMode!==mode||control.dataset.combatRun!==state.run)||options.run&&options.run!==state.run)return {ok:false,reason:"stale-control"};
+  if(state.requested||stopInFlight.has(state.owner))return {ok:false,reason:"already-requested",state:getFormalContinuousStopState(mode)};
+  stopInFlight.add(state.owner);
+  try{
+   const result=state.adapter.request();
+   if(result===false||result?.ok===false)return {ok:false,reason:result?.reason||"owner-rejected",result};
+   const after=formalStopSnapshot(mode);
+   return {ok:after.requested===true||!after.available,result,state:getFormalContinuousStopState(mode)};
+  }catch(error){return {ok:false,reason:"owner-failed"};}
+  finally{stopInFlight.delete(state.owner);syncFormalContinuousStopControls();}
+ }
+ function requestFormalContinuousStopFromControl(control){return requestFormalContinuousStop(control?.dataset?.combatMode,{control});}
+ function renderContinuousStopControl({mode,id="",pending=false}={}){
+  const state=formalStopSnapshot(mode),safeId=String(id).replace(/[^a-zA-Z0-9_-]/g,"");
+  if(!state.available)return pending&&stopAdapters.has(mode)?`<div data-formal-continuous-stop-slot="${stopEscape(mode)}" data-stop-id="${safeId}"></div>`:"";
+  return `<div class="continuous-stop-wrap combat-viewport-stop formal-continuous-stop" data-formal-continuous-stop="${stopEscape(mode)}"><button type="button" data-combat-action="stop-continuous" data-combat-mode="${stopEscape(mode)}" data-combat-run="${state.run}" data-stop-state="${state.status}"${safeId?` id="${safeId}"`:""} class="btn danger formal-continuous-stop-button" onclick="requestFormalContinuousStopFromControl(this)"${state.requested?" disabled":""} aria-busy="${state.finishing?'true':'false'}">${stopEscape(state.label)}</button></div>`;
+ }
+ window.registerFormalContinuousStopAdapter=registerFormalContinuousStopAdapter;
+ window.getFormalContinuousStopState=getFormalContinuousStopState;
+ window.getFormalContinuousStopModes=()=>[...stopAdapters.keys()];
+ window.requestFormalContinuousStop=requestFormalContinuousStop;
+ window.requestFormalContinuousStopFromControl=requestFormalContinuousStopFromControl;
+ window.syncFormalContinuousStopControls=syncFormalContinuousStopControls;
  window.renderMinimalModeEntry=renderMinimalModeEntry;
  window.renderContinuousStopControl=renderContinuousStopControl;
+ // Reconcile only explicit controls; never infer modes from labels or relocate UI.
+ function observeFormalStops(){
+  if(stopObserver||typeof MutationObserver!=="function"||!document.body)return;
+  stopObserver=new MutationObserver(syncFormalContinuousStopControls);stopObserver.observe(document.body,{childList:true,subtree:true});
+  syncFormalContinuousStopControls();
+ }
+ document.addEventListener('DOMContentLoaded',observeFormalStops,{once:true});
+ observeFormalStops();
  function isMainContinuousCombat(){
   const ctx=window.activeMainBattleContext;
   return typeof adventureScreen!=="undefined"&&adventureScreen==="combat"&&(ctx?.continuous===true||combatTotal===0||combatTotal===window.CONTINUOUS_BATTLE_COUNT);

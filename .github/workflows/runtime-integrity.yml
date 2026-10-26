@@ -242,6 +242,7 @@ jobs:
           /tmp/pr48-viewport-browser.json
           /tmp/pr48-live-combat.json
           /tmp/pr48-mode-matrix.json
+          /tmp/formal-continuous-stop/
           /tmp/t3b-formal-renderer-browser.json
           /tmp/batch28-consolidated
 

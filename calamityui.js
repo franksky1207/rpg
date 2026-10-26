@@ -92,12 +92,11 @@
   const view=ui.battleView;
   const ehp=view?.enemyHp??(st?.currentHp||enemy.hp),emax=view?.enemyMax??st?.maxHp??enemy.hp;
   const php=view?.playerHp??p.hp,pmax=view?.playerMax??p.hp;
-  const continuous=ui.mode==="continuous",stopping=run?.stopRequested===true||run?.active===false;
+  const continuous=ui.mode==="continuous";
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
    <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openCivilizationCalamityMinimalMode()">極簡模式</button>`:""}</div>
    <div class="calamity-run-stats"><div><span>災厄</span><strong>${esc(def?.name||enemy.name)}</strong></div><div><span>已完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div></div>
-   ${continuous?`<div class="calamity-stop-wrap"><button data-combat-action="stop-continuous" id="calamityStopBtn" class="btn danger" onclick="stopCivilizationCalamityContinuousUI()" ${stopping?"disabled":""}>${stopping?"停止中":"停止連續討伐"}</button></div>`:""}
-   <div class="combat-screen calamity-combat"><div class="combat-head">${modeLabel(ui.mode)}</div><div class="combat-arena">
+   <div class="combat-screen formal-continuous-combat calamity-combat"><div class="combat-head">${modeLabel(ui.mode)}</div>${window.renderContinuousStopControl({mode:"calamity",id:"calamityStopBtn",pending:continuous})}<div class="combat-arena">
     <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):esc(typeof currentPlayerName==="function"?currentPlayerName():"玩家")} Lv.${state.level}</h2><div class="muted">ATK ${p.atk}　DEF ${p.def}<br>暴擊 ${p.crit}%　閃避 ${p.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(pmax)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPercent(php,pmax)}%"></span></div></div></div>
     <div class="combat-vs">VS</div>
     <div class="combatant enemy" id="combatEnemyCard"><div class="combat-damage" id="combatEnemyDamage"></div><div class="calamity-threat-badge">文明災厄</div><h2>${esc(enemy.name)}</h2><div class="muted">ATK ${fmt(enemy.atk)}　DEF ${fmt(enemy.def)}<br>暴擊 ${enemy.crit}%　閃避 ${enemy.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatEnemyHp">${fmt(ehp)} / ${fmt(emax)}</span></div><div class="bar"><span class="hp" id="combatEnemyBar" style="width:${hpPercent(ehp,emax)}%"></span></div></div></div>
@@ -128,7 +127,7 @@
   const current=document.querySelector('#main .calamity-battle-shell');
   if(!current){render();return;}
   const template=document.createElement('template');template.innerHTML=html;
-  for(const selector of ['.calamity-combat-head','.calamity-run-stats','.calamity-stop-wrap','.combat-head','#combatPlayerCard','#combatEnemyCard','#combatMessage']){
+  for(const selector of ['.calamity-combat-head','.calamity-run-stats','[data-formal-continuous-stop]','.combat-head','#combatPlayerCard','#combatEnemyCard','#combatMessage']){
    const target=current.querySelector(selector),next=template.content.querySelector(selector);
    if(target&&next&&target.innerHTML!==next.innerHTML)target.innerHTML=next.innerHTML;
   }
@@ -275,12 +274,7 @@
   if(ui.mode==="continuous"){setTimeout(runContinuousUi,80);return true;}
   setTimeout(runSingleUi,80);return true;
  };
- window.stopCivilizationCalamityContinuousUI=function(){
-  const result=window.requestCivilizationCalamityContinuousStop?.();
-  const btn=document.getElementById("calamityStopBtn");if(btn){btn.disabled=true;btn.textContent="停止中";}
-  const msg=document.getElementById("combatMessage");if(msg)msg.textContent="已停止連續討伐；不會再開始下一場。";
-  return !!result?.ok;
- };
+ window.stopCivilizationCalamityContinuousUI=function(){return window.requestFormalContinuousStop("calamity").ok;};
  window.returnToCivilizationCalamityList=function(){stopMinimalIfOpen();if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-list");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};view="calamity";render();};
  window.leaveCivilizationCalamityUI=function(){if(ui.running)return false;window.returnToCivilizationCalamityList();view="home";render();return true;};
  window.prepareCivilizationCalamityEntry=function(){if(ui.running)return false;if(typeof window.clearCombatPresentation==="function")window.clearCombatPresentation("calamity-entry");ui={phase:"idle",running:false,selectedId:null,mode:"single",lastBattle:null,finalRun:null,message:"",displayBattleNumber:1,battleView:null};window.queuePendingPlayerTitleNotice?.();return true;};

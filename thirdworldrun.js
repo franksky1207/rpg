@@ -440,4 +440,8 @@
  window.runThirdWorldContinuousLoop=runLoop;
  window.THIRD_WORLD_RUN_INTEGRITY=validate();
  if(!window.THIRD_WORLD_RUN_INTEGRITY.passed)console.error("[文明戰線] Third-world run integrity error",window.THIRD_WORLD_RUN_INTEGRITY.errors);
+ window.registerFormalContinuousStopAdapter?.("higher-stage",{
+  read:()=>({owner:runtime,active:runtime?.active===true,continuous:true,requested:runtime?.stopRequested===true,finishing:runtime?.presentingBattle===true}),
+  request:()=>typeof window.stopThirdWorldPlayerFlow==="function"?window.stopThirdWorldPlayerFlow("manual"):window.stopThirdWorldContinuousRun("manual")
+ });
 })();

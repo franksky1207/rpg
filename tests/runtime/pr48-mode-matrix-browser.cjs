@@ -17,7 +17,7 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
   window.playerCombatStats=()=>({hp:50000,atk:300,def:1000,crit:0,dodge:0});state.hp=50000;state.specializations.combo=60;state.specializations.drain=60;Math.random=()=>.5;
   view='home';render();await CivilizationFormalBRenderer.warmSprites();if(phase===3&&mode==='bounty')return {blocked:!isDungeonModeEntryUnlocked('bounty',state),stops:document.querySelectorAll('[data-combat-action="stop-continuous"]').length};window.__scrollProof=[];const scroll=window.scrollTo.bind(window);window.scrollTo=(...args)=>{__scrollProof.push({ready:!!document.querySelector('.formal-b-shared-stage:not([hidden])'),args});scroll(...args);};
   window.__originalStops=0;
-  const names={main:phase===1?'requestContinuousBattleStop':phase===2?'requestSecondWorldContinuousStop':'stopThirdWorldRunFromPlayerUi',bounty:'requestBountyContinuousStop',arena:phase===3?'requestThirdWorldArenaUiStop':'requestArenaContinuousStop',calamity:phase===1?'stopCivilizationCalamityContinuousUI':'stopSecondWorldCalamityContinuousUI',void:'requestVoidMirageExitUI'};
+  const names={main:phase===1?'requestContinuousBattleStop':phase===2?'requestSecondWorldContinuousStop':'stopThirdWorldContinuousRun',bounty:'requestBountyContinuousStop',arena:phase===3?'requestThirdWorldArenaStop':'requestArenaContinuousStop',calamity:phase===1?'requestCivilizationCalamityContinuousStop':'requestSecondWorldCalamityStop',void:'requestVoidMirageExit'};
   const fn=names[mode],stop=window[fn];window[fn]=function(...args){__originalStops++;return stop.apply(this,args);};
   if(mode==='main'){
    view='adventure';setAdventureEraView(phase===1?'galaxy':phase===2?'universe':'higher');render();
@@ -31,7 +31,7 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
  if(item.phase===3&&item.mode==='bounty'){assert.equal(availability.blocked,true,'formal high-era bounty remains unavailable');assert.equal(availability.stops,0,'no invented high-era bounty stop');reports.push({item,size,availability});console.log('PASS existing unavailable mode',item,size);continue;}
  const handle=await page.waitForFunction(()=>{
   const s=document.querySelector('.formal-b-shared-stage:not([hidden])');if(!s||!CivilizationCombatViewport.snapshot().focused)return false;
-  const r=s.getBoundingClientRect(),vp=visualViewport,top=vp.offsetTop,bottom=top+vp.height;
+  const r=s.getBoundingClientRect(),vp=visualViewport,bottom=vp.offsetTop+vp.height,top=Math.max(vp.offsetTop,document.querySelector("header")?.getBoundingClientRect().bottom||0);
   if(r.height<=0||r.bottom<=top||r.top>=bottom)return false;
   const essential=[r];
   for(const card of document.querySelectorAll('.combat-arena .combatant.player,.combat-arena .combatant.enemy')){
@@ -40,7 +40,7 @@ const cases=[...[1,2,3].flatMap(phase=>[{phase,mode:'main'},{phase,mode:'bounty'
   const b=document.querySelector('[data-combat-action="stop-continuous"]');
   const control=b?.closest('.combat-viewport-stop');if(control){const box=control.getBoundingClientRect();if(box.height>0)essential.push(box);}
   const areaTop=Math.min(...essential.map(x=>x.top)),areaBottom=Math.max(...essential.map(x=>x.bottom));
-  const fits=areaBottom-areaTop<=vp.height-24;
+  const fits=areaBottom-areaTop<=bottom-top-24;
   if(fits&&(areaTop<top-3||areaBottom>bottom+3))return false;
   const delta=r.top+r.height/2-top-vp.height/2;
   return {count:document.querySelectorAll('[data-combat-action="stop-continuous"]').length,above:b?.getBoundingClientRect().bottom<=r.top+1,delta,fits,areaTop,areaBottom,viewportTop:top,viewportBottom:bottom,stageVisible:r.top<bottom&&r.bottom>top,scrolls:__scrollProof,handler:b?.getAttribute('onclick')};

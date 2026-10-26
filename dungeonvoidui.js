@@ -1,5 +1,5 @@
 (function(){
- let voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};
+ let voidUi={phase:"idle",running:false,floorResult:null,finalRun:null,message:""};
  const VOID_MIRAGE_W3_INTEGRATION_VERSION=1;
  const VOID_MIRAGE_W3_TITLE_PRESENTATION_VERSION=1;
  const VOID_MIRAGE_W3_RESOURCE_POLICY=Object.freeze({reward:"vip",sharedProgress:"void-highest-floor",exp:false,dimensionalStrings:false,thirdWorldBossHp:false,thirdWorldCore:false});
@@ -72,8 +72,7 @@
  function combatHtml(fr,run){
   const e=fr.enemy,s=run?.playerSnapshot||playerCombatStats(),floor=fr.floor,boss=e?.isBossFloor,daily=dailySafe();
   const traits=typeof combatTraitBadgesHtml==="function"?combatTraitBadgesHtml(e?.traits):"";
-  const exitLabel=voidUi.exitAfterFloor?"本層結束後將退出":"強制退出虛空幻境";
-  return `<section class="void-shell"><div class="card void-panel"><div class="void-title main-minimal-mode-head"><span class="main-minimal-mode-head-label">【虛空幻境】</span>${run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openVoidMirageMinimalMode()">極簡模式</button>`:""}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="void-actions void-top-exit"><button data-combat-action="stop-continuous" class="btn void-exit-btn" ${voidUi.exitAfterFloor?"disabled":""} onclick="requestVoidMirageExitUI()">${exitLabel}</button></div><div class="combat-screen void-combat"><div class="combat-head">自動挑戰中</div><div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${voidIdentityHtml()} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
+  return `<section class="void-shell"><div class="card void-panel"><div class="void-title main-minimal-mode-head"><span class="main-minimal-mode-head-label">【虛空幻境】</span>${run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openVoidMirageMinimalMode()">極簡模式</button>`:""}</div>${statsHtml(run,floor)}${claimLineHtml(daily)}<div class="combat-screen formal-continuous-combat void-combat"><div class="combat-head">自動挑戰中</div>${window.renderContinuousStopControl({mode:"void"})}<div class="combat-arena"><div class="combatant player void-player" id="voidPlayerCard"><div class="combat-damage" id="voidPlayerDamage"></div><h2>${voidIdentityHtml()} Lv.${state.level}</h2><div class="void-player-meta">ATK ${s.atk}　DEF ${s.def}<br>暴擊 ${s.crit}%　閃避 ${s.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidPlayerHp">${s.hp} / ${s.hp}</span></div><div class="bar"><span class="hp" id="voidPlayerBar" style="width:100%"></span></div></div></div><div class="combat-vs void-vs">VS</div><div class="combatant enemy void-enemy" id="voidEnemyCard"><div class="combat-damage" id="voidEnemyDamage"></div><div class="void-floor-badge${boss?" void-boss-badge":""}">${boss?"雙特性關卡":"一般關卡"}</div><h2>${e.name}</h2>${traits}<div class="void-enemy-meta">ATK ${e.atk}　DEF ${e.def}<br>暴擊 ${e.crit}%　閃避 ${e.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="voidEnemyHp">${e.hp} / ${e.hp}</span></div><div class="bar"><span class="hp" id="voidEnemyBar" style="width:100%"></span></div></div></div></div><div class="combat-message void-message" id="voidCombatMessage">準備戰鬥</div></div></div></section>`;
  }
 
  // Update native fields, leaving the formal shared stage and cards connected.
@@ -81,7 +80,7 @@
   const current=document.querySelector('#main .void-shell:has(.void-combat)');
   if(!current){render();return;}
   const template=document.createElement('template');template.innerHTML=combatHtml(fr,getVoidMirageRunSnapshot());
-  const selectors=completed?['.void-stats','.void-claim-line','.void-top-exit']:['.void-stats','.void-claim-line','.void-top-exit','#voidPlayerCard','#voidEnemyCard','#voidCombatMessage'];
+  const selectors=completed?['.void-stats','.void-claim-line','[data-formal-continuous-stop]']:['.void-stats','.void-claim-line','[data-formal-continuous-stop]','#voidPlayerCard','#voidEnemyCard','#voidCombatMessage'];
   for(const selector of selectors){const target=current.querySelector(selector),next=template.content.querySelector(selector);if(target&&next&&target.innerHTML!==next.innerHTML)target.innerHTML=next.innerHTML;}
  }
  function resultHtml(run){
@@ -184,7 +183,7 @@
  window.enterVoidMirageDungeon=function(){
   if(Number(state?.level||0)<25)return;
   if(voidUi.running)return;
-  voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};
+  voidUi={phase:"idle",running:false,floorResult:null,finalRun:null,message:""};
   view="dungeon-void-mirage";render();
  };
  window.startVoidMirageChallengeUI=function(){
@@ -194,7 +193,7 @@
   const allowBackground=typeof window.gmBackgroundBattleEnabled==="function"&&window.gmBackgroundBattleEnabled()===true;
   if(allowBackground&&typeof window.backgroundProgressStart==="function")window.backgroundProgressStart("void");
   else if(typeof window.backgroundProgressStop==="function")window.backgroundProgressStop("void");
-  voidUi={phase:"combat",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};render();
+  voidUi={phase:"combat",foregroundEpoch:window.CivilizationCombatLifecycle?.epoch(),running:false,floorResult:null,finalRun:null,message:""};render();
   if(allowBackground&&typeof window.backgroundProgressSleep==="function")window.backgroundProgressSleep(100,"void").then(runVoidMirageUiAuto);else setTimeout(runVoidMirageUiAuto,100);
  };
  window.claimVoidMirageRewardUI=function(){
@@ -215,14 +214,8 @@
   else voidUi.message="目前無法領取虛空獎勵。";
   render();
  };
- window.requestVoidMirageExitUI=function(){
-  if(voidUi.phase==="result")return;
-  voidUi.exitAfterFloor=true;
-  if(typeof window.requestVoidMirageExit==="function")window.requestVoidMirageExit();
-  const btn=document.querySelector(".void-exit-btn");if(btn){btn.disabled=true;btn.textContent="本層結束後將退出";}
-  const msg=document.getElementById("voidCombatMessage");if(msg)msg.textContent="已要求退出：本層結束後離開虛空幻境。";
- };
- window.returnFromVoidMirage=function(){voidUi={phase:"idle",running:false,exitAfterFloor:false,floorResult:null,finalRun:null,message:""};view="dungeon";render();};
+ window.requestVoidMirageExitUI=function(){return window.requestFormalContinuousStop("void");};
+ window.returnFromVoidMirage=function(){voidUi={phase:"idle",running:false,floorResult:null,finalRun:null,message:""};view="dungeon";render();};
 
  function stopVoidMinimalModeIfOpen(){
   if(window.getMinimalModeAdapterId?.()!=="void-mirage")return false;

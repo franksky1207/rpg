@@ -24,7 +24,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
  const geometry=await page.evaluate(()=>{
   const stage=document.querySelector('.formal-b-shared-stage'),r=stage.getBoundingClientRect();
   const btn=document.querySelector('[data-combat-action="stop-continuous"]');
-  const vp=visualViewport,top=vp.offsetTop,bottom=top+vp.height;
+  const vp=visualViewport,bottom=vp.offsetTop+vp.height,top=Math.max(vp.offsetTop,document.querySelector("header")?.getBoundingClientRect().bottom||0);
   const essential=[r];
   for(const card of document.querySelectorAll('.combat-arena .combatant.player,.combat-arena .combatant.enemy')){
    for(const el of [card.querySelector('h2'),card.querySelector('.big-hp')])if(el){const box=el.getBoundingClientRect();if(box.height>0)essential.push(box);}
@@ -33,7 +33,7 @@ const base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html';
   const areaTop=Math.min(...essential.map(x=>x.top)),areaBottom=Math.max(...essential.map(x=>x.bottom));
   return {count:document.querySelectorAll('[data-combat-action="stop-continuous"]').length,
    above:btn.getBoundingClientRect().bottom<=r.top+1,stageVisible:r.top<bottom&&r.bottom>top,
-   fits:areaBottom-areaTop<=vp.height-24,areaTop,areaBottom,top,bottom,
+   fits:areaBottom-areaTop<=bottom-top-24,areaTop,areaBottom,top,bottom,
    delta:r.top+r.height/2-top-vp.height/2,handler:btn.getAttribute('onclick'),y:scrollY};
  });
  assert.equal(geometry.count,1);assert(geometry.above,JSON.stringify(geometry));
