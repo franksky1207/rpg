@@ -84,11 +84,16 @@ try{for(const viewport of [{width:390,height:844},{width:844,height:390},{width:
  });
  const representativeCases=[];
  const take=predicate=>{const row=cases.find(predicate);assert.ok(row,'missing cross-viewport representative '+predicate);if(!representativeCases.includes(row))representativeCases.push(row);};
- for(const kind of ['normal','elite','boss','special'])take(r=>r.kind===kind);
- // 1 and 1.5 are absent in the current registry (the original sampler skipped them).
- // Keep both existing explicit size extremes and all four kind representatives.
- for(const ratio of [1.75,2])take(r=>r.ratio===ratio);
+ // Named shapes already cover elite/boss. Select them first so the kind
+ // requirements reuse those same representatives instead of adding duplicates.
  for(const assetId of ['ship-04','beast-03','core-03'])take(r=>r.assetId===assetId);
+ for(const kind of ['normal','elite','boss','special'])if(!representativeCases.some(r=>r.kind===kind))take(r=>r.kind===kind);
+ // 1 and 1.5 are absent in the current registry (the original sampler skipped them).
+ for(const ratio of [1.75,2])if(!representativeCases.some(r=>r.ratio===ratio))take(r=>r.ratio===ratio);
+ const displayActions=item=>['attack',item.assetId==='core-03'?'hit':item.kind==='normal'?'return':item.assetId==='ship-04'||item.ratio===1.75?'dodge':'defeat'];
+ // The per-mode matrix covers idle. Display samples together must exercise all six
+ // actions, while the full matrix exercises every action on every unique case.
+ assert.deepEqual([...new Set(['idle',...representativeCases.flatMap(displayActions)])].sort(),['attack','defeat','dodge','hit','idle','return']);
  // Exact duplicate identity/era/source rows carry no additional acceptance.
  const uniqueCases=[...new Map(cases.map(row=>[JSON.stringify([row.era,row.source,row.id]),row])).values()];
  const selectedCases=full?uniqueCases:representativeCases;
@@ -124,7 +129,7 @@ try{for(const viewport of [{width:390,height:844},{width:844,height:390},{width:
    if(mode!=='duel')assert.deepEqual(order.slice(0,6),['idle','attack','hit','dodge','return','defeat']);
    if(mode!=='duel')for(const clip of seen)assert.ok(order.includes(clip),'all action loop missing '+clip);
   }
-  await frame.locator('[data-play]').click();const stopped=await diag();await page.waitForTimeout(1300);assert.equal((await diag()).sequence,stopped.sequence);assert.equal((await diag()).playing,false);assertPaint(await measure());
+  await frame.locator('[data-play]').click();const stopped=await diag();if(full||mode==='duel')await page.waitForTimeout(1300);else await nextDraw();assert.equal((await diag()).sequence,stopped.sequence);assert.equal((await diag()).playing,false);assertPaint(await measure());
   await page.screenshot({path:output+'/'+viewport.width+'-'+mode+'.png'});
   await frame.locator('[data-play]').click();await repeated();await leave();
  }
@@ -135,7 +140,8 @@ try{for(const viewport of [{width:390,height:844},{width:844,height:390},{width:
   if(item.source!=='alternate')await frame.locator('[data-identity]').selectOption(item.id);
   await enter();if(item.source!=='alternate')assert.ok((await frame.locator('[data-caption]').innerText()).includes(item.name));
   assert.doesNotMatch(await frame.locator('[data-caption]').innerText(),/\.webp|assets\/|monster-|boss-[a-z]-\d/);
-  for(const clip of full?['idle','attack','hit','dodge','return','defeat']:['attack','dodge','defeat']){
+  const actions=full?['idle','attack','hit','dodge','return','defeat']:displayActions(item);
+  for(const clip of actions){
    await action('monster',clip);
    // Measure actual painted pixels over the entire owner action, not just DOM boxes.
    const actionStart=await ui.evaluate(()=>performance.now());
@@ -147,7 +153,7 @@ try{for(const viewport of [{width:390,height:844},{width:844,height:390},{width:
    }
   }
   await frame.locator('[data-content]').selectOption('auto');await waitState('auto');assertPaint(await measure());
-  samples.push({item,layout:(await diag()).layout,paint:await measure()});await leave();
+  samples.push({item,actions,layout:(await diag()).layout,paint:await measure()});await leave();
  }
  timings.samplesMs=performance.now()-samplesStarted;
  // Alternate classification, final depth and mirror survive the redesign.

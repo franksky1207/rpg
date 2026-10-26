@@ -17,8 +17,8 @@ source registrations, historical seals or release configuration will change.
 | Three modes: player, monster, duel; six specified actions; fit union, actual alpha bounds, no timers/HUD/legacy buttons | all 3 viewports | full in portrait; all modes and six actions retained in other viewports |
 | Speed options and live 2×/1.5×/1× changes without reload | all viewports/modes | full in portrait |
 | Attack repeats, defeat resets/repeats, ordered six-action loop, duel auto sequence | all viewports/modes | full real-time cycles in portrait, condition wait on observed transitions |
-| Stop holds sequence, restart resumes; pixels and screenshots | all viewports/modes | all viewports/modes |
-| Galaxy/universe/higher × existing main/calamity/bounty/arena/void/alternate samples; normal/elite/boss/special; ratios 1/1.5/1.75/2; ship-04/beast-03/core-03 | all viewports, six actions, five pixel scans/action | all original unique identity/era/source combinations and six actions in portrait; other viewports use union of kind/ratio/shape representatives, attack/dodge/defeat and actual alpha scans over full 700ms owner duration (all six actions also checked in each mode) |
+| Stop holds sequence, restart resumes; pixels and screenshots | all viewports/modes | stop/draw/replay in every viewport/mode; full 1300ms hold in all primary modes and display duel |
+| Galaxy/universe/higher × existing main/calamity/bounty/arena/void/alternate samples; normal/elite/boss/special; ratios 1/1.5/1.75/2; ship-04/beast-03/core-03 | all viewports, six actions, five pixel scans/action | all original unique identity/era/source combinations and six actions in portrait; other viewports use union of kind/ratio/shape representatives, attack plus one characteristic action and actual alpha scans over full 700ms owner duration (all six actions also checked in each mode) |
 | Human-readable identity/caption, no raw asset paths | every sample | every executed sample |
 | Alternate: 20 cultures, 5 stages, final culture/universe/stage, effects screenshot | all viewports | all viewports |
 | Formal mirror | all viewports | all viewports |
@@ -78,7 +78,7 @@ Registry audit found that explicit `visibleRatio` 1 and 1.5 have no matching row
 the original conditional sampler silently skipped both. Preserve every original
 row and require existing 1.75/2 ratio representatives explicitly. The four kinds
 and three named assets are also mandatory in the cross-viewport matrix. Each
-cross-viewport sample uses attack/dodge/defeat, while each viewport still checks
+cross-viewport sample initially used attack/dodge/defeat (the measured follow-up below consolidates this), while each viewport still checks
 all six actions in all three modes. This avoids repeating the full Cartesian
 matrix outside the portrait functional run.
 
@@ -167,3 +167,54 @@ scans. Only exact duplicates and repetition across viewports are consolidated.
 A second local complete run and this PR’s Actions results are recorded in the PR
 acceptance report after the tested commit is pushed, avoiding another CI run for
 a report-only commit. Full job duration uses Actions start/completion metadata.
+
+
+## Follow-up based on measured Actions timings
+
+The first PR CI run passed the GM job in **332s (5m32s)**, above the desired
+3–5 minute range. The five entries took 315.485s; viewport totals were
+204.261 / 50.675 / 51.842s. This identified additional duplicate display work,
+not a reason to shorten real-time checks or weaken the complete matrix.
+
+The display selector now chooses shape-specific cases first and reuses their
+elite/boss classifications, producing **7** representatives instead of 9 with
+identical kind/shape/explicit-ratio requirements. All 17 primary cases still run
+all six actions. Each display case runs attack plus its characteristic secondary
+action: wide ship dodge, beast defeat, core hit, normal return, special defeat,
+1.75 calamity dodge, 2 calamity defeat. Idle is checked in each viewport/mode. An explicit
+set assertion requires all six actions across the combined mode and sample matrix, in addition
+to all six actions on every viewport/mode. The resulting monster/action matrix
+has 102 + 14 + 14 = **130** combinations, each retaining five alpha scans.
+
+All modes on every viewport still stop, draw and replay. The 1300ms stopped hold
+remains in all primary modes and once per display viewport (duel); other display
+modes require a new stopped draw and unchanged sequence. Thus each mode retains
+its complete time-based hold in the full matrix and each display viewport
+retains that hold, without repeating the full functional check for every mode.
+All replay cycles and 60s/3s long-run observations remain unchanged.
+
+The earlier 9-sample measurements describe the first revision only. Final tested
+SHA, second-revision timings and all Actions results are in the PR report.
+
+Final display representatives (each also runs attack):
+
+| Identity | Coverage reused | Second sampled action |
+| --- | --- | --- |
+| galaxy-map-444 | ship-04, elite, wide ship | dodge |
+| universe-boss-021 | beast-03, boss, large creature | defeat |
+| galaxy-map-050 | core-03, boss, core effects | hit |
+| galaxy-map-001 | normal | return |
+| special-gold_slime | special, energy effects | defeat |
+| galaxy-calamity-01 | explicit ratio 1.75, calamity | dodge |
+| universe-calamity-10 | explicit ratio 2, calamity | defeat |
+
+No individual primary case/action or its assertion is removed by this refinement.
+The first complete Functional CI run and its final functional-ci-gate passed
+alongside Fast Development Preflight. The final test-only refinement is routed
+by the existing classifier; no routing rules, skips or required gates changed.
+
+Final refinement local full run passed all five entries in **266.867s**. Maximized
+phases took **253.373s**; viewport totals were **194.108 / 29.031 / 30.185s**.
+Evidence comparison again confirmed the original 17 unique primary cases,
+all 7 mandatory display representatives, recorded action sets, 130 total sampled
+combinations, original 12 screenshot names and 60s/3s observations.
