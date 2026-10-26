@@ -81,7 +81,7 @@
    <div class="back-home"><button class="btn back-btn" onclick="leaveCivilizationCalamityUI()">← 返回主頁</button></div>
    <div class="calamity-title card"><h2>文明災厄</h2><div class="muted">擊敗各區域最終 Boss 後逐步解鎖。災厄剩餘 HP 會跨挑戰保留，擊敗後可取得並提升對應印記。</div></div>
    ${ui.message?`<div class="notice calamity-notice">${esc(ui.message)}</div>`:""}
-   <div class="card"><h3>十種印記養成總覽</h3><p>已滿級 ${defs().filter(d=>status(d.id)?.mark?.level>=10).length} / 10；尚可養成 ${defs().filter(d=>(status(d.id)?.mark?.level||0)<10).length}</p></div><div class="calamity-mark-grid">${markCardsHtml()}</div><div class="calamity-section-head"><h3>災厄討伐</h3></div><div class="calamity-grid">${calamityCardsHtml()}</div>
+   <div class="calamity-section-head"><h3>災厄討伐</h3></div><div class="calamity-grid">${calamityCardsHtml()}</div><div class="card"><h3>十種印記養成總覽</h3><p>已滿級 ${defs().filter(d=>status(d.id)?.mark?.level>=10).length} / 10；尚可養成 ${defs().filter(d=>(status(d.id)?.mark?.level||0)<10).length}</p></div><div class="calamity-mark-grid">${markCardsHtml()}</div>
    <details class="card"><summary>已完成印記・查看成果</summary>${defs().filter(d=>status(d.id)?.mark?.level>=10).map(d=>`<h3>${esc(d.markName)} Lv.10 MAX</h3>${markEffectBlock(d,status(d.id).mark)}`).join("")}</details>
   </section>`;
  }
