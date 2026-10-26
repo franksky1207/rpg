@@ -297,7 +297,7 @@
     const run=window.getCivilizationCalamityRunSnapshot?.(),def=window.getCivilizationCalamityDefinition?.(ui.selectedId);
     const e=root.querySelector("[data-calamity-minimal-enemy]"),round=root.querySelector("[data-calamity-minimal-round]"),ehp=root.querySelector("[data-calamity-minimal-enemy-hp]"),php=root.querySelector("[data-calamity-minimal-player-hp]");
     if(e)e.textContent=def?.name||run?.calamityName||"文明災厄";
-    if(round)round.textContent=`第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`;
+    if(round)round.textContent=`第 ${window.minimalModeFormatNumber(Math.max(1,Number(ui.displayBattleNumber)||1))} 場`;
     const view=ui.battleView;
     const enemyCurrent=view?.enemyHp??(Number(run?.currentHp)||0),enemyMax=view?.enemyMax??(Number(run?.maxHp)||0);
     const playerCurrent=view?.playerHp??(Number(run?.playerHp)||0),playerMax=view?.playerMax??(Number(run?.playerMaxHp)||0);
