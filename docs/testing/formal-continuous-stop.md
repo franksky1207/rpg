@@ -190,6 +190,10 @@ Local verification completed before opening the PR:
 - Existing viewport 45-case matrix; PR48 24-mode matrix; actual full three-fight
   arena rounds and calamity presentation; foreground interruption/checkpoints;
   Mirror/Void recovery; 80-battle/180-sale/20-offline/20-preview reward matrix.
+- Existing Void formal test: 9 cases (three eras × three sizes), each regular/Boss/next
+  floor plus actual exit; progress and no-implicit-reward assertions retained. Its
+  old button-text selector was migrated to explicit shared action/mode attributes.
+- Higher dungeon sprite/settlement for Void and Mirror passed.
 - Runtime Node regression suite (all eight commands), source/notice/function seals,
   JS integrity, resource manifest, CI command inventory, and 28 equipment unit tests.
 - Chromium cross-era background/minimal: galaxy, universe and Void all passed
@@ -204,3 +208,55 @@ Fixtures provide deterministic strong player stats and isolated SDK sessions;
 production combat formulas, drop rates, saves and progression were not changed.
 CI URLs and final commit are supplied in the PR acceptance report. No merge or
 Pages publication is performed by this change.
+
+### Changed-file inventory
+
+47 files; full per-line changes remain reviewable in the PR.
+
+- `.github/workflows/functional-ci.yml`
+- `.github/workflows/runtime-integrity.yml`
+- `3d-test/formal-player-sprites.css`
+- `battle-mobile-viewport.css`
+- `battlepipeline.js`
+- `calamityrun.js`
+- `calamityui.css`
+- `calamityui.js`
+- `combat-viewport-coordinator.js`
+- `combatlifecycle.js`
+- `docs/testing/formal-continuous-stop.md`
+- `dungeonarena.js`
+- `dungeonbounty.js`
+- `dungeonvoid.css`
+- `dungeonvoid.js`
+- `dungeonvoidui.js`
+- `index.html`
+- `mainminimalmode.css`
+- `mainminimalmode.js`
+- `resource-manifest.json`
+- `scripts/ci-command-map.json`
+- `scripts/ci-suites.json`
+- `secondworldcalamityminimalmode.js`
+- `secondworldcalamityrun.js`
+- `secondworldcalamityui.js`
+- `secondworldmainline.js`
+- `specialencounter.js`
+- `tests/runtime/batch20-notice-protection.cjs`
+- `tests/runtime/foreground-combat-modes-browser.cjs`
+- `tests/runtime/formal-continuous-stop-browser.cjs`
+- `tests/runtime/formal-continuous-stop.test.cjs`
+- `tests/runtime/formal-stop-approved.cjs`
+- `tests/runtime/formal-stop-approved.json`
+- `tests/runtime/issue106-approved-sources.cjs`
+- `tests/runtime/mirror-void-formal-browser.cjs`
+- `tests/runtime/pr48-live-combat-browser.cjs`
+- `tests/runtime/pr48-mode-matrix-browser.cjs`
+- `tests/runtime/pr48-stop-contract.cjs`
+- `tests/runtime/unified-mobile-combat-viewport-browser.cjs`
+- `tests/runtime/unified-mobile-combat-viewport.cjs`
+- `thirdworldarena.js`
+- `thirdworldarenaui.js`
+- `thirdworldrun.js`
+- `thirdworldui.css`
+- `thirdworldui.js`
+- `ui.js`
+- `worldmapui.js`
