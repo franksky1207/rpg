@@ -19,5 +19,5 @@
 ## 後續方向
 
 - 實際待辦以最新 main、尚未結案 Issue 與使用者新指示為準；過去曾列為未發布的整合分支與已完成報告都不是現役待辦。
-- 文件瘦身仍在 `chore/docs-governance-cleanup-20261025` 工作分支，第 4 批必要驗收／PR／合併完成以前，不能說 main 已包含這批文件清理。
+- 文件治理精簡已由 PR #108 合併至正式 `main`；此處原先標記尚未完成的 `chore/docs-governance-cleanup-20261025` 為歷史施工快照，不再列為目前待辦。
 - 各類風險分級驗收、Codex 額度節約及必要 Pages Gate 以 `DEVELOPMENT_PROTOCOL.md` 為準。
