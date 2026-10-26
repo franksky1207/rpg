@@ -81,7 +81,7 @@
    <div class="back-home"><button class="btn back-btn" onclick="leaveCivilizationCalamityUI()">← 返回主頁</button></div>
    <div class="calamity-title card"><h2>文明災厄</h2><div class="muted">擊敗各區域最終 Boss 後逐步解鎖。災厄剩餘 HP 會跨挑戰保留，擊敗後可取得並提升對應印記。</div></div>
    ${ui.message?`<div class="notice calamity-notice">${esc(ui.message)}</div>`:""}
-   <div class="calamity-section-head"><h3>災厄討伐</h3></div><div class="calamity-grid">${calamityCardsHtml()}</div><div class="card"><h3>十種印記養成總覽</h3><p>已滿級 ${defs().filter(d=>status(d.id)?.mark?.level>=10).length} / 10；尚可養成 ${defs().filter(d=>(status(d.id)?.mark?.level||0)<10).length}</p></div><div class="calamity-mark-grid">${markCardsHtml()}</div>
+   <div class="card"><h3>十種印記養成總覽</h3><p>已滿級 ${defs().filter(d=>status(d.id)?.mark?.level>=10).length} / 10；尚可養成 ${defs().filter(d=>(status(d.id)?.mark?.level||0)<10).length}</p></div><div class="calamity-mark-grid">${markCardsHtml()}</div><div class="calamity-section-head"><h3>災厄討伐</h3></div><div class="calamity-grid">${calamityCardsHtml()}</div>
    <details class="card"><summary>已完成印記・查看成果</summary>${defs().filter(d=>status(d.id)?.mark?.level>=10).map(d=>`<h3>${esc(d.markName)} Lv.10 MAX</h3>${markEffectBlock(d,status(d.id).mark)}`).join("")}</details>
   </section>`;
  }
@@ -94,9 +94,9 @@
   const php=view?.playerHp??p.hp,pmax=view?.playerMax??p.hp;
   const continuous=ui.mode==="continuous",stopping=run?.stopRequested===true||run?.active===false;
   return `<section class="calamity-shell calamity-battle-shell"><div class="card calamity-panel">
-   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`${window.renderMinimalModeEntry("openCivilizationCalamityMinimalMode()")}`:""}</div>
+   <div class="calamity-combat-head main-minimal-mode-head"><span class="main-minimal-mode-head-label">${continuous?`連續討伐・第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`:"單場挑戰"}</span>${continuous&&run?.active?`<button type="button" class="main-minimal-mode-enter" onclick="openCivilizationCalamityMinimalMode()">極簡模式</button>`:""}</div>
    <div class="calamity-run-stats"><div><span>災厄</span><strong>${esc(def?.name||enemy.name)}</strong></div><div><span>已完成場次</span><strong>${fmt(run?.battleCount||0)}</strong></div><div><span>完整擊殺</span><strong>${fmt(run?.kills||0)}</strong></div></div>
-   ${continuous?`${window.renderContinuousStopControl({onclick:"stopCivilizationCalamityContinuousUI()",id:"calamityStopBtn",disabled:stopping,label:stopping?"停止中":"停止連續討伐",wrapClass:"calamity-stop-wrap combat-viewport-stop"})}`:""}
+   ${continuous?`<div class="calamity-stop-wrap"><button data-combat-action="stop-continuous" id="calamityStopBtn" class="btn danger" onclick="stopCivilizationCalamityContinuousUI()" ${stopping?"disabled":""}>${stopping?"停止中":"停止連續討伐"}</button></div>`:""}
    <div class="combat-screen calamity-combat"><div class="combat-head">${modeLabel(ui.mode)}</div><div class="combat-arena">
     <div class="combatant player" id="combatPlayerCard"><div class="combat-damage" id="combatPlayerDamage"></div><h2>${typeof window.playerIdentityNameHtml==="function"?window.playerIdentityNameHtml({compact:true}):esc(typeof currentPlayerName==="function"?currentPlayerName():"玩家")} Lv.${state.level}</h2><div class="muted">ATK ${p.atk}　DEF ${p.def}<br>暴擊 ${p.crit}%　閃避 ${p.dodge}%</div><div class="big-hp"><div class="status-label"><span>HP</span><span id="combatPlayerHp">${fmt(php)} / ${fmt(pmax)}</span></div><div class="bar"><span class="hp" id="combatPlayerBar" style="width:${hpPercent(php,pmax)}%"></span></div></div></div>
     <div class="combat-vs">VS</div>
@@ -297,7 +297,7 @@
     const run=window.getCivilizationCalamityRunSnapshot?.(),def=window.getCivilizationCalamityDefinition?.(ui.selectedId);
     const e=root.querySelector("[data-calamity-minimal-enemy]"),round=root.querySelector("[data-calamity-minimal-round]"),ehp=root.querySelector("[data-calamity-minimal-enemy-hp]"),php=root.querySelector("[data-calamity-minimal-player-hp]");
     if(e)e.textContent=def?.name||run?.calamityName||"文明災厄";
-    if(round)round.textContent=`第 ${window.minimalModeFormatNumber(Math.max(1,Number(ui.displayBattleNumber)||1))} 場`;
+    if(round)round.textContent=`第 ${Math.max(1,Number(ui.displayBattleNumber)||1)} 場`;
     const view=ui.battleView;
     const enemyCurrent=view?.enemyHp??(Number(run?.currentHp)||0),enemyMax=view?.enemyMax??(Number(run?.maxHp)||0);
     const playerCurrent=view?.playerHp??(Number(run?.playerHp)||0),playerMax=view?.playerMax??(Number(run?.playerMaxHp)||0);
