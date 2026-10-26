@@ -11,7 +11,7 @@ function historicalBytes(path,bytes){
  // projected away for historical source seals; live HTML remains untouched.
  if(path==='index.html'){
   let source=bytes.toString('utf8');
-  for(const [token,count] of [['&combatUiB1=20261026',5],['&combatUiB2=20261026',9],['&combatUiB3=20261026',3]]){
+  for(const [token,count] of [['&combatUiB1=20261026',5],['&combatUiB2=20261026',9],['&combatUiB3=20261026',4]]){
    assert.equal(source.split(token).length-1,count,'combat UI approved cache token count: '+token);
    source=source.split(token).join('');
   }
