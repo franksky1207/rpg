@@ -224,4 +224,13 @@ body.main-minimal-mode-open{overflow:hidden;background:#000}
 .calamity-home > .calamity-grid{order:2}
 .calamity-home > .card:not(.calamity-title){order:3}
 .calamity-home > .calamity-mark-grid{order:4}
-.calamity-home > details.card{order:5}
+.calamity-home > details.card:not(.calamity-title){order:5}
+
+/* Special-encounter stop belongs above its combat arena; owner JS remains sealed. */
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap){
+ display:flex;flex-direction:column;
+}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-head{order:0}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .continuous-stop-wrap{order:1}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-arena{order:2}
+.combat-screen:has(> .combat-head + .combat-arena + .combat-message + .continuous-stop-wrap) > .combat-message{order:3}
