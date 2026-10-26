@@ -28,7 +28,7 @@ test('CI suite preserves fail-fast exit status and writes failure evidence',()=>
  assert.equal(r.exitCode,7);
  assert.equal(r.reports.at(-1).data.passed,false);
  assert.equal(r.reports.at(-1).data.commands.length,1);
- assert.match(r.summary.join(''),'FAIL');
+ assert.ok(r.summary.join('').includes('FAIL'));
  assert.match(r.summary.join(''),/\| 7 \|/);
 });
 test('successful CI suite preserves two command executions and success summary',()=>{
@@ -36,5 +36,5 @@ test('successful CI suite preserves two command executions and success summary',
  assert.equal(r.calls.length,2);
  assert.equal(r.exitCode,0);
  assert.equal(r.reports.at(-1).data.passed,true);
- assert.match(r.summary.join(''),'PASS');
+ assert.ok(r.summary.join('').includes('PASS'));
 });
