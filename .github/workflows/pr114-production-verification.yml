@@ -80,6 +80,12 @@ jobs:
             console.log('PASS live entrypoint and six exact deployed assets:',sha);
           })().catch(error=>{console.error(error);process.exitCode=1;});
           NODE
+          node - <<'NODE'
+          const fs=require('node:fs'),assert=require('node:assert/strict'),path='tests/runtime/era-copy-browser.cjs';
+          const source=fs.readFileSync(path,'utf8'),needle="  // Match existing isolated UI browser fixtures; no login or remote save calls.",addition="  console.log('Live startup precondition:',JSON.stringify(await page.evaluate(()=>({ready:window.BACKGROUND_PRELOAD_READY===true,preloadCovering:!!document.elementFromPoint(innerWidth/2,innerHeight/2)?.closest('#backgroundPreloadScreen')}))));\n  await page.waitForFunction(()=>window.BACKGROUND_PRELOAD_READY===true&&(!document.getElementById('backgroundPreloadScreen')||getComputedStyle(document.getElementById('backgroundPreloadScreen')).pointerEvents==='none'),null,{timeout:120000});\n";
+          assert.equal(source.split(needle).length,2,'exact existing UI fixture anchor');
+          fs.writeFileSync(path,source.replace(needle,addition+needle));
+          NODE
           node tests/runtime/era-copy-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
