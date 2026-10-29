@@ -3,6 +3,8 @@
 // Historic guards still compare EVERY byte outside this explicit patch set.
 const fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const patch=require('./pr48-approved-presentation.json');
+// Era copy/cache changes are exactly registered in era-copy-approved.cjs, before
+// the unchanged historical chain; runtime acceptance exercises the live UI.
 const preForeground=require('./batch20-approved-runtime.cjs').original;
 // PR #50, 2026-10-20: two exact reviewed post-seal updates. Keep the old
 // baseline return value for historical invariants while rejecting all other edits.

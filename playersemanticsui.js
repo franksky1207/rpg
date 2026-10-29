@@ -112,7 +112,7 @@
    if(title==="專精"&&current===3)desc.textContent="查看已完成並持續生效的 Lv.60 專精";
    if(title==="副本")desc.textContent=current===3?"競技場、虛空幻境與鏡像戰":"挑戰懸賞、競技場、虛空幻境與鏡像戰";
    if(title==="文明災厄"){
-    if(current===3){const heading=card.querySelector("b");if(heading)heading.textContent="災厄回顧";desc.textContent="回顧銀河紀元與宇宙紀元文明災厄";}
+    if(current===3){const heading=card.querySelector("b");if(heading)heading.textContent="文明傳承";desc.textContent="查看當前文明力量與銀河印記";}
     else desc.textContent=current===2?"討伐宇宙文明級威脅並提升文明等級":"討伐文明級威脅並培養永久印記";
    }
    if(title==="設定"&&current===3)desc.textContent="裝備自動處理、存檔與遊戲設定";

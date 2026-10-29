@@ -1,0 +1,207 @@
+{
+  "baseline": "ad0b6d9969ba61988eb0f64a145b93354adec805",
+  "fileCount": 783,
+  "scopeCounts": {
+    "GM 3D": 51,
+    "site and assets": 341,
+    "development": 52,
+    "docs": 37,
+    "tests": 300,
+    "vendor": 2
+  },
+  "terms": [
+    "回顧",
+    "回顧內容",
+    "回顧模式",
+    "舊世界",
+    "舊紀元",
+    "歷史紀錄",
+    "主線保留",
+    "戰線紀錄",
+    "正式成長"
+  ],
+  "postChangeMatches": [
+    {
+      "path": "calamityui.css",
+      "matches": {
+        "回顧": 1
+      }
+    },
+    {
+      "path": "finalintegrity.js",
+      "matches": {
+        "戰線紀錄": 3
+      }
+    },
+    {
+      "path": "gameguide.js",
+      "matches": {
+        "舊紀元": 1,
+        "戰線紀錄": 1,
+        "正式成長": 2
+      }
+    },
+    {
+      "path": "mirrordungeonui.js",
+      "matches": {
+        "歷史紀錄": 1
+      }
+    },
+    {
+      "path": "monstercodex.js",
+      "matches": {
+        "戰線紀錄": 1
+      }
+    },
+    {
+      "path": "reincarnationui.js",
+      "matches": {
+        "回顧": 1,
+        "戰線紀錄": 2,
+        "正式成長": 1
+      }
+    },
+    {
+      "path": "secondworldcalamityuiintegrity.js",
+      "matches": {
+        "回顧": 2
+      }
+    },
+    {
+      "path": "story.css",
+      "matches": {
+        "回顧": 1,
+        "戰線紀錄": 3
+      }
+    },
+    {
+      "path": "storydata-core-war.js",
+      "matches": {
+        "歷史紀錄": 1
+      }
+    },
+    {
+      "path": "storydata-orion.js",
+      "matches": {
+        "歷史紀錄": 1
+      }
+    },
+    {
+      "path": "storydata-universe-galaxy-beyond.js",
+      "matches": {
+        "歷史紀錄": 1
+      }
+    },
+    {
+      "path": "storydata-universe-star-cluster-frontier.js",
+      "matches": {
+        "戰線紀錄": 1
+      }
+    },
+    {
+      "path": "storydata-universe-stellar-great-wall.js",
+      "matches": {
+        "歷史紀錄": 1
+      }
+    },
+    {
+      "path": "storydata-universe-trans-domain-frontier.js",
+      "matches": {
+        "戰線紀錄": 1
+      }
+    },
+    {
+      "path": "storyrecordtabs.js",
+      "matches": {
+        "回顧": 5,
+        "戰線紀錄": 6
+      }
+    },
+    {
+      "path": "tests/runtime/alternate-universe-ui-integrity.js",
+      "matches": {
+        "回顧": 1
+      }
+    },
+    {
+      "path": "tests/runtime/batch20-codex-browser.cjs",
+      "matches": {
+        "回顧": 1
+      }
+    },
+    {
+      "path": "tests/runtime/batch20-save-guide-browser.cjs",
+      "matches": {
+        "回顧": 2
+      }
+    },
+    {
+      "path": "tests/runtime/era-copy-browser.cjs",
+      "matches": {
+        "回顧": 1,
+        "舊世界": 1,
+        "戰線紀錄": 4
+      }
+    },
+    {
+      "path": "tests/story/flow.js",
+      "matches": {
+        "回顧": 2
+      }
+    },
+    {
+      "path": "tests/story/record.js",
+      "matches": {
+        "回顧": 13,
+        "戰線紀錄": 9
+      }
+    },
+    {
+      "path": "thirdworldcombat.js",
+      "matches": {
+        "正式成長": 1
+      }
+    },
+    {
+      "path": "thirdworldcombatintegrity.js",
+      "matches": {
+        "回顧": 3
+      }
+    },
+    {
+      "path": "thirdworldplayerflow.js",
+      "matches": {
+        "戰線紀錄": 1
+      }
+    },
+    {
+      "path": "thirdworldprogress.js",
+      "matches": {
+        "正式成長": 1
+      }
+    },
+    {
+      "path": "ui.js",
+      "matches": {
+        "戰線紀錄": 2
+      }
+    },
+    {
+      "path": "worldphaseui.js",
+      "matches": {
+        "戰線紀錄": 6,
+        "正式成長": 3
+      }
+    }
+  ],
+  "matchCounts": {
+    "回顧": 33,
+    "戰線紀錄": 40,
+    "舊紀元": 1,
+    "正式成長": 8,
+    "歷史紀錄": 5,
+    "舊世界": 1
+  },
+  "issues": 13,
+  "runtimeFilesChanged": 6
+}

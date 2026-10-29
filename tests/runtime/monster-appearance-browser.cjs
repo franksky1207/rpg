@@ -2,7 +2,19 @@
 // Accepted art replaces the superseded synthetic-uniqueness raster gate. Shapes,
 // bodies, canonical aliases, six actions, and resource lifecycle are tested live.
 const {chromium,webkit}=require('playwright'),fs=require('fs'),cp=require('child_process'),assert=require('node:assert/strict');
-(async()=>{const kind=process.env.APPEARANCE_BROWSER||'chromium',browser=await (kind==='webkit'?webkit:chromium).launch(kind==='webkit'?(process.env.WEBKIT_EXECUTABLE_PATH?{executablePath:process.env.WEBKIT_EXECUTABLE_PATH}:{}):{executablePath:fs.existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined,args:['--no-sandbox']});const out='work/approved-integration';fs.mkdirSync(out,{recursive:true});try{const p=await browser.newPage({viewport:{width:390,height:844}}),base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/';
+(async()=>{const kind=process.env.APPEARANCE_BROWSER||'chromium';
+ // Pixel goldens require the revision installed by setup-ci-browser, never a
+ // mutable system Chromium. Keep every existing appearance assertion below.
+ const browser=await (kind==='webkit'?webkit:chromium).launch(kind==='webkit'?(process.env.WEBKIT_EXECUTABLE_PATH?{executablePath:process.env.WEBKIT_EXECUTABLE_PATH}:{}):{args:['--no-sandbox']});
+ const out='work/approved-integration';fs.mkdirSync(out,{recursive:true});try{
+ if(kind==='chromium'){
+  const registry=JSON.parse(fs.readFileSync(require('path').join(require('path').dirname(require.resolve('playwright-core/package.json')),'browsers.json'),'utf8'));
+  const expected=registry.browsers.find(row=>row.name==='chromium').browserVersion;
+  assert.equal(browser.version(),expected,'M3 must use the Playwright-pinned Chromium revision');
+  const runtime={kind,browser:browser.version(),expected,playwright:require('playwright/package.json').version};
+  fs.writeFileSync(out+'/appearance-browser.json',JSON.stringify(runtime,null,2));console.log('M3 pinned browser:',JSON.stringify(runtime));
+ }
+ const p=await browser.newPage({viewport:{width:390,height:844}}),base=process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/';
 await p.route('**/__approved/*',route=>{const name=new URL(route.request().url()).pathname.split('/').pop();if(!/^[a-z0-9_-]+\.webp$/.test(name))throw Error('bad fixture');const bytes=cp.execFileSync('git',['show','20c7f286b32da7fc3533d34ed7561266f6969cc4:development/monster-art/full-review/effects-full/'+name],{maxBuffer:4*1024*1024});return route.fulfill({contentType:'image/webp',body:bytes});});
 await p.goto(base);const result=await p.evaluate(async kind=>{
  const {mappings}=await import('./3d-test/monster-sprites.mjs'),{MonsterActor,visibleFootprint}=await import('./3d-test/monster-actor.mjs'),{getSharedMonsterPool}=await import('./3d-test/monster-sprite-pool.mjs'),{getMonsterAppearanceManager,createMonsterAppearanceManager}=await import('./3d-test/monster-appearance-manager.mjs'),{drawCodexMonster}=await import('./monstercodeximage.mjs');
