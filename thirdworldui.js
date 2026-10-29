@@ -58,7 +58,7 @@
  function bossCardHtml(boss,index){
   const snap=bossSnapshot(index);if(!boss||!snap)return "";
   const spec=specializationPresentation(boss),status=challengePresentation(snap),abilities=activeAbilityNames(snap),abilityText=abilities.length?abilities.join("、"):"尚無新增能力",remaining=Math.max(0,Math.min(100,n(snap.remainingPercent))),run=runSnapshot(),isActive=run.active===true&&whole(run.bossIndex)===whole(index);
-  return `<article class="map-card universe-boss-card third-world-boss-card ${snap.defeated?"cleared defeated":""} ${isActive?"running":""}" data-third-world-boss="${index}"><div class="third-world-boss-head"><div><h3>${boss.name}</h3><div class="third-world-boss-type">${spec.label}</div></div><div class="third-world-boss-stage">Stage ${whole(snap.stage)}</div></div><div class="third-world-boss-specialization">${spec.effect}</div><div class="third-world-boss-hp"><div class="status-label"><span>剩餘 HP</span><b>${fmt(snap.currentHp)}</b></div><div class="bar"><span class="hp" style="width:${remaining}%"></span></div><div class="third-world-boss-percent">${pct(remaining)}</div></div><div class="third-world-boss-abilities"><span class="muted">已解鎖：</span>${abilityText}</div><div class="third-world-boss-status ${isActive?"running":status.className}"><b>${isActive?"連戰進行中":status.label}</b><span>${isActive?`死亡 ${whole(run.deaths)} / ${runMaxDeaths()}｜目前最大 HP ${suppressionPct(run.hpCap?.hpCapPercent??100)}`:status.detail}</span></div>${actionHtml(snap,status,index)}</article>`;
+  return `<article class="map-card universe-boss-card third-world-boss-card ${snap.defeated?"cleared defeated":""} ${isActive?"running":""}" data-third-world-boss="${index}"><div class="third-world-boss-head"><div><h3>${boss.name}</h3><div class="third-world-boss-type">${spec.label}</div></div><div class="third-world-boss-stage">階段 ${whole(snap.stage)}</div></div><div class="third-world-boss-specialization">${spec.effect}</div><div class="third-world-boss-hp"><div class="status-label"><span>剩餘 HP</span><b>${fmt(snap.currentHp)}</b></div><div class="bar"><span class="hp" style="width:${remaining}%"></span></div><div class="third-world-boss-percent">${pct(remaining)}</div></div><div class="third-world-boss-abilities"><span class="muted">已解鎖：</span>${abilityText}</div><div class="third-world-boss-status ${isActive?"running":status.className}"><b>${isActive?"連戰進行中":status.label}</b><span>${isActive?`死亡 ${whole(run.deaths)} / ${runMaxDeaths()}｜目前最大 HP ${suppressionPct(run.hpCap?.hpCapPercent??100)}`:status.detail}</span></div>${actionHtml(snap,status,index)}</article>`;
  }
  function summaryHtml(agg){
   const title=titleDefinition(),remaining=Math.max(0,Math.min(100,n(agg?.overallRemainingPercent)));
@@ -158,7 +158,7 @@
   if(typeof window.startThirdWorldPlayerFlow!=="function"){alert("高維玩家戰鬥流程尚未載入完整，請重新整理後再試。");return false;}
   try{
    const result=await window.startThirdWorldPlayerFlow(index);
-   if(result?.ok===false){alert(String(result?.reason||"目前無法開始高維連戰。"));return false;}
+   if(result?.ok===false){console.warn("[文明戰線] 高維連戰未能開始",result);const messages={"找不到高維 Boss。":"找不到此高維存在，請重新整理後再試。","高維連戰進行中，必須先停止目前連戰才能更換目標。":"請先停止目前連戰，再選擇其他高維存在。","已有其他正式戰鬥／背景流程進行中，無法開始高維連戰。":"目前有其他戰鬥正在進行，請先結束後再挑戰。"};alert(messages[String(result.reason||"")]||"高維連戰暫時無法開始，請重新整理後再試。");return false;}
    return true;
   }catch(error){console.error("[文明戰線] 高維玩家連戰失敗",error);alert("高維連戰發生錯誤，已停止本輪挑戰。");stopActiveRun("error");return false;}
  };

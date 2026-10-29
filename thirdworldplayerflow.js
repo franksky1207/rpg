@@ -135,7 +135,7 @@
    }
    if(event.type==="stage-crossed"){
     const boss=bossDefinition(event.bossIndex),thresholds=crossedThresholdText(event.crossedStages),abilities=(Array.isArray(event.newAbilityIds)?event.newAbilityIds:[]).map(abilityName).filter(Boolean);
-    const lines=[`${esc(boss?.name||"高維存在")}：Stage ${whole(event.from)} → Stage ${whole(event.to)}`];
+    const lines=[`${esc(boss?.name||"高維存在")}：強化階段 ${whole(event.from)} → ${whole(event.to)}`];
     if(thresholds)lines.push(`本場跨越門檻：${thresholds}`);
     if(abilities.length)lines.push(`新增能力：${abilities.map(esc).join("、")}`);
     sections.push(`<div class="notice"><b>高維存在進入新強化階段</b><div class="muted" style="margin-top:6px;line-height:1.55">${lines.join("<br>")}</div></div>`);
@@ -182,7 +182,7 @@
  }
  function stopReasonPresentation(reason=""){
   const value=String(reason||""),meta=typeof window.continuousRunStopReasonMeta==="function"?window.continuousRunStopReasonMeta(value):{category:"other"};
-  const exact={manual:"玩家手動停止",stopped:"玩家手動停止","death-limit":`已達本輪 ${runMaxDeaths()} 次死亡上限`,"boss-defeated":"高維存在已擊破","stage-crossed":"Stage 已改變","five-point-front":"戰線進度已更新","progress-event":"戰線進度已更新","active-runtime":"其他正式流程接管","challenge-blocked":"挑戰條件已變更","combat-incomplete":"戰鬥未完整完成","settlement-failed":"正式結算失敗","owner-missing":"必要系統未載入","battle-error":"連戰流程發生異常","pagehide":"頁面已離開","reload":"頁面重新載入","world-transition":"世界切換"};
+  const exact={manual:"玩家手動停止",stopped:"玩家手動停止","death-limit":`已達本輪 ${runMaxDeaths()} 次死亡上限`,"boss-defeated":"高維存在已擊破","stage-crossed":"強化階段已改變","five-point-front":"戰線進度已更新","progress-event":"戰線進度已更新","active-runtime":"目前有其他戰鬥正在進行","challenge-blocked":"挑戰條件已變更","combat-incomplete":"戰鬥未完整完成","settlement-failed":"正式結算失敗","owner-missing":"必要系統未載入","battle-error":"連戰流程發生異常","pagehide":"頁面已離開","reload":"頁面重新載入","world-transition":"世界切換"};
   const fallback={completion:"目標完成",progression:"戰線進度已更新",limit:"達到本輪限制",interruption:"連戰中斷",error:"流程異常",other:"連戰結束"};
   return Object.freeze({version:STOP_REASON_PRESENTATION_VERSION,reason:value,category:String(meta?.category||"other"),label:exact[value]||fallback[meta?.category]||fallback.other});
  }
@@ -407,7 +407,7 @@
   if(runMaxDeaths()!==500)errors.push("MAX_DEATHS_CONTRACT");
   if(adapterRegistered!==true)errors.push("MINIMAL_MODE_ADAPTER_REGISTRATION");
   const manual=stopReasonPresentation("manual"),boss=stopReasonPresentation("boss-defeated"),stage=stopReasonPresentation("stage-crossed"),front=stopReasonPresentation("five-point-front"),limit=stopReasonPresentation("death-limit"),battleError=stopReasonPresentation("battle-error");
-  if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||front.label!=="戰線進度已更新"||stage.label!=="Stage 已改變"||limit.category!=="limit"||limit.label!=="已達本輪 500 次死亡上限"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
+  if(manual.category!=="interruption"||boss.category!=="completion"||stage.category!=="progression"||front.label!=="戰線進度已更新"||stage.label!=="強化階段已改變"||limit.category!=="limit"||limit.label!=="已達本輪 500 次死亡上限"||battleError.category!=="error")errors.push("STOP_REASON_PRESENTATION_SEMANTICS");
   const completeFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:false}),truncatedFallback=summaryTotals({results:[{effectivePermanentDamage:1,xp:2,dimensionalStrings:3,itemCount:4}],resultsTruncated:true});
   if(completeFallback.complete!==true||completeFallback.effectivePermanentDamage!==1||truncatedFallback.complete!==false||truncatedFallback.effectivePermanentDamage!==null)errors.push("RUN_TOTALS_FAIL_CLOSED");
   const flowSource=Function.prototype.toString.call(startFlow),finalSource=Function.prototype.toString.call(updateContextFromFinalSnapshot),summarySource=Function.prototype.toString.call(presentRunSummary),eventSource=Function.prototype.toString.call(presentProgressEvents),stepSource=Function.prototype.toString.call(presentStep),minimalSource=Function.prototype.toString.call(syncMinimalValues),refreshSource=Function.prototype.toString.call(refreshContextFromStep),capSource=Function.prototype.toString.call(capFromCombat);

@@ -94,7 +94,7 @@
  function performBalancedEnhancementUpgrade(options={}){
   if(busy)return {ok:false,reason:"busy"};
   let preview=enhancementPreview();
-  if(!preview.available){if(options.silent!==true&&preview.reason==="formal-state")alert("強化資料異常，請先使用 GM／存檔檢查處理。");return {ok:false,reason:preview.reason||"unavailable"};}
+  if(!preview.available){if(options.silent!==true&&preview.reason==="formal-state")alert("強化資料異常，請先匯出存檔備份，重新整理後再試。");return {ok:false,reason:preview.reason||"unavailable"};}
   if(preview.steps<=0){if(options.silent!==true)alert(preview.allMax?"五個裝備欄位已達目前紀元最高強化等級。":"目前資源不足以再進行平均強化。");return {ok:false,reason:preview.allMax?"max":"insufficient"};}
   const spentText=preview.phase===2?`暗物質 ${preview.spent.darkMatter.toLocaleString()}、暗能量 ${preview.spent.darkEnergy.toLocaleString()}`:`基礎強化石 ${preview.spent.basic.toLocaleString()}、進階強化石 ${preview.spent.advanced.toLocaleString()}`;
   if(options.skipConfirm!==true&&!confirm(`將五個裝備欄位依目前最低強化等級優先提升，共強化 ${preview.steps} 次。\n消耗：${spentText}\n是否繼續？`))return {ok:false,reason:"cancelled"};

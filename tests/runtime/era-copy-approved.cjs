@@ -5,6 +5,7 @@ const assert=require('node:assert/strict'),crypto=require('node:crypto'),cp=requ
 const record=require('./era-copy-approved.json');
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 function historicalBytes(p,bytes){
+ bytes=require("./player-copy-approved.cjs").historicalBytes(p,bytes);
  const row=record.files[p];if(!row)return bytes;
  assert.equal(sha(bytes),row.after,'unregistered era copy edit: '+p);
  const before=cp.execFileSync('git',['show',record.baseline+':'+p],{maxBuffer:16*1024*1024});

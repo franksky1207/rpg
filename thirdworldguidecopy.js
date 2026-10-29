@@ -14,7 +14,7 @@
    "戰鬥結算":"third-combat-settlement",
    "戰鬥收益":"third-combat-rewards",
    "10 名高維存在的個體特化":"third-combat-specialization",
-   "Stage 強化":"third-combat-stage",
+   "強化階段":"third-combat-stage",
    "共通能力":"third-combat-abilities",
    "死亡壓制":"third-combat-death-suppression",
    "戰鬥速度":"third-combat-speed"
@@ -106,7 +106,7 @@
    removed+=removeById(gear?.items,"third-gear-vip-protection")?1:0;
    removed+=removeById(dungeon?.items,"third-dungeon-vip-protection")?1:0;
    replaced+=replaceById(combat?.items,"third-combat-specialization","10 名高維存在各自擁有不同的戰鬥特性；實際特化效果會顯示在各自的 Boss 卡片上。")?1:0;
-   replaced+=replaceById(combat?.items,"third-combat-stage","高維存在的永久 HP 持續下降時，會逐步進入更高 Stage，整體戰鬥能力也會隨之提升。詳細狀態以 Boss 卡片顯示為準。")?1:0;
+   replaced+=replaceById(combat?.items,"third-combat-stage","高維存在的永久 HP 持續下降時，會逐步進入更高的強化階段，整體戰鬥能力也會隨之提升。詳細狀態以 Boss 卡片顯示為準。")?1:0;
    replaced+=replaceById(combat?.items,"third-combat-abilities","高維存在會隨永久 HP 推進逐步解鎖共通能力；目前已解鎖的能力與效果以 Boss 卡片顯示為準。")?1:0;
    replaced+=replaceById(dungeon?.items,"third-dungeon-arena","高維競技場已開放。每輪為 3 場連續戰鬥，場間不回血；可選擇定相或異相模式，也可依剩餘每日次數一次進行多輪挑戰。完成挑戰可取得 VIP 積分，實際對手與獎勵以競技場頁面顯示為準。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-strings","維度之弦是第三紀元的主要永久成長資源，透過高維正式戰鬥取得，可用於強化界弦核心。")?1:0;

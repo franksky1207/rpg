@@ -114,7 +114,7 @@
   const cfg=window.THIRD_WORLD_BOSS_STAGE_CONFIG||{},snapshot=rules&&typeof rules==="object"?rules:thirdWorldGuideRuleSnapshot();
   const atk=Math.max(0,Math.floor(Number(cfg.atkPerStage)||0)),def=Math.max(0,Math.floor(Number(cfg.defPerStage)||0)),crit=Math.max(0,Number(cfg.critPointsPerStage)||0),dodge=Math.max(0,Number(cfg.dodgePointsPerStage)||0),step=Math.max(1,Math.floor(Number(cfg.stepPercent)||10));
   const firstThreshold=Math.max(step,100-step),lastThreshold=Math.max(step,100-snapshot.maxStage*step);
-  return `Boss 永久 HP 每跨過 ${firstThreshold}%、${Math.max(lastThreshold,step)}% 等 ${step}% 門檻就進入下一個 Stage，最高 Stage ${snapshot.maxStage}。每提升 1 Stage：ATK +${atk.toLocaleString()}、DEF +${def.toLocaleString()}、暴擊 +${crit}%、閃避 +${dodge}%。`;
+  return `Boss 永久 HP 每跨過 ${firstThreshold}%、${Math.max(lastThreshold,step)}% 等 ${step}% 門檻就進入下一個強化階段，最高為第 ${snapshot.maxStage} 階段。每提升 1 階段：ATK +${atk.toLocaleString()}、DEF +${def.toLocaleString()}、暴擊 +${crit}%、閃避 +${dodge}%。`;
  }
  function thirdWorldCoreGuideText(){
   const max=Math.max(0,Math.floor(Number(window.THIRD_WORLD_CORE_MAX_LEVEL)||10)),cost=Math.max(1,Math.floor(Number(window.THIRD_WORLD_CORE_COST_PER_LEVEL)||1000000000)),base=Math.max(0,Number(window.THIRD_WORLD_SUPPRESSION_BASE_POINTS)||.5),reduction=Math.max(0,Number(window.THIRD_WORLD_CORE_SUPPRESSION_REDUCTION_PER_LEVEL)||.04);
@@ -128,9 +128,9 @@
     ["10 名高維存在",`10 名高維存在各有 ${bossHp.toLocaleString()} 最大 HP，全部保留各自永久 HP。玩家可以在仍存活且符合戰線限制的目標之間切換。`],
     ["永久削血","每場正式戰鬥以 Boss 目前永久 HP 開始；本場實際削掉的 HP 會永久保留。汲取只能在該場戰鬥內回復角色 HP，不會回復 Boss 已被永久削掉的 HP。"],
     ["5% 戰線",`存活 Boss 之間最多只能相差 5% 戰線；以目前 10 名高維存在的基準換算為 ${gap.toLocaleString()} HP。若目標已超前，該場若已合法開始仍完整結算，但下一場會鎖定，直到其他存活 Boss 跟上。最後一名存活 Boss 不受此限制。`],
-    ["連續戰鬥",`高維主線以連續戰鬥為主要流程。沒有進度事件時，一輪最多累積 ${maxDeaths} 次死亡；玩家可手動停止。Boss 擊破、Stage 跨越、5% 戰線鎖定或整體進度事件都會結束本輪，確認後再開始下一輪。`],
+    ["連續戰鬥",`高維主線以連續戰鬥為主要流程。沒有進度事件時，一輪最多累積 ${maxDeaths} 次死亡；玩家可手動停止。Boss 擊破、強化階段改變、5% 戰線鎖定或整體進度事件都會結束本輪，確認後再開始下一輪。`],
     ["完成紀錄與怪物圖鑑","已擊破的高維存在保留完成紀錄；正式遭遇即解鎖怪物圖鑑，可查看靜態圖片。尚未擊破者仍可正式連戰，保留永久 HP、維度之弦與界弦核心規則。"],
-    ["高維離線",`完成正式前景高維戰鬥並成功結算後，可建立高維離線裝備樣本。離線只模擬裝備掉落機會，不取得 EXP、維度之弦，也不推進界弦核心、稱號、劇情或 Boss 永久 HP。最多計算 ${rules.offlineMaxHours.toLocaleString()} 小時。`],
+    ["高維離線",`在遊戲畫面中完成高維紀元正式戰鬥並成功結算後，即可開始累積離線裝備收益。離線只會獲得裝備，不取得 EXP、維度之弦，也不推進界弦核心、稱號、劇情或 Boss 永久 HP。最多計算 ${rules.offlineMaxHours.toLocaleString()} 小時。`],
     ["目前等級上限",`高維紀元角色等級上限為 Lv${rules.levelCap}。Lv${rules.entryLevel}～${Math.max(rules.entryLevel,rules.levelCap-1)} 每級固定需要 ${rules.expPerLevel.toLocaleString()} EXP；到達 Lv${rules.levelCap} 後不再累積 EXP。`]
    ]},
    {id:"gear",label:"角色與裝備",items:[
@@ -145,10 +145,10 @@
     ["戰鬥結算","正式戰鬥只在角色死亡或 Boss 被擊破後形成可落帳結果；有效永久削血等於該場開始時正式 Boss HP 減去戰鬥結束 HP。"],
     ["戰鬥收益","每 1 點有效永久削血同時換算為 1 EXP 與 1 維度之弦。即使角色死亡，只要該場是合法且完整的正式戰鬥，仍可依實際永久削血完成結算。"],
     ["10 名高維存在的個體特化",thirdWorldBossSpecializationGuideText()],
-    ["Stage 強化",thirdWorldStageGuideText(rules)],
+    ["強化階段",thirdWorldStageGuideText(rules)],
     ["共通能力",thirdWorldAbilityGuideText()],
-    ["死亡壓制","高維連戰的死亡次數只在本輪 runtime 中累積，不寫入存檔。角色死亡且 Boss 尚未擊破時才增加 1 次死亡；下一場的可用 HP 上限會依本輪死亡壓制重新計算。"],
-    ["戰鬥速度","第三紀元沿用已解鎖的 1.5× 戰鬥速度，可隨時切回 1×；GM 測試速度不改變正式玩家規則。"]
+    ["死亡壓制","高維連戰的死亡次數只在本輪戰鬥中累積，不會保留至下一輪。角色死亡且 Boss 尚未擊破時才增加 1 次死亡；下一場的可用 HP 上限會依本輪死亡壓制重新計算。"],
+    ["戰鬥速度","第三紀元沿用已解鎖的 1.5× 戰鬥速度，可隨時切回 1×。"]
    ]},
    {id:"dungeon",label:"副本與 VIP",items:[
     ["高維副本","進入第三紀元後，副本首頁只呈現目前仍可使用的模式與高維狀態；不適用的舊模式不再作為第三紀元正式成長來源。"],
@@ -163,7 +163,7 @@
     ["界弦核心",thirdWorldCoreGuideText()],
     ["核心注入","可將目前持有的維度之弦一次注入界弦核心，連續跨級時進度會正確保留。高維連戰進行中不能注入，必須先停止該輪戰鬥。"],
     ["高維稱號","10 名高維存在的總剩餘 HP 降到指定門檻時會推進高維稱號；稱號進度由 10 名高維存在的總剩餘 HP 統一判定，不依單一 Boss 重複發放。"],
-    ["既有養成","進入第三紀元前已完成的角色養成會依正式戰鬥 owner 繼續生效；第三紀元本身不再新增另一套平行養成資源或重複系統。"],
+    ["既有養成","原有養成效果將繼續生效；第三紀元本身不再新增另一套平行養成資源或重複系統。"],
     ["極簡模式","高維連續戰鬥可使用共用極簡模式；背景補播與快速追趕只加速等待與演出，不會因補播機制額外加發正式進度或收益；實際戰鬥仍依正式戰鬥與結算流程落帳。"],
     ["存檔","角色正式進度會持續寫入本機存檔；帳號登入後仍可使用設定頁的手動雲端上傳／下載。高維連戰的死亡次數、目前目標與最近戰鬥摘要都屬暫時狀態，不會寫入正式存檔。"]
    ]}
@@ -195,7 +195,7 @@
    "地圖推進":"宇宙紀元沒有普通怪與菁英怪主線。達到需求等級並擊敗前一隻 Boss 後，即可挑戰下一隻。",
    "Boss":"宇宙主線全由 Boss 組成，可單場或連續挑戰。首次擊敗會推進主線；戰敗時連續戰鬥立即停止。",
    "戰鬥模式":"宇宙主線 Boss 可選擇單場或連續戰鬥。連續戰鬥會持續挑戰目前 Boss，直到戰敗或玩家要求停止。",
-   "離線收益":"離線超過 1 分鐘後，可依最近的宇宙主線戰鬥樣本取得部分 EXP、暗物質、裝備與少量直接暗能量收益，最多計算 12 小時；不增加副本額度或 VIP 積分。",
+   "離線收益":"離線超過 1 分鐘後，可依最近獲勝的宇宙主線 Boss 戰鬥取得部分 EXP、暗物質、裝備與少量直接暗能量收益，最多計算 12 小時；不增加副本額度或 VIP 積分。",
    "目前等級上限":"宇宙紀元角色等級上限為 Lv1000。進入宇宙紀元後可繼續累積 EXP 升級，到達 Lv1000 後不再累積 EXP，且不會把滿等 EXP 轉成銀河金幣。",
    "裝備掉落":"宇宙主線 Boss 勝利會取得宇宙紀元裝備，裝備等級最高 Lv1000。裝備品質與詞條仍會影響實際能力。",
    "背包":"背包可查看、裝備與出售裝備，也能處理戰敗時遺失的裝備。宇宙紀元裝備出售使用暗物質；宇宙裝備贖回以暗物質支付，若遺失的是銀河紀元裝備則可免費贖回。",

@@ -778,5 +778,20 @@
     "source": "runtime-integrity/formal-continuous-stop",
     "suite": "R2-container",
     "command": "node tests/runtime/formal-continuous-stop-browser.cjs"
+  },
+  {
+    "source": "runtime-integrity/runtime-browser-regression",
+    "suite": "R2-container",
+    "command": "node tests/runtime/player-copy-boundaries.cjs"
+  },
+  {
+    "source": "runtime-integrity/runtime-browser-regression",
+    "suite": "R2-container",
+    "command": "RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/runtime/player-copy-browser.cjs"
+  },
+  {
+    "source": "runtime-integrity/runtime-browser-regression",
+    "suite": "R2-container",
+    "command": "PLAYER_COPY_BROWSER=webkit RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/runtime/player-copy-browser.cjs"
   }
 ]
