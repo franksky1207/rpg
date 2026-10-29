@@ -1,0 +1,543 @@
+{
+  "baseline": "0ba4743674f34ef52f77a126f7e6091e71a937ed",
+  "files": {
+    "cloudsave.js": {
+      "before": "d02a117f7ca817d4d826cfa5f143842c945463ca57703b49c2ff1cffd22ba094",
+      "after": "01649399315b4df16037210cbb48be4716f9ddd6def0cec73979d3b185d7e361"
+    },
+    "enhancementui.js": {
+      "before": "9842ee7af7ce8377bcd4632a5a6ca5c5099353a64dac2fc0c8d03511af323a6b",
+      "after": "9e76552b671e9ddb0004d5ecbc2d0ed9ce947edc474f36f8d51fdf5c08e079aa"
+    },
+    "gameguide.js": {
+      "before": "c4f544fd75d9b01aca782596379655db9b41e90dc6ed692d3b9e81a5ac11733a",
+      "after": "94d81d4f993fcc4f751022174e2a076fbdae217d442c8b0d176c4fcf91cdaeae"
+    },
+    "index.html": {
+      "before": "3bf6198a89b038cb87dca2efe531e3db101ff3201990bf3903a0d798aa7969b1",
+      "after": "eec007515a14b5194ba1fc502bb11f9fd176f6521eec3798cf7b2703a3f4f60c"
+    },
+    "mirrordungeonguide.js": {
+      "before": "4b3786c82e7c032c6a91d7d9a39183811a342985d8e89ca42e6cdfd0db1514ee",
+      "after": "8ad6bd619dbb717b778a1014df60a5125b55d13cf65d70ea2c2b0b80723ca5c7"
+    },
+    "mirrordungeonrun.js": {
+      "before": "52aa1c5b060ea8ed2ae22237a5d8b34b893457c914a8148a7af68c35c872c09d",
+      "after": "1058572c03f1053a25df56da2d03346783770f7cabffc7181617674ee8ad9ceb"
+    },
+    "mirrordungeonui.js": {
+      "before": "33c5e5431a08ac1df58dd59dda74124917a92b9bc2a5fff3a99edab361d8f8d8",
+      "after": "e003661866f877503812acd2baef99ff3f992cd5ce249d2a456d02455d2c332c"
+    },
+    "offlineprogress.js": {
+      "before": "eb16374c28349a728235252ecc233aa3c1114b0f81836e8c25ce37651d7d178f",
+      "after": "ac082fbd5bf88f6f2ab19c0a3fe7c4e765a19589aab8018c8eba159b120e266e"
+    },
+    "playerbatchupgrades.js": {
+      "before": "525895621325394030093c6b512e252f58a67dd8083b039b867e23ca6be7027f",
+      "after": "d7289ac2ac0d571a64d5c44a4084931b88cf06bc2fe9dce26e8c02bf4884913d"
+    },
+    "playersemanticsui.js": {
+      "before": "dc35b900ad425e474d0e3ab49e473f0023e8af9105ebc9758d5c1538dc11cb05",
+      "after": "aebe3ede39578e9c858b120642be170493f88e7445cc00448206e83f8dd386fe"
+    },
+    "reincarnationui.js": {
+      "before": "57bc5fcbef3bd8e0292b0f8023c26ad5902cce388ab146ccdac38399adc224cf",
+      "after": "b3b2985eb450ef548448a44d141acca074ab2475698bc4bde1a8d9bf63980d43"
+    },
+    "resource-cache-client.js": {
+      "before": "cdc353681b8cf9adc7c9deb6aa139e153e549659541a25834ceb34070903a9c5",
+      "after": "28c513c6336472df3845384388b237743e0d8652e3c1dc8336b155e042a8d5ae"
+    },
+    "saveversionguard.js": {
+      "before": "d88a16b9a4b581cb2e524acb3d5df11380d380b44a0e073d81f4bf2e332281af",
+      "after": "6a254e8d27b4bf9ec5fd481e7ee2c186785ba8a61aacdaadc6d8f24d3c75e793"
+    },
+    "specialization.js": {
+      "before": "af18cc00a22b8dd8e094b1749e026735a53cb5e7425a79292c15ae3a1da46f78",
+      "after": "570431a98e9eeea91688799b624e213f95bcf97907a5868cc662a4e928b31959"
+    },
+    "supabaseauth.js": {
+      "before": "a85919bad726ef57b50a18c475324ed59c8067f2eb537f8ccf6311434801e0c8",
+      "after": "7ac913ac3179e4e8f44ce018b1d4ee476b13b2dfc36ed1d5f7148d77f43eb3a9"
+    },
+    "thirdworldarenaui.js": {
+      "before": "a7dd314f2ed5eaaf1053e68d00c58f99b4f30e779a1e9395e8c160ac1018f806",
+      "after": "3a0c324d4775efb793dbf62ee9617fc35346dea212c9264fb103d8b0b62eb487"
+    },
+    "thirdworldguidecopy.js": {
+      "before": "c92554aa899f2c15d152c6154e58d8ad88c013e6117d1ac23fab636a9b0c1bbb",
+      "after": "3960f0fde52b2fca83d194fae3b52778fcff962db516071e90abc8ec11b6f393"
+    },
+    "thirdworldplayerflow.js": {
+      "before": "e63b07856e9859bd628a5397981d2c7bc5348476810769812f29cc67b38acae3",
+      "after": "2b4bfdc673e3484a82eda151e604afa58d88e8dca94304b3713fff10a4c17686"
+    },
+    "thirdworldui.js": {
+      "before": "4b6f682fb334cefb9bffd82cefb701bcbc25a11066c893178aa882aa0f3434cd",
+      "after": "45b3bba8d2dcb972052263651b1101ac9633826138c936b1c3099707f70a0b36"
+    },
+    "worldphaseui.js": {
+      "before": "51fd1388e9ac4073100560fc4d6b79b5578b218b3be53c2df42515794d1aeccc",
+      "after": "adbde32b5d3f5aa3d619f078ff5e04481a356ba8d42d48ff0d6d149d6853cc16"
+    }
+  },
+  "edits": [
+    {
+      "file": "offlineprogress.js",
+      "before": "為避免大量 DOM 造成卡頓不在此逐件展開。",
+      "after": "可前往背包查看其餘裝備。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "完成一場符合條件的主線普通／菁英戰鬥後，即可建立離線收益基準。Boss、副本與背景 catch-up 不會建立此樣本。",
+      "after": "在遊戲畫面中完成一場銀河紀元主線普通怪或菁英怪戰鬥並獲勝後，即可開始累積離線收益。敵人等級最多可比角色低 15 級。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "完成一場宇宙紀元主線 Boss 正式前景勝利後，即可建立離線收益基準。背景戰鬥、回頁 catch-up 與副本不會建立此樣本。",
+      "after": "在遊戲畫面中完成一場宇宙紀元主線 Boss 戰鬥並獲勝後，即可開始累積離線收益。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "完成一場高維紀元正式前景戰鬥並成功結算後，即可建立高維離線裝備樣本。背景戰鬥、回頁 catch-up、GM 測試不會建立此樣本。",
+      "after": "在遊戲畫面中完成一場高維紀元的正式戰鬥並成功結算後，即可開始累積離線裝備收益。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "偵測到舊版 Offline battle sample V${Math.max(0,Number(migration.sourceSampleVersion)||0)}。因舊格式無法安全對應目前三紀元實戰樣本，僅淘汰該離線樣本與 pending，不會修改角色、裝備或正式進度。",
+      "after": "部分舊版離線紀錄無法沿用，本次已重新開始計算離線時間。角色、裝備及遊戲進度不受影響。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "尚無可用的主線實戰樣本",
+      "after": "離線收益說明",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "本次離線區段因沒有可計算的實戰基準而不發放收益，已建立新的離線起點；之後只要有有效樣本，離線結算就會正常出現。",
+      "after": "本次離線期間沒有符合條件的收益紀錄，因此沒有取得收益。離線時間已重新開始計算。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "detail.innerHTML=`<div class=\"offline-duration\">離線 ${formatDuration(info?.elapsedUsed||info?.elapsedRaw||0)}",
+      "after": "page.querySelector(\".offline-page-title\").textContent=\"本次沒有離線收益\";\n  detail.innerHTML=`<div class=\"offline-duration\">離線 ${formatDuration(info?.elapsedUsed||info?.elapsedRaw||0)}",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "if(Number(result.world)===3){detail.innerHTML=",
+      "after": "page.querySelector(\".offline-page-title\").textContent=\"離線收益結算\";\n  if(Number(result.world)===3){detail.innerHTML=",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "次裝備模擬基準",
+      "after": "次裝備掉落機會",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "依最近正式高維戰鬥樣本估算；不指定 Boss，也不造成任何 Boss HP 傷害。",
+      "after": "依最近完成的高維戰鬥估算，不會對任何 Boss 造成傷害。",
+      "count": 1
+    },
+    {
+      "file": "offlineprogress.js",
+      "before": "高維離線只模擬裝備掉落機會：",
+      "after": "高維離線只會獲得裝備：",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "進入下一個 Stage，最高 Stage ${snapshot.maxStage}。每提升 1 Stage：",
+      "after": "進入下一個強化階段，最高為第 ${snapshot.maxStage} 階段。每提升 1 階段：",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "Boss 擊破、Stage 跨越、",
+      "after": "Boss 擊破、強化階段改變、",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "完成正式前景高維戰鬥並成功結算後，可建立高維離線裝備樣本。離線只模擬裝備掉落機會，",
+      "after": "在遊戲畫面中完成高維紀元正式戰鬥並成功結算後，即可開始累積離線裝備收益。離線只會獲得裝備，",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "[\"Stage 強化\",thirdWorldStageGuideText(rules)]",
+      "after": "[\"強化階段\",thirdWorldStageGuideText(rules)]",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "高維連戰的死亡次數只在本輪 runtime 中累積，不寫入存檔。",
+      "after": "高維連戰的死亡次數只在本輪戰鬥中累積，不會保留至下一輪。",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "；GM 測試速度不改變正式玩家規則。",
+      "after": "。",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "進入第三紀元前已完成的角色養成會依正式戰鬥 owner 繼續生效；",
+      "after": "原有養成效果將繼續生效；",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "依最近的宇宙主線戰鬥樣本取得部分",
+      "after": "依最近獲勝的宇宙主線 Boss 戰鬥取得部分",
+      "count": 1
+    },
+    {
+      "file": "thirdworldguidecopy.js",
+      "before": "\"Stage 強化\":\"third-combat-stage\"",
+      "after": "\"強化階段\":\"third-combat-stage\"",
+      "count": 1
+    },
+    {
+      "file": "thirdworldguidecopy.js",
+      "before": "會逐步進入更高 Stage，",
+      "after": "會逐步進入更高的強化階段，",
+      "count": 1
+    },
+    {
+      "file": "playersemanticsui.js",
+      "before": "高維紀元已由共用玩家 UI 正確接管；十王正式玩家 UI 將由第三紀元介面 owner 提供。",
+      "after": "高維戰線載入未完成，請重新整理後再試。",
+      "count": 1
+    },
+    {
+      "file": "thirdworldplayerflow.js",
+      "before": "：Stage ${whole(event.from)} → Stage ${whole(event.to)}",
+      "after": "：強化階段 ${whole(event.from)} → ${whole(event.to)}",
+      "count": 1
+    },
+    {
+      "file": "thirdworldplayerflow.js",
+      "before": "\"Stage 已改變\"",
+      "after": "\"強化階段已改變\"",
+      "count": 2
+    },
+    {
+      "file": "thirdworldplayerflow.js",
+      "before": "\"active-runtime\":\"其他正式流程接管\"",
+      "after": "\"active-runtime\":\"目前有其他戰鬥正在進行\"",
+      "count": 1
+    },
+    {
+      "file": "thirdworldui.js",
+      "before": ">Stage ${whole(snap.stage)}</div>",
+      "after": ">階段 ${whole(snap.stage)}</div>",
+      "count": 1
+    },
+    {
+      "file": "thirdworldui.js",
+      "before": "if(result?.ok===false){alert(String(result?.reason||\"目前無法開始高維連戰。\"));return false;}",
+      "after": "if(result?.ok===false){console.warn(\"[文明戰線] 高維連戰未能開始\",result);const messages={\"找不到高維 Boss。\":\"找不到此高維存在，請重新整理後再試。\",\"高維連戰進行中，必須先停止目前連戰才能更換目標。\":\"請先停止目前連戰，再選擇其他高維存在。\",\"已有其他正式戰鬥／背景流程進行中，無法開始高維連戰。\":\"目前有其他戰鬥正在進行，請先結束後再挑戰。\"};alert(messages[String(result.reason||\"\")]||\"高維連戰暫時無法開始，請重新整理後再試。\");return false;}",
+      "count": 1
+    },
+    {
+      "file": "thirdworldarenaui.js",
+      "before": "${esc(rt.stopReason||\"\")}</div></section></div>`;}",
+      "after": "若問題持續，請先匯出存檔備份。</div></section></div>`;}",
+      "count": 1
+    },
+    {
+      "file": "reincarnationui.js",
+      "before": "離線樣本與未結算戰鬥暫態",
+      "after": "離線紀錄與尚未結算的戰鬥",
+      "count": 1
+    },
+    {
+      "file": "reincarnationui.js",
+      "before": "目前仍有戰鬥、戰鬥介面或背景流程正在執行，請先結束後再進行轉生。",
+      "after": "目前仍有戰鬥或結算尚未結束，請先結束戰鬥並關閉戰鬥畫面，再進行轉生。",
+      "count": 1
+    },
+    {
+      "file": "reincarnationui.js",
+      "before": "轉生安全交易元件尚未完整載入，請重新整理後再試。",
+      "after": "轉生功能尚未載入完成，請重新整理後再試。",
+      "count": 1
+    },
+    {
+      "file": "worldphaseui.js",
+      "before": "世界轉換元件尚未完整載入，請重新整理後再試。",
+      "after": "突破功能尚未載入完成，請重新整理後再試。",
+      "count": 1
+    },
+    {
+      "file": "mirrordungeonguide.js",
+      "before": "離開前景",
+      "after": "切換到其他分頁或離開遊戲畫面",
+      "count": 1
+    },
+    {
+      "file": "mirrordungeonui.js",
+      "before": "離開前景",
+      "after": "切換到其他分頁或離開遊戲畫面",
+      "count": 2
+    },
+    {
+      "file": "mirrordungeonrun.js",
+      "before": "鏡像戰模組尚未載入，",
+      "after": "鏡像戰尚未載入完成，",
+      "count": 1
+    },
+    {
+      "file": "mirrordungeonui.js",
+      "before": "鏡像戰模組尚未載入，",
+      "after": "鏡像戰尚未載入完成，",
+      "count": 1
+    },
+    {
+      "file": "mirrordungeonui.js",
+      "before": "鏡像戰戰鬥模組尚未載入，",
+      "after": "鏡像戰尚未載入完成，",
+      "count": 1
+    },
+    {
+      "file": "mirrordungeonrun.js",
+      "before": "鏡像戰快照暫不可用，",
+      "after": "目前無法準備鏡像對手，",
+      "count": 1
+    },
+    {
+      "file": "mirrordungeonrun.js",
+      "before": "請返回遊戲前景後再繼續鏡像戰；",
+      "after": "請返回遊戲畫面後再繼續鏡像戰；",
+      "count": 1
+    },
+    {
+      "file": "enhancementui.js",
+      "before": "系統不會自動補強化等級，請使用 GM／存檔檢查處理。",
+      "after": "系統不會自動調整強化等級，請先匯出存檔備份。",
+      "count": 1
+    },
+    {
+      "file": "enhancementui.js",
+      "before": "alert(result.reason||\"強化失敗。\")",
+      "after": "alert(result.reason===\"無法建立強化前存檔快照。\"?\"強化前的存檔備份無法完成，請先匯出存檔並重新整理後再試。\":result.reason||\"強化失敗。\")",
+      "count": 1
+    },
+    {
+      "file": "playerbatchupgrades.js",
+      "before": "強化資料異常，請先使用 GM／存檔檢查處理。",
+      "after": "強化資料異常，請先匯出存檔備份，重新整理後再試。",
+      "count": 1
+    },
+    {
+      "file": "cloudsave.js",
+      "before": " function errorText(error){\n  const raw=String(error?.message||error||\"\").trim();\n  if(!raw)return \"雲端存檔操作失敗，請稍後再試。\";\n  if(raw.toLowerCase().includes(\"row-level security\"))return \"雲端存檔權限驗證失敗，請重新登入後再試。\";\n  return raw;\n }\n",
+      "after": " function errorText(error){\n  console.error(\"[文明戰線] Cloud save operation failed\",error);\n  const raw=String(error?.message||error||\"\").trim();\n  if(raw.toLowerCase().includes(\"row-level security\"))return \"雲端存檔權限驗證失敗，請重新登入後再試。\";\n  if(error?.code===\"FUTURE_SAVE_VERSION\")return \"雲端存檔來自較新的遊戲版本，請更新遊戲後再試。\";\n  if(error?.code===\"UNSUPPORTED_LEGACY_SAVE_VERSION\")return \"這份雲端存檔版本過舊，目前無法安全讀取。請先保留備份。\";\n  const known=new Set([\"登入帳號已變更，請重新操作雲端存檔。\",\"本機存檔所屬帳號已變更，已取消上傳。\",\"本機存檔失敗，已取消上傳。\",\"雲端存檔內容無效。\",\"下載後寫入本機存檔失敗。\"]);\n  if(known.has(raw))return raw;\n  if(raw===\"本機存檔無法整理成雲端資料。\")return \"無法讀取本機存檔，請先匯出備份並重新整理後再試。\";\n  if(raw===\"正式存檔 migration 尚未載入。\"||raw===\"正式存檔版本保護尚未載入。\")return \"存檔功能尚未載入完成，請重新整理後再試。\";\n  return \"雲端存檔操作未完成，請確認網路與登入狀態後再試。\";\n }\n",
+      "count": 1
+    },
+    {
+      "file": "supabaseauth.js",
+      "before": "重設密碼工作階段已失效，請返回登入頁重新寄送重設密碼信。",
+      "after": "重設密碼連結已失效，請返回登入頁重新寄送重設密碼信。",
+      "count": 1
+    },
+    {
+      "file": "supabaseauth.js",
+      "before": "  return raw;\n }\n\n function setStatus",
+      "after": "  console.error(\"[文明戰線] Account operation failed\",error);\n  if(raw===\"帳號服務尚未初始化。\")return \"帳號服務尚未載入完成，請重新整理後再試。\";\n  if(raw===\"登入未取得有效工作階段，請再試一次。\")return \"登入未完成，請重新登入後再試。\";\n  return \"帳號操作未完成，請確認網路連線後再試。\";\n }\n\n function setStatus",
+      "count": 1
+    },
+    {
+      "file": "saveversionguard.js",
+      "before": "${backup.error||\"請先匯出 JSON 或清理瀏覽器儲存空間。\"}",
+      "after": "請先匯出存檔備份，或清理瀏覽器儲存空間後再試。",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "cloudsave.js?v=20261025-optimization-batch2&settingsLayout=20261011-b02",
+      "after": "cloudsave.js?v=20261025-optimization-batch2&settingsLayout=20261011-b02&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "enhancementui.js?v=20260928-thirdworld-ui-text-batch1",
+      "after": "enhancementui.js?v=20260928-thirdworld-ui-text-batch1&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "gameguide.js?v=20261002-mythic-autosell-batch2&batch20=20261024-r2&postrelease=20261025-5",
+      "after": "gameguide.js?v=20261002-mythic-autosell-batch2&batch20=20261024-r2&postrelease=20261025-5&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "mirrordungeonguide.js?v=20260928-thirdworld-guide-opt2&foreground=20261023-194-v2",
+      "after": "mirrordungeonguide.js?v=20260928-thirdworld-guide-opt2&foreground=20261023-194-v2&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "mirrordungeonrun.js?v=20261025-optimization-batch2&previous=20261010-battle-end-return-theme1&victory=20261010-finalsettlement&allbattle=20261011&audiofix1=20261011&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&foreground=20261023-194-v2&mirrorVoid=20261024-v1",
+      "after": "mirrordungeonrun.js?v=20261025-optimization-batch2&previous=20261010-battle-end-return-theme1&victory=20261010-finalsettlement&allbattle=20261011&audiofix1=20261011&audioLifecycle=20261011-unified-v1&events=20261012-t1c-v1&foreground=20261023-194-v2&mirrorVoid=20261024-v1&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "mirrordungeonui.js?v=20260922-universe-offline-sample-batch10&foreground=20261023-194-v2&mirrorVoid=20261024-v1&postrelease=20261025-5&postrelease=20261025-5",
+      "after": "mirrordungeonui.js?v=20260922-universe-offline-sample-batch10&foreground=20261023-194-v2&mirrorVoid=20261024-v1&postrelease=20261025-5&postrelease=20261025-5&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "offlineprogress.js?v=20261013-t5-checkpoint1&previous=20261002-autoprocess-policy-batch2&v2=20261004-reincarnation-batch6-3&issue106=20261025-batch1&eraCopy=20261029",
+      "after": "offlineprogress.js?v=20261013-t5-checkpoint1&previous=20261002-autoprocess-policy-batch2&v2=20261004-reincarnation-batch6-3&issue106=20261025-batch1&eraCopy=20261029&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "playerbatchupgrades.js?v=20261004-reincarnation-batch6-opt3-transaction-fix1",
+      "after": "playerbatchupgrades.js?v=20261004-reincarnation-batch6-opt3-transaction-fix1&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "playersemanticsui.js?v=20260928-thirdworld-ui-text-batch1&v2=20261003-reincarnation-opt2-batch3&v3=20261003-reincarnation-batch4-2&v4=20261005-equipment-world-semantics-batch2&v5=20261006-batch4-character-world&v6=20261006-character-reincarnation-ui1&vgalaxyreview=20261010-higher-owner&batch20=20261024-r2&issue106=20261025-batch2&eraCopy=20261029",
+      "after": "playersemanticsui.js?v=20260928-thirdworld-ui-text-batch1&v2=20261003-reincarnation-opt2-batch3&v3=20261003-reincarnation-batch4-2&v4=20261005-equipment-world-semantics-batch2&v5=20261006-batch4-character-world&v6=20261006-character-reincarnation-ui1&vgalaxyreview=20261010-higher-owner&batch20=20261024-r2&issue106=20261025-batch2&eraCopy=20261029&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "reincarnationui.js?v=20261003-reincarnation-batch2-7&v2=20261003-reincarnation-opt2-batch4",
+      "after": "reincarnationui.js?v=20261003-reincarnation-batch2-7&v2=20261003-reincarnation-opt2-batch4&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "saveversionguard.js?v=20260930-audit-batch5&v2=20261003-reincarnation-batch1-2&foreground=20261023-194-v2",
+      "after": "saveversionguard.js?v=20260930-audit-batch5&v2=20261003-reincarnation-batch1-2&foreground=20261023-194-v2&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "supabaseauth.js?v=20260920-combat-speed-batch1&v2=20261010-gm-account-logout&settingsLayout=20261011-b02&settingsCopy=20261011-no-gm",
+      "after": "supabaseauth.js?v=20260920-combat-speed-batch1&v2=20261010-gm-account-logout&settingsLayout=20261011-b02&settingsCopy=20261011-no-gm&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "thirdworldarenaui.js?v=20261010-six-track-battle-integration2&vaudio=20261010-a03-formal-coverage2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&postrelease=20261025-5&formalStop=20261026",
+      "after": "thirdworldarenaui.js?v=20261010-six-track-battle-integration2&vaudio=20261010-a03-formal-coverage2&victory=20261010-finalsettlement&allbattle=20261011&audioLifecycle=20261011-unified-v1&pr48=20261019-center3&foreground=20261023-194-v2&postrelease=20261025-5&formalStop=20261026&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "thirdworldguidecopy.js?v=20260930-thirdworld-500-ui-batch2&batch20=20261024-r2",
+      "after": "thirdworldguidecopy.js?v=20260930-thirdworld-500-ui-batch2&batch20=20261024-r2&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "thirdworldplayerflow.js?v=20261013-background-hud-recovery2&foreground=20261023-194-v2&combatUiB3=20261026",
+      "after": "thirdworldplayerflow.js?v=20261013-background-hud-recovery2&foreground=20261023-194-v2&combatUiB3=20261026&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "thirdworldui.js?v=20261013-background-hud-recovery1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&postrelease=20261025-5&combatUiB2=20261026&formalStop=20261026",
+      "after": "thirdworldui.js?v=20261013-background-hud-recovery1&pr48=20261019-center3&foreground=20261023-194-v2&batch20=20261024-r2&postrelease=20261025-5&combatUiB2=20261026&formalStop=20261026&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "worldphaseui.js?v=20260926-thirdworld-entry-batch2-4fix1&v2=20261003-reincarnation-opt2-batch4&v3=20261003-au-architecture-opt-batch3&v4=20261004-reincarnation-speed-ui-fix1&v5=20261009-3d-b04&eraCopy=20261029",
+      "after": "worldphaseui.js?v=20260926-thirdworld-entry-batch2-4fix1&v2=20261003-reincarnation-opt2-batch4&v3=20261003-au-architecture-opt-batch3&v4=20261004-reincarnation-speed-ui-fix1&v5=20261009-3d-b04&eraCopy=20261029&playerCopy=20261029",
+      "count": 1
+    },
+    {
+      "file": "resource-cache-client.js",
+      "before": "角色進度、帳號資料與 GM 設定不會刪除。",
+      "after": "角色進度、帳號資料與遊戲設定不會刪除。",
+      "count": 1
+    },
+    {
+      "file": "specialization.js",
+      "before": "if(!snapshot)return alert(\"無法建立升級前存檔快照。\");",
+      "after": "if(!snapshot)return alert(\"升級前的存檔備份無法完成，請先匯出存檔並重新整理後再試。\");",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "每場可正式落帳的高維戰鬥",
+      "after": "每場可正常結算的高維戰鬥",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "只影響名稱與風格，不另建第二套戰鬥公式。",
+      "after": "只影響名稱與風格。",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "正式戰鬥只在角色死亡或 Boss 被擊破後形成可落帳結果；",
+      "after": "正式戰鬥需在角色死亡或 Boss 被擊破後，才能結算；",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "高維連續戰鬥可使用共用極簡模式；背景補播與快速追趕只加速等待與演出，不會因補播機制額外加發正式進度或收益；實際戰鬥仍依正式戰鬥與結算流程落帳。",
+      "after": "高維連續戰鬥可使用極簡模式；背景補播與快速追趕只加速等待與演出，不會額外增加進度或收益，實際戰鬥與結算規則維持不變。",
+      "count": 1
+    },
+    {
+      "file": "gameguide.js",
+      "before": "原有養成效果將繼續生效；第三紀元本身不再新增另一套平行養成資源或重複系統。",
+      "after": "原有養成效果將繼續生效。",
+      "count": 1
+    },
+    {
+      "file": "playersemanticsui.js",
+      "before": "高維正式玩家介面尚未載入。",
+      "after": "高維戰線尚未載入完成。",
+      "count": 2
+    },
+    {
+      "file": "worldphaseui.js",
+      "before": "以及不應跨越紀元繼續執行的戰鬥暫態。",
+      "after": "以及尚未結束的戰鬥。",
+      "count": 1
+    },
+    {
+      "file": "thirdworldguidecopy.js",
+      "before": "以正式計算與當前存檔為準。",
+      "after": "效果以角色目前的狀態為準。",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "src=\"resource-cache-client.js?v=20261025-optimization-batch3&repair=20261024-r2\"",
+      "after": "src=\"resource-cache-client.js?v=20261025-optimization-batch3&repair=20261024-r2&playerCopy=20261029\"",
+      "count": 1
+    },
+    {
+      "file": "index.html",
+      "before": "src=\"specialization.js?v=20260928-thirdworld-ui-text-batch1&vctx=20261008-gm-context1&issue106=20261025-batch1\"",
+      "after": "src=\"specialization.js?v=20260928-thirdworld-ui-text-batch1&vctx=20261008-gm-context1&issue106=20261025-batch1&playerCopy=20261029\"",
+      "count": 1
+    }
+  ]
+}

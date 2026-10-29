@@ -95,7 +95,7 @@
   const report={version:SAVE_MIGRATION_STAIRCASE_VERSION,passed:errors.length===0,errors,cases,checkedAt:Date.now()};window.SAVE_MIGRATION_STAIRCASE_REGRESSION_REPORT=report;return report;
  }
  function installLateDestructiveGuards(){
-  if(typeof window.resetGame==="function"&&window.resetGame.__saveSafetyWrapped!==true){const baseReset=window.resetGame,guarded=function(){const backup=createSafetyBackup("reset-game");if(backup.required&&(!backup.verified||backup.failed)){alert(`無法建立重置前安全備份，已取消清除進度。\n\n${backup.error||"請先匯出 JSON 或清理瀏覽器儲存空間。"}`);return false;}return baseReset.apply(this,arguments);};guarded.__saveSafetyWrapped=true;window.resetGame=guarded;}
+  if(typeof window.resetGame==="function"&&window.resetGame.__saveSafetyWrapped!==true){const baseReset=window.resetGame,guarded=function(){const backup=createSafetyBackup("reset-game");if(backup.required&&(!backup.verified||backup.failed)){alert(`無法建立重置前安全備份，已取消清除進度。\n\n請先匯出存檔備份，或清理瀏覽器儲存空間後再試。`);return false;}return baseReset.apply(this,arguments);};guarded.__saveSafetyWrapped=true;window.resetGame=guarded;}
   if(typeof window.gmImportSaveJsonFile==="function"&&window.gmImportSaveJsonFile.__saveSafetyWrapped!==true){const baseImport=window.gmImportSaveJsonFile,guardedImport=async function(input){const backup=createSafetyBackup("gm-import");if(backup.required&&(!backup.verified||backup.failed)){if(input)input.value="";alert(`無法建立匯入前安全備份，已取消匯入。\n\n${backup.error||"請先清理瀏覽器儲存空間。"}`);return false;}return baseImport.call(this,input);};guardedImport.__saveSafetyWrapped=true;window.gmImportSaveJsonFile=guardedImport;}
  }
  function beforeSaveCapacity(context){

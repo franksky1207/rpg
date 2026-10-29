@@ -98,20 +98,20 @@
  function startFailure(message){alert(message);return false;}
  window.startMirrorCombatRun=function(){
   if(run?.active||battleBusy)return startFailure("上一場戰鬥尚在收尾，請稍後再試；鏡像已完成場次會保留。");
-  if(typeof createMirrorCombatSnapshot!=="function"||typeof normalizeMirrorCombatSnapshot!=="function"||typeof runMirrorCombatCore!=="function"||typeof beginMirrorDungeonState!=="function")return startFailure("鏡像戰模組尚未載入，請重新整理後再試；本輪進度會保留。");
+  if(typeof createMirrorCombatSnapshot!=="function"||typeof normalizeMirrorCombatSnapshot!=="function"||typeof runMirrorCombatCore!=="function"||typeof beginMirrorDungeonState!=="function")return startFailure("鏡像戰尚未載入完成，請重新整理後再試；本輪進度會保留。");
   try{
    window.CivilizationCombatLifecycle?.foreground();
    const info=typeof mirrorDungeonStatus==="function"?mirrorDungeonStatus():null;
    if(!info?.canStart)return startFailure(info?.ended?"今日鏡像戰已結束。":"目前無法進入鏡像戰，請確認解鎖條件及本輪進度。");
    const snapshot=info.resumable?normalizeMirrorCombatSnapshot(state.dungeon.mirror.daily.resume.snapshot):createMirrorCombatSnapshot();
-   if(!snapshot?.stats?.hp)return startFailure("鏡像戰快照暫不可用，請重新整理後再試；本輪進度會保留。");
+   if(!snapshot?.stats?.hp)return startFailure("目前無法準備鏡像對手，請重新整理後再試；本輪進度會保留。");
    const begun=beginMirrorDungeonState(Date.now(),{snapshot});
    if(!begun?.ok)return startFailure(begun?.reason==="save_failed"?"無法保存鏡像戰進度，未消耗今日次數；請確認儲存空間後再試。":"鏡像戰進場條件已變更，請返回副本確認進度。");
    run={version:MIRROR_RUN_VERSION,active:true,snapshot,wins:begun.resumed?info.wins:0,losses:begun.resumed?info.losses:0,currentBattle:begun.resumed?info.wins+info.losses+1:1,currentResult:null,settlement:null};
    battleBusy=true;view="dungeon-mirror-combat";run.audioRunId=window.CivilizationAudioScenes?.startRun?.({mode:"mirror"});render();Promise.resolve().then(executeRun);return true;
   }catch(error){
    if(run)run.active=false;battleBusy=false;view="dungeon-mirror";window.CivilizationAudioScenes?.endRun?.(run?.audioRunId);render();
-   return startFailure(window.CivilizationCombatLifecycle?.isInterrupted(error)?"請返回遊戲前景後再繼續鏡像戰；已完成場次會保留。":"鏡像戰暫時無法開始，請重新整理後再試；本輪進度會保留。");
+   return startFailure(window.CivilizationCombatLifecycle?.isInterrupted(error)?"請返回遊戲畫面後再繼續鏡像戰；已完成場次會保留。":"鏡像戰暫時無法開始，請重新整理後再試；本輪進度會保留。");
   }
  };
  window.getMirrorDungeonActiveRun=function(){return run?{active:!!run.active,wins:run.wins,losses:run.losses,currentBattle:run.currentBattle,world:Number(run.snapshot?.world)||1,snapshot:run.snapshot,settlement:run.settlement}:null;};

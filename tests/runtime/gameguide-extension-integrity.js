@@ -42,8 +42,8 @@ for(const phase of [1,2,3]){
   assert(!/十王|十名高維存在/.test(text)&&/10 名高維存在/.test(text),"W3 rendered guide terminology must use 10 名高維存在.");
   for(const token of ["Lv2000","10,000,000 EXP","95% 傳說","5% 神話","+40 強化","VIP20","30%","12 小時","55,000,000 HP","100 次死亡"]){assert(text.includes(token),`W3 rendered guide missing canonical owner value: ${token}`);}
   assert(text.includes("背景補播與快速追趕只加速等待與演出"),"W3 Fast Catch-up wording must describe presentation/wait acceleration.");
-  assert(text.includes("不會因補播機制額外加發正式進度或收益"),"W3 Fast Catch-up wording must forbid extra progress/reward caused by catch-up itself.");
-  assert(text.includes("實際戰鬥仍依正式戰鬥與結算流程落帳"),"W3 Fast Catch-up wording must state formal combat/settlement still applies.");
+  assert(text.includes("不會額外增加進度或收益"),"W3 Fast Catch-up wording must forbid extra progress/reward caused by catch-up itself.");
+  assert(text.includes("實際戰鬥與結算規則維持不變"),"W3 Fast Catch-up wording must state formal combat/settlement still applies.");
   const before=context.gameGuidePage();context.setGameGuideCategory("special");const after=context.gameGuidePage();
   assert(!after.includes('data-guide-category="special" class="active"'),"W3 must reject legacy special category selection.");
  }

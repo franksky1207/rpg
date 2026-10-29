@@ -72,7 +72,7 @@
   const lv=level(type),effectiveMin=minLevel(),effectiveCap=cap(),invalid=lv<effectiveMin,max=lv>=effectiveCap,item=state.equipment?.[type]||null,next=Math.min(effectiveCap,lv+1),cost=max||invalid?null:costFor(next),pct=enhancementBonusPercent(lv),nextPct=enhancementBonusPercent(next);
   let itemHtmlBlock=`<div class="enhance-empty muted">目前未裝備；欄位仍可永久強化。</div>`;
   if(item){const stat=item.mainStat?.stat||mainStatForType(type),raw=Math.max(0,Number(item.mainStat?.value)||0),actual=enhancedMainStatValue(raw,lv),nextValue=enhancedMainStatValue(raw,next);itemHtmlBlock=`<div class="enhance-item">${itemHtml(item,true)}</div><div class="enhance-stat-row"><span>原始主能力</span><b>${fmt(stat,raw)}</b></div><div class="enhance-stat-row current"><span>目前實際主能力</span><b>${fmt(stat,actual)}</b></div>${max?"":`<div class="enhance-stat-row next"><span>強化後主能力</span><b>${fmt(stat,nextValue)}</b></div>`}`;}
-  return `<section class="enhance-slot-card"><div class="enhance-slot-head"><div><h3>${EQUIPMENT_LABELS[type]}</h3><span class="muted">欄位永久強化</span></div><strong>${invalid?`+${lv} / 異常`:max?`+${lv} MAX`:`+${lv} / ${effectiveCap}`}</strong></div><div class="enhance-effect">主能力加成 <b>+${pct}%</b>${max||invalid?"":` <span>→ +${nextPct}%</span>`}</div>${itemHtmlBlock}${invalid?`<div class="notice" style="margin-top:10px"><b>強化資料異常</b><div class="muted" style="margin-top:5px">目前紀元正式強化不得低於 +${effectiveMin}；系統不會自動補強化等級，請使用 GM／存檔檢查處理。</div></div>`:max?`<div class="enhance-max">已達最高強化等級</div>`:`<div class="enhance-cost"><span>下一級 +${next}</span>${costHtml(cost)}</div><button class="btn primary enhance-action" onclick="openEnhancementConfirm('${type}')" ${hasCost(cost)?"":"disabled"}>強化至 +${next}</button>`}</section>`;
+  return `<section class="enhance-slot-card"><div class="enhance-slot-head"><div><h3>${EQUIPMENT_LABELS[type]}</h3><span class="muted">欄位永久強化</span></div><strong>${invalid?`+${lv} / 異常`:max?`+${lv} MAX`:`+${lv} / ${effectiveCap}`}</strong></div><div class="enhance-effect">主能力加成 <b>+${pct}%</b>${max||invalid?"":` <span>→ +${nextPct}%</span>`}</div>${itemHtmlBlock}${invalid?`<div class="notice" style="margin-top:10px"><b>強化資料異常</b><div class="muted" style="margin-top:5px">目前紀元正式強化不得低於 +${effectiveMin}；系統不會自動調整強化等級，請先匯出存檔備份。</div></div>`:max?`<div class="enhance-max">已達最高強化等級</div>`:`<div class="enhance-cost"><span>下一級 +${next}</span>${costHtml(cost)}</div><button class="btn primary enhance-action" onclick="openEnhancementConfirm('${type}')" ${hasCost(cost)?"":"disabled"}>強化至 +${next}</button>`}</section>`;
  }
  function page(){
   ensure();
@@ -105,7 +105,7 @@
   busy=true;const btn=document.getElementById("enhancementConfirmButton");if(btn)btn.disabled=true;
   try{
    const p=pending,result=settleUpgrade(p.type,p.level,p.next);
-   if(!result.ok){alert(result.reason||"強化失敗。");if(result.rolledBack&&typeof render==="function")render();return;}
+   if(!result.ok){alert(result.reason==="無法建立強化前存檔快照。"?"強化前的存檔備份無法完成，請先匯出存檔並重新整理後再試。":result.reason||"強化失敗。");if(result.rolledBack&&typeof render==="function")render();return;}
    pending=null;document.getElementById("enhancementConfirmModal")?.classList.remove("show");render();
   }finally{if(btn)btn.disabled=false;busy=false;}
  };

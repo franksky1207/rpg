@@ -80,10 +80,16 @@
   ["civilizationCloudUpload","civilizationCloudDownload"].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=cloudBusy||(id==="civilizationCloudUpload"&&ownerMismatch())||(id==="civilizationCloudDownload"&&!cloudMeta);});
  }
  function errorText(error){
+  console.error("[文明戰線] Cloud save operation failed",error);
   const raw=String(error?.message||error||"").trim();
-  if(!raw)return "雲端存檔操作失敗，請稍後再試。";
   if(raw.toLowerCase().includes("row-level security"))return "雲端存檔權限驗證失敗，請重新登入後再試。";
-  return raw;
+  if(error?.code==="FUTURE_SAVE_VERSION")return "雲端存檔來自較新的遊戲版本，請更新遊戲後再試。";
+  if(error?.code==="UNSUPPORTED_LEGACY_SAVE_VERSION")return "這份雲端存檔版本過舊，目前無法安全讀取。請先保留備份。";
+  const known=new Set(["登入帳號已變更，請重新操作雲端存檔。","本機存檔所屬帳號已變更，已取消上傳。","本機存檔失敗，已取消上傳。","雲端存檔內容無效。","下載後寫入本機存檔失敗。"]);
+  if(known.has(raw))return raw;
+  if(raw==="本機存檔無法整理成雲端資料。")return "無法讀取本機存檔，請先匯出備份並重新整理後再試。";
+  if(raw==="正式存檔 migration 尚未載入。"||raw==="正式存檔版本保護尚未載入。")return "存檔功能尚未載入完成，請重新整理後再試。";
+  return "雲端存檔操作未完成，請確認網路與登入狀態後再試。";
  }
  async function refreshMeta(){
   const c=client(),u=user();if(!c||!u)return;

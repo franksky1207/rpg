@@ -73,7 +73,7 @@ test('Void minimal four-field display/order/status and numerical/save owners rem
  const cp=require('node:child_process'),at=path=>cp.execFileSync('git',['show','215cb89207363b0ed16e08fae9b8532ee67390a3:'+path],{encoding:'utf8',maxBuffer:16*1024*1024});
  const path='dungeonvoidui.js',marker=' function stopVoidMinimalModeIfOpen';
  const before=at(path),live=fs.readFileSync(path,'utf8');assert.equal(live.slice(live.indexOf(marker)),before.slice(before.indexOf(marker)),'Void minimal display adapter tail is unchanged');
- for(const p of ['combatcore.js','combatmath.js','engine.js','specialcore.js','calamitycore.js','secondworldcalamity.js','thirdworldcombat.js','thirdworldloot.js','thirdworldprogress.js','thirdworldplayerflow.js','alternateuniversecombat.js','savemigration.js','offlinestatecore.js','reincarnationstate.js','breakthroughcore.js'])assert.equal(fs.readFileSync(p,'utf8'),at(p),'unchanged formal math/reward/save owner '+p);
+ for(const p of ['combatcore.js','combatmath.js','engine.js','specialcore.js','calamitycore.js','secondworldcalamity.js','thirdworldcombat.js','thirdworldloot.js','thirdworldprogress.js','thirdworldplayerflow.js','alternateuniversecombat.js','savemigration.js','offlinestatecore.js','reincarnationstate.js','breakthroughcore.js'])assert.equal(require('./player-copy-approved.cjs').historicalBytes(p,fs.readFileSync(p)).toString('utf8'),at(p),'unchanged formal math/reward/save owner outside enumerated player copy '+p);
 });
 test('landscape viewport keeps authored stop and animation visible, including a tall arena lineup',()=>{
  for(const [tall,headerHeight] of [[false,0],[true,0],[false,68]]){

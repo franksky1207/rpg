@@ -188,7 +188,10 @@
     "node tests/runtime/thirdworld-background-browser.js",
     "BACKGROUND_BROWSER=webkit node tests/runtime/thirdworld-background-browser.js",
     "W3_B_VISUAL_FAILURE=1 node tests/runtime/thirdworld-background-browser.js",
-    "node tests/runtime/formal-continuous-stop-browser.cjs"
+    "node tests/runtime/formal-continuous-stop-browser.cjs",
+    "node tests/runtime/player-copy-boundaries.cjs",
+    "RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/runtime/player-copy-browser.cjs",
+    "PLAYER_COPY_BROWSER=webkit RUNTIME_SMOKE_URL=http://127.0.0.1:4173/index.html node tests/runtime/player-copy-browser.cjs"
   ],
   "R2-crash": [
     "node tests/runtime/foreground-combat-recovery-browser.cjs"

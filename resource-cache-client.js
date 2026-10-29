@@ -100,7 +100,7 @@ async function updateSettingsStatus(){
  renderSettingsStatus(await statusJob);
 }
 async function clearWithConfirmation(){
- if(!confirm("確定清除已下載的遊戲資源？角色進度、帳號資料與 GM 設定不會刪除。下次進入遊戲將重新下載必要資源。"))return false;
+ if(!confirm("確定清除已下載的遊戲資源？角色進度、帳號資料與遊戲設定不會刪除。下次進入遊戲將重新下載必要資源。"))return false;
  const result=await clear();
  alert(result.ok?"已清除遊戲資源快取。下次進入時將重新下載需要的資源。":"目前無法清除遊戲資源，請稍後再試。");
  await statusJob;

@@ -44,9 +44,12 @@
   if(lower.includes("rate limit")||lower.includes("too many requests"))return "操作過於頻繁，請稍後再試。";
   if(lower.includes("unable to validate email")||lower.includes("invalid email"))return "Email 格式不正確。";
   if(code==="otp_expired"||lower.includes("otp expired")||lower.includes("token has expired")||lower.includes("expired or is invalid"))return "重設密碼連結已過期或無效，請返回登入頁重新寄送重設密碼信。";
-  if(code==="session_not_found"||lower.includes("auth session missing")||lower.includes("session missing"))return "重設密碼工作階段已失效，請返回登入頁重新寄送重設密碼信。";
+  if(code==="session_not_found"||lower.includes("auth session missing")||lower.includes("session missing"))return "重設密碼連結已失效，請返回登入頁重新寄送重設密碼信。";
   if(lower.includes("same password")||lower.includes("different from the old password"))return "新密碼不能與原本密碼相同，請改用另一組密碼。";
-  return raw;
+  console.error("[文明戰線] Account operation failed",error);
+  if(raw==="帳號服務尚未初始化。")return "帳號服務尚未載入完成，請重新整理後再試。";
+  if(raw==="登入未取得有效工作階段，請再試一次。")return "登入未完成，請重新登入後再試。";
+  return "帳號操作未完成，請確認網路連線後再試。";
  }
 
  function setStatus(message,type="info"){

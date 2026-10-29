@@ -1,3 +1,4 @@
+// Player copy/cache projection is sealed in player-copy-approved.cjs before era-copy; live acceptance is separate.
 'use strict';
 // Exact reviewed presentation edits, applied to immutable latest-main sources.
 // Historic guards still compare EVERY byte outside this explicit patch set.

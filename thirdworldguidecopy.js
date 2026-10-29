@@ -14,7 +14,7 @@
    "戰鬥結算":"third-combat-settlement",
    "戰鬥收益":"third-combat-rewards",
    "10 名高維存在的個體特化":"third-combat-specialization",
-   "Stage 強化":"third-combat-stage",
+   "強化階段":"third-combat-stage",
    "共通能力":"third-combat-abilities",
    "死亡壓制":"third-combat-death-suppression",
    "戰鬥速度":"third-combat-speed"
@@ -106,14 +106,14 @@
    removed+=removeById(gear?.items,"third-gear-vip-protection")?1:0;
    removed+=removeById(dungeon?.items,"third-dungeon-vip-protection")?1:0;
    replaced+=replaceById(combat?.items,"third-combat-specialization","10 名高維存在各自擁有不同的戰鬥特性；實際特化效果會顯示在各自的 Boss 卡片上。")?1:0;
-   replaced+=replaceById(combat?.items,"third-combat-stage","高維存在的永久 HP 持續下降時，會逐步進入更高 Stage，整體戰鬥能力也會隨之提升。詳細狀態以 Boss 卡片顯示為準。")?1:0;
+   replaced+=replaceById(combat?.items,"third-combat-stage","高維存在的永久 HP 持續下降時，會逐步進入更高的強化階段，整體戰鬥能力也會隨之提升。詳細狀態以 Boss 卡片顯示為準。")?1:0;
    replaced+=replaceById(combat?.items,"third-combat-abilities","高維存在會隨永久 HP 推進逐步解鎖共通能力；目前已解鎖的能力與效果以 Boss 卡片顯示為準。")?1:0;
    replaced+=replaceById(dungeon?.items,"third-dungeon-arena","高維競技場已開放。每輪為 3 場連續戰鬥，場間不回血；可選擇定相或異相模式，也可依剩餘每日次數一次進行多輪挑戰。完成挑戰可取得 VIP 積分，實際對手與獎勵以競技場頁面顯示為準。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-strings","維度之弦是第三紀元的主要永久成長資源，透過高維正式戰鬥取得，可用於強化界弦核心。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-core","界弦核心可使用維度之弦持續強化，主要用來減輕高維連戰的死亡壓制。每輪連戰開始後，本輪核心效果會固定到該輪結束。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-infusion","持有維度之弦時可注入界弦核心；高維連戰進行中不能注入，需先結束本輪戰鬥。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-title","高維稱號會隨 10 名高維存在的整體攻略進度逐步解鎖。")?1:0;
-   replaced+=replaceById(growth?.items,"third-growth-existing","文明傳承可查看目前實際有效的宇宙文明傷害倍率及銀河十種印記；轉生重設的本輪印記不視為有效能力。以正式計算與當前存檔為準。")?1:0;
+   replaced+=replaceById(growth?.items,"third-growth-existing","文明傳承可查看目前實際有效的宇宙文明傷害倍率及銀河十種印記；轉生重設的本輪印記不視為有效能力。效果以角色目前的狀態為準。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-minimal","高維連續戰鬥可使用極簡模式，只保留必要資訊；戰鬥停止時會明確顯示停止狀態與原因，滑動即可查看後續結果。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-save","第三紀元正式進度會持續寫入本機存檔；登入帳號後仍可在設定頁手動使用雲端上傳／下載。")?1:0;
    const report=audit(categories,{replaced,removed});
