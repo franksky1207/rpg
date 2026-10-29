@@ -81,8 +81,8 @@
  }
  window.characterWorldSnapshot=characterSnapshot;
  function thirdWorldAdventureFallback(){
-  if(typeof window.wrapFunctionPage==="function")return window.wrapFunctionPage(`<div class="card"><h2>高維戰線</h2><div class="notice"><b>高維正式玩家介面尚未載入。</b><div class="muted" style="margin-top:6px">高維戰線載入未完成，請重新整理後再試。</div></div></div>`);
-  return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>高維正式玩家介面尚未載入。</b></div></section>`;
+  if(typeof window.wrapFunctionPage==="function")return window.wrapFunctionPage(`<div class="card"><h2>高維戰線</h2><div class="notice"><b>高維戰線尚未載入完成。</b><div class="muted" style="margin-top:6px">高維戰線載入未完成，請重新整理後再試。</div></div></div>`);
+  return `<section class="map-screen"><div class="page-top"><button class="btn back-btn" onclick="go('home')">← 返回主頁</button><h2 class="page-title">高維戰線</h2><span></span></div><div class="notice"><b>高維戰線尚未載入完成。</b></div></section>`;
  }
  function phaseAwareAdventurePage(){
   if(phase()===3){

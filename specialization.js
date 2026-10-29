@@ -176,7 +176,7 @@
    if(current!==lv)return;
    if(state.gold<cost)return alert("金幣不足。");
    const snapshot=cloneState();
-   if(!snapshot)return alert("無法建立升級前存檔快照。");
+   if(!snapshot)return alert("升級前的存檔備份無法完成，請先匯出存檔並重新整理後再試。");
    state.gold-=cost;state.specializations[key]=next;
    if(!saveStateOrRollback(snapshot,false)){
     if(typeof render==="function")render();

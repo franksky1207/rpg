@@ -113,7 +113,7 @@
    replaced+=replaceById(growth?.items,"third-growth-core","界弦核心可使用維度之弦持續強化，主要用來減輕高維連戰的死亡壓制。每輪連戰開始後，本輪核心效果會固定到該輪結束。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-infusion","持有維度之弦時可注入界弦核心；高維連戰進行中不能注入，需先結束本輪戰鬥。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-title","高維稱號會隨 10 名高維存在的整體攻略進度逐步解鎖。")?1:0;
-   replaced+=replaceById(growth?.items,"third-growth-existing","文明傳承可查看目前實際有效的宇宙文明傷害倍率及銀河十種印記；轉生重設的本輪印記不視為有效能力。以正式計算與當前存檔為準。")?1:0;
+   replaced+=replaceById(growth?.items,"third-growth-existing","文明傳承可查看目前實際有效的宇宙文明傷害倍率及銀河十種印記；轉生重設的本輪印記不視為有效能力。效果以角色目前的狀態為準。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-minimal","高維連續戰鬥可使用極簡模式，只保留必要資訊；戰鬥停止時會明確顯示停止狀態與原因，滑動即可查看後續結果。")?1:0;
    replaced+=replaceById(growth?.items,"third-growth-save","第三紀元正式進度會持續寫入本機存檔；登入帳號後仍可在設定頁手動使用雲端上傳／下載。")?1:0;
    const report=audit(categories,{replaced,removed});

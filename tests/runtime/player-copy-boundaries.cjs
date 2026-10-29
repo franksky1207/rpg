@@ -15,6 +15,8 @@ for(const part of [s=>s.slice(0,s.indexOf(' function ensureOfflineModals(')),s=>
 for(const p of ['offlinestatecore.js','offlineworld3adapter.js','battlepipeline.js','reincarnationcore.js'])assert.equal(read(p),old(p),p+' unchanged');
 // No administrator or structured diagnostic code is removed by this copy-only change.
 for(const p of cp.execFileSync('git',['ls-files','*.js'],{encoding:'utf8'}).trim().split('\n').filter(p=>!p.includes('/')&&(/gm|integrity/i.test(p)||p==='batch5ui.js')))assert.equal(read(p),old(p),p);
+const gmMarker=' function gmFormalSpecializationRange(';
+assert.ok(read('specialization.js').includes(gmMarker));assert.equal(read('specialization.js').slice(read('specialization.js').indexOf(gmMarker)),old('specialization.js').slice(old('specialization.js').indexOf(gmMarker)),'shared-file GM specialization controls and diagnostics unchanged');
 const cloud=read('cloudsave.js');const start=cloud.indexOf(' function errorText('),end=cloud.indexOf(' async function refreshMeta',start);assert.ok(start>0&&end>start);
 const logs=[];const context={console:{error:(...a)=>logs.push(a)}};vm.createContext(context);vm.runInContext(cloud.slice(start,end)+';this.display=errorText;',context);
 for(const e of [new Error('Save Hook runtime owner pending'),{code:'FUTURE_SAVE_VERSION',message:'internal migration detail'},{code:'UNSUPPORTED_LEGACY_SAVE_VERSION',message:'Offline battle sample V1'}]){

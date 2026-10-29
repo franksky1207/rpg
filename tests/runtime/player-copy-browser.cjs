@@ -59,6 +59,14 @@ const {sdk}=require('../equipment-formal/helpers.cjs');
    return out;
   });
   for(const r of rewards){if(r.world===3){assert.equal(r.result.totalXp,0);assert.equal(r.result.totalDimensionalStrings,0);assert.equal(r.result.totalCoreProgress,0);assert.ok(r.expected.unchanged);}else {assert.equal(r.result.totalXp,r.expected.xp);if(r.world===1)assert.equal(r.result.directGold,r.expected.gold);else {assert.equal(r.result.directDarkMatter,r.expected.matter);assert.equal(r.result.directDarkEnergy,r.expected.energy);}}}
+  const settings=await page.evaluate(async()=>{
+   state=newState();const confirmFn=window.confirm,alertFn=window.alert;let resource='',specialization='';
+   window.confirm=text=>{resource=text;return false;};await CivilizationResourceCache.clearWithConfirmation();
+   state.gold=1e15;const before=JSON.stringify(state);state.__copyCycle=state;window.confirm=()=>true;window.alert=text=>{specialization=text;};
+   try{upgradeSpecialization(SPECIALIZATION_KEYS[0]);}finally{delete state.__copyCycle;window.confirm=confirmFn;window.alert=alertFn;}
+   return {resource,specialization,unchanged:before===JSON.stringify(state)};
+  });
+  assert.ok(settings.unchanged);assert.match(settings.resource,/角色進度、帳號資料與遊戲設定不會刪除/);assert.doesNotMatch(settings.resource,/GM/);assert.match(settings.specialization,/存檔備份無法完成/);assert.doesNotMatch(settings.specialization,/快照/);
   const failures=await page.evaluate(async()=>{
    state=newState();state.secondWorld.entered=true;state.thirdWorld.entered=true;
    const before=JSON.stringify(state),start=startThirdWorldPlayerFlow,raw={ok:false,reason:'runtime owner pending DOM'},show=window.alert,warn=console.warn;let message='',diagnostic=null;
@@ -78,7 +86,7 @@ const {sdk}=require('../equipment-formal/helpers.cjs');
   assert.ok(other.unchanged);assert.match(other.blocked,/結束戰鬥並關閉戰鬥畫面/);assert.match(other.loading,/尚未載入完成/);assert.match(other.done,/轉生已完成/);assert.match(other.fallback,/高維戰線載入未完成/);
   assert.doesNotMatch(other.blocked+other.loading+other.fallback+other.stops.map(s=>s.label).join(''),/runtime|owner|共用玩家 UI|介面 owner/);
   const guide=await page.evaluate(()=>{state=newState();state.secondWorld.entered=true;state.thirdWorld.entered=true;return JSON.stringify(gameGuideCategoriesForState(state));});
-  assert.doesNotMatch(guide,/runtime|owner|GM 測試速度|正式前景|強化 Stage/);assert.match(guide,/本輪戰鬥/);assert.match(guide,/文明傳承可查看/);
-  assert.deepEqual(errors,[]);fs.writeFileSync(`${dir}/${engine}-report.json`,JSON.stringify({passed:true,results,unavailable,rewards,failures,other,errors},null,2));console.log(`${engine}: ${results.length} rendered screens, all save fields unchanged, no jargon/overflow; high-dimensional guide passed.`);
+  assert.doesNotMatch(guide,/runtime|owner|GM 測試速度|正式前景|強化 Stage|落帳|第二套戰鬥公式|平行養成資源/);assert.match(guide,/本輪戰鬥/);assert.match(guide,/文明傳承可查看/);
+  assert.deepEqual(errors,[]);fs.writeFileSync(`${dir}/${engine}-report.json`,JSON.stringify({passed:true,results,unavailable,rewards,settings,failures,other,errors},null,2));console.log(`${engine}: ${results.length} rendered screens, all save fields unchanged, no jargon/overflow; high-dimensional guide passed.`);
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
