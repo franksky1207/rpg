@@ -1,12 +1,12 @@
 {
   "baseline": "ad0b6d9969ba61988eb0f64a145b93354adec805",
-  "fileCount": 556,
+  "fileCount": 783,
   "scopeCounts": {
-    "GM 3D": 30,
-    "site and assets": 314,
-    "development": 38,
-    "docs": 36,
-    "tests": 136,
+    "GM 3D": 51,
+    "site and assets": 341,
+    "development": 52,
+    "docs": 37,
+    "tests": 300,
     "vendor": 2
   },
   "terms": [
@@ -124,6 +124,26 @@
       }
     },
     {
+      "path": "tests/runtime/batch20-codex-browser.cjs",
+      "matches": {
+        "回顧": 1
+      }
+    },
+    {
+      "path": "tests/runtime/batch20-save-guide-browser.cjs",
+      "matches": {
+        "回顧": 2
+      }
+    },
+    {
+      "path": "tests/runtime/era-copy-browser.cjs",
+      "matches": {
+        "回顧": 1,
+        "舊世界": 1,
+        "戰線紀錄": 4
+      }
+    },
+    {
       "path": "tests/story/flow.js",
       "matches": {
         "回顧": 2
@@ -175,11 +195,12 @@
     }
   ],
   "matchCounts": {
-    "回顧": 29,
-    "戰線紀錄": 36,
+    "回顧": 33,
+    "戰線紀錄": 40,
     "舊紀元": 1,
     "正式成長": 8,
-    "歷史紀錄": 5
+    "歷史紀錄": 5,
+    "舊世界": 1
   },
   "issues": 13,
   "runtimeFilesChanged": 6

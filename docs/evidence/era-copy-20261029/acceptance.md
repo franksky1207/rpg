@@ -4,7 +4,7 @@
 
 ## 掃描與語意判讀
 
-完整 tracked HTML/JS/CSS/JSON 來源清單與關鍵詞命中見 `scan.json`，包含正式入口、三紀元、GM、動態提示、設定、說明、地圖、戰線紀錄、3D 測試頁及開發文件。另查英文 review/replay 與回放／重播，以追查動態與兼容路徑。
+完整 tracked HTML/JS/CSS/JSON（含 CJS／MJS／TS／JSX） 來源清單與關鍵詞命中見 `scan.json`，包含正式入口、三紀元、GM、動態提示、設定、說明、地圖、戰線紀錄、3D 測試頁及開發文件。另查英文 review/replay 與回放／重播，以追查動態與兼容路徑。
 
 找到並修正 **13 處文案位置，分布於 6 個正式 JS 檔**：
 
