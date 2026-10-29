@@ -11,6 +11,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -24,6 +25,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -37,6 +39,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -50,6 +53,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -63,6 +67,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -76,6 +81,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -89,6 +95,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -102,6 +109,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -115,6 +123,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -128,6 +137,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -141,6 +151,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -154,6 +165,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -167,6 +179,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -180,6 +193,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -193,6 +207,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     },
@@ -206,6 +221,7 @@
         "horizontal": true,
         "inViewport": true,
         "buttonsVisible": true,
+        "unobscured": true,
         "scrollable": true
       }
     }

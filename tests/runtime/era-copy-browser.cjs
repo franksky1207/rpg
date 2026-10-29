@@ -7,6 +7,12 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
   const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(process.env.RUNTIME_SMOKE_URL||'http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof worldReincarnationContext==='function'&&typeof showWorldPhaseWelcome==='function'&&typeof storyRecordPageHtml==='function');
+  // Match existing isolated UI browser fixtures; no login or remote save calls.
+  await page.evaluate(()=>{
+   document.getElementById("civilizationAuthGate")?.remove();
+   document.getElementById("gameIntroModal")?.classList.remove("show");
+   document.body.classList.remove("auth-gate-open","background-preloading");
+  });
   for(const viewport of [{width:390,height:844},{width:1440,height:900}]){
    await page.setViewportSize(viewport);
    for(const count of [0,1])for(const world of [2,3]){
@@ -37,7 +43,7 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
      else assert.ok(text.includes(world===2?'鏡像戰與虛空進度完整保留，已解鎖的戰線紀錄亦可繼續查看。':'鏡像戰、虛空進度及既有養成完整保留，已解鎖的戰線紀錄亦可繼續查看。'));
      const layout=await modal.evaluate(el=>{
       const card=el.querySelector('.world-phase-card'),scroll=el.querySelector('.world-phase-scroll'),action=el.querySelector('.world-phase-modal-actions');const rect=card.getBoundingClientRect(),button=action.getBoundingClientRect();
-      return {horizontal:card.scrollWidth<=card.clientWidth&&scroll.scrollWidth<=scroll.clientWidth,inViewport:rect.left>=0&&rect.right<=innerWidth&&rect.top>=0&&rect.bottom<=innerHeight,buttonsVisible:button.bottom<=innerHeight,scrollable:scroll.scrollHeight>=scroll.clientHeight};
+      return {horizontal:card.scrollWidth<=card.clientWidth&&scroll.scrollWidth<=scroll.clientWidth,inViewport:rect.left>=0&&rect.right<=innerWidth&&rect.top>=0&&rect.bottom<=innerHeight,buttonsVisible:button.bottom<=innerHeight,unobscured:el.contains(document.elementFromPoint(button.left+button.width/2,button.top+button.height/2)),scrollable:scroll.scrollHeight>=scroll.clientHeight};
      });assert.ok(Object.values(layout).every(Boolean),JSON.stringify(layout));
      await modal.screenshot({path:`${output}/${viewport.width}-${count?'rerun':'first'}-${world}-${screen}.png`});
      results.push({viewport:viewport.width,count,world,screen,text,layout});
