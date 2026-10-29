@@ -12,7 +12,7 @@ try{
   const core=window.runMirrorCombatCore;window.runMirrorCombatCore=null;out.push(startMirrorCombatRun());window.runMirrorCombatCore=core;
   const saveFn=window.save;window.save=()=>false;out.push(startMirrorCombatRun());window.save=saveFn;
   return {out,before,after:JSON.stringify(state.dungeon.mirror)};
- });assert.deepEqual(failures.out,[false,false,false]);assert.equal(failures.after,failures.before);assert.equal(dialogs.length,3);assert.match(dialogs[0],/收尾/);assert.match(dialogs[1],/模組/);assert.match(dialogs[2],/保存/);
+ });assert.deepEqual(failures.out,[false,false,false]);assert.equal(failures.after,failures.before);assert.equal(dialogs.length,3);assert.match(dialogs[0],/收尾/);assert.equal(dialogs[1],"鏡像戰尚未載入完成，請重新整理後再試；本輪進度會保留。");assert.match(dialogs[2],/保存/);
  // Resume exactly one remaining battle and verify the daily settlement happens once.
  const seeded=await page.evaluate(()=>{
   Math.random=()=>.5;const snapshot=createMirrorCombatSnapshot();const begun=beginMirrorDungeonState(Date.now(),{snapshot});if(!begun.ok)throw Error('fixture start');state.dungeon.mirror.daily.wins=19;save(false);const before={daily:structuredClone(state.dungeon.mirror.daily),vip:state.vipPoints};return {before,started:startMirrorCombatRun()};
