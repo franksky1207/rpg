@@ -66,7 +66,7 @@
   if(index<0)return {ok:false,reason:"找不到宇宙紀元 Boss。"};
   const targetState=options.state&&typeof options.state==="object"?options.state:(typeof state!=="undefined"&&state&&typeof state==="object"?state:null);
   const reviewMode=false;
-   if(options.ignoreUnlock!==true&&!secondWorldFormalCombatEnabled(targetState))return {ok:false,reason:"宇宙紀元已轉為回顧，無法產生正式主線進度。"};
+   if(options.ignoreUnlock!==true&&!secondWorldFormalCombatEnabled(targetState))return {ok:false,reason:"目前不在宇宙紀元，無法進行宇宙主線戰鬥。"};
    if(options.ignoreUnlock!==true&&!(typeof window.canChallengeSecondWorldBoss==="function"&&window.canChallengeSecondWorldBoss(index,targetState))){
     return {ok:false,reason:"此宇宙紀元 Boss 尚未解鎖。"};
    }

@@ -9,6 +9,7 @@ const scopes=new Set(['readonly-viewport-primary-region','retire-legacy-minimal-
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 assert.equal(record.baseline,baseline);assert.deepEqual(Object.keys(record.files).sort(),paths);
 function historicalBytes(path,bytes){
+ bytes=require("./era-copy-approved.cjs").historicalBytes(path,bytes);
  const row=record.files[path];if(!row)return bytes;
  const before=cp.execFileSync('git',['show',baseline+':'+path],{maxBuffer:16*1024*1024});
  assert.equal(sha(before),row.beforeSha256,'formal stop immutable baseline '+path);

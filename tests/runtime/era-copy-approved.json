@@ -1,0 +1,33 @@
+{
+  "baseline": "ad0b6d9969ba61988eb0f64a145b93354adec805",
+  "files": {
+    "worldphaseui.js": {
+      "before": "7a1c46eed72041511ed406544ff53c75bd29c7cd9ed768488cb0fd16f541c41d",
+      "after": "51fd1388e9ac4073100560fc4d6b79b5578b218b3be53c2df42515794d1aeccc"
+    },
+    "gmbackground.js": {
+      "before": "5606a62469948c51a64c5b11840ddadc33278362b6a53419bca8f233ad822035",
+      "after": "6b098210e2b1f41dd14aa3cce8dc65c041c63542fe1d9ba298c05d4bd2b1e573"
+    },
+    "offlineprogress.js": {
+      "before": "6f8d83d9572d0388115551c02468921f58b3d0784abbc9fa16c2e324b8d8217e",
+      "after": "eb16374c28349a728235252ecc233aa3c1114b0f81836e8c25ce37651d7d178f"
+    },
+    "playersemanticsui.js": {
+      "before": "a81fb29c3124f8992ac7165a745699d07e361ccb7cd89081b4b5e0c2d1425921",
+      "after": "dc35b900ad425e474d0e3ab49e473f0023e8af9105ebc9758d5c1538dc11cb05"
+    },
+    "secondworldcombat.js": {
+      "before": "6fe736e69df499fb85076b17d10c18c0ebee1bdaaeba5959ab3fa8e122fdc1ae",
+      "after": "14a59df1b75933b0aa084c91dc14ac9f9de371df0300d609e743a5abe1a073e8"
+    },
+    "storyrecordtabs.js": {
+      "before": "69c5f98f5f326e0b619aeed01e158406563f2db8722f674cd7995dc0794c6a97",
+      "after": "e0ab895fd62dcaa13e5a59bd7a59b5090c0e62466c3f36234d0031f3dc3978fb"
+    },
+    "index.html": {
+      "before": "0c86093de7e1aae5fb6d00b84b79986197b7869dff5b7976e667bb742788a362",
+      "after": "3bf6198a89b038cb87dca2efe531e3db101ff3201990bf3903a0d798aa7969b1"
+    }
+  }
+}

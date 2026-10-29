@@ -87,6 +87,6 @@ oldMalformed.archiveState.reincarnation.count="2";
 oldMalformed.ctx.setStoryRecordEraView("galaxy-review");
 assert((oldMalformed.ctx.storyRecordPageHtml().match(/story-record-entry/g)||[]).length===101,'正式 lifecycle owner 統一解讀可規範化的舊數字轉生資料');
 const copy=buildArchive({count:2,second:true});
-assert(copy.ctx.storyRecordPageHtml().includes('文明歷史已永久歸檔'),'轉生後 UI 應採永久歷史文案');
-assert(!first.ctx.storyRecordPageHtml().includes('文明歷史已永久歸檔'),'首輪應維持原有正式劇情文案');
+assert(copy.ctx.storyRecordPageHtml().includes('戰線紀錄已永久歸檔'),'轉生後 UI 應使用戰線紀錄正式名稱');
+assert(!first.ctx.storyRecordPageHtml().includes('戰線紀錄已永久歸檔'),'首輪應維持原有正式劇情文案');
 console.log('REINCARNATION STORY ARCHIVE BATCH1 PASSED | count 0/1/2/3 | 101/100/11 | entry without bosses | read-only | final isolated');
