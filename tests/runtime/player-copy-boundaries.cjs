@@ -2,6 +2,11 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),cp=require('node:child_process'),vm=require('node:vm');
 const record=require('./player-copy-approved.json');
 const read=p=>fs.readFileSync(p,'utf8'),old=p=>cp.execFileSync('git',['show',record.baseline+':'+p],{encoding:'utf8',maxBuffer:16*1024*1024});
+for(const p of Object.keys(record.files)){
+ const bytes=fs.readFileSync(p),project=require('./player-copy-approved.cjs').historicalBytes;
+ assert.equal(project(p,bytes).toString('utf8'),old(p));
+ assert.throws(()=>project(p,Buffer.concat([bytes,Buffer.from(' ')])),/unregistered player-copy change/);
+}
 // Prove the entire offline calculation, grant, timers and save-owner code remains byte-identical.
 const source=read('offlineprogress.js'),base=old('offlineprogress.js');
 for(const part of [s=>s.slice(0,s.indexOf(' function ensureOfflineModals(')),s=>s.slice(s.indexOf(' window.closeOfflineRewardModal='))]){
