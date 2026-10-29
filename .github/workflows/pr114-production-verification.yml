@@ -1,0 +1,89 @@
+name: PR114 Published Copy Verification
+on:
+  push:
+    branches: [verify/pr114-production]
+permissions:
+  contents: read
+  actions: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Select latest verified main and wait for its Pages deployment
+        id: publish
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner=context.repo.owner,repo=context.repo.repo,merged='56a43df53fa319e1c1dc3c691e43074f1e386c32';
+            const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+            let manifest;
+            for(let i=0;i<60;i++){
+              const {data}=await github.rest.actions.listWorkflowRuns({owner,repo,workflow_id:'asset-version-manifest.yml',branch:'main',per_page:30});
+              manifest=data.workflow_runs.find(run=>run.head_sha===merged);
+              if(manifest?.status==='completed')break;
+              await pause(10000);
+            }
+            if(manifest?.conclusion!=='success')throw Error('Resource manifest workflow has not succeeded');
+            const head=(await github.rest.git.getRef({owner,repo,ref:'heads/main'})).data.object.sha;
+            if(head!==merged){
+              const comparison=(await github.rest.repos.compareCommitsWithBasehead({owner,repo,basehead:merged+'...'+head})).data;
+              if(comparison.status!=='ahead'||!comparison.files?.length||comparison.files.some(file=>file.filename!=='resource-manifest.json'))throw Error('Main advanced beyond the verified change and generated manifest');
+            }
+            core.setOutput('sha',head);
+            let run;
+            const runs=()=>github.rest.actions.listWorkflowRuns({owner,repo,workflow_id:'publish-optimized-pages.yml',branch:'main',per_page:30});
+            run=(await runs()).data.workflow_runs.find(item=>item.head_sha===head);
+            if(!run){
+              await github.rest.actions.createWorkflowDispatch({owner,repo,workflow_id:'publish-optimized-pages.yml',ref:'main'});
+              core.info('Dispatched normal Pages release checks for generated-manifest main '+head);
+            }
+            for(let i=0;i<160;i++){
+              run=(await runs()).data.workflow_runs.find(item=>item.head_sha===head);
+              if(run?.status==='completed')break;
+              await pause(10000);
+            }
+            if(run?.conclusion!=='success')throw Error('Pages deployment did not succeed: '+(run?.html_url||head));
+            if((await github.rest.git.getRef({owner,repo,ref:'heads/main'})).data.object.sha!==head)throw Error('Main changed during publication');
+            core.setOutput('url',run.html_url);
+            core.info('Verified Pages deployment '+run.html_url+' at '+head);
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.publish.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: ./.github/actions/setup-ci-browser
+        with:
+          browsers: chromium
+      - name: Compare live assets with deployed main and verify four transition scenarios
+        env:
+          VERIFIED_MAIN_SHA: ${{ steps.publish.outputs.sha }}
+          VERIFIED_PAGES_RUN: ${{ steps.publish.outputs.url }}
+          RUNTIME_SMOKE_URL: https://franksky1207.github.io/rpg/
+          ERA_COPY_EVIDENCE_DIR: /tmp/pr114-production
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('node:fs'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+          (async()=>{
+            const base=process.env.RUNTIME_SMOKE_URL,sha=process.env.VERIFIED_MAIN_SHA,files=['worldphaseui.js','gmbackground.js','offlineprogress.js','secondworldcombat.js','playersemanticsui.js','storyrecordtabs.js'],hashes={};
+            const html=await fetch(base+'?pr114='+sha,{cache:'no-store'});assert.equal(html.status,200);
+            assert.equal(((await html.text()).match(/eraCopy=20261029/g)||[]).length,6,'live entrypoint must contain six copy cache revisions');
+            for(const file of files){
+              const response=await fetch(new URL(file+'?pr114='+sha,base),{cache:'no-store'});assert.equal(response.status,200);
+              const bytes=Buffer.from(await response.arrayBuffer());assert.deepEqual(bytes,fs.readFileSync(file),'live deployed asset differs: '+file);
+              hashes[file]=crypto.createHash('sha256').update(bytes).digest('hex');
+            }
+            fs.mkdirSync('/tmp/pr114-production',{recursive:true});
+            fs.writeFileSync('/tmp/pr114-production/deployed-source.json',JSON.stringify({passed:true,mainSHA:sha,pagesRun:process.env.VERIFIED_PAGES_RUN,hashes},null,2));
+            console.log('PASS live entrypoint and six exact deployed assets:',sha);
+          })().catch(error=>{console.error(error);process.exitCode=1;});
+          NODE
+          node tests/runtime/era-copy-browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr114-production-copy-evidence
+          path: /tmp/pr114-production/
+          retention-days: 14
