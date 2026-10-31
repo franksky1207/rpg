@@ -1,0 +1,13 @@
+{
+  "baseline": "72aadfe127f92c7706e55c73d81bfac5bfca82ac",
+  "files": {
+    "cloudsave.js": {
+      "before": "01649399315b4df16037210cbb48be4716f9ddd6def0cec73979d3b185d7e361",
+      "after": "083369904ee49db306968fb8f072113eae940c388e95d25a6e61458956835456"
+    },
+    "index.html": {
+      "before": "eec007515a14b5194ba1fc502bb11f9fd176f6521eec3798cf7b2703a3f4f60c",
+      "after": "472b6b517969eb983439ddb55d0018989c41c509d2c233d3037ccd00876504e4"
+    }
+  }
+}

@@ -7,6 +7,8 @@
  let cloudMeta=null;
  let cloudBusy=false;
  let lastMetaUserId=null;
+ let metaRequest=null;
+ let metaHasProgress=false;
 
  window.CIVILIZATION_CLOUD_SAVE_VERSION=CLOUD_SAVE_VERSION;
 
@@ -36,14 +38,37 @@
   if(!owner)bindLocalOwner(u.id);
   if(!readLocalMeta()&&typeof localStorage!=="undefined"&&localStorage.getItem(typeof SAVE_KEY!=="undefined"?SAVE_KEY:"frank_text_rpg_save"))writeLocalMeta();
  }
+ // Read-only summaries: never normalize or migrate a save merely to display it.
+ function knownWhole(value){return typeof value==="number"&&Number.isSafeInteger(value)&&value>=0?value:null;}
+ function progression(target){
+  const count=knownWhole(target?.reincarnation?.count);
+  const raw=knownWhole(target?.reincarnation?.breakthrough?.permanent);
+  return {count,permanent:raw===null?null:(typeof window.permanentBreakthroughLevel==="function"?window.permanentBreakthroughLevel(target):raw)};
+ }
+ function progressionVisible(){
+  const target=typeof state!=="undefined"?state:null;
+  return !!target&&(progression(target).count>0||(typeof window.thirdWorldBossesAllDefeated==="function"&&window.thirdWorldBossesAllDefeated(target)===true));
+ }
+ function cloudSnapshot(data,source){
+  return data?{updated_at:data.updated_at,level:n(data.level,1),exp:n(data.exp,0),revision:n(data.revision,1),progression:progression(source)}:null;
+ }
+ function progressionText(row){
+  const p=row?.progression;
+  return {count:p?.count==null?"未知":`${p.count.toLocaleString()} 次`,permanent:p?.permanent==null?"未知":`Lv.${p.permanent.toLocaleString()}`};
+ }
+ function progressionHtml(row){
+  if(!progressionVisible())return "";
+  const text=progressionText(row);
+  return `<div class="cloud-save-line"><span>轉生次數</span><b>${text.count}</b></div><div class="cloud-save-line"><span>永久突破等級</span><b>${text.permanent}</b></div>`;
+ }
  function localSnapshot(){
   const meta=readLocalMeta();
-  return {updatedAt:meta?.updatedAt||null,level:n(typeof state!=="undefined"?state?.level:meta?.level,1),exp:n(typeof state!=="undefined"?state?.exp:meta?.exp,0)};
+  return {progression:progression(typeof state!=="undefined"?state:null),updatedAt:meta?.updatedAt||null,level:n(typeof state!=="undefined"?state?.level:meta?.level,1),exp:n(typeof state!=="undefined"?state?.exp:meta?.exp,0)};
  }
  function ownerMismatch(){const u=user(),owner=localOwner();return !!(u?.id&&owner&&owner!==u.id);}
  function rowHtml(label,row,emptyText){
   if(!row)return `<div class="cloud-save-column"><div class="cloud-save-title">${label}</div><div class="cloud-save-empty">${emptyText}</div></div>`;
-  return `<div class="cloud-save-column"><div class="cloud-save-title">${label}</div><div class="cloud-save-line"><span>存檔時間</span><b>${formatTime(row.updatedAt||row.updated_at)}</b></div><div class="cloud-save-line"><span>等級</span><b>Lv.${n(row.level,1)}</b></div><div class="cloud-save-line"><span>EXP</span><b>${n(row.exp,0).toLocaleString()}</b></div></div>`;
+  return `<div class="cloud-save-column"><div class="cloud-save-title">${label}</div><div class="cloud-save-line"><span>存檔時間</span><b>${formatTime(row.updatedAt||row.updated_at)}</b></div><div class="cloud-save-line"><span>等級</span><b>Lv.${n(row.level,1)}</b></div><div class="cloud-save-line"><span>EXP</span><b>${n(row.exp,0).toLocaleString()}</b></div>${progressionHtml(row)}</div>`;
  }
  function sectionHtml(){
   const local=localSnapshot();
@@ -60,7 +85,8 @@
   if(!fresh)return;
   const slot=document.getElementById("settingsCloudSaveSlot");
   if(section)section.replaceWith(fresh);else if(slot)slot.appendChild(fresh);else account.after(fresh);
-  if(lastMetaUserId!==user().id){cloudMeta=undefined;lastMetaUserId=user().id;renderOnly();refreshMeta();}
+  if(lastMetaUserId!==user().id){cloudMeta=undefined;metaHasProgress=false;lastMetaUserId=user().id;renderOnly();refreshMeta();}
+  else if(progressionVisible()&&!metaHasProgress&&!metaRequest)refreshMeta();
  }
  function renderOnly(){
   const section=document.getElementById("civilizationCloudSaveSettings");if(!section)return;
@@ -93,18 +119,26 @@
  }
  async function refreshMeta(){
   const c=client(),u=user();if(!c||!u)return;
+  if(metaRequest?.userId===u.id)return metaRequest.promise;
+  const includeProgress=progressionVisible();
+  const request={userId:u.id,promise:null};metaRequest=request;
   setBusy(true);setStatus("正在讀取雲端存檔資訊…");
-  try{
-   const {data,error}=await c.from(TABLE).select("updated_at,level,exp,revision").eq("user_id",u.id).maybeSingle();
-   if(error)throw error;
-   cloudMeta=data?{updated_at:data.updated_at,level:n(data.level,1),exp:n(data.exp,0),revision:n(data.revision,1)}:null;
-   renderOnly();setStatus(cloudMeta?"雲端資訊已更新。":"目前尚未建立雲端存檔。","success");
-  }catch(error){cloudMeta=null;renderOnly();setStatus(errorText(error),"error");}
-  finally{setBusy(false);}
+  request.promise=(async()=>{
+   try{
+    const {data,error}=await c.from(TABLE).select(includeProgress?"updated_at,level,exp,revision,save_data":"updated_at,level,exp,revision").eq("user_id",u.id).maybeSingle();
+    if(user()?.id!==u.id)return;
+    if(error)throw error;
+    cloudMeta=cloudSnapshot(data,data?.save_data);metaHasProgress=includeProgress;
+    renderOnly();setStatus(cloudMeta?"雲端資訊已更新。":"目前尚未建立雲端存檔。","success");
+   }catch(error){if(user()?.id===u.id){cloudMeta=null;metaHasProgress=true;renderOnly();setStatus(errorText(error),"error");}}
+   finally{if(metaRequest===request){metaRequest=null;setBusy(false);}}
+  })();
+  return request.promise;
  }
  function confirmSummary(action,local,cloud){
-  const cloudText=cloud?`${formatTime(cloud.updated_at)}／Lv.${n(cloud.level,1)}／EXP ${n(cloud.exp,0).toLocaleString()}`:"尚無雲端存檔";
-  const localText=`${formatTime(local.updatedAt)}／Lv.${n(local.level,1)}／EXP ${n(local.exp,0).toLocaleString()}`;
+  const extra=row=>{if(!progressionVisible())return "";const text=progressionText(row);return `／轉生次數 ${text.count}／永久突破等級 ${text.permanent}`;};
+  const cloudText=cloud?`${formatTime(cloud.updated_at)}／Lv.${n(cloud.level,1)}／EXP ${n(cloud.exp,0).toLocaleString()}${extra(cloud)}`:"尚無雲端存檔";
+  const localText=`${formatTime(local.updatedAt)}／Lv.${n(local.level,1)}／EXP ${n(local.exp,0).toLocaleString()}${extra(local)}`;
   if(action==="upload")return `確定要把本機存檔上傳到雲端嗎？\n\n本機：${localText}\n雲端：${cloudText}\n\n${cloud?"上傳後會覆蓋目前雲端存檔。":"將建立第一份雲端存檔。"}`;
   return `確定要下載雲端存檔並覆蓋這台裝置嗎？\n\n本機：${localText}\n雲端：${cloudText}\n\n這台裝置目前的本機進度會被覆蓋。`;
  }
@@ -114,11 +148,11 @@
   if(ownerMismatch()){setStatus("這份本機存檔屬於另一個帳號，已禁止上傳以避免誤覆蓋。","error");return;}
   setBusy(true);setStatus("正在確認雲端資訊…");
   try{
-   const {data:existing,error:metaError}=await c.from(TABLE).select("updated_at,level,exp,revision").eq("user_id",u.id).maybeSingle();
+   const {data:existing,error:metaError}=await c.from(TABLE).select(progressionVisible()?"updated_at,level,exp,revision,save_data":"updated_at,level,exp,revision").eq("user_id",u.id).maybeSingle();
    if(metaError)throw metaError;
    if(user()?.id!==u.id)throw new Error("登入帳號已變更，請重新操作雲端存檔。");
    if(ownerMismatch())throw new Error("本機存檔所屬帳號已變更，已取消上傳。");
-   cloudMeta=existing?{updated_at:existing.updated_at,level:n(existing.level,1),exp:n(existing.exp,0),revision:n(existing.revision,1)}:null;
+   cloudMeta=cloudSnapshot(existing,existing?.save_data);metaHasProgress=progressionVisible();
    const local=localSnapshot();
    if(!confirm(confirmSummary("upload",local,cloudMeta))){renderOnly();return;}
    if(typeof save==="function"&&!save(false))throw new Error("本機存檔失敗，已取消上傳。");
@@ -128,7 +162,7 @@
    const row={user_id:u.id,save_data:payload,level:n(state.level,1),exp:n(state.exp,0),revision:cloudMeta?n(cloudMeta.revision,1)+1:1,updated_at:updatedAt};
    const {data,error}=await c.from(TABLE).upsert(row,{onConflict:"user_id"}).select("updated_at,level,exp,revision").single();
    if(error)throw error;
-   cloudMeta={updated_at:data.updated_at,level:n(data.level,1),exp:n(data.exp,0),revision:n(data.revision,1)};
+   cloudMeta=cloudSnapshot(data,payload);metaHasProgress=true;
    renderOnly();setStatus("本機存檔已成功上傳到雲端。","success");
   }catch(error){renderOnly();setStatus(errorText(error),"error");}
   finally{setBusy(false);}
@@ -155,7 +189,7 @@
    if(error)throw error;
    if(user()?.id!==u.id)throw new Error("登入帳號已變更，請重新操作雲端存檔。");
    if(!data?.save_data){cloudMeta=null;renderOnly();setStatus("目前沒有可下載的雲端存檔。","error");return;}
-   cloudMeta={updated_at:data.updated_at,level:n(data.level,1),exp:n(data.exp,0),revision:n(data.revision,1)};
+   cloudMeta=cloudSnapshot(data,data.save_data);metaHasProgress=true;
    const prepared=prepareDownloadedState(data.save_data);
    const local=localSnapshot();
    if(!confirm(confirmSummary("download",local,cloudMeta))){renderOnly();return;}
