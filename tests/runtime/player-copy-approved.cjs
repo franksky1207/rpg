@@ -4,6 +4,7 @@ const assert=require('node:assert/strict'),crypto=require('node:crypto'),cp=requ
 const record=require('./player-copy-approved.json');
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
 function historicalBytes(p,bytes){
+ bytes=require("./cloudsave-progression-approved.cjs").historicalBytes(p,bytes);
  const row=record.files[p];if(!row)return bytes;
  assert.equal(sha(bytes),row.after,'unregistered player-copy change: '+p);
  const before=cp.execFileSync('git',['show',record.baseline+':'+p],{maxBuffer:16*1024*1024});
